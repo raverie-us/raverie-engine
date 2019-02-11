@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ThreadSync.cpp
-/// Implementation of Thread synchronization classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -106,11 +98,13 @@ void OsEvent::Wait()
 
   if (self->mManualReset)
   {
-    while (!self->mIsGateOpen);
+    while (!self->mIsGateOpen)
+      ;
   }
   else
   {
-    while (!self->mIsGateOpen.CompareExchange(false, true));
+    while (!self->mIsGateOpen.CompareExchange(false, true))
+      ;
   }
 }
 
@@ -141,14 +135,14 @@ Semaphore::Semaphore()
 Semaphore::~Semaphore()
 {
   ZeroGetPrivateData(SemaphorePrivateData)
-  SDL_DestroySemaphore(self->mSemaphore);
+      SDL_DestroySemaphore(self->mSemaphore);
   ZeroDestructPrivateData(SemaphorePrivateData);
 }
 
 void Semaphore::Increment()
 {
-  ZeroGetPrivateData(SemaphorePrivateData)
-  int result = SDL_SemPost(self->mSemaphore);
+  ZeroGetPrivateData(SemaphorePrivateData) int result =
+      SDL_SemPost(self->mSemaphore);
   if (result != 0)
     Warn(SDL_GetError());
 }
@@ -195,24 +189,26 @@ InterprocessMutex::InterprocessMutex()
 
 InterprocessMutex::~InterprocessMutex()
 {
-  ZeroGetPrivateData(InterprocessMutexPrivateData)
-  delete self->mFile;
+  ZeroGetPrivateData(InterprocessMutexPrivateData) delete self->mFile;
   ZeroDestructPrivateData(InterprocessMutexPrivateData);
 }
 
-void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status,
+                                   const char* mutexName,
+                                   bool failIfAlreadyExists)
 {
   ZeroGetPrivateData(InterprocessMutexPrivateData)
 
-  // This approach is a bit silly, but instead of using an actual inter process mutex we
-  // open a common file for write access. We use the temp directory because we know it will
-  // be shared between all running instances and it is guaranteed writable.
-  // We also keep the file open for write until the InterprocessMutex is destructed.
-  if (!failIfAlreadyExists)
-    return;
+      // This approach is a bit silly, but instead of using an actual inter
+      // process mutex we open a common file for write access. We use the temp
+      // directory because we know it will be shared between all running
+      // instances and it is guaranteed writable. We also keep the file open for
+      // write until the InterprocessMutex is destructed.
+      if (!failIfAlreadyExists) return;
 
-  // Sanitize the mutex name for files. We guarantee uniqueness because we don't allow the '-' character
-  // even though it is legal in file names, and any illegal character we find we replace with -XX where XX is the hex code.
+  // Sanitize the mutex name for files. We guarantee uniqueness because we don't
+  // allow the '-' character even though it is legal in file names, and any
+  // illegal character we find we replace with -XX where XX is the hex code.
   StringBuilder builder;
   while (*mutexName != '\0')
   {
@@ -231,13 +227,17 @@ void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool f
     ++mutexName;
   }
 
-  String sharedMutexPathName = FilePath::Combine(GetTemporaryDirectory(), builder.ToString());
+  String sharedMutexPathName =
+      FilePath::Combine(GetTemporaryDirectory(), builder.ToString());
 
-  self->mFile->Open(sharedMutexPathName, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
+  self->mFile->Open(sharedMutexPathName,
+                    FileMode::Write,
+                    FileAccessPattern::Sequential,
+                    FileShare::Unspecified,
+                    &status);
 }
 
-CountdownEvent::CountdownEvent()
-  : mCount(0)
+CountdownEvent::CountdownEvent() : mCount(0)
 {
   mWaitEvent.Initialize(true, true);
 }
@@ -267,4 +267,4 @@ void CountdownEvent::Wait()
   mWaitEvent.Wait();
 }
 
-}//namespace Zero
+} // namespace Zero

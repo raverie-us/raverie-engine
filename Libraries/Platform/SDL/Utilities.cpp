@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Utilities.cpp
-/// Implementation of the Utilities class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -27,7 +19,9 @@ void SetTimerFrequency(uint ms)
 }
 #endif
 
-const char* GetEnvironmentList(const char* defaultValue, const char* names[], size_t length)
+const char* GetEnvironmentList(const char* defaultValue,
+                               const char* names[],
+                               size_t length)
 {
   for (size_t i = 0; i < length; ++i)
   {
@@ -45,7 +39,8 @@ const char* GetEnvironmentList(const char* defaultValue, const char* names[], si
 String UserName()
 {
   // There is no portable way to get the user name
-  const char* names[] = { "USER", "USERNAME", "LOGNAME", "COMPUTERNAME", "HOSTNAME" };
+  const char* names[] = {
+      "USER", "USERNAME", "LOGNAME", "COMPUTERNAME", "HOSTNAME"};
   return GetEnvironmentList("User", names, SDL_arraysize(names));
 }
 #endif
@@ -54,7 +49,8 @@ String UserName()
 String ComputerName()
 {
   // There is no portable way to get the computer/host name
-  const char* names[] = { "COMPUTERNAME", "HOSTNAME", "USER", "USERNAME", "LOGNAME" };
+  const char* names[] = {
+      "COMPUTERNAME", "HOSTNAME", "USER", "USERNAME", "LOGNAME"};
   return GetEnvironmentList("Computer", names, SDL_arraysize(names));
 }
 #endif
@@ -105,10 +101,11 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   String expression = errorData.Expression;
 
   // Check if no message was provided
-  const char* errorMessage = errorData.Message ? errorData.Message : "No message";
-  
+  const char* errorMessage =
+      errorData.Message ? errorData.Message : "No message";
+
   String message = BuildString(errorMessage, "\n");
-  
+
   String callStack = GetCallStack();
   if (!callStack.Empty())
     message = BuildString(message, callStack, "\n");
@@ -117,25 +114,25 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 
   // Show a message box
   message = BuildString(message, "Would you like to continue?");
-  
-  const SDL_MessageBoxButtonData buttons[] =
-  {
-    { 0,                                       ReturnCode::Continue,    "Continue"   },
-    { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, ReturnCode::DebugBreak,  "DebugBreak" },
-    { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, ReturnCode::Terminate,   "Terminate"  },
-    { 0,                                       ReturnCode::Ignore,      "Ignore"     },
+
+  const SDL_MessageBoxButtonData buttons[] = {
+      {0, ReturnCode::Continue, "Continue"},
+      {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT,
+       ReturnCode::DebugBreak,
+       "DebugBreak"},
+      {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT,
+       ReturnCode::Terminate,
+       "Terminate"},
+      {0, ReturnCode::Ignore, "Ignore"},
   };
 
-  SDL_MessageBoxData data =
-  {
-    SDL_MESSAGEBOX_INFORMATION,
-    nullptr,
-    "Error",
-    message.c_str(),
-    SDL_arraysize(buttons),
-    buttons,
-    nullptr
-  };
+  SDL_MessageBoxData data = {SDL_MESSAGEBOX_INFORMATION,
+                             nullptr,
+                             "Error",
+                             message.c_str(),
+                             SDL_arraysize(buttons),
+                             buttons,
+                             nullptr};
 
   int buttonId = -1;
   SDL_ShowMessageBox(&data, &buttonId);
@@ -167,21 +164,24 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 }
 
 #if !defined(ZeroPlatformNoWebRequest)
-void WebRequest(
-  Status& status,
-  StringParam url,
-  const Array<WebPostData>& postDatas,
-  const Array<String>& additionalRequestHeaders,
-  WebRequestHeadersFn onHeadersReceived,
-  WebRequestDataFn onDataReceived,
-  void* userData)
+void WebRequest(Status& status,
+                StringParam url,
+                const Array<WebPostData>& postDatas,
+                const Array<String>& additionalRequestHeaders,
+                WebRequestHeadersFn onHeadersReceived,
+                WebRequestDataFn onDataReceived,
+                void* userData)
 {
   status.SetFailed("WebRequest not supported by SDL");
 }
 #endif
 
 #if !defined(ZeroPlatformNoSystemOpenFile)
-bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenFile(Status& status,
+                    cstr file,
+                    uint verb,
+                    cstr parameters,
+                    cstr workingDirectory)
 {
   // Unfortunately we have no portable way of using the working directory.
   String commandLine = String::Format("\"%s\" %s", file, parameters);
@@ -191,7 +191,11 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
 #endif
 
 #if !defined(ZeroPlatformNoSystemOpenNetworkFile)
-bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenNetworkFile(Status& status,
+                           cstr file,
+                           uint verb,
+                           cstr parameters,
+                           cstr workingDirectory)
 {
   return SystemOpenFile(status, file, verb, parameters, workingDirectory);
 }
@@ -202,7 +206,6 @@ String GetEnvironmentalVariable(StringParam variable)
   return getenv(variable.c_str());
 }
 
-//---------------------------------------------------------------- Memory Status 
 #if !defined(ZeroPlatformNoGetMemoryStatus)
 void GetMemoryStatus(MemoryInfo& data)
 {
@@ -217,10 +220,14 @@ String GetVersionString()
 {
   SDL_version version;
   SDL_GetVersion(&version);
-  return String::Format("%s SDL %d.%d.%d", SDL_GetPlatform(), version.major, version.minor, version.patch);
+  return String::Format("%s SDL %d.%d.%d",
+                        SDL_GetPlatform(),
+                        version.major,
+                        version.minor,
+                        version.patch);
 }
 
-}
+} // namespace Os
 
 u64 GenerateUniqueId64()
 {
@@ -239,4 +246,4 @@ u64 GenerateUniqueId64()
 
   return result;
 }
-}
+} // namespace Zero

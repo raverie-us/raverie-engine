@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,15 +6,17 @@ namespace Zero
 
 CustomLibraryLoader mCustomLibraryLoader = nullptr;
 
-void LoadResourcePackageRelative(StringParam baseDirectory, StringParam libraryName)
+void LoadResourcePackageRelative(StringParam baseDirectory,
+                                 StringParam libraryName)
 {
   String path = FilePath::Combine(baseDirectory, libraryName);
   String fileName = BuildString(libraryName, ".pack");
   String packageFile = FilePath::Combine(path, fileName);
 
-  if(!FileExists(packageFile))
+  if (!FileExists(packageFile))
   {
-    FatalEngineError("Failed to find needed content package. %s", libraryName.c_str());
+    FatalEngineError("Failed to find needed content package. %s",
+                     libraryName.c_str());
   }
 
   ResourcePackage* package = new ResourcePackage();
@@ -28,13 +25,12 @@ void LoadResourcePackageRelative(StringParam baseDirectory, StringParam libraryN
 
   Status status;
   Z::gResources->LoadPackage(status, package);
-  if(!status)
-    DoNotifyError("Failed to load resource package.",status.Message);
+  if (!status)
+    DoNotifyError("Failed to load resource package.", status.Message);
 }
 
 void GameRescueCall(void* userData)
 {
-
 }
 
 void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
@@ -56,18 +52,23 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
     size = windowLaunch->mWindowedResolution;
 
   // If changes are ever made to these flags, all platforms must be considered.
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable | WindowStyleFlags::Close);
+  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(
+      WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar |
+      WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable |
+      WindowStyleFlags::Close);
 
-  OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
+  OsWindow* mainWindow =
+      osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
 
   // On Emscripten, the window full screen can only be done by a user action.
-  // Setting it on startup causes an abrupt change the first time the user click or hits a button.
+  // Setting it on startup causes an abrupt change the first time the user click
+  // or hits a button.
 #if !defined(PLATFORM_EMSCRIPTEN)
   if (windowLaunch == nullptr || windowLaunch->mLaunchFullscreen)
     mainWindow->SetState(WindowState::Fullscreen);
 #endif
 
-  //quick hack to make exports work better so they can trap the mouse
+  // quick hack to make exports work better so they can trap the mouse
   Z::gMouse->mActiveWindow = mainWindow;
 
   mainWindow->SetTitle(project->ProjectName);
@@ -86,19 +87,20 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   LoadResourcePackageRelative(projectDirectory, "Editor");
 
   // Hack!
-  if(mCustomLibraryLoader != nullptr)
+  if (mCustomLibraryLoader != nullptr)
     mCustomLibraryLoader(configCog);
 
-  if(SharedContent* sharedContent = projectCog->has(SharedContent))
+  if (SharedContent* sharedContent = projectCog->has(SharedContent))
   {
-    forRange(ContentLibraryReference libraryRef, sharedContent->ExtraContentLibraries.All())
+    forRange(ContentLibraryReference libraryRef,
+             sharedContent->ExtraContentLibraries.All())
     {
       String libraryName = libraryRef.mContentLibraryName;
       LoadResourcePackageRelative(projectDirectory, libraryName);
     }
   }
 
-  //Set the store name based on the project name.
+  // Set the store name based on the project name.
   ObjectStore::GetInstance()->SetStoreName(project->ProjectName);
 
   LoadResourcePackageRelative(projectDirectory, project->ProjectName);
@@ -106,14 +108,16 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   // Make sure scripts in the project are compiled
   ZilchManager::GetInstance()->TriggerCompileExternally();
 
-  // Send after compiling since graphics uses this event to know to stop displaying the splash/loading screen
+  // Send after compiling since graphics uses this event to know to stop
+  // displaying the splash/loading screen
   ObjectEvent event(projectCog);
   Z::gEngine->DispatchEvent(Events::ProjectLoaded, &event);
 
   ZPrint("Creating game...\n");
 
   IntVec2 intViewportSize = mainWindow->GetClientSize();
-  Vec2 mainViewportSize = Pixels(float(intViewportSize.x), float(intViewportSize.y));
+  Vec2 mainViewportSize =
+      Pixels(float(intViewportSize.x), float(intViewportSize.y));
 
   RootWidget* rootWidget = new RootWidget(mainWindow);
   rootWidget->SetSize(mainViewportSize);
@@ -127,7 +131,7 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   GameSession* game = Z::gEngine->CreateGameSession();
   game->mMainWindow = mainWindow;
   game->SetInEditor(false);
-  
+
   game->mGameWidget = gameWidget;
   gameWidget->SetGameSession(game);
 

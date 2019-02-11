@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorSupport.hpp
-/// Declaration of the Editor support classes EditorSpace and Selection.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -47,7 +39,10 @@ struct ResourceAdd
   String ResourceOwner;
 
   /// Was the operation successful
-  bool WasSuccessful(){return mSuccess;}
+  bool WasSuccessful()
+  {
+    return mSuccess;
+  }
   bool mSuccess;
 };
 
@@ -71,20 +66,34 @@ public:
   virtual bool HasFocus(GameSession* game) = 0;
 
   // Add a new resource
-  virtual Resource* AddResource(ResourceManager* resourceManager, ResourceAdd& resourceAdd) = 0;
+  virtual Resource* AddResource(ResourceManager* resourceManager,
+                                ResourceAdd& resourceAdd) = 0;
 
-  // Determines if a new resource should be created, otherwise returns the original
-  virtual Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* type, StringParam propertyName, Space* space,
-                                       Resource* resource, Archetype* archetype, bool modified) = 0;
+  // Determines if a new resource should be created, otherwise returns the
+  // original
+  virtual Resource* NewResourceOnWrite(ResourceManager* resourceManager,
+                                       BoundType* type,
+                                       StringParam propertyName,
+                                       Space* space,
+                                       Resource* resource,
+                                       Archetype* archetype,
+                                       bool modified) = 0;
 
   // If there is a resource id conflict notify the editor
-  virtual void OnResourceIdConflict(ResourceEntry& resourceEntry, Resource* previous) = 0;
+  virtual void OnResourceIdConflict(ResourceEntry& resourceEntry,
+                                    Resource* previous) = 0;
 
-  // Show an error in a text file or resource text file using the editor's text editor
-  virtual void ShowTextError(StringParam file, int line, StringParam message) = 0;
+  // Show an error in a text file or resource text file using the editor's text
+  // editor
+  virtual void ShowTextError(StringParam file,
+                             int line,
+                             StringParam message) = 0;
 
   // Show a text block
-  virtual void ShowTextBlock(StringParam name, StringRange text, int line, StringParam message) = 0;
+  virtual void ShowTextBlock(StringParam name,
+                             StringRange text,
+                             int line,
+                             StringParam message) = 0;
 
   virtual MetaSelection* GetActiveSelection() = 0;
 
@@ -93,17 +102,17 @@ public:
 
 namespace Z
 {
-  // Enabled Debug Features used by the editor
-  extern bool EditorDebugFeatures;
-  // Enabled core developer features
-  extern bool DeveloperMode;
-  // Access the editor at runtime prevents including
-  // editor in core engine
-  // Runtime editor will be NULL outside the editor
-  extern RuntimeEditor* gRuntimeEditor;
-}//namespace Z
+// Enabled Debug Features used by the editor
+extern bool EditorDebugFeatures;
+// Enabled core developer features
+extern bool DeveloperMode;
+// Access the editor at runtime prevents including
+// editor in core engine
+// Runtime editor will be NULL outside the editor
+extern RuntimeEditor* gRuntimeEditor;
+} // namespace Z
 
-//Constants
+// Constants
 
 // Special object names in a level
 namespace SpecialCogNames
@@ -114,7 +123,7 @@ extern const String WorldAnchor;
 extern const String LevelGeometry;
 extern const String Main;
 extern const String ViewCube;
-}
+} // namespace SpecialCogNames
 
 // Special built in Archetypes
 namespace CoreArchetypes
@@ -148,7 +157,6 @@ extern const String DefaultSpace;
 extern const String EmptyTile;
 extern const String ViewCube;
 extern const String Wedge;
-}
+} // namespace CoreArchetypes
 
-
-}//namespace Zero
+} // namespace Zero

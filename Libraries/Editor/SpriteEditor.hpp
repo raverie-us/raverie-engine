@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SpriteEditor.hpp
-///
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,7 +13,11 @@ class SpriteFrameLayout
 {
 public:
   SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY);
-  SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY, uint sizeX, uint sizeY);
+  SpriteFrameLayout(uint frameCount,
+                    uint frameSizeX,
+                    uint frameSizeY,
+                    uint sizeX,
+                    uint sizeY);
 
   IntRect TotalSize;
   int FrameSizeX;
@@ -39,7 +35,7 @@ class PropertyView;
 class KeyboardEvent;
 class FileEditEvent;
 
-//------------------------------------------------------------------------  Sprite Frame
+//Sprite Frame
 // Display a frame of sprite
 class SpriteFrame
 {
@@ -74,7 +70,7 @@ struct TextureArea
   Texture* mTexture;
 };
 
-//------------------------------------------------------------------------ Sprite Preview
+//Sprite Preview
 // Animated Preview of a set of Frames as areas of a texture
 class SpritePreview : public Composite
 {
@@ -84,7 +80,10 @@ public:
   SpritePreview(Composite* parent);
   ~SpritePreview();
 
-  int GetCurrentFrame(){return mCurrentFrame;}
+  int GetCurrentFrame()
+  {
+    return mCurrentFrame;
+  }
   void SetCurrentFrame(int frame);
   void UpdateTransform() override;
   void UpdateFrame();
@@ -105,45 +104,51 @@ DeclareEnum5(SpriteOrigin, Custom, Center, UpperLeft, BottomLeft, BottomCenter);
 Vec2 ComputeOrigin(SpriteOrigin::Enum origin, int width, int height);
 SpriteOrigin::Enum ComputeOrigin(Vec2 point, int width, int height);
 
-//------------------------------------------------------------------------ Sprite Preview Widget
+//Sprite Preview Widget
 class SpritePreviewWidget : public PreviewWidget
 {
 public:
   typedef SpritePreviewWidget self_type;
-  
+
   SpritePreviewWidget(SpriteFrame* spriteFrame, Composite* parent);
   void UpdateTransform();
-  
+
   TextureView* mTextureView;
 };
 
-//------------------------------------------------------------------------ Sprite Tile View Widget
+//Sprite Tile View Widget
 class SpriteTileViewWidget : public TileViewWidget
 {
 public:
-  SpriteTileViewWidget(Composite* parent, TileView* tileView,
-                       PreviewWidget* tileWidget, DataIndex dataIndex);
-  
-  //TileViewWidget Event Handlers
+  SpriteTileViewWidget(Composite* parent,
+                       TileView* tileView,
+                       PreviewWidget* tileWidget,
+                       DataIndex dataIndex);
+
+  // TileViewWidget Event Handlers
   void OnMouseHover(MouseEvent* event) override;
   void OnMouseClick(MouseEvent* event) override;
 };
 
-//------------------------------------------------------------------------  Sprite Frame Tile View
+//Sprite Frame Tile View
 class SpriteFrameTileView : public TileView
 {
 public:
-  SpriteFrameTileView(Composite* parent) : TileView(parent) {}
-  TileViewWidget* CreateTileViewWidget(Composite* parent,
-                                       StringParam name, HandleParam instance, DataIndex index,
-                                       PreviewImportance::Enum minImportance = PreviewImportance::None) override;
+  SpriteFrameTileView(Composite* parent) : TileView(parent)
+  {
+  }
+  TileViewWidget* CreateTileViewWidget(
+      Composite* parent,
+      StringParam name,
+      HandleParam instance,
+      DataIndex index,
+      PreviewImportance::Enum minImportance = PreviewImportance::None) override;
 
   void OnMouseScroll(MouseEvent* event) override;
   void OnLeftMouseDrag(MouseDragEvent* e) override;
-
 };
 
-//------------------------------------------------------------------------  Sprite Data Source
+//Sprite Data Source
 class SpriteDataSource : public DataSource
 {
 public:
@@ -169,16 +174,19 @@ public:
   Handle ToHandle(DataEntry* dataEntry) override;
   DataEntry* Parent(DataEntry* dataEntry) override;
   uint ChildCount(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override;
   bool IsExpandable(DataEntry* dataEntry) override;
-  void GetData(DataEntry* dataEntry,       Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) override;
+  void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
+  bool SetData(DataEntry* dataEntry,
+               const Any& variant,
+               StringParam column) override;
 
-  SpriteFrame mRoot; 
+  SpriteFrame mRoot;
   Array<SpriteFrame*> mSpriteFrames;
 };
 
-//---------------------------------------------------- Sprite Source Editor
 class SpriteSourceEditor : public Composite
 {
 public:
@@ -211,7 +219,6 @@ public:
   int mTop;
   int mBottom;
 
-
   // Local copy of Sprite Source Settings
   String mSpriteName;
   Atlas* mAtlas;
@@ -233,7 +240,10 @@ public:
   String mEditDirectory;
 
   // Getters and Setters for Various Options
-  String GetSpriteName(){return mSpriteName;}
+  String GetSpriteName()
+  {
+    return mSpriteName;
+  }
   void SetSpriteName(StringParam name);
 
   bool GetPreviewAnimation();
@@ -242,13 +252,22 @@ public:
   int GetCurrentFrame();
   void SetCurrentFrame(int frameNumber);
 
-  float GetFrameRate(){return mFrameRate;}
+  float GetFrameRate()
+  {
+    return mFrameRate;
+  }
   void SetFrameRate(float frameRate);
 
-  SpriteSampling::Enum GetSampling(){return mSampling;}
+  SpriteSampling::Enum GetSampling()
+  {
+    return mSampling;
+  }
   void SetSampling(SpriteSampling::Enum sampling);
 
-  SpriteOrigin::Enum GetOrigin(){return mOrigin;}
+  SpriteOrigin::Enum GetOrigin()
+  {
+    return mOrigin;
+  }
   void SetOrigin(SpriteOrigin::Enum newOrigin);
 
   // Functions
@@ -271,11 +290,11 @@ public:
   void UpdatePreview();
   void InvalidateEdits();
 
-  //Frame Edit
+  // Frame Edit
   void EditFrameImage(DataIndex frameIndex);
   void LoadFramesFromSheet(Image& sourceImage, uint frameCount);
 
-  //Events
+  // Events
   void OnDoubleClickFrame(MouseEvent* event);
   void OnKeyDown(KeyboardEvent* event);
   void OnFileModified(FileEditEvent* event);
@@ -304,4 +323,4 @@ public:
 
 void EditSprite(SpriteSource* spriteSource);
 
-}
+} // namespace Zero

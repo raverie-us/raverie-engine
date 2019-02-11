@@ -1,25 +1,21 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Ryan Edgemon
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------- HeightMapBrushStroke ---
 class HeightMapBrushStroke
 {
 public:
   ZilchDeclareType(HeightMapBrushStroke, TypeCopyMode::ReferenceType);
 
-  HeightMapBrushStroke( ) {}
+  HeightMapBrushStroke()
+  {
+  }
   HeightMapBrushStroke(float radius, float featherRadius);
 
   void AddPoint(Vec2Param point);
-  //void Apply(HeightManipulationTool* tool, PatchMapCopy& patchMap);
+  // void Apply(HeightManipulationTool* tool, PatchMapCopy& patchMap);
 
 private:
   float mRadius;
@@ -28,7 +24,6 @@ private:
   Array<Vec2> mPoints;
 };
 
-//-------------------------------------------------------- HeightMapKeyFrame ---
 class HeightMapKeyFrame
 {
 public:
@@ -42,11 +37,12 @@ public:
   Array<HeightMapBrushStroke*> mBrushStrokes;
 };
 
-//---------------------------------------------------- HeightMapStateManager ---
 class HeightMapStateManager
 {
 public:
-  HeightMapStateManager( ) {}
+  HeightMapStateManager()
+  {
+  }
   HeightMapStateManager(HeightMap* map);
 
   void StartBrushStroke(float radius, float featherRadius);
@@ -61,7 +57,7 @@ public:
 
   HeightMapKeyFrame* mCurrentFrame;
   HeightMapBrushStroke* mCurrentStroke;
-  
+
   // InList?
   Array<HeightMapKeyFrame*> mFrames;
 
@@ -69,5 +65,4 @@ private:
   uint mFramesBetweenKeys;
 };
 
-
-}//namespace Zero
+} // namespace Zero

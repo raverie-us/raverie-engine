@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +9,6 @@ class Event;
 class ZeroShared DirectoryWatcher
 {
 public:
-  
   enum FileOperation
   {
     Added,
@@ -30,13 +24,17 @@ public:
     String FileName;
   };
 
-  typedef OsInt (*CallbackFunction)(void* callbackInstance, FileOperationInfo& info);
+  typedef OsInt (*CallbackFunction)(void* callbackInstance,
+                                    FileOperationInfo& info);
 
-  DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance);
+  DirectoryWatcher(cstr directoryToWatch,
+                   CallbackFunction callback,
+                   void* callbackInstance);
   ~DirectoryWatcher();
   void Shutdown();
 
-  template<typename classType, OsInt (classType::*MemberFunction)(FileOperationInfo& info)>
+  template <typename classType,
+            OsInt (classType::*MemberFunction)(FileOperationInfo& info)>
   static OsInt CallBackCreator(void* objectInstance, FileOperationInfo& info)
   {
     classType* object = (classType*)objectInstance;
@@ -55,4 +53,4 @@ private:
   OsEvent mCancelEvent;
 };
 
-}//namespace Zero
+} // namespace Zero

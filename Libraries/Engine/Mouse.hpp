@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------ Mouse
 
 /// Mouse object for Display System.
 class Mouse : public ExplicitSingleton<Mouse, EventObject>
@@ -19,11 +13,18 @@ public:
 
   Mouse();
 
-  /// The position of the mouse cursor relative to the application's top-left corner in pixels.
-  Vec2 GetClientPosition() { return mClientPosition; }
+  /// The position of the mouse cursor relative to the application's top-left
+  /// corner in pixels.
+  Vec2 GetClientPosition()
+  {
+    return mClientPosition;
+  }
 
   /// The movement of the mouse in pixels.
-  Vec2 GetCursorMovement() { return mCursorMovement; }
+  Vec2 GetCursorMovement()
+  {
+    return mCursorMovement;
+  }
 
   /// Is a mouse button currently down?
   bool IsButtonDown(MouseButtons::Enum button);
@@ -35,7 +36,7 @@ public:
   /// Trap the mouse preventing it from moving.
   bool GetTrapped();
   void SetTrapped(bool state);
-  
+
   /// Toggles if the mouse is currently trapped.
   void ToggleTrapped();
 
@@ -57,7 +58,7 @@ private:
 
 namespace Z
 {
-  extern Mouse* gMouse;
+extern Mouse* gMouse;
 }
 
-}//namespace Zero
+} // namespace Zero

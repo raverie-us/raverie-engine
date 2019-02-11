@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Process.hpp
-/// Declaration of the Process class and support functions.
-/// 
-/// Authors: Trevor Sundberg / Joshua T. Fisher / Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 #include "Process.hpp"
@@ -34,7 +26,9 @@ Process::~Process()
   ZeroDestructPrivateData(ProcessPrivateData);
 }
 
-inline void DuplicateAndClose(Status& status, HANDLE currentProcess, StackHandle& handle)
+inline void DuplicateAndClose(Status& status,
+                              HANDLE currentProcess,
+                              StackHandle& handle)
 {
   // This handle has not been redirected, just return
   if (handle.mHandle == cInvalidHandle)
@@ -42,14 +36,13 @@ inline void DuplicateAndClose(Status& status, HANDLE currentProcess, StackHandle
 
   HANDLE noninheritingHandle;
 
-  BOOL result = DuplicateHandle(
-    currentProcess,
-    handle,
-    currentProcess,
-    &noninheritingHandle, // Address of new handle.
-    0,
-    FALSE, // Make it uninheritable.
-    DUPLICATE_SAME_ACCESS);
+  BOOL result = DuplicateHandle(currentProcess,
+                                handle,
+                                currentProcess,
+                                &noninheritingHandle, // Address of new handle.
+                                0,
+                                FALSE, // Make it uninheritable.
+                                DUPLICATE_SAME_ACCESS);
 
   if (result == FALSE)
     WinReturnIfStatus(status);
@@ -58,7 +51,10 @@ inline void DuplicateAndClose(Status& status, HANDLE currentProcess, StackHandle
   handle = noninheritingHandle;
 }
 
-inline void SetupStandardHandle(Status& status, StackHandle& writeHandle, StackHandle& readHandle, bool redirect)
+inline void SetupStandardHandle(Status& status,
+                                StackHandle& writeHandle,
+                                StackHandle& readHandle,
+                                bool redirect)
 {
   // If we are redirecting create a new pipe.
   if (redirect)
@@ -71,28 +67,31 @@ inline void SetupStandardHandle(Status& status, StackHandle& writeHandle, StackH
     security.bInheritHandle = TRUE;
 
     SetLastError(0);
-    BOOL result = CreatePipe(&readHandle.mHandle, &writeHandle.mHandle, &security, 0);
+    BOOL result =
+        CreatePipe(&readHandle.mHandle, &writeHandle.mHandle, &security, 0);
     if (result == FALSE)
       WinReturnIfStatus(status);
   }
 }
 
-void SetUpStartInfo(ProcessStartInfo &info)
+void SetUpStartInfo(ProcessStartInfo& info)
 {
-  // The application name always has to be the first argument, even if it's passed
-  // in as the application name. Because of this the application name (if it exists)
-  // is always quoted as the first argument.
+  // The application name always has to be the first argument, even if it's
+  // passed in as the application name. Because of this the application name (if
+  // it exists) is always quoted as the first argument.
   if (info.mApplicationName.Empty() != true)
-    info.mArguments = String::Format("\"%s\" %s", info.mApplicationName.c_str(), info.mArguments.c_str());
+    info.mArguments = String::Format(
+        "\"%s\" %s", info.mApplicationName.c_str(), info.mArguments.c_str());
 
-  // In order for process to search for the application, the passed in application
-  // name needs to be null. In this case we've already set the application as the
-  // first argument so we can just clear out the application name.
+  // In order for process to search for the application, the passed in
+  // application name needs to be null. In this case we've already set the
+  // application as the first argument so we can just clear out the application
+  // name.
   if (info.mSearchPath == true)
     info.mApplicationName.Clear();
 }
 
-void Process::Start(Status &status, ProcessStartInfo &info)
+void Process::Start(Status& status, ProcessStartInfo& info)
 {
   ZeroGetPrivateData(ProcessPrivateData);
 
@@ -100,7 +99,7 @@ void Process::Start(Status &status, ProcessStartInfo &info)
 
   HANDLE currentProcess = GetCurrentProcess();
 
-  // These are simply stack copies of what we'll keep around to monitor 
+  // These are simply stack copies of what we'll keep around to monitor
   // if the pipe has been redirected (null otherwise)
   StackHandle standardOutRead;
   StackHandle standardErrorRead;
@@ -113,30 +112,36 @@ void Process::Start(Status &status, ProcessStartInfo &info)
 
   // Set up the handles for each standard stream.
   // Make sure to clean up the unneeded ones.
-  SetupStandardHandle(status, standardOutWrite, standardOutRead, info.mRedirectStandardOutput);
+  SetupStandardHandle(
+      status, standardOutWrite, standardOutRead, info.mRedirectStandardOutput);
   WinReturnIfStatus(status);
   DuplicateAndClose(status, currentProcess, standardOutRead);
   WinReturnIfStatus(status);
 
-  SetupStandardHandle(status, standardErrorWrite, standardErrorRead, info.mRedirectStandardError);
+  SetupStandardHandle(status,
+                      standardErrorWrite,
+                      standardErrorRead,
+                      info.mRedirectStandardError);
   WinReturnIfStatus(status);
   DuplicateAndClose(status, currentProcess, standardErrorRead);
   WinReturnIfStatus(status);
 
-  SetupStandardHandle(status, standardInWrite, standardInRead, info.mRedirectStandardInput);
+  SetupStandardHandle(
+      status, standardInWrite, standardInRead, info.mRedirectStandardInput);
   WinReturnIfStatus(status);
   DuplicateAndClose(status, currentProcess, standardInWrite);
   WinReturnIfStatus(status);
 
-  // Set up the struct containing the possibly redirected IO for our child process.
+  // Set up the struct containing the possibly redirected IO for our child
+  // process.
   STARTUPINFO startUpInfo;
   ZeroMemory(&startUpInfo, sizeof(STARTUPINFO));
-  startUpInfo.cb          = sizeof(STARTUPINFO);
-  startUpInfo.hStdOutput  = standardOutWrite;
-  startUpInfo.hStdError   = standardErrorWrite;
-  startUpInfo.hStdInput   = standardInRead;
+  startUpInfo.cb = sizeof(STARTUPINFO);
+  startUpInfo.hStdOutput = standardOutWrite;
+  startUpInfo.hStdError = standardErrorWrite;
+  startUpInfo.hStdInput = standardInRead;
   startUpInfo.wShowWindow = info.mShowWindow ? SW_SHOWDEFAULT : SW_HIDE;
-  startUpInfo.dwFlags     = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+  startUpInfo.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
 
   PROCESS_INFORMATION processInfo;
   ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
@@ -147,36 +152,41 @@ void Process::Start(Status &status, ProcessStartInfo &info)
 
   if (applicationName.c_str() == nullptr && arguments.c_str() == nullptr)
   {
-    status.SetFailed("Neither application name or command line parameters were specified.");
+    status.SetFailed(
+        "Neither application name or command line parameters were specified.");
     return;
   }
 
-  // arguments MUST be a copy of the buffer, because CreateProcess will add null terminators to the string
+  // arguments MUST be a copy of the buffer, because CreateProcess will add null
+  // terminators to the string
   SetLastError(0);
-  BOOL result = CreateProcess(
-    (LPCWSTR)applicationName.Data(),
-    (LPWSTR)arguments.Data(),
-    NULL,
-    NULL,
-    TRUE,
-    CREATE_NEW_CONSOLE,
-    NULL,
-    (LPCWSTR)workingDirectory.Data(),
-    &startUpInfo,
-    &processInfo);
+  BOOL result = CreateProcess((LPCWSTR)applicationName.Data(),
+                              (LPWSTR)arguments.Data(),
+                              NULL,
+                              NULL,
+                              TRUE,
+                              CREATE_NEW_CONSOLE,
+                              NULL,
+                              (LPCWSTR)workingDirectory.Data(),
+                              &startUpInfo,
+                              &processInfo);
 
   if (result == FALSE)
   {
     FillWindowsErrorStatus(status);
     if (status.Failed())
     {
-      status.Message = String::Format("Failed to create process %s. \nCommand line '%s'\n%s",
-        info.mApplicationName.c_str(), info.mArguments.c_str(), status.Message.c_str());
+      status.Message =
+          String::Format("Failed to create process %s. \nCommand line '%s'\n%s",
+                         info.mApplicationName.c_str(),
+                         info.mArguments.c_str(),
+                         status.Message.c_str());
       return;
     }
   }
 
-  // Store the process so we can query the return value later (and wait on it closing)
+  // Store the process so we can query the return value later (and wait on it
+  // closing)
   self->mProcess = processInfo.hProcess;
   self->mProcessThread = processInfo.hThread;
 
@@ -222,7 +232,7 @@ int Process::WaitForClose()
 int Process::WaitForClose(unsigned long milliseconds)
 {
   ZeroGetPrivateData(ProcessPrivateData);
-  if(self->mProcess == cInvalidHandle)
+  if (self->mProcess == cInvalidHandle)
     return -1;
 
   // Wait for the process to close.
@@ -234,7 +244,9 @@ int Process::WaitForClose(unsigned long milliseconds)
   return exitCode;
 }
 
-void OpenStandardStream(StackHandle& handle, File& fileStream, FileMode::Enum mode)
+void OpenStandardStream(StackHandle& handle,
+                        File& fileStream,
+                        FileMode::Enum mode)
 {
   fileStream.Open(handle, mode);
   handle = cInvalidHandle;
@@ -276,10 +288,10 @@ bool Process::IsStandardInRedirected()
   return self->mStandardIn == cInvalidHandle;
 }
 
-/////////////////////////////////////////////////////////////////////
 // Global Functions/Helpers
-/////////////////////////////////////////////////////////////////////
-inline void GetProcessNameAndId(DWORD processID, String& processName, String& processPath)
+inline void GetProcessNameAndId(DWORD processID,
+                                String& processName,
+                                String& processPath)
 {
   // We can't retrieve info about some processes so default those to some string
   static const String unknownStr = "<unknown>";
@@ -288,7 +300,8 @@ inline void GetProcessNameAndId(DWORD processID, String& processName, String& pr
   TCHAR szProcessPath[MAX_PATH] = TEXT("<unknown>");
 
   // Get a handle to the process.
-  HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
+  HANDLE hProcess = OpenProcess(
+      PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
 
   // Get the process name.
   if (NULL != hProcess)
@@ -297,11 +310,16 @@ inline void GetProcessNameAndId(DWORD processID, String& processName, String& pr
     DWORD resultsBytesNeeded;
 
     // Gets a handle for each module in the process
-    if (EnumProcessModules(hProcess, &moduleHandle, sizeof(moduleHandle), &resultsBytesNeeded))
+    if (EnumProcessModules(
+            hProcess, &moduleHandle, sizeof(moduleHandle), &resultsBytesNeeded))
     {
-      // According to the exhumation's of GetModuleBaseName it is preferable (and faster) to use 
-      // GetModuleFileName (which gets the full path) and the parse the text to get the process name
-      GetModuleFileNameEx(hProcess, moduleHandle, szProcessPath, sizeof(szProcessPath) / sizeof(TCHAR));
+      // According to the exhumation's of GetModuleBaseName it is preferable
+      // (and faster) to use GetModuleFileName (which gets the full path) and
+      // the parse the text to get the process name
+      GetModuleFileNameEx(hProcess,
+                          moduleHandle,
+                          szProcessPath,
+                          sizeof(szProcessPath) / sizeof(TCHAR));
 
       processPath = Narrow(szProcessPath);
       // Make sure to normalize the path just in-case
@@ -351,4 +369,4 @@ void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags)
   RegisterApplicationRestart(nullptr, 0);
 }
 
-}
+} // namespace Zero

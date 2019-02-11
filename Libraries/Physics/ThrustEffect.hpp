@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,8 +7,8 @@ namespace Zero
 DeclareBitField1(ThrustFlags, LocalSpaceDirection);
 
 /// Applies a directional force at the thrust effect's center. When applied to a
-/// rigid body, this will compute a torque if the force's direction does not go through
-/// the center of mass. Useful for modeling any sort of a thruster.
+/// rigid body, this will compute a torque if the force's direction does not go
+/// through the center of mass. Useful for modeling any sort of a thruster.
 class ThrustEffect : public PhysicsEffect
 {
 public:
@@ -45,7 +40,7 @@ public:
 
 private:
   BitField<ThrustFlags::Enum> mThrustFlags;
-  
+
   real mForceStrength;
   Vec3 mForceDirection;
 
@@ -54,4 +49,4 @@ private:
   Vec3 mWorldThrustDirection;
 };
 
-}//namespace Zero
+} // namespace Zero

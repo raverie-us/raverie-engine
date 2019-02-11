@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ToolTip.hpp
-///  Declaration of the ToolTip Widget.
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +7,6 @@ namespace Zero
 // Fill out necessary tooltip information for a Composite, if available.
 bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText);
 
-//----------------------------------------------------------- Tool Tip Placement
 DeclareEnum4(IndicatorSide, Left, Top, Right, Bottom);
 
 struct ToolTipPlacement
@@ -25,9 +16,11 @@ struct ToolTipPlacement
   /// Sets the screen rect and sets the hotspot to the center of the rect.
   void SetScreenRect(const WidgetRect& rect);
 
-  void SetPriority(IndicatorSide::Type pri0, IndicatorSide::Type pri1, 
-                   IndicatorSide::Type pri2, IndicatorSide::Type pri3);
-  
+  void SetPriority(IndicatorSide::Type pri0,
+                   IndicatorSide::Type pri1,
+                   IndicatorSide::Type pri2,
+                   IndicatorSide::Type pri3);
+
   /// The tooltip will be placed pointing at the edges of this rect.
   WidgetRect mScreenRect;
 
@@ -38,7 +31,6 @@ struct ToolTipPlacement
   IndicatorSide::Type mPriority[4];
 };
 
-//--------------------------------------------------------------------- Tool Tip
 DeclareEnum6(ToolTipColorScheme, Default, Gray, Red, Yellow, Green, Orange);
 
 class ToolTip : public Composite
@@ -65,7 +57,8 @@ public:
   void SetContent(Widget* content);
 
   /// If the content isn't already text, create a stack of one multitext object
-  /// and set it as the content.  Else set the text on the already present multitext object.
+  /// and set it as the content.  Else set the text on the already present
+  /// multitext object.
   Text* SetText(StringParam text);
   /// If the content isn't already text, create a multitext stack.
   /// Then, add a new multitext object to the content's stack.
@@ -120,7 +113,7 @@ public:
 private:
   /// Shared constructor.
   void Initialize(Widget* source);
-  
+
   /// We want to destroy ourself if our source is destroyed or the mouse exits.
   void OnMouseUpdate(MouseEvent* event);
 
@@ -152,4 +145,4 @@ private:
   HandleOf<Widget> mSource;
 };
 
-}//namespace Zero
+} // namespace Zero

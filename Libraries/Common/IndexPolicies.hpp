@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file IndexPolicies.hpp
-/// Declaration of the Lcp policies for various math classes that need to use
-/// only index into the vector and matrix to solve.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Math
@@ -54,7 +45,7 @@ struct GenericDimIndexPolicy
   template <typename MatrixType>
   real& operator()(MatrixType& A, uint row, uint col)
   {
-    return A(row,col);
+    return A(row, col);
   }
 
   template <typename VectorType>
@@ -70,4 +61,4 @@ struct GenericDimIndexPolicy
   }
 };
 
-}//namespace Math
+} // namespace Math

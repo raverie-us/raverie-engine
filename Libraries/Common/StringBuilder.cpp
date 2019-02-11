@@ -1,20 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file String.cpp
-/// Implementation of the StringBuilder and ByteBuffer.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 char* AppendRange(char* bufferPos, char* bufferEnd, StringRange& b)
 {
-  ZeroCStringCopy(bufferPos, bufferEnd-bufferPos, b.mBegin, b.SizeInBytes());
-  bufferPos+=b.SizeInBytes();
+  ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, b.mBegin, b.SizeInBytes());
+  bufferPos += b.SizeInBytes();
   return bufferPos;
 }
 
@@ -45,21 +37,33 @@ String BuildString(StringRange a, StringRange b, StringRange c, StringRange d)
   return BuildString(strings, 4);
 }
 
-String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e)
+String BuildString(
+    StringRange a, StringRange b, StringRange c, StringRange d, StringRange e)
 {
   StringRange* strings[] = {&a, &b, &c, &d, &e};
   return BuildString(strings, 5);
 }
 
-String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f)
+String BuildString(StringRange a,
+                   StringRange b,
+                   StringRange c,
+                   StringRange d,
+                   StringRange e,
+                   StringRange f)
 {
-  StringRange* strings[] = { &a, &b, &c, &d, &e, &f };
+  StringRange* strings[] = {&a, &b, &c, &d, &e, &f};
   return BuildString(strings, 6);
 }
 
-String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g)
+String BuildString(StringRange a,
+                   StringRange b,
+                   StringRange c,
+                   StringRange d,
+                   StringRange e,
+                   StringRange f,
+                   StringRange g)
 {
-  StringRange* strings[] = { &a, &b, &c, &d, &e, &f, &g };
+  StringRange* strings[] = {&a, &b, &c, &d, &e, &f, &g};
   return BuildString(strings, 7);
 }
 
@@ -67,14 +71,14 @@ String BuildString(StringRange** ranges, uint count)
 {
   //+1 extra for null terminator
   size_t bufferSize = 1;
-  for(size_t i=0;i<count;++i)
+  for (size_t i = 0; i < count; ++i)
     bufferSize += ranges[i]->SizeInBytes();
 
   char* buffer = (char*)alloca(bufferSize);
   char* bufferPos = buffer;
   char* bufferEnd = buffer + bufferSize;
 
-  for(size_t i=0;i<count;++i)
+  for (size_t i = 0; i < count; ++i)
     bufferPos = AppendRange(bufferPos, bufferEnd, *ranges[i]);
 
   *bufferPos = '\0';
@@ -84,23 +88,22 @@ String BuildString(StringRange** ranges, uint count)
 
 String StringJoin(Array<String>& strings, StringParam joinToken)
 {
-  //join together all of the strings with the join token in between
-  if(strings.Size() == 0)
+  // join together all of the strings with the join token in between
+  if (strings.Size() == 0)
     return String();
 
-  if(strings.Size() == 1)
+  if (strings.Size() == 1)
     return strings[0];
 
   StringBuilder builder;
   builder.Append(strings[0]);
-  for(uint i = 1; i < strings.Size(); ++i)
+  for (uint i = 1; i < strings.Size(); ++i)
   {
     builder.Append(joinToken);
     builder.Append(strings[i]);
   }
   return builder.ToString();
 }
-
 
 void StringBuilder::Append(StringRange range)
 {
@@ -143,13 +146,13 @@ char& StringBuilder::operator[](size_t index)
 
   ErrorIf(block == nullptr, "The block should be filled out");
 
-  return (char&)block[index %  mBlockSize];
+  return (char&)block[index % mBlockSize];
 }
 
 void StringBuilder::Repeat(size_t count, StringParam str)
 {
-  for(size_t i = 0; i < count; ++i)
+  for (size_t i = 0; i < count; ++i)
     Append(str);
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Editor.hpp
-/// Declaration of the Editor classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Forward Declarations
 class ConsoleUi;
 class LoadingWindow;
 class ToolControl;
@@ -43,15 +34,13 @@ class CameraViewport;
 class EditorViewport;
 class FindTextDialog;
 
-//------------------------------------------------------------------------------
 namespace Events
 {
-  DeclareEvent(EditorChangeSpace);
-  DeclareEvent(UnloadProject);
-  DeclareEvent(LoadedProject);
-}//namespace Events
+DeclareEvent(EditorChangeSpace);
+DeclareEvent(UnloadProject);
+DeclareEvent(LoadedProject);
+} // namespace Events
 
-//----------------------------------------------------------------- Editor Event
 class EditorEvent : public Event
 {
 public:
@@ -61,7 +50,6 @@ public:
   Editor* mEditor;
 };
 
-//----------------------------------------------------------------------- Editor
 DeclareEnum2(EditorMode, Mode2D, Mode3D);
 DeclareEnum2(PlayGameOptions, SingleInstance, MultipleInstances);
 
@@ -113,22 +101,27 @@ public:
 
   Widget* ShowWindow(StringParam name);
   Widget* HideWindow(StringParam name);
-  Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible = true);
+  Window* AddManagedWidget(Widget* widget,
+                           DockArea::Enum dockArea,
+                           bool visible = true);
 
-  void CreateDockableWindow(StringParam windowName, CameraViewport* cameraViewport,
-                            Vec2Param initialSize, bool destroySpaceOnClose,
+  void CreateDockableWindow(StringParam windowName,
+                            CameraViewport* cameraViewport,
+                            Vec2Param initialSize,
+                            bool destroySpaceOnClose,
                             DockArea::Enum dockMode = DockArea::Floating);
 
-  //User Configuration object.
+  // User Configuration object.
   Cog* mConfig;
   // Current loaded Project object.
   HandleOf<Cog> mProject;
-  
+
   EventDirectoryWatcher* mProjectDirectoryWatcher;
-  
+
   /// Get the project of current game.
   Cog* GetProjectCog();
-  /// Simple helper to get the path of the current project. Returns an empty string if no project is loaded.
+  /// Simple helper to get the path of the current project. Returns an empty
+  /// string if no project is loaded.
   String GetProjectPath();
 
   /// Current game session being edited
@@ -148,26 +141,26 @@ public:
   PropertyView* GetPropertyView();
   MainPropertyView* mMainPropertyView;
 
-  //Core Editor Widgets
+  // Core Editor Widgets
   LibraryView* mLibrary;
   ConsoleUi* mConsole;
   LoadingWindow* mLoading;
   ObjectView* mObjectView;
 
-  //Commands
+  // Commands
   CommandManager* mCommands;
   CogCommandManager* mCogCommands;
 
-  //Bugs
+  // Bugs
   BugReporter* mBugReporter;
 
-  //Find
+  // Find
   FindTextDialog* mFindTextDialog;
 
-  //Stress Tests
+  // Stress Tests
   StressTestDialog* mStressTestDialog;
 
-  //Desync
+  // Desync
   Window* mDesyncWindow;
 
   // For re-parenting on copy and paste
@@ -196,30 +189,38 @@ public:
   void AddResource();
 
   // Add a new resource type of given type
-  void AddResourceType(BoundType* resourceType, ContentLibrary* library = nullptr, StringParam resourceName = "");
+  void AddResourceType(BoundType* resourceType,
+                       ContentLibrary* library = nullptr,
+                       StringParam resourceName = "");
 
   // Open a text file if it is a resource it will open as that resource
   virtual DocumentEditor* OpenTextFileAuto(StringParam file) = 0;
   // Open a string in the text editor for debugging data dumps etc
-  virtual DocumentEditor* OpenTextString(StringParam name, StringParam text, StringParam extension = String()) = 0;
+  virtual DocumentEditor* OpenTextString(StringParam name,
+                                         StringParam text,
+                                         StringParam extension = String()) = 0;
   // Open a text file for text editing
   virtual DocumentEditor* OpenTextFile(StringParam filename) = 0;
   // Open a document resource for text editing
-  virtual DocumentEditor* OpenDocumentResource(DocumentResource* docResource) = 0;
+  virtual DocumentEditor*
+  OpenDocumentResource(DocumentResource* docResource) = 0;
 
-  //Undo last change.
+  // Undo last change.
   void Undo();
 
-  //Redo last undo.
+  // Redo last undo.
   void Redo();
 
-  //Save all objects.
+  // Save all objects.
   Status SaveAll(bool showNotify);
 
   bool TakeProjectScreenshot();
 
   /// The main operation queue used by the editor.
-  OperationQueue* GetOperationQueue() { return mQueue; }
+  OperationQueue* GetOperationQueue()
+  {
+    return mQueue;
+  }
   HandleOf<OperationQueue> mQueue;
 
   /// To re-initialize script objects, we need to remove all live script that
@@ -241,10 +242,11 @@ public:
   /// Otherwise, modifying a script would always mark a space as modified.
   HashMap<Space*, bool> mSpaceModifiedStates;
 
-//Internals
+  // Internals
   void OnSaveCheck(SavingEvent* event);
   RuntimeEditorImpl* mRuntimeEditorImpl;
-  /// This function is marked for removal from Zero.Editor, use Zero.Editor.Selection's functionality instead.
+  /// This function is marked for removal from Zero.Editor, use
+  /// Zero.Editor.Selection's functionality instead.
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
@@ -254,10 +256,12 @@ public:
   Composite* OpenSearchWindow(Widget* returnFocus, bool noBorder = false);
   Space* CreateNewSpace(uint flags);
   void OnCaptureContext(CommandCaptureContextEvent* event);
-  typedef Array<HandleOf<GameSession> > GameArray;
+  typedef Array<HandleOf<GameSession>> GameArray;
   typedef GameArray::range GameRange;
   void DisplayGameSession(StringParam name, GameSession* gameSession);
-  GameSession* PlayGame(PlayGameOptions::Enum options, bool takeFocus = true, bool startGame = true);
+  GameSession* PlayGame(PlayGameOptions::Enum options,
+                        bool takeFocus = true,
+                        bool startGame = true);
   GameSession* PlaySingleGame();
   GameSession* PlayNewGame();
   void ZoomOnGame(GameSession* gameSession);
@@ -298,8 +302,7 @@ public:
 
 namespace Z
 {
-  extern Editor* gEditor;
-}//namespace Z
+extern Editor* gEditor;
+} // namespace Z
 
-
-}//namespace Zero
+} // namespace Zero

@@ -1,23 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ ModalProgess
+//ModalProgess
 /// A Modal with a progress bar. Currently only works with background tasks.
 class ModalBackgroundTaskProgessBar : public ModalStrip
 {
 public:
-
   typedef ModalBackgroundTaskProgessBar ZilchSelf;
   /// Constructor.
-  ModalBackgroundTaskProgessBar(Composite* parent, StringParam title, BackgroundTask* progressListener = nullptr);
+  ModalBackgroundTaskProgessBar(Composite* parent,
+                                StringParam title,
+                                BackgroundTask* progressListener = nullptr);
 
   void OnProgressUpdated(BackgroundTaskEvent* e);
   void OnTaskEnded(BackgroundTaskEvent* e);
@@ -28,4 +24,4 @@ public:
   bool mCloseOnComplete;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,10 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 void LoadTexture(StringParam filename, Texture* texture)
 {
   texture->mFormat = TextureFormat::None;
@@ -28,11 +26,14 @@ void LoadTexture(StringParam filename, Texture* texture)
     return;
 
   // Check for compression support and fallback to downsized texture if needed
-  if (header.mCompression != TextureCompression::None && Z::gRenderer->mDriverSupport.mTextureCompression == false)
+  if (header.mCompression != TextureCompression::None &&
+      Z::gRenderer->mDriverSupport.mTextureCompression == false)
   {
-    // If a texture is compressed, the data file will have an uncompressed version of the texture
-    // after the compressed data, including a separate file header
-    uint dataSizeToSkip = header.mMipCount * sizeof(MipHeader) + header.mTotalDataSize;
+    // If a texture is compressed, the data file will have an uncompressed
+    // version of the texture after the compressed data, including a separate
+    // file header
+    uint dataSizeToSkip =
+        header.mMipCount * sizeof(MipHeader) + header.mTotalDataSize;
     file.Seek(dataSizeToSkip, SeekOrigin::Current);
 
     // Read new header
@@ -76,7 +77,6 @@ void LoadTexture(StringParam filename, Texture* texture)
   texture->mMipMapping = (TextureMipMapping::Enum)header.mMipMapping;
 }
 
-//**************************************************************************************************
 HandleOf<Resource> TextureLoader::LoadFromFile(ResourceEntry& entry)
 {
   Texture* texture = new Texture();
@@ -85,7 +85,6 @@ HandleOf<Resource> TextureLoader::LoadFromFile(ResourceEntry& entry)
   return texture;
 }
 
-//**************************************************************************************************
 void TextureLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 {
   Texture* texture = (Texture*)resource;
@@ -93,7 +92,6 @@ void TextureLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
   texture->SendModified();
 }
 
-//**************************************************************************************************
 HandleOf<Resource> TextureLoader::LoadFromBlock(ResourceEntry& entry)
 {
   return nullptr;

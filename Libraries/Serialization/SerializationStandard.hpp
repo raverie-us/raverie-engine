@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Support/SupportStandard.hpp"
@@ -26,7 +21,7 @@ public:
   static void Shutdown();
 };
 
-}
+} // namespace Zero
 
 #include "Serialization.hpp"
 #include "ZeroContainers.hpp"

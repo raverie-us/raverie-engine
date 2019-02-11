@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,13 +8,15 @@ ZilchDefineType(ImageWidget, builder, type)
 {
 }
 
-ImageWidget::ImageWidget(Composite* parent, StringParam style, AttachType::Enum attachType)
-  :Widget(parent, attachType)
+ImageWidget::ImageWidget(Composite* parent,
+                         StringParam style,
+                         AttachType::Enum attachType) :
+    Widget(parent, attachType)
 {
   mDefSet = parent->mDefSet;
   mDef = (SlicedDefinition*)mDefSet->GetDefinition(style);
 
-  if(mDef == nullptr)
+  if (mDef == nullptr)
     mDef = (SlicedDefinition*)mDefSet->GetDefinition("White");
 
   mSize = mDef->DefaultSize;
@@ -38,7 +35,8 @@ Vec2 ImageWidget::GetMinSize()
 
 Thickness ImageWidget::GetBorderThickness()
 {
-  return Thickness(mDef->Borders.x, mDef->Borders.y, mDef->Borders.z, mDef->Borders.w);
+  return Thickness(
+      mDef->Borders.x, mDef->Borders.y, mDef->Borders.z, mDef->Borders.w);
 }
 
 void ImageWidget::ChangeDefinition(BaseDefinition* def)
@@ -56,7 +54,11 @@ void ImageWidget::SetDisplayOrigin(DisplayOrigin::Type displayOrigin)
   mOrigin = displayOrigin;
 }
 
-void ImageWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void ImageWidget::RenderUpdate(ViewBlock& viewBlock,
+                               FrameBlock& frameBlock,
+                               Mat4Param parentTx,
+                               ColorTransform colorTx,
+                               WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -81,12 +83,15 @@ void ImageWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
   posSlices[SlicesIndex::Top] *= -texSize.y;
   posSlices[SlicesIndex::Bottom] *= -texSize.y;
 
-  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mDef->TexturePtr);
+  ViewNode& viewNode =
+      AddRenderNodes(viewBlock, frameBlock, clipRect, mDef->TexturePtr);
 
   if (mDef->Sliced)
-    frameBlock.mRenderQueues->AddStreamedQuadNineSliced(viewNode, pos0, pos1, uv0, uv1, color, posSlices, slices);
+    frameBlock.mRenderQueues->AddStreamedQuadNineSliced(
+        viewNode, pos0, pos1, uv0, uv1, color, posSlices, slices);
   else
-    frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, color);
+    frameBlock.mRenderQueues->AddStreamedQuad(
+        viewNode, pos0, pos1, uv0, uv1, color);
 }
 
-}
+} // namespace Zero

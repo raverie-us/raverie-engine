@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(SerializationLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -52,7 +46,6 @@ ZilchDefineStaticLibrary(SerializationLibrary)
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void SerializationLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -74,10 +67,9 @@ void SerializationLibrary::Initialize()
   ZilchTypeId(Quat)->Add(new PrimitiveMetaSerialization<Quat>());
 }
 
-//**************************************************************************************************
 void SerializationLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

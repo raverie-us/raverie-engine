@@ -1,40 +1,31 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BinaryContent.cpp
-/// Implementation of the Binary content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------Factory
 
 cstr errorMessage = "Need builder type for binary files."
-  " Since file is binary a loader must be provided.";
+                    " Since file is binary a loader must be provided.";
 
 ContentItem* MakeBinaryContent(ContentInitializer& initializer)
 {
-  //any extensions?
-  if(initializer.Extension == "dds")
+  // any extensions?
+  if (initializer.Extension == "dds")
     initializer.BuilderType = "TextureDds";
-  
-  if(initializer.Extension == "convexmesh")
+
+  if (initializer.Extension == "convexmesh")
     initializer.BuilderType = "ConvexMesh";
-  if(initializer.Extension == "multiconvexmesh")
+  if (initializer.Extension == "multiconvexmesh")
     initializer.BuilderType = "MultiConvexMesh";
 
-  if(initializer.Extension == "cubetex")
+  if (initializer.Extension == "cubetex")
     initializer.BuilderType = "TextureCube";
 
-  //if(initializer.Extension == "hdr")
-    //initializer.BuilderType = "TextureHdr";
+  // if(initializer.Extension == "hdr")
+  // initializer.BuilderType = "TextureHdr";
 
-  if(initializer.BuilderType.Empty())
+  if (initializer.BuilderType.Empty())
   {
     ErrorIf(initializer.BuilderType.Empty(), errorMessage);
     initializer.Success = false;
@@ -42,22 +33,21 @@ ContentItem* MakeBinaryContent(ContentInitializer& initializer)
     return nullptr;
   }
 
-  //Make the content item
+  // Make the content item
   BinaryContent* content = new BinaryContent();
   content->Filename = initializer.Filename;
 
-  //Make the builder component
+  // Make the builder component
   BinaryBuilder* builder = new BinaryBuilder();
   builder->Generate(initializer);
 
-  //Add the builder
+  // Add the builder
   content->AddComponent(builder);
 
-  //Done
+  // Done
   return content;
 }
 
-//------------------------------------------------------------Binary Content
 ZilchDefineType(BinaryContent, builder, type)
 {
 }
@@ -67,7 +57,6 @@ BinaryContent::BinaryContent()
   EditMode = ContentEditMode::ResourceObject;
 }
 
-//------------------------------------------------------------Binary Builder
 ZilchDefineType(BinaryBuilder, builder, type)
 {
   ZeroBindComponent();
@@ -87,8 +76,8 @@ void BinaryBuilder::Serialize(Serializer& stream)
 
 void BinaryBuilder::Generate(ContentInitializer& initializer)
 {
-  //Generate a new resource id
-  if(initializer.AddResourceId==0)
+  // Generate a new resource id
+  if (initializer.AddResourceId == 0)
     mResourceId = GenerateUniqueId64();
   else
     mResourceId = initializer.AddResourceId;
@@ -109,9 +98,9 @@ void CreateBinaryContent(ContentSystem* system)
   system->CreatorsByExtension["bin"] = binary;
   system->CreatorsByExtension["convexmesh"] = binary;
   system->CreatorsByExtension["multiconvexmesh"] = binary;
-  system->CreatorsByExtension["physmesh"] = binary;  
+  system->CreatorsByExtension["physmesh"] = binary;
   system->CreatorsByExtension["cubetex"] = binary;
-  //system->CreatorsByExtension["hdr"] = binary;
+  // system->CreatorsByExtension["hdr"] = binary;
 }
 
-}
+} // namespace Zero

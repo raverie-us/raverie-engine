@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Scratchboard.hpp
-/// Declaration of the Scratchboard Composite.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,6 @@ namespace Zero
 class ScratchboardDrawer;
 class MouseManipulation;
 
-//----------------------------------------------------------------- Scratchboard
 class Scratchboard : public Composite
 {
 public:
@@ -34,9 +25,11 @@ public:
   /// Makes the given aabb visible in the window by translating and zooming.
   void Frame(Aabb& worldAabb, float panTime);
 
-  /// Creates a mouse manipulator to drag the given object 
-  MouseManipulation* StartObjectDrag(Mouse* mouse, Widget* object, 
-                        bool snapping = false, float snapFidelity = Pixels(10));
+  /// Creates a mouse manipulator to drag the given object
+  MouseManipulation* StartObjectDrag(Mouse* mouse,
+                                     Widget* object,
+                                     bool snapping = false,
+                                     float snapFidelity = Pixels(10));
 
   /// Returns whether or not the given point is visible in the graph.
   bool WithinView(Vec3Param graphPosition);
@@ -82,7 +75,7 @@ private:
   /// Whether or not dragging is enabled.
   bool mDraggingEnabled;
 
-  /// Makes it so that you cannot move around so that the view leaves the 
+  /// Makes it so that you cannot move around so that the view leaves the
   /// aabb of all objects.
   bool mKeepElementsInView;
 
@@ -96,4 +89,4 @@ private:
   Composite* mClientArea;
 };
 
-}//namespace Zero
+} // namespace Zero

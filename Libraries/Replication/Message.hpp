@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                   Message                                       //
-//---------------------------------------------------------------------------------//
+//                                   Message //
 
 /// Application data unit
 class Message
@@ -39,17 +32,17 @@ public:
   Message(MoveReference<Message> rhs);
 
   /// Copy Assignment Operator
-  Message& operator =(const Message& rhs);
+  Message& operator=(const Message& rhs);
   /// Move Assignment Operator
-  Message& operator =(MoveReference<Message> rhs);
+  Message& operator=(MoveReference<Message> rhs);
 
   /// Comparison Operators (compares message channel sequence IDs)
-  bool operator ==(const Message& rhs) const;
-  bool operator !=(const Message& rhs) const;
-  bool operator  <(const Message& rhs) const;
-  bool operator ==(MessageSequenceId rhs) const;
-  bool operator !=(MessageSequenceId rhs) const;
-  bool operator  <(MessageSequenceId rhs) const;
+  bool operator==(const Message& rhs) const;
+  bool operator!=(const Message& rhs) const;
+  bool operator<(const Message& rhs) const;
+  bool operator==(MessageSequenceId rhs) const;
+  bool operator!=(MessageSequenceId rhs) const;
+  bool operator<(MessageSequenceId rhs) const;
 
   //
   // Member Functions
@@ -75,7 +68,8 @@ public:
   void SetTimestamp(TimeMs timestamp);
   TimeMs GetTimestamp() const;
 
-  /// Returns true if the message is a part of a message channel (has a non-zero channel ID), else false
+  /// Returns true if the message is a part of a message channel (has a non-zero
+  /// channel ID), else false
   bool IsChanneled() const;
 
   /// Message channel ID this message was sent with
@@ -83,10 +77,12 @@ public:
   /// Message channel sequence ID this message was sent with
   MessageSequenceId GetSequenceId() const;
 
-  /// Returns the message's current header bits as it currently would result in when serialized
+  /// Returns the message's current header bits as it currently would result in
+  /// when serialized
   Bits GetHeaderBits(bool asFragment = false) const;
 
-  /// Returns the total unread message bits (current header size + unread message data)
+  /// Returns the total unread message bits (current header size + unread
+  /// message data)
   Bits GetTotalBits() const;
 
 protected:
@@ -94,7 +90,8 @@ protected:
   // Internal
   //
 
-  /// Returns true if the message type belongs to the user or a plugin (not the protocol), else false
+  /// Returns true if the message type belongs to the user or a plugin (not the
+  /// protocol), else false
   bool IsCustomType() const;
 
   /// Returns true if the message is a fragment, else false
@@ -105,21 +102,21 @@ protected:
   bool IsFinalFragment() const;
 
   /// Message type ID
-  MessageType          mType;
+  MessageType mType;
   /// Message data stream
-  BitStream            mData;
+  BitStream mData;
   /// Message channel ID
-  MessageChannelId     mChannelId;
+  MessageChannelId mChannelId;
   /// Message channel sequence ID
-  MessageSequenceId    mSequenceId;
+  MessageSequenceId mSequenceId;
   /// Message timestamp
-  TimeMs               mTimestamp;
+  TimeMs mTimestamp;
   /// Message 'Is fragment?' flag
-  bool                 mIsFragment;
+  bool mIsFragment;
   /// Message fragment index
   MessageFragmentIndex mFragmentIndex;
   /// Message 'Is final fragment?' flag
-  bool                 mIsFinalFragment;
+  bool mIsFinalFragment;
 
   /// Friends
   friend class PeerLink;
@@ -133,30 +130,32 @@ protected:
   friend class LinkPlugin;
 
   template <typename Message>
-  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
+  friend Bits Serialize(SerializeDirection::Enum direction,
+                        BitStream& bitStream,
+                        Message& message);
 };
 
 /// Typedefs
 typedef UniquePointer<Message> MessagePtr;
 
 /// Message Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<Message>
 {
   static inline void MoveWithoutDestruction(Message* dest, Message* source)
   {
-    new(dest) Message(ZeroMove(*source));
+    new (dest) Message(ZeroMove(*source));
   }
 };
 
 /// Serializes a message
 /// Returns the number of bits serialized if successful, else 0
 template <>
-Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message);
+Bits Serialize<Message>(SerializeDirection::Enum direction,
+                        BitStream& bitStream,
+                        Message& message);
 
-//---------------------------------------------------------------------------------//
-//                                 OutMessage                                      //
-//---------------------------------------------------------------------------------//
+//                                 OutMessage //
 
 /// Outgoing application data unit (message w/ additional send information)
 class OutMessage : public Message
@@ -164,21 +163,29 @@ class OutMessage : public Message
 public:
   /// Constructors
   OutMessage();
-  OutMessage(MoveReference<Message> message, bool reliable = false, MessageChannelId channelId = 0, MessageSequenceId sequenceId = 0, TransferMode::Enum transferMode = TransferMode::Immediate,
-             MessageReceiptId receiptId = 0, MessagePriority priority = 0, TimeMs lifetime = 0, TimeMs creationTime = 0);
+  OutMessage(MoveReference<Message> message,
+             bool reliable = false,
+             MessageChannelId channelId = 0,
+             MessageSequenceId sequenceId = 0,
+             TransferMode::Enum transferMode = TransferMode::Immediate,
+             MessageReceiptId receiptId = 0,
+             MessagePriority priority = 0,
+             TimeMs lifetime = 0,
+             TimeMs creationTime = 0);
 
   /// Copy Constructors
-  OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMessageInstead);
+  OutMessage(const OutMessage& rhs,
+             MoveReference<Message> takeThisMessageInstead);
   OutMessage(const OutMessage& rhs);
 
   /// Move Constructor
   OutMessage(MoveReference<OutMessage> rhs);
 
   /// Move Assignment Operator
-  OutMessage& operator =(MoveReference<OutMessage> rhs);
+  OutMessage& operator=(MoveReference<OutMessage> rhs);
 
   /// Comparison Operator (compares message type category, then priority)
-  bool operator <(const OutMessage& rhs) const;
+  bool operator<(const OutMessage& rhs) const;
 
   //
   // Member Functions
@@ -190,7 +197,8 @@ public:
   /// Returns the message channel's transfer mode
   TransferMode::Enum GetTransferMode() const;
 
-  /// Returns true if the message is receipted (a receipt was requested), else false
+  /// Returns true if the message is receipted (a receipt was requested), else
+  /// false
   bool IsReceipted() const;
 
   /// Returns the message receipt ID (0 indicates no receipt was requested)
@@ -199,7 +207,8 @@ public:
   /// Returns the message priority
   MessagePriority GetPriority() const;
 
-  /// Returns true if the message has expired (lifetime duration has elapsed), else false
+  /// Returns true if the message has expired (lifetime duration has elapsed),
+  /// else false
   bool HasExpired(TimeMs currentTime) const;
 
   /// Returns the message lifetime duration
@@ -210,35 +219,34 @@ public:
 
 private:
   /// Message 'Is reliable?' flag
-  bool               mReliable;
+  bool mReliable;
   /// Message channel transfer mode
   TransferMode::Enum mTransferMode;
   /// Message receipt ID
-  MessageReceiptId   mReceiptID;
+  MessageReceiptId mReceiptID;
   /// Message priority
-  MessagePriority    mPriority;
+  MessagePriority mPriority;
   /// Message lifetime duration
-  TimeMs             mLifetime;
+  TimeMs mLifetime;
   /// Message creation time
-  TimeMs             mCreationTime;
+  TimeMs mCreationTime;
 };
 
 /// Typedefs
 typedef UniquePointer<OutMessage> OutMessagePtr;
 
 /// OutMessage Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<OutMessage>
 {
-  static inline void MoveWithoutDestruction(OutMessage* dest, OutMessage* source)
+  static inline void MoveWithoutDestruction(OutMessage* dest,
+                                            OutMessage* source)
   {
-    new(dest) OutMessage(ZeroMove(*source));
+    new (dest) OutMessage(ZeroMove(*source));
   }
 };
 
-//---------------------------------------------------------------------------------//
-//                              FragmentedMessage                                  //
-//---------------------------------------------------------------------------------//
+//                              FragmentedMessage //
 
 /// Fragmented message collection
 class FragmentedMessage
@@ -250,7 +258,7 @@ class FragmentedMessage
     typedef Message value_type;
 
     /// Sort using fragment index
-    template<typename CompareType>
+    template <typename CompareType>
     bool operator()(const value_type& lhs, const CompareType& rhs) const
     {
       return lhs.mFragmentIndex < rhs;
@@ -260,7 +268,7 @@ class FragmentedMessage
       return lhs.mFragmentIndex < rhs.mFragmentIndex;
     }
 
-    template<typename CompareType>
+    template <typename CompareType>
     bool Equal(const value_type& lhs, const CompareType& rhs) const
     {
       return lhs.mFragmentIndex == rhs;
@@ -283,12 +291,12 @@ public:
   FragmentedMessage(MoveReference<FragmentedMessage> rhs);
 
   /// Comparison Operators (compares message channel sequence IDs)
-  bool operator ==(const FragmentedMessage& rhs) const;
-  bool operator !=(const FragmentedMessage& rhs) const;
-  bool operator  <(const FragmentedMessage& rhs) const;
-  bool operator ==(MessageSequenceId rhs) const;
-  bool operator !=(MessageSequenceId rhs) const;
-  bool operator  <(MessageSequenceId rhs) const;
+  bool operator==(const FragmentedMessage& rhs) const;
+  bool operator!=(const FragmentedMessage& rhs) const;
+  bool operator<(const FragmentedMessage& rhs) const;
+  bool operator==(MessageSequenceId rhs) const;
+  bool operator!=(MessageSequenceId rhs) const;
+  bool operator<(MessageSequenceId rhs) const;
 
   //
   // Member Functions
@@ -300,7 +308,8 @@ public:
   /// Adds a fragment to the collection
   void Add(MoveReference<Message> fragment);
 
-  /// Returns true if the collection is complete (all missing fragments have been added), else false
+  /// Returns true if the collection is complete (all missing fragments have
+  /// been added), else false
   bool IsComplete() const;
 
   /// Reconstructs the collection into a whole message
@@ -311,18 +320,19 @@ private:
   void AddInternal(MoveReference<Message> fragment);
 
   /// Fragment message collection
-  FragmentSet          mFragments;
+  FragmentSet mFragments;
   /// Final message fragment index
   MessageFragmentIndex mFinalFragmentIndex;
 };
 
 /// FragmentedMessage Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<FragmentedMessage>
 {
-  static inline void MoveWithoutDestruction(FragmentedMessage* dest, FragmentedMessage* source)
+  static inline void MoveWithoutDestruction(FragmentedMessage* dest,
+                                            FragmentedMessage* source)
   {
-    new(dest) FragmentedMessage(ZeroMove(*source));
+    new (dest) FragmentedMessage(ZeroMove(*source));
   }
 };
 

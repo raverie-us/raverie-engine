@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -12,34 +7,29 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//-------------------------------------------------------------------------------------- Sound Entry 
+//Sound Entry
 
-//**************************************************************************************************
 ZilchDefineType(SoundEntryDisplay, builder, type)
 {
 }
 
-//**************************************************************************************************
 String SoundEntryDisplay::GetName(HandleParam object)
 {
   SoundEntry* soundEntry = object.Get<SoundEntry*>(GetOptions::AssertOnNull);
   return BuildString("Sound: ", soundEntry->GetSound()->Name);
 }
 
-//**************************************************************************************************
 String SoundEntryDisplay::GetDebugText(HandleParam object)
 {
   return GetName(object);
 }
 
-//**************************************************************************************************
 String SoundEntryDisplayText(const BoundType* type, const byte* data)
 {
   SoundEntry* soundEntry = (SoundEntry*)data;
   return BuildString("Sound: ", soundEntry->GetSound()->Name);
 }
 
-//**************************************************************************************************
 ZilchDefineType(SoundEntry, builder, type)
 {
   ZeroBindDocumented();
@@ -59,16 +49,15 @@ ZilchDefineType(SoundEntry, builder, type)
   ZilchBindMethodProperty(StopPreview);
 }
 
-//**************************************************************************************************
-SoundEntry::SoundEntry() : 
-  mLoopEndTime(0), 
-  mLoopStartTime(0), 
-  mWeight(1.0f), 
-  mStartTime(0.0f),
-  mEndTime(0.0f),
-  mLoopTailLength(0.0f),
-  mSound(nullptr),
-  mCrossFadeLoopTail(false)
+SoundEntry::SoundEntry() :
+    mLoopEndTime(0),
+    mLoopStartTime(0),
+    mWeight(1.0f),
+    mStartTime(0.0f),
+    mEndTime(0.0f),
+    mLoopTailLength(0.0f),
+    mSound(nullptr),
+    mCrossFadeLoopTail(false)
 {
   mSound = SoundManager::GetDefault();
   if (mSound)
@@ -78,7 +67,6 @@ SoundEntry::SoundEntry() :
   }
 }
 
-//**************************************************************************************************
 void SoundEntry::Serialize(Serializer& stream)
 {
   SerializeResourceName(mSound, SoundManager);
@@ -91,13 +79,11 @@ void SoundEntry::Serialize(Serializer& stream)
   SerializeNameDefault(mCrossFadeLoopTail, false);
 }
 
-//**************************************************************************************************
 Sound* SoundEntry::GetSound()
 {
   return mSound;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetSound(Sound* sound)
 {
   if (sound)
@@ -110,30 +96,28 @@ void SoundEntry::SetSound(Sound* sound)
   }
 }
 
-//**************************************************************************************************
 float SoundEntry::GetWeight()
 {
   return mWeight;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetWeight(float weight)
 {
   mWeight = Math::Clamp(weight, 0.0f, 100.0f);
 }
 
-//**************************************************************************************************
 void SoundEntry::Preview()
 {
   Z::gSound->StopPreview();
 
   // Create a new SoundInstance with no SoundSpace
   Status status;
-  SoundInstance *instance = new SoundInstance(status, nullptr, mSound->mAsset, 1.0f, 0.0f); 
+  SoundInstance* instance =
+      new SoundInstance(status, nullptr, mSound->mAsset, 1.0f, 0.0f);
 
   if (!status.Failed())
   {
-    // If instance was created successfully, play it without looping, 
+    // If instance was created successfully, play it without looping,
     // without a tag, and without an output node
     instance->Play(false, Z::gSound->mOutputNode, false);
     // Save the SoundInstance
@@ -147,31 +131,26 @@ void SoundEntry::Preview()
   }
 }
 
-//**************************************************************************************************
 void SoundEntry::StopPreview()
 {
   Z::gSound->StopPreview();
 }
 
-//**************************************************************************************************
 float SoundEntry::GetStartTime()
 {
   return mStartTime;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetStartTime(float time)
 {
   mStartTime = Math::Clamp(time, 0.0f, mEndTime);
 }
 
-//**************************************************************************************************
 float SoundEntry::GetEndTime()
 {
   return mEndTime;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetEndTime(float time)
 {
   time = Math::Max(time, mStartTime);
@@ -182,25 +161,21 @@ void SoundEntry::SetEndTime(float time)
     mEndTime = time;
 }
 
-//**************************************************************************************************
 float SoundEntry::GetLoopStartTime()
 {
   return mLoopStartTime;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetLoopStartTime(float time)
 {
   mLoopStartTime = Math::Clamp(time, 0.0f, mEndTime);
 }
 
-//**************************************************************************************************
 float SoundEntry::GetLoopEndTime()
 {
   return mLoopEndTime;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetLoopEndTime(float time)
 {
   time = Math::Max(time, mLoopStartTime);
@@ -211,47 +186,42 @@ void SoundEntry::SetLoopEndTime(float time)
     mLoopEndTime = time;
 }
 
-//**************************************************************************************************
 float SoundEntry::GetLoopTailLength()
 {
   return mLoopTailLength;
 }
 
-//**************************************************************************************************
 void SoundEntry::SetLoopTailLength(float time)
 {
   mLoopTailLength = Math::Clamp(time, 0.0f, 30.0f);
 }
 
-//---------------------------------------------------------------------------------- Sound Tag Entry 
+//Sound Tag Entry
 
-//**************************************************************************************************
 ZilchDefineType(SoundTagEntryDisplay, builder, type)
 {
 }
 
-//**************************************************************************************************
 String SoundTagEntryDisplay::GetName(HandleParam object)
 {
-  SoundTagEntry* soundTagEntry = object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
+  SoundTagEntry* soundTagEntry =
+      object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
   return BuildString("Tag: ", soundTagEntry->GetSoundTag()->Name);
 }
 
-//**************************************************************************************************
 String SoundTagEntryDisplay::GetDebugText(HandleParam object)
 {
-  SoundTagEntry* soundTagEntry = object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
+  SoundTagEntry* soundTagEntry =
+      object.Get<SoundTagEntry*>(GetOptions::AssertOnNull);
   return BuildString("Tag: ", soundTagEntry->GetSoundTag()->Name);
 }
 
-//**************************************************************************************************
 String SoundTagEntryDisplayText(const BoundType* type, const byte* data)
 {
   SoundTagEntry* soundEntry = (SoundTagEntry*)data;
   return BuildString("Tag: ", soundEntry->GetSoundTag()->Name);
 }
 
-//**************************************************************************************************
 ZilchDefineType(SoundTagEntry, builder, type)
 {
   ZeroBindDocumented();
@@ -262,77 +232,81 @@ ZilchDefineType(SoundTagEntry, builder, type)
   ZilchBindGetterSetterProperty(SoundTag);
 }
 
-//**************************************************************************************************
-SoundTagEntry::SoundTagEntry() : 
-  mSoundTag(SoundTagManager::GetDefault())
+SoundTagEntry::SoundTagEntry() : mSoundTag(SoundTagManager::GetDefault())
 {
-
 }
 
-//**************************************************************************************************
 void SoundTagEntry::Serialize(Serializer& stream)
 {
   SerializeResourceName(mSoundTag, SoundTagManager);
 }
 
-//**************************************************************************************************
 void SoundTagEntry::SetSoundTag(SoundTag* tag)
 {
   if (tag)
     mSoundTag = tag;
 }
 
-//**************************************************************************************************
 SoundTag* SoundTagEntry::GetSoundTag()
 {
   return mSoundTag;
 }
 
-//---------------------------------------------------------------------------------------- Sound Cue
+//Sound Cue
 
-//**************************************************************************************************
 ZilchDefineType(SoundCueDisplay, builder, type)
 {
 }
 
-//**************************************************************************************************
 String SoundCueDisplay::GetName(HandleParam object)
 {
   return "SoundCue";
 }
 
-//**************************************************************************************************
 String SoundCueDisplay::GetDebugText(HandleParam object)
 {
   return "SoundCue";
 }
 
-//**************************************************************************************************
 ZilchDefineType(SoundCue, builder, type)
 {
   ZeroBindDocumented();
 
   ZilchBindGetterSetterProperty(PlayMode);
   ZilchBindGetterSetterProperty(SelectMode);
-  ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
-  ZilchBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(VolumeVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.01f))->
-    ZeroFilterNotBool(mUseDecibelVariation);
-  ZilchBindGetterSetterProperty(DecibelVariation)->Add(new EditorSlider(0.0f, 6.0f, 0.1f))->
-    ZeroFilterBool(mUseDecibelVariation);
-  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
-  ZilchBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(PitchVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->
-    ZeroFilterNotBool(mUseSemitoneVariation);
-  ZilchBindGetterSetterProperty(SemitoneVariation)->Add(new EditorSlider(0.0f, 12.0f, 0.1f))->
-    ZeroFilterBool(mUseSemitoneVariation);
+  ZilchBindGetterSetterProperty(Volume)->Add(
+      new EditorSlider(0.0f, 2.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Decibels)->Add(
+      new EditorSlider(-32.0f, 6.0f, 0.1f));
+  ZilchBindFieldProperty(mUseDecibelVariation)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(VolumeVariation)
+      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f))
+      ->ZeroFilterNotBool(mUseDecibelVariation);
+  ZilchBindGetterSetterProperty(DecibelVariation)
+      ->Add(new EditorSlider(0.0f, 6.0f, 0.1f))
+      ->ZeroFilterBool(mUseDecibelVariation);
+  ZilchBindGetterSetterProperty(Pitch)->Add(
+      new EditorSlider(-2.0f, 2.0f, 0.1f));
+  ZilchBindGetterSetterProperty(Semitones)->Add(
+      new EditorSlider(-24.0f, 24.0f, 0.1f));
+  ZilchBindFieldProperty(mUseSemitoneVariation)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(PitchVariation)
+      ->Add(new EditorSlider(0.0f, 1.0f, 0.1f))
+      ->ZeroFilterNotBool(mUseSemitoneVariation);
+  ZilchBindGetterSetterProperty(SemitoneVariation)
+      ->Add(new EditorSlider(0.0f, 12.0f, 0.1f))
+      ->ZeroFilterBool(mUseSemitoneVariation);
   ZilchBindGetterSetterProperty(Attenuator);
-  ZilchBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(BeatsPerMinute)->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindGetterSetterProperty(TimeSigBeats)->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindGetterSetterProperty(TimeSigValue)->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindFieldProperty(mShowMusicOptions)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(BeatsPerMinute)
+      ->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(TimeSigBeats)
+      ->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(TimeSigValue)
+      ->ZeroFilterBool(mShowMusicOptions);
 
   ZilchBindMethodProperty(Preview);
   ZilchBindMethodProperty(StopPreview);
@@ -350,35 +324,32 @@ ZilchDefineType(SoundCue, builder, type)
   type->Add(new SoundCueDisplay());
 }
 
-//**************************************************************************************************
 SoundCue::SoundCue() :
-  mPlayMode(SoundPlayMode::Single),
-  mSelectMode(SoundSelectMode::Random),
-  mVolume(1.0f),
-  mVolumeVariation(0.0f),
-  mPitch(0.0f),
-  mPitchVariation(0.0f),
-  mSemitoneVariation(0),
-  mDecibelVariation(0),
-  mShowMusicOptions(false),
-  mBeatsPerMinute(0),
-  mTimeSigBeats(0),
-  mTimeSigValue(0),
-  mUseSemitoneVariation(false),
-  mUseDecibelVariation(false),
-  mSoundIndex(0)
+    mPlayMode(SoundPlayMode::Single),
+    mSelectMode(SoundSelectMode::Random),
+    mVolume(1.0f),
+    mVolumeVariation(0.0f),
+    mPitch(0.0f),
+    mPitchVariation(0.0f),
+    mSemitoneVariation(0),
+    mDecibelVariation(0),
+    mShowMusicOptions(false),
+    mBeatsPerMinute(0),
+    mTimeSigBeats(0),
+    mTimeSigValue(0),
+    mUseSemitoneVariation(false),
+    mUseDecibelVariation(false),
+    mSoundIndex(0)
 {
   SoundTags.PushBack();
 
   mAttenuator = SoundAttenuatorManager::GetDefault();
 }
 
-//**************************************************************************************************
 SoundCue::~SoundCue()
 {
 }
 
-//**************************************************************************************************
 void SoundCue::Serialize(Serializer& stream)
 {
   SerializeEnumNameDefault(SoundPlayMode, mPlayMode, SoundPlayMode::Single);
@@ -401,7 +372,6 @@ void SoundCue::Serialize(Serializer& stream)
   SerializeResourceName(mAttenuator, SoundAttenuatorManager);
 }
 
-//**************************************************************************************************
 void SoundCue::Unload()
 {
   Sounds.Clear();
@@ -409,193 +379,163 @@ void SoundCue::Unload()
   mAttenuator = nullptr;
 }
 
-//**************************************************************************************************
 SoundPlayMode::Enum SoundCue::GetPlayMode()
 {
   return mPlayMode;
 }
 
-//**************************************************************************************************
 void SoundCue::SetPlayMode(SoundPlayMode::Enum mode)
 {
   mPlayMode = mode;
 }
 
-//**************************************************************************************************
 SoundSelectMode::Enum SoundCue::GetSelectMode()
 {
   return mSelectMode;
 }
 
-//**************************************************************************************************
 void SoundCue::SetSelectMode(SoundSelectMode::Enum selectMode)
 {
   mSelectMode = selectMode;
 }
 
-//**************************************************************************************************
 float SoundCue::GetVolume()
 {
   return mVolume;
 }
 
-//**************************************************************************************************
 void SoundCue::SetVolume(float newVolume)
 {
   mVolume = Math::Clamp(newVolume, 0.0f, cMaxVolumeValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetDecibels()
 {
   return VolumeToDecibels(mVolume);
 }
 
-//**************************************************************************************************
 void SoundCue::SetDecibels(float newDecibels)
 {
   newDecibels = Math::Clamp(newDecibels, cMinDecibelsValue, cMaxDecibelsValue);
-
 }
 
-//**************************************************************************************************
 float SoundCue::GetVolumeVariation()
 {
   return mVolumeVariation;
 }
 
-//**************************************************************************************************
 void SoundCue::SetVolumeVariation(float variation)
 {
   mVolumeVariation = Math::Clamp(variation, 0.0f, cMaxVolumeValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetDecibelVariation()
 {
   return mDecibelVariation;
 }
 
-//**************************************************************************************************
 void SoundCue::SetDecibelVariation(float variation)
 {
-  mDecibelVariation = Math::Clamp(variation, cMinDecibelsValue, cMaxDecibelsValue);
+  mDecibelVariation =
+      Math::Clamp(variation, cMinDecibelsValue, cMaxDecibelsValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetPitch()
 {
   return mPitch;
 }
 
-//**************************************************************************************************
 void SoundCue::SetPitch(float newPitch)
 {
   mPitch = Math::Clamp(newPitch, cMinPitchValue, cMaxPitchValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetSemitones()
 {
   return PitchToSemitones(mPitch);
 }
 
-//**************************************************************************************************
 void SoundCue::SetSemitones(float newSemitones)
 {
-  mPitch = Math::Clamp(SemitonesToPitch(newSemitones), cMinPitchValue, cMaxPitchValue);
+  mPitch = Math::Clamp(
+      SemitonesToPitch(newSemitones), cMinPitchValue, cMaxPitchValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetPitchVariation()
 {
   return mPitchVariation;
 }
 
-//**************************************************************************************************
 void SoundCue::SetPitchVariation(float variation)
 {
   mPitchVariation = Math::Clamp(variation, 0.0f, cMaxPitchValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetSemitoneVariation()
 {
   return mSemitoneVariation;
 }
 
-//**************************************************************************************************
 void SoundCue::SetSemitoneVariation(float variation)
 {
   mSemitoneVariation = Math::Clamp(variation, 0.0f, cMaxSemitonesValue);
 }
 
-//**************************************************************************************************
 float SoundCue::GetBeatsPerMinute()
 {
   return mBeatsPerMinute;
 }
 
-//**************************************************************************************************
 void SoundCue::SetBeatsPerMinute(float bpm)
 {
   mBeatsPerMinute = Math::Clamp(bpm, 0.0f, 500.0f);
 }
 
-//**************************************************************************************************
 float SoundCue::GetTimeSigBeats()
 {
   return mTimeSigBeats;
 }
 
-//**************************************************************************************************
 void SoundCue::SetTimeSigBeats(float beats)
 {
   mTimeSigBeats = Math::Clamp(beats, 0.0f, 100.0f);
 }
 
-//**************************************************************************************************
 float SoundCue::GetTimeSigValue()
 {
   return mTimeSigValue;
 }
 
-//**************************************************************************************************
 void SoundCue::SetTimeSigValue(float value)
 {
   mTimeSigValue = Math::Clamp(value, 0.0f, 64.0f);
 }
 
-//**************************************************************************************************
 SoundAttenuator* SoundCue::GetAttenuator()
 {
   return mAttenuator;
 }
 
-//**************************************************************************************************
 void SoundCue::SetAttenuator(SoundAttenuator* attenuation)
 {
   mAttenuator = attenuation;
 }
 
-//**************************************************************************************************
 void SoundCue::AddSoundEntry(Sound* sound, float weight)
 {
   SoundEntry& soundEntry = Sounds.PushBack();
   soundEntry.SetSound(sound);
   soundEntry.SetWeight(weight);
-
 }
 
-//**************************************************************************************************
 void SoundCue::AddSoundTagEntry(SoundTag* tag)
 {
   SoundTagEntry& tagEntry = SoundTags.PushBack();
   tagEntry.SetSoundTag(tag);
 }
 
-//**************************************************************************************************
-HandleOf<SoundInstance> SoundCue::PlayCueOnNode(HandleOf<SoundNode> outputNode, bool startPaused)
+HandleOf<SoundInstance> SoundCue::PlayCueOnNode(HandleOf<SoundNode> outputNode,
+                                                bool startPaused)
 {
   if (outputNode)
     return PlayCue(nullptr, outputNode, startPaused);
@@ -603,7 +543,6 @@ HandleOf<SoundInstance> SoundCue::PlayCueOnNode(HandleOf<SoundNode> outputNode, 
     return nullptr;
 }
 
-//**************************************************************************************************
 void SoundCue::Preview()
 {
   Z::gSound->StopPreview();
@@ -614,38 +553,41 @@ void SoundCue::Preview()
   SoundInstance* instance = Z::gSound->mPreviewInstance;
   if (instance)
   {
-    // Connect it to the audio system's output 
+    // Connect it to the audio system's output
     Z::gSound->mOutputNode->AddInputNode(instance);
   }
 }
 
-//**************************************************************************************************
 void SoundCue::StopPreview()
 {
   Z::gSound->StopPreview();
 }
 
-//**************************************************************************************************
-HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, HandleOf<SoundNode> outputNode, bool startPaused)
+HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space,
+                                          HandleOf<SoundNode> outputNode,
+                                          bool startPaused)
 {
   // No sounds to choose from
   if (Sounds.Empty())
   {
-    DoNotifyWarning("Audio Warning", "Tried to play a SoundCue with no Sounds.");
+    DoNotifyWarning("Audio Warning",
+                    "Tried to play a SoundCue with no Sounds.");
     return nullptr;
   }
 
   // Get volume value
-  float volume(mVolume); 
+  float volume(mVolume);
   if (mUseDecibelVariation && mDecibelVariation > 0)
-    volume = DecibelsToVolume(Z::gSound->mRandom.FloatVariance(GetDecibels(), mDecibelVariation));
+    volume = DecibelsToVolume(
+        Z::gSound->mRandom.FloatVariance(GetDecibels(), mDecibelVariation));
   else if (!mUseDecibelVariation && mVolumeVariation > 0)
     volume = Z::gSound->mRandom.FloatVariance(mVolume, mVolumeVariation);
 
   // Get pitch value
   float pitch(mPitch);
   if (mUseSemitoneVariation && mSemitoneVariation > 0)
-    pitch = SemitonesToPitch(Z::gSound->mRandom.FloatVariance(GetSemitones(), mSemitoneVariation));
+    pitch = SemitonesToPitch(
+        Z::gSound->mRandom.FloatVariance(GetSemitones(), mSemitoneVariation));
   else if (!mUseSemitoneVariation && mPitchVariation > 0)
     pitch = Z::gSound->mRandom.FloatVariance(mPitch, mPitchVariation);
 
@@ -658,7 +600,8 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, HandleOf<SoundNode>
   else if (mSelectMode == SoundSelectMode::Random)
   {
     // Created weighted table to get a random sound
-    // (doing this every time because there isn't an easy way right now to update as sounds are added and removed)
+    // (doing this every time because there isn't an easy way right now to
+    // update as sounds are added and removed)
     Math::WeightedProbabilityTable<SoundEntry*> weightedtable;
     for (unsigned i = 0; i < Sounds.Size(); ++i)
       weightedtable.AddItem(&Sounds[i], Sounds[i].GetWeight());
@@ -678,13 +621,16 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, HandleOf<SoundNode>
   ErrorIf(!asset, "No sound asset when playing SoundCue");
   if (!asset)
   {
-    DoNotifyError("Audio Error", String::Format("No audio asset for Sound %s", entry->GetSound()->Name.c_str()));
+    DoNotifyError("Audio Error",
+                  String::Format("No audio asset for Sound %s",
+                                 entry->GetSound()->Name.c_str()));
     return nullptr;
   }
 
   // Create sound instance
   Status status;
-  SoundInstance* instance(new SoundInstance(status, space, asset, volume, pitch));
+  SoundInstance* instance(
+      new SoundInstance(status, space, asset, volume, pitch));
   if (status.Failed())
   {
     DoNotifyError("Audio Error", status.Message);
@@ -730,13 +676,12 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, HandleOf<SoundNode>
   return instanceHandle;
 }
 
-//-------------------------------------------------------------------------------- Sound Cue Manager
+//Sound Cue Manager
 
 ImplementResourceManager(SoundCueManager, SoundCue);
 
-//**************************************************************************************************
-SoundCueManager::SoundCueManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+SoundCueManager::SoundCueManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("SoundCue", new TextDataFileLoader<SoundCueManager>());
   mCategory = "Sound";
@@ -748,4 +693,4 @@ SoundCueManager::SoundCueManager(BoundType* resourceType)
   mExtension = DataResourceExtension;
 }
 
-}//namespace Zero
+} // namespace Zero

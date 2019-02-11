@@ -1,19 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EnginePropertyEditors.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-// Because CogPath is a shared reference counted object, it doesn't actually matter if the user marks it as read only
-// because it can still be modified by setting values on the path object itself (the actual cog path object can't be replaced with another though)
-// However, if a reference property is read only, even if it is modified currently the property view will not mark the level as modified (issue)
+// Because CogPath is a shared reference counted object, it doesn't actually
+// matter if the user marks it as read only because it can still be modified by
+// setting values on the path object itself (the actual cog path object can't be
+// replaced with another though) However, if a reference property is read only,
+// even if it is modified currently the property view will not mark the level as
+// modified (issue)
 static bool cCogPathIgnoreReadOnly = false;
 
 namespace ComponentUi
@@ -24,14 +19,14 @@ DeclareTweakable(float, OpenTime);
 namespace ResourceEditorUi
 {
 const cstr cLocation = "EditorUi/PropertyView/Editors";
-Tweakable(Vec4, ResourceEditColor,     Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ResourceEditMouseOver, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ResourceEditColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ResourceEditMouseOver, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(float, CogPathPickerIndent, 8.0f, cLocation);
 Tweakable(float, CogPathCogLabelMinWidth, 15.0f, cLocation);
 Tweakable(float, CogPathCogLabelSpace, 100.0f, cLocation);
-}
+} // namespace ResourceEditorUi
 
-//------------------------------------------------------------ Archetype Property
+//Property
 class PropertyArchetype : public DirectProperty
 {
 public:
@@ -44,14 +39,15 @@ public:
   Any mVariantValue;
   Composite* mRow;
 
-  PropertyArchetype(PropertyWidgetInitializer& initializer)
-    :DirectProperty(initializer)
+  PropertyArchetype(PropertyWidgetInitializer& initializer) :
+      DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
     mLabel->SetText("Archetype");
 
     mRow = new Composite(this);
-    mRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+    mRow->SetLayout(CreateStackLayout(
+        LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
     mEditText = new TextBox(mRow);
     mEditText->SetEditable(true);
     mEditText->SetSizing(SizeAxis::X, SizePolicy::Flex, 20);
@@ -64,7 +60,7 @@ public:
     mUpload = new IconButton(mRow);
     mUpload->SetIcon("Upload");
 
-    if(mInstance.Get<MetaSelection*>())
+    if (mInstance.Get<MetaSelection*>())
       mEditText->SetReadOnly(true);
 
     Refresh();
@@ -84,15 +80,15 @@ public:
 
   Cog* GetCog()
   {
-    if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
+    if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
       return selection->GetPrimaryAs<Cog>();
-    
+
     return mInstance.Get<Cog*>();
   }
 
   void RevertCog(Cog* cog, HashSet<MetaSelection*>* modifiedSelections)
   {
-    if(cog->mArchetype == nullptr)
+    if (cog->mArchetype == nullptr)
       return;
 
     RevertToArchetype(Z::gEditor->GetOperationQueue(), cog);
@@ -101,7 +97,7 @@ public:
   void OnRevert(ObjectEvent* event)
   {
     // Revert all selected objects
-    if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
+    if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
     {
       HashSet<MetaSelection*> modifiedSelections;
 
@@ -112,19 +108,19 @@ public:
 
       // Revert all selected objects. We don't want to rebuild archetypes
       // until we've marked each one as modified
-      forRange(Cog* cog, selection->AllOfType<Cog>())
-        RevertCog(cog, &modifiedSelections);
+      forRange(Cog * cog, selection->AllOfType<Cog>())
+          RevertCog(cog, &modifiedSelections);
 
       opQueue->EndBatch();
 
-      forRange(MetaSelection* selection, modifiedSelections.All())
-        selection->FinalSelectionChanged();
+      forRange(MetaSelection * selection, modifiedSelections.All())
+          selection->FinalSelectionChanged();
     }
     else
     {
       // If it's just a single cog, revert it and rebuild archetypes
       Cog* cog = GetCog();
-      if(cog->FindRootArchetype() != nullptr)
+      if (cog->FindRootArchetype() != nullptr)
         RevertCog(cog, nullptr);
     }
   }
@@ -136,22 +132,23 @@ public:
     Cog* cog = GetCog();
     OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
-    // Consider empty archetype text on UploadInherited to be the same as pressing
-    // enter after emptying out the text.
-    if(archetypeName.Empty())
+    // Consider empty archetype text on UploadInherited to be the same as
+    // pressing enter after emptying out the text.
+    if (archetypeName.Empty())
     {
-      if(cog->GetArchetype())
+      if (cog->GetArchetype())
         ClearArchetype(opQueue, cog);
 
       return;
     }
     else
     {
-      Archetype* oldArchetype = cog->GetArchetype( );
+      Archetype* oldArchetype = cog->GetArchetype();
       UploadToArchetype(opQueue, cog, archetypeName, oldArchetype);
     }
 
-    // If the object had a locally removed Component, we need to rebuild the property grid
+    // If the object had a locally removed Component, we need to rebuild the
+    // property grid
     mGrid->Invalidate();
   }
 
@@ -161,14 +158,14 @@ public:
 
     OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
-    if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
+    if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
     {
       // Copy the objects from the selection as uploading to Archetype
       // will cause the selection to be modified
       Array<Cog*> cogs;
-      forRange(Cog* cog, selection->AllOfType<Cog>())
+      forRange(Cog * cog, selection->AllOfType<Cog>())
       {
-        if(cog->GetArchetype())
+        if (cog->GetArchetype())
           cogs.PushBack(cog);
       }
 
@@ -176,7 +173,7 @@ public:
       opQueue->SetActiveBatchName("UploadArchetypes");
 
       HashMap<Archetype*, uint> selectedArchetypes;
-      forRange(Cog* cog, cogs.All())
+      forRange(Cog * cog, cogs.All())
       {
         Archetype* archetype = cog->GetArchetype();
 
@@ -184,19 +181,21 @@ public:
         uint count = selectedArchetypes[archetype];
 
         // If it's the first time we've seen the Archetype, upload this one
-        if(count == 1)
+        if (count == 1)
         {
           // Uploading to current archetype
           UploadToArchetype(opQueue, cog);
         }
         // If it's the second, notify them that it was ignored
         // Ignore all other occurrences of this Archetype
-        else if(count == 2)
+        else if (count == 2)
         {
           cstr archetypeName = archetype->Name.c_str();
-          String message = String::Format("There were multiple objects with "
-            "the same Archetype (%s) in the selection. The first was "
-            "uploaded, the others were ignored.", archetypeName);
+          String message = String::Format(
+              "There were multiple objects with "
+              "the same Archetype (%s) in the selection. The first was "
+              "uploaded, the others were ignored.",
+              archetypeName);
           DoNotifyWarning("Object not Uploaded", message);
         }
       }
@@ -209,16 +208,16 @@ public:
 
       // Consider empty archetype text on upload to be the same as pressing
       // enter after emptying out the text.
-      if(archetypeName.Empty())
+      if (archetypeName.Empty())
       {
-        if(cog->GetArchetype())
+        if (cog->GetArchetype())
           ClearArchetype(opQueue, cog);
 
         return;
       }
       // User may have just change archetype text and clicked upload
       // before pressing enter
-      else if(oldArchetype == nullptr || oldArchetype->Name != archetypeName)
+      else if (oldArchetype == nullptr || oldArchetype->Name != archetypeName)
       {
         UploadToArchetype(opQueue, cog, archetypeName);
         return;
@@ -228,7 +227,8 @@ public:
       UploadToArchetype(opQueue, cog);
     }
 
-    // If the object had a locally removed Component, we need to rebuild the property grid
+    // If the object had a locally removed Component, we need to rebuild the
+    // property grid
     mGrid->Invalidate();
   }
 
@@ -236,13 +236,13 @@ public:
   {
     OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
-    if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
+    if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
     {
       opQueue->BeginBatch();
       opQueue->SetActiveBatchName("PropertyEditors_OnSelectionClear");
-      forRange(Cog* cog, selection->AllOfType<Cog>())
+      forRange(Cog * cog, selection->AllOfType<Cog>())
       {
-        if(cog->GetArchetype())
+        if (cog->GetArchetype())
           ClearArchetype(opQueue, cog);
       }
       opQueue->EndBatch();
@@ -250,7 +250,7 @@ public:
     else
     {
       Cog* cog = GetCog();
-      if(cog->GetArchetype())
+      if (cog->GetArchetype())
         ClearArchetype(opQueue, cog);
     }
   }
@@ -259,15 +259,16 @@ public:
   {
     // If they are editing the archetype name or pressing
     // the archetype upload button, we don't want to set the archetype text
-    bool subFocus = mEditText->HasFocus() || mUpload->HasFocus() || mUploadInherit->HasFocus();
+    bool subFocus = mEditText->HasFocus() || mUpload->HasFocus() ||
+                    mUploadInherit->HasFocus();
 
-    if(!subFocus)
+    if (!subFocus)
     {
       PropertyState state = GetValue();
-      if(state.IsValid())
+      if (state.IsValid())
       {
         mVariantValue = state.Value;
-        if(Archetype* archetype = mVariantValue.Get<Archetype*>())
+        if (Archetype* archetype = mVariantValue.Get<Archetype*>())
           mEditText->SetText(archetype->Name);
         else
           mEditText->SetText("");
@@ -289,17 +290,18 @@ public:
     Cog* commonArchetypeContextCog = nullptr;
 
     // Disable reverting of game and space until we resolve some issues
-    bool revertTypeDisabled = (mInstance.StoredType->IsA(ZilchTypeId(GameSession)) ||
-                               mInstance.StoredType->IsA(ZilchTypeId(Space)));
+    bool revertTypeDisabled =
+        (mInstance.StoredType->IsA(ZilchTypeId(GameSession)) ||
+         mInstance.StoredType->IsA(ZilchTypeId(Space)));
 
     // Update button tooltips
-    if(MetaSelection* selection = mInstance.Get<MetaSelection*>())
+    if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
     {
       bool first = true;
-      forRange(Cog* cog, selection->AllOfType<Cog>())
+      forRange(Cog * cog, selection->AllOfType<Cog>())
       {
         // Add all unique Archetypes
-        if(Archetype* archetype = cog->GetArchetype())
+        if (Archetype* archetype = cog->GetArchetype())
           archetypes.Insert(archetype);
 
         if (first)
@@ -307,7 +309,7 @@ public:
           commonArchetypeContextCog = cog->FindNearestArchetypeContext();
           first = false;
         }
-        else if(commonArchetypeContextCog)
+        else if (commonArchetypeContextCog)
         {
           // There is no common ancestor
           if (commonArchetypeContextCog != cog->FindNearestArchetypeContext())
@@ -321,40 +323,44 @@ public:
     {
       singleCog = GetCog();
       commonArchetypeContextCog = singleCog->FindNearestArchetypeContext();
-      if(commonArchetypeContextCog == singleCog)
+      if (commonArchetypeContextCog == singleCog)
         commonArchetypeContextCog = nullptr;
-      if((singleArchetype = singleCog->GetArchetype()))
+      if ((singleArchetype = singleCog->GetArchetype()))
         archetypes.Insert(singleArchetype);
 
-      if(singleCog->FindNearestArchetype())
+      if (singleCog->FindNearestArchetype())
         revertableModifications |= singleCog->IsModifiedFromArchetype();
     }
 
     // Upload inheritance button
     String currText = mEditText->GetText();
-    if(singleArchetype == nullptr)
+    if (singleArchetype == nullptr)
     {
       mUploadInherit->SetIcon("UploadInheritDisabled");
-      mUploadInherit->SetToolTip("Requires a base Archetype to create an inherited Archetype");
+      mUploadInherit->SetToolTip(
+          "Requires a base Archetype to create an inherited Archetype");
       mUploadInherit->SetIgnoreInput(true);
     }
-    else if(singleArchetype && subFocus && currText != singleArchetype->Name)
+    else if (singleArchetype && subFocus && currText != singleArchetype->Name)
     {
       mUploadInherit->SetIcon("UploadInherit");
 
-      String toolTip = String::Format("Uploaded Archetype inheriting from \"%s\"", singleArchetype->Name.c_str());
+      String toolTip =
+          String::Format("Uploaded Archetype inheriting from \"%s\"",
+                         singleArchetype->Name.c_str());
       mUploadInherit->SetToolTip(toolTip);
       mUploadInherit->SetIgnoreInput(false);
     }
     else
     {
       mUploadInherit->SetIcon("UploadInheritDisabled");
-      mUploadInherit->SetToolTip("Enter new Archetype name to upload an inherited Archetype");
+      mUploadInherit->SetToolTip(
+          "Enter new Archetype name to upload an inherited Archetype");
       mUploadInherit->SetIgnoreInput(true);
     }
 
     // Upload button
-    if(archetypes.Empty() && mEditText->GetText().Empty())
+    if (archetypes.Empty() && mEditText->GetText().Empty())
     {
       mUpload->SetIcon("UploadDisabled");
       mUpload->SetIgnoreInput(true);
@@ -368,17 +374,19 @@ public:
     }
 
     // Revert button
-    if(revertableModifications && !revertTypeDisabled)
+    if (revertableModifications && !revertTypeDisabled)
     {
       mRevert->SetIcon("Revert");
       mRevert->SetIgnoreInput(false);
-      
+
       String toolTip = "Revert object to Archetype";
 
-      if(commonArchetypeContextCog)
+      if (commonArchetypeContextCog)
       {
-          toolTip = String::Format("Revert to the definition as specified by the parent '%s' Archetype",
-                                   commonArchetypeContextCog->GetArchetype()->Name.c_str());
+        toolTip = String::Format(
+            "Revert to the definition as specified by the parent '%s' "
+            "Archetype",
+            commonArchetypeContextCog->GetArchetype()->Name.c_str());
       }
       else if (archetypes.Empty())
       {
@@ -392,14 +400,15 @@ public:
       mRevert->SetIcon("RevertDisabled");
       mRevert->SetIgnoreInput(true);
 
-      if(revertTypeDisabled)
-        mRevert->SetToolTip("GameSessions and Spaces currently cannot be reverted");
+      if (revertTypeDisabled)
+        mRevert->SetToolTip(
+            "GameSessions and Spaces currently cannot be reverted");
       else
         mRevert->SetToolTip("Nothing to revert");
     }
 
     // Label text
-    if(!archetypes.Empty() && revertableModifications)
+    if (!archetypes.Empty() && revertableModifications)
       mLabel->SetColor(PropertyViewUi::ModifiedTextColor);
     else
       mLabel->SetColor(Vec4(1));
@@ -413,7 +422,7 @@ public:
     if (newValue.Empty())
     {
       Cog* cog = GetCog();
-      if(cog->GetArchetype())
+      if (cog->GetArchetype())
         ClearArchetype(opQueue, cog);
     }
     else
@@ -423,16 +432,18 @@ public:
       if (oldArchetype && oldArchetype->Name == newValue)
         return;
 
-      //bool preExistingArchetype = (ArchetypeManager::GetInstance()->FindOrNull(newValue) != NULL);
+      // bool preExistingArchetype =
+      // (ArchetypeManager::GetInstance()->FindOrNull(newValue) != NULL);
 
       // MakeNewArchetypeWith will Assign the archetype to the cog
       Archetype* newArchetype = UploadToArchetype(opQueue, GetCog(), newValue);
-      if(newArchetype == NULL)
+      if (newArchetype == NULL)
         mEditText->SetText(String());
 
-      // It is common to create a similarly purposed archetype by modifying a current one
-      // If you don't want the tags copied over, you can clear the archetype field before making a new one
-      //else if (oldArchetype && !preExistingArchetype)
+      // It is common to create a similarly purposed archetype by modifying a
+      // current one If you don't want the tags copied over, you can clear the
+      // archetype field before making a new one
+      // else if (oldArchetype && !preExistingArchetype)
       //{
       //  // Copy over tags
       //  TagList oldTags;
@@ -441,7 +452,7 @@ public:
       //}
 
       // Mark the translation as modified
-      if(newArchetype)
+      if (newArchetype)
       {
         Cog* cog = GetCog();
         cog->MarkTransformModified();
@@ -457,28 +468,29 @@ public:
     PlaceWithLayout(nameLayout, mLabel);
     PlaceWithLayout(contentLayout, mRow);
 
-    mEditText->SetSize(Vec2(contentLayout.Size.x - Pixels(48), contentLayout.Size.y));
+    mEditText->SetSize(
+        Vec2(contentLayout.Size.x - Pixels(48), contentLayout.Size.y));
 
     PropertyWidget::UpdateTransform();
   }
 
   void OnMetaDrop(MetaDropEvent* event)
   {
-    if(!event->Handled)
+    if (!event->Handled)
       DropOnObject(event, GetCog());
   }
 };
 
-//------------------------------------------------------------ Cog Reference
 template <typename PropertyEditor>
 class CogPickerManipulation : public MouseManipulation
 {
 public:
-
   typedef CogPickerManipulation ZilchSelf;
 
-  CogPickerManipulation(Mouse* mouse, Composite* owner, PropertyEditor* editor)
-    : MouseManipulation(mouse, owner)
+  CogPickerManipulation(Mouse* mouse,
+                        Composite* owner,
+                        PropertyEditor* editor) :
+      MouseManipulation(mouse, owner)
   {
     mEditor = editor;
     mMousePosition = Vec2::cZero;
@@ -518,8 +530,8 @@ public:
   Element* mClearButton;
   HandleOf<FloatingSearchView> mActiveSearch;
 
-  PropertyEditorCogRef(PropertyWidgetInitializer& initializer)
-    : DirectProperty(initializer)
+  PropertyEditorCogRef(PropertyWidgetInitializer& initializer) :
+      DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
 
@@ -549,7 +561,7 @@ public:
     // For now we return that all selections are valid
   }
 
-  //Set the cog (Set null to clear)
+  // Set the cog (Set null to clear)
   void SetReferencedCog(Cog* cog)
   {
     Any cogRef = cog;
@@ -559,12 +571,12 @@ public:
     Refresh();
   }
 
-  //Get the current Cog being referenced (may be null)
+  // Get the current Cog being referenced (may be null)
   Cog* GetReferencedCog()
   {
     // Get the CogId from the property
     mState = GetValue();
-    if(!mState.IsValid())
+    if (!mState.IsValid())
       return NULL;
 
     return mState.Value.Get<Cog*>();
@@ -573,9 +585,9 @@ public:
   void Refresh() override
   {
     Cog* cog = GetReferencedCog();
-    if(cog == nullptr)
+    if (cog == nullptr)
       return;
-    if(mState.IsValid())
+    if (mState.IsValid())
     {
       String text = cog->GetDescription();
       mName->SetText(text);
@@ -588,16 +600,17 @@ public:
 
   void OnPickerButtonDown(MouseEvent* event)
   {
-    if(mProperty->IsReadOnly())
+    if (mProperty->IsReadOnly())
       return;
 
     event->GetMouse()->SetCursor(Cursor::Cross);
-    new CogPickerManipulation<PropertyEditorCogRef>(event->GetMouse(), GetParent(), this);
+    new CogPickerManipulation<PropertyEditorCogRef>(
+        event->GetMouse(), GetParent(), this);
   }
 
   void OnClearButtonClick(MouseEvent* event)
   {
-    if(mProperty->IsReadOnly())
+    if (mProperty->IsReadOnly())
       return;
 
     SetReferencedCog(NULL);
@@ -605,21 +618,21 @@ public:
 
   void OnLeftClick(MouseEvent* event)
   {
-    if(mProperty->IsReadOnly())
+    if (mProperty->IsReadOnly())
       return;
 
     FloatingSearchView* searchView = mActiveSearch;
-    if(searchView==NULL)
+    if (searchView == NULL)
     {
       FloatingSearchView* viewPopUp = new FloatingSearchView(this);
       Vec3 mousePos = ToVector3(event->GetMouse()->GetClientPosition());
       SearchView* searchView = viewPopUp->mView;
-      viewPopUp->SetSize(Pixels(300,400));
+      viewPopUp->SetSize(Pixels(300, 400));
       viewPopUp->ShiftOntoScreen(mousePos);
       viewPopUp->UpdateTransformExternal();
 
       searchView->AddHiddenTag("Objects");
-      searchView->mSearch->SearchProviders.PushBack(GetObjectSearchProvider()) ;
+      searchView->mSearch->SearchProviders.PushBack(GetObjectSearchProvider());
 
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
@@ -642,17 +655,22 @@ public:
   {
     LayoutResult nameLayout = GetNameLayout();
     LayoutResult contentLayout = GetContentLayout(nameLayout);
-    contentLayout.Size.x -= mPickerButton->GetSize().x + mClearButton->GetSize().x + Pixels(8);
+    contentLayout.Size.x -=
+        mPickerButton->GetSize().x + mClearButton->GetSize().x + Pixels(8);
 
     PlaceWithLayout(nameLayout, mLabel);
     PlaceWithLayout(contentLayout, mName);
 
-    mClearButton->SetTranslation( Vec3(contentLayout.Translation.x + contentLayout.Size.x + Pixels(2),0,0) );
-    mPickerButton->SetTranslation( Vec3(contentLayout.Translation.x + contentLayout.Size.x + Pixels(2) + mClearButton->GetSize().x + Pixels(2),0,0) );
+    mClearButton->SetTranslation(Vec3(
+        contentLayout.Translation.x + contentLayout.Size.x + Pixels(2), 0, 0));
+    mPickerButton->SetTranslation(
+        Vec3(contentLayout.Translation.x + contentLayout.Size.x + Pixels(2) +
+                 mClearButton->GetSize().x + Pixels(2),
+             0,
+             0));
 
     PropertyWidget::UpdateTransform();
   }
-
 };
 
 class PropertyEditorCogPath : public DirectProperty
@@ -678,8 +696,8 @@ public:
   PropertyWidgetObject* mMetaGeneratedProperties;
   ObjectPropertyNode* mObjectNode;
 
-  PropertyEditorCogPath(PropertyWidgetInitializer& initializer)
-    : DirectProperty(initializer)
+  PropertyEditorCogPath(PropertyWidgetInitializer& initializer) :
+      DirectProperty(initializer)
   {
     mExpanded = false;
     mDefSet = initializer.Parent->GetDefinitionSet();
@@ -687,13 +705,16 @@ public:
     Parent = Type::DynamicCast<PropertyWidgetObject*>(initializer.Parent);
 
     const float StackSpacing = 2.0f;
-    SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2(0, StackSpacing), Thickness::cZero));
+    SetLayout(CreateStackLayout(
+        LayoutDirection::TopToBottom, Vec2(0, StackSpacing), Thickness::cZero));
 
     mTopBar = new Composite(this);
-    mTopBar->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+    mTopBar->SetLayout(CreateStackLayout(
+        LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
     mLabelPathIcons = new Composite(mTopBar);
-    mLabelPathIcons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+    mLabelPathIcons->SetLayout(CreateStackLayout(
+        LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
     mLabelPathIcons->AttachChildWidget(mLabel);
     new Spacer(mLabelPathIcons);
 
@@ -727,32 +748,34 @@ public:
     PropertyWidgetInitializer initializerCogPath = initializer;
     initializerCogPath.ObjectNode = mObjectNode;
     initializerCogPath.Parent = this;
-    mMetaGeneratedProperties = new PropertyWidgetObject(initializerCogPath, nullptr);
+    mMetaGeneratedProperties =
+        new PropertyWidgetObject(initializerCogPath, nullptr);
     mMetaGeneratedProperties->OpenNode(false);
-    
+
     mTopBar->SizeToContents();
-    
+
     mMetaGeneratedProperties->UpdateTransformExternal();
     float totalSizeY = 0.0f;
     int childCount = 0;
-    forRange(Widget& child, GetChildren())
+    forRange(Widget & child, GetChildren())
     {
       totalSizeY += child.mSize.y;
       ++childCount;
     }
     totalSizeY += StackSpacing * (childCount - 1);
     mSize.y = totalSizeY;
-    
+
     mContractedSize = mTopBar->mSize.y;
     mExpandedSize = totalSizeY;
     mSize.y = mContractedSize;
 
     SetClipping(true);
-    
+
     ConnectThisTo(mGrid, Events::PropertyModified, OnPropertyChanged);
     ConnectThisTo(mExpandButton, Events::LeftMouseDown, OnExpandButtonDown);
     ConnectThisTo(mPickerButton, Events::LeftMouseDown, OnPickerButtonDown);
-    ConnectThisTo(mPickerButton, Events::RightMouseDown, OnPickerRightButtonDown);
+    ConnectThisTo(
+        mPickerButton, Events::RightMouseDown, OnPickerRightButtonDown);
     ConnectThisTo(mPathTextBox, Events::TextBoxChanged, OnTextEnter);
   }
 
@@ -787,17 +810,23 @@ public:
   void ValidateSelection(Status& status, Cog* test)
   {
     EnsureCogPathIsRelativeTo();
-    String path = CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2(), false);
+    String path = CogPath::ComputePath(status,
+                                       mValue.GetRelativeTo(),
+                                       test,
+                                       mValue.GetPathPreference0(),
+                                       mValue.GetPathPreference1(),
+                                       mValue.GetPathPreference2(),
+                                       false);
     if (status.Failed())
       return;
 
     // Resolve the path to get clear ambiguity errors.
     CogPath::Resolve(status, mValue.GetRelativeTo(), path, true);
-    }
+  }
 
   void SetReferencedCog(Cog* to)
   {
-    if(to != nullptr)
+    if (to != nullptr)
     {
       Status status;
       ValidateSelection(status, to);
@@ -813,13 +842,14 @@ public:
       propertyPath.AddPropertyToPath(prop);
 
       PropertyState state(to);
-      mProp->ChangeProperty(rootInstance, propertyPath, state, PropertyAction::Commit);
+      mProp->ChangeProperty(
+          rootInstance, propertyPath, state, PropertyAction::Commit);
 
       // Refresh the property
       Refresh();
     }
   }
-  
+
   void OnTextEnter(ObjectEvent* event)
   {
     Handle rootInstance;
@@ -831,28 +861,29 @@ public:
     propertyPath.AddPropertyToPath(prop);
 
     PropertyState state(mPathTextBox->GetText());
-    mProp->ChangeProperty(rootInstance, propertyPath, state, PropertyAction::Commit);
+    mProp->ChangeProperty(
+        rootInstance, propertyPath, state, PropertyAction::Commit);
 
-    //mValue.SetPath(mPathTextBox->GetText());
+    // mValue.SetPath(mPathTextBox->GetText());
     //
-    //Variant result(mValue);
-    //CommitValue(result);
-    //Refresh();
+    // Variant result(mValue);
+    // CommitValue(result);
+    // Refresh();
   }
 
   void Refresh() override
   {
     LocalModifications* modifications = LocalModifications::GetInstance();
     mLabel->SetColor(Vec4(1));
-    if(ObjectState* objectState = modifications->GetObjectState(mInstance))
+    if (ObjectState* objectState = modifications->GetObjectState(mInstance))
     {
       PropertyPath path(mProperty);
 
-      forRange(Property* subProperty, ZilchTypeId(CogPath)->GetProperties())
+      forRange(Property * subProperty, ZilchTypeId(CogPath)->GetProperties())
       {
         path.AddPropertyToPath(subProperty);
 
-        if(objectState->IsPropertyModified(path))
+        if (objectState->IsPropertyModified(path))
         {
           mLabel->SetColor(PropertyViewUi::ModifiedTextColor);
           break;
@@ -863,10 +894,13 @@ public:
     }
 
     PropertyState state = GetValue();
-    if(state.IsValid())
+    if (state.IsValid())
     {
       CogPath* path = state.Value.Get<CogPath*>();
-      ReturnIf(!path,, "The value in the property grid was not a path (or it was not valid)");
+      ReturnIf(!path,
+               ,
+               "The value in the property grid was not a path (or it was not "
+               "valid)");
 
       // Any changes to the actual CogPath in the variant we want to know about
       mValue = *path;
@@ -880,7 +914,7 @@ public:
       mExpandButton->SetVisible(true);
       mPickerButton->SetVisible(true);
 
-      if(!cCogPathIgnoreReadOnly && mProperty->IsReadOnly())
+      if (!cCogPathIgnoreReadOnly && mProperty->IsReadOnly())
       {
         mPathTextBox->SetReadOnly(true);
         mPickerButton->SetColor(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
@@ -891,10 +925,10 @@ public:
         mPickerButton->SetColor(Vec4(1.0f));
       }
 
-      if(!mPathTextBox->HasFocus())
+      if (!mPathTextBox->HasFocus())
         mPathTextBox->SetText(path->GetPath());
-      
-      if(mMetaGeneratedProperties != nullptr)
+
+      if (mMetaGeneratedProperties != nullptr)
         mMetaGeneratedProperties->Refresh();
     }
     else
@@ -906,13 +940,13 @@ public:
       mExpandButton->SetVisible(false);
       mPickerButton->SetVisible(false);
     }
-    if(mMetaGeneratedProperties)
+    if (mMetaGeneratedProperties)
       mMetaGeneratedProperties->Refresh();
   }
 
   void RefreshIfSameObject(HandleParam instance)
   {
-    if(instance.Get<CogPath*>() == &mValue)
+    if (instance.Get<CogPath*>() == &mValue)
     {
       Any result(mValue);
       CommitValue(result);
@@ -922,7 +956,8 @@ public:
 
   void OnPropertyChanged(PropertyEvent* event)
   {
-    // If the property that is being changed belongs to our temporary cog path object...
+    // If the property that is being changed belongs to our temporary cog path
+    // object...
     RefreshIfSameObject(Handle(event->mObject));
   }
 
@@ -945,7 +980,8 @@ public:
     if (anmate)
     {
       ActionSequence* sequence = new ActionSequence(this);
-      sequence->Add(SizeWidgetAction(this, Vec2(mSize.x, sizeY), ComponentUi::OpenTime));
+      sequence->Add(
+          SizeWidgetAction(this, Vec2(mSize.x, sizeY), ComponentUi::OpenTime));
     }
     else
     {
@@ -960,30 +996,31 @@ public:
 
   void OnPickerButtonDown(MouseEvent* event)
   {
-    if(!cCogPathIgnoreReadOnly && mProperty->IsReadOnly())
+    if (!cCogPathIgnoreReadOnly && mProperty->IsReadOnly())
       return;
 
     event->GetMouse()->SetCursor(Cursor::Cross);
-    new CogPickerManipulation<PropertyEditorCogPath>(event->GetMouse(), GetParent(), this);
+    new CogPickerManipulation<PropertyEditorCogPath>(
+        event->GetMouse(), GetParent(), this);
   }
 
   void OnPickerRightButtonDown(MouseEvent* event)
   {
-    if(!cCogPathIgnoreReadOnly && mProperty->IsReadOnly())
+    if (!cCogPathIgnoreReadOnly && mProperty->IsReadOnly())
       return;
 
     FloatingSearchView* searchView = mActiveSearch;
-    if(searchView==NULL)
+    if (searchView == NULL)
     {
       FloatingSearchView* viewPopUp = new FloatingSearchView(this);
       Vec3 mousePos = ToVector3(event->GetMouse()->GetClientPosition());
       SearchView* searchView = viewPopUp->mView;
-      viewPopUp->SetSize(Pixels(300,400));
+      viewPopUp->SetSize(Pixels(300, 400));
       viewPopUp->ShiftOntoScreen(mousePos);
       viewPopUp->UpdateTransformExternal();
 
       searchView->AddHiddenTag("Objects");
-      searchView->mSearch->SearchProviders.PushBack(GetObjectSearchProvider()) ;
+      searchView->mSearch->SearchProviders.PushBack(GetObjectSearchProvider());
 
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
@@ -1004,10 +1041,12 @@ public:
   void UpdateTransform()
   {
     mTopBar->mSize.x = mSize.x;
-    
+
     Composite* cogTextParent = mCogText->mParent;
 
-    float sizeX = mSize.x - mLabel->mSize.x - mPickerButton->mSize.x - mExpandButton->mSize.x - ResourceEditorUi::CogPathCogLabelSpace;
+    float sizeX = mSize.x - mLabel->mSize.x - mPickerButton->mSize.x -
+                  mExpandButton->mSize.x -
+                  ResourceEditorUi::CogPathCogLabelSpace;
     sizeX = Math::Max(sizeX, (float)ResourceEditorUi::CogPathCogLabelMinWidth);
     sizeX = Math::Min(sizeX, mCogText->GetMinSize().x);
     Vec2 cogTextSize = Vec2(sizeX, cogTextParent->mSize.y);
@@ -1015,13 +1054,14 @@ public:
     cogTextParent->SetMinSize(cogTextSize);
     mCogText->SetSize(cogTextSize);
 
-    mMetaGeneratedProperties->mSize.x = mSize.x - ResourceEditorUi::CogPathPickerIndent;
-    mMetaGeneratedProperties->mTranslation.x = ResourceEditorUi::CogPathPickerIndent;
+    mMetaGeneratedProperties->mSize.x =
+        mSize.x - ResourceEditorUi::CogPathPickerIndent;
+    mMetaGeneratedProperties->mTranslation.x =
+        ResourceEditorUi::CogPathPickerIndent;
     mMetaGeneratedProperties->UpdateTransformExternal();
 
     PropertyWidget::UpdateTransform();
   }
-
 };
 
 template <typename PropertyEditor>
@@ -1029,27 +1069,32 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
 {
   Cog* selectedObject = mSelectedObject;
 
-  if(selectedObject)
+  if (selectedObject)
   {
     // The size we want to display the text at
     const float TextSize = 0.55f;
 
     // We want to draw debug text in the object's space
-    //Debug::DefaultConfig config;
+    // Debug::DefaultConfig config;
     u32 spaceId = selectedObject->GetSpace()->GetId().Id;
-    //config.SpaceId(spaceId);
-    //config.OnTop(true);
+    // config.SpaceId(spaceId);
+    // config.OnTop(true);
     Debug::ActiveDrawSpace drawSpace(spaceId);
 
-    String selectText = BuildString("Select '", selectedObject->GetDescription(), "'");
+    String selectText =
+        BuildString("Select '", selectedObject->GetDescription(), "'");
 
     Vec3 worldPosition = GetObjectTextPosition(selectedObject);
 
     SafeDestroy(mToolTip);
 
     ToolTipPlacement toolTipPlacement;
-    toolTipPlacement.SetScreenRect(WidgetRect::CenterAndSize(mMousePosition, Vec2(15, 15)));
-    toolTipPlacement.SetPriority(IndicatorSide::Top, IndicatorSide::Bottom, IndicatorSide::Left, IndicatorSide::Right);
+    toolTipPlacement.SetScreenRect(
+        WidgetRect::CenterAndSize(mMousePosition, Vec2(15, 15)));
+    toolTipPlacement.SetPriority(IndicatorSide::Top,
+                                 IndicatorSide::Bottom,
+                                 IndicatorSide::Left,
+                                 IndicatorSide::Right);
     mToolTip = new ToolTip(GetRootWidget());
 
     Status status;
@@ -1059,7 +1104,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
       selectText = BuildString(selectText, "\n", status.Message);
       mToolTip->SetColorScheme(ToolTipColorScheme::Yellow);
     }
-    
+
     mToolTip->SetText(selectText);
     mToolTip->SetArrowTipTranslation(toolTipPlacement);
 
@@ -1083,16 +1128,16 @@ void CogPickerManipulation<PropertyEditor>::OnMouseMove(MouseEvent* event)
 
   this->GetRootWidget()->DispatchAt(dispatchAtParams);
 
-  if(mLastWidget && mLastWidget != pollEvent.OwnedWidget)
+  if (mLastWidget && mLastWidget != pollEvent.OwnedWidget)
     mLastWidget->GetDispatcher()->Dispatch(Events::MouseExit, event);
 
-  if(pollEvent.OwnedWidget)
+  if (pollEvent.OwnedWidget)
     pollEvent.OwnedWidget->GetDispatcher()->Dispatch(Events::MouseMove, event);
 
   mLastWidget = pollEvent.OwnedWidget;
   mSelectedObject = pollEvent.FoundObject;
 
-  if(pollEvent.FoundObject == nullptr)
+  if (pollEvent.FoundObject == nullptr)
     SafeDestroy(mToolTip);
 }
 
@@ -1124,12 +1169,12 @@ class FocusComposite : public ColoredComposite
 public:
   typedef FocusComposite ZilchSelf;
 
-  FocusComposite(Composite* parent, Vec4Param color)
-    : ColoredComposite(parent, color)
+  FocusComposite(Composite* parent, Vec4Param color) :
+      ColoredComposite(parent, color)
   {
     ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   }
-  
+
   void OnKeyDown(KeyboardEvent* event)
   {
     TabJump(this, event);
@@ -1167,12 +1212,14 @@ public:
   bool mSmallDisplay;
   bool mForceCompact;
 
-  ResourceEditor(Composite* parent, BoundType* resourceType, bool forceCompact)
-    : Composite(parent)
-    , mResourceType(resourceType)
-    , mResourcePreview(nullptr)
-    , mReadOnly(false)
-    , mForceCompact(forceCompact)
+  ResourceEditor(Composite* parent,
+                 BoundType* resourceType,
+                 bool forceCompact) :
+      Composite(parent),
+      mResourceType(resourceType),
+      mResourcePreview(nullptr),
+      mReadOnly(false),
+      mForceCompact(forceCompact)
   {
     // Background
     mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -1183,12 +1230,15 @@ public:
     mBorder = CreateAttached<Element>(cWhiteSquareBorder);
     mBorder->SetColor(Vec4::cZero);
 
-    SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(1, 0), Thickness(1, 1, 1, 1)));
+    SetLayout(CreateStackLayout(
+        LayoutDirection::LeftToRight, Pixels(1, 0), Thickness(1, 1, 1, 1)));
 
-    mResourceManager = Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
+    mResourceManager =
+        Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
 
-    mSmallDisplay = (ResourcePreview::GetPreviewImportance(resourceType) != PreviewImportance::High);
-    
+    mSmallDisplay = (ResourcePreview::GetPreviewImportance(resourceType) !=
+                     PreviewImportance::High);
+
     if (mForceCompact)
       mSmallDisplay = true;
 
@@ -1201,8 +1251,10 @@ public:
     mClearButton = new IconButton(this);
     mClearButton->SetNotInLayout(true);
     mClearButton->SetIcon("RemoveX");
-    mClearButton->mBackgroundColor = ToByteColor(Vec4(0.18f, 0.18f, 0.18f, 1.0f));
-    mClearButton->mBackgroundHoverColor = ToByteColor(Vec4(0.43f, 0.18f, 0.18f, 1.0f));
+    mClearButton->mBackgroundColor =
+        ToByteColor(Vec4(0.18f, 0.18f, 0.18f, 1.0f));
+    mClearButton->mBackgroundHoverColor =
+        ToByteColor(Vec4(0.43f, 0.18f, 0.18f, 1.0f));
     mClearButton->mPadding = Thickness(-1, 0, 0, 0);
     mClearButton->mBorder->SetActive(false);
     ConnectThisTo(mClearButton, Events::MouseEnterHierarchy, OnMouseEnterClear);
@@ -1246,7 +1298,8 @@ public:
     {
       Composite* topDown = new Composite(this);
       topDown->SetSizing(SizePolicy::Flex, 1.0f);
-      topDown->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 1)));
+      topDown->SetLayout(
+          CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 1)));
       topDown->AttachChildWidget(mNameArea);
       topDown->AttachChildWidget(mResourcePreviewParent);
       mNameArea->SetSize(Vec2(1));
@@ -1262,7 +1315,8 @@ public:
       // Button Column
       buttonParent = new Composite(this);
       buttonParent->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(16));
-      buttonParent->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 1)));
+      buttonParent->SetLayout(
+          CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 1)));
     }
     {
       mNewButton = new IconButton(buttonParent);
@@ -1305,7 +1359,7 @@ public:
       mEditButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(24));
     }
 
-    if(mResourceManager && mResourceManager->mCanDuplicate == false)
+    if (mResourceManager && mResourceManager->mCanDuplicate == false)
     {
       mCloneButton->mIconColor = ToByteColor(Vec4(1, 1, 1, 0.3f));
       mCloneButton->SetIgnoreInput(true);
@@ -1314,28 +1368,35 @@ public:
       mCloneButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
-    if(mResourceManager && mResourceManager->mCanCreateNew == false)
+    if (mResourceManager && mResourceManager->mCanCreateNew == false)
     {
       mNewButton->mIconColor = ToByteColor(Vec4(1, 1, 1, 0.3f));
       mNewButton->SetIgnoreInput(true);
       mNewButton->mTabFocusStop = false;
-      mNewButton->SetToolTip(String::Format("Cannot create new %s", mResourceType->Name.c_str()));
+      mNewButton->SetToolTip(
+          String::Format("Cannot create new %s", mResourceType->Name.c_str()));
       mNewButton->mToolTipColor = ToolTipColorScheme::Yellow;
     }
 
     ConnectThisTo(mNameArea, Events::MouseEnterHierarchy, OnMouseEnterMainArea);
-    ConnectThisTo(mResourcePreviewParent, Events::MouseEnterHierarchy, OnMouseEnterMainArea);
+    ConnectThisTo(mResourcePreviewParent,
+                  Events::MouseEnterHierarchy,
+                  OnMouseEnterMainArea);
     ConnectThisTo(mNameArea, Events::MouseExitHierarchy, OnMouseExitMainArea);
-    ConnectThisTo(mResourcePreviewParent, Events::MouseExitHierarchy, OnMouseExitMainArea);
+    ConnectThisTo(mResourcePreviewParent,
+                  Events::MouseExitHierarchy,
+                  OnMouseExitMainArea);
     ConnectThisTo(mNameArea, Events::LeftMouseDown, OnLeftMouseDownMainArea);
-    ConnectThisTo(mResourcePreviewParent, Events::LeftMouseDown, OnLeftMouseDownMainArea);
+    ConnectThisTo(
+        mResourcePreviewParent, Events::LeftMouseDown, OnLeftMouseDownMainArea);
     ConnectThisTo(mNameArea, Events::LeftMouseUp, OnLeftMouseUpMainArea);
-    ConnectThisTo(mResourcePreviewParent, Events::LeftMouseUp, OnLeftMouseUpMainArea);
+    ConnectThisTo(
+        mResourcePreviewParent, Events::LeftMouseUp, OnLeftMouseUpMainArea);
 
     ConnectThisTo(mResourcePreviewParent, Events::FocusGained, OnFocusChanged);
     ConnectThisTo(mResourcePreviewParent, Events::FocusLost, OnFocusChanged);
 
-    if(mForceCompact)
+    if (mForceCompact)
     {
       mCloneButton->SetActive(false);
       mNewButton->SetActive(false);
@@ -1349,35 +1410,35 @@ public:
 
   void OnMouseEnterMainArea(Event*)
   {
-    if(mReadOnly)
+    if (mReadOnly)
       return;
     mNameArea->mBackground->SetColor(Vec4(0.27f, 0.27f, 0.27f, 1.0f));
   }
 
   void OnMouseExitMainArea(Event*)
   {
-    if(mReadOnly)
+    if (mReadOnly)
       return;
     mNameArea->mBackground->SetColor(Vec4(0.24f, 0.24f, 0.24f, 1.0f));
   }
 
   void OnLeftMouseDownMainArea(Event*)
   {
-    if(mReadOnly)
+    if (mReadOnly)
       return;
     mNameArea->mBackground->SetColor(Vec4(0.23f, 0.23f, 0.23f, 1.0f));
   }
 
   void OnLeftMouseUpMainArea(Event*)
   {
-    if(mReadOnly)
+    if (mReadOnly)
       return;
     mNameArea->mBackground->SetColor(Vec4(0.27f, 0.27f, 0.27f, 1.0f));
   }
 
   void OnMouseEnterClear(Event*)
   {
-    if(mReadOnly)
+    if (mReadOnly)
       return;
     mBorder->SetColor(Vec4(0.58f, 0.18f, 0.18f, 1.0f / 1.4) * 1.4);
     mNameArea->mBackground->SetColor(Vec4(0.43f, 0.18f, 0.18f, 1.0f));
@@ -1385,7 +1446,7 @@ public:
 
   void OnMouseExitClear(Event*)
   {
-    if(mReadOnly)
+    if (mReadOnly)
       return;
     mBorder->SetColor(Vec4::cZero);
     mNameArea->mBackground->SetColor(Vec4(0.24f, 0.24f, 0.24f, 1.0f));
@@ -1393,7 +1454,7 @@ public:
 
   void UpdateTransform() override
   {
-    if(mSmallDisplay)
+    if (mSmallDisplay)
     {
       if (mClearButton->GetActive())
         mResourcePreviewParent->SetTranslation(Pixels(7, 1, 0));
@@ -1403,16 +1464,19 @@ public:
 
     Vec2 nameAreaSize = mNameArea->GetSize();
     Vec2 nameMinSize = mResourceName->GetMinSize();
-    
+
     // Place the down arrow
     Vec2 arrowSize = mDownArrow->GetSize();
-    Vec3 arrowTranslation(nameAreaSize.x - arrowSize.x - 12.0f, nameAreaSize.y * 0.5f - arrowSize.y * 0.5f, 0);
+    Vec3 arrowTranslation(nameAreaSize.x - arrowSize.x - 12.0f,
+                          nameAreaSize.y * 0.5f - arrowSize.y * 0.5f,
+                          0);
     mDownArrow->SetTranslation(SnapToPixels(arrowTranslation));
 
     // Place name
-    Vec3 nameTranslation(12.0f, nameAreaSize.y * 0.5f - nameMinSize.y * 0.5f, 0);
+    Vec3 nameTranslation(
+        12.0f, nameAreaSize.y * 0.5f - nameMinSize.y * 0.5f, 0);
 
-    if(mForceCompact)
+    if (mForceCompact)
     {
       nameTranslation.x = 4.0f;
     }
@@ -1430,12 +1494,13 @@ public:
 
     Vec2 nameSize = nameAreaSize;
     nameSize.x -= 12.0f; // 12 pixels to the left of the name
-    nameSize.x -= (nameAreaSize.x - arrowTranslation.x); // Space used up by the arrow
+    nameSize.x -=
+        (nameAreaSize.x - arrowTranslation.x); // Space used up by the arrow
     nameSize.x -= 2.0f; // little breathing room between arrow and text
     mResourceName->SetSize(nameSize);
 
     // Clear placement
-    if(mSmallDisplay)
+    if (mSmallDisplay)
       mClearButton->SetTranslation(Pixels(-6, 2, 0));
     else
       mClearButton->SetTranslation(Pixels(-6, 19, 0));
@@ -1459,11 +1524,11 @@ public:
     if (oldResource && oldResource == resource)
       return;
 
-    if(oldResource)
+    if (oldResource)
       DisconnectAll(oldResource, this);
 
     mDisplayedResource = resource;
-    
+
     // When setting a resource in the property grid update the manager
     // to cover the case where a "Resource" has been made a property
     // and can be set to different resource types with different managers
@@ -1474,7 +1539,8 @@ public:
     if (mResourcePreview && !(oldResource == nullptr && resource == nullptr))
     {
       mResourcePreview->Destroy();
-      mResourceName->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
+      mResourceName->SetSizing(
+          SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
       mResourcePreview = nullptr;
     }
 
@@ -1482,7 +1548,8 @@ public:
     if (resource == nullptr)
     {
       mResourceName->SetText("null");
-      mResourceName->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
+      mResourceName->SetSizing(
+          SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
       mResourceName->mFontColor = Vec4(1, 1, 1, 0.4f);
       mClearButton->SetActive(false);
       mCloneButton->SetIgnoreInput(true);
@@ -1504,7 +1571,7 @@ public:
     if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
       mNameArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(22));
 
-    if(mResourceManager && mResourceManager->mCanDuplicate)
+    if (mResourceManager && mResourceManager->mCanDuplicate)
     {
       mCloneButton->mIconColor = ToByteColor(Vec4(1));
       mCloneButton->SetIgnoreInput(false);
@@ -1530,12 +1597,14 @@ public:
       mClearButton->SetActive(true);
 
     mResourceName->SetText(resource->Name);
-    mResourceName->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
+    mResourceName->SetSizing(
+        SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
 
     // Don't show previews for compact mode
-    if(!mForceCompact)
+    if (!mForceCompact)
     {
-      mResourcePreview = ResourcePreview::CreatePreviewWidget(mResourcePreviewParent, resource->Name, resource);
+      mResourcePreview = ResourcePreview::CreatePreviewWidget(
+          mResourcePreviewParent, resource->Name, resource);
       mResourcePreview->SetSizing(SizePolicy::Flex, 1.0f);
       if (mSmallDisplay)
         mResourcePreview->SetMinSize(Vec2(12, 12));
@@ -1582,7 +1651,8 @@ public:
       mClearButton->SetActive(true);
 
     mResourceName->SetText("-");
-    mResourceName->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
+    mResourceName->SetSizing(
+        SizeAxis::Y, SizePolicy::Fixed, mResourceName->GetMinSize().y);
 
     mEditButton->SetIgnoreInput(true);
     mEditButton->mIconColor = ToByteColor(Vec4(1, 1, 1, 0.3f));
@@ -1595,7 +1665,7 @@ public:
   }
 };
 
-//------------------------------------------------------------ PropertyEditorResource
+//PropertyEditorResource
 const String NoResourceName = "None";
 
 class PropertyEditorResource : public DirectProperty
@@ -1606,14 +1676,15 @@ public:
   MetaEditorResource* mMetaEdit;
   ResourceManager* mResourceManager;
   ResourceEditor* mEditor;
-  // Storing a pointer to this is safe because when meta is changed, the entire property grid
-  // is torn down and rebuilt. This should never point at a destroyed type.
+  // Storing a pointer to this is safe because when meta is changed, the entire
+  // property grid is torn down and rebuilt. This should never point at a
+  // destroyed type.
   BoundType* mResourceType;
   HandleOf<FloatingSearchView> mActiveSearch;
   HandleOf<ToolTip> mTooltip;
 
-  PropertyEditorResource(PropertyWidgetInitializer& initializer)
-    : DirectProperty(initializer)
+  PropertyEditorResource(PropertyWidgetInitializer& initializer) :
+      DirectProperty(initializer)
   {
     mDefSet = initializer.Parent->GetDefinitionSet();
     mDefSet = mDefSet->GetDefinitionSet("PropertyGrid");
@@ -1621,23 +1692,25 @@ public:
     mMetaEdit = mProperty->HasInherited<MetaEditorResource>();
 
     mResourceType = Type::GetBoundType(initializer.Property->PropertyType);
-    mResourceManager = Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
+    mResourceManager =
+        Z::gResources->Managers.FindValue(mResourceType->Name, nullptr);
 
     if (mResourceManager)
       ConnectThisTo(mResourceManager, Events::ResourceAdded, OnResourceAdded);
-    
+
     bool forceCompact = false;
     if (mMetaEdit)
       forceCompact = mMetaEdit->ForceCompact;
 
     mEditor = new ResourceEditor(this, mResourceType, forceCompact);
 
-    if(forceCompact)
+    if (forceCompact)
       SetSize(Pixels(1, mEditor->mSize.y + Pixels(3)));
     else
       SetSize(Pixels(1, mEditor->mSize.y + Pixels(20)));
 
-    ConnectThisTo(mEditor->mResourcePreviewParent, Events::LeftClick, OnLeftClick);
+    ConnectThisTo(
+        mEditor->mResourcePreviewParent, Events::LeftClick, OnLeftClick);
     ConnectThisTo(mEditor->mNameArea, Events::LeftClick, OnLeftClick);
 
     ConnectThisTo(this, Events::MouseHover, OnHover);
@@ -1647,7 +1720,7 @@ public:
     ConnectThisTo(this, Events::MetaDropTest, OnMetaDrop);
 
     mEditor->ShowClearButton(false);
-    if(mMetaEdit)
+    if (mMetaEdit)
       mEditor->ShowClearButton(mMetaEdit->AllowNone);
 
     if (mProperty->IsReadOnly())
@@ -1657,12 +1730,18 @@ public:
     ConnectThisTo(mEditor->mNewButton, Events::ButtonPressed, OnAdd);
     ConnectThisTo(mEditor->mClearButton, Events::ButtonPressed, OnRemove);
     ConnectThisTo(mEditor->mCloneButton, Events::ButtonPressed, OnDuplicate);
-    ConnectThisTo(mEditor->mNameArea, Events::MouseEnterHierarchy, OnMouseEnter);
-    ConnectThisTo(mEditor->mResourcePreviewParent, Events::MouseEnterHierarchy, OnMouseEnter);
+    ConnectThisTo(
+        mEditor->mNameArea, Events::MouseEnterHierarchy, OnMouseEnter);
+    ConnectThisTo(mEditor->mResourcePreviewParent,
+                  Events::MouseEnterHierarchy,
+                  OnMouseEnter);
     ConnectThisTo(mEditor->mNameArea, Events::MouseExitHierarchy, OnMouseExit);
-    ConnectThisTo(mEditor->mResourcePreviewParent, Events::MouseExitHierarchy, OnMouseExit);
+    ConnectThisTo(mEditor->mResourcePreviewParent,
+                  Events::MouseExitHierarchy,
+                  OnMouseExit);
 
-    ConnectThisTo(mEditor->mResourcePreviewParent, Events::KeyDown, OnFocusKeyDown);
+    ConnectThisTo(
+        mEditor->mResourcePreviewParent, Events::KeyDown, OnFocusKeyDown);
 
     Refresh();
     this->SetName("ResourceSelector");
@@ -1670,19 +1749,19 @@ public:
 
   ~PropertyEditorResource()
   {
-    if(FloatingSearchView* searchView = mActiveSearch)
+    if (FloatingSearchView* searchView = mActiveSearch)
       searchView->Destroy();
     mTooltip.SafeDestroy();
   }
-  
+
   void OnFocusKeyDown(KeyboardEvent* e)
   {
     if (e->Key == Keys::Enter)
-     OnLeftClick(nullptr);
+      OnLeftClick(nullptr);
     else if (e->Key == Keys::Delete || e->Key == Keys::Back)
     {
       // Only clear if it can be cleared
-      if(mEditor->mClearButton->GetActive())
+      if (mEditor->mClearButton->GetActive())
         OnRemove(nullptr);
     }
   }
@@ -1691,7 +1770,7 @@ public:
   {
     Pair<Resource*, PropertyState::Enum> state = GetResource();
     Resource* resource = state.first;
-    if(resource == NULL || state.second != PropertyState::Valid)
+    if (resource == NULL || state.second != PropertyState::Valid)
       return;
 
     // Create the tooltip
@@ -1702,9 +1781,10 @@ public:
 
     // Create the resource widget and attach it to the tooltip
     String name = resource->Name;
-    //MetaObjectInstance resourceInstance = resource;
-    PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(toolTip, name, resource, PreviewImportance::High);
-    if(tileWidget == NULL)
+    // MetaObjectInstance resourceInstance = resource;
+    PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(
+        toolTip, name, resource, PreviewImportance::High);
+    if (tileWidget == NULL)
     {
       toolTip->Destroy();
       return;
@@ -1722,8 +1802,10 @@ public:
     ToolTipPlacement placement;
     placement.SetScreenRect(rect);
     placement.mHotSpot = mEditor->GetScreenRect().Center();
-    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
-                          IndicatorSide::Bottom, IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right,
+                          IndicatorSide::Left,
+                          IndicatorSide::Bottom,
+                          IndicatorSide::Top);
     toolTip->SetArrowTipTranslation(placement);
 
     tileWidget->AnimatePreview(PreviewAnimate::Always);
@@ -1736,16 +1818,17 @@ public:
     mTooltip.SafeDestroy();
   }
 
-  Pair<Resource*,PropertyState::Enum> GetResource()
+  Pair<Resource*, PropertyState::Enum> GetResource()
   {
     PropertyState state = GetValue();
-    if(!state.IsValid())
+    if (!state.IsValid())
       return MakePair((Resource*)NULL, PropertyState::Invalid);
     mVariantValue = state.Value;
 
-    if(mVariantValue.Is<String>())
+    if (mVariantValue.Is<String>())
     {
-      Resource* resource = mResourceManager->GetResource(mVariantValue.ToString(), ResourceNotFound::ReturnNull);
+      Resource* resource = mResourceManager->GetResource(
+          mVariantValue.ToString(), ResourceNotFound::ReturnNull);
       return MakePair(resource, PropertyState::Valid);
     }
     else
@@ -1757,9 +1840,9 @@ public:
 
   void SetResource(Resource* resource, bool preview = false)
   {
-    if(resource)
+    if (resource)
     {
-      if(mProperty->PropertyType == ZilchTypeId(String))
+      if (mProperty->PropertyType == ZilchTypeId(String))
       {
         // Set the as a string with the full Id and name
         mVariantValue = resource->ResourceIdName;
@@ -1781,7 +1864,7 @@ public:
       }
 
       // Resource properties can invalid objects forcing the grid to rebuild
-      if(mProperty->HasAttribute(PropertyAttributes::cInvalidatesObject))
+      if (mProperty->HasAttribute(PropertyAttributes::cInvalidatesObject))
         mGrid->Invalidate();
       else
         Refresh();
@@ -1796,7 +1879,7 @@ public:
     DirectProperty::Refresh();
 
     auto resourceState = GetResource();
-    if(resourceState.second == PropertyState::Valid)
+    if (resourceState.second == PropertyState::Valid)
       mEditor->SetResource(resourceState.first);
     else
       mEditor->SetInvalid();
@@ -1804,24 +1887,22 @@ public:
 
   void OnExit(MouseEvent* event)
   {
-
   }
 
   void OnHover(MouseEvent* event)
   {
-
   }
 
   void OnMetaDrop(MetaDropEvent* event)
   {
-    if(event->Instance.StoredType == mResourceType)
+    if (event->Instance.StoredType == mResourceType)
     {
       event->Handled = true;
       Resource* resource = event->Instance.Get<Resource*>();
-      if(event->Testing)
+      if (event->Testing)
       {
-        event->Result = String::Format("Set %s to %s", 
-          mProperty->Name.c_str(), resource->Name.c_str());
+        event->Result = String::Format(
+            "Set %s to %s", mProperty->Name.c_str(), resource->Name.c_str());
       }
       else
       {
@@ -1836,7 +1917,7 @@ public:
   {
     mEditor->SetResource(nullptr);
 
-    if(mProperty->PropertyType == ZilchTypeId(String))
+    if (mProperty->PropertyType == ZilchTypeId(String))
     {
       // Set the as a string with the full Id and name
       mVariantValue = String();
@@ -1854,19 +1935,20 @@ public:
   {
     Handle object = mNode->mParent->mObject;
     Resource* resource = (Resource*)result.Data;
-    return mMetaEdit->FilterPropertySearchResult(object, mProperty, resource, result.mStatus);
+    return mMetaEdit->FilterPropertySearchResult(
+        object, mProperty, resource, result.mStatus);
   }
 
   void OnLeftClick(Event* event)
   {
-    if(mProperty->IsReadOnly())
+    if (mProperty->IsReadOnly())
       return;
     FloatingSearchView* searchView = mActiveSearch;
-    if(searchView == NULL)
+    if (searchView == NULL)
     {
       FloatingSearchView* viewPopUp = new FloatingSearchView(this);
       SearchView* searchView = viewPopUp->mView;
-      viewPopUp->SetSize(Pixels(300,400));
+      viewPopUp->SetSize(Pixels(300, 400));
       Vec3 pos = ToVector3(mEditor->GetScreenRect().TopRight());
       viewPopUp->ShiftOntoScreen(pos + Vec3(6, 0, 0));
       viewPopUp->UpdateTransformExternal();
@@ -1877,18 +1959,19 @@ public:
 
       searchView->AddMetaType(Type::GetBoundType(mProperty->PropertyType));
 
-      if(mMetaEdit && !mMetaEdit->FilterTag.Empty())
+      if (mMetaEdit && !mMetaEdit->FilterTag.Empty())
         searchView->AddTag(mMetaEdit->FilterTag);
 
       SearchProvider* searchProvider = GetResourceSearchProvider();
-      if(mMetaEdit)
-        searchProvider->SetCallbackFilter<ZilchSelf, &ZilchSelf::OnSearchFilter>(this);
+      if (mMetaEdit)
+        searchProvider
+            ->SetCallbackFilter<ZilchSelf, &ZilchSelf::OnSearchFilter>(this);
       searchView->mSearch->SearchProviders.PushBack(searchProvider);
 
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
       searchView->Search(String());
-      if(mMetaEdit == nullptr || mMetaEdit->SearchPreview)
+      if (mMetaEdit == nullptr || mMetaEdit->SearchPreview)
         ConnectThisTo(searchView, Events::SearchPreview, OnSearchPreview);
       ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
       ConnectThisTo(searchView, Events::SearchCanceled, OnSearchCanceled);
@@ -1928,7 +2011,6 @@ public:
 
   void ResourcesChanged()
   {
-
   }
 
   void OnResourceAdded(ResourceEvent* event)
@@ -1942,7 +2024,8 @@ public:
     while (node)
     {
       Handle object = node->mObject;
-      if (object.StoredType && object.StoredType->IsA(ZilchTypeId(MetaSelection)))
+      if (object.StoredType &&
+          object.StoredType->IsA(ZilchTypeId(MetaSelection)))
         return object.Get<MetaSelection*>();
       node = node->mParent;
     }
@@ -1966,7 +2049,7 @@ public:
     Vec3 topRight = ToVector3(rect.TopRight());
 
     window->ShiftOntoScreen(topRight + Vec3(6.0f, -22.0f, 0));
-    
+
     Handle rootInstance;
     PropertyPath propertyPath;
     BuildPath(mNode, rootInstance, propertyPath);
@@ -1976,7 +2059,8 @@ public:
       BoundType* targetType = rootInstance.StoredType;
       forRange(Handle object, selection->All())
       {
-        if (MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>())
+        if (MetaComposition* composition =
+                object.StoredType->HasInherited<MetaComposition>())
         {
           Handle component = composition->GetComponent(object, targetType);
           if (component.StoredType->IsA(targetType))
@@ -1998,17 +2082,17 @@ public:
   {
     mTooltip.SafeDestroy();
 
-    if(Resource* resource = GetResource().first)
+    if (Resource* resource = GetResource().first)
     {
       Resource* newResource = DuplicateResource(resource);
       SetResource(newResource);
     }
   }
-  
+
   void OnEdit(Event* event)
   {
     Resource* resource = GetResource().first;
-    if(resource)
+    if (resource)
     {
       Z::gEditor->EditResource(resource);
     }
@@ -2022,7 +2106,7 @@ public:
     if (mMetaEdit && mMetaEdit->ForceCompact)
     {
       mEditor->SetTranslation(Vec3(nameLayout.Size.x, 1, 0));
-      mEditor->SetSize(Vec2(mSize.x  - nameLayout.Size.x, mEditor->GetSize().y));
+      mEditor->SetSize(Vec2(mSize.x - nameLayout.Size.x, mEditor->GetSize().y));
     }
     else
     {
@@ -2032,7 +2116,6 @@ public:
 
     PropertyWidget::UpdateTransform();
   }
-
 };
 
 class ListItem : public Composite
@@ -2045,8 +2128,12 @@ public:
   Element* mRemoveIcon;
   Label* mLabel;
 
-  ListItem(Composite* parent, StringParam itemName, bool bold, bool removable = false, bool expandable = false)
-    : Composite(parent)
+  ListItem(Composite* parent,
+           StringParam itemName,
+           bool bold,
+           bool removable = false,
+           bool expandable = false) :
+      Composite(parent)
   {
     mBackground = CreateAttached<Element>(cWhiteSquare);
     mBackground->MoveToBack();
@@ -2124,8 +2211,7 @@ public:
   Element* mBorder;
   Label* mLabel;
 
-  AddItemButton(Composite* parent, StringParam itemName)
-    : Composite(parent)
+  AddItemButton(Composite* parent, StringParam itemName) : Composite(parent)
   {
     SetClipping(true);
 
@@ -2154,12 +2240,12 @@ public:
     mBorder->SetSize(mSize);
 
     float center = mSize.x * 0.5f;
-    //float totalWidth = mIcon->mSize.x + Pixels(4) + mLabel->mSize.x;
+    // float totalWidth = mIcon->mSize.x + Pixels(4) + mLabel->mSize.x;
 
-    //float iconPos = Math::Max(center - totalWidth * 0.5f, 0.0f);
+    // float iconPos = Math::Max(center - totalWidth * 0.5f, 0.0f);
     Vec2 labelPos = mSize * 0.5f - mLabel->GetSize() * 0.5f;
 
-    //mIcon->SetTranslation(Vec3(iconPos, 1, 0));
+    // mIcon->SetTranslation(Vec3(iconPos, 1, 0));
     mLabel->SetTranslation(ToVector3(labelPos));
 
     Composite::UpdateTransform();
@@ -2179,18 +2265,18 @@ public:
 class ItemStack : public Composite
 {
 public:
-
   Element* mBackground;
 
-  ItemStack(Composite* parent, Vec2 spacing, Thickness padding)
-    : Composite(parent)
+  ItemStack(Composite* parent, Vec2 spacing, Thickness padding) :
+      Composite(parent)
   {
     mBackground = CreateAttached<Element>(cWhiteSquare);
     mBackground->SetColor(ComponentUi::BackgroundColor);
     mBackground->SetInteractive(false);
     mBackground->SetNotInLayout(true);
 
-    SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, spacing, padding));
+    SetLayout(
+        CreateStackLayout(LayoutDirection::TopToBottom, spacing, padding));
   }
 
   void UpdateTransform()
@@ -2214,12 +2300,16 @@ public:
   String mInvalidMessage;
   HandleOf<ToolTip> mToolTip;
 
-  ResourceListItem(Composite* parent, PropertyWidget* propertyWidget, ResourceList* resourceList, StringParam listName, StringParam resourceIdName)
-    : ListItem(parent, listName, false, !resourceList->GetReadOnly())
-    , mPropertyWidget(propertyWidget)
-    , mResourceList(resourceList)
-    , mResourceIdName(resourceIdName)
-    , mInvalidIcon(nullptr)
+  ResourceListItem(Composite* parent,
+                   PropertyWidget* propertyWidget,
+                   ResourceList* resourceList,
+                   StringParam listName,
+                   StringParam resourceIdName) :
+      ListItem(parent, listName, false, !resourceList->GetReadOnly()),
+      mPropertyWidget(propertyWidget),
+      mResourceList(resourceList),
+      mResourceIdName(resourceIdName),
+      mInvalidIcon(nullptr)
   {
     ConnectThisTo(mBackground, Events::LeftClick, OnSelect);
     ConnectThisTo(mRemoveIcon, Events::LeftClick, OnRemove);
@@ -2227,8 +2317,10 @@ public:
 
   void OnSelect(MouseEvent* event)
   {
-    Zilch::BoundType* type = ZilchTypeId(typename ResourceList::ManagerType::ResourceType);
-    Resource* resource = Z::gResources->GetResourceByTypeAndName(type->Name, mResourceIdName);
+    Zilch::BoundType* type =
+        ZilchTypeId(typename ResourceList::ManagerType::ResourceType);
+    Resource* resource =
+        Z::gResources->GetResourceByTypeAndName(type->Name, mResourceIdName);
     if (resource != nullptr)
       Z::gEditor->EditResource(resource);
   }
@@ -2236,7 +2328,8 @@ public:
   void OnRemove(MouseEvent* event)
   {
     uint index = mResourceList->GetResourceIndex(mResourceIdName);
-    Operation* operation = new ResourceListOperation<ResourceList>(mResourceList, mResourceIdName, index, false);
+    Operation* operation = new ResourceListOperation<ResourceList>(
+        mResourceList, mResourceIdName, index, false);
 
     PropertyToUndo* undoProp = (PropertyToUndo*)mPropertyWidget->mProp;
     undoProp->mOperationQueue->Queue(operation);
@@ -2278,7 +2371,10 @@ public:
 
       ToolTipPlacement placement;
       placement.SetScreenRect(this->GetScreenRect());
-      placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, IndicatorSide::Bottom, IndicatorSide::Top);
+      placement.SetPriority(IndicatorSide::Right,
+                            IndicatorSide::Left,
+                            IndicatorSide::Bottom,
+                            IndicatorSide::Top);
       mToolTip->SetArrowTipTranslation(placement);
 
       TextBox* text = new TextBox(mToolTip);
@@ -2302,8 +2398,9 @@ class ResourceListSearchProvider : public SearchProvider
 public:
   ResourceList* mResourceList;
 
-  ResourceListSearchProvider(ResourceList* resourceList)
-    : SearchProvider("ResourceList"), mResourceList(resourceList)
+  ResourceListSearchProvider(ResourceList* resourceList) :
+      SearchProvider("ResourceList"),
+      mResourceList(resourceList)
   {
   }
 
@@ -2312,7 +2409,7 @@ public:
     Array<Resource*> resources;
     ResourceList::ManagerType::GetInstance()->EnumerateResources(resources);
 
-    forRange (Resource* resource, resources.All())
+    forRange(Resource * resource, resources.All())
     {
       AttemptAddResource(search, resource);
     }
@@ -2321,7 +2418,9 @@ public:
   void AttemptAddResource(SearchData& search, Resource* resource)
   {
     // Match on the name
-    int priority = PartialMatch(search.SearchString.All(), resource->Name.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(search.SearchString.All(),
+                                resource->Name.All(),
+                                CaseInsensitiveCompare);
     if (priority != cNoMatch)
     {
       // Add a result
@@ -2330,7 +2429,8 @@ public:
       result.Interface = this;
       result.Name = resource->Name;
       result.Priority = priority;
-      // Grey out resources options in the search view that cannot be added to the object
+      // Grey out resources options in the search view that cannot be added to
+      // the object
       mResourceList->CheckForAddition(result.mStatus, resource);
     }
   }
@@ -2340,7 +2440,8 @@ public:
     return mResourceList->GetResourceTypeName();
   }
 
-  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override
+  Composite* CreatePreview(Composite* parent,
+                           SearchViewResult& element) override
   {
     if (!element.mStatus.Failed())
       return nullptr;
@@ -2363,8 +2464,8 @@ public:
 // void AddResource(StringParam resourceIdName, uint index);
 // void RemoveResource(StringParam resourceIdName);
 // Array<String>::range GetIdNames();
-// typedef void (*ListItemCallback)(GraphicsResourceList* resourceList, String entryIdName, Status& status);
-// ListItemCallback mListItemCallback;
+// typedef void (*ListItemCallback)(GraphicsResourceList* resourceList, String
+// entryIdName, Status& status); ListItemCallback mListItemCallback;
 template <typename ResourceList>
 class ResourceListEditor : public PropertyWidget
 {
@@ -2377,14 +2478,15 @@ public:
   ItemStack* mItemStack;
   HandleOf<FloatingSearchView> mActiveSearch;
 
-  ResourceListEditor(PropertyWidgetInitializer& initializer)
-    : PropertyWidget(initializer)
+  ResourceListEditor(PropertyWidgetInitializer& initializer) :
+      PropertyWidget(initializer)
   {
     // No ui for multi selection
     if (initializer.Instance.Get<MetaSelection*>())
       return;
 
-    mResourceList = initializer.Property->GetValue(initializer.Instance).Get<ResourceList*>();
+    mResourceList = initializer.Property->GetValue(initializer.Instance)
+                        .Get<ResourceList*>();
 
     mDefSet = initializer.Parent->GetDefinitionSet();
     mLabel->SetActive(false);
@@ -2393,12 +2495,13 @@ public:
     if (titleName.Empty() == false)
     {
       mTitle = new ListItem(this, titleName, true, false, true);
-      //if (mResourceList->GetReadOnly())
+      // if (mResourceList->GetReadOnly())
       //  mTitle->mLabel->SetColor(ToFloatColor(Color::Gray));
       ConnectThisTo(mTitle, Events::LeftClick, OnTitleClick);
     }
 
-    SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
+    SetLayout(CreateStackLayout(
+        LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
     SizeToContents();
 
     if (mResourceList->GetExpanded())
@@ -2417,17 +2520,22 @@ public:
 
   void Expand()
   {
-    mTitle->mExpandIcon->ChangeDefinition(mDefSet->GetDefinition("PropArrowDown"));
+    mTitle->mExpandIcon->ChangeDefinition(
+        mDefSet->GetDefinition("PropArrowDown"));
 
-    mItemStack = new ItemStack(this, Pixels(0, 2), Thickness(PropertyViewUi::IndentSize, 2, 2, 2));
+    mItemStack = new ItemStack(
+        this, Pixels(0, 2), Thickness(PropertyViewUi::IndentSize, 2, 2, 2));
 
-    forRange (StringParam resourceIdName, mResourceList->GetIdNames())
+    forRange(StringParam resourceIdName, mResourceList->GetIdNames())
     {
       StringRange listName = resourceIdName.FindFirstOf(':');
       listName = StringRange(listName.End(), resourceIdName.End());
-      ResourceListItem<ResourceList>* listItem = new ResourceListItem<ResourceList>(mItemStack, this, mResourceList, listName, resourceIdName);
+      ResourceListItem<ResourceList>* listItem =
+          new ResourceListItem<ResourceList>(
+              mItemStack, this, mResourceList, listName, resourceIdName);
 
-      Resource* resource = ResourceList::ManagerType::FindOrNull(resourceIdName);
+      Resource* resource =
+          ResourceList::ManagerType::FindOrNull(resourceIdName);
       if (resource == nullptr)
         listItem->mLabel->SetColor(ToFloatColor(Color::Gray));
       else if (mResourceList->mListItemCallback != nullptr)
@@ -2441,7 +2549,8 @@ public:
 
     if (!mResourceList->GetReadOnly())
     {
-      AddItemButton* addButton = new AddItemButton(mItemStack, mResourceList->GetResourceTypeName());
+      AddItemButton* addButton =
+          new AddItemButton(mItemStack, mResourceList->GetResourceTypeName());
       ConnectThisTo(addButton, Events::LeftClick, OnAddClick);
     }
 
@@ -2452,7 +2561,8 @@ public:
 
   void Close()
   {
-    mTitle->mExpandIcon->ChangeDefinition(mDefSet->GetDefinition("PropArrowRight"));
+    mTitle->mExpandIcon->ChangeDefinition(
+        mDefSet->GetDefinition("PropArrowRight"));
 
     mItemStack->Destroy();
 
@@ -2469,13 +2579,14 @@ public:
   FloatingSearchView* OpenSearch(Vec3 position)
   {
     FloatingSearchView* viewPopUp = new FloatingSearchView(this);
-    viewPopUp->SetSize(Pixels(300,400));
+    viewPopUp->SetSize(Pixels(300, 400));
     viewPopUp->UpdateTransformExternal();
     viewPopUp->ShiftOntoScreen(position);
     viewPopUp->UpdateTransformExternal();
 
     SearchView* searchView = viewPopUp->mView;
-    SearchProvider* provider = new ResourceListSearchProvider<ResourceList>(mResourceList);
+    SearchProvider* provider =
+        new ResourceListSearchProvider<ResourceList>(mResourceList);
     searchView->mSearch->SearchProviders.PushBack(provider);
     searchView->Search(String());
     searchView->TakeFocus();
@@ -2492,7 +2603,8 @@ public:
     {
       Resource* resource = (Resource*)event->Element->Data;
 
-      Operation* operation = new ResourceListOperation<ResourceList>(mResourceList, resource->ResourceIdName);
+      Operation* operation = new ResourceListOperation<ResourceList>(
+          mResourceList, resource->ResourceIdName);
 
       PropertyToUndo* undoProp = (PropertyToUndo*)mProp;
       undoProp->mOperationQueue->Queue(operation);
@@ -2506,13 +2618,12 @@ public:
 class CompositionLabel : public PropertyWidget
 {
 public:
-
   Element* mDivider;
   Element* mLabelBackground;
   Label* mLabel;
 
-  CompositionLabel(PropertyWidgetInitializer& initializer)
-    : PropertyWidget(initializer)
+  CompositionLabel(PropertyWidgetInitializer& initializer) :
+      PropertyWidget(initializer)
   {
     mDivider = CreateAttached<Element>(cWhiteSquare);
     mDivider->SetColor(PropertyViewUi::ColorWidgetHighlight);
@@ -2545,18 +2656,30 @@ public:
 
 void RegisterEngineEditors()
 {
-  ZilchTypeId(CogPath)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorCogPath>));
+  ZilchTypeId(CogPath)->Add(
+      new MetaPropertyEditor(&CreateProperty<PropertyEditorCogPath>));
 
   // METAREFACTOR Was this ever used?
-  //PropEditors->PropertyEditorMap["Cog"] = new PropertyGridTypeData(&CreateProperty<PropertyEditorCogRef>);
+  // PropEditors->PropertyEditorMap["Cog"] = new
+  // PropertyGridTypeData(&CreateProperty<PropertyEditorCogRef>);
 
-  ZilchTypeId(Resource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
-  ZilchTypeId(MetaEditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
-  ZilchTypeId(CogArchetypeExtension)->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
-  ZilchTypeId(RenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<RenderGroupList> >));
-  ZilchTypeId(ChildRenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<ChildRenderGroupList> >));
-  ZilchTypeId(MaterialList)->Add(new MetaPropertyEditor(&CreateProperty< ResourceListEditor<MaterialList> >));
-  ZilchTypeId(CompositionLabelExtension)->Add(new MetaPropertyEditor(&CreateProperty<CompositionLabel>));
+  ZilchTypeId(Resource)->Add(
+      new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
+  ZilchTypeId(MetaEditorResource)
+      ->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
+  ZilchTypeId(CogArchetypeExtension)
+      ->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
+  ZilchTypeId(RenderGroupList)
+      ->Add(new MetaPropertyEditor(
+          &CreateProperty<ResourceListEditor<RenderGroupList>>));
+  ZilchTypeId(ChildRenderGroupList)
+      ->Add(new MetaPropertyEditor(
+          &CreateProperty<ResourceListEditor<ChildRenderGroupList>>));
+  ZilchTypeId(MaterialList)
+      ->Add(new MetaPropertyEditor(
+          &CreateProperty<ResourceListEditor<MaterialList>>));
+  ZilchTypeId(CompositionLabelExtension)
+      ->Add(new MetaPropertyEditor(&CreateProperty<CompositionLabel>));
 }
 
-}//namespace Zero
+} // namespace Zero

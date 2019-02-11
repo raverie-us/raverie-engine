@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,4 +9,4 @@ bool Thread::IsMainThread()
 {
   return GetCurrentThreadId() == MainThreadId;
 }
-}//namespace Zero
+} // namespace Zero

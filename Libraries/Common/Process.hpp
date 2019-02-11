@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Joshua T. Fisher, Chris Peters Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,9 +18,9 @@ public:
   bool mRedirectStandardInput;  // Default: false
 };
 
-//---------------------------------------------------------------------- Process
-/// Process class used for managing external processes and redirecting their stdio.
-/// Used to launch and monitor various external programs, compilers and tools.
+/// Process class used for managing external processes and redirecting their
+/// stdio. Used to launch and monitor various external programs, compilers and
+/// tools.
 class ZeroShared Process
 {
 public:
@@ -42,27 +37,33 @@ public:
   //       version of this function.
   // NOTE: Will always search the path for the application after
   //       not finding it in the working directory.
-  void Start(Status& status, StringRange commandLine, bool redirectOut = false, bool redirectError = false,
-            bool redirectIn = false, bool showWindow = false);
+  void Start(Status& status,
+             StringRange commandLine,
+             bool redirectOut = false,
+             bool redirectError = false,
+             bool redirectIn = false,
+             bool showWindow = false);
 
   // Wait for the process to close (returns the exit code).
   // Do not call this after closing a process
   int WaitForClose();
-  // Wait for the process to close up to a maximum time-limit(returns the exit code).
-  // Do not call this after closing a process.
+  // Wait for the process to close up to a maximum time-limit(returns the exit
+  // code). Do not call this after closing a process.
   int WaitForClose(unsigned long milliseconds);
 
   //  Returns if the process is running or not.
   bool IsRunning();
 
-  // Close the process handle. This does not force the process to exit or wait for the process.
+  // Close the process handle. This does not force the process to exit or wait
+  // for the process.
   void Close();
 
   // Terminate the process (unsafe)
   void Terminate();
 
-  // Opening these will allow for reading/writing through the provided filestream interface.
-  // Close should close all these pipes unless they have been stolen by the below functions:
+  // Opening these will allow for reading/writing through the provided
+  // filestream interface. Close should close all these pipes unless they have
+  // been stolen by the below functions:
   void OpenStandardOut(File& fileStream);
   void OpenStandardError(File& fileStream);
   void OpenStandardIn(File& fileStream);
@@ -70,10 +71,10 @@ public:
   bool IsStandardOutRedirected();
   bool IsStandardErrorRedirected();
   bool IsStandardInRedirected();
+
 protected:
   ZeroDeclarePrivateData(Process, 48);
 };
-
 
 struct ProcessInfo
 {
@@ -93,23 +94,27 @@ ZeroShared void GetProcesses(Array<ProcessInfo>& results);
 ZeroShared void KillProcess(OsInt processId, int exitCode = 1);
 /// Find a process by name (returns 0 for the id and empty strings if it fails)
 ZeroShared ProcessInfo FindProcess(StringParam processName);
-/// Register the current application with the operating system's restart services.
-/// Allows an installer to restart this application when running.
-/// The application name is auto-added to the arguments. See the specific platform for flags.
-ZeroShared void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags = 0);
+/// Register the current application with the operating system's restart
+/// services. Allows an installer to restart this application when running. The
+/// application name is auto-added to the arguments. See the specific platform
+/// for flags.
+ZeroShared void RegisterApplicationRestartCommand(StringParam commandLineArgs,
+                                                  uint flags = 0);
 
 class SimpleProcess : public Process
 {
 public:
   ~SimpleProcess();
 
-  // Begin execution of another process. All output from this process 
+  // Begin execution of another process. All output from this process
   // will be passed to the provided stream. This call will return immediately
-  void ExecProcess(StringParam debugName, StringParam commandLine,
-    TextStream* stream = nullptr, bool showWindow = false);
+  void ExecProcess(StringParam debugName,
+                   StringParam commandLine,
+                   TextStream* stream = nullptr,
+                   bool showWindow = false);
 
-  // Wait for the process to close and read the rest of the output (returns the exit code)
-  // Do not call this after closing a process
+  // Wait for the process to close and read the rest of the output (returns the
+  // exit code) Do not call this after closing a process
   int WaitForClose();
 
   void Cancel();
@@ -123,4 +128,4 @@ private:
   String mDebugName;
 };
 
-}//namespace Zero
+} // namespace Zero

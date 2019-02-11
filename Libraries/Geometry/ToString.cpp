@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -52,4 +47,4 @@ String ToString(const Frustum& value, bool shortFormat)
   return String::Format("(%s), (%s)", centerStr.c_str(), aabbStr.c_str());
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Manipulator.cpp
-/// Implementation of the MouseManipulation and Gripper.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -16,11 +8,11 @@ ZilchDefineType(MouseManipulation, builder, type)
 {
 }
 
-//----------------------------------------------------------- Mouse Manipulation
 const String MouseManipulationElement = "MouseManipulation";
 
-MouseManipulation::MouseManipulation(Mouse* mouse, Composite* parent)
-  : Widget(parent, AttachType::Direct) // Manipulation should not be attached to the client area
+MouseManipulation::MouseManipulation(Mouse* mouse, Composite* parent) :
+    Widget(parent, AttachType::Direct) // Manipulation should not be attached to
+                                       // the client area
 {
   SetNotInLayout(true);
 
@@ -32,29 +24,32 @@ MouseManipulation::MouseManipulation(Mouse* mouse, Composite* parent)
   mMouseStartPosition = mouse->GetClientPosition();
 
   // If a button triggered this MouseManipulation, determine which button.
-  //   - ie, a mouse button click isn't the only way to start a MouseManipulation
+  //   - ie, a mouse button click isn't the only way to start a
+  //   MouseManipulation
   //   - ex: MouseMove
-  for(uint i = MouseButtons::Left; i < MouseButtons::Size; ++i)
+  for (uint i = MouseButtons::Left; i < MouseButtons::Size; ++i)
   {
     MouseButtons::Enum button = MouseButtons::Enum(i);
 
-    // Only ONE button, in order of precedence, may claim this MouseManipulation.
-    if(mouse->IsButtonDown(button))
+    // Only ONE button, in order of precedence, may claim this
+    // MouseManipulation.
+    if (mouse->IsButtonDown(button))
     {
       mButton = button;
 
       ErrorIf(mButton == MouseButtons::None,
-        "A valid MouseButton MUST trigger an instance of 'MouseManipulation'");
+              "A valid MouseButton MUST trigger an instance of "
+              "'MouseManipulation'");
 
       break;
     }
-    else  // No way to check if a MouseUp triggered this manipulation...
+    else // No way to check if a MouseUp triggered this manipulation...
     {
-      // Could cause bugs to always assume a MouseDown triggers the manipulation. So,
-      // each class deriving from 'MouseManipulation' should handle those special cases.
+      // Could cause bugs to always assume a MouseDown triggers the
+      // manipulation. So, each class deriving from 'MouseManipulation' should
+      // handle those special cases.
       mButton = MouseButtons::None;
     }
-
   }
 
   ConnectThisTo(this, Events::FocusReset, OnFocusReset);
@@ -92,7 +87,7 @@ void MouseManipulation::CloseAndReturnFocus()
 {
   Widget* relativeWidget = mRelative;
   mRelative = nullptr;
-  if(relativeWidget)
+  if (relativeWidget)
     relativeWidget->TryTakeFocus();
   this->Destroy();
 }
@@ -107,12 +102,13 @@ void MouseManipulation::OnMouseUp(MouseEvent* event)
   CloseAndReturnFocus();
 }
 
-//---------------------------------------------------------------------- Gripper
 
 const String GripperElement = "Gripper";
 
-Gripper::Gripper(Composite* parent, Widget* target, DockMode::Enum gripDirection)
-  : Widget(parent, AttachType::Direct)
+Gripper::Gripper(Composite* parent,
+                 Widget* target,
+                 DockMode::Enum gripDirection) :
+    Widget(parent, AttachType::Direct)
 {
   mDefSet = parent->GetDefinitionSet();
 
@@ -131,12 +127,10 @@ Gripper::Gripper(Composite* parent, Widget* target, DockMode::Enum gripDirection
 
 void Gripper::OnMouseDrag(MouseEvent* event)
 {
-
 }
 
 Gripper::~Gripper()
 {
-
 }
 
 Cursor::Enum DockDirectionToMouseCursor(DockMode::Enum dockDirection)
@@ -178,7 +172,7 @@ void Gripper::OnMouseExit(MouseEvent* event)
 void Gripper::OnMouseDown(MouseEvent* event)
 {
   Widget* target = mTarget;
-  if(Docker* docker = target->GetDocker())
+  if (Docker* docker = target->GetDocker())
     docker->StartManipulation(target, mGripDirection);
   else
     new SizingManipulation(event->GetMouse(), target, mGripDirection);
@@ -189,34 +183,44 @@ void Gripper::OnOsWindowBorderHitTest(OsWindowBorderHitTest* event)
   Widget* target = mTarget;
   if (Docker* docker = target->GetDocker())
   {
-    WindowBorderArea::Enum area = docker->GetWindowBorderArea(target, mGripDirection);
+    WindowBorderArea::Enum area =
+        docker->GetWindowBorderArea(target, mGripDirection);
 
     if (area != WindowBorderArea::None)
       event->mWindowBorderArea = area;
   }
 }
 
-GripZones::GripZones(Composite* owner, Widget * sizeTarget)
-  :Composite(owner, AttachType::Direct)
+GripZones::GripZones(Composite* owner, Widget* sizeTarget) :
+    Composite(owner, AttachType::Direct)
 {
   SetLayout(CreateEdgeDockLayout());
 
   mGripper[SlicesIndex::Top] = new Gripper(this, sizeTarget, DockMode::DockTop);
-  mGripper[SlicesIndex::Left] = new Gripper(this, sizeTarget, DockMode::DockLeft);
-  mGripper[SlicesIndex::Bottom] = new Gripper(this, sizeTarget,DockMode::DockBottom );
-  mGripper[SlicesIndex::Right] = new Gripper(this, sizeTarget, DockMode::DockRight);
+  mGripper[SlicesIndex::Left] =
+      new Gripper(this, sizeTarget, DockMode::DockLeft);
+  mGripper[SlicesIndex::Bottom] =
+      new Gripper(this, sizeTarget, DockMode::DockBottom);
+  mGripper[SlicesIndex::Right] =
+      new Gripper(this, sizeTarget, DockMode::DockRight);
 
-  mCornerGripper[0] = new Gripper(this, sizeTarget,
-    DockMode::Enum(DockMode::DockTop | DockMode::DockLeft));
-  mCornerGripper[1] = new Gripper(this, sizeTarget,
-    DockMode::Enum(DockMode::DockTop | DockMode::DockRight));
-  mCornerGripper[2] = new Gripper(this, sizeTarget,
-    DockMode::Enum(DockMode::DockBottom | DockMode::DockLeft));
-  mCornerGripper[3] = new Gripper(this, sizeTarget,
-    DockMode::Enum(DockMode::DockBottom | DockMode::DockRight));
+  mCornerGripper[0] = new Gripper(
+      this, sizeTarget, DockMode::Enum(DockMode::DockTop | DockMode::DockLeft));
+  mCornerGripper[1] =
+      new Gripper(this,
+                  sizeTarget,
+                  DockMode::Enum(DockMode::DockTop | DockMode::DockRight));
+  mCornerGripper[2] =
+      new Gripper(this,
+                  sizeTarget,
+                  DockMode::Enum(DockMode::DockBottom | DockMode::DockLeft));
+  mCornerGripper[3] =
+      new Gripper(this,
+                  sizeTarget,
+                  DockMode::Enum(DockMode::DockBottom | DockMode::DockRight));
 }
 
-void GripZones::UpdateTransform() 
+void GripZones::UpdateTransform()
 {
   Vec4 margins = Vec4(6, 6, 6, 6);
 
@@ -224,48 +228,54 @@ void GripZones::UpdateTransform()
   Vec2 topSize = Vec2(mSize.x, margins[SlicesIndex::Bottom]);
   Vec2 corSize = Vec2(margins[SlicesIndex::Left], margins[SlicesIndex::Bottom]);
 
-  //Set up gripper areas
+  // Set up gripper areas
   mGripper[SlicesIndex::Top]->SetSize(topSize);
   mGripper[SlicesIndex::Left]->SetSize(sideSize);
   mGripper[SlicesIndex::Bottom]->SetSize(topSize);
   mGripper[SlicesIndex::Right]->SetSize(sideSize);
 
-  for(uint i = 0; i < 4; ++i)
+  for (uint i = 0; i < 4; ++i)
     mCornerGripper[i]->SetSize(corSize);
 
   Composite::UpdateTransform();
 }
 
-
-void MoveUpperAxis(int a, Vec3& newObjectPos, Vec2& newObjectSize, 
-                   Vec2Param minSize, Vec2Param movement)
+void MoveUpperAxis(int a,
+                   Vec3& newObjectPos,
+                   Vec2& newObjectSize,
+                   Vec2Param minSize,
+                   Vec2Param movement)
 {
-  //The max change is limited by the minimum size to
-  //prevent shrinking the object to small
+  // The max change is limited by the minimum size to
+  // prevent shrinking the object to small
   float maxDelta = newObjectSize[a] - minSize[a];
-  //The min change is limited by the position of the object
-  //to prevent sizing outside the window
+  // The min change is limited by the position of the object
+  // to prevent sizing outside the window
   float minDelta = -newObjectPos[a];
 
-  //Clamp the value
+  // Clamp the value
   float moveAxis = Math::Clamp(movement[a], minDelta, maxDelta);
 
-  //Update the position and size
+  // Update the position and size
   newObjectPos[a] += moveAxis;
   newObjectSize[a] -= moveAxis;
 }
 
-void MoveLowerAxis(int a, Vec3& newObjectPos, Vec2& newObjectSize, 
-                   Vec2Param minSize, Vec2Param maxSize, Vec2Param movement)
+void MoveLowerAxis(int a,
+                   Vec3& newObjectPos,
+                   Vec2& newObjectSize,
+                   Vec2Param minSize,
+                   Vec2Param maxSize,
+                   Vec2Param movement)
 {
   newObjectSize[a] += movement[a];
   newObjectSize[a] = Math::Clamp(newObjectSize[a], minSize[a], maxSize[a]);
 }
 
-//---------------------------------------------------------- Sizing Manipulation
-SizingManipulation::SizingManipulation(Mouse* mouse, Widget* toBeSized, 
-                                       DockMode::Enum mode)
-  : MouseManipulation(mouse, toBeSized->GetParent())
+SizingManipulation::SizingManipulation(Mouse* mouse,
+                                       Widget* toBeSized,
+                                       DockMode::Enum mode) :
+    MouseManipulation(mouse, toBeSized->GetParent())
 {
   mBeingSized = toBeSized;
   mTargetStartPosition = toBeSized->GetTranslation();
@@ -282,7 +292,7 @@ void SizingManipulation::OnMouseUp(MouseEvent* event)
 void SizingManipulation::OnMouseMove(MouseEvent* event)
 {
   Widget* beingSized = mBeingSized;
-  if(beingSized == nullptr)
+  if (beingSized == nullptr)
   {
     // Lost widget while sizing
     this->Destroy();
@@ -299,21 +309,21 @@ void SizingManipulation::OnMouseMove(MouseEvent* event)
 
   Vec2 parentSize = parent->GetSize();
 
-  if(mSizerMode & DockMode::DockLeft)
+  if (mSizerMode & DockMode::DockLeft)
     MoveUpperAxis(0, newObjectPos, newObjectSize, minSize, delta);
 
-  if(mSizerMode & DockMode::DockTop)
+  if (mSizerMode & DockMode::DockTop)
     MoveUpperAxis(1, newObjectPos, newObjectSize, minSize, delta);
 
   Vec2 maxSize = parentSize - Vec2(newObjectPos.x, newObjectPos.y);
 
-  if(mSizerMode & DockMode::DockRight)
+  if (mSizerMode & DockMode::DockRight)
     MoveLowerAxis(0, newObjectPos, newObjectSize, minSize, maxSize, delta);
 
-  if(mSizerMode & DockMode::DockBottom)
+  if (mSizerMode & DockMode::DockBottom)
     MoveLowerAxis(1, newObjectPos, newObjectSize, minSize, maxSize, delta);
 
-  if(mSizerMode & DockMode::DockFill)
+  if (mSizerMode & DockMode::DockFill)
   {
     newObjectPos = newObjectPos + Vec3(delta.x, delta.y, 0);
     Vec2 maxPoint = parentSize - newObjectSize;
@@ -326,4 +336,4 @@ void SizingManipulation::OnMouseMove(MouseEvent* event)
   beingSized->UpdateTransformExternal();
 }
 
-}//namespace Zero
+} // namespace Zero

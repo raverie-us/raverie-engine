@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,8 +7,8 @@ namespace Zero
 class UpdateEvent;
 class HierarchyEvent;
 
-//-------------------------------------------------------------------HierarchySpline
-/// A spline that builds its control points from all child cogs that have Transforms.
+/// A spline that builds its control points from all child cogs that have
+/// Transforms.
 class HierarchySpline : public Component
 {
 public:
@@ -45,7 +40,7 @@ public:
   /// What color should that spline be drawn with
   Vec4 GetSplineColor() const;
   void SetSplineColor(Vec4 splineColor);
-  
+
   /// Rebuild the baked points if there are any changes to the spline's control
   /// points. This should never need to be manually called.
   void RebuildIfModified();
@@ -56,17 +51,15 @@ public:
   /// Samples the curve at a given arc-length distance.
   SplineSampleData SampleDistance(real distance);
 
-  
 private:
   void OnQuerySpline(SplineEvent* e);
   void OnFrameUpdate(UpdateEvent* e);
   void OnChildAttached(HierarchyEvent* e);
   void OnChildDetached(HierarchyEvent* e);
   void OnMarkModified(Event* e);
-  
+
   void ConnectChildEvents(Cog* child);
   void GetChildrenConnections();
-  
 
   bool mDebugDrawSpline;
   Vec4 mSplineColor;
@@ -75,5 +68,4 @@ private:
   HandleOf<Spline> mSpline;
 };
 
-}//namespace Zero
-
+} // namespace Zero

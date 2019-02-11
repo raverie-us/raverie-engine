@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  Authors: Joshua Davis, Benjamin Strukus
-///  Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
@@ -13,7 +8,6 @@ const Vector2 Vector2::cZero(real(0.0), real(0.0));
 const Vector2 Vector2::cXAxis(real(1.0), real(0.0));
 const Vector2 Vector2::cYAxis(real(0.0), real(1.0));
 const Vector2 Vector2::Axes[] = {Vector2::cXAxis, Vector2::cYAxis};
-
 
 Vector2::Vector2(real x_, real y_)
 {
@@ -116,7 +110,7 @@ Vector2 Vector2::operator*(Vec2Param rhs) const
 Vector2 Vector2::operator/(Vec2Param rhs) const
 {
   ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0),
-    "Vector2 - Division by zero.");
+          "Vector2 - Division by zero.");
   return Vector2(x / rhs.x, y / rhs.y);
 }
 
@@ -132,26 +126,22 @@ bool Vector2::operator!=(Vec2Param rhs) const
 
 BoolVec2 Vector2::operator<(Vec2Param rhs) const
 {
-  return BoolVec2(x < rhs.x,
-                  y < rhs.y);
+  return BoolVec2(x < rhs.x, y < rhs.y);
 }
 
 BoolVec2 Vector2::operator<=(Vec2Param rhs) const
 {
-  return BoolVec2(x <= rhs.x,
-                  y <= rhs.y);
+  return BoolVec2(x <= rhs.x, y <= rhs.y);
 }
 
 BoolVec2 Vector2::operator>(Vec2Param rhs) const
 {
-  return BoolVec2(x > rhs.x,
-                  y > rhs.y);
+  return BoolVec2(x > rhs.x, y > rhs.y);
 }
 
 BoolVec2 Vector2::operator>=(Vec2Param rhs) const
 {
-  return BoolVec2(x >= rhs.x,
-                  y >= rhs.y);
+  return BoolVec2(x >= rhs.x, y >= rhs.y);
 }
 
 void Vector2::ZeroOut()
@@ -234,7 +224,7 @@ real Vector2::AttemptNormalize(Vec2Ref value)
   // Although the squared length may not be zero, the sqrt of a small number
   // may be truncated to zero, causing a divide by zero crash.  This is why
   // we check to make sure that it is larger than our epsilon squared.
-  if(lengthSq >= Epsilon() * Epsilon())
+  if (lengthSq >= Epsilon() * Epsilon())
   {
     lengthSq = Sqrt(lengthSq);
     value /= lengthSq;
@@ -266,14 +256,12 @@ Vector2 Vector2::Abs(Vec2Param value)
 
 Vector2 Vector2::Min(Vec2Param lhs, Vec2Param rhs)
 {
-  return Vector2(Math::Min(lhs.x, rhs.x),
-                 Math::Min(lhs.y, rhs.y));
+  return Vector2(Math::Min(lhs.x, rhs.x), Math::Min(lhs.y, rhs.y));
 }
 
 Vector2 Vector2::Max(Vec2Param lhs, Vec2Param rhs)
 {
-  return Vector2(Math::Max(lhs.x, rhs.x),
-                 Math::Max(lhs.y, rhs.y));
+  return Vector2(Math::Max(lhs.x, rhs.x), Math::Max(lhs.y, rhs.y));
 }
 
 Vector2 Vector2::Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue)
@@ -284,7 +272,10 @@ Vector2 Vector2::Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue)
   return result;
 }
 
-Vector2 Vector2::DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped)
+Vector2 Vector2::DebugClamp(Vec2Param value,
+                            Vec2Param minValue,
+                            Vec2Param maxValue,
+                            bool& wasClamped)
 {
   Vector2 result = value;
   result.x = Math::DebugClamp(value.x, minValue.x, maxValue.x, wasClamped);
@@ -327,7 +318,7 @@ Vector2 Vector2::Round(Vec2Param value)
 Vector2 Vector2::Lerp(Vec2Param start, Vec2Param end, real tValue)
 {
   WarnIf(!Math::InRange(tValue, real(0.0), real(1.0)),
-    "Vector2 - Interpolation value is not in the range of [0, 1]");
+         "Vector2 - Interpolation value is not in the range of [0, 1]");
   return Math::Lerp<Vector2, real>(start, end, tValue);
 }
 
@@ -356,7 +347,8 @@ Vector2 Vector2::ProjectOnPlane(Vec2Param input, Vec2Param planeNormal)
   return GenericProjectOnPlane(input, planeNormal);
 }
 
-Vector2 Vector2::ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector)
+Vector2 Vector2::ReflectAcrossVector(Vec2Param input,
+                                     Vec2Param normalizedVector)
 {
   return GenericReflectAcrossVector(input, normalizedVector);
 }
@@ -366,7 +358,9 @@ Vector2 Vector2::ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal)
   return GenericReflectAcrossPlane(input, planeNormal);
 }
 
-Vector2 Vector2::Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex)
+Vector2 Vector2::Refract(Vec2Param input,
+                         Vec2Param planeNormal,
+                         real refractionIndex)
 {
   return GenericRefract(input, planeNormal, refractionIndex);
 }
@@ -435,7 +429,7 @@ real Vector2::AttemptNormalize()
   // Although the squared length may not be zero, the sqrt of a small number
   // may be truncated to zero, causing a divide by zero crash.  This is why
   // we check to make sure that it is larger than our epsilon squared.
-  if(lengthSq >= Epsilon() * Epsilon())
+  if (lengthSq >= Epsilon() * Epsilon())
   {
     lengthSq = Sqrt(lengthSq);
     *this /= lengthSq;
@@ -481,7 +475,6 @@ Vec2Ref Vector2::Negate(void)
   return *this;
 }
 
-//-------------------------------------------------------------------Globals
 Vector2 operator*(real lhs, Vec2Param rhs)
 {
   return rhs * lhs;
@@ -577,7 +570,10 @@ Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue)
   return Vector2::Clamp(value, minValue, maxValue);
 }
 
-Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped)
+Vector2 DebugClamp(Vec2Param value,
+                   Vec2Param minValue,
+                   Vec2Param maxValue,
+                   bool& wasClamped)
 {
   return Vector2::DebugClamp(value, minValue, maxValue, wasClamped);
 }
@@ -652,7 +648,6 @@ real AngleBetween(Vec2Param a, Vec2Param b)
   return Vector2::AngleBetween(a, b);
 }
 
-//-------------------------------------------------------------------Legacy
 void Clamp(Vec2Ptr vec, real min, real max)
 {
   ErrorIf(vec == nullptr, "Null pointer passed into function.");
@@ -671,4 +666,4 @@ Vector2 Negated(Vec2Param vec)
   return Vector2(-vec.x, -vec.y);
 }
 
-}// namespace Math
+} // namespace Math

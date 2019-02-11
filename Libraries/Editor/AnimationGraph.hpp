@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationGraph.hpp
-/// Declaration of the AnimationGraph Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -27,7 +19,6 @@ class ScrollingGraph;
 class KeyFrameEvent;
 class AnimationToolBox;
 
-//------------------------------------------------------- Animation Curve Editor
 class AnimationCurveEditor : public CurveEditor
 {
 public:
@@ -54,7 +45,6 @@ private:
   AnimationGraphEditor* mGraph;
 };
 
-//------------------------------------------------------- Animation Curve Object
 class AnimationCurveObject : public CurveObject
 {
 public:
@@ -110,7 +100,6 @@ private:
   HashMap<KeyFrame*, ControlPoint*> mKeysToControlPoints;
 };
 
-//-------------------------------------------------------------- Animation Graph
 class AnimationGraphEditor : public Composite
 {
 public:
@@ -118,7 +107,8 @@ public:
   typedef AnimationGraphEditor ZilchSelf;
 
   /// Constructor.
-  AnimationGraphEditor(Composite* parent,AnimationEditor* editor,
+  AnimationGraphEditor(Composite* parent,
+                       AnimationEditor* editor,
                        ScrollingGraph* graphData);
 
   void SetScrubber(AnimationScrubber* scrubber);
@@ -155,7 +145,8 @@ private:
   friend class AnimationCurveObject;
 
   /// Finds a color for the given track.
-  ByteColor GetTrackColor(TrackNode* track, HashSet<ByteColor>& takenColors,
+  ByteColor GetTrackColor(TrackNode* track,
+                          HashSet<ByteColor>& takenColors,
                           uint& colorIndex);
 
   /// Rebuilds all curve editors based on the visible property tracks.
@@ -200,4 +191,4 @@ private:
   AnimationScrubber* mScrubber;
 };
 
-}//namespace Zero
+} // namespace Zero

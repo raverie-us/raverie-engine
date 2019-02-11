@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 namespace Events
 {
-  DeclareEvent(AllObjectsInitialized);
+DeclareEvent(AllObjectsInitialized);
 }
 
 class GameSession;
@@ -25,8 +20,8 @@ public:
   CogInitializer* mCogInitializer;
 };
 
-///Cog initialization data. Structure that is passed in to 
-///initialize the component and cog.
+/// Cog initialization data. Structure that is passed in to
+/// initialize the component and cog.
 class CogInitializer : public SafeId32EventObject
 {
 public:
@@ -46,31 +41,40 @@ public:
   /// This is useful for controlling initialization order and phases
   void DispatchEvent(StringParam eventId, Event* event);
 
-  Space* GetSpace(){return mSpace;}
-  Cog* GetParent(){return mParent; }
-  GameSession* GetGameSession(){return mGameSession; }
+  Space* GetSpace()
+  {
+    return mSpace;
+  }
+  Cog* GetParent()
+  {
+    return mParent;
+  }
+  GameSession* GetGameSession()
+  {
+    return mGameSession;
+  }
 
-  //The GameSession the object is created in.
+  // The GameSession the object is created in.
   GameSession* mGameSession;
 
-  //The space the object is created in.
+  // The space the object is created in.
   Space* mSpace;
 
-  //The parent in the Game Object Hierarchy.
+  // The parent in the Game Object Hierarchy.
   Cog* mParent;
 
-  //Level resource create from.
+  // Level resource create from.
   String mLevel;
 
-  //Objects being added
+  // Objects being added
   SpaceCogList CreationList;
   uint AddCount;
 
   friend class Space;
 
-  //Creation Context for loading object
-  //relationships.
+  // Creation Context for loading object
+  // relationships.
   CogCreationContext* Context;
 };
 
-}
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -54,12 +49,13 @@ void FixedAngleJoint::Initialize(CogInitializer& initializer)
 
 void FixedAngleJoint::ComputeInitialConfiguration()
 {
-  // Compute the reference angle that'll preserve the current rotation between the objects
+  // Compute the reference angle that'll preserve the current rotation between
+  // the objects
   ComputeCurrentReferenceAngle(mReferenceAngle);
 }
 
 void FixedAngleJoint::ComputeMoleculeData(MoleculeData& moleculeData)
-{  
+{
   moleculeData.SetUp(nullptr, &mReferenceAngle, this);
   moleculeData.SetLinearIdentity();
   moleculeData.SetAngularIdentity();
@@ -75,7 +71,7 @@ void FixedAngleJoint::UpdateAtoms()
 
 uint FixedAngleJoint::MoleculeCount() const
 {
-  return GetMoleculeCount(this, sInfo.mAtomCountMask); 
+  return GetMoleculeCount(this, sInfo.mAtomCountMask);
 }
 
 void FixedAngleJoint::ComputeMolecules(MoleculeWalker& molecules)
@@ -111,17 +107,19 @@ void FixedAngleJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void FixedAngleJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
 }
 
-uint FixedAngleJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint FixedAngleJoint::GetAtomIndexFilter(uint atomIndex,
+                                         real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return AngularAxis;
@@ -147,6 +145,6 @@ uint FixedAngleJoint::GetDefaultSpringIds() const
   return AllAxes;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

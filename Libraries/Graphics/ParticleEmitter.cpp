@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleEmitter.cpp
-/// Implementation of the Particle emitter component classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,11 +6,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ParticlesExhausted);
-  DefineEvent(AllParticlesDead);
-}
+DefineEvent(ParticlesExhausted);
+DefineEvent(AllParticlesDead);
+} // namespace Events
 
-//------------------------------------------------------------- Particle Emitter
 ZilchDefineType(ParticleEmitter, builder, type)
 {
   ZeroBindDocumented();
@@ -41,23 +32,21 @@ void ParticleEmitter::Initialize(CogInitializer& initializer)
 
   GetOwner()->has(ParticleSystem)->AddEmitter(this);
   mTransform = GetOwner()->has(Transform);
-  if(mTransform)
+  if (mTransform)
   {
     Vec3 newPosition = mTransform->GetWorldTranslation();
     mLastFramePosition = newPosition;
   }
 }
 
-
-//--------------------------------------------------------------------------------- Hide Base Filter
+//Hide Base Filter
 ZilchDefineType(HideBaseFilter, builder, type)
 {
 }
 
-HideBaseFilter::HideBaseFilter(BoundType* hiddenOnType) : 
-  mHiddenOnType(hiddenOnType)
+HideBaseFilter::HideBaseFilter(BoundType* hiddenOnType) :
+    mHiddenOnType(hiddenOnType)
 {
-
 }
 
 bool HideBaseFilter::Filter(Member* prop, HandleParam instance)
@@ -67,7 +56,7 @@ bool HideBaseFilter::Filter(Member* prop, HandleParam instance)
   return true;
 }
 
-//--------------------------------------------------------------------- Particle Emitter Common Data
+//Emitter Common Data
 const float ParticleEmitterShared::mMaxEmitRate = 50000.0f;
 
 ZilchDefineType(ParticleEmitterShared, builder, type)
@@ -101,7 +90,9 @@ ZilchDefineType(ParticleEmitterShared, builder, type)
 
   ZilchBindFieldProperty(mRandomSpin);
 
-  ZilchBindFieldProperty(mFill)->Add(new EditorSlider(0, 1, 0.01f))->HideOnDerivedType(MeshParticleEmitter);
+  ZilchBindFieldProperty(mFill)
+      ->Add(new EditorSlider(0, 1, 0.01f))
+      ->HideOnDerivedType(MeshParticleEmitter);
   ZilchBindFieldProperty(mEmitterVelocityPercent);
 
   ZilchBindFieldProperty(mStartVelocity);
@@ -151,14 +142,14 @@ void ParticleEmitterShared::Serialize(Serializer& stream)
   SerializeNameDefault(mEmitterVelocityPercent, 0.0f);
 
   SerializeNameDefault(mStartVelocity, Vec3::cZero);
-  SerializeNameDefault(mRandomVelocity, Vec3(2,2,2));
+  SerializeNameDefault(mRandomVelocity, Vec3(2, 2, 2));
   SerializeNameDefault(mTangentVelocity, Vec3::cZero);
 
   SerializeNameDefault(mEmitterSize, Vec3::cZero);
 
   SerializeNameDefault(mFastMovingEmitter, false);
 
-  if(stream.GetMode() == SerializerMode::Loading)
+  if (stream.GetMode() == SerializerMode::Loading)
   {
     mEmitRate = Math::Min(mEmitRate, mMaxEmitRate);
   }
@@ -183,10 +174,13 @@ float ParticleEmitterShared::GetEmitRate()
 
 void ParticleEmitterShared::SetEmitRate(float emitRate)
 {
-  if(emitRate > mMaxEmitRate)
+  if (emitRate > mMaxEmitRate)
   {
-    String msg = String::Format("The value %f is outside the valid range of [0, %f]. "
-                                "The value will be clamped", emitRate, mMaxEmitRate);
+    String msg =
+        String::Format("The value %f is outside the valid range of [0, %f]. "
+                       "The value will be clamped",
+                       emitRate,
+                       mMaxEmitRate);
     DoNotifyWarning("Particle emit rate too large", msg);
     emitRate = mMaxEmitRate;
   }
@@ -194,29 +188,31 @@ void ParticleEmitterShared::SetEmitRate(float emitRate)
   mEmitRate = emitRate;
 }
 
-int ParticleEmitterShared::GetParticleEmissionCount(ParticleList* particleList, float dt, float timeAlive)
+int ParticleEmitterShared::GetParticleEmissionCount(ParticleList* particleList,
+                                                    float dt,
+                                                    float timeAlive)
 {
-  if(!mActive)
+  if (!mActive)
     return 0;
 
-  if(mEmitDelay > timeAlive)
+  if (mEmitDelay > timeAlive)
     return 0;
-
 
   mSample -= dt;
   const float sampleTiming = 0.25f;
 
-  if(mSample < sampleTiming)
+  if (mSample < sampleTiming)
   {
-    mSample+=sampleTiming;
-    mEmitRateCurrent = mGraphicsSpace->mRandom.FloatVariance(mEmitRate, mEmitVariance);
+    mSample += sampleTiming;
+    mEmitRateCurrent =
+        mGraphicsSpace->mRandom.FloatVariance(mEmitRate, mEmitVariance);
   }
 
-  if(mEmitRateCurrent <= 0.0f)
+  if (mEmitRateCurrent <= 0.0f)
     return 0;
 
   float emitRateScalar = 1.0f;
-  if(mEmitRateSoftStartTime > 0.0f)
+  if (mEmitRateSoftStartTime > 0.0f)
   {
     emitRateScalar = (timeAlive - mEmitDelay) / mEmitRateSoftStartTime;
     emitRateScalar = Math::Clamp(emitRateScalar, 0.0f, 1.0f);
@@ -225,14 +221,14 @@ int ParticleEmitterShared::GetParticleEmissionCount(ParticleList* particleList, 
   uint emitRate = (uint)(float(mEmitRateCurrent) * emitRateScalar);
 
   mAccumulation += dt * emitRate;
-  int particlesToEmit =(int)mAccumulation;
-  mAccumulation-= float(particlesToEmit);
+  int particlesToEmit = (int)mAccumulation;
+  mAccumulation -= float(particlesToEmit);
 
-  if(mEmitCount != 0)
+  if (mEmitCount != 0)
   {
-    if(mCurrentCount > 0)
+    if (mCurrentCount > 0)
     {
-      if(mCurrentCount > particlesToEmit)
+      if (mCurrentCount > particlesToEmit)
       {
         mCurrentCount -= particlesToEmit;
       }
@@ -254,17 +250,18 @@ int ParticleEmitterShared::GetParticleEmissionCount(ParticleList* particleList, 
   return particlesToEmit;
 }
 
-Particle* ParticleEmitterShared::CreateInitializedParticle(ParticleList* particleList,
-                                                           int particle, 
-                                                           Mat4Ref transform, 
-                                                           Vec3Param emitterVelocity)
+Particle*
+ParticleEmitterShared::CreateInitializedParticle(ParticleList* particleList,
+                                                 int particle,
+                                                 Mat4Ref transform,
+                                                 Vec3Param emitterVelocity)
 {
   Particle* newParticle = particleList->AllocateParticle();
   Math::Random& random = mGraphicsSpace->mRandom;
 
   Vec3 direction;
 
-  if(mEmitterSize.x == 0)
+  if (mEmitterSize.x == 0)
     direction = random.PointOnUnitCircleX();
   else if (mEmitterSize.y == 0)
     direction = random.PointOnUnitCircleY();
@@ -279,34 +276,36 @@ Particle* ParticleEmitterShared::CreateInitializedParticle(ParticleList* particl
 
   Vec3 velocity = mStartVelocity + random.PointOnUnitSphere() * mRandomVelocity;
 
-  if(mTangentVelocity.LengthSq() > 0.0f)
+  if (mTangentVelocity.LengthSq() > 0.0f)
   {
     Vec3 dirNorm = startingPoint;
     dirNorm.AttemptNormalize();
-    Vec3 crossA = Cross(dirNorm, Vec3(0,1,0));
+    Vec3 crossA = Cross(dirNorm, Vec3(0, 1, 0));
     Vec3 crossB = Cross(crossA, dirNorm);
-    velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y + crossB * mTangentVelocity.x;
+    velocity += dirNorm * mTangentVelocity.z + crossA * mTangentVelocity.y +
+                crossB * mTangentVelocity.x;
   }
 
   newParticle->Time = 0;
   newParticle->Size = random.FloatVariance(mSize, mSizeVariance);
 
-  newParticle->Velocity = Math::TransformNormal(transform, velocity) + emitterVelocity * mEmitterVelocityPercent;
+  newParticle->Velocity = Math::TransformNormal(transform, velocity) +
+                          emitterVelocity * mEmitterVelocityPercent;
   newParticle->Position = Math::TransformPoint(transform, startingPoint);
   newParticle->Lifetime = random.FloatVariance(mLifetime, mLifetimeVariance);
 
   newParticle->WanderAngle = random.FloatRange(0.0f, 2 * Math::cTwoPi);
 
-  if(mRandomSpin)
+  if (mRandomSpin)
     newParticle->Rotation = random.FloatRange(0.0f, 2 * Math::cTwoPi);
   else
     newParticle->Rotation = 0;
 
-  newParticle->RotationalVelocity = random.FloatVariance(Math::DegToRad(mSpin),
-                                                          Math::DegToRad(mSpinVariance));
+  newParticle->RotationalVelocity = random.FloatVariance(
+      Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
 
   particleList->AddParticle(newParticle);
-  
+
   return newParticle;
 }
 

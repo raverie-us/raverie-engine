@@ -1,28 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file OrientationGizmoViewport.cpp
-/// Implementation of the OrientationGizmoViewport class.
-///
-/// Authors: Nathan Carlson
-/// Copyright 2013-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-OrientationGizmoViewport::OrientationGizmoViewport(EditorViewport* editorViewport)
-  : Widget(editorViewport)
+OrientationGizmoViewport::OrientationGizmoViewport(
+    EditorViewport* editorViewport) :
+    Widget(editorViewport)
 {
   mEditorViewport = editorViewport;
 
   GameSession* gameSession = Z::gEditor->GetEditGameSession();
-  Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
+  Archetype* spaceArchetype =
+      ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
   mViewCubeSpace = gameSession->CreateEditorSpace(spaceArchetype);
   mViewCubeSpace->SetName(CoreArchetypes::ViewCube);
 
-  mCamera = mViewCubeSpace->CreateAt(CoreArchetypes::PreviewCamera, Vec3(0, 0, 2.5));
+  mCamera =
+      mViewCubeSpace->CreateAt(CoreArchetypes::PreviewCamera, Vec3(0, 0, 2.5));
   mCamera->ClearArchetype();
 
   Component* renderer = mCamera->GetComponentByName("ForwardRenderer");
@@ -42,7 +37,8 @@ OrientationGizmoViewport::OrientationGizmoViewport(EditorViewport* editorViewpor
 
   mViewport = (Viewport*)cameraViewport->mViewport;
 
-  Cog* viewCube = mViewCubeSpace->CreateAt(CoreArchetypes::ViewCube, Vec3::cZero);
+  Cog* viewCube =
+      mViewCubeSpace->CreateAt(CoreArchetypes::ViewCube, Vec3::cZero);
   viewCube->ClearArchetype();
   SetOrientations(*viewCube);
 
@@ -103,8 +99,9 @@ void OrientationGizmoViewport::OnMouseUp(MouseEvent* event)
   if (GetViewDirection(event, dir))
   {
     Cog* editorCamera = mEditorViewport->mEditorCamera;
-    EditorCameraController* controller = editorCamera->has(EditorCameraController);
-    if(!controller)
+    EditorCameraController* controller =
+        editorCamera->has(EditorCameraController);
+    if (!controller)
     {
       event->Terminate();
       return;
@@ -125,9 +122,20 @@ void OrientationGizmoViewport::OnMouseUp(MouseEvent* event)
 
     newH = oldH + deltaH;
 
-    ActionGroup* actionGroup = new ActionGroup(controller->GetOwner(), ActionExecuteMode::FrameUpdate);
-    actionGroup->Add(AnimatePropertyGetSet(EditorCameraController, HorizontalAngle, Ease::Quad::InOut, controller, 0.5f, newH));
-    actionGroup->Add(AnimatePropertyGetSet(EditorCameraController, VerticalAngle, Ease::Quad::InOut, controller, 0.5f, newV));
+    ActionGroup* actionGroup =
+        new ActionGroup(controller->GetOwner(), ActionExecuteMode::FrameUpdate);
+    actionGroup->Add(AnimatePropertyGetSet(EditorCameraController,
+                                           HorizontalAngle,
+                                           Ease::Quad::InOut,
+                                           controller,
+                                           0.5f,
+                                           newH));
+    actionGroup->Add(AnimatePropertyGetSet(EditorCameraController,
+                                           VerticalAngle,
+                                           Ease::Quad::InOut,
+                                           controller,
+                                           0.5f,
+                                           newV));
 
     event->Terminate();
   }
@@ -148,7 +156,7 @@ void OrientationGizmoViewport::OnMouseUpdate(MouseEvent* event)
 
 void OrientationGizmoViewport::SetOrientations(Cog& cog)
 {
-  forRange (Cog& child, cog.GetChildren())
+  forRange(Cog & child, cog.GetChildren())
   {
     Collider* collider = child.has(Collider);
     if (collider != nullptr)
@@ -162,13 +170,16 @@ void OrientationGizmoViewport::SetOrientations(Cog& cog)
   }
 }
 
-bool OrientationGizmoViewport::GetViewDirection(MouseEvent* event, Vec3& direction)
+bool OrientationGizmoViewport::GetViewDirection(MouseEvent* event,
+                                                Vec3& direction)
 {
   if (mViewport.IsNull())
     return false;
 
   RaycastResultList result(1);
-  CastInfo castInfo(mViewCubeSpace, mViewport->mViewportInterface->GetCameraCog(), event->Position);
+  CastInfo castInfo(mViewCubeSpace,
+                    mViewport->mViewportInterface->GetCameraCog(),
+                    event->Position);
   Ray pickRay = mViewport->ScreenToWorldRay(event->Position);
 
   mRayCaster.RayCast(pickRay, castInfo, result);
@@ -193,7 +204,9 @@ Cog* OrientationGizmoViewport::GetRaycastResult(MouseEvent* event)
     return nullptr;
 
   RaycastResultList result(1);
-  CastInfo castInfo(mViewCubeSpace, mViewport->mViewportInterface->GetCameraCog(), event->Position);
+  CastInfo castInfo(mViewCubeSpace,
+                    mViewport->mViewportInterface->GetCameraCog(),
+                    event->Position);
   Ray pickRay = mViewport->ScreenToWorldRay(event->Position);
 
   mRayCaster.RayCast(pickRay, castInfo, result);
@@ -206,7 +219,7 @@ Cog* OrientationGizmoViewport::GetRaycastResult(MouseEvent* event)
 
 void OrientationGizmoViewport::SetFaces(Vec3 direction)
 {
-  forRange (auto pair, mOrientationMap.All())
+  forRange(auto pair, mOrientationMap.All())
   {
     CogId cogId = pair.first;
     if (cogId.IsValid() == false)
@@ -215,9 +228,12 @@ void OrientationGizmoViewport::SetFaces(Vec3 direction)
     Vec3 dir = pair.second;
 
     int count = 0;
-    if (dir.x != 0) ++count;
-    if (dir.y != 0) ++count;
-    if (dir.z != 0) ++count;
+    if (dir.x != 0)
+      ++count;
+    if (dir.y != 0)
+      ++count;
+    if (dir.z != 0)
+      ++count;
 
     if (count != 1)
       continue;
@@ -226,7 +242,8 @@ void OrientationGizmoViewport::SetFaces(Vec3 direction)
 
     real t = Math::Abs(dir.Dot(direction));
     t = 1.0f - (t / 0.5f);
-    if (t < 0.0f) t = 0.0f;
+    if (t < 0.0f)
+      t = 0.0f;
 
     Vec3 in = Vec3::cZero;
     Vec3 out = -dir * 0.24f;

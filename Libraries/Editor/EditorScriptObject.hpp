@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,16 +7,15 @@ namespace Zero
 // Forward declarations
 class ResourceEvent;
 
-//-------------------------------------------------------- Editor Script Objects
 /// DataType needs the following members:
 ///   Handle<Archetype> mArchetype;
 ///   MetaType* mScriptComponentMeta;
 ///   Handle<Cog> mCog;
-/// 
+///
 /// And the following members:
 ///   String GetName();
 
-/// Manages the creation and deletion of objects based on 
+/// Manages the creation and deletion of objects based on
 template <typename DataType>
 class EditorScriptObjects : public EventObject
 {
@@ -64,33 +58,35 @@ public:
   String mAutoRegister;
 };
 
-//******************************************************************************
 template <typename DataType>
 EditorScriptObjects<DataType>::EditorScriptObjects(StringParam attributeName) :
-  mAttributeName(attributeName),
-  mAutoRegister("autoRegister")
+    mAttributeName(attributeName),
+    mAutoRegister("autoRegister")
 {
   ConnectThisTo(Z::gEditor, Events::ProjectLoaded, OnProjectLoaded);
 
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
-  ConnectThisTo(ZilchScriptManager::GetInstance(), Events::ResourceRemoved, OnScriptRemoved);
+  ConnectThisTo(ZilchManager::GetInstance(),
+                Events::ScriptsCompiledPostPatch,
+                OnScriptsCompiled);
+  ConnectThisTo(ZilchScriptManager::GetInstance(),
+                Events::ResourceRemoved,
+                OnScriptRemoved);
 }
 
-//******************************************************************************
 template <typename DataType>
 DataType* EditorScriptObjects<DataType>::AddOrUpdate(Archetype* archetype)
 {
-  if(archetype == nullptr)
+  if (archetype == nullptr)
     return nullptr;
 
   // If there was already a object for this archetype, update
   // it with the new object
   uint objectCount = GetObjectCount();
-  for(uint i = 0; i < objectCount; ++i)
+  for (uint i = 0; i < objectCount; ++i)
   {
     DataType* currObject = GetObject(i);
 
-    if(currObject == nullptr || currObject->GetName() != archetype->Name)
+    if (currObject == nullptr || currObject->GetName() != archetype->Name)
       continue;
 
     // Object from archetype gets priority
@@ -110,11 +106,10 @@ DataType* EditorScriptObjects<DataType>::AddOrUpdate(Archetype* archetype)
   return newObject;
 }
 
-//******************************************************************************
 template <typename DataType>
 DataType* EditorScriptObjects<DataType>::AddOrUpdate(BoundType* componentType)
 {
-  if(componentType == nullptr)
+  if (componentType == nullptr)
     return nullptr;
 
   // If the object exists, then all necessary data should be updated.
@@ -123,7 +118,7 @@ DataType* EditorScriptObjects<DataType>::AddOrUpdate(BoundType* componentType)
   // There's already an object for this meta type and we don't have to do
   // anything because script re-initialization should handle the updating
   // of the script component on the object.
-  if(object != nullptr)
+  if (object != nullptr)
     return object;
 
   // Create a new object
@@ -134,17 +129,16 @@ DataType* EditorScriptObjects<DataType>::AddOrUpdate(BoundType* componentType)
   return newObject;
 }
 
-//******************************************************************************
 template <typename DataType>
 void EditorScriptObjects<DataType>::CreateOrUpdateCog(DataType* object)
 {
   Space* space = GetSpace(object);
 
   // Destroy the old one if it exists
-  if(Cog* toDestroy = object->mCog)
+  if (Cog* toDestroy = object->mCog)
     toDestroy->ForceDestroy();
 
-  if(Archetype* archetype = object->mArchetype)
+  if (Archetype* archetype = object->mArchetype)
   {
     Cog* cog = space->Create(archetype);
     cog->ClearArchetype();
@@ -152,7 +146,7 @@ void EditorScriptObjects<DataType>::CreateOrUpdateCog(DataType* object)
 
     object->mCog = cog;
   }
-  else if(object->mScriptComponentType)
+  else if (object->mScriptComponentType)
   {
     BoundType* componentType = object->mScriptComponentType;
     // Create an empty cog then add the component
@@ -172,18 +166,17 @@ void EditorScriptObjects<DataType>::CreateOrUpdateCog(DataType* object)
   }
 }
 
-//******************************************************************************
 template <typename DataType>
 void EditorScriptObjects<DataType>::RemoveObject(Archetype* archetype)
 {
   uint objectCount = GetObjectCount();
-  for(uint i = 0; i < objectCount; ++i)
+  for (uint i = 0; i < objectCount; ++i)
   {
     DataType* currObject = GetObject(i);
 
-    if(currObject && (Archetype*)currObject->mArchetype == archetype)
+    if (currObject && (Archetype*)currObject->mArchetype == archetype)
     {
-      if(Cog* cog = currObject->mCog)
+      if (Cog* cog = currObject->mCog)
         cog->ForceDestroy();
 
       bool removeObject = true;
@@ -191,9 +184,10 @@ void EditorScriptObjects<DataType>::RemoveObject(Archetype* archetype)
       // Now that the object is no longer created from the Archetype,
       // there could still be a script component with 'autoRegister', so we
       // have to attempt to update this object with the autoRegister
-      if(BoundType* componentType = MetaDatabase::GetInstance()->FindType(currObject->GetName()))
+      if (BoundType* componentType =
+              MetaDatabase::GetInstance()->FindType(currObject->GetName()))
       {
-        if(IsAutoRegister(componentType))
+        if (IsAutoRegister(componentType))
         {
           currObject->mArchetype = nullptr;
           currObject->mScriptComponentType = componentType;
@@ -203,7 +197,7 @@ void EditorScriptObjects<DataType>::RemoveObject(Archetype* archetype)
       }
 
       // Delete the object and remove it
-      if(removeObject)
+      if (removeObject)
         RemoveObject(currObject);
 
       return;
@@ -211,49 +205,57 @@ void EditorScriptObjects<DataType>::RemoveObject(Archetype* archetype)
   }
 }
 
-//******************************************************************************
 template <typename DataType>
 void EditorScriptObjects<DataType>::OnProjectLoaded(Event*)
 {
   // Walk all resources
-  forRange(Resource* resource, ArchetypeManager::GetInstance()->ResourceIdMap.Values())
+  forRange(Resource * resource,
+           ArchetypeManager::GetInstance()->ResourceIdMap.Values())
   {
     // Skip core resources
-    if(!resource->IsWritable())
+    if (!resource->IsWritable())
       continue;
 
     // Add the tool if it has the Tool tag
-    if(resource->mContentItem->HasTag(mAttributeName))
+    if (resource->mContentItem->HasTag(mAttributeName))
       AddOrUpdate((Archetype*)resource);
   }
 
-  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceTagsModified, OnArchetypeModified);
-  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceRemoved, OnArchetypeModified);
-  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceAdded, OnArchetypeModified);
-  ConnectThisTo(ArchetypeManager::GetInstance(), Events::ResourceReload, OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(),
+                Events::ResourceTagsModified,
+                OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(),
+                Events::ResourceRemoved,
+                OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(),
+                Events::ResourceAdded,
+                OnArchetypeModified);
+  ConnectThisTo(ArchetypeManager::GetInstance(),
+                Events::ResourceReload,
+                OnArchetypeModified);
 }
 
-//******************************************************************************
 template <typename DataType>
 void EditorScriptObjects<DataType>::OnScriptsCompiled(Event*)
 {
   Array<BoundType*> components;
-  MetaComposition* composition = ZilchTypeId(Cog)->HasInherited<MetaComposition>();
+  MetaComposition* composition =
+      ZilchTypeId(Cog)->HasInherited<MetaComposition>();
   composition->Enumerate(components, EnumerateAction::All);
 
-  forRange(BoundType* componentType, components.All())
+  forRange(BoundType * componentType, components.All())
   {
-    if(IsAutoRegister(componentType))
+    if (IsAutoRegister(componentType))
     {
       // Create a new object if there's not already an object archetype
       // with the same name
-      if(!ArchetypeObjectExists(componentType->Name))
+      if (!ArchetypeObjectExists(componentType->Name))
         AddOrUpdate(componentType);
     }
     else
     {
       DataType* oldObject = GetObject(componentType->Name);
-      if(oldObject && oldObject->mScriptComponentType == componentType)
+      if (oldObject && oldObject->mScriptComponentType == componentType)
         RemoveObject(oldObject);
     }
   }
@@ -261,11 +263,12 @@ void EditorScriptObjects<DataType>::OnScriptsCompiled(Event*)
   // Look for commands created from scripts who's names may have changed
   // and remove them
   uint objectCount = GetObjectCount();
-  for(uint i = 0; i < objectCount; ++i)
+  for (uint i = 0; i < objectCount; ++i)
   {
     DataType* currObject = GetObject(i);
 
-    if(currObject && currObject->mScriptComponentType && !components.Contains(currObject->mScriptComponentType))
+    if (currObject && currObject->mScriptComponentType &&
+        !components.Contains(currObject->mScriptComponentType))
     {
       RemoveObject(currObject);
 
@@ -276,30 +279,30 @@ void EditorScriptObjects<DataType>::OnScriptsCompiled(Event*)
   }
 }
 
-//******************************************************************************
 template <typename DataType>
 void EditorScriptObjects<DataType>::OnScriptRemoved(ResourceEvent* e)
 {
   Array<BoundType*> components;
-  MetaComposition* composition = ZilchTypeId(Cog)->HasInherited<MetaComposition>();
+  MetaComposition* composition =
+      ZilchTypeId(Cog)->HasInherited<MetaComposition>();
   composition->Enumerate(components, EnumerateAction::All);
 
-  forRange(BoundType* componentType, components.All())
+  forRange(BoundType * componentType, components.All())
   {
     MetaResource* metaResource = componentType->HasInherited<MetaResource>();
-    if(metaResource == nullptr)
+    if (metaResource == nullptr)
       continue;
 
-    // If the resource that "owns" this meta type is being removed, we 
+    // If the resource that "owns" this meta type is being removed, we
     // want to remove the object
-    if(metaResource->mResourceId == e->EventResource->mResourceId)
+    if (metaResource->mResourceId == e->EventResource->mResourceId)
     {
       uint objectCount = GetObjectCount();
-      for(uint i = 0; i < objectCount; ++i)
+      for (uint i = 0; i < objectCount; ++i)
       {
         DataType* currObject = GetObject(i);
 
-        if(currObject && currObject->mScriptComponentType == componentType)
+        if (currObject && currObject->mScriptComponentType == componentType)
         {
           RemoveObject(currObject);
           return;
@@ -309,33 +312,31 @@ void EditorScriptObjects<DataType>::OnScriptRemoved(ResourceEvent* e)
   }
 }
 
-//******************************************************************************
 template <typename DataType>
 void EditorScriptObjects<DataType>::OnArchetypeModified(ResourceEvent* e)
 {
   Archetype* archetype = (Archetype*)e->EventResource;
 
-  if(e->RemoveMode != RemoveMode::None)
+  if (e->RemoveMode != RemoveMode::None)
   {
     RemoveObject(archetype);
     return;
   }
 
   // Ignore resources that aren't user created
-  if(!archetype->IsWritable())
+  if (!archetype->IsWritable())
     return;
 
   bool objectExists = (GetObject(archetype->Name) != nullptr);
   bool hasTag = archetype->mContentItem->HasTag(mAttributeName);
 
   // Only add it if it doesn't already exist
-  if(hasTag)
+  if (hasTag)
     AddOrUpdate(archetype);
-  else if(objectExists && !hasTag)
+  else if (objectExists && !hasTag)
     RemoveObject(archetype);
 }
 
-//******************************************************************************
 template <typename DataType>
 bool EditorScriptObjects<DataType>::IsAutoRegister(BoundType* componentType)
 {
@@ -344,15 +345,15 @@ bool EditorScriptObjects<DataType>::IsAutoRegister(BoundType* componentType)
     return false;
 
   // It must have the correct attribute
-  forRange(Attribute& attribute, componentType->Attributes.All())
+  forRange(Attribute & attribute, componentType->Attributes.All())
   {
-    if(attribute.Name != mAttributeName)
+    if (attribute.Name != mAttributeName)
       continue;
 
     // Check to see if auto is enabled
-    forRange(AttributeParameter& parameter, attribute.Parameters.All())
+    forRange(AttributeParameter & parameter, attribute.Parameters.All())
     {
-      if(parameter.Name == mAutoRegister && parameter.BooleanValue)
+      if (parameter.Name == mAutoRegister && parameter.BooleanValue)
         return true;
     }
 
@@ -362,14 +363,13 @@ bool EditorScriptObjects<DataType>::IsAutoRegister(BoundType* componentType)
   return false;
 }
 
-//******************************************************************************
 template <typename DataType>
 bool EditorScriptObjects<DataType>::ArchetypeObjectExists(StringParam name)
 {
   Archetype* archetype = ArchetypeManager::FindOrNull(name);
-  if(archetype)
+  if (archetype)
     return archetype->HasTag(mAttributeName);
   return false;
 }
 
-}//namespace Zero
+} // namespace Zero

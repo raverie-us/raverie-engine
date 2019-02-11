@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationSettings.cpp
-/// Declaration of settings for the animator.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +9,6 @@ class PropertyView;
 class AnimationEditor;
 class AnimationEditorData;
 
-//----------------------------------------------------------- Animation Settings
 DeclareEnum2(TimeDisplay, Frames, Timecodes);
 
 class AnimationSettings
@@ -71,7 +62,6 @@ public:
   static EditFpsPresetArray mEditFpsPresets;
 };
 
-//------------------------------------------------------ Animation Settings View
 class AnimationSettingsView : public Composite
 {
 public:
@@ -88,4 +78,4 @@ private:
   AnimationEditor* mEditor;
 };
 
-}//namespace Zero
+} // namespace Zero

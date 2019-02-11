@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorCommands.hpp
-/// Various editor commands.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,7 +13,10 @@ class Editor;
 struct Aabb;
 
 void DeleteSelectedObjects(Editor* editor, Space* space);
-void AddToSelection(Space* space, MetaSelection* selection, BoundType* boundType, SelectComponentMode::Enum mode);
+void AddToSelection(Space* space,
+                    MetaSelection* selection,
+                    BoundType* boundType,
+                    SelectComponentMode::Enum mode);
 void SaveSelectionToClipboard(Editor* editor, Space* space);
 void LoadObjectFromClipboard(Editor* editor, Space* space);
 Cog* SelectTopOfTree(Editor* editor, Space* cog);
@@ -49,7 +44,10 @@ void CameraFocusSpace(Space* space);
 DeclareEnum3(EditFocusMode, AutoTime, Center, Frame);
 
 void CameraFocusSpace(Space* space, Cog* camera, EditFocusMode::Enum mode);
-void CameraFocusSpace(Space* space, Cog* camera, const Aabb& focusAabb, EditFocusMode::Enum mode);
+void CameraFocusSpace(Space* space,
+                      Cog* camera,
+                      const Aabb& focusAabb,
+                      EditFocusMode::Enum mode);
 
 /// Allows you to edit the game while it is running.
 void EditInGame(Editor* editor);
@@ -58,4 +56,4 @@ void EditInGame(Editor* editor);
 bool ExecuteShortCuts(Space* space, Viewport* viewport, KeyboardEvent* event);
 bool CogHierarchyIndexCompareFn(Cog* lhs, Cog* rhs);
 
-}//namespace Zero
+} // namespace Zero

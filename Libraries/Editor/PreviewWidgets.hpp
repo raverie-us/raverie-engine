@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------- Icon Item
 class IconPreview : public PreviewWidget
 {
 public:
@@ -19,57 +13,48 @@ public:
   Element* mIcon;
 };
 
-//------------------------------------------------------------------ Script Item
 class ScriptPreview : public IconPreview
 {
 public:
-  ScriptPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "ScriptIcon")
-  {};
+  ScriptPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "ScriptIcon"){};
 };
 
 class RenderGroupPreview : public IconPreview
 {
 public:
-  RenderGroupPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "RenderGroupIcon")
-  {};
+  RenderGroupPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "RenderGroupIcon"){};
 };
 
 class SoundPreview : public IconPreview
 {
 public:
-  SoundPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "SoundIcon")
-  {};
+  SoundPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "SoundIcon"){};
 };
 
 class NetworkingPreview : public IconPreview
 {
 public:
-  NetworkingPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "NetworkingIcon")
-  {};
+  NetworkingPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "NetworkingIcon"){};
 };
 
 class PhysicsPreview : public IconPreview
 {
 public:
-  PhysicsPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "PhysicsIcon")
-  {};
+  PhysicsPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "PhysicsIcon"){};
 };
 
-//------------------------------------------------------------------- Level Item
 class LevelPreview : public IconPreview
 {
 public:
-  LevelPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "LevelIcon")
-  {};
+  LevelPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "LevelIcon"){};
 };
 
-//--------------------------------------------------------------- Sound Cue Item
 class SoundCuePreview : public IconPreview
 {
 public:
@@ -79,38 +64,37 @@ public:
   void OnLeftClick(MouseEvent* event);
 };
 
-//-------------------------------------------------------- Physics Material Item
 class PhysicsMaterialPreview : public IconPreview
 {
 public:
-  PhysicsMaterialPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "PhysicsMaterial")
-  {};
+  PhysicsMaterialPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "PhysicsMaterial"){};
 };
 
-//------------------------------------------------------------------- Empty Item
 class EmptyPreview : public IconPreview
 {
 public:
-  EmptyPreview(PreviewWidgetInitializer& initializer)
-    : IconPreview(initializer, "LargeFolder")
+  EmptyPreview(PreviewWidgetInitializer& initializer) :
+      IconPreview(initializer, "LargeFolder")
   {
     mIcon->SetColor(Vec4(0, 0, 0, 0));
   }
 };
 
-//--------------------------------------------------------- CameraViewportDrawer
 class CameraViewportDrawer : public Widget
 {
 public:
   CameraViewportDrawer(Composite* parent, Cog* cameraObject);
 
   void SetSize(Vec2 newSize);
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
   HandleOf<Cog> mCameraObject;
 };
-//--------------------------------------------- Space Preview Mouse Manipulation
 class SpacePreview;
 class SpacePreviewMouseDrag : public MouseManipulation
 {
@@ -123,13 +107,14 @@ public:
   SpacePreview* mPreview;
 };
 
-//---------------------------------------------------------------- Space Preview
 class SpacePreview : public PreviewWidget
 {
 public:
   typedef SpacePreview ZilchSelf;
 
-  SpacePreview(PreviewWidgetInitializer& initializer, StringParam objectArchetype = CoreArchetypes::Default, Cog* objectToView = nullptr);
+  SpacePreview(PreviewWidgetInitializer& initializer,
+               StringParam objectArchetype = CoreArchetypes::Default,
+               Cog* objectToView = nullptr);
   ~SpacePreview();
 
   void SetInteractive(bool interactive) override;
@@ -161,42 +146,36 @@ public:
   float mHorizontalAngle;
 };
 
-//----------------------------------------------------------- Material Grid Tile
 class MaterialPreview : public SpacePreview
 {
 public:
   MaterialPreview(PreviewWidgetInitializer& initializer);
 };
 
-//--------------------------------------------------------------- Mesh Grid Item
 class MeshPreview : public SpacePreview
 {
 public:
   MeshPreview(PreviewWidgetInitializer& initializer);
 };
 
-//------------------------------------------------------- Physics Mesh Grid Item
 class PhysicsMeshPreview : public SpacePreview
 {
 public:
   PhysicsMeshPreview(PreviewWidgetInitializer& initializer);
 };
 
-//------------------------------------------------------- Convex Mesh Grid Item
 class ConvexMeshPreview : public SpacePreview
 {
 public:
   ConvexMeshPreview(PreviewWidgetInitializer& initializer);
 };
 
-//------------------------------------------------------- Physics Mesh Grid Item
 class MultiConvexMeshPreview : public SpacePreview
 {
 public:
   MultiConvexMeshPreview(PreviewWidgetInitializer& initializer);
 };
 
-//---------------------------------------------------------- Archetype Grid Item
 class ArchetypePreview : public SpacePreview
 {
 public:
@@ -208,14 +187,12 @@ public:
   const float cSpritePreviewThreshold = 0.1f;
 };
 
-//------------------------------------------------------------- SpriteSourceTile
 class SpriteSourcePreview : public SpacePreview
 {
 public:
   SpriteSourcePreview(PreviewWidgetInitializer& initializer);
 };
 
-//---------------------------------------------------------- Animation Grid Item
 class AnimationPreview : public SpacePreview
 {
 public:
@@ -229,14 +206,12 @@ public:
   HandleOf<Animation> mAnimation;
 };
 
-//------------------------------------------------------------------ CogGridItem
 class CogPreview : public SpacePreview
 {
 public:
   CogPreview(PreviewWidgetInitializer& initializer);
 };
 
-//------------------------------------------------------------------ TextureTile
 class TexturePreview : public PreviewWidget
 {
 public:
@@ -246,14 +221,13 @@ public:
   TextureView* mImage;
 };
 
-//------------------------------------------------------------------ Font preview
+//preview
 class FontPreview : public SpacePreview
 {
 public:
   FontPreview(PreviewWidgetInitializer& initializer);
 };
 
-//------------------------------------------------------------------ TextureTile
 class TilePaletteSourcePreview : public PreviewWidget
 {
 public:
@@ -266,7 +240,6 @@ private:
   HandleOf<TilePaletteSource> mSource;
 };
 
-//---------------------------------------------------------- Color Gradient Tile
 class ColorGradientPreview : public PreviewWidget
 {
 public:
@@ -280,19 +253,25 @@ public:
   TextureView* mGradientBlockDisplay;
 };
 
-//---------------------------------------------------------- Sample Curve Drawer
 class SampleCurveDrawer : public Widget
 {
 public:
   SampleCurveDrawer(Composite* parent, HandleParam object);
 
-  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject);
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  void AddCurve(ViewBlock& viewBlock,
+                FrameBlock& frameBlock,
+                WidgetRect clipRect,
+                SampleCurve* curveObject);
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect);
 
   Handle mObject;
 };
 
-//------------------------------------------------------------ SampleCurvePreview
+//SampleCurvePreview
 class SampleCurvePreview : public PreviewWidget
 {
 public:
@@ -304,7 +283,6 @@ public:
   SampleCurveDrawer* mDrawer;
 };
 
-//------------------------------------------------------- Resource Table Preview
 class ResourceTablePreview : public PreviewWidget
 {
 public:
@@ -316,11 +294,11 @@ public:
   PreviewWidgetGroup* mGroup;
 };
 
-//--------------------------------------------------------- Space Archetype Tile
 class SpaceArchetypePreview : public IconPreview
 {
 public:
-  SpaceArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype);
+  SpaceArchetypePreview(PreviewWidgetInitializer& initializer,
+                        Archetype* archetype);
   ~SpaceArchetypePreview();
 
   Handle GetEditObject() override;
@@ -328,11 +306,11 @@ public:
   HandleOf<Space> mObject;
 };
 
-//--------------------------------------------------------- GameArchetypePreview
 class GameArchetypePreview : public IconPreview
 {
 public:
-  GameArchetypePreview(PreviewWidgetInitializer& initializer, Archetype* archetype);
+  GameArchetypePreview(PreviewWidgetInitializer& initializer,
+                       Archetype* archetype);
   ~GameArchetypePreview();
 
   Handle GetEditObject() override;
@@ -341,4 +319,4 @@ public:
   bool UsingEditorGameSession;
 };
 
-}// namespace Zero
+} // namespace Zero

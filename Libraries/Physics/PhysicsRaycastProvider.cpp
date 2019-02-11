@@ -1,15 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-String PhysicsRaycastProviderDisplayText(const BoundType* type, const byte* data)
+String PhysicsRaycastProviderDisplayText(const BoundType* type,
+                                         const byte* data)
 {
   static String Name("Physics");
   return Name;
@@ -26,7 +22,7 @@ ZilchDefineType(PhysicsRaycastProvider, builder, type)
   ZilchBindFieldProperty(mStaticColliders);
   ZilchBindFieldProperty(mMultiSelectStatic);
   ZilchBindFieldProperty(mMultiSelectKinematic);
-  
+
   type->ToStringFunction = PhysicsRaycastProviderDisplayText;
   type->Add(new StringNameDisplay("Physics"));
 }
@@ -40,15 +36,17 @@ PhysicsRaycastProvider::PhysicsRaycastProvider()
   mMultiSelectKinematic = false;
 }
 
-void PhysicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results)
+void PhysicsRaycastProvider::RayCast(Ray& ray,
+                                     CastInfo& castInfo,
+                                     RaycastResultList& results)
 {
   // If we don't select static or dynamic, there's nothing to do...
-  if(!mDynamicColliders && !mStaticColliders)
+  if (!mDynamicColliders && !mStaticColliders)
     return;
 
   // Make sure there is a physics space
   PhysicsSpace* physicsSpace = castInfo.mTargetSpace->has(PhysicsSpace);
-  if(physicsSpace == nullptr)
+  if (physicsSpace == nullptr)
     return;
 
   // Set the filters for what we do select
@@ -64,30 +62,36 @@ void PhysicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResult
   physicsSpace->CastRay(ray, physicsResults);
   // And then add all of the results that we got
   CastResults::range range = physicsResults.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     CastResult& item = range.Front();
-    results.AddItem(item.GetObjectHit(), item.GetDistance(), item.GetWorldPosition(), item.GetNormal());
+    results.AddItem(item.GetObjectHit(),
+                    item.GetDistance(),
+                    item.GetWorldPosition(),
+                    item.GetNormal());
   }
 }
 
-void PhysicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results)
+void PhysicsRaycastProvider::FrustumCast(Frustum& frustum,
+                                         CastInfo& castInfo,
+                                         RaycastResultList& results)
 {
   // Make sure there is a physics space
   PhysicsSpace* physicsSpace = castInfo.mTargetSpace->has(PhysicsSpace);
-  if(physicsSpace == nullptr)
+  if (physicsSpace == nullptr)
     return;
 
   CastFilter filter;
 
-  // Set up the filters for multi casting (make sure to get the flags that still matter such as ghost)
-  if(!mSelectGhosts)
+  // Set up the filters for multi casting (make sure to get the flags that still
+  // matter such as ghost)
+  if (!mSelectGhosts)
     filter.Set(BaseCastFilterFlags::IgnoreGhost);
-  if(!mDynamicColliders)
+  if (!mDynamicColliders)
     filter.Set(BaseCastFilterFlags::IgnoreDynamic);
-  if(!mMultiSelectStatic)
+  if (!mMultiSelectStatic)
     filter.Set(BaseCastFilterFlags::IgnoreStatic);
-  if(!mMultiSelectKinematic)
+  if (!mMultiSelectKinematic)
     filter.Set(BaseCastFilterFlags::IgnoreKinematic);
 
   // Form a physics cast result with the total result's capacity
@@ -96,11 +100,14 @@ void PhysicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, R
   physicsSpace->CastFrustum(frustum, physicsResults);
   // And then add all of the results that we got
   CastResults::range range = physicsResults.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     CastResult& item = range.Front();
-    results.AddItem(item.GetObjectHit(), item.GetDistance(), item.GetWorldPosition(), item.GetNormal());
+    results.AddItem(item.GetObjectHit(),
+                    item.GetDistance(),
+                    item.GetWorldPosition(),
+                    item.GetNormal());
   }
 }
 
-}//namespace Zero
+} // namespace Zero

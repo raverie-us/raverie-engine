@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 //#include "Networking/SendableEvent.hpp"
@@ -13,21 +8,21 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(LauncherNewProject);
-  DeclareEvent(LauncherOpenProject);
-  DeclareEvent(LauncherRunProject);
-  DeclareEvent(LauncherOpenRecentProjects);
-  DeclareEvent(LauncherRunCommand);
-  DeclareEvent(LauncherUpdateTags);
-  DeclareEvent(LauncherOpenTemplate);
-  DeclareEvent(LauncherInstallProject);
-  DeclareEvent(LauncherOpenBuild);
-}
+DeclareEvent(LauncherNewProject);
+DeclareEvent(LauncherOpenProject);
+DeclareEvent(LauncherRunProject);
+DeclareEvent(LauncherOpenRecentProjects);
+DeclareEvent(LauncherRunCommand);
+DeclareEvent(LauncherUpdateTags);
+DeclareEvent(LauncherOpenTemplate);
+DeclareEvent(LauncherInstallProject);
+DeclareEvent(LauncherOpenBuild);
+} // namespace Events
 
-/// Event used for the engine to communicate with the launcher (to tell it to open
-/// recent projects and so on). Also used for the launcher to communicate with itself
-/// as the launcher is a singleton application but needs to send any command-line arguments
-/// to the current running instance.
+/// Event used for the engine to communicate with the launcher (to tell it to
+/// open recent projects and so on). Also used for the launcher to communicate
+/// with itself as the launcher is a singleton application but needs to send any
+/// command-line arguments to the current running instance.
 class LauncherCommunicationEvent : public SendableEvent
 {
 public:
@@ -47,4 +42,4 @@ public:
   String mTags;
 };
 
-}//namespace Zero
+} // namespace Zero

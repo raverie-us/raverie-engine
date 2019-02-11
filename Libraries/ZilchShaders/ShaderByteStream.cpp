@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ShaderStreamWriter
 void ShaderStreamWriter::Write(uint32 word)
 {
   WriteWord(word);
@@ -38,20 +32,26 @@ void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction)
   Write(size, instruction);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint32 data0)
+void ShaderStreamWriter::WriteInstruction(uint16 size,
+                                          uint16 instruction,
+                                          uint32 data0)
 {
   Write(size, instruction);
   Write(data0);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1)
+void ShaderStreamWriter::WriteInstruction(uint16 size,
+                                          uint16 instruction,
+                                          uint32 data0,
+                                          uint32 data1)
 {
   Write(size, instruction);
   Write(data0);
   Write(data1);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1, uint32 data2)
+void ShaderStreamWriter::WriteInstruction(
+    uint16 size, uint16 instruction, uint32 data0, uint32 data1, uint32 data2)
 {
   Write(size, instruction);
   Write(data0);
@@ -59,11 +59,12 @@ void ShaderStreamWriter::WriteInstruction(uint16 size, uint16 instruction, uint3
   Write(data2);
 }
 
-void ShaderStreamWriter::WriteInstruction(uint16 instruction, Array<uint32>& args)
+void ShaderStreamWriter::WriteInstruction(uint16 instruction,
+                                          Array<uint32>& args)
 {
   int16 size = (int16)args.Size() + 1;
   Write(size, instruction);
-  for(size_t i = 0; i < args.Size(); ++i)
+  for (size_t i = 0; i < args.Size(); ++i)
     Write(args[i]);
 }
 
@@ -75,10 +76,10 @@ void ShaderStreamWriter::Write(StringParam text)
   size_t wordCount = byteCount / 4;
   byte* data = (byte*)text.Data();
   size_t i = 0;
-  while(i < totalSize)
+  while (i < totalSize)
   {
     int32 word = 0;
-    for(size_t j = 0; j < 4 && i + j < totalSize; ++j)
+    for (size_t j = 0; j < 4 && i + j < totalSize; ++j)
     {
       int32 shiftedData = *(data + i + j) << (j * 8);
       word = word | shiftedData;
@@ -93,13 +94,12 @@ size_t ShaderStreamWriter::GetPaddedByteCount(StringParam text)
   size_t byteCount = text.SizeInBytes();
   size_t paddedByteCount = byteCount + 1;
   int totalSize = (paddedByteCount) / 4;
-  if((paddedByteCount % 4) != 0)
+  if ((paddedByteCount % 4) != 0)
     ++totalSize;
   totalSize *= 4;
   return totalSize;
 }
 
-//-------------------------------------------------------------------ShaderByteStream
 void ShaderByteStream::Load(Array<uint32>& words)
 {
   size_t byteCount = words.Size() * 4;
@@ -162,7 +162,6 @@ size_t ShaderByteStream::WordCount() const
   return wordCount;
 }
 
-//-------------------------------------------------------------------ShaderByteStreamWriter
 ShaderByteStreamWriter::ShaderByteStreamWriter()
 {
   mStreamIsOwned = true;
@@ -177,14 +176,14 @@ ShaderByteStreamWriter::ShaderByteStreamWriter(ShaderByteStream* stream)
 
 ShaderByteStreamWriter::~ShaderByteStreamWriter()
 {
-  if(mStreamIsOwned)
+  if (mStreamIsOwned)
     delete mByteStream;
 }
 
 void ShaderByteStreamWriter::WriteWord(uint32 word)
 {
   byte* bytes = (byte*)&word;
-  for(size_t i = 0; i < 4; ++i)
+  for (size_t i = 0; i < 4; ++i)
     mByteStream->mData.PushBack(bytes[i]);
 }
 
@@ -203,4 +202,4 @@ size_t ShaderByteStreamWriter::WordCount() const
   return mByteStream->WordCount();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Definition.hpp
-/// Declaration of the Display object base definition classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,26 +8,29 @@ class BaseDefinition;
 class DefinitionCreator
 {
 public:
-  virtual BaseDefinition* Create()=0;
+  virtual BaseDefinition* Create() = 0;
   virtual ~DefinitionCreator(){};
 };
 
-template<typename type>
+template <typename type>
 class DefinitionCreatorType : public DefinitionCreator
 {
 public:
-  virtual BaseDefinition* Create(){ return new type(); }
+  virtual BaseDefinition* Create()
+  {
+    return new type();
+  }
 };
 
 class DefinitionSet;
 class DefinitionSetManager;
 
-///Base definition class for all display objects.
+/// Base definition class for all display objects.
 class BaseDefinition : public Resource
 {
 public:
-  virtual void Initialize()=0;
-  virtual void Serialize(Serializer& stream)=0;
+  virtual void Initialize() = 0;
+  virtual void Serialize(Serializer& stream) = 0;
   virtual void SetParent(DefinitionSet* set){};
   virtual ~BaseDefinition(){};
 };
@@ -81,12 +76,12 @@ public:
 
   DefinitionSet* Main;
 
-  template<typename definitionType>
+  template <typename definitionType>
   void AddDefinitionCreator()
   {
-    CreatorMap.Insert( ZilchTypeId(definitionType)->Name, new DefinitionCreatorType<definitionType> );
+    CreatorMap.Insert(ZilchTypeId(definitionType)->Name,
+                      new DefinitionCreatorType<definitionType>);
   }
 };
 
-
-}///namespace Zero
+} // namespace Zero

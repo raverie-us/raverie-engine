@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -8,20 +7,21 @@ namespace Zero
 
 namespace Tags
 {
-  DefineTag(Graphical);
+DefineTag(Graphical);
 }
 
 namespace Events
 {
-  DefineEvent(EnterView);
-  DefineEvent(EnterViewAny);
-  DefineEvent(ExitView);
-  DefineEvent(ExitViewAll);
-}
+DefineEvent(EnterView);
+DefineEvent(EnterViewAny);
+DefineEvent(ExitView);
+DefineEvent(ExitViewAll);
+} // namespace Events
 
-
-//**************************************************************************************************
-void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation)
+void MakeLocalToViewAligned(Mat4& localToView,
+                            Mat4Param localToWorld,
+                            Mat4Param worldToView,
+                            Vec3Param translation)
 {
   // Get just the camera's rotation
   Mat4 viewBasis = worldToView;
@@ -54,7 +54,6 @@ ZilchDefineType(GraphicalEvent, builder, type)
   ZilchBindFieldProperty(mViewingObject);
 }
 
-//**************************************************************************************************
 ZilchDefineType(Graphical, builder, type)
 {
   ZeroBindDocumented();
@@ -64,9 +63,12 @@ ZilchDefineType(Graphical, builder, type)
   ZilchBindGetterSetterProperty(Visible);
   ZilchBindGetterSetterProperty(ViewCulling);
   ZilchBindFieldProperty(mVisibilityEvents);
-  ZilchBindGetterSetterProperty(OverrideBoundingBox)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(LocalAabbCenter)->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
-  ZilchBindGetterSetterProperty(LocalAabbHalfExtents)->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
+  ZilchBindGetterSetterProperty(OverrideBoundingBox)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(LocalAabbCenter)
+      ->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
+  ZilchBindGetterSetterProperty(LocalAabbHalfExtents)
+      ->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
   ZilchBindFieldProperty(mGroupSortValue);
   ZilchBindGetterSetterProperty(Material);
   ZilchBindGetterSetter(ShaderInputs);
@@ -81,7 +83,6 @@ ZilchDefineType(Graphical, builder, type)
   ZeroBindTag(Tags::Graphical);
 }
 
-//**************************************************************************************************
 void Graphical::Initialize(CogInitializer& initializer)
 {
   mTransform = GetOwner()->has(Transform);
@@ -91,11 +92,14 @@ void Graphical::Initialize(CogInitializer& initializer)
 
   RebuildComponentShaderInputs();
 
-  ConnectThisTo(Z::gEngine->has(GraphicsEngine), Events::ShaderInputsModified, OnShaderInputsModified);
-  ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceModified, OnMaterialModified);
+  ConnectThisTo(Z::gEngine->has(GraphicsEngine),
+                Events::ShaderInputsModified,
+                OnShaderInputsModified);
+  ConnectThisTo(MaterialManager::GetInstance(),
+                Events::ResourceModified,
+                OnMaterialModified);
 }
 
-//**************************************************************************************************
 void Graphical::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mVisible, true);
@@ -105,35 +109,33 @@ void Graphical::Serialize(Serializer& stream)
   SerializeNameDefault(mLocalAabbCenter, Vec3(0.0f));
   SerializeNameDefault(mLocalAabbHalfExtents, Vec3(1.0f));
   SerializeNameDefault(mGroupSortValue, 0);
-  SerializeResourceNameDefault(mMaterial, MaterialManager, GetDefaultMaterialName());
+  SerializeResourceNameDefault(
+      mMaterial, MaterialManager, GetDefaultMaterialName());
 }
 
-//**************************************************************************************************
 void Graphical::OnDestroy(uint flags)
 {
   mGraphicsSpace->RemoveGraphical(this);
 }
 
-//**************************************************************************************************
 void Graphical::TransformUpdate(TransformUpdateInfo& info)
 {
   UpdateBroadPhaseAabb();
 }
 
-//**************************************************************************************************
 void Graphical::AttachTo(AttachmentInfo& info)
 {
   UpdateBroadPhaseAabb();
 }
 
-//**************************************************************************************************
 void Graphical::Detached(AttachmentInfo& info)
 {
   UpdateBroadPhaseAabb();
 }
 
-//**************************************************************************************************
-void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
+void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries,
+                              Camera& camera,
+                              Frustum* frustum)
 {
   mGraphicalEntryData.mGraphical = this;
   mGraphicalEntryData.mFrameNodeIndex = -1;
@@ -147,7 +149,6 @@ void Graphical::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Fr
   entries.PushBack(entry);
 }
 
-//**************************************************************************************************
 bool Graphical::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   Ray ray = rayCast.mRay;
@@ -156,7 +157,8 @@ bool Graphical::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   Intersection::IntersectionPoint point;
   Intersection::Type result = Intersection::None;
 
-  result = Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
+  result = Intersection::RayObb(
+      ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
   if (result == Intersection::None)
     return false;
 
@@ -165,31 +167,26 @@ bool Graphical::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   return true;
 }
 
-//**************************************************************************************************
 bool Graphical::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
 {
   return Overlap(frustum, GetWorldObb());
 }
 
-//**************************************************************************************************
 void Graphical::AddToSpace()
 {
   mGraphicsSpace->AddGraphical(this);
 }
 
-//**************************************************************************************************
 String Graphical::GetDefaultMaterialName()
 {
   return MaterialManager::GetInstance()->DefaultResourceName;
 }
 
-//**************************************************************************************************
 bool Graphical::GetVisible()
 {
   return mVisible;
 }
 
-//**************************************************************************************************
 void Graphical::SetVisible(bool visible)
 {
   if (visible == mVisible)
@@ -201,13 +198,11 @@ void Graphical::SetVisible(bool visible)
   AddToSpace();
 }
 
-//**************************************************************************************************
 bool Graphical::GetViewCulling()
 {
   return mViewCulling;
 }
 
-//**************************************************************************************************
 void Graphical::SetViewCulling(bool culling)
 {
   if (culling == mViewCulling)
@@ -219,13 +214,11 @@ void Graphical::SetViewCulling(bool culling)
   AddToSpace();
 }
 
-//**************************************************************************************************
 bool Graphical::GetOverrideBoundingBox()
 {
   return mOverrideBoundingBox;
 }
 
-//**************************************************************************************************
 void Graphical::SetOverrideBoundingBox(bool overrideBoundingBox)
 {
   if (overrideBoundingBox == mOverrideBoundingBox)
@@ -235,88 +228,80 @@ void Graphical::SetOverrideBoundingBox(bool overrideBoundingBox)
   UpdateBroadPhaseAabb();
 }
 
-//**************************************************************************************************
 Vec3 Graphical::GetLocalAabbCenter()
 {
   return mLocalAabbCenter;
 }
 
-//**************************************************************************************************
 void Graphical::SetLocalAabbCenter(Vec3 center)
 {
   mLocalAabbCenter = center;
   UpdateBroadPhaseAabb();
 }
 
-//**************************************************************************************************
 Vec3 Graphical::GetLocalAabbHalfExtents()
 {
   return mLocalAabbHalfExtents;
 }
 
-//**************************************************************************************************
 void Graphical::SetLocalAabbHalfExtents(Vec3 halfExtents)
 {
-  mLocalAabbHalfExtents = Math::Max(halfExtents, Vec3(cMinimumBoundingHalfSize));
+  mLocalAabbHalfExtents =
+      Math::Max(halfExtents, Vec3(cMinimumBoundingHalfSize));
   UpdateBroadPhaseAabb();
 }
 
-//**************************************************************************************************
 Material* Graphical::GetMaterial()
 {
   return mMaterial;
 }
 
-//**************************************************************************************************
 void Graphical::SetMaterial(Material* material)
 {
   if (material != nullptr && material != mMaterial)
   {
     mMaterial = material;
 
-    // Some shader inputs could be using the material to auto-find which fragment to use
+    // Some shader inputs could be using the material to auto-find which
+    // fragment to use
     RebuildComponentShaderInputs();
   }
 }
 
-//**************************************************************************************************
 ShaderInputs* Graphical::GetShaderInputs()
 {
   return mShaderInputs;
 }
 
-//**************************************************************************************************
 void Graphical::SetShaderInputs(ShaderInputs* shaderInputs)
 {
   mShaderInputs = shaderInputs;
 }
 
-//**************************************************************************************************
 Aabb Graphical::GetWorldAabb()
 {
   Aabb localAabb = GetLocalAabbInternal();
-  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
+  localAabb.SetHalfExtents(
+      Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
   return localAabb.TransformAabb(mTransform->GetWorldMatrix());
 }
 
-//**************************************************************************************************
 Obb Graphical::GetWorldObb()
 {
   Aabb localAabb = GetLocalAabbInternal();
-  localAabb.SetHalfExtents(Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
+  localAabb.SetHalfExtents(
+      Math::Max(localAabb.GetHalfExtents(), Vec3(cMinimumBoundingHalfSize)));
   return localAabb.Transform(mTransform->GetWorldMatrix());
 }
 
-//**************************************************************************************************
 Aabb Graphical::GetLocalAabbInternal()
 {
- if (mOverrideBoundingBox)
+  if (mOverrideBoundingBox)
     return Aabb(mLocalAabbCenter, mLocalAabbHalfExtents);
   else
     return GetLocalAabb();
- }
+}
 
-//**************************************************************************************************
 void Graphical::UpdateBroadPhaseAabb()
 {
   if (mProxy.ToVoidPointer() != nullptr)
@@ -330,7 +315,6 @@ void Graphical::UpdateBroadPhaseAabb()
   }
 }
 
-//**************************************************************************************************
 void Graphical::OnShaderInputsModified(ShaderInputsEvent* event)
 {
   // Valid pointer already checked by GraphicsEngine
@@ -341,7 +325,9 @@ void Graphical::OnShaderInputsModified(ShaderInputsEvent* event)
     return;
 
   // Iterate backwards to erase while iterating
-  for (uint i = mPropertyShaderInputs.Size() - 1; i < mPropertyShaderInputs.Size(); --i)
+  for (uint i = mPropertyShaderInputs.Size() - 1;
+       i < mPropertyShaderInputs.Size();
+       --i)
   {
     if (mPropertyShaderInputs[i].mComponent == component)
       mPropertyShaderInputs.EraseAt(i);
@@ -350,39 +336,36 @@ void Graphical::OnShaderInputsModified(ShaderInputsEvent* event)
   AddComponentShaderInputs(component);
 }
 
-//**************************************************************************************************
 void Graphical::OnMaterialModified(ResourceEvent* event)
 {
   if ((Material*)event->EventResource == mMaterial)
     RebuildComponentShaderInputs();
 }
 
-//**************************************************************************************************
 void Graphical::ComponentAdded(BoundType* typeId, Component* component)
 {
   AddComponentShaderInputs(component);
 }
 
-//**************************************************************************************************
 void Graphical::ComponentRemoved(BoundType* typeId, Component* component)
 {
-  for (uint i = mPropertyShaderInputs.Size() - 1; i < mPropertyShaderInputs.Size(); --i)
+  for (uint i = mPropertyShaderInputs.Size() - 1;
+       i < mPropertyShaderInputs.Size();
+       --i)
   {
     if (mPropertyShaderInputs[i].mComponent == component)
       mPropertyShaderInputs.EraseAt(i);
   }
 }
 
-//**************************************************************************************************
 void Graphical::RebuildComponentShaderInputs()
 {
   mPropertyShaderInputs.Clear();
 
-  forRange (Component* component, GetOwner()->GetComponents())
-    AddComponentShaderInputs(component);
+  forRange(Component * component, GetOwner()->GetComponents())
+      AddComponentShaderInputs(component);
 }
 
-//**************************************************************************************************
 void Graphical::AddComponentShaderInputs(Component* component)
 {
   // If a ZilchComponent becomes a proxy, the GraphicsEngine does not spend time
@@ -392,17 +375,21 @@ void Graphical::AddComponentShaderInputs(Component* component)
     return;
 
   String componentName = ZilchVirtualTypeId(component)->Name;
-  Array<ShaderMetaProperty>* shaderProperties = Z::gEngine->has(GraphicsEngine)->mComponentShaderProperties.FindPointer(componentName);
+  Array<ShaderMetaProperty>* shaderProperties =
+      Z::gEngine->has(GraphicsEngine)
+          ->mComponentShaderProperties.FindPointer(componentName);
 
   // No inputs from this component
   if (shaderProperties == nullptr)
     return;
 
-  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  ZilchShaderGenerator* shaderGenerator =
+      Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
-  forRange (ShaderMetaProperty& shaderProperty, shaderProperties->All())
+  forRange(ShaderMetaProperty & shaderProperty, shaderProperties->All())
   {
-    Property* metaProperty = ZilchVirtualTypeId(component)->GetProperty(shaderProperty.mMetaPropertyName);
+    Property* metaProperty = ZilchVirtualTypeId(component)->GetProperty(
+        shaderProperty.mMetaPropertyName);
     String fragmentName = shaderProperty.mFragmentName;
     String inputName = shaderProperty.mInputName;
 
@@ -410,16 +397,17 @@ void Graphical::AddComponentShaderInputs(Component* component)
     if (inputName.Empty())
       inputName = metaProperty->Name;
 
-    // Look on material for a fragment with matching input if attribute did not specify
+    // Look on material for a fragment with matching input if attribute did not
+    // specify
     if (fragmentName.Empty())
     {
-      forRange (MaterialBlock* materialBlock, mMaterial->mMaterialBlocks.All())
+      forRange(MaterialBlock * materialBlock, mMaterial->mMaterialBlocks.All())
       {
         BoundType* metaType = ZilchVirtualTypeId(materialBlock);
         if (metaType->HasAttribute(ObjectAttributes::cProxy))
           continue;
 
-        forRange (Property* fragmentProperty, metaType->GetProperties())
+        forRange(Property * fragmentProperty, metaType->GetProperties())
         {
           if (fragmentProperty->Name != inputName)
             continue;
@@ -437,8 +425,11 @@ void Graphical::AddComponentShaderInputs(Component* component)
       }
     }
 
-    ShaderInputType::Enum type = MaterialFactory::GetInstance()->GetShaderInputType(metaProperty->PropertyType);
-    ShaderInput shaderInput = shaderGenerator->CreateShaderInput(fragmentName, inputName, type, Any());
+    ShaderInputType::Enum type =
+        MaterialFactory::GetInstance()->GetShaderInputType(
+            metaProperty->PropertyType);
+    ShaderInput shaderInput = shaderGenerator->CreateShaderInput(
+        fragmentName, inputName, type, Any());
     if (shaderInput.mShaderInputType == ShaderInputType::Invalid)
       continue;
 

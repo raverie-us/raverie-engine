@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,26 +7,27 @@ namespace Zero
 namespace Events
 {
 DefineEvent(TemplateProjectPreviewUpdated);
-}//namespace Events
+} // namespace Events
 
-void BuildTagSetFromTokenDelimitedList(StringParam tagData, TagSet& tagSet, char delimiter)
+void BuildTagSetFromTokenDelimitedList(StringParam tagData,
+                                       TagSet& tagSet,
+                                       char delimiter)
 {
   tagSet.Clear();
 
-  //split the string
+  // split the string
   StringRange range = tagData.All();
-  while(!range.Empty())
+  while (!range.Empty())
   {
     Pair<StringRange, StringRange> pair = SplitOnFirst(range, delimiter);
     tagSet.Insert(pair.first.Trim());
 
     range = pair.second;
-    if(!range.Empty() && range.Front() == delimiter)
+    if (!range.Empty() && range.Front() == delimiter)
       range.PopFront();
   }
 }
 
-//-------------------------------------------------------------------BuildId
 BuildId::BuildId()
 {
   mMajorVersion = 0;
@@ -49,15 +45,16 @@ void BuildId::Serialize(Serializer& stream, bool includePlatform)
   SerializeNameDefault(mRevisionId, 0);
   SerializeNameDefault(mShortChangeSet, String());
   // Projects save this save information but without the platform
-  if(includePlatform)
+  if (includePlatform)
     SerializeNameDefault(mPlatform, String());
 }
 
 BuildId BuildId::GetCurrentLauncherId()
 {
   BuildId id;
-  // This major id needs to match "ZeroLauncherMajorId" on the web server in order to determine
-  // if a new major version is available which triggers a re-install of the launcher.
+  // This major id needs to match "ZeroLauncherMajorId" on the web server in
+  // order to determine if a new major version is available which triggers a
+  // re-install of the launcher.
   id.mMajorVersion = GetLauncherMajorVersion();
   id.mMinorVersion = 0;
   id.mPatchVersion = 0;
@@ -74,12 +71,16 @@ bool BuildId::Parse(StringParam buildName)
   return Parse(buildName, year, month, day);
 }
 
-bool BuildId::Parse(StringParam buildName, String& year, String& month, String& day)
+bool BuildId::Parse(StringParam buildName,
+                    String& year,
+                    String& month,
+                    String& day)
 {
   // Match ZeroEngineSetup.#.#.#.RevisionId
   String revisionId;
-  bool parsed = ZeroBuild::ParseLegacyBuildName(buildName, year, month, day, revisionId);
-  if(!parsed)
+  bool parsed =
+      ZeroBuild::ParseLegacyBuildName(buildName, year, month, day, revisionId);
+  if (!parsed)
     return false;
 
   mExperimentalBranchName = String();
@@ -109,12 +110,14 @@ String BuildId::GetMajorMinorPatchRevisionIdString() const
   return GetFullId(false, true, false);
 }
 
-String BuildId::GetFullId(bool showExperimentalBranch, bool showChangeset, bool showPlatform) const
+String BuildId::GetFullId(bool showExperimentalBranch,
+                          bool showChangeset,
+                          bool showPlatform) const
 {
   StringBuilder builder;
 
   // If we have a branch then start with that
-  if(showExperimentalBranch && !mExperimentalBranchName.Empty())
+  if (showExperimentalBranch && !mExperimentalBranchName.Empty())
     builder.AppendFormat("%s.", mExperimentalBranchName.c_str());
 
   // Append the main 4 id numbers
@@ -122,11 +125,11 @@ String BuildId::GetFullId(bool showExperimentalBranch, bool showChangeset, bool 
   builder.AppendFormat("%d.", mMinorVersion);
   builder.AppendFormat("%d.", mPatchVersion);
   builder.AppendFormat("%d", mRevisionId);
-  if(showChangeset && !mShortChangeSet.Empty())
+  if (showChangeset && !mShortChangeSet.Empty())
     builder.AppendFormat(".%s", mShortChangeSet.c_str());
 
   // If we display the platform then add that in too
-  if(showPlatform)
+  if (showPlatform)
     builder.AppendFormat("-%s", mPlatform.c_str());
 
   return builder.ToString();
@@ -153,21 +156,21 @@ bool BuildId::operator!=(const BuildId& rhs) const
 bool BuildId::CompareBuilds(const BuildId& rhs, bool legacyCompare) const
 {
   // If anything doesn't match then we aren't equal
-  if(mExperimentalBranchName != rhs.mExperimentalBranchName)
+  if (mExperimentalBranchName != rhs.mExperimentalBranchName)
     return false;
-  if(mMajorVersion != rhs.mMajorVersion)
+  if (mMajorVersion != rhs.mMajorVersion)
     return false;
-  if(mMinorVersion != rhs.mMinorVersion)
+  if (mMinorVersion != rhs.mMinorVersion)
     return false;
-  if(mPatchVersion != rhs.mPatchVersion)
+  if (mPatchVersion != rhs.mPatchVersion)
     return false;
-  if(mRevisionId != rhs.mRevisionId)
+  if (mRevisionId != rhs.mRevisionId)
     return false;
   // Legacy builds didn't store the changeset. To properly resolve old projects
   // to their builds we have to compare without the changeset.
-  if(!legacyCompare && mShortChangeSet != rhs.mShortChangeSet)
+  if (!legacyCompare && mShortChangeSet != rhs.mShortChangeSet)
     return false;
-  if(mPlatform != rhs.mPlatform)
+  if (mPlatform != rhs.mPlatform)
     return false;
   return true;
 }
@@ -175,28 +178,28 @@ bool BuildId::CompareBuilds(const BuildId& rhs, bool legacyCompare) const
 BuildUpdateState::Enum BuildId::CheckForUpdate(const BuildId& rhs) const
 {
   // Check if the branches are different
-  if(mExperimentalBranchName != rhs.mExperimentalBranchName)
+  if (mExperimentalBranchName != rhs.mExperimentalBranchName)
     return BuildUpdateState::DifferentBranch;
 
   // Check for changes in the major version
-  if(mMajorVersion < rhs.mMajorVersion)
+  if (mMajorVersion < rhs.mMajorVersion)
     return BuildUpdateState::NewerBreaking;
-  if(mMajorVersion > rhs.mMajorVersion)
+  if (mMajorVersion > rhs.mMajorVersion)
     return BuildUpdateState::OlderBreaking;
   // Check for changes in the minor version
-  if(mMinorVersion < rhs.mMinorVersion)
+  if (mMinorVersion < rhs.mMinorVersion)
     return BuildUpdateState::Newer;
-  if(mMinorVersion > rhs.mMinorVersion)
+  if (mMinorVersion > rhs.mMinorVersion)
     return BuildUpdateState::Older;
   // Check for changes in the patch version
-  if(mPatchVersion < rhs.mPatchVersion)
+  if (mPatchVersion < rhs.mPatchVersion)
     return BuildUpdateState::Newer;
-  if(mPatchVersion > rhs.mPatchVersion)
+  if (mPatchVersion > rhs.mPatchVersion)
     return BuildUpdateState::Older;
   // Check for changes in the revision id
-  if(mRevisionId < rhs.mRevisionId)
+  if (mRevisionId < rhs.mRevisionId)
     return BuildUpdateState::Newer;
-  if(mRevisionId > rhs.mRevisionId)
+  if (mRevisionId > rhs.mRevisionId)
     return BuildUpdateState::Older;
   return BuildUpdateState::Same;
 }
@@ -204,12 +207,12 @@ BuildUpdateState::Enum BuildId::CheckForUpdate(const BuildId& rhs) const
 bool BuildId::IsOlderThan(const BuildId& rhs) const
 {
   BuildUpdateState::Enum upgradeState = CheckForUpdate(rhs);
-  if(upgradeState == BuildUpdateState::Newer || upgradeState == BuildUpdateState::NewerBreaking)
+  if (upgradeState == BuildUpdateState::Newer ||
+      upgradeState == BuildUpdateState::NewerBreaking)
     return true;
   return false;
 }
 
-//-------------------------------------------------------------------ZeroBuild
 const String ZeroBuild::mExtension = "zerobuild";
 const String ZeroBuild::mDeprecatedTag = "Deprecated";
 
@@ -241,23 +244,23 @@ void ZeroBuild::UninstallCompleted(Event* e)
 
 ZeroBuildContent* ZeroBuild::GetBuildContent(bool createIfNull)
 {
-  if(createIfNull)
+  if (createIfNull)
     CreateMetaIfNull();
 
-  if(mMetaCog == nullptr)
+  if (mMetaCog == nullptr)
     return nullptr;
   return mMetaCog->has(ZeroBuildContent);
 }
 
 ZeroBuildDeprecated* ZeroBuild::GetDeprecatedInfo(bool createIfNull)
 {
-  if(createIfNull)
+  if (createIfNull)
   {
     CreateMetaIfNull();
     return HasOrAdd<ZeroBuildDeprecated>(mMetaCog);
   }
-  
-  if(mMetaCog == nullptr)
+
+  if (mMetaCog == nullptr)
     return nullptr;
   return mMetaCog->has(ZeroBuildDeprecated);
 }
@@ -274,10 +277,10 @@ String ZeroBuild::GetDebugIdString()
 
 BuildId ZeroBuild::GetBuildId()
 {
-  // If we have a cog with the build content component on it then return its build id,
-  // otherwise just return the current launcher's id
+  // If we have a cog with the build content component on it then return its
+  // build id, otherwise just return the current launcher's id
   ZeroBuildContent* zeroBuild = GetBuildContent(false);
-  if(zeroBuild != nullptr)
+  if (zeroBuild != nullptr)
     return zeroBuild->GetBuildId();
   return BuildId::GetCurrentLauncherId();
 }
@@ -323,9 +326,10 @@ String ZeroBuild::GetMetaFilePath(StringParam basePath)
 bool ZeroBuild::CreateMetaIfNull()
 {
   bool metaIsNull = mMetaCog == nullptr;
-  if(metaIsNull)
+  if (metaIsNull)
   {
-    mMetaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
+    mMetaCog = Z::gFactory->Create(
+        Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
     mMetaCog->ClearArchetype();
   }
 
@@ -334,12 +338,16 @@ bool ZeroBuild::CreateMetaIfNull()
   return metaIsNull;
 }
 
-bool ZeroBuild::ParseLegacyBuildName(StringParam buildName, String& year, String& month, String& day, String& revisionId)
+bool ZeroBuild::ParseLegacyBuildName(StringParam buildName,
+                                     String& year,
+                                     String& month,
+                                     String& day,
+                                     String& revisionId)
 {
   Matches matches;
   Regex regex("\\w*\\.(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)");
   regex.Search(buildName, matches);
-  if(matches.Size() == 5)
+  if (matches.Size() == 5)
   {
     year = matches[1];
     month = matches[2];
@@ -354,11 +362,11 @@ void ZeroBuild::GetReleaseDate(String& year, String& month, String& day)
 {
   // Get the build content component and split the release date field on it
   ZeroBuildContent* zeroBuild = GetBuildContent(true);
-  
+
   Matches matches;
   Regex regex("(\\d+)\\-(\\d+)\\-(\\d+)");
   regex.Search(zeroBuild->mChangeSetDate, matches);
-  if(matches.Size() == 4)
+  if (matches.Size() == 4)
   {
     year = matches[1];
     month = matches[2];
@@ -373,10 +381,10 @@ bool ZeroBuild::IsBad()
 
 String ZeroBuild::GetReleaseNotes()
 {
-  if(mMetaCog != nullptr)
+  if (mMetaCog != nullptr)
   {
     ZeroBuildReleaseNotes* releaseNotes = mMetaCog->has(ZeroBuildReleaseNotes);
-    if(releaseNotes != nullptr)
+    if (releaseNotes != nullptr)
       return releaseNotes->mNotes;
   }
   return String();
@@ -385,7 +393,7 @@ String ZeroBuild::GetReleaseNotes()
 String ZeroBuild::GetDeprecatedString()
 {
   ZeroBuildDeprecated* deprecatedInfo = GetDeprecatedInfo(false);
-  if(deprecatedInfo == nullptr)
+  if (deprecatedInfo == nullptr)
     return String();
 
   return deprecatedInfo->GetDeprecatedString();
@@ -401,7 +409,6 @@ bool ZeroBuild::ContainsTag(StringParam tag)
   return GetBuildContent(true)->ContainsTag(tag);
 }
 
-//-------------------------------------------------------------------TemplateProject
 const String TemplateProject::mExtensionWithoutDot = "zerotemplate";
 const String TemplateProject::mExtensionWithDot = ".zerotemplate";
 const String TemplateProject::mBackupIconTextureName = "BackupProjectIcon";
@@ -415,10 +422,10 @@ TemplateProject::TemplateProject()
 
 ZeroTemplate* TemplateProject::GetZeroTemplate(bool createIfNull)
 {
-  if(createIfNull)
+  if (createIfNull)
     CreateMetaIfNull();
 
-  if(mMetaCog == nullptr)
+  if (mMetaCog == nullptr)
     return nullptr;
   return mMetaCog->has(ZeroTemplate);
 }
@@ -426,9 +433,10 @@ ZeroTemplate* TemplateProject::GetZeroTemplate(bool createIfNull)
 bool TemplateProject::CreateMetaIfNull()
 {
   bool metaIsNull = mMetaCog == nullptr;
-  if(metaIsNull)
+  if (metaIsNull)
   {
-    mMetaCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
+    mMetaCog = Z::gFactory->Create(
+        Z::gEngine->GetEngineSpace(), CoreArchetypes::Empty, 0, nullptr);
     mMetaCog->ClearArchetype();
   }
 
@@ -480,7 +488,8 @@ float TemplateProject::GetSortPriority()
 String TemplateProject::GetLocalTemplateFileName()
 {
   ZeroTemplate* zeroTemplate = GetZeroTemplate(true);
-  return BuildString(zeroTemplate->GetFullTemplateVersionName(), TemplateProject::mExtensionWithDot);
+  return BuildString(zeroTemplate->GetFullTemplateVersionName(),
+                     TemplateProject::mExtensionWithDot);
 }
 
 String TemplateProject::GetInstalledTemplatePath()
@@ -497,9 +506,11 @@ bool TemplateProject::ContainsVersion(const BuildId& buildId)
 
 void TemplateProject::DownloadIcon(VersionSelector* versionSelector)
 {
-  // When we finish downloading the preview image we need to update our texture (on the main thread)
+  // When we finish downloading the preview image we need to update our texture
+  // (on the main thread)
   BackgroundTask* task = versionSelector->DownloadTemplateIcon(this);
-  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
+  ConnectThisTo(
+      task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
 }
 
 void TemplateProject::LoadLocalImages()
@@ -507,11 +518,12 @@ void TemplateProject::LoadLocalImages()
   ZeroTemplate* zeroTemplate = GetZeroTemplate(true);
   String iconPath = FilePath::Combine(mLocalPath, zeroTemplate->mIconUrl);
   // If a valid icon path exists then queue up a job to load it
-  if(!zeroTemplate->mIconUrl.Empty() && FileExists(iconPath))
+  if (!zeroTemplate->mIconUrl.Empty() && FileExists(iconPath))
   {
     LoadImageFromDiskTaskJob* job = new LoadImageFromDiskTaskJob(iconPath);
     BackgroundTask* task = Z::gBackgroundTasks->Execute(job, "Load preview");
-    ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
+    ConnectThisTo(
+        task, Events::BackgroundTaskCompleted, OnPreviewImageDownloaded);
   }
   else
   {
@@ -523,11 +535,13 @@ void TemplateProject::OnPreviewImageDownloaded(BackgroundTaskEvent* e)
 {
   DownloadImageTaskJob* job = (DownloadImageTaskJob*)e->mTask->GetFinishedJob();
 
-  // If we got a valid image then load it (different than having a valid or complete job)
-  if(!job->mImageWasInvalid)
+  // If we got a valid image then load it (different than having a valid or
+  // complete job)
+  if (!job->mImageWasInvalid)
   {
-    // This event can get dispatched multiple times. If the image is empty then don't swap again
-    if(job->mImage.SizeInBytes == 0)
+    // This event can get dispatched multiple times. If the image is empty then
+    // don't swap again
+    if (job->mImage.SizeInBytes == 0)
       return;
 
     // Load the image into a texture (must be done on the main thread)
@@ -536,15 +550,14 @@ void TemplateProject::OnPreviewImageDownloaded(BackgroundTaskEvent* e)
     Image& image = mIconImage;
     mIconTexture = Texture::CreateRuntime();
     mIconTexture->Upload(image);
-    
   }
   // Otherwise, use the backup icon texture
   else
     mIconTexture = TextureManager::Find(mBackupIconTextureName);
-  
+
   // Tell whoever cares that we have a new preview image
   Event toSend;
   DispatchEvent(Events::TemplateProjectPreviewUpdated, &toSend);
 }
 
-}//namespace Zero
+} // namespace Zero

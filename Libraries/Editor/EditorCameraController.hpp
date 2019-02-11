@@ -1,31 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorCameraController.hpp
-/// Declaration of the EditorCameraController class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
- 
-//------------------------------------------------------------ Controller Button
-DeclareEnum13(ControllerButton, MoveForward,
-                                MoveBack,
-                                MoveLeft,
-                                MoveRight,
-                                RotateRight,
-                                RotateLeft,
-                                PitchUp,
-                                PitchDown,
-                                MoveUp,
-                                MoveDown,
-                                OrbitMove,
-                                ZoomMove,
-                                NumButtons);
+
+DeclareEnum13(ControllerButton,
+              MoveForward,
+              MoveBack,
+              MoveLeft,
+              MoveRight,
+              RotateRight,
+              RotateLeft,
+              PitchUp,
+              PitchDown,
+              MoveUp,
+              MoveDown,
+              OrbitMove,
+              ZoomMove,
+              NumButtons);
 
 class KeyboardEvent;
 class UpdateEvent;
@@ -34,14 +26,13 @@ class Viewport;
 
 namespace Events
 {
-  DeclareEvent(CameraControllerUpdated);
-}//namespace Events
+DeclareEvent(CameraControllerUpdated);
+} // namespace Events
 
 DeclareEnum3(ControlMode, Orbit, FirstPerson, ZPlane);
 
 DeclareEnum4(CameraDragMode, NotActive, Rotation, Pan, Zoom);
 
-//----------------------------------------------------- Editor Camera Controller
 class EditorCameraController : public Component
 {
 public:
@@ -61,40 +52,61 @@ public:
   void SetLookTarget(Vec3Param newTarget);
 
   // Distance to the look target
-  float GetLookDistance() { return mLookDistance; }
+  float GetLookDistance()
+  {
+    return mLookDistance;
+  }
   void SetLookDistance(float v);
 
   // Angle the camera is rotated horizontally around the look target
-  float GetHorizontalAngle(){return  Math::RadToDeg(mHorizontalAngle);}
+  float GetHorizontalAngle()
+  {
+    return Math::RadToDeg(mHorizontalAngle);
+  }
   void SetHorizontalAngle(float value);
 
   // Angle the camera is rotated vertically around the look target
-  float GetVerticalAngle(){ return Math::RadToDeg(mVerticalAngle);}
+  float GetVerticalAngle()
+  {
+    return Math::RadToDeg(mVerticalAngle);
+  }
   void SetVerticalAngle(float value);
 
-  //Direction of the camera.
-  Vec3 GetCameraDirection(){return mCameraDirection;}
+  // Direction of the camera.
+  Vec3 GetCameraDirection()
+  {
+    return mCameraDirection;
+  }
 
-  //Right vector of the camera.
-  Vec3 GetCameraRight(){return mCameraRight;}
+  // Right vector of the camera.
+  Vec3 GetCameraRight()
+  {
+    return mCameraRight;
+  }
 
-  //Up vector of the camera.
-  Vec3 GetCameraUp(){return mCameraUp;}
+  // Up vector of the camera.
+  Vec3 GetCameraUp()
+  {
+    return mCameraUp;
+  }
 
-  //Position of Camera
-  Vec3 GetCameraPosition(){return mCameraPosition;}
+  // Position of Camera
+  Vec3 GetCameraPosition()
+  {
+    return mCameraPosition;
+  }
 
-  //Aligns with a passed in camera
+  // Aligns with a passed in camera
   void AlignToCamera(Cog* cameraCog);
 
-  //How close we can look/zoom in
+  // How close we can look/zoom in
   float GetMinLookDistance();
   void SetMinLookDistance(float distance);
 
-  //Reset the camera
+  // Reset the camera
   void Reset();
 
-  //Drag active
+  // Drag active
   bool IsActive();
   void SetEnabled(bool value);
   void Deactivate();
@@ -119,13 +131,19 @@ private:
   friend class EditorCameraMouseDrag;
   void OnFrameUpdate(UpdateEvent* event);
   void UpdateTransform();
-  void SetInput(uint index, bool state) { mMovement[index] = state; }
-  void SetDragMode(uint mode) { mDragMode = mode; }
+  void SetInput(uint index, bool state)
+  {
+    mMovement[index] = state;
+  }
+  void SetDragMode(uint mode)
+  {
+    mDragMode = mode;
+  }
   void ClearMovement();
   void Update(float dt);
 
   void Draw();
-  //Control variables
+  // Control variables
   Camera* mCamera;
   ControlMode::Enum mControlMode;
   ControlMode::Enum mPrevious3DMode;
@@ -151,4 +169,4 @@ private:
   friend class EditorViewport;
 };
 
-}//namespace Zero
+} // namespace Zero

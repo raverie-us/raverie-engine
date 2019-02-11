@@ -1,24 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
 Browser::Browser(const BrowserSetup& setup) :
-  mUserData(nullptr),
-  mLastSetUrl(setup.mUrl),
-  mScrollSpeed(setup.mScrollSpeed),
-  mBackgroundColor(setup.mBackgroundColor),
-  mTransparent(setup.mTransparent),
-  mSize(setup.mSize),
-  mClientPosition(setup.mClientPosition),
-  mZIndex(0),
-  mVisible(false)
+    mUserData(nullptr),
+    mLastSetUrl(setup.mUrl),
+    mScrollSpeed(setup.mScrollSpeed),
+    mBackgroundColor(setup.mBackgroundColor),
+    mTransparent(setup.mTransparent),
+    mSize(setup.mSize),
+    mClientPosition(setup.mClientPosition),
+    mZIndex(0),
+    mVisible(false)
 {
 }
 
@@ -162,7 +157,9 @@ String Browser::GetUrl()
   return mLastSetUrl;
 }
 
-void Browser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
+void Browser::ExecuteScriptFromLocation(StringParam script,
+                                        StringParam url,
+                                        int line)
 {
 }
 
@@ -174,24 +171,32 @@ void Browser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseMove(Math::IntVec2Param localPosition,
+                                BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseClick(Math::IntVec2Param localPosition,
+                                 MouseButtons::Enum button,
+                                 bool down,
+                                 BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition,
+                                       MouseButtons::Enum button,
+                                       BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Param delta, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition,
+                                  Math::Vec2Param delta,
+                                  BrowserModifiers::Enum modifiers)
 {
 }
 
 // This must be called before any browsers are created
-void Browser::PlatformCreate() 
+void Browser::PlatformCreate()
 {
 }
 
@@ -203,10 +208,10 @@ void Browser::PlatformUpdate()
 {
 }
 
-//------------------------------------------------------------------------------ BrowserSubProcess
+//BrowserSubProcess
 int BrowserSubProcess::Execute()
 {
   return 0;
 }
 
-}// namespace Zero
+} // namespace Zero

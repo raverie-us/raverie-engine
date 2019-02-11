@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TreeView.cpp
-/// Implementation of Tree View
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -19,65 +11,64 @@ const String cItemIcon = "ItemIcon";
 const float cResizerWidth = Pixels(10.0f);
 const float cHeaderRowIndent = Pixels(2.0f);
 
-const Vec2 cDefaultColumnIconSize = Pixels(16,16);
+const Vec2 cDefaultColumnIconSize = Pixels(16, 16);
 
 namespace TreeViewUi
 {
 const cstr cLocation = "EditorUi/TreeView";
-Tweakable(Vec4,  HeaderColor,          Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  HeaderHighlight,      Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  ColumnSeparatorColor, Vec4(1,1,1,1), cLocation);
-Tweakable(float, ItemHeight,           Pixels(20),    cLocation);
-Tweakable(float, ItemSpacing,          Pixels(2),     cLocation);
-Tweakable(float, IndentSize,           Pixels(8),     cLocation);
-Tweakable(float, MaxDragScrollSpeed,   Pixels(4),     cLocation);
-Tweakable(float, DragScrollSize,       Pixels(30),    cLocation);
-Tweakable(float, DragInsertSize,       Pixels(3.15f),  cLocation);
-}
+Tweakable(Vec4, HeaderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, HeaderHighlight, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ColumnSeparatorColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(float, ItemHeight, Pixels(20), cLocation);
+Tweakable(float, ItemSpacing, Pixels(2), cLocation);
+Tweakable(float, IndentSize, Pixels(8), cLocation);
+Tweakable(float, MaxDragScrollSpeed, Pixels(4), cLocation);
+Tweakable(float, DragScrollSize, Pixels(30), cLocation);
+Tweakable(float, DragInsertSize, Pixels(3.15f), cLocation);
+} // namespace TreeViewUi
 
 namespace TreeViewValidUi
 {
 const cstr cLocation = "EditorUi/TreeView/ValidRows";
-Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, PrimaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SecondaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MouseOverColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SelectedColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace TreeViewValidUi
 
 namespace TreeViewInvalidUi
 {
 const cstr cLocation = "EditorUi/TreeView/InvalidRows";
-Tweakable(Vec4, PrimaryColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, SecondaryColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, MouseOverColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, SelectedColor,  Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, PrimaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SecondaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MouseOverColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SelectedColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace TreeViewInvalidUi
 
 namespace Events
 {
-  DefineEvent(TreeRightClick);
-  DefineEvent(TreeKeyPress);
-  DefineEvent(MouseEnterRow);
-  DefineEvent(MouseExitRow);
-  DefineEvent(TreeViewHeaderAdded);
-}
+DefineEvent(TreeRightClick);
+DefineEvent(TreeKeyPress);
+DefineEvent(MouseEnterRow);
+DefineEvent(MouseExitRow);
+DefineEvent(TreeViewHeaderAdded);
+} // namespace Events
 
-//------------------------------------------------------------------- Tree Event
 ZilchDefineType(TreeEvent, builder, type)
 {
 }
 
-//-------------------------------------------------- TreeView Header Added Event
 ZilchDefineType(TreeViewHeaderAddedEvent, builder, type)
 {
 }
 
-TreeViewHeaderAddedEvent::TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader)
-  : mHeaderIndex(headerIndex), mNewHeader(newHeader)
+TreeViewHeaderAddedEvent::TreeViewHeaderAddedEvent(uint headerIndex,
+                                                   ColumnHeader* newHeader) :
+    mHeaderIndex(headerIndex),
+    mNewHeader(newHeader)
 {
 }
 
-//----------------------------------------------------------------- Row Selector
 class RowSelector : public MouseManipulation
 {
 public:
@@ -90,8 +81,9 @@ public:
   /// Displays the drag selection
   Element* mSelectBox;
 
-  RowSelector(MouseDragEvent* dragEvent, TreeView* tree)
-    : MouseManipulation(dragEvent->GetMouse(), tree), mTree(tree)
+  RowSelector(MouseDragEvent* dragEvent, TreeView* tree) :
+      MouseManipulation(dragEvent->GetMouse(), tree),
+      mTree(tree)
   {
     mClientArea = tree->mArea->GetClientWidget();
 
@@ -145,7 +137,7 @@ public:
 
   void OnKeyDown(KeyboardEvent* event) override
   {
-    if(event->Key == Keys::Escape)
+    if (event->Key == Keys::Escape)
     {
       this->Destroy();
       mSelectBox->Destroy();
@@ -153,8 +145,7 @@ public:
   }
 };
 
-//---------------------------------------------------------------- Column Format
-ColumnFormat::ColumnFormat( )
+ColumnFormat::ColumnFormat()
 {
   ColumnType = ColumnType::Flex;
   IconSizePolicy = ColumnIconSizePolicy::Auto;
@@ -170,14 +161,12 @@ ColumnFormat::ColumnFormat( )
   Flags = 0;
 }
 
-//--------------------------------------------------------------------- Tree Row
 ZilchDefineType(TreeRow, builder, type)
 {
-
 }
 
-TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry)
-  :TreeBase(treeView->mArea)
+TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry) :
+    TreeBase(treeView->mArea)
 {
   mExpanded = false;
   mTree = treeView;
@@ -193,43 +182,45 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry)
   mBackground = new Spacer(this);
   mValid = true;
 
-  //Can this node be expanded?
+  // Can this node be expanded?
   bool isExpandable = treeView->mDataSource->IsExpandable(entry);
-  //Is this node currently expanded. Nodes can be expanded even if
-  //there is node TreeNode currently displaying them.
+  // Is this node currently expanded. Nodes can be expanded even if
+  // there is node TreeNode currently displaying them.
   bool isExpaned = mTree->mExpanded->IsSelected(mIndex);
 
-  //Create selection highlight
+  // Create selection highlight
   mSelection = CreateAttached<Element>(cWhiteSquare);
-  mSelection->SetTranslation( Pixels(0,1,0));
+  mSelection->SetTranslation(Pixels(0, 1, 0));
   mSelection->SetInteractive(false);
 
-  if(mTree->mFormatting.Flags.IsSet(FormatFlags::ShowSeparators))
+  if (mTree->mFormatting.Flags.IsSet(FormatFlags::ShowSeparators))
   {
     mSeparator = CreateAttached<Element>("HorizontalDivider");
-    mSeparator->SetColor(Vec4(1,1,1,0.2f));
+    mSeparator->SetColor(Vec4(1, 1, 1, 0.2f));
   }
 
-  //Create the expand icon
+  // Create the expand icon
   mExpandIcon = CreateAttached<Element>(cArrowRight);
-  //Clicking on it will expand the row
+  // Clicking on it will expand the row
   ConnectThisTo(mExpandIcon, Events::LeftMouseDown, OnMouseDownExpander);
 
-  if(!isExpandable)
+  if (!isExpandable)
     mExpandIcon->SetVisible(false);
 
-  //Build Edit Columns
+  // Build Edit Columns
   ValueEditorFactory* factory = ValueEditorFactory::GetInstance();
   float offsetX = Pixels(20);
   TreeFormatting* formatting = &mTree->mFormatting;
   uint columns = formatting->Columns.Size();
-  for(uint i=0;i<columns;++i)
+  for (uint i = 0; i < columns; ++i)
   {
     ColumnFormat& format = formatting->Columns[i];
 
     String customEditor = format.CustomEditor;
-    String editorType = (customEditor == String()) ? cDefaultValueEditor : customEditor;
-    ValueEditor* valueEditor = factory->GetEditor(editorType, this, format.CustomEditorData, format.Flags);
+    String editorType =
+        (customEditor == String()) ? cDefaultValueEditor : customEditor;
+    ValueEditor* valueEditor = factory->GetEditor(
+        editorType, this, format.CustomEditorData, format.Flags);
     valueEditor->Editable = format.Editable;
 
     valueEditor->Name = format.Name;
@@ -243,11 +234,11 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry)
 
     Array<Widget*> dragWidgets;
     valueEditor->GetDragWidgets(dragWidgets);
-    forRange(Widget* dragWidget, dragWidgets.All())
-      ConnectThisTo(dragWidget, Events::LeftMouseDrag, OnMouseDragRow);
+    forRange(Widget * dragWidget, dragWidgets.All())
+        ConnectThisTo(dragWidget, Events::LeftMouseDrag, OnMouseDragRow);
   }
 
-  //Connect all needed events
+  // Connect all needed events
   ConnectThisTo(this, Events::KeyUp, OnKeyUp);
   ConnectThisTo(this, Events::LeftClick, OnMouseClick);
   ConnectThisTo(this, Events::DoubleClick, OnDoubleClick);
@@ -259,11 +250,11 @@ TreeRow::TreeRow(TreeView* treeView, TreeRow* rowparent, DataEntry* entry)
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
 
-  //Load data from data source
+  // Load data from data source
   RefreshData();
 
-  //Expand the node if necessary
-  if(isExpaned)
+  // Expand the node if necessary
+  if (isExpaned)
     Expand();
 }
 
@@ -280,15 +271,15 @@ void TreeRow::RefreshData()
 
   // No need to refresh the data if we're the root and not displaying the root
   bool showRoot = formatting.Flags.IsSet(FormatFlags::ShowRoot);
-  if(IsRoot() && !showRoot)
+  if (IsRoot() && !showRoot)
     return;
 
   /// Get Data and Update Editors
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
-  if(entry)
+  if (entry)
   {
     uint columns = formatting.Columns.Size();
-    for(uint i=0;i<columns;++i)
+    for (uint i = 0; i < columns; ++i)
     {
       ColumnFormat& format = formatting.Columns[i];
       Any value;
@@ -302,44 +293,43 @@ void TreeRow::RefreshData()
   }
 }
 
-
-//--------------------------------------------------------------------- Row Edit
 void TreeRow::OnValueChanged(ObjectEvent* event)
 {
-  //Editor has changed value update the Tree
+  // Editor has changed value update the Tree
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
-  if(entry)
+  if (entry)
   {
-    //Editor has changed the value
+    // Editor has changed the value
     ValueEditor* editor = (ValueEditor*)event->Source;
 
-    //Get the new value
+    // Get the new value
     Any newValue;
     editor->GetVariant(newValue);
 
-    //Apply the value to the data source
+    // Apply the value to the data source
     mTree->mDataSource->SetData(entry, newValue, editor->Name);
   }
 
-  if(mTree->mRefreshOnValueChange)
+  if (mTree->mRefreshOnValueChange)
     Refresh();
 }
 
 void TreeRow::OnTextChanged(TextUpdatedEvent* event)
 {
-  //Editor has changed text value update the Tree
+  // Editor has changed text value update the Tree
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
   if (entry)
   {
-    //Editor has changed the in place text
+    // Editor has changed the in place text
     InPlaceTextEditor* editor = (InPlaceTextEditor*)event->GetSource();
 
-    //Get the text value
+    // Get the text value
     Any newTextValue;
     editor->GetEditTextVariant(newTextValue);
 
-    //Apply the value to the data source
-    event->mChangeAccepted = mTree->mDataSource->SetData(entry, newTextValue, editor->Name);
+    // Apply the value to the data source
+    event->mChangeAccepted =
+        mTree->mDataSource->SetData(entry, newTextValue, editor->Name);
   }
 
   if (mTree->mRefreshOnValueChange)
@@ -349,36 +339,36 @@ void TreeRow::OnTextChanged(TextUpdatedEvent* event)
 void TreeRow::Edit(int column)
 {
   ColumnFormat& format = mTree->mFormatting.Columns[column];
-  if(format.Editable)
+  if (format.Editable)
     mEditorColumns[column]->Edit();
 }
 
 void TreeRow::Edit(StringParam column)
 {
   ColumnFormat& format = mTree->GetColumn(column);
-  if(format.Editable)
+  if (format.Editable)
     mEditorColumns[format.Index]->Edit();
 }
 
 void TreeRow::UpdateTransform()
 {
-  if(mActive == false)
+  if (mActive == false)
     return;
 
   // We want the background to take the indent into account so that we
   // can drag items to the left of rows (without activating that row)
   float backgroundOffset = TreeViewUi::IndentSize * float(mDepth - 1);
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
-  
-  if(entry && !mTree->mDataSource->IsExpandable(entry))
+
+  if (entry && !mTree->mDataSource->IsExpandable(entry))
     backgroundOffset += Pixels(16);
-  
+
   mBackground->SetTranslation(Vec3(backgroundOffset, 0, 0));
   mBackground->SetSize(mSize - Vec2(backgroundOffset, 0));
 
-  if(mTree->mFormatting.Flags.IsSet(FormatFlags::ShowSeparators))
+  if (mTree->mFormatting.Flags.IsSet(FormatFlags::ShowSeparators))
   {
-    mSeparator->SetTranslation(Vec3(0,mSize.y - Pixels(2),0));
+    mSeparator->SetTranslation(Vec3(0, mSize.y - Pixels(2), 0));
     mSeparator->SetSize(Vec2(mSize.x, Pixels(2)));
   }
 
@@ -386,12 +376,12 @@ void TreeRow::UpdateTransform()
   UpdateColumnsTransform(mSize);
 
   // If the mouse is over it (while dragging), make a lighter highlight
-  if(mTree->mMouseOver == mIndex)
+  if (mTree->mMouseOver == mIndex)
   {
     Highlight(HighlightType::Preview, mTree->mMouseOverMode);
   }
   // If this element is selected, make the darker highlight visible
-  else if(mTree->mSelection->IsSelected(mIndex))
+  else if (mTree->mSelection->IsSelected(mIndex))
   {
     Highlight(HighlightType::Selected);
   }
@@ -411,11 +401,10 @@ void TreeRow::UpdateColumnsTransform(Vec2Param size)
   mExpandIcon->SetTranslation(SnapToPixels(Vec3(indentWidth, 2, 0)));
 
   // Add extra room for the expand/collapse icon if the datasource requires it.
-  if(mTree->mDataSource->IsExpandable())
+  if (mTree->mDataSource->IsExpandable())
     indentWidth += Pixels(16);
   else
     indentWidth += Pixels(4);
-
 
   TreeFormatting& formatting = mTree->mFormatting;
 
@@ -424,13 +413,13 @@ void TreeRow::UpdateColumnsTransform(Vec2Param size)
   // We want to find the first non fixed column because anything before it
   // will be pushed over by the indent width
   uint firstNonFixedColumn = 0;
-  for(uint i = 0; i < columnCount; ++i)
+  for (uint i = 0; i < columnCount; ++i)
   {
     // Grab the formatting
     ColumnFormat& column = formatting.Columns[i];
 
     // If it's the flex, set it and break out of the loop
-    if(column.ColumnType == ColumnType::Flex)
+    if (column.ColumnType == ColumnType::Flex)
     {
       firstNonFixedColumn = i;
       break;
@@ -438,7 +427,7 @@ void TreeRow::UpdateColumnsTransform(Vec2Param size)
   }
 
   // Walk through each column and set its size and translation
-  for(uint i = 0; i < columnCount; ++i)
+  for (uint i = 0; i < columnCount; ++i)
   {
     // Grab the formatting
     ColumnFormat& column = formatting.Columns[i];
@@ -447,18 +436,18 @@ void TreeRow::UpdateColumnsTransform(Vec2Param size)
     ValueEditor* valueEditor = mEditorColumns[i];
 
     Vec2 desiredSize = column.CurrSize;
-    
+
     // The final x position
     float finalX = column.StartX;
 
     // If it's before the first non fixed column, we have to apply the indent
-    if(i <= firstNonFixedColumn)
+    if (i <= firstNonFixedColumn)
     {
       finalX += indentWidth;
 
       // If it's the first flex, it needs to eat (shrink in size) the indent
       // so that everything after it can retain its desired position and size
-      if(column.ColumnType == ColumnType::Flex)
+      if (column.ColumnType == ColumnType::Flex)
         desiredSize.x -= indentWidth;
     }
 
@@ -472,61 +461,60 @@ void TreeRow::Refresh()
 {
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
 
-  if(entry == nullptr)
+  if (entry == nullptr)
     return;
-  
+
   bool isExpandable = mTree->mDataSource->IsExpandable(entry);
 
-  if(isExpandable)
+  if (isExpandable)
   {
-    // Show Expander 
+    // Show Expander
     mExpandIcon->SetVisible(true);
 
     // We may have been added to the expanded list externally
     mExpanded = mTree->mExpanded->IsSelected(mIndex);
 
-    //Rebuild the tree if expanded
-    if(this->mExpanded)
+    // Rebuild the tree if expanded
+    if (this->mExpanded)
       RebuildChildren();
   }
   else
   {
-    //Not expandable
+    // Not expandable
 
-    //If node used to be expanded collapse
-    if(this->mExpanded)
+    // If node used to be expanded collapse
+    if (this->mExpanded)
       Collapse();
 
-    //Hide Expander
+    // Hide Expander
     mExpandIcon->SetVisible(false);
   }
 
-  //Reload columns
+  // Reload columns
   this->RefreshData();
 }
 
-//-------------------------------------------------------------- Row Destruction 
 
 TreeRow::~TreeRow()
 {
-  //Remove from parent
-  if(mParentRow)
+  // Remove from parent
+  if (mParentRow)
   {
     mParentRow = nullptr;
     TreeRowList::Unlink(this);
 
-    //If the index still refers to this row
-    //erase this row, it will be rebuilt if needed
-    if(mTree->mRowMap.FindValue(mIndex.Id, nullptr) == this)
+    // If the index still refers to this row
+    // erase this row, it will be rebuilt if needed
+    if (mTree->mRowMap.FindValue(mIndex.Id, nullptr) == this)
       mTree->mRowMap.Erase(mIndex.Id);
   }
 
-  while(!mChildren.Empty())
+  while (!mChildren.Empty())
   {
     mChildren.Front().mParentRow = nullptr;
     TreeRowList::Unlink(&mChildren.Front());
   }
- 
+
   mToolTip.SafeDestroy();
 }
 
@@ -535,10 +523,9 @@ void TreeRow::OnDestroy()
   Composite::OnDestroy();
 }
 
-
 void TreeRow::DestroyChildren()
 {
-  forRange(TreeRow& child, mChildren.All())
+  forRange(TreeRow & child, mChildren.All())
   {
     child.RecursiveDestroy();
   }
@@ -559,16 +546,16 @@ void TreeRow::Remove()
 void TreeRow::UpdateBgColor(uint index)
 {
   Vec4 color;
-  if(index)
+  if (index)
   {
-    if(mValid)
+    if (mValid)
       color = TreeViewValidUi::PrimaryColor;
     else
       color = TreeViewInvalidUi::PrimaryColor;
   }
   else
   {
-    if(mValid)
+    if (mValid)
       color = TreeViewValidUi::SecondaryColor;
     else
       color = TreeViewInvalidUi::SecondaryColor;
@@ -577,35 +564,34 @@ void TreeRow::UpdateBgColor(uint index)
   mGraphicBackground->SetColor(color);
 }
 
-//-------------------------------------------------------- Row Expand / Collapse
 void TreeRow::RebuildChildren()
 {
-  //Rebuild children by reusing valid rows and destroying invalid rows
+  // Rebuild children by reusing valid rows and destroying invalid rows
 
-  //Look up the entry
+  // Look up the entry
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
 
-  if(entry == nullptr)
+  if (entry == nullptr)
     return;
 
   uint numChildren = mTree->mDataSource->ChildCount(entry);
 
-  //Swap out old children
+  // Swap out old children
   TreeRowList oldChildren;
   oldChildren.Swap(mChildren);
 
   DataEntry* prev = nullptr;
-  for(uint i = 0;i<numChildren;++i)
+  for (uint i = 0; i < numChildren; ++i)
   {
     DataEntry* child = mTree->mDataSource->GetChild(entry, i, prev);
     DataIndex index = mTree->mDataSource->ToIndex(child);
 
-    //Is this row still valid?
+    // Is this row still valid?
     TreeRow* row = mTree->FindRowByIndex(index);
-    if(row && row->mParentRow==this)
+    if (row && row->mParentRow == this)
     {
-      //node is still valid and this row is still the parent
-      //move to current children list
+      // node is still valid and this row is still the parent
+      // move to current children list
       oldChildren.Erase(row);
       mChildren.PushBack(row);
 
@@ -613,8 +599,8 @@ void TreeRow::RebuildChildren()
     }
     else
     {
-      //No rows created for this data index 
-      //Create a new child TreeRow
+      // No rows created for this data index
+      // Create a new child TreeRow
       TreeRow* treeRow = new TreeRow(mTree, this, child);
       mChildren.PushBack(treeRow);
     }
@@ -622,13 +608,13 @@ void TreeRow::RebuildChildren()
     prev = child;
   }
 
-  //Destroy all children that are no longer valid.
-  while(!oldChildren.Empty())
+  // Destroy all children that are no longer valid.
+  while (!oldChildren.Empty())
   {
     TreeRow* current = &oldChildren.Front();
     current->RecursiveDestroy();
     oldChildren.Erase(current);
-    //Child removes itself in destruction.
+    // Child removes itself in destruction.
     mChildren.PushBack(current);
   }
 
@@ -637,15 +623,15 @@ void TreeRow::RebuildChildren()
 
 void TreeRow::Collapse()
 {
-  //Do not repeat
-  if(!mExpanded)
+  // Do not repeat
+  if (!mExpanded)
     return;
 
-  //Change the expander icon
-  if(mExpandIcon)
+  // Change the expander icon
+  if (mExpandIcon)
     mExpandIcon->ChangeDefinition(mDefSet->GetDefinition(cArrowRight));
 
-  //Mark the index as not expanded
+  // Mark the index as not expanded
   mTree->mExpanded->Deselect(mIndex);
 
   DestroyChildren();
@@ -655,60 +641,61 @@ void TreeRow::Collapse()
 
 void TreeRow::Expand()
 {
-  //Do not repeat
-  if(mExpanded)
+  // Do not repeat
+  if (mExpanded)
     return;
 
-  //Change the expander icon
-  if(mExpandIcon)
+  // Change the expander icon
+  if (mExpandIcon)
     mExpandIcon->ChangeDefinition(mDefSet->GetDefinition(cArrowDown));
 
-  //Mark the index as expanded
+  // Mark the index as expanded
   mTree->mExpanded->Select(mIndex);
 
-  //Tell the data source to expand
+  // Tell the data source to expand
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
-  if(entry == nullptr)
+  if (entry == nullptr)
     return;
 
   mTree->mDataSource->Expand(entry);
 
-  //Build children
+  // Build children
   RebuildChildren();
   this->RefreshData();
 
-  //Mark TreeRow as expanded
+  // Mark TreeRow as expanded
   mExpanded = true;
 }
 
 void TreeRow::Select(bool singleSelect)
 {
-  //Already selected
+  // Already selected
   bool wasSelected = mTree->mSelection->IsSelected(mIndex);
 
-  //Always clear everyone with onlySelected
-  if(singleSelect) 
+  // Always clear everyone with onlySelected
+  if (singleSelect)
     mTree->mSelection->SelectNone(false);
 
-  // Select this row. To avoid sending multiple selection events, we don't want to send one here
-  // because we're calling `SelectFinal` below which will send out the event for us.
+  // Select this row. To avoid sending multiple selection events, we don't want
+  // to send one here because we're calling `SelectFinal` below which will send
+  // out the event for us.
   mTree->mSelection->Select(mIndex, false);
 
-  //Only send the event if this was not already selected.
-  if(!wasSelected)
+  // Only send the event if this was not already selected.
+  if (!wasSelected)
   {
-    //Send out selected event
+    // Send out selected event
     DataEvent dataEvent;
     dataEvent.Index = mIndex;
     mTree->mDataSource->DispatchEvent(Events::DataSelected, &dataEvent);
   }
   else
   {
-    //When group selecting
-    //selecting an already selected item removes it
-    if(!singleSelect)
+    // When group selecting
+    // selecting an already selected item removes it
+    if (!singleSelect)
     {
-      //Remove from select
+      // Remove from select
       mTree->mSelection->Deselect(mIndex);
     }
   }
@@ -724,7 +711,7 @@ void TreeRow::MultiSelect()
   uint rowIndex = mTree->FindRowIndex(this);
 
   // If the selection size is 0, select from the root to this row
-  if(selection->Size() == 0)
+  if (selection->Size() == 0)
   {
     mTree->SelectRowsInRange(0, rowIndex);
   }
@@ -752,13 +739,13 @@ void TreeRow::Highlight(HighlightType::Type type, InsertMode::Type insertMode)
   mSelection->SetTranslation(Vec3(Pixels(1), 0, 0));
 
   // Set it invisible if it's none
-  if(type == HighlightType::None)
+  if (type == HighlightType::None)
   {
     mSelection->SetVisible(false);
   }
-  else if(type == HighlightType::Selected)
+  else if (type == HighlightType::Selected)
   {
-    if(mValid)
+    if (mValid)
       mSelection->SetColor(TreeViewValidUi::SelectedColor);
     else
       mSelection->SetColor(TreeViewInvalidUi::SelectedColor);
@@ -766,9 +753,9 @@ void TreeRow::Highlight(HighlightType::Type type, InsertMode::Type insertMode)
     // Make it visible again
     mSelection->SetVisible(true);
   }
-  else if(type == HighlightType::Preview)
+  else if (type == HighlightType::Preview)
   {
-    if(mValid)
+    if (mValid)
       mSelection->SetColor(TreeViewValidUi::MouseOverColor);
     else
       mSelection->SetColor(TreeViewInvalidUi::MouseOverColor);
@@ -780,13 +767,13 @@ void TreeRow::Highlight(HighlightType::Type type, InsertMode::Type insertMode)
 
     // If the mouse over mode is before, set the highlight to only cover
     // the top of the row
-    if(insertMode == InsertMode::Before)
+    if (insertMode == InsertMode::Before)
     {
       mSelection->SetSize(Vec2(mSize.x, Pixels(3)));
       mSelection->SetTranslation(Vec3(indent, -1.5f, 0));
     }
     // If it's set to after, make it cover the bottom of the row
-    else if(insertMode == InsertMode::After)
+    else if (insertMode == InsertMode::After)
     {
       mSelection->SetSize(Vec2(mSize.x, Pixels(3)));
       mSelection->SetTranslation(Vec3(indent, mSize.y - 1.5f, 0));
@@ -794,23 +781,22 @@ void TreeRow::Highlight(HighlightType::Type type, InsertMode::Type insertMode)
   }
 }
 
-//------------------------------------------------------------ Row Events
 void TreeRow::OnKeyPress(KeyboardEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  //Select(true);
+  // Select(true);
 }
 
 void TreeRow::OnMouseClick(MouseEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  if(event->ShiftPressed)
+  if (event->ShiftPressed)
     MultiSelect();
-  else if(event->CtrlPressed)
+  else if (event->CtrlPressed)
     Select(false);
   else
     Select(true);
@@ -818,11 +804,11 @@ void TreeRow::OnMouseClick(MouseEvent* event)
 
 void TreeRow::OnMouseDragBackground(MouseDragEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
   // If this row is selected, start the meta drag of the row
-  if(mTree->mSelection->IsSelected(mIndex))
+  if (mTree->mSelection->IsSelected(mIndex))
   {
     OnMouseDragRow(event);
   }
@@ -837,14 +823,14 @@ void TreeRow::OnMouseDragBackground(MouseDragEvent* event)
 
 void TreeRow::OnMouseDragRow(MouseEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  if(event->ShiftPressed)
+  if (event->ShiftPressed)
   {
     MultiSelect();
   }
-  else if(event->CtrlPressed)
+  else if (event->CtrlPressed)
   {
     Select(false);
   }
@@ -852,25 +838,25 @@ void TreeRow::OnMouseDragRow(MouseEvent* event)
   {
     // Only select the object if it isn't already in the selection,
     // otherwise we want the selection to stay the same and move all of them
-    if(!mTree->mSelection->IsSelected(mIndex))
+    if (!mTree->mSelection->IsSelected(mIndex))
       Select(true);
   }
 
-  //Create Drag
+  // Create Drag
   MetaDrag* drag = new MetaDrag(event->GetMouse(), mTree, this);
 
-  //Get all currently selected items in the library view
+  // Get all currently selected items in the library view
   Array<DataIndex> selected;
   DataSelection* selection = mTree->mSelection;
   selection->GetSelected(selected);
- 
-  //Drag all the meta objects for these entries if they are valid for
-  //drag and drop onto other Ui
+
+  // Drag all the meta objects for these entries if they are valid for
+  // drag and drop onto other Ui
   for (size_t i = 0; i < selected.Size(); ++i)
   {
     DataEntry* entry = mTree->mDataSource->ToEntry(selected[i]);
     Handle instance = mTree->mDataSource->ToHandle(entry);
-    if(instance.IsNotNull())
+    if (instance.IsNotNull())
       drag->AddObject(instance);
   }
 }
@@ -886,7 +872,7 @@ void TreeRow::OnObjectPoll(ObjectPollEvent* event)
 void TreeRow::OnMouseEnter(MouseEvent* event)
 {
   TreeEvent e;
-  e.Row  = this;
+  e.Row = this;
   mTree->DispatchEvent(Events::MouseEnterRow, &e);
 
   Any toolTipData;
@@ -894,29 +880,31 @@ void TreeRow::OnMouseEnter(MouseEvent* event)
   DataEntry* entry = source->ToEntry(mIndex);
   source->GetData(entry, toolTipData, CommonColumns::ToolTip);
 
-  if(toolTipData.IsHoldingValue())
+  if (toolTipData.IsHoldingValue())
   {
     ErrorIf(!toolTipData.Is<String>(), "ToolTips must be a string.");
     String message = toolTipData.Get<String>();
-    if(message.Empty())
+    if (message.Empty())
       return;
 
     // Create the tooltip
     ToolTip* toolTip = new ToolTip(this);
-  
+
     toolTip->SetText(message);
-    if(mValid)
+    if (mValid)
       toolTip->SetColorScheme(ToolTipColorScheme::Default);
     else
       toolTip->SetColorScheme(ToolTipColorScheme::Red);
-  
+
     // Position the tooltip
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
-                          IndicatorSide::Top, IndicatorSide::Bottom);
+    placement.SetPriority(IndicatorSide::Right,
+                          IndicatorSide::Left,
+                          IndicatorSide::Top,
+                          IndicatorSide::Bottom);
     toolTip->SetArrowTipTranslation(placement);
-  
+
     mToolTip.SafeDestroy();
     mToolTip = toolTip;
   }
@@ -926,22 +914,25 @@ void TreeRow::OnMouseExit(MouseEvent* event)
 {
   mToolTip.SafeDestroy();
   TreeEvent e;
-  e.Row  = this;
+  e.Row = this;
   mTree->DispatchEvent(Events::MouseExitRow, &e);
 }
 
-InsertMode::Enum TreeRow::GetInsertPosition(DataEntry* entry, Vec2Param screenPos)
+InsertMode::Enum TreeRow::GetInsertPosition(DataEntry* entry,
+                                            Vec2Param screenPos)
 {
   Vec2 localPos = mBackground->ToLocal(screenPos);
-  if(localPos.y < TreeViewUi::DragInsertSize)
+  if (localPos.y < TreeViewUi::DragInsertSize)
     return InsertMode::Before;
-  if((mSize.y - localPos.y) < TreeViewUi::DragInsertSize)
+  if ((mSize.y - localPos.y) < TreeViewUi::DragInsertSize)
     return InsertMode::After;
   return InsertMode::On;
 }
 
-void TreeRow::GetInsertMode(Status& status, DataEntry* movingEntry,
-                            Vec2Param screenPos, InsertMode::Type& mode)
+void TreeRow::GetInsertMode(Status& status,
+                            DataEntry* movingEntry,
+                            Vec2Param screenPos,
+                            InsertMode::Type& mode)
 {
   // Determine where we're moving to
   // If the mouse is near the top or bottom of the row, we want to Insert
@@ -959,30 +950,33 @@ void TreeRow::GetInsertMode(Status& status, DataEntry* movingEntry,
   results[InsertMode::On].Message = "Move Item";
   results[InsertMode::After].Message = "Move Item After";
 
-  for(uint i = 0; i < InsertMode::Size; ++i)
+  for (uint i = 0; i < InsertMode::Size; ++i)
     mTree->mDataSource->CanMove(results[i], movingEntry, entry, i);
 
   // Start as invalid
   mode = uint(-1);
 
-  do 
+  do
   {
-    bool beforeSupported = results[InsertMode::Before].Context != InsertError::NotSupported;
-    bool onSupported = results[InsertMode::On].Context != InsertError::NotSupported;
-    bool afterSupported = results[InsertMode::After].Context != InsertError::NotSupported;
+    bool beforeSupported =
+        results[InsertMode::Before].Context != InsertError::NotSupported;
+    bool onSupported =
+        results[InsertMode::On].Context != InsertError::NotSupported;
+    bool afterSupported =
+        results[InsertMode::After].Context != InsertError::NotSupported;
 
     // Check to move before
-    if(beforeSupported)
+    if (beforeSupported)
     {
       // Mouse is at the top small area
-      if(localPos.y < TreeViewUi::DragInsertSize)
+      if (localPos.y < TreeViewUi::DragInsertSize)
       {
         mode = InsertMode::Before;
         break;
       }
 
-      // Cannot move on top, and the mouse is in the upper half 
-      if(!onSupported && localPos.y <= (mSize.y * 0.5f))
+      // Cannot move on top, and the mouse is in the upper half
+      if (!onSupported && localPos.y <= (mSize.y * 0.5f))
       {
         mode = InsertMode::Before;
         break;
@@ -990,24 +984,24 @@ void TreeRow::GetInsertMode(Status& status, DataEntry* movingEntry,
     }
 
     // Check to move after
-    if(afterSupported)
+    if (afterSupported)
     {
       // Mouse is at the bottom small area
-      if((mSize.y - localPos.y) < TreeViewUi::DragInsertSize)
+      if ((mSize.y - localPos.y) < TreeViewUi::DragInsertSize)
       {
         mode = InsertMode::After;
         break;
       }
 
-      // Cannot move on top, and the mouse is in the lower half 
-      if(!onSupported && localPos.y > (mSize.y * 0.5f))
+      // Cannot move on top, and the mouse is in the lower half
+      if (!onSupported && localPos.y > (mSize.y * 0.5f))
       {
         mode = InsertMode::After;
         break;
       }
     }
 
-    if(onSupported)
+    if (onSupported)
     {
       mode = InsertMode::On;
       break;
@@ -1015,19 +1009,21 @@ void TreeRow::GetInsertMode(Status& status, DataEntry* movingEntry,
   } while (false);
 
   // Cannot move if no mode was set
-  if(mode == uint(-1))
+  if (mode == uint(-1))
   {
     status.SetFailed(String(), InsertError::NotSupported);
     return;
   }
 
   // Set the text
-  status  = results[mode];
+  status = results[mode];
 }
 
-void UpdateToolTipPlacement(TreeRow* row, InsertMode::Type mode, MetaDropEvent* e)
+void UpdateToolTipPlacement(TreeRow* row,
+                            InsertMode::Type mode,
+                            MetaDropEvent* e)
 {
-  if(row->IsRoot())
+  if (row->IsRoot())
     return;
   ToolTipPlacement& placement = e->mToolTipPlacement;
 
@@ -1039,14 +1035,16 @@ void UpdateToolTipPlacement(TreeRow* row, InsertMode::Type mode, MetaDropEvent* 
   placement.SetScreenRect(rect);
 
   // If we're inserting before, make it point to the top left corner
-  if(mode == InsertMode::Before)
+  if (mode == InsertMode::Before)
     placement.mHotSpot = rect.TopLeft();
   // If we're inserting after, point to the bottom left
-  else if(mode == InsertMode::After)
+  else if (mode == InsertMode::After)
     placement.mHotSpot = rect.BottomLeft();
 
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-                        IndicatorSide::Top, IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        IndicatorSide::Top,
+                        IndicatorSide::Bottom);
 }
 
 void TreeRow::OnMetaDrop(MetaDropEvent* event)
@@ -1055,20 +1053,20 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
 
   mTree->mMouseOver.Id = (u64)-1;
 
-  //Dropped on the Row
-  if(event->Instance.StoredType->IsA(ZilchTypeId(TreeRow)))
+  // Dropped on the Row
+  if (event->Instance.StoredType->IsA(ZilchTypeId(TreeRow)))
   {
-    //Do not drop on self
+    // Do not drop on self
     TreeRow* sourceRow = event->Instance.Get<TreeRow*>();
-    if(sourceRow == nullptr || this == sourceRow)
+    if (sourceRow == nullptr || this == sourceRow)
       return;
 
-    //Do not drop on rows from other trees
-    if(sourceRow->mTree != this->mTree)
+    // Do not drop on rows from other trees
+    if (sourceRow->mTree != this->mTree)
       return;
 
-    //Selected do not drop
-    if(mTree->mSelection->IsSelected(mIndex))
+    // Selected do not drop
+    if (mTree->mSelection->IsSelected(mIndex))
       return;
 
     // Get the Insert mode based on the mouse position
@@ -1080,18 +1078,18 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
 
     // Create a custom placement for the tooltip
     UpdateToolTipPlacement(this, insertMode, event);
-    
+
     // Do nothing if we cannot Insert anywhere
-    if(insertStatus.Context != InsertError::None)
+    if (insertStatus.Context != InsertError::None)
     {
       event->Failed = true;
       return;
     }
 
     // If we're expanding, forward the event to our first child row
-    if(insertMode == InsertMode::After && mExpanded && !mChildren.Empty())
+    if (insertMode == InsertMode::After && mExpanded && !mChildren.Empty())
     {
-      if(!IsRoot())
+      if (!IsRoot())
       {
         TreeRow* firstChild = &mChildren.Front();
         firstChild->OnMetaDrop(event);
@@ -1100,9 +1098,9 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
     }
 
     // Drop is good
-    
+
     // If testing, set highlight and return
-    if(event->Testing)
+    if (event->Testing)
     {
       mTree->mMouseOver = mIndex;
       mTree->mMouseOverMode = insertMode;
@@ -1115,7 +1113,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
     // so that nothing is highlighted anymore
     mTree->mMouseOver.Id = (u64)-1;
 
-    //Move all selected data indexes
+    // Move all selected data indexes
     Array<DataIndex> indexes;
     mTree->mSelection->GetSelected(indexes);
     mTree->mDataSource->BeginBatchMove();
@@ -1126,7 +1124,8 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
   }
   else
   {
-    // Get the insert mode based on where the mouse is relative to the mouse over row
+    // Get the insert mode based on where the mouse is relative to the mouse
+    // over row
     InsertMode::Enum insertMode = GetInsertPosition(entry, event->Position);
 
     // Create a custom placement for the tooltip
@@ -1134,7 +1133,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
 
     mTree->mDataSource->OnMetaDrop(event, entry, insertMode);
 
-    if(event->Testing && event->Handled)
+    if (event->Testing && event->Handled)
     {
       mTree->mMouseOver = mIndex;
       mTree->mMouseOverMode = insertMode;
@@ -1145,7 +1144,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
 
 void TreeRow::OnMouseDownExpander(MouseEvent* event)
 {
-  if(mExpanded)
+  if (mExpanded)
   {
     Collapse();
   }
@@ -1157,21 +1156,21 @@ void TreeRow::OnMouseDownExpander(MouseEvent* event)
 
 void TreeRow::Fill(Array<TreeRow*>& nodes, uint depth)
 {
-  if(!mActive || mDestroyed)
+  if (!mActive || mDestroyed)
     return;
 
   nodes.PushBack(this);
   this->mDepth = depth;
   this->mVisibleRowIndex = nodes.Size() - 1;
-  forRange(TreeRow& child, mChildren.All())
+  forRange(TreeRow & child, mChildren.All())
   {
-    child.Fill(nodes, depth+1);
+    child.Fill(nodes, depth + 1);
   }
 }
 
 void TreeRow::OnDoubleClick(MouseEvent* event)
 {
-  if(!event->Handled)
+  if (!event->Handled)
   {
     DataEvent e;
     e.Index = mIndex;
@@ -1181,18 +1180,18 @@ void TreeRow::OnDoubleClick(MouseEvent* event)
 
 void TreeRow::OnRightUp(MouseEvent* event)
 {
-  if(!mTree->GetSelection()->IsSelected(mIndex))
+  if (!mTree->GetSelection()->IsSelected(mIndex))
     OnMouseClick(event);
 
   TreeEvent e;
-  e.Row  = this;
+  e.Row = this;
   mTree->DispatchEvent(Events::TreeRightClick, &e);
   event->Handled = true;
 }
 
 void TreeRow::OnKeyUp(KeyboardEvent* event)
 {
-  //if(!mTree->GetSelection()->IsSelected(mIndex))
+  // if(!mTree->GetSelection()->IsSelected(mIndex))
   //  OnKeyPress(event);
 
   TreeEvent e;
@@ -1200,12 +1199,10 @@ void TreeRow::OnKeyUp(KeyboardEvent* event)
   mTree->DispatchEvent(Events::TreeKeyPress, &e);
 }
 
-//---------------------------------------------------------------- Column Header
-//******************************************************************************
-ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format)
-  : Composite(tree)
-  , mFormat(format)
-  , mTree(tree)
+ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format) :
+    Composite(tree),
+    mFormat(format),
+    mTree(tree)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(TreeViewUi::HeaderColor);
@@ -1218,31 +1215,29 @@ ColumnHeader::ColumnHeader(TreeView* tree, ColumnFormat* format)
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
 }
 
-//******************************************************************************
 void ColumnHeader::SetText(StringParam name)
 {
-  if(mLabel == nullptr)
+  if (mLabel == nullptr)
     mLabel = new Label(this, "BoldText");
   mLabel->SetText(name);
 }
 
-//******************************************************************************
 void ColumnHeader::SetIcon(ColumnFormat& format)
 {
-  if(mIcon == nullptr)
+  if (mIcon == nullptr)
     mIcon = CreateAttached<Element>(format.HeaderIcon);
 
   mIcon->SetColor(format.IconColor);
 
-  if(format.IconSizePolicy == ColumnIconSizePolicy::Auto)
+  if (format.IconSizePolicy == ColumnIconSizePolicy::Auto)
   {
     mIcon->SetSize(cDefaultColumnIconSize);
     mIcon->SetTranslation(SnapToPixels(Pixels(2, 2, 0)));
   }
-  else  // ColumnIconSizePolicy::CustomSize
+  else // ColumnIconSizePolicy::CustomSize
   {
     Vec2& size = format.IconSize;
-    size = size.Clamp(size, Pixels(0,0), format.FixedSize);
+    size = size.Clamp(size, Pixels(0, 0), format.FixedSize);
 
     float padX = 0.5f * (format.FixedSize.x - size.x);
     float padY = 0.5f * (format.FixedSize.y - size.y);
@@ -1250,21 +1245,19 @@ void ColumnHeader::SetIcon(ColumnFormat& format)
     mIcon->SetSize(size);
     mIcon->SetTranslation(SnapToPixels(Pixels(padX, padY, 0)));
   }
-
 }
 
-//******************************************************************************
 void ColumnHeader::UpdateTransform()
 {
   mBackground->SetSize(GetSize());
-  
-  if(mLabel)
+
+  if (mLabel)
   {
     mLabel->SetTranslation(Pixels(0, 0, 0));
-//     Thickness borderThickness = mBackground->GetBorderThickness();
-// 
-//     LayoutResult lr = RemoveThickness(borderThickness, mSize, Pixels(0,-1,0));
-//     mLabel->SetTranslation(lr.Translation);
+    //     Thickness borderThickness = mBackground->GetBorderThickness();
+    //
+    //     LayoutResult lr = RemoveThickness(borderThickness, mSize,
+    //     Pixels(0,-1,0)); mLabel->SetTranslation(lr.Translation);
     mLabel->SizeToContents();
 
     mLabel->SetColor(Vec4(1, 1, 1, 0.33f));
@@ -1272,13 +1265,11 @@ void ColumnHeader::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void ColumnHeader::OnMouseEnter(MouseEvent* e)
 {
   mBackground->SetColor(TreeViewUi::HeaderHighlight);
 }
 
-//******************************************************************************
 void ColumnHeader::OnLeftClick(MouseEvent* e)
 {
   if (DataSource* source = mTree->GetDataSource())
@@ -1290,20 +1281,18 @@ void ColumnHeader::OnLeftClick(MouseEvent* e)
   }
 }
 
-//******************************************************************************
 void ColumnHeader::OnMouseExit(MouseEvent* e)
 {
   mBackground->SetColor(TreeViewUi::HeaderColor);
 }
 
-//--------------------------------------------------- Column Resizer Manipulator
 class ColumnResizerManipulator : public MouseManipulation
 {
 public:
   ColumnResizer* mResizer;
 
-  ColumnResizerManipulator(Mouse* mouse, ColumnResizer* resizer) 
-    : MouseManipulation(mouse, resizer)
+  ColumnResizerManipulator(Mouse* mouse, ColumnResizer* resizer) :
+      MouseManipulation(mouse, resizer)
   {
     mResizer = resizer;
   }
@@ -1321,10 +1310,10 @@ public:
   }
 };
 
-//--------------------------------------------------------------- Column Resizer
-ColumnResizer::ColumnResizer(Composite* parent, ColumnFormat* left, 
-                           ColumnFormat* right)
-  : Composite(parent)
+ColumnResizer::ColumnResizer(Composite* parent,
+                             ColumnFormat* left,
+                             ColumnFormat* right) :
+    Composite(parent)
 {
   mSpacer = new Spacer(this);
   mLeftFormat = left;
@@ -1345,7 +1334,8 @@ void ColumnResizer::ResizeHeaders(float pos)
 {
   // Clamp the position into the movable range
   float leftBound = (mLeftFormat->StartX + mLeftFormat->MinWidth);
-  float rightBound = (mRightFormat->StartX + mRightFormat->CurrSize.x - mRightFormat->MinWidth);
+  float rightBound = (mRightFormat->StartX + mRightFormat->CurrSize.x -
+                      mRightFormat->MinWidth);
   pos = Math::Clamp(pos, leftBound, rightBound);
 
   // The size (in pixels) of the left column
@@ -1358,37 +1348,38 @@ void ColumnResizer::ResizeHeaders(float pos)
   ColumnType::Type rightType = mRightFormat->ColumnType;
 
   // If either size is fixed then don't update their sizes
-  if(leftType == ColumnType::Fixed || rightType == ColumnType::Fixed)
+  if (leftType == ColumnType::Fixed || rightType == ColumnType::Fixed)
     return;
 
   // Update Left column
-  if(leftType == ColumnType::Flex)
+  if (leftType == ColumnType::Flex)
   {
     // Apply the difference in scale in pixels to the flex size
     float scaleDifference = (pixelSizeLeft / mLeftFormat->CurrSize.x);
     mLeftFormat->FlexSize *= scaleDifference;
   }
-  else if(leftType == ColumnType::Sizeable)
+  else if (leftType == ColumnType::Sizeable)
   {
     // Set it to the newly calculated size
     mLeftFormat->FixedSize.x = pixelSizeLeft;
   }
 
   // Update right column
-  if(rightType == ColumnType::Flex)
+  if (rightType == ColumnType::Flex)
   {
-    // If the left is flex as well, we want 
-    if(leftType == ColumnType::Flex)
+    // If the left is flex as well, we want
+    if (leftType == ColumnType::Flex)
       mRightFormat->FlexSize += oldFlexLeft - mLeftFormat->FlexSize;
     else
     {
       // Apply the difference in scale in pixels to the flex size
-      float newSizeRight = mRightFormat->StartX + mRightFormat->CurrSize.x - pos;
+      float newSizeRight =
+          mRightFormat->StartX + mRightFormat->CurrSize.x - pos;
       float scaleDifference = (newSizeRight / mRightFormat->CurrSize.x);
       mRightFormat->FlexSize *= scaleDifference;
     }
   }
-  else if(rightType == ColumnType::Sizeable)
+  else if (rightType == ColumnType::Sizeable)
   {
     // Add the difference to the right
     mRightFormat->FixedSize.x -= pixelSizeLeft - mLeftFormat->CurrSize.x;
@@ -1411,9 +1402,7 @@ void ColumnResizer::OnMouseExit(MouseEvent* event)
   event->GetMouse()->SetCursor(Cursor::Arrow);
 }
 
-//-------------------------------------------------------------------- Tree View
-TreeView::TreeView(Composite* parent)
-  :Composite(parent)
+TreeView::TreeView(Composite* parent) : Composite(parent)
 {
   static const String className = "TreeGrid";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -1423,7 +1412,7 @@ TreeView::TreeView(Composite* parent)
   mArea->SetClientSize(Pixels(20, 20));
   mMinSize = Vec2(100, 100);
 
-  mMouseOver = (DataIndex )-1;
+  mMouseOver = (DataIndex)-1;
   mMouseOverMode = InsertMode::On;
 
   mSelection = new HashDataSelection();
@@ -1439,14 +1428,14 @@ TreeView::TreeView(Composite* parent)
   ConnectThisTo(clientWidget, Events::MouseExit, OnMouseExit);
   ConnectThisTo(clientWidget, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(clientWidget, Events::MouseExitHierarchy, OnMouseExitHierarchy);
- 
+
   ConnectThisTo(clientWidget, Events::MouseUpdate, OnMouseUpdate);
 
   ConnectThisTo(clientWidget, Events::KeyDown, OnKeyDown);
   ConnectThisTo(clientWidget, Events::KeyUp, OnKeyUp);
   ConnectThisTo(clientWidget, Events::KeyRepeated, OnKeyRepeated);
-  
-  //Forward background Right click and meta drop to root
+
+  // Forward background Right click and meta drop to root
   ConnectThisTo(mArea->GetBackground(), Events::MetaDrop, OnMetaDropBg);
   ConnectThisTo(mArea->GetBackground(), Events::MetaDropTest, OnMetaDropBg);
   ConnectThisTo(mArea->GetBackground(), Events::MouseEnter, OnMouseEnter);
@@ -1466,7 +1455,7 @@ void TreeView::SetFormatName()
   formatting.Columns[0].FixedSize = Pixels(16, 20);
   formatting.Columns[0].Editable = false;
   formatting.Columns[0].CustomEditor = cDefaultIconEditor;
-  
+
   formatting.Columns[1].Index = 1;
   formatting.Columns[1].Name = CommonColumns::Name;
   formatting.Columns[1].ColumnType = ColumnType::Flex;
@@ -1508,16 +1497,16 @@ void TreeView::SetFormatNameAndType()
 void TreeView::SetFormat(TreeFormatting& format)
 {
   mFormatting = format;
-  
+
   auto headers = mHeaders.All();
-  while(!headers.Empty())
+  while (!headers.Empty())
   {
     ColumnHeader* header = headers.Front();
     headers.PopFront();
     header->Destroy();
   }
   auto resizers = mHeaderResizers.All();
-  while(!resizers.Empty())
+  while (!resizers.Empty())
   {
     ColumnResizer* resizer = resizers.Front().second;
     resizers.PopFront();
@@ -1527,9 +1516,9 @@ void TreeView::SetFormat(TreeFormatting& format)
   mHeaders.Clear();
   mHeaderResizers.Clear();
   ClearAllRows();
-  if(mDataSource)
+  if (mDataSource)
   {
-    //Build new Tree
+    // Build new Tree
     DataEntry* root = mDataSource->GetRoot();
     mRoot = new TreeRow(this, nullptr, root);
     mRoot->Expand();
@@ -1544,11 +1533,11 @@ void TreeView::SetRowHeight(float height)
 
 void TreeView::ShowRow(DataIndex& index)
 {
-  if(mDataSource == nullptr)
+  if (mDataSource == nullptr)
     return;
 
   DataEntry* entry = mDataSource->ToEntry(index);
-  if(entry == nullptr)
+  if (entry == nullptr)
     return;
 
   TreeRow* row = FindRowByIndex(index);
@@ -1559,26 +1548,27 @@ void TreeView::ShowRow(DataIndex& index)
   bool needRefresh = false;
 
   // We want to search up starting at our parent for the first visible row
-  while(parent)
+  while (parent)
   {
     DataIndex currIndex = mDataSource->ToIndex(parent);
 
     // If there is a visible row for this index, expand it and we're done
     row = FindRowByIndex(currIndex);
-    if(row)
+    if (row)
     {
       if (row->mExpanded == false)
       {
         row->Expand();
 
-        // Expanding the row will require building rows for each child in the row
+        // Expanding the row will require building rows for each child in the
+        // row
         needRefresh = true;
       }
 
       break;
     }
 
-    // It doesn't have a row, but when the row is created, we want it 
+    // It doesn't have a row, but when the row is created, we want it
     // to be expanded (instead of recursively creating and then expanding).
     // Adding it to this data selection will make it automatically be
     // expanded when it's created
@@ -1589,7 +1579,7 @@ void TreeView::ShowRow(DataIndex& index)
   }
 
   // Rebuild the tree
-  if(needRefresh)
+  if (needRefresh)
     Refresh();
 
   // Update transform will update the size of the scroll area
@@ -1598,13 +1588,13 @@ void TreeView::ShowRow(DataIndex& index)
   // Scroll to this object
   Zero::TreeRow* dataRow = FindRowByIndex(index);
 
-  if(dataRow)
+  if (dataRow)
   {
     uint rowIndex = dataRow->mVisibleRowIndex;
     float yPos = rowIndex * mRowHeight;
-    mArea->ScrollAreaToView(Vec2(0, yPos - mRowHeight), Vec2(0, yPos + mRowHeight));
+    mArea->ScrollAreaToView(Vec2(0, yPos - mRowHeight),
+                            Vec2(0, yPos + mRowHeight));
   }
-
 
   MarkAsNeedsUpdate();
 }
@@ -1624,7 +1614,7 @@ void TreeView::SetRefreshOnValueChange(bool state)
 
 void TreeView::Refresh()
 {
-  if(mRoot)
+  if (mRoot)
     mRoot->Refresh();
 
   UpdateTransform();
@@ -1634,7 +1624,7 @@ void TreeView::SetDataSource(DataSource* dataSource)
 {
   if (mDataSource)
   {
-    //Stop listening to old data source
+    // Stop listening to old data source
     mDataSource->GetDispatcher()->Disconnect(this);
     mDataSource = nullptr;
   }
@@ -1645,13 +1635,13 @@ void TreeView::SetDataSource(DataSource* dataSource)
 
   if (mDataSource)
   {
-    //Connect all events
+    // Connect all events
     ConnectThisTo(mDataSource, Events::DataRemoved, OnDataErased);
     ConnectThisTo(mDataSource, Events::DataAdded, OnDataAdded);
     ConnectThisTo(mDataSource, Events::DataModified, OnDataModified);
     ConnectThisTo(mDataSource, Events::DataReplaced, OnDataReplaced);
 
-    //Build new Tree
+    // Build new Tree
     DataEntry* root = mDataSource->GetRoot();
     mRoot = new TreeRow(this, nullptr, root);
     mRoot->Expand();
@@ -1671,7 +1661,7 @@ void TreeView::SetSelection(DataSelection* selection)
 
 void TreeView::ClearAllRows()
 {
-  if(mRoot)
+  if (mRoot)
   {
     mRoot->RecursiveDestroy();
     mRoot = nullptr;
@@ -1701,8 +1691,9 @@ void TreeView::OnKeyRepeated(KeyboardEvent* event)
 
 void TreeView::HandleKeyLogic(KeyboardEvent* event)
 {
-  // Do nothing if the event was already handled (likely from editing a text box)
-  if(event->Handled)
+  // Do nothing if the event was already handled (likely from editing a text
+  // box)
+  if (event->Handled)
     return;
 
   // We're going to move based on what's currently selected
@@ -1710,26 +1701,26 @@ void TreeView::HandleKeyLogic(KeyboardEvent* event)
   GetSelectionRange(&minIndex, &maxIndex);
 
   // If Up is pressed, move up the tree
-  if(event->Key == Keys::Up)
+  if (event->Key == Keys::Up)
   {
     // Move up an index ( -1 )
     int newMin = (int)minIndex - 1;
-    
+
     // Make sure we don't go passed the first row (take into account the root)
     newMin = Math::Max(newMin, 1);
 
     // Select the new row
-    if(event->ShiftPressed)
+    if (event->ShiftPressed)
       SelectRowsInRange(newMin, maxIndex);
     else
       SelectRowsInRange(newMin, newMin);
     mSelection->SelectFinal();
 
     float y = float(newMin - 1) * mRowHeight;
-    mArea->ScrollAreaToView(Vec2(0, y), Vec2(0,y));
+    mArea->ScrollAreaToView(Vec2(0, y), Vec2(0, y));
   }
   // If Down is pressed, move down the tree
-  else if(event->Key == Keys::Down)
+  else if (event->Key == Keys::Down)
   {
     // Move down an index
     uint newMax = maxIndex + 1;
@@ -1738,32 +1729,32 @@ void TreeView::HandleKeyLogic(KeyboardEvent* event)
     newMax = Math::Min((size_t)newMax, (size_t)(mRows.Size() - 1));
 
     // Select the new row
-    if(event->ShiftPressed)
+    if (event->ShiftPressed)
       SelectRowsInRange(minIndex, newMax);
     else
       SelectRowsInRange(newMax, newMax);
     mSelection->SelectFinal();
 
     float y = float(newMax + 1) * mRowHeight;
-    mArea->ScrollAreaToView(Vec2(0, y), Vec2(0,y));
+    mArea->ScrollAreaToView(Vec2(0, y), Vec2(0, y));
   }
-  else if(event->Key == Keys::Right && minIndex < mRows.Size())
+  else if (event->Key == Keys::Right && minIndex < mRows.Size())
   {
     // If right is pressed, attempt to expand the row
     TreeRow* row = mRows[minIndex];
     row->Expand();
   }
-  else if(event->Key == Keys::Left && minIndex < mRows.Size())
+  else if (event->Key == Keys::Left && minIndex < mRows.Size())
   {
     // If the row is expanded, collapse it and remain selected on it
     TreeRow* row = mRows[minIndex];
-    if(row->mExpanded)
+    if (row->mExpanded)
     {
       row->Collapse();
     }
-    // If it's not expanded and it has a parent that's not the root, 
+    // If it's not expanded and it has a parent that's not the root,
     // move the selection to the parent
-    else if(row->mParentRow && row->mParentRow != mRoot)
+    else if (row->mParentRow && row->mParentRow != mRoot)
     {
       mSelection->SelectNone();
       mSelection->Select(row->mParentRow->mIndex);
@@ -1773,20 +1764,19 @@ void TreeView::HandleKeyLogic(KeyboardEvent* event)
   MarkAsNeedsUpdate();
 }
 
-//Ui Events
+// Ui Events
 void TreeView::OnKeyUp(KeyboardEvent* event)
 {
-  
 }
 
 void TreeView::OnMouseExit(MouseEvent* event)
 {
-  if(!this->IsAncestorOf(event->Source))
+  if (!this->IsAncestorOf(event->Source))
   {
-    if(mMouseOver.Id != -1)
+    if (mMouseOver.Id != -1)
     {
       TreeRow* row = FindRowByIndex(mMouseOver);
-      if(row)
+      if (row)
         row->UpdateTransformExternal();
     }
     mMouseOver = (DataIndex)-1;
@@ -1801,7 +1791,6 @@ void TreeView::OnMouseExitHierarchy(MouseEvent* event)
 
 void TreeView::DoFocus()
 {
-
 }
 
 void TreeView::OnMouseEnter(MouseEvent* event)
@@ -1824,14 +1813,14 @@ void TreeView::OnMouseDragBg(MouseDragEvent* event)
 void TreeView::OnMouseUpdate(MouseEvent* event)
 {
   Vec2 local = mArea->ToLocal(event->Position);
-  Vec2 offset = mArea->GetClientOffset(); 
+  Vec2 offset = mArea->GetClientOffset();
   offset.y += GetHeaderRowHeight();
   Vec2 world = local - offset;
 
   MarkAsNeedsUpdate();
-  
+
   uint index = uint(world.y / mRowHeight) + 1;
-  if(index < mRows.Size())
+  if (index < mRows.Size())
   {
     TreeRow* row = mRows[index];
     mMouseOver = row->mIndex;
@@ -1850,7 +1839,7 @@ void TreeView::OnMetaDropBg(MetaDropEvent* event)
 
 void TreeView::OnRightClickBg(MouseEvent* event)
 {
-  if(mRoot)
+  if (mRoot)
     mRoot->OnRightUp(event);
 }
 
@@ -1874,19 +1863,19 @@ void TreeView::MoveToView(TreeRow* row)
 
 TreeRow* TreeView::FindRowByColumnValue(StringParam column, StringParam value)
 {
-  //brute force search through all visible rows
+  // brute force search through all visible rows
 
-  //Which column to search in
+  // Which column to search in
   ColumnFormat& format = GetColumn(column);
 
-  forRange(TreeRow* row, mRows.All())
+  forRange(TreeRow * row, mRows.All())
   {
-    //Get the value of the column
+    // Get the value of the column
     Any var;
     row->mEditorColumns[format.Index]->GetVariant(var);
 
-    //Check the value, strings for now
-    if(var.ToString() == value)
+    // Check the value, strings for now
+    if (var.ToString() == value)
       return row;
   }
 
@@ -1895,7 +1884,7 @@ TreeRow* TreeView::FindRowByColumnValue(StringParam column, StringParam value)
 
 void TreeView::SelectFirstRow()
 {
-  if(mRows.Size() < 2)
+  if (mRows.Size() < 2)
     return;
   mSelection->SelectNone();
   mSelection->Select(mRows[1]->mIndex);
@@ -1904,11 +1893,11 @@ void TreeView::SelectFirstRow()
   mSelection->SelectFinal();
 }
 
-//Data Source Events
+// Data Source Events
 void TreeView::OnDataErased(DataEvent* event)
 {
   TreeRow* row = FindRowByIndex(event->Index);
-  if(row)
+  if (row)
   {
     mRowMap.Erase(event->Index.Id);
     row->RecursiveDestroy();
@@ -1917,16 +1906,16 @@ void TreeView::OnDataErased(DataEvent* event)
 
 void TreeView::OnDataAdded(DataEvent* event)
 {
-  //Id is parent
+  // Id is parent
   TreeRow* row = FindRowByIndex(event->Index);
-  if(row)
+  if (row)
     row->Refresh();
 }
 
 void TreeView::OnDataModified(DataEvent* event)
 {
   TreeRow* row = FindRowByIndex(event->Index);
-  if(row)
+  if (row)
     row->RefreshData();
   else
     Refresh();
@@ -1934,7 +1923,7 @@ void TreeView::OnDataModified(DataEvent* event)
 
 void TreeView::OnDataReplaced(DataReplaceEvent* e)
 {
-  if(mExpanded->IsSelected(e->mOldIndex))
+  if (mExpanded->IsSelected(e->mOldIndex))
   {
     mExpanded->Deselect(e->mOldIndex);
     mExpanded->Select(e->mNewIndex, false);
@@ -1943,9 +1932,9 @@ void TreeView::OnDataReplaced(DataReplaceEvent* e)
 
 ColumnFormat& TreeView::GetColumn(StringParam columnName)
 {
-  for(uint i=0;i<mFormatting.Columns.Size();++i)
+  for (uint i = 0; i < mFormatting.Columns.Size(); ++i)
   {
-    if(mFormatting.Columns[i].Name == columnName)
+    if (mFormatting.Columns[i].Name == columnName)
       return mFormatting.Columns[i];
   }
   return mFormatting.Columns[0];
@@ -1961,7 +1950,7 @@ void TreeView::GetSelectionRange(uint* minIndex, uint* maxIndex)
   mSelection->GetSelected(selected);
 
   // Walk through the selected and min / max
-  for(uint i = 0; i < selected.Size(); ++i)
+  for (uint i = 0; i < selected.Size(); ++i)
   {
     // Get the index of the current row
     TreeRow* currRow = FindRowByIndex(selected[i]);
@@ -1975,14 +1964,14 @@ void TreeView::GetSelectionRange(uint* minIndex, uint* maxIndex)
 
 void TreeView::SelectRowsInRange(uint min, uint max)
 {
-  if(mDataSource == nullptr)
+  if (mDataSource == nullptr)
     return;
 
   // Clear the selection
   mSelection->SelectNone(false);
 
   // Select all in the given range
-  for(uint i = min; i <= max && i < mRows.Size(); ++i)
+  for (uint i = min; i <= max && i < mRows.Size(); ++i)
   {
     TreeRow* row = mRows[i];
     mSelection->Select(row->mIndex, false);
@@ -1996,12 +1985,12 @@ void TreeView::SelectRowsInRange(uint min, uint max)
 void TreeView::SelectAll()
 {
   // you can't delete the editor camera so size is always at least 1
-  SelectRowsInRange(0, mRows.Size()-1);
+  SelectRowsInRange(0, mRows.Size() - 1);
 }
 
 float TreeView::GetHeaderRowHeight()
 {
-  if(mFormatting.Flags.IsSet(FormatFlags::ShowHeaders))
+  if (mFormatting.Flags.IsSet(FormatFlags::ShowHeaders))
     return mRowHeight;
   return 0.0f;
 }
@@ -2018,16 +2007,17 @@ void TreeView::DragScroll(Vec2Param screenPosition)
   float scrollSpeed = 0;
   float maxSpeed = TreeViewUi::MaxDragScrollSpeed;
 
-  if(mArea->IsScrollBarVisible(1))
+  if (mArea->IsScrollBarVisible(1))
   {
-    if(local.y < TreeViewUi::DragScrollSize)
+    if (local.y < TreeViewUi::DragScrollSize)
     {
       float percentage = 1.0f - (local.y / TreeViewUi::DragScrollSize);
       scrollSpeed = -percentage * maxSpeed;
     }
-    else if(local.y > (mSize.y - TreeViewUi::DragScrollSize))
+    else if (local.y > (mSize.y - TreeViewUi::DragScrollSize))
     {
-      float percentage = 1.0f - (mSize.y - local.y) / TreeViewUi::DragScrollSize;
+      float percentage =
+          1.0f - (mSize.y - local.y) / TreeViewUi::DragScrollSize;
       scrollSpeed = percentage * maxSpeed;
     }
   }
@@ -2046,7 +2036,7 @@ void TreeView::UpdateTransform()
   mRows.Clear();
 
   // Collect all visible nodes
-  if(mRoot)
+  if (mRoot)
     mRoot->Fill(mRows, 0);
 
   // Build the column starting / ending positions
@@ -2058,7 +2048,7 @@ void TreeView::UpdateTransform()
   UpdateHeaders();
 
   float rowWidth = mSize.x;
-  if(mArea->IsScrollBarVisible(1))
+  if (mArea->IsScrollBarVisible(1))
     rowWidth -= mArea->GetScrollBarSize();
 
   // Header floats inside the search area
@@ -2078,10 +2068,10 @@ void TreeView::UpdateTransform()
 
   uint activeRows = mRows.Size();
 
-  // scrolling past the end of our total list by half of the visible rows results in
-  // a consistent buffer area past the end. Subtracting a flat number gives varying
-  // results for the object view and library view.
-  mScrollAreaRows = activeRows + (visibleRows/2);
+  // scrolling past the end of our total list by half of the visible rows
+  // results in a consistent buffer area past the end. Subtracting a flat number
+  // gives varying results for the object view and library view.
+  mScrollAreaRows = activeRows + (visibleRows / 2);
 
   // Update the client size with the size of all the rows
   mArea->SetClientSize(Vec2(mSize.x, float(mScrollAreaRows) * mRowHeight));
@@ -2091,19 +2081,20 @@ void TreeView::UpdateTransform()
 
   // Skip the root
   bool showRoot = mFormatting.Flags.IsSet(FormatFlags::ShowRoot);
-  if(!showRoot && !mRows.Empty())
+  if (!showRoot && !mRows.Empty())
   {
     ++startVisible;
     startVisible = Math::Min(activeRows, startVisible);
-    // Shift back row y 
+    // Shift back row y
     rowY -= mRowHeight;
   }
 
   // Compute the end of the visible rows
-  uint endVisible = Math::Min((size_t)mRows.Size(), (size_t)(startVisible + visibleRows));
+  uint endVisible =
+      Math::Min((size_t)mRows.Size(), (size_t)(startVisible + visibleRows));
 
   // Deactivate all rows before the first visible
-  for(uint i = 0; i < startVisible; ++i)
+  for (uint i = 0; i < startVisible; ++i)
   {
     TreeRow* item = mRows[i];
     item->SetActive(false);
@@ -2111,7 +2102,7 @@ void TreeView::UpdateTransform()
   }
 
   // Activate and move all visible rows
-  for(uint i = startVisible; i < endVisible; ++i)
+  for (uint i = startVisible; i < endVisible; ++i)
   {
     TreeRow* item = mRows[i];
     item->SetActive(true);
@@ -2133,7 +2124,7 @@ void TreeView::UpdateTransform()
   }
 
   // Deactivate all rows from first non visible to the number of rows
-  for(uint i = endVisible; i < activeRows; ++i)
+  for (uint i = endVisible; i < activeRows; ++i)
   {
     TreeRow* item = mRows[i];
     item->SetTranslation(Vec3(0, rowY, 0));
@@ -2158,15 +2149,15 @@ void TreeView::UpdateColumnTransforms()
 
   // We want to find out how much room we have after all fixed columns
   float unfixedWidth = mSize.x;
-  if(mArea->IsScrollBarVisible(1))
+  if (mArea->IsScrollBarVisible(1))
     unfixedWidth -= mArea->GetScrollBarSize();
 
   float totalFlex = 0.0f;
 
-  forRange(ColumnFormat& column, mFormatting.Columns.All())
+  forRange(ColumnFormat & column, mFormatting.Columns.All())
   {
     // If it's fixed, subtract its size
-    if(column.ColumnType != ColumnType::Flex)
+    if (column.ColumnType != ColumnType::Flex)
       unfixedWidth -= column.FixedSize.x;
     // If it's flex, add to the total flex size
     else
@@ -2177,13 +2168,13 @@ void TreeView::UpdateColumnTransforms()
   float currentX = cHeaderRowIndent;
 
   // Walk through each column and set its size and translation
-  forRange(ColumnFormat& column, mFormatting.Columns.All())
+  forRange(ColumnFormat & column, mFormatting.Columns.All())
   {
     // The starting position doesn't rely on the column type
     column.StartX = currentX;
 
     // If it's fixed, we just Assign it its desired size
-    if(column.ColumnType != ColumnType::Flex)
+    if (column.ColumnType != ColumnType::Flex)
     {
       column.CurrSize = column.FixedSize;
     }
@@ -2203,23 +2194,23 @@ void TreeView::UpdateColumnTransforms()
 void TreeView::UpdateHeaders()
 {
   // Do nothing if we're not showing headers
-  if(!mFormatting.Flags.IsSet(FormatFlags::ShowHeaders))
+  if (!mFormatting.Flags.IsSet(FormatFlags::ShowHeaders))
     return;
 
   uint currHeader = 0;
-  for(uint i = 0; i < mFormatting.Columns.Size(); ++i)
+  for (uint i = 0; i < mFormatting.Columns.Size(); ++i)
   {
     // Get the formatting of the column
     ColumnFormat& format = mFormatting.Columns[i];
 
     // Do nothing if there's no header
-    if(format.HeaderName.Empty() && format.HeaderIcon.Empty())
+    if (format.HeaderName.Empty() && format.HeaderIcon.Empty())
       continue;
 
     ColumnHeader* header;
 
     // Create a new header
-    if(currHeader >= mHeaders.Size())
+    if (currHeader >= mHeaders.Size())
     {
       header = new ColumnHeader(this, &format);
       mHeaders.PushBack(header);
@@ -2227,7 +2218,7 @@ void TreeView::UpdateHeaders()
       TreeViewHeaderAddedEvent headerEvent(currHeader, header);
       DispatchEvent(Events::TreeViewHeaderAdded, &headerEvent);
     }
-    
+
     header = mHeaders[currHeader];
 
     float startPos = format.StartX;
@@ -2238,11 +2229,11 @@ void TreeView::UpdateHeaders()
     // We want to walk left and keep pushing the start of the header left
     // to eat any columns that don't have a header
     // We may have to do something similar for eating right
-    for(int j = (int)i - 1; j >= 0; --j)
+    for (int j = (int)i - 1; j >= 0; --j)
     {
       // Get the formatting of the column
       ColumnFormat& testFormat = mFormatting.Columns[j];
-      if(!testFormat.HeaderIcon.Empty() || !testFormat.HeaderName.Empty())
+      if (!testFormat.HeaderIcon.Empty() || !testFormat.HeaderName.Empty())
         break;
       startPos -= testFormat.CurrSize.x;
       extraWidth += testFormat.CurrSize.x;
@@ -2251,7 +2242,7 @@ void TreeView::UpdateHeaders()
     header->SetTranslation(SnapToPixels(Vec3(startPos, 0, 0)));
 
     // Add 1 pixel to the last columns width
-    if(i != mFormatting.Columns.Size() - 1)
+    if (i != mFormatting.Columns.Size() - 1)
       extraWidth += Pixels(1);
 
     float finalWidth = format.CurrSize.x + extraWidth;
@@ -2260,19 +2251,19 @@ void TreeView::UpdateHeaders()
     header->SetSize(SnapToPixels(Vec2(finalWidth, TreeViewUi::ItemHeight)));
 
     // Set the respective header type
-    if(!format.HeaderName.Empty())
+    if (!format.HeaderName.Empty())
       header->SetText(format.HeaderName);
     else
       header->SetIcon(format);
 
     // Update the column resizers
-    if(mFormatting.Flags.IsSet(FormatFlags::ColumnsResizable))
+    if (mFormatting.Flags.IsSet(FormatFlags::ColumnsResizable))
     {
       // Attempt to find the current resizer for this header
       ColumnResizer* resizer = mHeaderResizers.FindValue(header, nullptr);
-      if(resizer == nullptr)
+      if (resizer == nullptr)
       {
-        if((i + 1) < mFormatting.Columns.Size())
+        if ((i + 1) < mFormatting.Columns.Size())
         {
           ColumnFormat* nextFormat = &mFormatting.Columns[i + 1];
           resizer = new ColumnResizer(this, &format, nextFormat);
@@ -2281,7 +2272,7 @@ void TreeView::UpdateHeaders()
       }
 
       // Place the resizer to the right side of this header.
-      if(resizer)
+      if (resizer)
       {
         Vec3 resizerPos(startPos + finalWidth - cResizerWidth * 0.5f, 0, 0);
         resizer->SetTranslation(SnapToPixels(resizerPos));
@@ -2295,7 +2286,7 @@ void TreeView::UpdateHeaders()
   // Move all the resizers to the front of the headers so that they get hit
   // first with ray casts
   typedef Pair<ColumnHeader*, ColumnResizer*> ResizerPair;
-  forRange(ResizerPair& entry, mHeaderResizers.All())
+  forRange(ResizerPair & entry, mHeaderResizers.All())
   {
     ColumnResizer* resizer = entry.second;
     resizer->MoveToFront();
@@ -2304,7 +2295,7 @@ void TreeView::UpdateHeaders()
 
 void TreeView::UpdateSeparators()
 {
-  if(!mFormatting.Flags.IsSet(FormatFlags::ShowSeparators))
+  if (!mFormatting.Flags.IsSet(FormatFlags::ShowSeparators))
     return;
 
   UpdateColumnSeparators();
@@ -2316,21 +2307,21 @@ void TreeView::UpdateColumnSeparators()
   uint separatorCount = 0;
 
   // Rebuild separators
-  for(uint i = 0; i < mFormatting.Columns.Size(); ++i)
+  for (uint i = 0; i < mFormatting.Columns.Size(); ++i)
   {
     ColumnFormat& column = mFormatting.Columns[i];
 
     // We want to skip everything until after we found the first flex column
-    if(!foundFlex)
+    if (!foundFlex)
     {
-      if(column.ColumnType == ColumnType::Flex)
+      if (column.ColumnType == ColumnType::Flex)
         foundFlex = true;
 
       continue;
     }
 
     // Create a new separator if needed
-    if(separatorCount >= mColumnSeparators.Size())
+    if (separatorCount >= mColumnSeparators.Size())
     {
       Element* separator = CreateAttached<Element>(cWhiteSquare);
       separator->SetColor(TreeViewUi::ColumnSeparatorColor);
@@ -2347,4 +2338,4 @@ void TreeView::UpdateColumnSeparators()
   }
 }
 
-}//namespace Zero
+} // namespace Zero

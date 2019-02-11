@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson, Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Includes
@@ -17,10 +12,12 @@ namespace Zero
 class HalfFloatConverter
 {
 public:
-  /// Converts a 32-bit float (represented in IEEE 754 format) to a 16-bit "half" float
+  /// Converts a 32-bit float (represented in IEEE 754 format) to a 16-bit
+  /// "half" float
   static u16 ToHalfFloat(float float32);
 
-  /// Converts a 16-bit "half" float to a 32-bit float (represented in IEEE 754 format)
+  /// Converts a 16-bit "half" float to a 32-bit float (represented in IEEE 754
+  /// format)
   static float ToFloat(u16 float16);
 
 private:

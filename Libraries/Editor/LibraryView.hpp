@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file LibraryView.hpp
-/// Declaration of the LibraryView composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -33,21 +25,22 @@ class PreviewWidgetGroup;
 class LibraryView;
 struct SelectionChangedEvent;
 
-//------------------------------------------------------------ Library Tile View
 class LibraryTileView : public TileView
 {
 public:
   LibraryTileView(LibraryView* parent);
 
   /// TileView interface.
-  TileViewWidget* CreateTileViewWidget(Composite* parent, StringParam name,
-                                HandleParam instance, DataIndex index,
-                                PreviewImportance::Enum minImportance) override;
+  TileViewWidget*
+  CreateTileViewWidget(Composite* parent,
+                       StringParam name,
+                       HandleParam instance,
+                       DataIndex index,
+                       PreviewImportance::Enum minImportance) override;
 
   LibraryView* mLibraryView;
 };
 
-//----------------------------------------------------------------- Library View
 class LibraryView : public Composite
 {
 public:
@@ -78,7 +71,8 @@ public:
 
   /// Creates a preview group of the given tag with the current search as
   /// extra tags.
-  PreviewWidgetGroup* CreatePreviewGroup(Composite* parent, StringParam tag,
+  PreviewWidgetGroup* CreatePreviewGroup(Composite* parent,
+                                         StringParam tag,
                                          uint max);
 
   void AddHiddenLibrary(StringParam libraryName);
@@ -113,7 +107,7 @@ private:
   void OnDataSelectionFinal(ObjectEvent* event);
   void OnEditorSelectionChanged(SelectionChangedEvent* event);
   void SelectAll();
-  
+
   /// Context menu event response.
   void OnRemove(ObjectEvent* event);
   void OnRename(ObjectEvent* event);
@@ -122,8 +116,8 @@ private:
   void OnEditTags(ObjectEvent* event);
   void OnMessageBox(MessageBoxEvent* event);
   void OnDuplicate(Event* event);
-  /// Extra context menus for zilch fragment translation. These should eventually
-  /// be moved to some external registration once it is possible.
+  /// Extra context menus for zilch fragment translation. These should
+  /// eventually be moved to some external registration once it is possible.
   void OnComposeZilchMaterial(Event* event);
   void OnTranslateZilchPixelMaterial(Event* event);
   void OnTranslateZilchGeometryMaterial(Event* event);
@@ -131,8 +125,10 @@ private:
   void OnTranslateFragment(Event* event);
 
   void OnAddTagToSearch(ObjectEvent* event);
-  
-  bool AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider = false);
+
+  bool AddResourceOptionsToMenu(ContextMenu* menu,
+                                StringParam resouceName,
+                                bool addDivider = false);
   void OnAddResource(ObjectEvent* event);
 
   /// Editor event response.
@@ -163,7 +159,7 @@ private:
   void OpenTagEditor();
   void CloseTagEditor();
 
-  /// Used to hide 
+  /// Used to hide
   HashSet<String> mHiddenLibraries;
   StringComboBox* mContentLibraries;
   Composite* mLibrariesRow;
@@ -199,4 +195,4 @@ private:
   ResourceTagEditor* mTagEditor;
 };
 
-}// namespace Zero
+} // namespace Zero

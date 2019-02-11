@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,13 +13,13 @@ ZilchDefineEnum(HorizontalAlignment);
 ZilchDefineEnum(IndicatorSide);
 ZilchDefineEnum(ToolTipColorScheme);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(WidgetLibrary)
 {
   builder.CreatableInScriptDefault = false;
-  
+
   // Ranges
-  ZilchInitializeRangeAs(ContextMenuEntryChildren::range, "ContextMenuEntryChildrenRange");
+  ZilchInitializeRangeAs(ContextMenuEntryChildren::range,
+                         "ContextMenuEntryChildrenRange");
 
   // Enums
   ZilchInitializeEnum(VerticalAlignment);
@@ -114,20 +109,21 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void WidgetLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
-  RegisterClassAttributeType(ObjectAttributes::cTags, MetaScriptTagAttribute)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cShortcut, MetaScriptShortcutAttribute)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTags, MetaScriptTagAttribute)
+      ->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cShortcut,
+                             MetaScriptShortcutAttribute)
+      ->TypeMustBe(Component);
 
   WidgetManager::Initialize();
   CommandManager::Initialize();
 }
 
-//**************************************************************************************************
 void WidgetLibrary::Shutdown()
 {
   CommandManager::Destroy();
@@ -136,4 +132,4 @@ void WidgetLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

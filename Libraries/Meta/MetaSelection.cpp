@@ -1,34 +1,35 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MetaSelection.cpp
-/// Implementation of the MetaSelection class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 namespace Events
 {
-  DefineEvent(SelectionChanged);
-  DefineEvent(SelectionFinal);
-}
+DefineEvent(SelectionChanged);
+DefineEvent(SelectionFinal);
+} // namespace Events
 
 ZilchDefineType(SelectionChangedEvent, builder, type)
 {
 }
 
-//---------------------------------------------------------------- MetaSelection
 ZilchDefineType(MetaSelection, builder, type)
 {
   ZilchBindMethod(Count);
   ZilchBindMethod(Empty);
-  ZilchFullBindMethod(builder, type, &MetaSelection::Clear, (void(MetaSelection::*)()), "Clear", ZilchNoNames);
+  ZilchFullBindMethod(builder,
+                      type,
+                      &MetaSelection::Clear,
+                      (void (MetaSelection::*)()),
+                      "Clear",
+                      ZilchNoNames);
   ZilchBindMethod(SelectOnly);
-  ZilchFullBindMethod(builder, type, &MetaSelection::Add, (void(MetaSelection::*)(HandleParam)), "Add", ZilchNoNames);
+  ZilchFullBindMethod(builder,
+                      type,
+                      &MetaSelection::Add,
+                      (void (MetaSelection::*)(HandleParam)),
+                      "Add",
+                      ZilchNoNames);
   ZilchBindMethod(Remove);
   ZilchBindMethod(Replace);
   ZilchBindMethod(Contains);
@@ -43,19 +44,16 @@ ZilchDefineType(MetaSelection, builder, type)
 
 MetaSelection::MetaSelectionArray MetaSelection::sSelections;
 
-//******************************************************************************
 MetaSelection::MetaSelection()
 {
   sSelections.PushBack(this);
 }
 
-//******************************************************************************
 MetaSelection::~MetaSelection()
 {
   sSelections.EraseValueError(this);
 }
 
-//******************************************************************************
 bool MetaSelection::IsEqual(MetaSelection* rhs)
 {
   if (mPrimary != rhs->mPrimary)
@@ -64,7 +62,6 @@ bool MetaSelection::IsEqual(MetaSelection* rhs)
   return (this->mSelectedObjects == rhs->mSelectedObjects);
 }
 
-//******************************************************************************
 Handle MetaSelection::GetPrimary()
 {
   // If the primary isn't valid, search all objects for another valid primary
@@ -74,7 +71,6 @@ Handle MetaSelection::GetPrimary()
   return mPrimary;
 }
 
-//******************************************************************************
 void MetaSelection::SetPrimary(HandleParam object)
 {
   // Do nothing if they're the same
@@ -91,25 +87,23 @@ void MetaSelection::SetPrimary(HandleParam object)
   SelectionChanged();
 }
 
-//******************************************************************************
 void MetaSelection::SelectOnly(HandleParam object)
 {
-  // We don't send events here because 'SetPrimaryObject' will send an event at the end
+  // We don't send events here because 'SetPrimaryObject' will send an event at
+  // the end
   Clear(SendsEvents::False);
   SetPrimary(object);
 }
 
-//******************************************************************************
 void MetaSelection::Add(MetaSelection& other, SendsEvents::Enum sendsEvents)
 {
-  forRange(const Handle& object, other.All())
-    this->Add(object, SendsEvents::False);
+  forRange(const Handle& object, other.All()) this->Add(object,
+                                                        SendsEvents::False);
 
-  if(sendsEvents == SendsEvents::True)
+  if (sendsEvents == SendsEvents::True)
     SelectionChanged();
 }
 
-//******************************************************************************
 void MetaSelection::Copy(MetaSelection& other, SendsEvents::Enum sendsEvents)
 {
   Clear(SendsEvents::False);
@@ -119,14 +113,12 @@ void MetaSelection::Copy(MetaSelection& other, SendsEvents::Enum sendsEvents)
   Add(other, sendsEvents);
 }
 
-//******************************************************************************
 void MetaSelection::Add(HandleParam object)
 {
   if (!object.IsNull())
     Add(object, SendsEvents::True);
 }
 
-//******************************************************************************
 void MetaSelection::Add(HandleParam object, SendsEvents::Enum sendsEvents)
 {
   // Do nothing if it's already in the selection
@@ -141,7 +133,6 @@ void MetaSelection::Add(HandleParam object, SendsEvents::Enum sendsEvents)
     SelectionChanged();
 }
 
-//******************************************************************************
 void MetaSelection::Remove(HandleParam object)
 {
   // Do nothing if the object isn't in the selection
@@ -162,20 +153,17 @@ void MetaSelection::Remove(HandleParam object)
   SelectionChanged();
 }
 
-//******************************************************************************
 bool MetaSelection::Contains(HandleParam object)
 {
   // Attempt to find it in the handle map
   return mSelectedObjects.FindPointer(object) != NULL;
 }
 
-//******************************************************************************
 void MetaSelection::Clear()
 {
   Clear(SendsEvents::True);
 }
 
-//******************************************************************************
 void MetaSelection::Clear(SendsEvents::Enum sendsEvents)
 {
   // We don't want to send out an event if it's already cleared
@@ -191,19 +179,16 @@ void MetaSelection::Clear(SendsEvents::Enum sendsEvents)
     SelectionChanged();
 }
 
-//******************************************************************************
 uint MetaSelection::Count()
 {
   return mSelectedObjects.Size();
 }
 
-//******************************************************************************
 bool MetaSelection::Empty()
 {
   return mSelectedObjects.Empty();
 }
 
-//******************************************************************************
 void MetaSelection::SelectionChanged()
 {
   // Dispatch an event on ourself
@@ -212,7 +197,6 @@ void MetaSelection::SelectionChanged()
   DispatchEvent(Events::SelectionChanged, &event);
 }
 
-//******************************************************************************
 void MetaSelection::FinalSelectionChanged()
 {
   // Dispatch an event on ourself
@@ -221,7 +205,6 @@ void MetaSelection::FinalSelectionChanged()
   DispatchEvent(Events::SelectionFinal, &event);
 }
 
-//******************************************************************************
 void MetaSelection::FinalSelectionUpdated()
 {
   // Dispatch an event on ourself
@@ -231,7 +214,6 @@ void MetaSelection::FinalSelectionUpdated()
   DispatchEvent(Events::SelectionFinal, &event);
 }
 
-//******************************************************************************
 void MetaSelection::Replace(HandleParam toBeReplaced, HandleParam replacedWith)
 {
   // Replace the primary if it was the primary
@@ -242,16 +224,14 @@ void MetaSelection::Replace(HandleParam toBeReplaced, HandleParam replacedWith)
   mSelectedObjects.Insert(replacedWith);
 }
 
-//******************************************************************************
 MetaSelection::MetaSelectionArray::range MetaSelection::GetAllSelections()
 {
   return sSelections.All();
 }
 
-//******************************************************************************
 void MetaSelection::ReplaceInAllSelections(Object* oldObject, Object* newObject)
 {
-  forRange(MetaSelection* selection, MetaSelection::GetAllSelections())
+  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
   {
     if (selection->Contains(oldObject))
     {
@@ -261,10 +241,9 @@ void MetaSelection::ReplaceInAllSelections(Object* oldObject, Object* newObject)
   }
 }
 
-//******************************************************************************
 void MetaSelection::RemoveObjectFromAllSelections(Object* object)
 {
-  forRange(MetaSelection* selection, MetaSelection::GetAllSelections())
+  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
   {
     if (selection->Contains(object))
     {
@@ -274,7 +253,6 @@ void MetaSelection::RemoveObjectFromAllSelections(Object* object)
   }
 }
 
-//******************************************************************************
 void MetaSelection::FindNewPrimary()
 {
   if (mPrimary.IsNull())
@@ -285,39 +263,30 @@ void MetaSelection::FindNewPrimary()
   }
 }
 
-//--------------------------------------------------------------- SelectionRange
-//******************************************************************************
 MetaSelection::range::range()
 {
-
 }
 
-//******************************************************************************
-MetaSelection::range::range(SetRange range)
-  : mRange(range)
+MetaSelection::range::range(SetRange range) : mRange(range)
 {
   FindNextValidId();
 }
 
-//******************************************************************************
 const Handle& MetaSelection::range::Front()
 {
   return mCurrent;
 }
 
-//******************************************************************************
 void MetaSelection::range::PopFront()
 {
   FindNextValidId();
 }
 
-//******************************************************************************
 bool MetaSelection::range::Empty()
 {
   return mCurrent.IsNull();
 }
 
-//******************************************************************************
 void MetaSelection::range::FindNextValidId()
 {
   mCurrent.Clear();
@@ -336,10 +305,9 @@ void MetaSelection::range::FindNextValidId()
   }
 }
 
-//******************************************************************************
 MetaSelection::range MetaSelection::All()
 {
   return range(mSelectedObjects.All());
 }
 
-}//namespace Zero
+} // namespace Zero

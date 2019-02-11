@@ -1,23 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file LibraryView.cpp
-/// Implementation of the LibraryView composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ LibraryDataSource
 const String cTagIcon = "Tag";
 
 struct LibDataEntry
 {
-  LibDataEntry() : mResource(nullptr) {}
+  LibDataEntry() : mResource(nullptr)
+  {
+  }
   Resource* mResource;
   String mTag;
 };
@@ -82,7 +75,7 @@ public:
   //****************************************************************************
   DataEntry* ToEntry(DataIndex index) override
   {
-    if(index == cRootIndex || (uint)index.Id >= mEntries.Size())
+    if (index == cRootIndex || (uint)index.Id >= mEntries.Size())
       return &mRoot;
     return mEntries[(uint)index.Id];
   }
@@ -90,7 +83,7 @@ public:
   //****************************************************************************
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
-    if(dataEntry == &mRoot)
+    if (dataEntry == &mRoot)
       return cRootIndex;
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
     uint index = mEntries.FindIndex(entry);
@@ -100,9 +93,9 @@ public:
   //****************************************************************************
   DataIndex GetResourceIndex(Resource* resource)
   {
-    for(uint i = 0; i < mEntries.Size(); ++i)
+    for (uint i = 0; i < mEntries.Size(); ++i)
     {
-      if(resource == mEntries[i]->mResource)
+      if (resource == mEntries[i]->mResource)
         return DataIndex(i);
     }
 
@@ -115,11 +108,11 @@ public:
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
     return entry->mResource;
   }
-  
+
   //****************************************************************************
   DataEntry* Parent(DataEntry* dataEntry) override
   {
-    if(dataEntry == &mRoot)
+    if (dataEntry == &mRoot)
       return nullptr;
     return &mRoot;
   }
@@ -127,19 +120,21 @@ public:
   //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
-    if(dataEntry == &mRoot)
+    if (dataEntry == &mRoot)
       return mEntries.Size();
     return 0;
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
-    if(dataEntry == &mRoot)
+    if (dataEntry == &mRoot)
       return mEntries[index];
     return nullptr;
   }
-  
+
   //****************************************************************************
   bool IsExpandable(DataEntry* dataEntry) override
   {
@@ -152,31 +147,33 @@ public:
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
 
     // Resource entry
-    if(entry->mResource)
+    if (entry->mResource)
     {
       Resource* resource = entry->mResource;
       BoundType* resourceType = ZilchVirtualTypeId(resource);
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
         variant = resource->Name;
-      else if(column == CommonColumns::Type)
+      else if (column == CommonColumns::Type)
         variant = resourceType->Name;
-      else if(column == CommonColumns::Icon)
+      else if (column == CommonColumns::Icon)
         variant = String("ResourceIcon");
     }
     // Icon entry
     else
     {
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
         variant = entry->mTag;
-      else if(column == CommonColumns::Type)
+      else if (column == CommonColumns::Type)
         variant = cTagIcon;
-      else if(column == CommonColumns::Icon)
+      else if (column == CommonColumns::Icon)
         variant = cTagIcon;
     }
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     if (Z::gEngine->IsReadOnly())
     {
@@ -187,19 +184,19 @@ public:
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
     Resource* resource = entry->mResource;
 
-    if(resource == nullptr)
+    if (resource == nullptr)
       return false;
 
-    if(!column.Empty())
+    if (!column.Empty())
     {
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
       {
         String newName = variant.Get<String>();
         Status status;
-        if(IsValidFilename(newName, status))
+        if (IsValidFilename(newName, status))
           return RenameResource(resource, newName);
         else
-          DoNotifyWarning("Invalid resource name.",status.Message);
+          DoNotifyWarning("Invalid resource name.", status.Message);
       }
     }
 
@@ -210,9 +207,11 @@ public:
 class TagTileWidget : public TileViewWidget
 {
 public:
-  TagTileWidget(Composite* parent, TileView* tileView,
-                PreviewWidget* tileWidget, DataIndex dataIndex)
-    : TileViewWidget(parent, tileView, tileWidget, dataIndex)
+  TagTileWidget(Composite* parent,
+                TileView* tileView,
+                PreviewWidget* tileWidget,
+                DataIndex dataIndex) :
+      TileViewWidget(parent, tileView, tileWidget, dataIndex)
   {
     // Create the tag icon
     mTagIcon = CreateAttached<Element>(cTagIcon);
@@ -222,12 +221,13 @@ public:
   void UpdateTransform() override
   {
     TileViewWidget::UpdateTransform();
-    //mTagIcon->SetTranslation(Pixels(2, 2, 0));
-    
+    // mTagIcon->SetTranslation(Pixels(2, 2, 0));
+
     float tagWidth = mTagIcon->mSize.x;
 
     // Place the tag to the left of the text
-    Vec3 tagTranslation(mEditableText->mTranslation.x - tagWidth - Pixels(2), Pixels(2), 0);
+    Vec3 tagTranslation(
+        mEditableText->mTranslation.x - tagWidth - Pixels(2), Pixels(2), 0);
 
     // The amount the tag would be negative on the left
     float overflow = tagTranslation.x - Pixels(2);
@@ -236,62 +236,63 @@ public:
     tagTranslation.x += overflow;
     mTagIcon->SetTranslation(tagTranslation);
 
-    // Push the text to the right to account for the tag being stuck too far on the left
+    // Push the text to the right to account for the tag being stuck too far on
+    // the left
     mEditableText->mTranslation.x += overflow;
 
     // Make sure the size isn't too large
-    mEditableText->mSize.x = Math::Min(mEditableText->mSize.x, mSize.x - tagWidth - Pixels(2));
+    mEditableText->mSize.x =
+        Math::Min(mEditableText->mSize.x, mSize.x - tagWidth - Pixels(2));
 
-    // We need to update our children again to let the ellipses (...) on mText process
+    // We need to update our children again to let the ellipses (...) on mText
+    // process
     Composite::UpdateTransform();
   }
 
   Element* mTagIcon;
 };
 
-//------------------------------------------------------------ Library Tile View
-//******************************************************************************
-LibraryTileView::LibraryTileView(LibraryView* parent)
-  : TileView(parent), mLibraryView(parent)
+LibraryTileView::LibraryTileView(LibraryView* parent) :
+    TileView(parent),
+    mLibraryView(parent)
 {
-
 }
 
-//******************************************************************************
-TileViewWidget* LibraryTileView::CreateTileViewWidget(Composite* parent,
-                                  StringParam name, HandleParam instance,
-                                  DataIndex index,
-                                  PreviewImportance::Enum minImportance)
+TileViewWidget*
+LibraryTileView::CreateTileViewWidget(Composite* parent,
+                                      StringParam name,
+                                      HandleParam instance,
+                                      DataIndex index,
+                                      PreviewImportance::Enum minImportance)
 {
   PreviewWidget* previewWidget = nullptr;
 
-  if(instance.IsNull())
+  if (instance.IsNull())
     previewWidget = mLibraryView->CreatePreviewGroup(parent, name, 4);
 
   // If the instance isn't valid, it's a tag
-  if(instance.IsNotNull() || previewWidget == nullptr)
-    previewWidget = ResourcePreview::CreatePreviewWidget(parent, name, instance, minImportance);
+  if (instance.IsNotNull() || previewWidget == nullptr)
+    previewWidget = ResourcePreview::CreatePreviewWidget(
+        parent, name, instance, minImportance);
 
-  if(previewWidget == nullptr)
+  if (previewWidget == nullptr)
     return nullptr;
 
-  if(instance.IsNull())
+  if (instance.IsNull())
     return new TagTileWidget(parent, this, previewWidget, index);
   else
     return new TileViewWidget(parent, this, previewWidget, index);
 }
 
-//----------------------------------------------------------------- Library View
 ZilchDefineType(LibraryView, builder, type)
 {
 }
 
 void RegisterEditorTileViewWidgets();
 
-//******************************************************************************
-LibraryView::LibraryView(Composite* parent)
-  : Composite(parent)
-  , mResourceLibrary(nullptr)
+LibraryView::LibraryView(Composite* parent) :
+    Composite(parent),
+    mResourceLibrary(nullptr)
 {
   mSource = nullptr;
   mDataSelection = nullptr;
@@ -303,12 +304,14 @@ LibraryView::LibraryView(Composite* parent)
 
   mLibrariesRow = new Composite(this);
   mLibrariesRow->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(16));
-  mLibrariesRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(5, 0), Thickness(1, 0, 2, 0)));
+  mLibrariesRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(5, 0), Thickness(1, 0, 2, 0)));
   {
     mContentLibraries = new StringComboBox(mLibrariesRow);
 
-    ConnectThisTo(mContentLibraries, Events::ItemSelected, OnContentLibrarySelected);
-    
+    ConnectThisTo(
+        mContentLibraries, Events::ItemSelected, OnContentLibrarySelected);
+
     mContentLibraries->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
 
     BuildContentLibraryList();
@@ -321,7 +324,8 @@ LibraryView::LibraryView(Composite* parent)
 
   Composite* topRow = new Composite(this);
   topRow->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(16));
-  topRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(1, 0, 2, 0)));
+  topRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(1, 0, 2, 0)));
   {
     mSearchBox = new TagChainTextBox(topRow);
     mSearchBox->SetSizing(SizeAxis::X, SizePolicy::Flex, 20);
@@ -336,7 +340,8 @@ LibraryView::LibraryView(Composite* parent)
     mToggleViewButton = new ToggleIconButton(topRow);
     mToggleViewButton->SetEnabledIcon("GridIcon");
     mToggleViewButton->SetDisabledIcon("TreeIcon");
-    ConnectThisTo(mToggleViewButton, Events::ButtonPressed, OnToggleViewButtonPressed);
+    ConnectThisTo(
+        mToggleViewButton, Events::ButtonPressed, OnToggleViewButtonPressed);
   }
 
   spacer = new Spacer(this);
@@ -360,7 +365,8 @@ LibraryView::LibraryView(Composite* parent)
   mTileView->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
   ConnectThisTo(mTileView, Events::TileViewRightClick, OnTileViewRightClick);
   ConnectThisTo(mTileView, Events::KeyDown, OnKeyDown);
-  ConnectThisTo(mTileView, Events::ScrolledAllTheWayOut, OnTilesScrolledAllTheWayOut);
+  ConnectThisTo(
+      mTileView, Events::ScrolledAllTheWayOut, OnTilesScrolledAllTheWayOut);
 
   mTagEditor = new ResourceTagEditor(this);
   mTagEditor->SetSizing(SizeAxis::Y, SizePolicy::Fixed, 20);
@@ -369,11 +375,13 @@ LibraryView::LibraryView(Composite* parent)
 
   mTagEditorCloseButton = mTagEditor->CreateAttached<Element>("Minimize");
   ConnectThisTo(mTagEditorCloseButton, Events::LeftMouseDown, OnTagEditorClose);
-  ConnectThisTo(mTagEditorCloseButton, Events::MouseHover, OnTagEditorCloseHover);
+  ConnectThisTo(
+      mTagEditorCloseButton, Events::MouseHover, OnTagEditorCloseHover);
 
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesModified);
-  ConnectThisTo(Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
+  ConnectThisTo(
+      Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
 
   ConnectThisTo(mTreeView, Events::MouseScroll, OnMouseScroll);
 
@@ -390,40 +398,42 @@ LibraryView::~LibraryView()
   SafeDelete(mSource);
 }
 
-//******************************************************************************
 void LibraryView::UpdateTransform()
 {
-  mTagEditorCloseButton->SetTranslation(Vec3(mTagEditor->mSize.x - Pixels(18), Pixels(2), 0));
+  mTagEditorCloseButton->SetTranslation(
+      Vec3(mTagEditor->mSize.x - Pixels(18), Pixels(2), 0));
 
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
-void LibraryView::View(ContentLibrary* contentLibrary, ResourceLibrary* resourceLibrary)
+void LibraryView::View(ContentLibrary* contentLibrary,
+                       ResourceLibrary* resourceLibrary)
 {
-  if(mResourceLibrary)
+  if (mResourceLibrary)
     DisconnectAll(mResourceLibrary, this);
 
   mContentLibrary = contentLibrary;
   mResourceLibrary = resourceLibrary;
 
   // These can be set to NULL
-  if(mContentLibrary == nullptr || mResourceLibrary == nullptr)
+  if (mContentLibrary == nullptr || mResourceLibrary == nullptr)
     return;
 
   ConnectThisTo(resourceLibrary, Events::ResourceAdded, OnResourcesModified);
 
   mSearch->ClearSearchProviders();
-  // We want to show all hidden resources in this resource library. The reason hidden exists is
-  // because we don't want them to show up when setting resource properties, but we do want them
-  // to show up when viewing the resource library
-  mSearch->SearchProviders.PushBack(GetResourceSearchProvider(mResourceLibrary, true));
+  // We want to show all hidden resources in this resource library. The reason
+  // hidden exists is because we don't want them to show up when setting
+  // resource properties, but we do want them to show up when viewing the
+  // resource library
+  mSearch->SearchProviders.PushBack(
+      GetResourceSearchProvider(mResourceLibrary, true));
 
   // Refresh the search with the new library
   mSearchBox->Refresh();
 
   // The data source represents the visible objects in the tree and tile view
-  if(mSource == nullptr)
+  if (mSource == nullptr)
   {
     mSource = new LibraryDataSource();
     mTreeView->SetDataSource(mSource);
@@ -432,13 +442,15 @@ void LibraryView::View(ContentLibrary* contentLibrary, ResourceLibrary* resource
   }
 
   // The selected objects
-  if(mDataSelection == nullptr)
+  if (mDataSelection == nullptr)
   {
     mDataSelection = new HashDataSelection();
     mTreeView->SetSelection(mDataSelection);
     mTileView->SetSelection(mDataSelection);
-    ConnectThisTo(mDataSelection, Events::DataSelectionModified, OnDataSelectionModified);
-    ConnectThisTo(mDataSelection, Events::DataSelectionFinal, OnDataSelectionFinal);
+    ConnectThisTo(
+        mDataSelection, Events::DataSelectionModified, OnDataSelectionModified);
+    ConnectThisTo(
+        mDataSelection, Events::DataSelectionFinal, OnDataSelectionFinal);
   }
 
   UpdateVisibleResources();
@@ -452,17 +464,18 @@ void LibraryView::View()
   if (mContentLibraries->GetCount() > 0)
   {
     String selectedLibrary = mContentLibraries->GetItem(0);
-    ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(selectedLibrary);
-    ContentLibrary** contentLibrary = Z::gContentSystem->Libraries.FindPointer(selectedLibrary);
-  
+    ResourceLibrary* resourceLibrary =
+        Z::gResources->GetResourceLibrary(selectedLibrary);
+    ContentLibrary** contentLibrary =
+        Z::gContentSystem->Libraries.FindPointer(selectedLibrary);
+
     View(*contentLibrary, resourceLibrary);
   }
 }
 
-//******************************************************************************
 void LibraryView::SwitchToTreeView()
 {
-  if(mActiveView == mTileView)
+  if (mActiveView == mTileView)
   {
     mTileView->SetActive(false);
     mTreeView->SetActive(true);
@@ -471,10 +484,9 @@ void LibraryView::SwitchToTreeView()
   }
 }
 
-//******************************************************************************
 void LibraryView::SwitchToTileView()
 {
-  if(mActiveView == mTreeView)
+  if (mActiveView == mTreeView)
   {
     mTreeView->SetActive(false);
     mTileView->SetActive(true);
@@ -482,7 +494,6 @@ void LibraryView::SwitchToTileView()
   }
 }
 
-//******************************************************************************
 void LibraryView::SetSearchTags(TagList& tags)
 {
   mSearchBox->ClearTags();
@@ -493,8 +504,8 @@ void LibraryView::SetSearchTags(TagList& tags)
   mSearchBox->Refresh();
 }
 
-//******************************************************************************
-void PopulateGroup(PreviewWidgetGroup* group, SearchData* searchData,
+void PopulateGroup(PreviewWidgetGroup* group,
+                   SearchData* searchData,
                    uint maxResults)
 {
   searchData->Search();
@@ -502,44 +513,44 @@ void PopulateGroup(PreviewWidgetGroup* group, SearchData* searchData,
   uint count = searchData->Results.Size();
   count = Math::Min(count, maxResults);
   uint found = 0;
-  for(uint i = 0; i < searchData->Results.Size() && found < count; ++i)
+  for (uint i = 0; i < searchData->Results.Size() && found < count; ++i)
   {
     SearchViewResult& result = searchData->Results[i];
 
     String resultType = result.Interface->GetElementType(result);
-    if(resultType != "Tag")
+    if (resultType != "Tag")
     {
       Resource* resource = (Resource*)result.Data;
 
       String name = resource->Name;
-      PreviewWidget* widget = group->AddPreviewWidget(name, resource,
-                                                      PreviewImportance::High);
-      if(widget)
+      PreviewWidget* widget =
+          group->AddPreviewWidget(name, resource, PreviewImportance::High);
+      if (widget)
         ++found;
     }
   }
 }
 
-
-//******************************************************************************
-PreviewWidgetGroup* LibraryView::CreatePreviewGroup(Composite* parent, 
-                                                    StringParam tag, uint max)
+PreviewWidgetGroup* LibraryView::CreatePreviewGroup(Composite* parent,
+                                                    StringParam tag,
+                                                    uint max)
 {
   PreviewWidgetGroup* group = new PreviewWidgetGroup(parent, tag);
 
   // Create a search to search for items with the given tag
   SearchData temporarySearch;
-  temporarySearch.SearchProviders.PushBack(GetResourceSearchProvider(mResourceLibrary, true));
+  temporarySearch.SearchProviders.PushBack(
+      GetResourceSearchProvider(mResourceLibrary, true));
   forRange(String currTag, mSearch->ActiveTags.All())
   {
     temporarySearch.ActiveTags.Insert(currTag);
   }
   temporarySearch.ActiveTags.Insert(tag);
 
-  // Fill out the group 
+  // Fill out the group
   PopulateGroup(group, &temporarySearch, max);
 
-  if(group->mPreviewWidgets.Size() == 0)
+  if (group->mPreviewWidgets.Size() == 0)
   {
     group->Destroy();
     return nullptr;
@@ -548,17 +559,15 @@ PreviewWidgetGroup* LibraryView::CreatePreviewGroup(Composite* parent,
   return group;
 }
 
-//******************************************************************************
 void LibraryView::AddHiddenLibrary(StringParam libraryName)
 {
   mHiddenLibraries.Insert(libraryName);
   BuildContentLibraryList();
 }
 
-//******************************************************************************
 void LibraryView::UpdateVisibleResources()
 {
-  if(mSource == nullptr || mResourceLibrary == nullptr)
+  if (mSource == nullptr || mResourceLibrary == nullptr)
     return;
 
   mSource->Clear();
@@ -566,13 +575,14 @@ void LibraryView::UpdateVisibleResources()
   // If there's only the default active tag (Resources), and they haven't
   // typed anything yet, we want to just show tags for the resources
   // they have in their project
-  if(mSearch->ActiveTags.Size() == 1 && mSearch->SearchString.Empty())
+  if (mSearch->ActiveTags.Size() == 1 && mSearch->SearchString.Empty())
   {
     HashSet<String> resourceTypes;
-    forRange(HandleOf<Resource> resourceHandle, mResourceLibrary->Resources.All())
+    forRange(HandleOf<Resource> resourceHandle,
+             mResourceLibrary->Resources.All())
     {
       Resource* resource = resourceHandle;
-      if(resource == nullptr)
+      if (resource == nullptr)
       {
         Error("This should never be the case. "
               "Somehow we have a reference to a resource that doesn't exist.");
@@ -584,11 +594,11 @@ void LibraryView::UpdateVisibleResources()
 
       // Add a filter tag as well
       String filterTag = resource->FilterTag;
-      if(!filterTag.Empty())
+      if (!filterTag.Empty())
         resourceTypes.Insert(filterTag);
     }
 
-    forRange(String& resourceType, resourceTypes.All())
+    forRange(String & resourceType, resourceTypes.All())
     {
       mSource->AddTag(resourceType);
     }
@@ -599,15 +609,15 @@ void LibraryView::UpdateVisibleResources()
   // Otherwise, we want to show the results
   else
   {
-    forRange(SearchViewResult& result, mSearch->Results.All())
+    forRange(SearchViewResult & result, mSearch->Results.All())
     {
       String resultType = result.Interface->GetElementType(result);
-      if(resultType != "Tag")
+      if (resultType != "Tag")
       {
         Resource* resource = (Resource*)result.Data;
-        
+
         // Only add it if it's the set we're editing
-        //if(resource->mSet == mResourceLibrary)
+        // if(resource->mSet == mResourceLibrary)
         mSource->AddResource(resource);
       }
       else
@@ -622,19 +632,18 @@ void LibraryView::UpdateVisibleResources()
   mTileView->SetDataSource(mSource);
 }
 
-//******************************************************************************
 void LibraryView::BuildContentLibraryList()
 {
   mContentLibraries->ClearItems();
   mLibrariesRow->SetActive(false);
 
-  forRange(ContentLibrary* library, Z::gContentSystem->Libraries.Values())
+  forRange(ContentLibrary * library, Z::gContentSystem->Libraries.Values())
   {
-    if(library == nullptr || mHiddenLibraries.Contains(library->Name))
+    if (library == nullptr || mHiddenLibraries.Contains(library->Name))
       continue;
-    
+
     // Only show the library if a resource library was built from it
-    if(Z::gResources->GetResourceLibrary(library->Name))
+    if (Z::gResources->GetResourceLibrary(library->Name))
       mContentLibraries->AddItem(library->Name);
   }
 
@@ -645,27 +654,26 @@ void LibraryView::BuildContentLibraryList()
   }
 }
 
-//******************************************************************************
 void LibraryView::OnPackageBuilt(ContentSystemEvent* e)
 {
   String libraryName = e->mLibrary->Name;
-  if(mHiddenLibraries.Contains(libraryName))
+  if (mHiddenLibraries.Contains(libraryName))
     return;
 
   mContentLibraries->AddItem(libraryName);
-  if(mContentLibraries->GetCount() > 1)
+  if (mContentLibraries->GetCount() > 1)
     mLibrariesRow->SetActive(true);
 
-  // If nothing is selected, attempt to select the library that was initially viewed
+  // If nothing is selected, attempt to select the library that was initially
+  // viewed
   int selected = mContentLibraries->GetSelectedItem();
-  if(selected == cNoItemSelected && mContentLibrary)
+  if (selected == cNoItemSelected && mContentLibrary)
   {
     uint index = mContentLibraries->GetIndexOfItem(mContentLibrary->Name);
     mContentLibraries->SetSelectedItem((int)index, false);
   }
 }
 
-//******************************************************************************
 void LibraryView::OnContentLibrarySelected(Event* e)
 {
   int selectedIndex = mContentLibraries->GetSelectedItem();
@@ -673,55 +681,54 @@ void LibraryView::OnContentLibrarySelected(Event* e)
     return;
 
   String selectedItem = mContentLibraries->GetItem(selectedIndex);
-  ContentLibrary* contentLibrary = Z::gContentSystem->Libraries.FindValue(selectedItem, nullptr);
-  ResourceLibrary* resourceLibrary = Z::gResources->LoadedResourceLibraries.FindValue(selectedItem, nullptr);
-  if(contentLibrary && resourceLibrary)
+  ContentLibrary* contentLibrary =
+      Z::gContentSystem->Libraries.FindValue(selectedItem, nullptr);
+  ResourceLibrary* resourceLibrary =
+      Z::gResources->LoadedResourceLibraries.FindValue(selectedItem, nullptr);
+  if (contentLibrary && resourceLibrary)
     View(contentLibrary, resourceLibrary);
 }
 
-//******************************************************************************
 void LibraryView::OnResourcesModified(ResourceEvent* event)
 {
   // If an archetype has a RunInEditor script that creates a runtime resource
   // we don't want the preview to cause itself to be recreated
-  if(event->EventResource != nullptr && event->EventResource->IsRuntime())
+  if (event->EventResource != nullptr && event->EventResource->IsRuntime())
     return;
 
   // Whenever a resource is modified, added/removed, etc close the tag editor to
   // clean up all handles to now potentially invalid data that results in an odd
   // crash that hasn't been able to be reproduced. T941.
-  if(event->EventId != Events::ResourceTagsModified)
+  if (event->EventId != Events::ResourceTagsModified)
     CloseTagEditor();
 
   mSearchBox->Refresh();
 
   // If there are no results (likely because resources have been removed),
   // clear the active tags and restart from the beginning
-  if(mSearch->Results.Empty())
+  if (mSearch->Results.Empty())
   {
     mSearchBox->ClearTags();
     mSearchBox->Refresh();
   }
-  
+
   UpdateVisibleResources();
 }
 
-//******************************************************************************
 void LibraryView::OnTreeRightClick(TreeEvent* event)
 {
   DataIndex index = event->Row->mIndex;
   OnRightClickObject(event->Row, index);
 }
 
-//******************************************************************************
 void LibraryView::OnTileViewRightClick(TileViewEvent* event)
 {
   DataIndex index = event->mTile->GetDataIndex();
   OnRightClickObject(event->mTile, index);
 }
 
-//******************************************************************************
-void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex index)
+void LibraryView::OnRightClickObject(Composite* objectToAttachTo,
+                                     DataIndex index)
 {
   mCommandIndices.Clear();
 
@@ -733,7 +740,7 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
   LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
 
   Resource* resource = entry->mResource;
-  if(resource)
+  if (resource)
   {
     ConnectMenu(menu, "Edit", OnEdit, true);
     ConnectMenu(menu, "Rename", OnRename, false);
@@ -741,7 +748,7 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
     ConnectMenu(menu, "Edit Tags", OnEditTags, false);
     ConnectMenu(menu, "Remove", OnRemove, false);
 
-    if(resource && resource->mManager->mCanDuplicate)
+    if (resource && resource->mManager->mCanDuplicate)
     {
       ConnectMenu(menu, "Duplicate", OnDuplicate, false);
     }
@@ -749,15 +756,24 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
     BoundType* resourceType = ZilchVirtualTypeId(resource);
 
     // Add composing and translation test functions for materials
-    if(resourceType->IsA(ZilchTypeId(Material)))
+    if (resourceType->IsA(ZilchTypeId(Material)))
     {
       ConnectMenu(menu, "ComposeZilchMaterial", OnComposeZilchMaterial, false);
-      ConnectMenu(menu, "TranslateZilchPixelMaterial", OnTranslateZilchPixelMaterial, false);
-      ConnectMenu(menu, "TranslateZilchGeometryMaterial", OnTranslateZilchGeometryMaterial, false);
-      ConnectMenu(menu, "TranslateZilchVertexMaterial", OnTranslateZilchVertexMaterial, false);
+      ConnectMenu(menu,
+                  "TranslateZilchPixelMaterial",
+                  OnTranslateZilchPixelMaterial,
+                  false);
+      ConnectMenu(menu,
+                  "TranslateZilchGeometryMaterial",
+                  OnTranslateZilchGeometryMaterial,
+                  false);
+      ConnectMenu(menu,
+                  "TranslateZilchVertexMaterial",
+                  OnTranslateZilchVertexMaterial,
+                  false);
     }
     // Add a translation tests function for fragments
-    if(resourceType->IsA(ZilchTypeId(ZilchFragment)))
+    if (resourceType->IsA(ZilchTypeId(ZilchFragment)))
     {
       ConnectMenu(menu, "TranslateFragment", OnTranslateFragment, false);
     }
@@ -766,8 +782,9 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
   }
   else
   {
-    // When right clicking on a resource tag show an "Add 'resourceType'" option if the user can add this type of resource
-    if(AddResourceOptionsToMenu(menu, entry->mTag))
+    // When right clicking on a resource tag show an "Add 'resourceType'" option
+    // if the user can add this type of resource
+    if (AddResourceOptionsToMenu(menu, entry->mTag))
       menu->AddDivider();
     ConnectMenu(menu, "Add Tag To Search", OnAddTagToSearch, true);
   }
@@ -784,10 +801,11 @@ void LibraryView::OnRightMouseUp(MouseEvent* event)
   ContextMenu* menu = new ContextMenu(this);
   menu->mRootEntry->mContext.Add(mContentLibrary);
 
-  // When in the context of a specific resource search show an "Add 'resourceType'" option
-  forRange(String& tag, mSearchBox->mSearch.ActiveTags.All())
+  // When in the context of a specific resource search show an "Add
+  // 'resourceType'" option
+  forRange(String & tag, mSearchBox->mSearch.ActiveTags.All())
   {
-    if(AddResourceOptionsToMenu(menu, tag))
+    if (AddResourceOptionsToMenu(menu, tag))
     {
       menu->ShiftOntoScreen(ToVector3(event->Position));
       return;
@@ -799,32 +817,31 @@ void LibraryView::OnRightMouseUp(MouseEvent* event)
   menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
-//******************************************************************************
 void LibraryView::OnKeyDown(KeyboardEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  //Delete selected objects
-  if(event->Key == Keys::Delete)
+  // Delete selected objects
+  if (event->Key == Keys::Delete)
   {
     mCommandIndices.Clear();
     mDataSelection->GetSelected(mCommandIndices);
-    if(!mCommandIndices.Empty())
+    if (!mCommandIndices.Empty())
     {
       mPrimaryCommandIndex = mCommandIndices.Front();
       OnRemove(nullptr);
     }
   }
-  else if(event->Key == Keys::Enter)
+  else if (event->Key == Keys::Enter)
   {
     Array<DataIndex> indices;
     mDataSelection->GetSelected(indices);
 
-    if(indices.Size() == 1)
+    if (indices.Size() == 1)
     {
       LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(indices.Front());
-      if(entry->mResource)
+      if (entry->mResource)
       {
         Z::gEditor->EditResource(entry->mResource);
       }
@@ -835,22 +852,23 @@ void LibraryView::OnKeyDown(KeyboardEvent* event)
     }
   }
 
-  if(event->Key == Keys::F2)
+  if (event->Key == Keys::F2)
   {
     if (Z::gEngine->IsReadOnly())
     {
-      DoNotifyWarning("Resources", "Cannot rename resources while in read-only mode");
+      DoNotifyWarning("Resources",
+                      "Cannot rename resources while in read-only mode");
       return;
     }
 
     DataSelection* selection = mTreeView->GetSelection();
     // check if we have something currently selected
-    if(selection)
+    if (selection)
     {
       Array<DataIndex> selectedIndices;
       mDataSelection->GetSelected(selectedIndices);
       // make sure we have anything actively selected
-      if(selectedIndices.Size())
+      if (selectedIndices.Size())
       {
         // get the data index of the selected item and edit its name
         RenameAtIndex(selectedIndices.Front());
@@ -858,40 +876,38 @@ void LibraryView::OnKeyDown(KeyboardEvent* event)
     }
   }
 
-  if(event->CtrlPressed && event->Key == Keys::A)
+  if (event->CtrlPressed && event->Key == Keys::A)
     SelectAll();
 }
 
-//******************************************************************************
 void LibraryView::OnMouseEnterTreeRow(TreeEvent* event)
 {
   mResourcePreview.SafeDestroy();
   DataIndex index = event->Row->mIndex;
   LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(index);
-  if(entry->mResource)
+  if (entry->mResource)
     CreateResourceToolTip(entry->mResource, event->Row);
   else
     CreateTagToolTip(entry->mTag, event->Row);
 }
 
-//******************************************************************************
 void LibraryView::OnMouseExitTreeRow(TreeEvent* event)
 {
   mResourcePreview.SafeDestroy();
 }
 
-//******************************************************************************
 void LibraryView::CreateResourceToolTip(Resource* resource, TreeRow* row)
 {
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
-  toolTip->mContentPadding = Thickness(2,2,2,2);
+  toolTip->mContentPadding = Thickness(2, 2, 2, 2);
   toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   // Create the resource widget and attach it to the tooltip
   String name = resource->Name;
-  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(toolTip, name, resource, PreviewImportance::High);
-  if(tileWidget == nullptr)
+  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(
+      toolTip, name, resource, PreviewImportance::High);
+  if (tileWidget == nullptr)
   {
     toolTip->Destroy();
     return;
@@ -902,8 +918,10 @@ void LibraryView::CreateResourceToolTip(Resource* resource, TreeRow* row)
   // Position the tooltip
   ToolTipPlacement placement;
   placement.SetScreenRect(row->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
-                        IndicatorSide::Bottom, IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        IndicatorSide::Bottom,
+                        IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
 
   tileWidget->AnimatePreview(PreviewAnimate::Always);
@@ -911,16 +929,15 @@ void LibraryView::CreateResourceToolTip(Resource* resource, TreeRow* row)
   mResourcePreview = toolTip;
 }
 
-//******************************************************************************
 void LibraryView::CreateTagToolTip(StringParam tagName, TreeRow* row)
 {
   // Create the tooltip
   ToolTip* toolTip = new ToolTip(row);
-  toolTip->mContentPadding = Thickness(2,2,2,2);
+  toolTip->mContentPadding = Thickness(2, 2, 2, 2);
   toolTip->SetColorScheme(ToolTipColorScheme::Gray);
 
   PreviewWidgetGroup* group = CreatePreviewGroup(toolTip, tagName, 9);
-  if(group == nullptr)
+  if (group == nullptr)
   {
     toolTip->Destroy();
     return;
@@ -932,8 +949,10 @@ void LibraryView::CreateTagToolTip(StringParam tagName, TreeRow* row)
   // Position the tooltip
   ToolTipPlacement placement;
   placement.SetScreenRect(row->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
-                        IndicatorSide::Bottom, IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        IndicatorSide::Bottom,
+                        IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
 
   group->AnimatePreview(PreviewAnimate::Always);
@@ -941,11 +960,10 @@ void LibraryView::CreateTagToolTip(StringParam tagName, TreeRow* row)
   mResourcePreview = toolTip;
 }
 
-//******************************************************************************
 void LibraryView::OnDataActivated(DataEvent* event)
 {
   LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(event->Index);
-  if(entry->mResource)
+  if (entry->mResource)
   {
     Z::gEditor->EditResource(entry->mResource);
   }
@@ -955,17 +973,16 @@ void LibraryView::OnDataActivated(DataEvent* event)
   }
 }
 
-//******************************************************************************
 void LibraryView::OnDataSelectionModified(ObjectEvent* event)
 {
-  if(TagEditorIsOpen())
+  if (TagEditorIsOpen())
     EditTags(mDataSelection);
 
   // Get the selected indices
   Array<DataIndex> selectedIndices;
   mDataSelection->GetSelected(selectedIndices);
 
-  if(mDataSelection->Size() != 0)
+  if (mDataSelection->Size() != 0)
     mSearchBox->mSearchIndex = (uint)selectedIndices.Front().Id;
 
   // Add all selected resources to the editors selection
@@ -977,28 +994,27 @@ void LibraryView::OnDataSelectionModified(ObjectEvent* event)
   {
     // Only add it if it's a resource
     LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(dataIndex);
-    if(entry->mResource)
+    if (entry->mResource)
     {
       // Clear the editor selection first
-      if(!cleared)
+      if (!cleared)
       {
         editorSelection->Clear();
         cleared = true;
       }
 
       // Ignore all documents (scripts, shader fragments, etc...)
-      if(Type::DynamicCast<DocumentResource*>(entry->mResource))
+      if (Type::DynamicCast<DocumentResource*>(entry->mResource))
         continue;
 
       editorSelection->Add(entry->mResource, SendsEvents::False);
     }
   }
 
-  if(cleared)
+  if (cleared)
     editorSelection->SelectionChanged();
 }
 
-//******************************************************************************
 void LibraryView::OnDataSelectionFinal(ObjectEvent* event)
 {
   OnDataSelectionModified(event);
@@ -1010,36 +1026,34 @@ void LibraryView::OnDataSelectionFinal(ObjectEvent* event)
   mIgnoreEditorSelectionChange = false;
 }
 
-//******************************************************************************
 void LibraryView::OnEditorSelectionChanged(SelectionChangedEvent* event)
 {
-  if(mIgnoreEditorSelectionChange || mDataSelection == nullptr)
+  if (mIgnoreEditorSelectionChange || mDataSelection == nullptr)
     return;
 
   mDataSelection->SelectNone();
 
-  forRange(Resource* resource, event->Selection->AllOfType<Resource>())
+  forRange(Resource * resource, event->Selection->AllOfType<Resource>())
   {
     DataIndex index = mSource->GetResourceIndex(resource);
-    if(index.Id != (u64)-1)
+    if (index.Id != (u64)-1)
       mDataSelection->Select(index);
   }
   mTreeView->MarkAsNeedsUpdate();
   mTileView->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void LibraryView::SelectAll()
 {
   mTreeView->SelectAll();
 }
 
-//******************************************************************************
 void LibraryView::OnRemove(ObjectEvent* event)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resources", "Cannot remove resources while in read-only mode");
+    DoNotifyWarning("Resources",
+                    "Cannot remove resources while in read-only mode");
     return;
   }
 
@@ -1047,25 +1061,25 @@ void LibraryView::OnRemove(ObjectEvent* event)
 
   // This isn't the resource count, because it may contain rows that are tags
   uint indexCount = mCommandIndices.Size();
-  if(indexCount > 1)
+  if (indexCount > 1)
   {
     // We're removing multiple resources
     title = "Remove Resources";
 
     String names;
     uint resourceCount = 0;
-    for(uint i = 0; i < mCommandIndices.Size(); ++i)
+    for (uint i = 0; i < mCommandIndices.Size(); ++i)
     {
       DataIndex currIndex = mCommandIndices[i];
 
       LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(currIndex);
-      if(Resource* resource = treeNode->mResource)
+      if (Resource* resource = treeNode->mResource)
       {
         // Add this resource name to the list of names
         names = BuildString(names, resource->Name);
 
         // Only add a comma after if it's not the last resource
-        if(i != mCommandIndices.Size() - 1)
+        if (i != mCommandIndices.Size() - 1)
           names = BuildString(names, ", ");
 
         ++resourceCount;
@@ -1073,18 +1087,23 @@ void LibraryView::OnRemove(ObjectEvent* event)
     }
 
     message = String::Format("Are you sure you want to remove %i resources [%s]"
-                             " from the content library?", resourceCount, names.c_str());
+                             " from the content library?",
+                             resourceCount,
+                             names.c_str());
   }
   else
   {
     // We're removing a single resource
     title = "Remove Resource";
 
-    LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-    if(Resource* resource = treeNode->mResource)
+    LibDataEntry* treeNode =
+        (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+    if (Resource* resource = treeNode->mResource)
     {
-      message = String::Format("Are you sure you want to remove the resource '%s' " 
-                               " from the content library?", resource->Name.c_str());
+      message =
+          String::Format("Are you sure you want to remove the resource '%s' "
+                         " from the content library?",
+                         resource->Name.c_str());
     }
     else
     {
@@ -1093,26 +1112,23 @@ void LibraryView::OnRemove(ObjectEvent* event)
     }
   }
 
-  MessageBox* box = MessageBox::Show(title, message , MBConfirmCancel);
+  MessageBox* box = MessageBox::Show(title, message, MBConfirmCancel);
   ConnectThisTo(box, Events::MessageBoxResult, OnMessageBox);
 }
 
-//******************************************************************************
 void LibraryView::OnRename(ObjectEvent* event)
 {
   RenameAtIndex(mPrimaryCommandIndex);
 }
 
-//******************************************************************************
 void LibraryView::OnEdit(ObjectEvent* event)
 {
   LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
 
-  if(Resource* resource = entry->mResource)
+  if (Resource* resource = entry->mResource)
     Z::gEditor->EditResource(resource);
 }
 
-//******************************************************************************
 void LibraryView::OnEditMeta(ObjectEvent* event)
 {
   LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
@@ -1127,29 +1143,28 @@ void LibraryView::OnEditMeta(ObjectEvent* event)
   }
 }
 
-//******************************************************************************
 void LibraryView::OnEditTags(ObjectEvent* event)
 {
   EditTags(mDataSelection);
 }
 
-//******************************************************************************
 void LibraryView::OnMessageBox(MessageBoxEvent* event)
 {
-  if(event->ButtonIndex == MessageResult::Yes)
+  if (event->ButtonIndex == MessageResult::Yes)
   {
     Array<Resource*> resourcesToRemove;
     // content items with an associated resource that will be deleted
     HashSet<ContentItem*> contentItems;
 
-    for(uint i = 0; i < mCommandIndices.Size(); ++i)
+    for (uint i = 0; i < mCommandIndices.Size(); ++i)
     {
       DataIndex currIndex = mCommandIndices[i];
       LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(currIndex);
-      if(Resource* resource = treeNode->mResource)
+      if (Resource* resource = treeNode->mResource)
       {
-        // only delete 1 resource for a content item as removing one removes all associated resources 
-        if(!contentItems.Contains(resource->mContentItem))
+        // only delete 1 resource for a content item as removing one removes all
+        // associated resources
+        if (!contentItems.Contains(resource->mContentItem))
         {
           resourcesToRemove.PushBack(resource);
           contentItems.Insert(resource->mContentItem);
@@ -1157,7 +1172,7 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
       }
     }
 
-    forRange(Resource* resource, resourcesToRemove.All())
+    forRange(Resource * resource, resourcesToRemove.All())
     {
       RemoveResource(resource);
     }
@@ -1171,96 +1186,97 @@ void LibraryView::OnMessageBox(MessageBoxEvent* event)
   }
 }
 
-//******************************************************************************
 void LibraryView::OnDuplicate(Event* event)
 {
-  LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-  if(Resource* resource = treeNode->mResource)
+  LibDataEntry* treeNode =
+      (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+  if (Resource* resource = treeNode->mResource)
     DuplicateResource(resource);
 }
 
-//******************************************************************************
 void LibraryView::OnComposeZilchMaterial(Event* event)
 {
-  LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-  if(Resource* resource = treeNode->mResource)
-    if(Resource* resource = treeNode->mResource)
+  LibDataEntry* treeNode =
+      (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+  if (Resource* resource = treeNode->mResource)
+    if (Resource* resource = treeNode->mResource)
     {
       ObjectEvent toSend(resource);
       Z::gEditor->DispatchEvent("ComposeZilchMaterial", &toSend);
     }
 }
 
-//******************************************************************************
 void LibraryView::OnTranslateZilchPixelMaterial(Event* event)
 {
-  LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-  if(Resource* resource = treeNode->mResource)
+  LibDataEntry* treeNode =
+      (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+  if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
     Z::gEditor->DispatchEvent("TranslateZilchPixelMaterial", &toSend);
   }
 }
 
-//******************************************************************************
 void LibraryView::OnTranslateZilchGeometryMaterial(Event* event)
 {
-  LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-  if(Resource* resource = treeNode->mResource)
+  LibDataEntry* treeNode =
+      (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+  if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
     Z::gEditor->DispatchEvent("TranslateZilchGeometryMaterial", &toSend);
   }
 }
 
-//******************************************************************************
 void LibraryView::OnTranslateZilchVertexMaterial(Event* event)
 {
-  LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-  if(Resource* resource = treeNode->mResource)
+  LibDataEntry* treeNode =
+      (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+  if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
     Z::gEditor->DispatchEvent("TranslateZilchVertexMaterial", &toSend);
   }
 }
 
-//******************************************************************************
 void LibraryView::OnTranslateFragment(Event* event)
 {
-  LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
-  if(Resource* resource = treeNode->mResource)
+  LibDataEntry* treeNode =
+      (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
+  if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
     Z::gEditor->DispatchEvent("TranslateZilchFragment", &toSend);
   }
 }
 
-//******************************************************************************
 void LibraryView::OnAddTagToSearch(ObjectEvent* event)
 {
   Array<DataIndex> selected;
   mDataSelection->GetSelected(selected);
 
   Array<String> tagsToAdd;
-  forRange(DataIndex& index, selected.All())
+  forRange(DataIndex & index, selected.All())
   {
     LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(index);
-    if(entry->mResource == nullptr)
+    if (entry->mResource == nullptr)
       tagsToAdd.PushBack(entry->mTag);
   }
 
-  forRange(String& tag, tagsToAdd.All())
+  forRange(String & tag, tagsToAdd.All())
   {
     mSearchBox->AddTag(tag, true, false);
   }
 }
 
-//******************************************************************************
-bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceTypeName, bool addDivider)
+bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu,
+                                           StringParam resouceTypeName,
+                                           bool addDivider)
 {
   BoundType* boundType = MetaDatabase::GetInstance()->FindType(resouceTypeName);
 
-  // Attempt to get bound type for the tag and if we have a type is it a resource
+  // Attempt to get bound type for the tag and if we have a type is it a
+  // resource
   if (boundType && boundType->IsA(ZilchTypeId(Resource)))
   {
     ResourceManager* manager = Z::gResources->GetResourceManager(boundType);
@@ -1269,7 +1285,8 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
       if (addDivider)
         menu->AddDivider();
 
-      // We have a resource so add the option to create a new resource of the viewed type
+      // We have a resource so add the option to create a new resource of the
+      // viewed type
       StringBuilder buttonTitle;
       buttonTitle.Append("Add ");
       buttonTitle.Append(boundType->Name);
@@ -1278,13 +1295,12 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
       ConnectThisTo(entry, Zero::Events::MenuItemSelected, OnAddResource);
       entry->mContext.Add(boundType);
       return true;
-     }
-   }
+    }
+  }
 
-   return false;
+  return false;
 }
 
-//******************************************************************************
 void LibraryView::OnAddResource(ObjectEvent* event)
 {
   ContextMenuItem* item = (ContextMenuItem*)event->Source;
@@ -1297,15 +1313,14 @@ void LibraryView::OnAddResource(ObjectEvent* event)
     resourceWindow->SelectResourceType(resourceType);
 
     TagList tags = mSearch->ActiveTags;
-    // The library view has an implicit "Resources" tag and we don't want to add this to
-    // all the newly created resources as a custom tag
+    // The library view has an implicit "Resources" tag and we don't want to add
+    // this to all the newly created resources as a custom tag
     tags.Erase("Resources");
     resourceWindow->AddTags(tags);
   }
   resourceWindow->TemplateSearchTakeFocus();
 }
 
-//******************************************************************************
 void LibraryView::OnToggleViewButtonPressed(Event* e)
 {
   if (mToggleViewButton->GetEnabled())
@@ -1314,22 +1329,21 @@ void LibraryView::OnToggleViewButtonPressed(Event* e)
     SwitchToTileView();
 }
 
-//******************************************************************************
 void LibraryView::OnSearchDataModified(Event* e)
 {
-  if(mSearchBox->mSearchBar->HasFocus())
+  if (mSearchBox->mSearchBar->HasFocus())
   {
-    if(mTreeView->GetActive())
+    if (mTreeView->GetActive())
     {
       mTreeView->SelectFirstRow();
       mTreeView->ShowRow(mPrimaryCommandIndex);
     }
-    else if(mTileView->GetActive())
+    else if (mTileView->GetActive())
     {
       mTileView->SelectFirstTile();
     }
   }
-  else if(mDataSelection)
+  else if (mDataSelection)
   {
     mDataSelection->SelectNone();
   }
@@ -1337,28 +1351,26 @@ void LibraryView::OnSearchDataModified(Event* e)
   UpdateVisibleResources();
 }
 
-//******************************************************************************
 void LibraryView::OnSearchKeyDown(KeyboardEvent* e)
 {
   HandleSearchKeyLogic(e);
 }
 
-//******************************************************************************
 void LibraryView::OnSearchKeyPreview(KeyboardEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
-  if(e->Key == Keys::Enter)
+  if (e->Key == Keys::Enter)
   {
     Array<DataIndex> indices;
     mDataSelection->GetSelected(indices);
 
-    if(indices.Size() == 1)
+    if (indices.Size() == 1)
     {
       LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(indices.Front());
 
-      if(entry->mResource)
+      if (entry->mResource)
         Z::gEditor->EditResource(entry->mResource);
       else
         mSearchBox->AddTag(entry->mTag, true, false);
@@ -1368,32 +1380,31 @@ void LibraryView::OnSearchKeyPreview(KeyboardEvent* e)
   }
 }
 
-//******************************************************************************
 void LibraryView::OnSearchKeyRepeated(KeyboardEvent* e)
 {
   HandleSearchKeyLogic(e);
 }
 
-//******************************************************************************
 void LibraryView::HandleSearchKeyLogic(KeyboardEvent* e)
 {
-  if(e->Key == Keys::Down || e->Key == Keys::Up ||
-     e->Key == Keys::Left || e->Key == Keys::Right)
+  if (e->Key == Keys::Down || e->Key == Keys::Up || e->Key == Keys::Left ||
+      e->Key == Keys::Right)
   {
     e->Handled = false;
-    if(mTreeView->GetActive())
-      mTreeView->GetScrollArea()->GetClientWidget()->DispatchEvent(Events::KeyDown, e);
-    else if(mTileView->GetActive())
-      mTileView->GetScrollArea()->GetClientWidget()->DispatchEvent(Events::KeyDown, e);
+    if (mTreeView->GetActive())
+      mTreeView->GetScrollArea()->GetClientWidget()->DispatchEvent(
+          Events::KeyDown, e);
+    else if (mTileView->GetActive())
+      mTileView->GetScrollArea()->GetClientWidget()->DispatchEvent(
+          Events::KeyDown, e);
   }
 }
 
-//******************************************************************************
 void LibraryView::OnMouseScroll(MouseEvent* e)
 {
-  if(e->CtrlPressed)
+  if (e->CtrlPressed)
   {
-    if(e->Scroll.y > 0)
+    if (e->Scroll.y > 0)
     {
       SwitchToTileView();
       mTileView->SetItemSizePercent(0);
@@ -1401,80 +1412,72 @@ void LibraryView::OnMouseScroll(MouseEvent* e)
   }
 }
 
-//******************************************************************************
 void LibraryView::OnTilesScrolledAllTheWayOut(Event* e)
 {
   SwitchToTreeView();
 }
 
-//******************************************************************************
 void LibraryView::OnProjectLoaded(Event* e)
 {
   mSearchBox->ClearTags();
   mSearchBox->Refresh();
 }
 
-//******************************************************************************
 void LibraryView::OnTagEditorModified(Event* e)
 {
   OpenTagEditor();
 }
 
-//******************************************************************************
 void LibraryView::OnTagEditorClose(MouseEvent* e)
 {
   CloseTagEditor();
 }
 
-//******************************************************************************
 void LibraryView::OnTagEditorCloseHover(MouseEvent* e)
 {
-  //new ToolTip(this, "Hide");
+  // new ToolTip(this, "Hide");
 }
 
-//******************************************************************************
 float LibraryView::GetTagEditorSize(SizeAxis::Enum axis)
 {
   return mTagEditor->GetAxisSize(axis);
 }
 
-//******************************************************************************
 void LibraryView::SetTagEditorSize(SizeAxis::Enum axis, float size)
 {
   mTagEditor->SetAxisSize(axis, size);
 }
 
-//******************************************************************************
 float LibraryView::GetTagEditorCurrentHeight()
 {
   return mTagEditorCurrentHeight;
 }
 
-//******************************************************************************
 void LibraryView::SetTagEditorCurrentHeight(float height)
 {
-  if(height < Pixels(1))
+  if (height < Pixels(1))
   {
     mTagEditor->SetActive(false);
   }
   else
   {
-    mTagEditorCloseButton->SetTranslation(Vec3(mTagEditor->mSize.x - Pixels(18), Pixels(2), 0));
+    mTagEditorCloseButton->SetTranslation(
+        Vec3(mTagEditor->mSize.x - Pixels(18), Pixels(2), 0));
     mTagEditor->SetSize(Vec2(mTagEditor->mSize.x, height));
-    mTagEditor->SetSizing(SizeAxis::Y, mTagEditor->GetSizePolicy().YPolicy, height);
+    mTagEditor->SetSizing(
+        SizeAxis::Y, mTagEditor->GetSizePolicy().YPolicy, height);
     mTagEditor->SetActive(true);
   }
 
   mTagEditorCurrentHeight = height;
 
   // If the difference is less than 1 pixel, then the animation has finished.
-  if(Math::Abs(mTagEditorFinalHeight - height) < Pixels(1))
+  if (Math::Abs(mTagEditorFinalHeight - height) < Pixels(1))
     mTagEditor->SetIsAnimating(false);
 
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void LibraryView::RenameAtIndex(DataIndex& dataIndex)
 {
   if (Z::gEngine->IsReadOnly())
@@ -1495,25 +1498,24 @@ void LibraryView::RenameAtIndex(DataIndex& dataIndex)
   }
 }
 
-//******************************************************************************
 bool LibraryView::TagEditorIsOpen()
 {
   // When it's closed the height should be 0
   return mTagEditorCurrentHeight != 0.0f;
 }
 
-//******************************************************************************
 void LibraryView::EditTags(DataSelection* dataSelection)
 {
   Array<DataIndex> selection;
   dataSelection->GetSelected(selection);
 
   Array<Resource*> resources;
-  for(uint i = 0; i < selection.Size(); ++i)
+  for (uint i = 0; i < selection.Size(); ++i)
   {
     DataIndex dataIndex = selection[i];
-    Resource* resource = ((LibDataEntry*)mSource->ToEntry(dataIndex))->mResource;
-    if(resource)
+    Resource* resource =
+        ((LibDataEntry*)mSource->ToEntry(dataIndex))->mResource;
+    if (resource)
       resources.PushBack(resource);
   }
 
@@ -1521,31 +1523,38 @@ void LibraryView::EditTags(DataSelection* dataSelection)
   OpenTagEditor();
 }
 
-//******************************************************************************
 void LibraryView::OpenTagEditor()
 {
-  mTagEditorFinalHeight = mTagEditor->GetDesiredHeight(mTagEditor->GetTagChain()->GetSize());
+  mTagEditorFinalHeight =
+      mTagEditor->GetDesiredHeight(mTagEditor->GetTagChain()->GetSize());
 
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add(AnimatePropertyGetSet(ZilchSelf, TagEditorCurrentHeight, Ease::Quad::Out,
-                                 this, 0.3f, mTagEditorFinalHeight));
+  seq->Add(AnimatePropertyGetSet(ZilchSelf,
+                                 TagEditorCurrentHeight,
+                                 Ease::Quad::Out,
+                                 this,
+                                 0.3f,
+                                 mTagEditorFinalHeight));
 
   mTagEditor->SetIsAnimating(true);
 }
 
-//******************************************************************************
 void LibraryView::CloseTagEditor()
 {
   // Clean up all references to resource that the tag editor is holding onto
   mTagEditor->CleanTagEditor();
-  
+
   float mTagEditorFinalHeight = 0;
 
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add(AnimatePropertyGetSet(ZilchSelf, TagEditorCurrentHeight, Ease::Quad::Out,
-                                 this, 0.3f, mTagEditorFinalHeight));
+  seq->Add(AnimatePropertyGetSet(ZilchSelf,
+                                 TagEditorCurrentHeight,
+                                 Ease::Quad::Out,
+                                 this,
+                                 0.3f,
+                                 mTagEditorFinalHeight));
 
   mTagEditor->SetIsAnimating(true);
 }
 
-}// namespace Zero
+} // namespace Zero

@@ -1,14 +1,11 @@
-/**************************************************************\
-* Author: Trevor Sundberg
-\**************************************************************/
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zilch
 {
-  // The symbols or keywords we use, if available for given grammar symbols
-  static String KeywordsOrSymbols[] = 
-  {
+// The symbols or keywords we use, if available for given grammar symbols
+static String KeywordsOrSymbols[] = {
     "Invalid",
     "End",
     "Error",
@@ -180,11 +177,10 @@ namespace Zilch
     "//",
     "/*",
     "*/",
-  };
+};
 
-  // The human readable names we give to every symbol
-  static String Names[] = 
-  {
+// The human readable names we give to every symbol
+static String Names[] = {
     "Invalid",
     "End",
     "Error",
@@ -356,156 +352,151 @@ namespace Zilch
     "CommentLine",
     "CommentStart",
     "CommentEnd",
-  };
+};
 
-  //***************************************************************************
-  const String& Grammar::GetName(Grammar::Enum value)
-  {
-    // We add one because of the 'Invalid' index
-    return Names[value + 1];
-  }
-
-  //***************************************************************************
-  const String& Grammar::GetKeywordOrSymbol(Grammar::Enum value)
-  {
-    // We add one because of the 'Invalid' index
-    return KeywordsOrSymbols[value + 1];
-  }
-
-  //***************************************************************************
-  const Array<String>& Grammar::GetUsedKeywords()
-  {
-    static Array<String> results;
-    if (results.Empty())
-    {
-      results.PushBack("any");
-      results.PushBack("and");
-      results.PushBack("as");
-      results.PushBack("base");
-      results.PushBack("break");
-      results.PushBack("class");
-      results.PushBack("constructor");
-      results.PushBack("continue");
-      results.PushBack("debug");
-      results.PushBack("delegate");
-      results.PushBack("delete");
-      results.PushBack("destructor");
-      results.PushBack("do");
-      results.PushBack("else");
-      results.PushBack("enum");
-      results.PushBack("false");
-      results.PushBack("flags");
-      results.PushBack("for");
-      results.PushBack("foreach");
-      results.PushBack("function");
-      results.PushBack("get");
-      results.PushBack("if");
-      results.PushBack("loop");
-      results.PushBack("memberid");
-      results.PushBack("new");
-      results.PushBack("not");
-      results.PushBack("null");
-      results.PushBack("or");
-      results.PushBack("ref");
-      results.PushBack("return");
-      results.PushBack("sends");
-      results.PushBack("set");
-      results.PushBack("struct");
-      results.PushBack("throw");
-      results.PushBack("true");
-      results.PushBack("typeid");
-      results.PushBack("typeof");
-      results.PushBack("var");
-      results.PushBack("while");
-    }
-    return results;
-  }
-
-  //***************************************************************************
-  const Array<String>& Grammar::GetSpecialKeywords()
-  {
-    static Array<String> results;
-    if (results.Empty())
-    {
-      results.PushBack("this");
-      results.PushBack("value");
-      results.PushBack("event");
-    }
-    return results;
-  }
-
-  //***************************************************************************
-  const Array<String>& Grammar::GetReservedKeywords()
-  {
-    static Array<String> results;
-    if (results.Empty())
-    {
-      results.PushBack("abstract");
-      results.PushBack("alias");
-      results.PushBack("alignof");
-      results.PushBack("assert");
-      results.PushBack("auto");
-      results.PushBack("case");
-      results.PushBack("catch");
-      results.PushBack("checked");
-      results.PushBack("const");
-      results.PushBack("default");
-      results.PushBack("dynamic");
-      results.PushBack("explicit");
-      results.PushBack("export");
-      results.PushBack("extern");
-      results.PushBack("finally");
-      results.PushBack("fixed");
-      results.PushBack("friend");
-      results.PushBack("global");
-      results.PushBack("goto");
-      results.PushBack("immutable");
-      results.PushBack("implicit");
-      results.PushBack("import");
-      results.PushBack("in");
-      results.PushBack("include");
-      results.PushBack("inline");
-      results.PushBack("interface");
-      results.PushBack("internal");
-      results.PushBack("is");
-      results.PushBack("local");
-      results.PushBack("lock");
-      results.PushBack("module");
-      results.PushBack("mutable");
-      results.PushBack("namespace");
-      results.PushBack("operator");
-      results.PushBack("out");
-      results.PushBack("override");
-      results.PushBack("package");
-      results.PushBack("params");
-      results.PushBack("partial");
-      results.PushBack("positional");
-      results.PushBack("private");
-      results.PushBack("protected");
-      results.PushBack("public");
-      results.PushBack("readonly");
-      results.PushBack("register");
-      results.PushBack("require");
-      results.PushBack("scope");
-      results.PushBack("sealed");
-      results.PushBack("signed");
-      results.PushBack("sizeof");
-      results.PushBack("stackalloc");
-      results.PushBack("static");
-      results.PushBack("switch");
-      results.PushBack("timeout");
-      results.PushBack("try");
-      results.PushBack("typedef");
-      results.PushBack("typename");
-      results.PushBack("unchecked");
-      results.PushBack("unsafe");
-      results.PushBack("unsigned");
-      results.PushBack("using");
-      results.PushBack("virtual");
-      results.PushBack("volatile");
-      results.PushBack("where");
-      results.PushBack("yield");
-    }
-    return results;
-  }
+const String& Grammar::GetName(Grammar::Enum value)
+{
+  // We add one because of the 'Invalid' index
+  return Names[value + 1];
 }
+
+const String& Grammar::GetKeywordOrSymbol(Grammar::Enum value)
+{
+  // We add one because of the 'Invalid' index
+  return KeywordsOrSymbols[value + 1];
+}
+
+const Array<String>& Grammar::GetUsedKeywords()
+{
+  static Array<String> results;
+  if (results.Empty())
+  {
+    results.PushBack("any");
+    results.PushBack("and");
+    results.PushBack("as");
+    results.PushBack("base");
+    results.PushBack("break");
+    results.PushBack("class");
+    results.PushBack("constructor");
+    results.PushBack("continue");
+    results.PushBack("debug");
+    results.PushBack("delegate");
+    results.PushBack("delete");
+    results.PushBack("destructor");
+    results.PushBack("do");
+    results.PushBack("else");
+    results.PushBack("enum");
+    results.PushBack("false");
+    results.PushBack("flags");
+    results.PushBack("for");
+    results.PushBack("foreach");
+    results.PushBack("function");
+    results.PushBack("get");
+    results.PushBack("if");
+    results.PushBack("loop");
+    results.PushBack("memberid");
+    results.PushBack("new");
+    results.PushBack("not");
+    results.PushBack("null");
+    results.PushBack("or");
+    results.PushBack("ref");
+    results.PushBack("return");
+    results.PushBack("sends");
+    results.PushBack("set");
+    results.PushBack("struct");
+    results.PushBack("throw");
+    results.PushBack("true");
+    results.PushBack("typeid");
+    results.PushBack("typeof");
+    results.PushBack("var");
+    results.PushBack("while");
+  }
+  return results;
+}
+
+const Array<String>& Grammar::GetSpecialKeywords()
+{
+  static Array<String> results;
+  if (results.Empty())
+  {
+    results.PushBack("this");
+    results.PushBack("value");
+    results.PushBack("event");
+  }
+  return results;
+}
+
+const Array<String>& Grammar::GetReservedKeywords()
+{
+  static Array<String> results;
+  if (results.Empty())
+  {
+    results.PushBack("abstract");
+    results.PushBack("alias");
+    results.PushBack("alignof");
+    results.PushBack("assert");
+    results.PushBack("auto");
+    results.PushBack("case");
+    results.PushBack("catch");
+    results.PushBack("checked");
+    results.PushBack("const");
+    results.PushBack("default");
+    results.PushBack("dynamic");
+    results.PushBack("explicit");
+    results.PushBack("export");
+    results.PushBack("extern");
+    results.PushBack("finally");
+    results.PushBack("fixed");
+    results.PushBack("friend");
+    results.PushBack("global");
+    results.PushBack("goto");
+    results.PushBack("immutable");
+    results.PushBack("implicit");
+    results.PushBack("import");
+    results.PushBack("in");
+    results.PushBack("include");
+    results.PushBack("inline");
+    results.PushBack("interface");
+    results.PushBack("internal");
+    results.PushBack("is");
+    results.PushBack("local");
+    results.PushBack("lock");
+    results.PushBack("module");
+    results.PushBack("mutable");
+    results.PushBack("namespace");
+    results.PushBack("operator");
+    results.PushBack("out");
+    results.PushBack("override");
+    results.PushBack("package");
+    results.PushBack("params");
+    results.PushBack("partial");
+    results.PushBack("positional");
+    results.PushBack("private");
+    results.PushBack("protected");
+    results.PushBack("public");
+    results.PushBack("readonly");
+    results.PushBack("register");
+    results.PushBack("require");
+    results.PushBack("scope");
+    results.PushBack("sealed");
+    results.PushBack("signed");
+    results.PushBack("sizeof");
+    results.PushBack("stackalloc");
+    results.PushBack("static");
+    results.PushBack("switch");
+    results.PushBack("timeout");
+    results.PushBack("try");
+    results.PushBack("typedef");
+    results.PushBack("typename");
+    results.PushBack("unchecked");
+    results.PushBack("unsafe");
+    results.PushBack("unsigned");
+    results.PushBack("using");
+    results.PushBack("virtual");
+    results.PushBack("volatile");
+    results.PushBack("where");
+    results.PushBack("yield");
+  }
+  return results;
+}
+} // namespace Zilch

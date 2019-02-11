@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ScriptEditor.cpp
-/// Implementation of the ScriptEditor Widget.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,14 +16,17 @@ const int cAutoCompleteFailed = -2;
 
 const cstr cLocation = "EditorUi/ScriptEditor";
 Tweakable(Vec4, AutoCompleteConfident, Vec4(0.3f, 1.0f, 0.3f, 1.0f), cLocation);
-Tweakable(Vec4, AutoCompleteNonConfident, Vec4(0.9f, 0.3f, 0.3f, 1.0f), cLocation);
+Tweakable(Vec4,
+          AutoCompleteNonConfident,
+          Vec4(0.9f, 0.3f, 0.3f, 1.0f),
+          cLocation);
 Tweakable(Vec2, CallTipTextSize, Vec2(400.0f, 400.0f), cLocation);
 Tweakable(Vec2, AutoCompleteSize, Vec2(300.0f, 200.0f), cLocation);
 Tweakable(Vec2, AutoCompleteTextSize, Vec2(300.0f, 200.0f), cLocation);
 
 namespace Events
 {
-  DefineEvent(AutoCompleteItemDoubleClicked);
+DefineEvent(AutoCompleteItemDoubleClicked);
 }
 
 CompletionDataSource::CompletionDataSource()
@@ -64,15 +59,15 @@ int CompletionDataSource::Modified()
     return -1;
   }
 
-  auto filterResults = FilterStrings(mAll.All(), mPartialText, [](Completion& completion) -> String
-  {
-    return completion.Name;
-  });
+  auto filterResults = FilterStrings(
+      mAll.All(), mPartialText, [](Completion& completion) -> String {
+        return completion.Name;
+      });
 
   if (!filterResults.mFiltered.Empty())
   {
     mFiltered.Clear();
-    for (size_t i = 0 ; i < filterResults.mFiltered.Size(); ++i)
+    for (size_t i = 0; i < filterResults.mFiltered.Size(); ++i)
     {
       auto completion = filterResults.mFiltered[i];
 
@@ -90,21 +85,21 @@ int CompletionDataSource::Modified()
 void CompletionDataSource::FilterHidden()
 {
   bool allHidden = true;
-  forRange(Completion* completion, mFiltered.All())
-    allHidden &= completion->Hidden;
+  forRange(Completion * completion, mFiltered.All()) allHidden &=
+      completion->Hidden;
 
   // We want to show hidden only when they're all hidden
   if (allHidden)
     return;
 
   // Remove all hidden
-  for(uint i = 0; i < mFiltered.Size();)
+  for (uint i = 0; i < mFiltered.Size();)
   {
     Completion* completion = mFiltered[i];
 
     // Still show hidden if it's an exact match
     bool exactMatch = (mPartialText == completion->Name);
-    if(completion->Hidden && !exactMatch)
+    if (completion->Hidden && !exactMatch)
     {
       mFiltered.EraseAt(i);
       continue;
@@ -119,8 +114,8 @@ String CompletionDataSource::GetStringValueAt(DataIndex index)
   return mFiltered[(size_t)index.Id]->Name;
 }
 
-AutoCompletePopUp::AutoCompletePopUp(Widget* source)
-  : PopUp(source, PopUpCloseMode::MouseDistance, cPopUpLight)
+AutoCompletePopUp::AutoCompletePopUp(Widget* source) :
+    PopUp(source, PopUpCloseMode::MouseDistance, cPopUpLight)
 {
   mConfidence = CompletionConfidence::Unsure;
   mManualSelection = false;
@@ -148,7 +143,8 @@ void AutoCompletePopUp::SetCompletions(Array<Completion>& completions)
   // Let the list-box know that we set the completion data
   mSource.SetCompletions(completions);
 
-  Vec2 size = mList->GetSizeWithItems(AutoCompleteSize.mValue.x, mList->GetCount());
+  Vec2 size =
+      mList->GetSizeWithItems(AutoCompleteSize.mValue.x, mList->GetCount());
   if (size.y > AutoCompleteSize.mValue.y)
     size.y = AutoCompleteSize.mValue.y;
 
@@ -175,7 +171,8 @@ void AutoCompletePopUp::PartialTextChanged(StringParam partial)
       mSearchFailed = false;
       mList->SetSelectionColor(Vec4(1.0f));
     }
-    // This MUST come after 'SetSelectedItem' above, because in the selection event we set it to true
+    // This MUST come after 'SetSelectedItem' above, because in the selection
+    // event we set it to true
     mManualSelection = false;
   }
 }
@@ -206,7 +203,9 @@ void AutoCompletePopUp::PreviousCompletion()
   mList->SetSelectedItem(index, true);
 }
 
-void AppendResourcePreviewToToolTip(Composite* tooltip, Resource* resource, float topPadding)
+void AppendResourcePreviewToToolTip(Composite* tooltip,
+                                    Resource* resource,
+                                    float topPadding)
 {
   if (!resource)
     return;
@@ -216,11 +215,8 @@ void AppendResourcePreviewToToolTip(Composite* tooltip, Resource* resource, floa
   // We specify high importance because there is no need to show an icon
   // or any preview for resources that don't support it
   PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(
-    tooltip,
-    resource->Name,
-    resource,
-    PreviewImportance::High);
-  
+      tooltip, resource->Name, resource, PreviewImportance::High);
+
   if (preview)
   {
     preview->SetTranslation(Vec3(0, size.y, 0));
@@ -259,8 +255,9 @@ void AutoCompletePopUp::ShowToolTip()
   }
 
   StringBuilder tipBuilder;
-  
-  if (!completion->SignaturePathType.Empty() && !completion->Description.Empty())
+
+  if (!completion->SignaturePathType.Empty() &&
+      !completion->Description.Empty())
   {
     tipBuilder.Append(completion->SignaturePathType);
     tipBuilder.Append("\n\n");
@@ -277,7 +274,8 @@ void AutoCompletePopUp::ShowToolTip()
 
   auto config = Z::gEditor->mConfig->has(TextEditorConfig);
 
-  bool allowSymbolCompletion = mConfidence == CompletionConfidence::Perfect && config->ConfidentAutoCompleteOnSymbols;
+  bool allowSymbolCompletion = mConfidence == CompletionConfidence::Perfect &&
+                               config->ConfidentAutoCompleteOnSymbols;
 
   if (allowSymbolCompletion)
   {
@@ -309,9 +307,10 @@ void AutoCompletePopUp::ShowToolTip()
 
   auto tooltip = new PopUp(this, PopUpCloseMode::MouseDistance, cPopUpLight);
   mToolTip = tooltip;
-  
+
   tooltip->FadeIn();
-  tooltip->SetTranslation(this->GetTranslation() + Vec3(this->GetSize().x, 0, 0));
+  tooltip->SetTranslation(this->GetTranslation() +
+                          Vec3(this->GetSize().x, 0, 0));
 
   Thickness borderThickness = mBackground->GetBorderThickness();
 
@@ -322,9 +321,11 @@ void AutoCompletePopUp::ShowToolTip()
   text->SetText(tipText);
 
   // The 2.0f is a little padding to the edge of the screen
-  float distanceToRightEdgeOfScreen = GetRootWidget()->mSize.x - GetScreenRect().Right() - 2.0f;
+  float distanceToRightEdgeOfScreen =
+      GetRootWidget()->mSize.x - GetScreenRect().Right() - 2.0f;
 
-  float width = Math::Min(AutoCompleteTextSize.mValue.x, distanceToRightEdgeOfScreen);
+  float width =
+      Math::Min(AutoCompleteTextSize.mValue.x, distanceToRightEdgeOfScreen);
 
   text->FitToWidth(width, 1000000.0f);
   Vec2 size = text->GetSize();
@@ -334,7 +335,8 @@ void AutoCompletePopUp::ShowToolTip()
 
   tooltip->SetSize(size);
 
-  if (Resource* resource = Z::gResources->GetResource(completion->AssociatedResourceId))
+  if (Resource* resource =
+          Z::gResources->GetResource(completion->AssociatedResourceId))
     AppendResourcePreviewToToolTip(tooltip, resource, borderThickness.Top);
 
   mLastCompletion = completion;
@@ -391,8 +393,8 @@ void AutoCompletePopUp::OnItemDoubleClicked(ObjectEvent* event)
   this->DispatchEvent(Events::AutoCompleteItemDoubleClicked, &objectEvent);
 }
 
-CallTipPopUp::CallTipPopUp(Widget* source)
-  :PopUp( source, PopUpCloseMode::MouseDistance, cPopUpLight)
+CallTipPopUp::CallTipPopUp(Widget* source) :
+    PopUp(source, PopUpCloseMode::MouseDistance, cPopUpLight)
 {
   mIndex = 0;
   mParameterIndex = 0;
@@ -455,7 +457,8 @@ void CallTipPopUp::PreviousTip()
 
 void CallTipPopUp::SetParameterIndex(size_t index)
 {
-  ErrorIf(mTips.Empty(), "Attempting to set a parameter index when we have no call tips");
+  ErrorIf(mTips.Empty(),
+          "Attempting to set a parameter index when we have no call tips");
 
   if (mParameterIndex != index)
   {
@@ -466,7 +469,9 @@ void CallTipPopUp::SetParameterIndex(size_t index)
 
 void CallTipPopUp::UpdateTip()
 {
-  ReturnIf(mTips.Empty(),, "Attempting to update the call tips dialog when no tips were added");
+  ReturnIf(mTips.Empty(),
+           ,
+           "Attempting to update the call tips dialog when no tips were added");
 
   auto& tip = mTips[mIndex];
 
@@ -476,18 +481,18 @@ void CallTipPopUp::UpdateTip()
 
   builder.Append(mFunctionName);
   builder.Append("(");
-  
+
   String currentParamDescription;
   String currentParamName;
 
   auto paramCount = tip.Parameters.Size();
-  for(size_t i = 0; i < paramCount; ++i)
+  for (size_t i = 0; i < paramCount; ++i)
   {
     auto& param = tip.Parameters[i];
     bool isNotLast = (i != (paramCount - 1));
 
     auto paramName = param.Name;
-    
+
     if (paramName.Empty())
     {
       if (paramCount == 1)
@@ -500,7 +505,7 @@ void CallTipPopUp::UpdateTip()
       }
     }
 
-    if(mParameterIndex == i)
+    if (mParameterIndex == i)
     {
       builder.Append("[");
       builder.Append(paramName);
@@ -533,13 +538,13 @@ void CallTipPopUp::UpdateTip()
     builder.Append(tip.Return);
   }
 
-  if(!tip.Description.Empty())
+  if (!tip.Description.Empty())
   {
     builder.Append("\n\n");
     builder.Append(tip.Description);
   }
 
-  if(!currentParamDescription.Empty())
+  if (!currentParamDescription.Empty())
   {
     builder.Append("\n\n");
     builder.Append(currentParamName);
@@ -549,7 +554,7 @@ void CallTipPopUp::UpdateTip()
 
   auto text = builder.ToString();
   mText->SetText(text);
-  
+
   Thickness borderThickness = mBackground->GetBorderThickness();
   borderThickness = borderThickness + Thickness::All(5);
 
@@ -561,7 +566,7 @@ void CallTipPopUp::UpdateTip()
     mPreviousTip->SetActive(true);
     mOverloadIndex->SetActive(true);
     mNextTip->SetActive(true);
-      
+
     mPreviousTip->SetTranslation(Vec3(x, y, 0));
     x += mPreviousTip->GetSize().x;
 
@@ -579,7 +584,7 @@ void CallTipPopUp::UpdateTip()
     mOverloadIndex->SetActive(false);
     mNextTip->SetActive(false);
   }
- 
+
   mText->SetTranslation(Vec3(x, y, 0));
   mText->FitToWidth(CallTipTextSize.mValue.x, CallTipTextSize.mValue.y);
 
@@ -599,8 +604,7 @@ ZilchDefineType(DocumentEditor, builder, type)
 {
 }
 
-DocumentEditor::DocumentEditor(Composite* composite)
-  :TextEditor(composite)
+DocumentEditor::DocumentEditor(Composite* composite) : TextEditor(composite)
 {
   DocumentManager* docManager = DocumentManager::GetInstance();
   mDocument = nullptr;
@@ -619,7 +623,7 @@ DocumentEditor::~DocumentEditor()
   ReleaseDocument();
   DocumentManager* docManager = DocumentManager::GetInstance();
   docManager->Instances.EraseValueError(this);
-  if(docManager->CurrentEditor == this)
+  if (docManager->CurrentEditor == this)
     docManager->CurrentEditor = nullptr;
 }
 
@@ -649,10 +653,10 @@ void DocumentEditor::OnDocumentRemoved(Event* event)
 
 void DocumentEditor::ReleaseDocument()
 {
-  if(mDocument)
+  if (mDocument)
   {
     DocumentResource* resource = mDocument->GetResource();
-    if(resource != nullptr)
+    if (resource != nullptr)
       resource->GetDispatcher()->Disconnect(this);
 
     mDocument->mEditor = nullptr;
@@ -665,15 +669,18 @@ void DocumentEditor::ReleaseDocument()
 void DocumentEditor::SetDocument(Document* doc)
 {
   ReleaseDocument();
-  
+
   ConnectThisTo(doc, Events::DocumentRemoved, OnDocumentRemoved);
   ConnectThisTo(doc, Events::DocumentReload, OnDocumentReload);
 
   DocumentResource* resource = doc->GetResource();
-  if(resource != nullptr)
+  if (resource != nullptr)
   {
-    ConnectThisTo(resource->GetManager(), Events::ClearAllAnnotations, OnClearAllAnnotations);
-    ConnectThisTo(resource->GetManager(), Events::ResourceModified, OnResourceModified);
+    ConnectThisTo(resource->GetManager(),
+                  Events::ClearAllAnnotations,
+                  OnClearAllAnnotations);
+    ConnectThisTo(
+        resource->GetManager(), Events::ResourceModified, OnResourceModified);
   }
   mDocument = doc;
   ++mDocument->mEditCounter;
@@ -698,7 +705,7 @@ void DocumentEditor::OnTextModified(Event* event)
 void DocumentEditor::OnResourceModified(ResourceEvent* event)
 {
   DocumentResource* resource = mDocument->GetResource();
-  if(event->EventResource != resource)
+  if (event->EventResource != resource)
     return;
 
   mName = event->EventResource->Name;
@@ -715,7 +722,7 @@ void DocumentEditor::OnDocumentReload(Event* event)
 
 DocumentResource* DocumentEditor::GetResource()
 {
-  if(mDocument)
+  if (mDocument)
     return mDocument->GetResource();
   else
     return nullptr;
@@ -734,7 +741,7 @@ void DocumentEditor::SaveDocument()
     return;
   }
 
-  if(mDocument)
+  if (mDocument)
   {
     StringRange text = GetAllText();
     mDocument->Save(text);
@@ -757,20 +764,20 @@ void DocumentEditor::OnSave(SavingEvent* event)
 
 void DocumentEditor::OnSaveCheck(SavingEvent* event)
 {
-  if(this->IsModified())
+  if (this->IsModified())
     event->NeedSaving = true;
 }
 
 void DocumentEditor::OnTabFind(WindowTabEvent* event)
 {
   // Skip checking if there is no valid object
-  if(event->SearchObject.IsNull())
+  if (event->SearchObject.IsNull())
     return;
 
   Resource* resource = GetResource();
-  if(event->SearchObject == resource)
+  if (event->SearchObject == resource)
     event->TabWidgetFound = this;
-  if(event->SearchObject == mDocument)
+  if (event->SearchObject == mDocument)
     event->TabWidgetFound = this;
 }
 
@@ -778,7 +785,8 @@ void DocumentEditor::OnQueryModified(QueryModifiedSaveEvent* event)
 {
   event->Modified = this->IsModified();
   event->Title = String("Save and Close");
-  event->Message = String("Save changes to the current document before closing it?");
+  event->Message =
+      String("Save changes to the current document before closing it?");
 }
 
 void DocumentEditor::OnSaveConfirmed(Event* event)
@@ -795,8 +803,7 @@ void DocumentEditor::OnFocusIn()
   }
 }
 
-ScriptEditor::ScriptEditor(Composite* parent)
-  :DocumentEditor(parent)
+ScriptEditor::ScriptEditor(Composite* parent) : DocumentEditor(parent)
 {
   mCharacterWasAdded = false;
 
@@ -855,7 +862,8 @@ void ScriptEditor::OnKeyUp(KeyboardEvent* event)
   CheckPopups();
 }
 
-String ScriptEditor::ReplaceTabRuneWithOurTabStyle(StringParam text, StringParam perLineIndent)
+String ScriptEditor::ReplaceTabRuneWithOurTabStyle(StringParam text,
+                                                   StringParam perLineIndent)
 {
   String newTab = GetTabStyleAsString();
 
@@ -891,7 +899,7 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
   this->HideToolTip();
 
   // Quick escape to clear errors
-  if(event->Key == Keys::Escape)
+  if (event->Key == Keys::Escape)
   {
     this->ClearAnnotations();
     this->HideAutoComplete();
@@ -899,7 +907,7 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
   }
 
   // Command processing
-  if(event->CtrlPressed)
+  if (event->CtrlPressed)
   {
     ICodeInspector* code = this->GetCodeInspector();
     if (code && (event->Key == 'K'))
@@ -907,9 +915,9 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
       this->BlockComment(code->GetSingleLineCommentToken().c_str());
     }
   }
-  
+
   auto autoCompletion = GetAutoComplete();
-  if(autoCompletion)
+  if (autoCompletion)
   {
     // If we have more than one tip...
     if (event->Key == Keys::Down)
@@ -944,12 +952,12 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
     if (this->AutoCompleteZeroConnect())
       return;
   }
-  
+
   auto tip = GetCallTip();
-  if(tip && (event->Key == Keys::Down || event->Key == Keys::Up))
+  if (tip && (event->Key == Keys::Down || event->Key == Keys::Up))
   {
     // If we have more than one tip...
-    if(tip->mTips.Size() > 1)
+    if (tip->mTips.Size() > 1)
     {
       if (event->Key == Keys::Down)
       {
@@ -968,7 +976,8 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
   DocumentEditor::OnKeyDown(event);
 }
 
-void ScriptEditor::ShowAutoComplete(Array<Completion>& tips, CompletionConfidence::Enum confidence)
+void ScriptEditor::ShowAutoComplete(Array<Completion>& tips,
+                                    CompletionConfidence::Enum confidence)
 {
   ShowAutoComplete(tips, 0, confidence);
 }
@@ -990,19 +999,21 @@ void ScriptEditor::OnTextModified(Event* event)
 
   // Walk all breakpoint markers
   int line = -1;
-  for(;;)
+  for (;;)
   {
     line = GetNextMarker(line + 1, BreakPointMarker);
-  
+
     if (line == -1)
       break;
-  
+
     if (inspector->SetBreakpoint((size_t)line, true) == false)
       this->ClearMarker(line, BreakPointMarker);
   }
 }
 
-void ScriptEditor::ShowAutoComplete(Array<Completion>& completions, int cursorOffset, CompletionConfidence::Enum confidence)
+void ScriptEditor::ShowAutoComplete(Array<Completion>& completions,
+                                    int cursorOffset,
+                                    CompletionConfidence::Enum confidence)
 {
   if (completions.Empty())
     return;
@@ -1013,7 +1024,9 @@ void ScriptEditor::ShowAutoComplete(Array<Completion>& completions, int cursorOf
 
   popup->SetConfidence(confidence);
 
-  ConnectThisTo(popup, Events::AutoCompleteItemDoubleClicked, OnAutoCompleteItemDoubleClicked);
+  ConnectThisTo(popup,
+                Events::AutoCompleteItemDoubleClicked,
+                OnAutoCompleteItemDoubleClicked);
 
   mAutoComplete.SafeDestroy();
 
@@ -1048,10 +1061,12 @@ bool ScriptEditor::AttemptFinishAutoComplete(UserCompletion::Enum mode)
       return false;
     }
 
-    // If the completion is NOT confident, and the partial text they typed in is LONGER than the
-    // current completion selection, then just let the text they typed be there
+    // If the completion is NOT confident, and the partial text they typed in is
+    // LONGER than the current completion selection, then just let the text they
+    // typed be there
     String& partialText = autoComplete->mSource.mPartialText;
-    if (!partialText.Empty() && autoComplete->mConfidence == CompletionConfidence::Unsure)
+    if (!partialText.Empty() &&
+        autoComplete->mConfidence == CompletionConfidence::Unsure)
     {
       if (partialText.SizeInBytes() > text.SizeInBytes())
       {
@@ -1070,10 +1085,12 @@ bool ScriptEditor::AttemptFinishAutoComplete(UserCompletion::Enum mode)
 
     position -= added;
 
-    this->InsertAutoCompleteText(text.c_str(), text.SizeInBytes(), position - mAutoCompleteStart, added);
-    //this->RemoveRange(mAutoCompleteStart, position - mAutoCompleteStart);
-    //this->InsertText(mAutoCompleteStart, text.c_str());
-    //this->SetSelectionStartAndLength(mAutoCompleteStart + text.Size() + added, 0);
+    this->InsertAutoCompleteText(
+        text.c_str(), text.SizeInBytes(), position - mAutoCompleteStart, added);
+    // this->RemoveRange(mAutoCompleteStart, position - mAutoCompleteStart);
+    // this->InsertText(mAutoCompleteStart, text.c_str());
+    // this->SetSelectionStartAndLength(mAutoCompleteStart + text.Size() +
+    // added, 0);
 
     this->HideAutoComplete();
     return true;
@@ -1113,7 +1130,9 @@ ToolTip* ScriptEditor::ShowToolTip(StringParam text, Vec3Param screenPos)
   return tip;
 }
 
-void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex)
+void ScriptEditor::ShowCallTips(Array<CallTip>& tips,
+                                StringParam functionName,
+                                size_t parameterIndex)
 {
   if (tips.Empty())
     return;
@@ -1122,7 +1141,8 @@ void ScriptEditor::ShowCallTips(Array<CallTip>& tips, StringParam functionName, 
   if (lastTips != nullptr)
   {
     // Leave the current dialog up if it's the same
-    if (lastTips->mFunctionName == functionName && lastTips->mTips.Size() == tips.Size())
+    if (lastTips->mFunctionName == functionName &&
+        lastTips->mTips.Size() == tips.Size())
     {
       lastTips->SetParameterIndex(parameterIndex);
       return;
@@ -1200,16 +1220,17 @@ void ScriptEditor::Unindent(size_t line)
   int tabWidth = GetTabWidth();
 
   int lineIndentation = GetLineIndentation(line);
-  
+
   // Don't unindent if we have no indenting to do...
-  if(lineIndentation < tabWidth)
+  if (lineIndentation < tabWidth)
     return;
 
   int linePosition = this->GetPositionFromLine(line);
   this->RemoveRange(linePosition, tabWidth);
 }
 
-// Gets the name of the document we're editing. Often times this can be used in place of a class name for dynamic languages
+// Gets the name of the document we're editing. Often times this can be used in
+// place of a class name for dynamic languages
 String ScriptEditor::GetDocumentDisplayName()
 {
   if (mDocument)
@@ -1252,25 +1273,26 @@ ICodeInspector* ScriptEditor::GetCodeInspector()
 void ScriptEditor::CheckPopups()
 {
   CallTipPopUp* tip = GetCallTip();
-  if(tip)
+  if (tip)
   {
     size_t cursorPosition = GetCurrentPosition();
     size_t currentLine = GetCurrentLine();
 
     bool lessThanStart = (int)cursorPosition < mCallTipStart;
     bool cursorMovedOffLine = currentLine != mCallTipLine;
-    
-    if(lessThanStart || cursorMovedOffLine)
+
+    if (lessThanStart || cursorMovedOffLine)
     {
       HideCallTips();
     }
     else
     {
       size_t linePosition = GetPositionFromLine(currentLine);
-      
+
       size_t cursorColumn = cursorPosition - linePosition;
       StringRange lineTextFull = GetLineText(currentLine);
-      StringRange lineText = lineTextFull.SubString(lineTextFull.Begin(), lineTextFull.Begin() + cursorColumn);
+      StringRange lineText = lineTextFull.SubString(
+          lineTextFull.Begin(), lineTextFull.Begin() + cursorColumn);
 
       // Closers are any type of symbol such as [] {} ()
       int closerCount = 0;
@@ -1306,23 +1328,25 @@ void ScriptEditor::CheckPopups()
   }
 
   auto autoComplete = GetAutoComplete();
-  if(autoComplete)
+  if (autoComplete)
   {
     size_t cursorPosition = GetCurrentPosition();
     size_t currentLine = GetCurrentLine();
 
     bool hideAutoComplete;
-    // the cursor must be before the auto complete start to hide the box during perfect confidence
-    if(autoComplete->mConfidence == CompletionConfidence::Perfect)
+    // the cursor must be before the auto complete start to hide the box during
+    // perfect confidence
+    if (autoComplete->mConfidence == CompletionConfidence::Perfect)
       hideAutoComplete = (int)cursorPosition < mAutoCompleteStart;
-    // not perfect completion should be cleared when returning to the start otherwise starting letter
-    // changes won't pop up a properly populated local auto complete
+    // not perfect completion should be cleared when returning to the start
+    // otherwise starting letter changes won't pop up a properly populated local
+    // auto complete
     else
       hideAutoComplete = (int)cursorPosition <= mAutoCompleteStart;
-    
+
     bool cursorMovedOffLine = currentLine != mAutoCompleteLine;
 
-    if(hideAutoComplete || cursorMovedOffLine)
+    if (hideAutoComplete || cursorMovedOffLine)
     {
       HideAutoComplete();
     }
@@ -1333,7 +1357,6 @@ void ScriptEditor::CheckPopups()
     }
   }
 }
-
 
 void ScriptEditor::OnMouseDown(MouseEvent* event)
 {
@@ -1351,21 +1374,21 @@ void ScriptEditor::OnMouseScroll(MouseEvent* event)
 void ScriptEditor::OnMouseMove(MouseEvent* event)
 {
   DocumentResource* resource = GetResource();
-  
+
   if (resource == nullptr)
   {
     mLastLocation = CodeLocation();
     return;
   }
-  
+
   ICodeInspector* codeInspector = resource->GetCodeInspector();
-  
+
   if (codeInspector == nullptr)
   {
     mLastLocation = CodeLocation();
     return;
   }
-  
+
   int cursor = GetCursorFromScreenPosition(event->Position);
 
   if (cursor == -1)
@@ -1374,20 +1397,22 @@ void ScriptEditor::OnMouseMove(MouseEvent* event)
     mLastLocation = CodeLocation();
     return;
   }
-  
+
   CodeDefinition definition;
   codeInspector->AttemptGetDefinition(this, cursor, definition);
-  
-  //// Don't keep showing the tooltip if we're at the same location and moving the mouse slightly
+
+  //// Don't keep showing the tooltip if we're at the same location and moving
+  ///the mouse slightly
   if (definition.ElementLocation.IsSamePositionAndOrigin(mLastLocation))
     return;
-  
+
   mLastLocation = definition.ElementLocation;
 
   Any value;
   Array<QueryResult> results;
   if (definition.DefinedVariable != nullptr)
-    value = codeInspector->QueryExpression(definition.DefinedVariable->Name, results);
+    value = codeInspector->QueryExpression(definition.DefinedVariable->Name,
+                                           results);
 
   String tooltipText = definition.ToolTip;
 
@@ -1396,7 +1421,7 @@ void ScriptEditor::OnMouseMove(MouseEvent* event)
     StringBuilder builder;
 
     bool isFirst = true;
-    forRange(QueryResult& result, results)
+    forRange(QueryResult & result, results)
     {
       if (!isFirst)
         builder.Append("  ");
@@ -1420,9 +1445,14 @@ void ScriptEditor::OnMouseMove(MouseEvent* event)
       AppendResourcePreviewToToolTip(tooltip, (Resource*)resource, 4);
 
     ToolTipPlacement placement;
-    placement.mHotSpot = Math::ToVector2(GetScreenPositionFromCursor(cursor)) + Vec2(0, (float)GetLineHeight() * 0.5f);
-    placement.mScreenRect = WidgetRect::CenterAndSize(placement.mHotSpot, Vec2(200, (float)GetLineHeight() + 2));
-    placement.SetPriority(IndicatorSide::Bottom, IndicatorSide::Top, IndicatorSide::Right, IndicatorSide::Left);
+    placement.mHotSpot = Math::ToVector2(GetScreenPositionFromCursor(cursor)) +
+                         Vec2(0, (float)GetLineHeight() * 0.5f);
+    placement.mScreenRect = WidgetRect::CenterAndSize(
+        placement.mHotSpot, Vec2(200, (float)GetLineHeight() + 2));
+    placement.SetPriority(IndicatorSide::Bottom,
+                          IndicatorSide::Top,
+                          IndicatorSide::Right,
+                          IndicatorSide::Left);
     tooltip->SetArrowTipTranslation(placement);
 
     tooltip->UpdateTransformExternal();
@@ -1442,8 +1472,9 @@ void ScriptEditor::ScriptError(ScriptEvent* event)
 {
   if (mDocument->GetPath() != event->Location.Origin)
     return;
-  
-  String errMsg = FormatErrorMessage(event->Message, event->Location.PrimaryCharacter);
+
+  String errMsg =
+      FormatErrorMessage(event->Message, event->Location.PrimaryCharacter);
   this->SetAnnotation(event->Location.PrimaryLine - 1, errMsg);
 
   // If the error is a runtime clear Focus to prevent any keys
@@ -1462,11 +1493,14 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
   AutoCompletePopUp* autoComplete = GetAutoComplete();
   static const String doNotCompleteCharacters = "_[]\r\n";
   Rune addedRune = Rune(event->Added);
-  if (autoComplete && !IsAlphaNumeric(addedRune) && doNotCompleteCharacters.FindFirstOf(addedRune).Empty())
+  if (autoComplete && !IsAlphaNumeric(addedRune) &&
+      doNotCompleteCharacters.FindFirstOf(addedRune).Empty())
   {
-    // If we allow confident completion on other symbols, and we have a confident auto-complete
-    bool shouldFinish = GetConfig()->ConfidentAutoCompleteOnSymbols &&
-      autoComplete->mConfidence == CompletionConfidence::Perfect;
+    // If we allow confident completion on other symbols, and we have a
+    // confident auto-complete
+    bool shouldFinish =
+        GetConfig()->ConfidentAutoCompleteOnSymbols &&
+        autoComplete->mConfidence == CompletionConfidence::Perfect;
 
     if (shouldFinish)
     {
@@ -1478,7 +1512,6 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
     }
   }
 
-  
   bool isInComment = false;
   bool isInString = false;
   bool isInCommentOrString = false;
@@ -1498,7 +1531,7 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
 
     bool previousWasEscape = false;
 
-    for (;!currentLineRange.Empty(); currentLineRange.PopFront())
+    for (; !currentLineRange.Empty(); currentLineRange.PopFront())
     {
       Rune r = currentLineRange.Front();
 
@@ -1548,18 +1581,20 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
     {
       bool doWordCompletion = true;
 
-      if(code)
+      if (code)
       {
         doWordCompletion = code->CanStartLocalWordCompletion(this);
       }
-      if(doWordCompletion)
+      if (doWordCompletion)
       {
         Array<Completion> completions;
         AttemptAddLocalWordCompletions(completions);
         AttemptAddKeywordAndTypeCompletions(completions);
 
-        // Show the auto-complete, but since the character was just added we need to backup by one
-        this->ShowAutoComplete(completions, startPos - curPos, CompletionConfidence::Unsure);
+        // Show the auto-complete, but since the character was just added we
+        // need to backup by one
+        this->ShowAutoComplete(
+            completions, startPos - curPos, CompletionConfidence::Unsure);
       }
     }
   }
@@ -1572,7 +1607,7 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
     }
   }
 
-  //Auto indent feature
+  // Auto indent feature
   if (addedRune == '\n')
   {
     Array<int> caretPositions;
@@ -1593,7 +1628,7 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
 
         String initialSpace;
 
-        for (;!prevLine.Empty(); prevLine.PopFront())
+        for (; !prevLine.Empty(); prevLine.PopFront())
         {
           Rune r = prevLine.Front();
 
@@ -1603,7 +1638,7 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
             break;
           }
         }
-        
+
         InsertText(caret, initialSpace.Data());
         insertedCharCount += initialSpace.ComputeRuneCount();
       }
@@ -1613,7 +1648,9 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
   CheckPopups();
 }
 
-bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut)
+bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut,
+                                              String& indentOut,
+                                              int& functionPositionOut)
 {
   functionPositionOut = -1;
 
@@ -1621,18 +1658,21 @@ bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& inde
   if (code && code->SupportsZeroConnect())
   {
     String line = GetCurrentLineText();
-    Regex zeroConnect("Zero.Connect\\(.+,\\s*Events\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
+    Regex zeroConnect(
+        "Zero.Connect\\(.+,\\s*Events\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
     Matches matches;
     zeroConnect.Search(line, matches);
 
     if (matches.Size() != 2)
     {
-      Regex zeroConnectString("Zero.Connect\\(.+,\\s*\"([a-zA-Z0-9_]+)\"\\s*,\\s*$");
+      Regex zeroConnectString(
+          "Zero.Connect\\(.+,\\s*\"([a-zA-Z0-9_]+)\"\\s*,\\s*$");
       zeroConnectString.Search(line, matches);
 
       if (matches.Size() != 2)
       {
-        Regex zeroConnectString("Zero.Connect\\(.+,\\s*.*\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
+        Regex zeroConnectString(
+            "Zero.Connect\\(.+,\\s*.*\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
         zeroConnectString.Search(line, matches);
 
         if (matches.Size() != 2)
@@ -1645,17 +1685,20 @@ bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& inde
 
     if (matches.Size() == 2)
     {
-      eventNameOut = Zilch::LibraryBuilder::FixIdentifier(matches[1], TokenCheck::IsUpper);
+      eventNameOut =
+          Zilch::LibraryBuilder::FixIdentifier(matches[1], TokenCheck::IsUpper);
 
       if (eventNameOut.Empty())
       {
         return false;
       }
-      
-      code->FindPositionToGenerateFunction(this, functionPositionOut, indentOut);
 
-      ReturnIf(functionPositionOut <= GetCurrentPosition(), false,
-        "The function must be inserted after the cursor (below)");
+      code->FindPositionToGenerateFunction(
+          this, functionPositionOut, indentOut);
+
+      ReturnIf(functionPositionOut <= GetCurrentPosition(),
+               false,
+               "The function must be inserted after the cursor (below)");
 
       if (functionPositionOut != -1)
       {
@@ -1689,10 +1732,12 @@ bool ScriptEditor::AutoCompleteZeroConnect()
     ICodeInspector* code = this->GetCodeInspector();
 
     String eventTypeName;
-    Regex sendsDeclaration(BuildString("sends\\s+", eventName, "\\s*\\:\\s*([a-zA-Z0-9_]+)"));
+    Regex sendsDeclaration(
+        BuildString("sends\\s+", eventName, "\\s*\\:\\s*([a-zA-Z0-9_]+)"));
 
     // Search all script documents and look for a sends declaration
-    forRange(Document* document, DocumentManager::GetInstance()->Documents.Values())
+    forRange(Document * document,
+             DocumentManager::GetInstance()->Documents.Values())
     {
       StringRange text;
 
@@ -1715,7 +1760,8 @@ bool ScriptEditor::AutoCompleteZeroConnect()
     {
       // If we could not find an event type, assume it's just event
       // Get the type of the event
-      BoundType* eventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
+      BoundType* eventType =
+          MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
       if (eventType == nullptr)
         eventType = ZilchTypeId(Event);
 
@@ -1723,14 +1769,15 @@ bool ScriptEditor::AutoCompleteZeroConnect()
     }
 
     String functionName = BuildString("On", eventName);
-  
+
     String connectCallEnd = code->GenerateConnectCallEnd(functionName);
 
     int cursorPosition = GetCurrentPosition();
 
-    String start = code->GenerateConnectFunctionStart(functionName, eventTypeName);
+    String start =
+        code->GenerateConnectFunctionStart(functionName, eventTypeName);
     String end = code->GenerateConnectFunctionEnd();
-    
+
     start = ReplaceTabRuneWithOurTabStyle(start, indent);
     end = ReplaceTabRuneWithOurTabStyle(end, indent);
 
@@ -1740,7 +1787,7 @@ bool ScriptEditor::AutoCompleteZeroConnect()
     {
       connectCallEnd = BuildString(" ", connectCallEnd);
     }
-    
+
     InsertText(cursorPosition, connectCallEnd.c_str());
 
     int startPosition = functionPosition + connectCallEnd.SizeInBytes();
@@ -1757,27 +1804,29 @@ bool ScriptEditor::AutoCompleteZeroConnect()
   return false;
 }
 
-void ScriptEditor::AttemptAddKeywordAndTypeCompletions(Array<Completion>& completionsOut)
+void ScriptEditor::AttemptAddKeywordAndTypeCompletions(
+    Array<Completion>& completionsOut)
 {
   auto config = Z::gEditor->mConfig->has(TextEditorConfig);
 
-  if(!config->KeywordAndTypeCompletion)
+  if (!config->KeywordAndTypeCompletion)
     return;
 
   auto code = GetCodeInspector();
-  if(code)
+  if (code)
   {
     code->GetKeywords(completionsOut);
   }
 }
 
-void ScriptEditor::AttemptAddLocalWordCompletions(Array<Completion>& completionsOut)
+void ScriptEditor::AttemptAddLocalWordCompletions(
+    Array<Completion>& completionsOut)
 {
   auto config = Z::gEditor->mConfig->has(TextEditorConfig);
 
-  if(!config->LocalWordCompletion)
+  if (!config->LocalWordCompletion)
     return;
-  
+
   // Caret positions of word being edited
   int curPos = GetCurrentPosition();
   int startPos = GetWordStartPosition(curPos);
@@ -1791,7 +1840,7 @@ void ScriptEditor::AttemptAddLocalWordCompletions(Array<Completion>& completions
   char* buffer = new char[length + 1];
   GetText(0, length, buffer, length + 1);
   String text(buffer);
-  delete [] buffer;
+  delete[] buffer;
 
   HashSet<String> words;
 
@@ -1845,7 +1894,8 @@ void ScriptEditor::AttemptAddLocalWordCompletions(Array<Completion>& completions
         {
           StringRange curWordRange = curWord;
           StringRange wordRange = word;
-          for (; !curWordRange.Empty(); curWordRange.PopFront(), wordRange.PopFront())
+          for (; !curWordRange.Empty();
+               curWordRange.PopFront(), wordRange.PopFront())
           {
             Rune a = word.Front();
             Rune b = curWord.Front();
@@ -1883,7 +1933,7 @@ void ScriptEditor::AttemptAddLocalWordCompletions(Array<Completion>& completions
   }
 
   // Put words into an array to sort it
-  forRange(String& str, words.All())
+  forRange(String & str, words.All())
   {
     auto& completion = completionsOut.PushBack();
     completion.Name = str;
@@ -1892,16 +1942,16 @@ void ScriptEditor::AttemptAddLocalWordCompletions(Array<Completion>& completions
 
 String ScriptEditor::FormatErrorMessage(StringParam message, int offset)
 {
-  if(offset != 0)
+  if (offset != 0)
   {
-    //build up a line with an arrow to the
+    // build up a line with an arrow to the
     Array<char> whiteSpace;
-    whiteSpace.Resize(offset + 2,' ');
+    whiteSpace.Resize(offset + 2, ' ');
     whiteSpace[offset - 1] = '^';
     whiteSpace[offset + 0] = '\n';
     whiteSpace[offset + 1] = '\0';
     String arrowLine(whiteSpace.Data());
-    return BuildString(arrowLine,message);
+    return BuildString(arrowLine, message);
   }
 
   return message;
@@ -1911,7 +1961,7 @@ void ScriptEditor::Save()
 {
   this->ClearAnnotations();
 
-  if(IsModified())
+  if (IsModified())
   {
     SaveDocument();
   }
@@ -1925,19 +1975,19 @@ ScriptEditor* CreateScriptEditor(Composite* parent, ResourceDocument* doc)
 
   String format = doc->mResource->GetFormat();
 
-  if(format == "Python")
+  if (format == "Python")
     editor->SetLexer(Lexer::Python);
-  else if(format == "Zilch")
+  else if (format == "Zilch")
     editor->SetLexer(Lexer::Zilch);
-  else if(format == "Shader")
+  else if (format == "Shader")
     editor->SetLexer(Lexer::Shader);
-  else if(format == "C++")
+  else if (format == "C++")
     editor->SetLexer(Lexer::Cpp);
   else
     editor->SetLexer(Lexer::Text);
 
-  // SetLexer overrides some of the text config settings so we need to apply the config to
-  // set our script editor to the correct configured state
+  // SetLexer overrides some of the text config settings so we need to apply the
+  // config to set our script editor to the correct configured state
   editor->UpdateConfig(editor->GetConfig());
 
   return editor;
@@ -1951,4 +2001,4 @@ DocumentEditor* CreateDocumentEditor(Composite* parent, Document* doc)
   return editor;
 }
 
-}
+} // namespace Zero

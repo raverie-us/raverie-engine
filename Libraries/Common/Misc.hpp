@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Misc.hpp
-/// Miscellaneous functions.
-///
-/// Authors: 
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Typedefs.hpp"
@@ -15,18 +7,25 @@
 namespace Zero
 {
 
-//Smaller of two is put in the top 32 bits.
+// Smaller of two is put in the top 32 bits.
 u64 GetLexicographicId(u32 id1, u32 id2);
-//Unpacks the pair id into the two ids. Id1 is the lower 32 bits.
+// Unpacks the pair id into the two ids. Id1 is the lower 32 bits.
 void UnPackLexicographicId(u32& id1, u32& id2, u64 pairId);
 
 class IndexRange
 {
 public:
-  IndexRange() {}
-  IndexRange(uint s, uint e) : start(s), end(e) {}
+  IndexRange()
+  {
+  }
+  IndexRange(uint s, uint e) : start(s), end(e)
+  {
+  }
 
-  uint Count() { return end - start; }
+  uint Count()
+  {
+    return end - start;
+  }
 
   uint start, end;
 };
@@ -74,27 +73,27 @@ class SetAndRecallOnDestruction : public RecallOnDestruction<T>
 {
 public:
   SetAndRecallOnDestruction(T* variable, T setToValue) :
-    RecallOnDestruction<T>(variable)
+      RecallOnDestruction<T>(variable)
   {
     *variable = setToValue;
   }
 
   SetAndRecallOnDestruction(T* variable, T setToValue, T recallToValue) :
-    RecallOnDestruction<T>(variable, recallToValue)
+      RecallOnDestruction<T>(variable, recallToValue)
   {
     *variable = setToValue;
   }
 };
 
-template<typename RefType>
+template <typename RefType>
 void SafeRelease(RefType& interfacePtr)
 {
-  if(interfacePtr)
+  if (interfacePtr)
     interfacePtr->Release();
   interfacePtr = nullptr;
 }
 
-template<typename RefType>
+template <typename RefType>
 void SafeDelete(RefType& objectPtr)
 {
   // We do this so that if the object is atomic we will
@@ -104,22 +103,22 @@ void SafeDelete(RefType& objectPtr)
   delete temp;
 }
 
-template<typename RefType>
+template <typename RefType>
 void SafeDeleteArray(RefType& objectPtr)
 {
   delete[] objectPtr;
   objectPtr = nullptr;
 }
 
-template<typename type>
+template <typename type>
 void SafeDestroy(type*& instance)
 {
-  if(instance)
+  if (instance)
     instance->Destroy();
   instance = nullptr;
 }
 
-template<typename type>
+template <typename type>
 void ZeroClassMemory(type& classRef)
 {
   memset(&classRef, 0, sizeof(type));
@@ -133,4 +132,4 @@ bool IsBigEndian();
 /// Will result in zero if most significant bit is set
 u32 NextPowerOfTwo(u32 x);
 
-}//namespace Zero
+} // namespace Zero

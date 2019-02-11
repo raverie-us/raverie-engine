@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ListControls.cpp
-/// Implementation of the basic ListBox and ComboBox widget data controls.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,41 +6,38 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ItemSelected);
-  DefineEvent(ItemDoubleClicked);
-  DefineEvent(ListBoxOpened);
-  DefineEvent(ListEntriesChanged);
-}
+DefineEvent(ItemSelected);
+DefineEvent(ItemDoubleClicked);
+DefineEvent(ListBoxOpened);
+DefineEvent(ListEntriesChanged);
+} // namespace Events
 
 const float cTextCellHeight = Pixels(15);
-const Thickness ComboBoxPadding = Thickness(2,2,2,2);
-const Thickness ListBoxPadding = Thickness(1,1,1,1);
+const Thickness ComboBoxPadding = Thickness(2, 2, 2, 2);
+const Thickness ListBoxPadding = Thickness(1, 1, 1, 1);
 
 namespace ListControlsUi
 {
 const cstr cLocation = "EditorUi/ListControls";
-Tweakable(Vec4, BackgroundColor,    Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, BorderColor,        Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, FocusBorderColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ListPrimaryColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ListSecondaryColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ListReadOnlyColor,  Vec4(1, 1, 1, 1), cLocation);
-Tweakable(Vec4, ListBackgroundColor, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, FocusBorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ListPrimaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ListSecondaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ListReadOnlyColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ListBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, ReadOnlyBackgroundColor, Vec4(1, 1, 1, 1), cLocation)
-}
+} // namespace ListControlsUi
 
 const String cSelectionBox = "SelectionBox";
 const String cSelectText = "SelectedText";
 const String cHighlightedText = "TextHighlight";
 
-//--------------------------------------------------------------------- List Box
 ZilchDefineType(ListBox, builder, type)
 {
-
 }
 
-ListBox::ListBox(Composite* parent)
-  : Composite(parent)
+ListBox::ListBox(Composite* parent) : Composite(parent)
 {
   static const String className = "ListBox";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -99,7 +88,6 @@ ListBox::ListBox(Composite* parent)
 
 ListBox::~ListBox()
 {
-
 }
 
 bool ListBox::TakeFocusOverride()
@@ -111,7 +99,7 @@ bool ListBox::TakeFocusOverride()
 void ListBox::SetSelectedItem(int index, bool sendMessage)
 {
   mSelectedItem = index;
-  if(sendMessage)
+  if (sendMessage)
   {
     ObjectEvent e(this);
     DispatchBubble(Events::ItemSelected, &e);
@@ -155,19 +143,19 @@ void ListBox::UpdateTransform()
   mBackground->SetColor(ListControlsUi::ListBackgroundColor);
   mBorder->SetSize(mSize);
 
-  if(!mCustomBorderColor)
+  if (!mCustomBorderColor)
   {
-    if(HasFocus())
+    if (HasFocus())
       mBorder->SetColor(ListControlsUi::FocusBorderColor);
     else
       mBorder->SetColor(ListControlsUi::BorderColor);
   }
 
   float boxWidth = mSize.x;
-  
+
   mSelection->SetSize(Vec2(boxWidth, cTextCellHeight));
 
-  if(mListArea->IsScrollBarVisible(SizeAxis::Y))
+  if (mListArea->IsScrollBarVisible(SizeAxis::Y))
     boxWidth -= mListArea->GetScrollBarSize();
 
   WidgetRect listArea = RemoveThicknessRect(borderThickness, mSize);
@@ -175,31 +163,31 @@ void ListBox::UpdateTransform()
   Vec2 subSize = listArea.GetSize();
 
   uint dataCount = 0;
-  if(mDataSource)
+  if (mDataSource)
     dataCount = mDataSource->GetCount();
 
-  if(mSelectedItem > int(dataCount))
+  if (mSelectedItem > int(dataCount))
   {
     mSelection->SetVisible(false);
     mSelectedItem = cNoItemSelected;
   }
 
-  if(mHighlightItem > int(dataCount))
+  if (mHighlightItem > int(dataCount))
   {
     mHighlightBox->SetVisible(false);
     mHighlightItem = cNoItemSelected;
   }
 
-  //Compute the number of elements that can be 
-  //seen at the controls current size
+  // Compute the number of elements that can be
+  // seen at the controls current size
   uint possibleVisibleCount = 0;
-  if(subSize.y > 0)
+  if (subSize.y > 0)
   {
     possibleVisibleCount = uint(subSize.y / cTextCellHeight) + 2;
   }
 
-  //Add enough text blocks to display the visible elements
-  while(mTextBlocks.Size() < possibleVisibleCount)
+  // Add enough text blocks to display the visible elements
+  while (mTextBlocks.Size() < possibleVisibleCount)
   {
     ItemEntry entry;
     entry.first = mClient->CreateAttached<Element>(cWhiteSquare);
@@ -209,8 +197,8 @@ void ListBox::UpdateTransform()
     mTextBlocks.PushBack(entry);
   }
 
-  //Remove extra text elements if necessary
-  while(possibleVisibleCount < mTextBlocks.Size())
+  // Remove extra text elements if necessary
+  while (possibleVisibleCount < mTextBlocks.Size())
   {
     mTextBlocks.Back().first->Destroy();
     mTextBlocks.Back().second->Destroy();
@@ -220,11 +208,11 @@ void ListBox::UpdateTransform()
   Event e;
   DispatchBubble(Events::ListEntriesChanged, &e);
 
-  //Set the client size
+  // Set the client size
   float listAreaSize = cTextCellHeight * float(dataCount);
 
   const float listAreaMinSize = Pixels(20);
-  if(listAreaSize < listAreaMinSize)
+  if (listAreaSize < listAreaMinSize)
     listAreaSize = listAreaMinSize;
 
   Vec2 clientSize = Vec2(boxWidth, listAreaSize);
@@ -235,14 +223,14 @@ void ListBox::UpdateTransform()
   cellsOff = floor(cellsOff);
   uint startingBlockIndex = uint(cellsOff);
 
-  for(uint i = 0; i < mTextBlocks.Size(); ++i)
+  for (uint i = 0; i < mTextBlocks.Size(); ++i)
   {
     Element* background = mTextBlocks[i].first;
     Text* text = mTextBlocks[i].second;
 
-    Vec3 translation = Vec3(borderThickness.Left, 
-                            cTextCellHeight * i + 
-                            cellsOff * cTextCellHeight, 0);
+    Vec3 translation = Vec3(borderThickness.Left,
+                            cTextCellHeight * i + cellsOff * cTextCellHeight,
+                            0);
 
     text->SetTranslation(translation);
     text->SetSize(Vec2(boxWidth, cTextCellHeight));
@@ -250,36 +238,36 @@ void ListBox::UpdateTransform()
     background->SetTranslation(translation);
     background->SetSize(Vec2(boxWidth, cTextCellHeight));
 
-    // Compute the global index for this item so that the color is consistent for
-    // the same named item, otherwise the color can flip when we have an odd
+    // Compute the global index for this item so that the color is consistent
+    // for the same named item, otherwise the color can flip when we have an odd
     // number of bound items and we reach the end of the list.
     uint globalIndex = i + startingBlockIndex;
-    if(globalIndex % 2)
+    if (globalIndex % 2)
       background->SetColor(ListControlsUi::ListPrimaryColor);
     else
       background->SetColor(ListControlsUi::ListSecondaryColor);
   }
 
-  if(mDataSource)
+  if (mDataSource)
   {
     uint itemCount = mDataSource->GetCount();
     uint itemsToDisplay = mTextBlocks.Size();
     uint currentBlockIndex = startingBlockIndex;
 
-    for(uint i = 0; i < itemsToDisplay; ++i)
+    for (uint i = 0; i < itemsToDisplay; ++i)
     {
       Vec3 blockTrans = Vec3(0, cTextCellHeight * float(currentBlockIndex), 0);
       Vec2 blockSize = Vec2(boxWidth, cTextCellHeight);
 
-      if(currentBlockIndex == mSelectedItem)
+      if (currentBlockIndex == mSelectedItem)
       {
         mSelection->SetVisible(true);
         mSelection->SetTranslation(blockTrans);
         mSelection->SetSize(blockSize);
       }
 
-      if(currentBlockIndex == mHighlightItem && mMouseHover &&
-         mHighlightItem < (int)dataCount)
+      if (currentBlockIndex == mHighlightItem && mMouseHover &&
+          mHighlightItem < (int)dataCount)
       {
         mHighlightBox->SetVisible(true);
         mHighlightBox->SetTranslation(blockTrans);
@@ -287,18 +275,20 @@ void ListBox::UpdateTransform()
       }
 
       TextDefinition* regular = (TextDefinition*)mDefSet->GetDefinition(cText);
-      TextDefinition* selected = (TextDefinition*)mDefSet->GetDefinition(cSelectText);
-      TextDefinition* highlighted = (TextDefinition*)mDefSet->GetDefinition(cHighlightedText);
-      
+      TextDefinition* selected =
+          (TextDefinition*)mDefSet->GetDefinition(cSelectText);
+      TextDefinition* highlighted =
+          (TextDefinition*)mDefSet->GetDefinition(cHighlightedText);
+
       Text& text = *mTextBlocks[i].second;
-      if(currentBlockIndex < itemCount)
+      if (currentBlockIndex < itemCount)
       {
         text.SetActive(true);
         text.SetText(mDataSource->GetStringValueAt(currentBlockIndex));
 
-        if(currentBlockIndex == mSelectedItem)
+        if (currentBlockIndex == mSelectedItem)
           text.ChangeDefinition(selected);
-        else if(mHighlightedItems.Contains(i))
+        else if (mHighlightedItems.Contains(i))
           text.ChangeDefinition(highlighted);
         else
           text.ChangeDefinition(regular);
@@ -328,18 +318,18 @@ void ListBox::EnableDropShadow()
 
 void ListBox::ScrollToView()
 {
-  if(mDataSource == nullptr)
+  if (mDataSource == nullptr)
     return;
 
   float numberOfItems = float(mDataSource->GetCount());
 
   Vec2 minSelect = Vec2(0, mSelectedItem * cTextCellHeight);
-  Vec2 maxSelect =  minSelect + Vec2(0, cTextCellHeight);
+  Vec2 maxSelect = minSelect + Vec2(0, cTextCellHeight);
 
   mListArea->ScrollAreaToView(minSelect, maxSelect);
 
   this->MarkAsNeedsUpdate();
-  
+
   // Force update for visual issue
   this->UpdateTransformExternal();
 }
@@ -387,24 +377,25 @@ void ListBox::OnScrollUpdate(ObjectEvent* object)
 
 void ListBox::OnMouseMove(MouseEvent* event)
 {
-  if(mDataSource == nullptr)
+  if (mDataSource == nullptr)
     return;
 
   Vec2 localPosition = mClient->ToLocal(event->Position);
   int index = IndexFromPosition(localPosition);
-  
-  if(index < int(mDataSource->GetCount( )))
+
+  if (index < int(mDataSource->GetCount()))
   {
     mHighlightItem = index;
 
-    if(index != -1)
+    if (index != -1)
     {
       StringBuilder toolTipText;
-      if(GetToolTipText(index, mDataSource, &toolTipText))
+      if (GetToolTipText(index, mDataSource, &toolTipText))
       {
-        mToolTip.SafeDestroy( );
+        mToolTip.SafeDestroy();
         mToolTip = new ToolTip(this);
-        mToolTip->SetTextAndPlace(toolTipText.ToString( ), mTextBlocks[index].first->GetScreenRect( ));
+        mToolTip->SetTextAndPlace(toolTipText.ToString(),
+                                  mTextBlocks[index].first->GetScreenRect());
       }
     }
   }
@@ -414,12 +405,12 @@ void ListBox::OnMouseMove(MouseEvent* event)
 
 void ListBox::OnMouseClick(MouseEvent* event)
 {
-  if(mDataSource == nullptr)
+  if (mDataSource == nullptr)
     return;
-  
+
   Vec2 localPosition = mClient->ToLocal(event->Position);
   int index = IndexFromPosition(localPosition);
-  if(index < int(mDataSource->GetCount()))
+  if (index < int(mDataSource->GetCount()))
   {
     int dataIndex = IndexFromPosition(localPosition);
     SetSelectedItem(dataIndex, true);
@@ -434,7 +425,7 @@ void ListBox::OnMouseExit(MouseEvent* event)
 }
 
 void ListBox::OnMouseEnter(MouseEvent* event)
-{ 
+{
   mMouseHover = true;
 }
 
@@ -443,7 +434,7 @@ void ListBox::OnDoubleClick(MouseEvent* event)
   Vec2 localPosition = mClient->ToLocal(event->Position);
   int index = IndexFromPosition(localPosition);
 
-  if(mDataSource && index < int(mDataSource->GetCount()))
+  if (mDataSource && index < int(mDataSource->GetCount()))
   {
     mDataSource->Selected(DataIndex(index));
 
@@ -455,7 +446,7 @@ void ListBox::OnDoubleClick(MouseEvent* event)
 void ListBox::OnKeyDown(KeyboardEvent* event)
 {
 
-  switch(event->Key)
+  switch (event->Key)
   {
   case Keys::Tab:
     TabJump(this, event);
@@ -463,7 +454,7 @@ void ListBox::OnKeyDown(KeyboardEvent* event)
   case Keys::Left:
   case Keys::Up:
     mSelectedItem -= 1;
-    if(mSelectedItem < 0)
+    if (mSelectedItem < 0)
       mSelectedItem = mDataSource->GetCount() - 1;
     break;
   case Keys::Right:
@@ -507,16 +498,13 @@ int ListBox::IndexFromPosition(Vec2Param localPosition)
   return int(index);
 }
 
-//-------------------------------------------------------------------- Combo Box
 const String DownArrow = "DownArrowGrey";
 
 ZilchDefineType(ComboBox, builder, type)
 {
-
 }
 
-ComboBox::ComboBox(Composite* parent)
-  :Composite(parent)
+ComboBox::ComboBox(Composite* parent) : Composite(parent)
 {
   static const String className = "ComboBox";
   mDataSource = nullptr;
@@ -573,12 +561,12 @@ void ComboBox::OpenList()
   listBox->TakeFocus();
 
   Vec2 sizeOfBox = Vec2(mSize.x - ListBoxPadding.Size().x, cTextCellHeight);
-  if(mDataSource)
+  if (mDataSource)
     sizeOfBox.y = float(mDataSource->GetCount()) * cTextCellHeight;
   sizeOfBox = ExpandSizeByThickness(ListBoxPadding, sizeOfBox);
 
   const float cMaxListSize = cTextCellHeight * 12;
-  if(sizeOfBox.y > cMaxListSize)
+  if (sizeOfBox.y > cMaxListSize)
     sizeOfBox.y = cMaxListSize;
 
   Vec3 screenPosition = this->GetScreenPosition();
@@ -586,7 +574,7 @@ void ComboBox::OpenList()
 
   // If at the bottom of the scree flip the box the
   // other direction to prevent clipping
-  if(screenPosition.y + sizeOfBox.y > spaceSize.y)
+  if (screenPosition.y + sizeOfBox.y > spaceSize.y)
     screenPosition.y = screenPosition.y - sizeOfBox.y - mSize.y;
 
   listBox->SetTranslation(screenPosition + Vec3(0, mSize.y, 0));
@@ -613,7 +601,7 @@ void ComboBox::CloseList()
   ListBox* listBox = mListBox;
   mListBox = nullptr;
 
-  if(listBox)
+  if (listBox)
   {
     listBox->Destroy();
     mReady = false;
@@ -629,13 +617,13 @@ void ComboBox::SetSelectable(bool selectable)
 
 void ComboBox::OnMouseDown(MouseEvent* event)
 {
-  if(!mAllowSelect)
+  if (!mAllowSelect)
     return;
-  if(!mReady)
+  if (!mReady)
     return;
-  if(mDataSource == nullptr)
+  if (mDataSource == nullptr)
     return;
-  if(mListBox.IsNull())
+  if (mListBox.IsNull())
     OpenList();
   else
     mListBox.SafeDestroy();
@@ -643,33 +631,31 @@ void ComboBox::OnMouseDown(MouseEvent* event)
 
 void ComboBox::OnMouseEnter(MouseEvent* event)
 {
-  if(mSelectedItem == -1 || uint(mSelectedItem) > mDataSource->GetCount( ))
+  if (mSelectedItem == -1 || uint(mSelectedItem) > mDataSource->GetCount())
     return;
 
   StringBuilder toolTipText;
-  if(GetToolTipText(mSelectedItem, mDataSource, &toolTipText))
+  if (GetToolTipText(mSelectedItem, mDataSource, &toolTipText))
   {
     ToolTip* toolTip = new ToolTip(this);
-    toolTip->SetTextAndPlace(toolTipText.ToString( ), this->GetScreenRect( ));
+    toolTip->SetTextAndPlace(toolTipText.ToString(), this->GetScreenRect());
   }
-
 }
-
 
 void ComboBox::OnItemSelected(ObjectEvent* event)
 {
   ListBox* listBox = mListBox;
-  if(listBox)
+  if (listBox)
     SetSelectedItem(listBox->GetSelectedItem(), true);
   HardTakeFocus();
 }
 
 void ComboBox::OnListFocusLost(FocusEvent* event)
 {
-  if(ListBox* listBox = mListBox)
+  if (ListBox* listBox = mListBox)
   {
     bool childOfList = !listBox->IsAncestorOf(event->ReceivedFocus);
-    if(childOfList)
+    if (childOfList)
       CloseList();
   }
 }
@@ -683,19 +669,19 @@ void ComboBox::OnKeyDown(KeyboardEvent* event)
 {
   TabJump(this, event);
 
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  switch(event->Key)
+  switch (event->Key)
   {
-    case Keys::Left:
-    case Keys::Right:
-    case Keys::Up:
-    case Keys::Down:
-    case Keys::Enter:
-      OpenList();
-    default:
-      break;
+  case Keys::Left:
+  case Keys::Right:
+  case Keys::Up:
+  case Keys::Down:
+  case Keys::Enter:
+    OpenList();
+  default:
+    break;
   }
 }
 
@@ -726,14 +712,14 @@ void ComboBox::SetSelectedItem(int index, bool message)
 {
   mSelectedItem = index;
 
-  if(mSelectedItem != -1 && uint(index) < mDataSource->GetCount())
+  if (mSelectedItem != -1 && uint(index) < mDataSource->GetCount())
     mText->SetText(mDataSource->GetStringValueAt(DataIndex(mSelectedItem)));
   else
     mText->SetText(String());
 
   CloseList();
 
-  if(message)
+  if (message)
   {
     ObjectEvent e(this);
     DispatchBubble(Events::ItemSelected, &e);
@@ -756,12 +742,12 @@ void ComboBox::UpdateTransform()
   mBackground->SetSize(mSize);
   mBorder->SetSize(mSize);
 
-  if(HasFocus())
+  if (HasFocus())
     mBorder->SetColor(ListControlsUi::FocusBorderColor);
   else
     mBorder->SetColor(ListControlsUi::BorderColor);
 
-  if(!mAllowSelect)
+  if (!mAllowSelect)
   {
     mText->SetColor(ListControlsUi::ListReadOnlyColor);
     mBackground->SetColor(ListControlsUi::ReadOnlyBackgroundColor);
@@ -783,82 +769,71 @@ void ComboBox::UpdateTransform()
 
   real rightBorder = 6.0f;
   mPullImage->SetTranslation(Vec3(newSize.x - iconSize.x - rightBorder,
-                                  (newSize.y - iconSize.y) / 2.0f, 0.0f));
+                                  (newSize.y - iconSize.y) / 2.0f,
+                                  0.0f));
   Composite::UpdateTransform();
 }
 
-//------------------------------------------------------------- String Combo Box
 ZilchDefineType(StringComboBox, builder, type)
 {
 }
 
-//******************************************************************************
-StringComboBox::StringComboBox(Composite* parent)
-  : ComboBox(parent)
+StringComboBox::StringComboBox(Composite* parent) : ComboBox(parent)
 {
   mStrings = new StringSource();
   SetListSource(mStrings);
 }
 
-//******************************************************************************
 StringComboBox::~StringComboBox()
 {
-  if (mStrings) delete mStrings;
+  if (mStrings)
+    delete mStrings;
 }
 
-//******************************************************************************
 void StringComboBox::AddItem(StringParam string)
 {
   mStrings->Strings.PushBack(string);
 }
 
-//******************************************************************************
 void StringComboBox::RemoveItem(StringParam string)
 {
   mStrings->Strings.EraseValueError(string);
 }
 
-//******************************************************************************
 void StringComboBox::RemoveItem(uint index)
 {
   mStrings->Strings.EraseAt(index);
 }
 
-//******************************************************************************
 void StringComboBox::InsertItem(uint index, StringParam string)
 {
   mStrings->Strings.InsertAt(index, string);
 }
 
-//******************************************************************************
 void StringComboBox::ClearItems()
 {
   mStrings->Strings.Clear();
 }
 
-//******************************************************************************
 uint StringComboBox::GetIndexOfItem(StringParam string)
 {
   return mStrings->Strings.FindIndex(string);
 }
 
-//******************************************************************************
 StringParam StringComboBox::GetItem(uint index)
 {
   return mStrings->Strings[index];
 }
 
-//******************************************************************************
 uint StringComboBox::GetCount()
 {
   return mStrings->GetCount();
 }
 
-//******************************************************************************
 String StringComboBox::GetSelectedString()
 {
   uint selectedIndex = GetSelectedItem();
   return GetItem(selectedIndex);
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -37,7 +32,8 @@ PhysicsEffect::PhysicsEffect()
 
 void PhysicsEffect::Serialize(Serializer& stream)
 {
-  Error("Physics Effect should never have serialize called, meta serialization is assumed");
+  Error("Physics Effect should never have serialize called, meta serialization "
+        "is assumed");
 }
 
 void PhysicsEffect::Initialize(CogInitializer& initializer)
@@ -47,33 +43,33 @@ void PhysicsEffect::Initialize(CogInitializer& initializer)
   // is needed since 'has' returns objects that have already been deleted.
 
   // Deal with being on level settings (basically a space effect)
-  if(GetOwner() == GetOwner()->GetLevelSettings())
+  if (GetOwner() == GetOwner()->GetLevelSettings())
     mFlags.SetFlag(EffectFlags::LevelEffect);
 
   // Check for a region
   Region* region = GetOwner()->has(Region);
-  if(region)
+  if (region)
     mFlags.SetFlag(EffectFlags::RegionEffect);
 
   // Check for a single Rigid Body
   RigidBody* body = GetOwner()->has(RigidBody);
-  if(body)
+  if (body)
     mFlags.SetFlag(EffectFlags::BodyEffect);
 
   Collider* collider = GetOwner()->has(Collider);
-  if(collider)
+  if (collider)
     mFlags.SetFlag(EffectFlags::ColliderEffect);
 
   // If there is no region, check for a physics space
   PhysicsSpace* space = GetOwner()->has(PhysicsSpace);
-  if(space)
+  if (space)
     mFlags.SetFlag(EffectFlags::SpaceEffect);
 
   // All spaces need to know what effects are in them so try to find our
   // physics space (could be our owner or space) and add ourself to it
-  if(space == nullptr && initializer.mSpace != nullptr)
+  if (space == nullptr && initializer.mSpace != nullptr)
     space = initializer.mSpace->has(PhysicsSpace);
-  if(space != nullptr)
+  if (space != nullptr)
     space->mEffects.PushBack(this);
 
   AddEffect();
@@ -83,10 +79,10 @@ void PhysicsEffect::OnDestroy(uint flags)
 {
   // If we have a physics space then remove ourself from it
   Space* space = GetSpace();
-  if(space != nullptr)
+  if (space != nullptr)
   {
     PhysicsSpace* physicsSpace = space->has(PhysicsSpace);
-    if(physicsSpace != nullptr)
+    if (physicsSpace != nullptr)
       InList<PhysicsEffect, &PhysicsEffect::SpaceLink>::Unlink(this);
   }
 
@@ -95,19 +91,19 @@ void PhysicsEffect::OnDestroy(uint flags)
 
 void PhysicsEffect::ComponentAdded(BoundType* typeId, Component* component)
 {
-  if(typeId == ZilchTypeId(Region))
+  if (typeId == ZilchTypeId(Region))
   {
     RemoveEffect();
     mFlags.SetFlag(EffectFlags::RegionEffect);
     AddEffect();
   }
-  else if(typeId == ZilchTypeId(RigidBody))
+  else if (typeId == ZilchTypeId(RigidBody))
   {
     RemoveEffect();
     mFlags.SetFlag(EffectFlags::BodyEffect);
     AddEffect();
   }
-  else if(typeId == ZilchTypeId(PhysicsSpace))
+  else if (typeId == ZilchTypeId(PhysicsSpace))
   {
     RemoveEffect();
     mFlags.SetFlag(EffectFlags::SpaceEffect);
@@ -115,7 +111,7 @@ void PhysicsEffect::ComponentAdded(BoundType* typeId, Component* component)
   }
   else
   {
-    if(typeId->IsA(ZilchTypeId(Collider)))
+    if (typeId->IsA(ZilchTypeId(Collider)))
     {
       RemoveEffect();
       mFlags.SetFlag(EffectFlags::ColliderEffect);
@@ -126,19 +122,19 @@ void PhysicsEffect::ComponentAdded(BoundType* typeId, Component* component)
 
 void PhysicsEffect::ComponentRemoved(BoundType* typeId, Component* component)
 {
-  if(typeId == ZilchTypeId(Region))
+  if (typeId == ZilchTypeId(Region))
   {
     RemoveEffect();
     mFlags.ClearFlag(EffectFlags::RegionEffect);
     AddEffect();
   }
-  else if(typeId == ZilchTypeId(RigidBody))
+  else if (typeId == ZilchTypeId(RigidBody))
   {
     RemoveEffect();
     mFlags.ClearFlag(EffectFlags::BodyEffect);
     AddEffect();
   }
-  else if(typeId == ZilchTypeId(PhysicsSpace))
+  else if (typeId == ZilchTypeId(PhysicsSpace))
   {
     RemoveEffect();
     mFlags.ClearFlag(EffectFlags::SpaceEffect);
@@ -146,7 +142,7 @@ void PhysicsEffect::ComponentRemoved(BoundType* typeId, Component* component)
   }
   else
   {
-    if(typeId->IsA(ZilchTypeId(Collider)))
+    if (typeId->IsA(ZilchTypeId(Collider)))
     {
       RemoveEffect();
       mFlags.ClearFlag(EffectFlags::ColliderEffect);
@@ -158,9 +154,10 @@ void PhysicsEffect::ComponentRemoved(BoundType* typeId, Component* component)
 Vec3 PhysicsEffect::TransformLocalDirectionToWorld(Vec3Param localDir) const
 {
   Vec3 worldDir = localDir;
-  // If we have a collider then use the cached body-to-world transform to get our world space values
+  // If we have a collider then use the cached body-to-world transform to get
+  // our world space values
   Collider* collider = GetOwner()->has(Collider);
-  if(collider != nullptr)
+  if (collider != nullptr)
   {
     WorldTransformation* transform = collider->GetWorldTransform();
     worldDir = transform->TransformNormal(worldDir);
@@ -169,7 +166,7 @@ Vec3 PhysicsEffect::TransformLocalDirectionToWorld(Vec3Param localDir) const
 
   // Otherwise fall-back on using the transform
   Transform* transform = GetOwner()->has(Transform);
-  if(transform != nullptr)
+  if (transform != nullptr)
   {
     Quat worldRotation = transform->GetWorldRotation();
     worldDir = transform->TransformNormal(worldDir);
@@ -181,9 +178,10 @@ Vec3 PhysicsEffect::TransformLocalDirectionToWorld(Vec3Param localDir) const
 Vec3 PhysicsEffect::TransformLocalPointToWorld(Vec3Param localPoint) const
 {
   Vec3 worldPoint = localPoint;
-  // If we have a collider then use the cached body-to-world transform to get our world space values
+  // If we have a collider then use the cached body-to-world transform to get
+  // our world space values
   Collider* collider = GetOwner()->has(Collider);
-  if(collider != nullptr)
+  if (collider != nullptr)
   {
     WorldTransformation* transform = collider->GetWorldTransform();
     worldPoint = transform->TransformPoint(localPoint);
@@ -192,7 +190,7 @@ Vec3 PhysicsEffect::TransformLocalPointToWorld(Vec3Param localPoint) const
 
   // Otherwise fall-back on using the transform
   Transform* transform = GetOwner()->has(Transform);
-  if(transform != nullptr)
+  if (transform != nullptr)
   {
     Vec3 worldPoint = transform->TransformPoint(localPoint);
     return worldPoint;
@@ -200,11 +198,13 @@ Vec3 PhysicsEffect::TransformLocalPointToWorld(Vec3Param localPoint) const
   return worldPoint;
 }
 
-void PhysicsEffect::TransformLocalDirectionAndPointToWorld(Vec3& localPoint, Vec3& localDir) const
+void PhysicsEffect::TransformLocalDirectionAndPointToWorld(Vec3& localPoint,
+                                                           Vec3& localDir) const
 {
-  // If we have a collider then use the cached body-to-world transform to get our world space values
+  // If we have a collider then use the cached body-to-world transform to get
+  // our world space values
   Collider* collider = GetOwner()->has(Collider);
-  if(collider != nullptr)
+  if (collider != nullptr)
   {
     WorldTransformation* transform = collider->GetWorldTransform();
     localDir = transform->TransformNormal(localDir);
@@ -214,7 +214,7 @@ void PhysicsEffect::TransformLocalDirectionAndPointToWorld(Vec3& localPoint, Vec
 
   // Otherwise fall-back on using the transform
   Transform* transform = GetOwner()->has(Transform);
-  if(transform != nullptr)
+  if (transform != nullptr)
   {
     localDir = transform->TransformNormal(localDir);
     localPoint = transform->TransformPoint(localPoint);
@@ -224,33 +224,33 @@ void PhysicsEffect::TransformLocalDirectionAndPointToWorld(Vec3& localPoint, Vec
 
 void PhysicsEffect::AddEffect()
 {
-  if(mFlags.IsSet(EffectFlags::LevelEffect))
+  if (mFlags.IsSet(EffectFlags::LevelEffect))
     LevelAdd(GetSpace()->has(PhysicsSpace));
-  else if(mFlags.IsSet(EffectFlags::RegionEffect))
+  else if (mFlags.IsSet(EffectFlags::RegionEffect))
     RegionAdd(GetOwner()->has(Region));
-  else if(mFlags.IsSet(EffectFlags::BodyEffect))
+  else if (mFlags.IsSet(EffectFlags::BodyEffect))
     BodyAdd(GetOwner()->has(RigidBody));
-  else if(mFlags.IsSet(EffectFlags::ColliderEffect))
+  else if (mFlags.IsSet(EffectFlags::ColliderEffect))
     ColliderAdd(GetOwner()->has(Collider));
-  else if(mFlags.IsSet(EffectFlags::SpaceEffect))
+  else if (mFlags.IsSet(EffectFlags::SpaceEffect))
     SpaceAdd(GetOwner()->has(PhysicsSpace));
-  else if(GetSpace() != nullptr)
+  else if (GetSpace() != nullptr)
     HierarchyAdd();
 }
 
 void PhysicsEffect::RemoveEffect()
 {
-  if(mFlags.IsSet(EffectFlags::LevelEffect))
+  if (mFlags.IsSet(EffectFlags::LevelEffect))
     LevelRemove(GetSpace()->has(PhysicsSpace));
-  else if(mFlags.IsSet(EffectFlags::RegionEffect))
+  else if (mFlags.IsSet(EffectFlags::RegionEffect))
     RegionRemove(GetOwner()->has(Region));
-  else if(mFlags.IsSet(EffectFlags::BodyEffect))
+  else if (mFlags.IsSet(EffectFlags::BodyEffect))
     BodyRemove(GetOwner()->has(RigidBody));
-  else if(mFlags.IsSet(EffectFlags::ColliderEffect))
+  else if (mFlags.IsSet(EffectFlags::ColliderEffect))
     ColliderRemove(GetOwner()->has(Collider));
-  else if(mFlags.IsSet(EffectFlags::SpaceEffect))
+  else if (mFlags.IsSet(EffectFlags::SpaceEffect))
     SpaceRemove(GetOwner()->has(PhysicsSpace));
-  else if(GetSpace() != nullptr)
+  else if (GetSpace() != nullptr)
     HierarchyRemove();
 }
 
@@ -307,57 +307,58 @@ void PhysicsEffect::SpaceRemove(PhysicsSpace* space)
 void PhysicsEffect::HierarchyAdd()
 {
   PhysicsSpace* physicsSpace = GetSpace()->has(PhysicsSpace);
-  if(physicsSpace != nullptr)
+  if (physicsSpace != nullptr)
     physicsSpace->mHierarchyEffects.PushBack(this);
 }
 
 void PhysicsEffect::HierarchyRemove()
 {
   PhysicsSpace* physicsSpace = GetSpace()->has(PhysicsSpace);
-  if(physicsSpace != nullptr)
+  if (physicsSpace != nullptr)
     physicsSpace->mHierarchyEffects.Erase(this);
 }
 
 void PhysicsEffect::CheckWakeUp()
 {
-  // If we don't wake up the objects when a property is changed then don't do anything
-  if(!mFlags.IsSet(EffectFlags::WakeUpOnChange) || !IsInitialized())
+  // If we don't wake up the objects when a property is changed then don't do
+  // anything
+  if (!mFlags.IsSet(EffectFlags::WakeUpOnChange) || !IsInitialized())
     return;
 
   // Otherwise tell the correct thing to wake everything up
-  if(mFlags.IsSet(EffectFlags::RegionEffect))
+  if (mFlags.IsSet(EffectFlags::RegionEffect))
   {
     Region* region = GetOwner()->has(Region);
-    if(!region)
+    if (!region)
       return;
     region->WakeUpAll();
   }
-  else if(mFlags.IsSet(EffectFlags::BodyEffect))
+  else if (mFlags.IsSet(EffectFlags::BodyEffect))
   {
     RigidBody* body = GetOwner()->has(RigidBody);
-    while(body && !body->IsDynamic())
+    while (body && !body->IsDynamic())
       body = body->mParentBody;
-    if(body)
+    if (body)
       body->ForceAwake();
   }
-  else if(mFlags.IsSet(EffectFlags::ColliderEffect))
+  else if (mFlags.IsSet(EffectFlags::ColliderEffect))
   {
     Collider* collider = GetOwner()->has(Collider);
-    if(!collider)
+    if (!collider)
       return;
     collider->ForceAwake();
   }
-  else if(mFlags.IsSet(EffectFlags::SpaceEffect))
+  else if (mFlags.IsSet(EffectFlags::SpaceEffect))
   {
     PhysicsSpace* space = GetOwner()->has(PhysicsSpace);
-    if(!space)
+    if (!space)
       return;
     space->ForceAwakeRigidBodies();
   }
-  else if(mFlags.IsSet(EffectFlags::LevelEffect))
+  else if (mFlags.IsSet(EffectFlags::LevelEffect))
   {
     PhysicsSpace* space = GetSpace()->has(PhysicsSpace);
-    if(!space)
+    if (!space)
       return;
     space->ForceAwakeRigidBodies();
   }
@@ -381,11 +382,11 @@ bool PhysicsEffect::GetActive()
 
 void PhysicsEffect::SetActive(bool state)
 {
-  if(mFlags.IsSet(EffectFlags::Active) == state)
+  if (mFlags.IsSet(EffectFlags::Active) == state)
     return;
 
   mFlags.SetState(EffectFlags::Active, state);
-  if(IsInitialized())
+  if (IsInitialized())
     CheckWakeUp();
 }
 
@@ -409,4 +410,4 @@ void PhysicsEffect::SetDebugDrawEffect(bool state)
   mFlags.SetState(EffectFlags::DebugDraw, state);
 }
 
-}//namespace Zero
+} // namespace Zero

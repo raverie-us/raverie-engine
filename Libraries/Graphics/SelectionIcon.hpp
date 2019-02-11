@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -12,7 +11,9 @@ class SelectionIcon : public Graphical
 public:
   // Does not bind Graphical as an interface because this component
   // is only for special behavior that needs to draw.
-  ZilchDeclareDerivedTypeExplicit(SelectionIcon, Component, TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(SelectionIcon,
+                                  Component,
+                                  TypeCopyMode::ReferenceType);
 
   static const float cBaseScale;
 
@@ -26,8 +27,12 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
-  void MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
+  void MidPhaseQuery(Array<GraphicalEntry>& entries,
+                     Camera& camera,
+                     Frustum* frustum) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
   bool TestFrustum(const Frustum& frustum, CastInfo& castInfo) override;
   void AddToSpace() override;
@@ -43,11 +48,12 @@ public:
   /// Scalar for how big the icon should appear in the viewport.
   float mViewScale;
 
-  /// If collider/graphical or other selection logic should be disabled and only selectable via this icon.
+  /// If collider/graphical or other selection logic should be disabled and only
+  /// selectable via this icon.
   bool GetOverrideSelections();
   void SetOverrideSelections(bool overrideSelections);
   bool mOverrideSelections;
-  
+
   // Internal
 
   float GetRadius(Camera* camera);

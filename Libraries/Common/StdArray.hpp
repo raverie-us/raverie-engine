@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Array.hpp
-/// Declaration of the Binder for STL vector container.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -17,11 +9,11 @@
 namespace Zero
 {
 
-template<typename type>
-class StdVector : public std::vector<type, Zallocator<type> >
+template <typename type>
+class StdVector : public std::vector<type, Zallocator<type>>
 {
 public:
-  typedef StdVector <type> this_type;
+  typedef StdVector<type> this_type;
   typedef IteratorRange<this_type> range;
 
   typedef type value_type;
@@ -40,7 +32,6 @@ public:
   {
     return &(*this)[0];
   }
-
 };
 
-}//namespace Zero
+} // namespace Zero

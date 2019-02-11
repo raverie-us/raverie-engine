@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationEditor.hpp
-/// Declaration of AnimationEditor Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -27,7 +19,6 @@ class TrackEvent;
 
 void RegisterAnimationTrackViewEditors();
 
-//--------------------------------------------------------- Animation Track View
 class AnimationTrackView : public Composite
 {
 public:
@@ -102,4 +93,4 @@ private:
   AnimationEditorData* mEditorData;
 };
 
-}//namespace Zero
+} // namespace Zero

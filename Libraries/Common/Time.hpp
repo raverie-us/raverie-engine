@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Time.hpp
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include <time.h>
@@ -36,7 +29,6 @@ struct CalendarDateTime
 class Time
 {
 public:
-
   static TimeType GetTime();
   static TimeType Clock();
   static TimeType GenerateSeed();
@@ -47,9 +39,18 @@ public:
 
   static const char* GetMonthString(int month)
   {
-    const char* cDates[] = {"January", "February", "March", "April", "May",
-                             "June", "July", "August", "September",
-                             "October", "November", "December"};
+    const char* cDates[] = {"January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December"};
 
     return cDates[month];
   }

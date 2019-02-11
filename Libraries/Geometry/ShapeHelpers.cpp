@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ShapesHelpers.hpp
-/// Contains conversion functions to and from shapes.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Conversion Functions
 Ray ToRay(const Segment& segment)
 {
   return Ray(segment.Start, segment.End - segment.Start);
@@ -62,7 +53,7 @@ Aabb ToAabb(const SweptTriangle& sweptTri)
 {
   Aabb aabb;
   aabb.Compute(&sweptTri.BaseTri.p0, 3);
-  for(uint i = 0; i < 3; ++i)
+  for (uint i = 0; i < 3; ++i)
     aabb.Expand(sweptTri.BaseTri[i] + sweptTri.ScaledDir);
   return aabb;
 }
@@ -72,8 +63,8 @@ Aabb ToAabb(const Obb& obb)
   Vec3 e = obb.HalfExtents;
   Vec3 halfExtents;
 
-  //some black magic from real time collision detection
-  for(uint i = 0; i < 3; ++i)
+  // some black magic from real time collision detection
+  for (uint i = 0; i < 3; ++i)
   {
     halfExtents[i] = Math::Abs(obb.Basis.GetBasis(0)[i]) * e[0];
     halfExtents[i] += Math::Abs(obb.Basis.GetBasis(1)[i]) * e[1];
@@ -99,8 +90,8 @@ Aabb ToAabb(const Ellipsoid& ellipsoid)
   Vec3 e = ellipsoid.Radii;
   Vec3 halfExtents;
 
-  //some black magic from real time collision detection
-  for(uint i = 0; i < 3; ++i)
+  // some black magic from real time collision detection
+  for (uint i = 0; i < 3; ++i)
   {
     halfExtents[i] = Math::Abs(ellipsoid.Basis(i, 0)) * e[0];
     halfExtents[i] += Math::Abs(ellipsoid.Basis(i, 1)) * e[1];
@@ -116,11 +107,11 @@ Aabb ToAabb(const Ellipsoid& ellipsoid)
 Aabb ToAabb(const Capsule& capsule)
 {
   Aabb aabb;
-  for(uint axis = 0; axis < 3; ++axis)
+  for (uint axis = 0; axis < 3; ++axis)
   {
     real min = capsule.PointA[axis];
     real max = capsule.PointB[axis];
-    if(min > max)
+    if (min > max)
       Math::Swap(min, max);
 
     aabb.mMin[axis] = min - capsule.Radius;
@@ -131,13 +122,13 @@ Aabb ToAabb(const Capsule& capsule)
 
 Aabb ToAabb(const Cylinder& cylinder)
 {
-  //not quite right, this is of a capsule, but whatever...
+  // not quite right, this is of a capsule, but whatever...
   Aabb aabb;
-  for(uint axis = 0; axis < 3; ++axis)
+  for (uint axis = 0; axis < 3; ++axis)
   {
     real min = cylinder.PointA[axis];
     real max = cylinder.PointB[axis];
-    if(min > max)
+    if (min > max)
       Math::Swap(min, max);
 
     aabb.mMin[axis] = min - cylinder.Radius;
@@ -207,4 +198,4 @@ Capsule ToCapsule(const Cylinder& cylinder)
   return Capsule(cylinder.PointA, cylinder.PointB, cylinder.Radius);
 }
 
-}//namespace Zero
+} // namespace Zero

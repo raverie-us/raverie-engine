@@ -1,8 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -11,24 +7,21 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//---------------------------------------------------------------------------------- BiQuad Filter
+//BiQuad Filter
 
-//************************************************************************************************
 BiQuad::BiQuad() :
-  a0(0),
-  a1(0),
-  a2(0),
-  b1(0),
-  b2(0),
-  x_1(0),
-  x_2(0),
-  y_1(0),
-  y_2(0)
+    a0(0),
+    a1(0),
+    a2(0),
+    b1(0),
+    b2(0),
+    x_1(0),
+    x_2(0),
+    y_1(0),
+    y_2(0)
 {
-
 }
 
-//************************************************************************************************
 void BiQuad::FlushDelays()
 {
   x_1 = 0.0f;
@@ -37,8 +30,11 @@ void BiQuad::FlushDelays()
   y_2 = 0.0f;
 }
 
-//************************************************************************************************
-void BiQuad::SetValues(const float a0_, const float a1_, const float a2_, const float b1_, const float b2_)
+void BiQuad::SetValues(const float a0_,
+                       const float a1_,
+                       const float a2_,
+                       const float b1_,
+                       const float b2_)
 {
   a0 = a0_;
   a1 = a1_;
@@ -47,7 +43,6 @@ void BiQuad::SetValues(const float a0_, const float a1_, const float a2_, const 
   b2 = b2_;
 }
 
-//************************************************************************************************
 float BiQuad::DoBiQuad(const float x)
 {
   float y = (a0 * x) + (a1 * x_1) + (a2 * x_2) - (b1 * y_1) - (b2 * y_2);
@@ -60,7 +55,6 @@ float BiQuad::DoBiQuad(const float x)
   return y;
 }
 
-//************************************************************************************************
 void BiQuad::AddHistoryTo(BiQuad& otherFilter)
 {
   otherFilter.x_1 += x_1;
@@ -69,32 +63,28 @@ void BiQuad::AddHistoryTo(BiQuad& otherFilter)
   otherFilter.y_2 += y_2;
 }
 
-//----------------------------------------------------------------------------------- Delay Filter
+//Delay Filter
 
-//************************************************************************************************
 Delay::Delay(float maxDelayTime, int sampleRate) :
-  mBuffer(nullptr),
-  mDelayInSamples(0),
-  mOutputAttenuation(0),
-  mBufferSize(0),
-  mReadIndex(0),
-  mWriteIndex(0),
-  mSampleRate(sampleRate)
+    mBuffer(nullptr),
+    mDelayInSamples(0),
+    mOutputAttenuation(0),
+    mBufferSize(0),
+    mReadIndex(0),
+    mWriteIndex(0),
+    mSampleRate(sampleRate)
 {
   mBufferSize = (int)(maxDelayTime * sampleRate);
   mBuffer = new float[mBufferSize];
   memset(mBuffer, 0, mBufferSize * sizeof(float));
 }
 
-//************************************************************************************************
 Delay::~Delay()
 {
   if (mBuffer)
     delete[] mBuffer;
-
 }
 
-//************************************************************************************************
 void Delay::ResetDelay()
 {
   if (mBuffer)
@@ -106,7 +96,6 @@ void Delay::ResetDelay()
   mPrevReadIndex = mReadIndex - 1;
 }
 
-//************************************************************************************************
 void Delay::SetDelayMSec(const float mSec)
 {
   mDelayInSamples = mSec * (mSampleRate / 1000.0f);
@@ -119,20 +108,18 @@ void Delay::SetDelayMSec(const float mSec)
     mPrevReadIndex += mBufferSize;
 }
 
-//************************************************************************************************
 void Delay::SetOutputAttenuation(const float attenDB)
 {
   mOutputAttenuation = Math::Pow(10.0f, attenDB / 20.0f);
 }
 
-//************************************************************************************************
 float Delay::ReadDelay()
 {
-  return mBuffer[mPrevReadIndex] + ((mBuffer[mReadIndex] - mBuffer[mPrevReadIndex])
-    * (mDelayInSamples - (int)mDelayInSamples));
+  return mBuffer[mPrevReadIndex] +
+         ((mBuffer[mReadIndex] - mBuffer[mPrevReadIndex]) *
+          (mDelayInSamples - (int)mDelayInSamples));
 }
 
-//************************************************************************************************
 float Delay::ReadDelayAt(const float mSec)
 {
   int readIndex = mWriteIndex - (int)(mSec * (mSampleRate / 1000.0f));
@@ -146,11 +133,10 @@ float Delay::ReadDelayAt(const float mSec)
   if (prevIndex < 0)
     prevIndex = mBufferSize - 1;
 
-  return mBuffer[prevIndex] + ((mBuffer[readIndex] - mBuffer[prevIndex])
-    * (mDelayInSamples - (int)mDelayInSamples));
+  return mBuffer[prevIndex] + ((mBuffer[readIndex] - mBuffer[prevIndex]) *
+                               (mDelayInSamples - (int)mDelayInSamples));
 }
 
-//************************************************************************************************
 void Delay::WriteDelayAndInc(const float delayInput)
 {
   mBuffer[mWriteIndex] = delayInput;
@@ -168,8 +154,7 @@ void Delay::WriteDelayAndInc(const float delayInput)
     mPrevReadIndex = 0;
 }
 
-//************************************************************************************************
-void Delay::ProcessAudio(const float input, float *output)
+void Delay::ProcessAudio(const float input, float* output)
 {
   if (mDelayInSamples == 0)
     *output = input * mOutputAttenuation;
@@ -179,18 +164,15 @@ void Delay::ProcessAudio(const float input, float *output)
   WriteDelayAndInc(input);
 }
 
-//-------------------------------------------------------------------------------- DelayAPF Filter
+//DelayAPF Filter
 
-//************************************************************************************************
 DelayAPF::DelayAPF(const float maxDelayTime, const int sampleRate) :
-  mAPFg(0),
-  Delay(maxDelayTime, sampleRate)
+    mAPFg(0),
+    Delay(maxDelayTime, sampleRate)
 {
-
 }
 
-//************************************************************************************************
-void DelayAPF::ProcessAudio(const float input, float *output)
+void DelayAPF::ProcessAudio(const float input, float* output)
 {
   if (mReadIndex == mWriteIndex)
   {
@@ -208,24 +190,21 @@ void DelayAPF::ProcessAudio(const float input, float *output)
   WriteDelayAndInc(inputWithDelay);
 }
 
-//------------------------------------------------------------------------------------ Comb Filter
+//Comb Filter
 
-//************************************************************************************************
 Comb::Comb(const float maxDelayTime, const int sampleRate) :
-  mCombG(0),
-  Delay(maxDelayTime, sampleRate)
+    mCombG(0),
+    Delay(maxDelayTime, sampleRate)
 {
-
 }
 
-//************************************************************************************************
 void Comb::SetCombGWithRT60(const float RT)
 {
-  mCombG = Math::Pow(10.0f, (-3.0f * mDelayInSamples * (1.0f / mSampleRate) * 1000.0f) / RT);
+  mCombG = Math::Pow(
+      10.0f, (-3.0f * mDelayInSamples * (1.0f / mSampleRate) * 1000.0f) / RT);
 }
 
-//************************************************************************************************
-void Comb::ProcessAudio(const float input, float *output)
+void Comb::ProcessAudio(const float input, float* output)
 {
   if (mReadIndex == mWriteIndex)
   {
@@ -239,34 +218,30 @@ void Comb::ProcessAudio(const float input, float *output)
   WriteDelayAndInc(input + (mCombG * (*output)));
 }
 
-//--------------------------------------------------------------------------- Low Pass Comb Filter
+//Low Pass Comb Filter
 
-//************************************************************************************************
 LPComb::LPComb(const float maxDelayTime, const int sampleRate) :
-  mCombG(0),
-  mLPFg(0),
-  mPrevSample(0),
-  Delay(maxDelayTime, sampleRate)
+    mCombG(0),
+    mLPFg(0),
+    mPrevSample(0),
+    Delay(maxDelayTime, sampleRate)
 {
-
 }
 
-//************************************************************************************************
 void LPComb::SetG(const float combG, const float overallGain)
 {
   mCombG = combG;
   mLPFg = overallGain * (1.0f - mCombG);
 }
 
-//************************************************************************************************
 void LPComb::SetGWithRT60(const float RT, const float overallGain)
 {
-  mCombG = Math::Pow(10.0f, (-3.0f * mDelayInSamples * (1.0f / mSampleRate) * 1000.0f) / RT);
+  mCombG = Math::Pow(
+      10.0f, (-3.0f * mDelayInSamples * (1.0f / mSampleRate) * 1000.0f) / RT);
   mLPFg = overallGain * (1.0f - mCombG);
 }
 
-//************************************************************************************************
-void LPComb::ProcessAudio(const float input, float *output)
+void LPComb::ProcessAudio(const float input, float* output)
 {
   if (mReadIndex == mWriteIndex)
   {
@@ -282,44 +257,36 @@ void LPComb::ProcessAudio(const float input, float *output)
   WriteDelayAndInc(*output);
 }
 
-//----------------------------------------------------------------------- One Pole Low Pass Filter
+//Pole Low Pass Filter
 
-//************************************************************************************************
-OnePoleLP::OnePoleLP() :
-  mLPFg(0),
-  mPrevSample(0)
+OnePoleLP::OnePoleLP() : mLPFg(0), mPrevSample(0)
 {
-
 }
 
-//************************************************************************************************
 void OnePoleLP::SetLPFg(const float g)
 {
   mLPFg = g;
   mInvG = 1.0f - mLPFg;
 }
 
-//************************************************************************************************
 void OnePoleLP::Initialize()
 {
   mPrevSample = 0;
 }
 
-//************************************************************************************************
-void OnePoleLP::ProcessAudio(const float input, float *output)
+void OnePoleLP::ProcessAudio(const float input, float* output)
 {
   *output = (input * mInvG) + (mLPFg * mPrevSample);
 
   mPrevSample = *output;
 }
 
-//-------------------------------------------------------------------------------- Low Pass Filter
+//Low Pass Filter
 
-//************************************************************************************************
 LowPassFilter::LowPassFilter() :
-  CutoffFrequency(20001.0f),
-  HalfPI(Math::cPi / 2.0f),
-  SqRoot2(Math::Sqrt(2.0f))
+    CutoffFrequency(20001.0f),
+    HalfPI(Math::cPi / 2.0f),
+    SqRoot2(Math::Sqrt(2.0f))
 {
   SetCutoffValues();
 
@@ -327,7 +294,6 @@ LowPassFilter::LowPassFilter() :
     BiQuadsPerChannel[i].FlushDelays();
 }
 
-//************************************************************************************************
 void LowPassFilter::SetCutoffValues()
 {
   // LP coefficients
@@ -346,14 +312,12 @@ void LowPassFilter::SetCutoffValues()
     BiQuadsPerChannel[i].SetValues(alpha, 2.0f * alpha, alpha, beta1, beta2);
 }
 
-//************************************************************************************************
 void LowPassFilter::SetCutoffFrequency(float value)
 {
   CutoffFrequency = value;
   SetCutoffValues();
 }
 
-//************************************************************************************************
 void LowPassFilter::MergeWith(LowPassFilter& otherFilter)
 {
   for (int i = 0; i < cMaxChannels; ++i)
@@ -362,8 +326,9 @@ void LowPassFilter::MergeWith(LowPassFilter& otherFilter)
   }
 }
 
-//************************************************************************************************
-void LowPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
+void LowPassFilter::ProcessFrame(const float* input,
+                                 float* output,
+                                 const unsigned numChannels)
 {
   if (CutoffFrequency > 20000.0f)
   {
@@ -376,9 +341,10 @@ void LowPassFilter::ProcessFrame(const float* input, float* output, const unsign
   }
 }
 
-//************************************************************************************************
-void LowPassFilter::ProcessBuffer(const float* input, float* output, const unsigned numChannels,
-  const unsigned numSamples)
+void LowPassFilter::ProcessBuffer(const float* input,
+                                  float* output,
+                                  const unsigned numChannels,
+                                  const unsigned numSamples)
 {
   if (CutoffFrequency > 20000.0f)
   {
@@ -390,19 +356,17 @@ void LowPassFilter::ProcessBuffer(const float* input, float* output, const unsig
     ProcessFrame(input + i, output + i, numChannels);
 }
 
-//************************************************************************************************
 float LowPassFilter::GetCutoffFrequency()
 {
   return CutoffFrequency;
 }
 
-//------------------------------------------------------------------------------- High Pass Filter
+//High Pass Filter
 
-//************************************************************************************************
 HighPassFilter::HighPassFilter() :
-  CutoffFrequency(10.0f),
-  HalfPI(Math::cPi / 2.0f),
-  SqRoot2(Math::Sqrt(2.0f))
+    CutoffFrequency(10.0f),
+    HalfPI(Math::cPi / 2.0f),
+    SqRoot2(Math::Sqrt(2.0f))
 {
   SetCutoffValues();
 
@@ -410,7 +374,6 @@ HighPassFilter::HighPassFilter() :
     BiQuadsPerChannel[i].FlushDelays();
 }
 
-//************************************************************************************************
 void HighPassFilter::SetCutoffValues()
 {
   float tanValue = Math::cPi * CutoffFrequency / cSystemSampleRate;
@@ -428,14 +391,12 @@ void HighPassFilter::SetCutoffValues()
     BiQuadsPerChannel[i].SetValues(alpha, -2.0f * alpha, alpha, beta1, beta2);
 }
 
-//************************************************************************************************
 void HighPassFilter::SetCutoffFrequency(const float value)
 {
   CutoffFrequency = value;
   SetCutoffValues();
 }
 
-//************************************************************************************************
 void HighPassFilter::MergeWith(HighPassFilter& otherFilter)
 {
   for (int i = 0; i < cMaxChannels; ++i)
@@ -444,8 +405,9 @@ void HighPassFilter::MergeWith(HighPassFilter& otherFilter)
   }
 }
 
-//************************************************************************************************
-void HighPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
+void HighPassFilter::ProcessFrame(const float* input,
+                                  float* output,
+                                  const unsigned numChannels)
 {
   if (CutoffFrequency < 20.0f)
     memcpy(output, input, sizeof(float) * numChannels);
@@ -456,12 +418,9 @@ void HighPassFilter::ProcessFrame(const float* input, float* output, const unsig
   }
 }
 
-//------------------------------------------------------------------------------- Band Pass Filter
+//Band Pass Filter
 
-//************************************************************************************************
-BandPassFilter::BandPassFilter() :
-  Quality(0.669f),
-  CentralFreq(1000.0f)
+BandPassFilter::BandPassFilter() : Quality(0.669f), CentralFreq(1000.0f)
 {
   ResetFrequencies();
 
@@ -470,7 +429,6 @@ BandPassFilter::BandPassFilter() :
   memset(PreviousOutput2, 0, sizeof(float) * cMaxChannels);
 }
 
-//************************************************************************************************
 void BandPassFilter::SetFrequency(const float freq)
 {
   CentralFreq = freq;
@@ -478,7 +436,6 @@ void BandPassFilter::SetFrequency(const float freq)
   ResetFrequencies();
 }
 
-//************************************************************************************************
 void BandPassFilter::SetQuality(const float Q)
 {
   Quality = Q;
@@ -486,7 +443,6 @@ void BandPassFilter::SetQuality(const float Q)
   ResetFrequencies();
 }
 
-//************************************************************************************************
 void BandPassFilter::MergeWith(BandPassFilter& otherFilter)
 {
   for (int i = 0; i < cMaxChannels; ++i)
@@ -497,14 +453,16 @@ void BandPassFilter::MergeWith(BandPassFilter& otherFilter)
   }
 }
 
-//************************************************************************************************
-void BandPassFilter::ProcessFrame(const float* input, float* output, const unsigned numChannels)
+void BandPassFilter::ProcessFrame(const float* input,
+                                  float* output,
+                                  const unsigned numChannels)
 {
   for (unsigned i = 0; i < numChannels; ++i)
   {
     float inputSample = input[i];
-    output[i] = (AlphaHP * (1 - AlphaLP) * (inputSample - PreviousInput[i]))
-      + ((AlphaHP + AlphaLP) * PreviousOutput1[i]) - (AlphaLP * AlphaHP * PreviousOutput2[i]);
+    output[i] = (AlphaHP * (1 - AlphaLP) * (inputSample - PreviousInput[i])) +
+                ((AlphaHP + AlphaLP) * PreviousOutput1[i]) -
+                (AlphaLP * AlphaHP * PreviousOutput2[i]);
 
     PreviousInput[i] = inputSample;
     PreviousOutput2[i] = PreviousOutput1[i];
@@ -512,40 +470,40 @@ void BandPassFilter::ProcessFrame(const float* input, float* output, const unsig
   }
 }
 
-//************************************************************************************************
 void BandPassFilter::ResetFrequencies()
 {
-  HighPassCutoff = (2.0f * CentralFreq * Quality) / (Math::Sqrt(4.0f * Quality * Quality + 1.0f) + 1.0f);
+  HighPassCutoff = (2.0f * CentralFreq * Quality) /
+                   (Math::Sqrt(4.0f * Quality * Quality + 1.0f) + 1.0f);
 
   if (HighPassCutoff != 0.0f)
     LowPassCutoff = (CentralFreq * CentralFreq) / HighPassCutoff;
   else
     LowPassCutoff = 0.0f;
 
-  AlphaLP = cSystemSampleRate / ((LowPassCutoff * 2.0f * Math::cPi) +
-    cSystemSampleRate);
-  AlphaHP = cSystemSampleRate / ((HighPassCutoff * 2.0f * Math::cPi) +
-    cSystemSampleRate);
+  AlphaLP = cSystemSampleRate /
+            ((LowPassCutoff * 2.0f * Math::cPi) + cSystemSampleRate);
+  AlphaHP = cSystemSampleRate /
+            ((HighPassCutoff * 2.0f * Math::cPi) + cSystemSampleRate);
 }
 
-//------------------------------------------------------------------------------------- Oscillator
+//Oscillator
 
-//************************************************************************************************
 Oscillator::Oscillator() :
-  mReadIndex(0),
-  mIncrement(0),
-  mNoteOn(false),
-  mFrequency(1.0f),
-  mType(SynthWaveType::Noise),
-  mPolarity(Bipolar),
-  mSquareWavePositiveFraction(0.5f)
+    mReadIndex(0),
+    mIncrement(0),
+    mNoteOn(false),
+    mFrequency(1.0f),
+    mType(SynthWaveType::Noise),
+    mPolarity(Bipolar),
+    mSquareWavePositiveFraction(0.5f)
 {
   mIncrement = ArraySize * mFrequency / (float)cSystemSampleRate;
   SetType(SynthWaveType::SineWave);
 }
 
-//************************************************************************************************
-void Oscillator::ProcessBuffer(float *buffer, const unsigned numChannels, const unsigned bufferSize)
+void Oscillator::ProcessBuffer(float* buffer,
+                               const unsigned numChannels,
+                               const unsigned bufferSize)
 {
   for (unsigned i = 0; i < bufferSize; i += numChannels)
   {
@@ -558,7 +516,6 @@ void Oscillator::ProcessBuffer(float *buffer, const unsigned numChannels, const 
   }
 }
 
-//************************************************************************************************
 float Oscillator::GetNextSample()
 {
   // If not running, exit
@@ -570,14 +527,17 @@ float Oscillator::GetNextSample()
 
   int readIndexInt = (int)mReadIndex;
 
-  ErrorIf(readIndexInt >= ArraySize, "Audio Engine: Oscillator read index went beyond array size");
+  ErrorIf(readIndexInt >= ArraySize,
+          "Audio Engine: Oscillator read index went beyond array size");
 
   int readIndexNext = readIndexInt + 1;
   if (readIndexNext > ArraySize - 1)
     readIndexNext = 0;
 
-  float returnValue = mWaveValues[readIndexInt] + (mReadIndex - readIndexInt)
-    * (mWaveValues[readIndexNext] - mWaveValues[readIndexInt]);
+  float returnValue =
+      mWaveValues[readIndexInt] +
+      (mReadIndex - readIndexInt) *
+          (mWaveValues[readIndexNext] - mWaveValues[readIndexInt]);
 
   mReadIndex += mIncrement;
   if (mReadIndex >= ArraySize)
@@ -588,20 +548,19 @@ float Oscillator::GetNextSample()
     returnValue *= 0.5f;
     returnValue += 0.5f;
 
-    ErrorIf(returnValue < 0 || returnValue > 1.0f, "Audio Engine: Oscillator value out of bounds");
+    ErrorIf(returnValue < 0 || returnValue > 1.0f,
+            "Audio Engine: Oscillator value out of bounds");
   }
 
   return returnValue;
 }
 
-//************************************************************************************************
 void Oscillator::SetFrequency(const float frequency)
 {
   mFrequency = frequency;
   mIncrement = ArraySize * mFrequency / cSystemSampleRate;
 }
 
-//************************************************************************************************
 void Oscillator::SetType(const SynthWaveType::Enum newType)
 {
   if (newType == mType)
@@ -612,7 +571,8 @@ void Oscillator::SetType(const SynthWaveType::Enum newType)
   if (mType == SynthWaveType::SineWave)
   {
     for (int i = 0; i < ArraySize; ++i)
-      mWaveValues[i] = 0.99f * Math::Sin(((float)i / (float)ArraySize) * Math::cTwoPi);
+      mWaveValues[i] =
+          0.99f * Math::Sin(((float)i / (float)ArraySize) * Math::cTwoPi);
   }
   else if (mType == SynthWaveType::SawWave)
   {
@@ -660,7 +620,6 @@ void Oscillator::SetType(const SynthWaveType::Enum newType)
   }
 }
 
-//************************************************************************************************
 void Oscillator::SetSquareWavePositiveFraction(const float positiveFraction)
 {
   mSquareWavePositiveFraction = positiveFraction;
@@ -680,31 +639,30 @@ void Oscillator::SetSquareWavePositiveFraction(const float positiveFraction)
   }
 }
 
-//------------------------------------------------------------------------------------- Delay Line
+//Delay Line
 
-//************************************************************************************************
 DelayLine::DelayLine() :
-  mDelaySamplesFractional(100.0f * cSystemSampleRate / 1000.0f),
-  mFeedback(0),
-  mWetLevel(0.5f),
-  mReadIndex(0),
-  mWriteIndex(0),
-  mBufferSize(0),
-  mInterpolatingWetLevel(false)
+    mDelaySamplesFractional(100.0f * cSystemSampleRate / 1000.0f),
+    mFeedback(0),
+    mWetLevel(0.5f),
+    mReadIndex(0),
+    mWriteIndex(0),
+    mBufferSize(0),
+    mInterpolatingWetLevel(false)
 {
   mDelaySamples = (int)mDelaySamplesFractional;
   memset(mBuffersPerChannel, 0, sizeof(float) * cMaxChannels);
 }
 
-//************************************************************************************************
 DelayLine::~DelayLine()
 {
   DestroyBuffers();
 }
 
-//************************************************************************************************
-void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned numberOfChannels,
-  const unsigned bufferSize)
+void DelayLine::ProcessBuffer(const float* input,
+                              float* output,
+                              const unsigned numberOfChannels,
+                              const unsigned bufferSize)
 {
   // If there is no delay, simply copy input into output
   if (mDelaySamplesFractional == 0.0f)
@@ -719,7 +677,8 @@ void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned 
     CreateBuffers(mBufferSize, numberOfChannels);
   }
 
-  for (unsigned frameIndex = 0; frameIndex < bufferSize; frameIndex += numberOfChannels)
+  for (unsigned frameIndex = 0; frameIndex < bufferSize;
+       frameIndex += numberOfChannels)
   {
     for (unsigned channel = 0; channel < numberOfChannels; ++channel)
     {
@@ -727,7 +686,8 @@ void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned 
       float inputSample = input[frameIndex + channel];
       float delayedSample;
 
-      // If delay is less than 1 sample, interpolate between input(n) and input(n-1)
+      // If delay is less than 1 sample, interpolate between input(n) and
+      // input(n-1)
       if (mReadIndex == mWriteIndex && mDelaySamplesFractional < 1.0f)
         delayedSample = inputSample;
       // Otherwise, get delayed sample from buffer
@@ -741,11 +701,13 @@ void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned 
       float delayedSample_1 = mBuffersPerChannel[channel][readIndex_1];
 
       // Interpolate between the two samples
-      delayedSample = delayedSample_1 + ((mDelaySamplesFractional - mDelaySamples) *
-        (delayedSample - delayedSample_1));
+      delayedSample =
+          delayedSample_1 + ((mDelaySamplesFractional - mDelaySamples) *
+                             (delayedSample - delayedSample_1));
 
       // Write input to delay buffer
-      mBuffersPerChannel[channel][mWriteIndex] = inputSample + (mFeedback * delayedSample);
+      mBuffersPerChannel[channel][mWriteIndex] =
+          inputSample + (mFeedback * delayedSample);
 
       // Check if we are interpolating the wet level
       if (mInterpolatingWetLevel)
@@ -755,7 +717,8 @@ void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned 
       }
 
       // Write wet/dry mix to output buffer
-      output[frameIndex + channel] = (mWetLevel * delayedSample) + ((1.0f - mWetLevel) * inputSample);
+      output[frameIndex + channel] =
+          (mWetLevel * delayedSample) + ((1.0f - mWetLevel) * inputSample);
     }
 
     // Done with this frame, increment indexes
@@ -768,7 +731,6 @@ void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned 
   }
 }
 
-//************************************************************************************************
 void DelayLine::SetDelayMSec(float delay)
 {
   mDelaySamplesFractional = delay * cSystemSampleRate / 1000.0f;
@@ -783,7 +745,8 @@ void DelayLine::SetDelayMSec(float delay)
   }
   else if (mDelaySamplesFractional > 0.0f)
   {
-    // this will move the index forward if the delay is smaller, and backward if it is larger
+    // this will move the index forward if the delay is smaller, and backward if
+    // it is larger
     mReadIndex -= delayDifference;
 
     if (mReadIndex >= mBufferSize)
@@ -791,38 +754,33 @@ void DelayLine::SetDelayMSec(float delay)
     else if (mReadIndex < 0)
       mReadIndex += mBufferSize;
 
-    ErrorIf(mReadIndex < 0 || mReadIndex >= mBufferSize, "Error changing read index when setting delay");
+    ErrorIf(mReadIndex < 0 || mReadIndex >= mBufferSize,
+            "Error changing read index when setting delay");
   }
 }
 
-//************************************************************************************************
 float DelayLine::GetDelayMSec()
 {
   return mDelaySamplesFractional / cSystemSampleRate * 1000.0f;
 }
 
-//************************************************************************************************
 void DelayLine::SetFeedback(const float feedbackValue)
 {
   mFeedback = feedbackValue;
-
 }
 
-//************************************************************************************************
 void DelayLine::SetWetLevel(const float wetLevelValue)
 {
   mWetLevel = wetLevelValue;
-
 }
 
-//************************************************************************************************
 void DelayLine::InterpolateWetLevel(const float newValue, const float time)
 {
   mInterpolatingWetLevel = true;
-  WetLevelInterpolator.SetValues(mWetLevel, newValue, (unsigned)(time * cSystemSampleRate));
+  WetLevelInterpolator.SetValues(
+      mWetLevel, newValue, (unsigned)(time * cSystemSampleRate));
 }
 
-//************************************************************************************************
 bool DelayLine::IsDataInBuffer()
 {
   for (unsigned i = 0; i < cMaxChannels; ++i)
@@ -846,7 +804,6 @@ bool DelayLine::IsDataInBuffer()
   return false;
 }
 
-//************************************************************************************************
 void DelayLine::SetMaxDelayMSec(float maxDelay, int numChannels)
 {
   int delaySamples = (int)(maxDelay * cSystemSampleRate / 1000.0f);
@@ -861,7 +818,6 @@ void DelayLine::SetMaxDelayMSec(float maxDelay, int numChannels)
   }
 }
 
-//************************************************************************************************
 void DelayLine::CreateBuffers(int length, int numChannels)
 {
   for (int i = 0; i < numChannels; ++i)
@@ -874,7 +830,6 @@ void DelayLine::CreateBuffers(int length, int numChannels)
   }
 }
 
-//************************************************************************************************
 void DelayLine::DestroyBuffers()
 {
   for (unsigned i = 0; i < cMaxChannels; ++i)
@@ -887,7 +842,6 @@ void DelayLine::DestroyBuffers()
   }
 }
 
-//************************************************************************************************
 void DelayLine::ReallocateBuffers(int newLength)
 {
   if (newLength <= mBufferSize)
@@ -904,9 +858,12 @@ void DelayLine::ReallocateBuffers(int newLength)
     float* newBuffer = new float[newLength];
     memset(newBuffer, 0, sizeof(float) * newLength);
 
-    memcpy(newBuffer + dataStart, mBuffersPerChannel[i] + mReadIndex, sizeof(float) * mBufferSize - mReadIndex);
-    memcpy(newBuffer + dataStart + mBufferSize - mReadIndex, mBuffersPerChannel[i] + mWriteIndex,
-      sizeof(float) * mWriteIndex);
+    memcpy(newBuffer + dataStart,
+           mBuffersPerChannel[i] + mReadIndex,
+           sizeof(float) * mBufferSize - mReadIndex);
+    memcpy(newBuffer + dataStart + mBufferSize - mReadIndex,
+           mBuffersPerChannel[i] + mWriteIndex,
+           sizeof(float) * mWriteIndex);
 
     delete[] mBuffersPerChannel[i];
     mBuffersPerChannel[i] = newBuffer;
@@ -914,32 +871,33 @@ void DelayLine::ReallocateBuffers(int newLength)
 
   mWriteIndex = 0;
   mReadIndex = newLength - mDelaySamples;
-  ErrorIf(mReadIndex < 1, "Read index bad position when reallocating buffers for delay line");
+  ErrorIf(mReadIndex < 1,
+          "Read index bad position when reallocating buffers for delay line");
 
   mBufferSize = newLength;
 }
 
-//------------------------------------------------------------------------------ Envelope Detector
+//Envelope Detector
 
-//************************************************************************************************
 EnvelopeDetector::EnvelopeDetector() :
-  mAttackTimeMSec(0.0f),
-  mReleaseTimeMSec(0.0f),
-  mAttackTime(0.0f),
-  mReleaseTime(0.0f),
-  mSampleRate((float)cSystemSampleRate),
-  mEnvelope(0.0f),
-  mDetectMode(DetectModes::Peak),
-  mSample(0),
-  mAnalogTC(false),
-  mLogDetector(false)
+    mAttackTimeMSec(0.0f),
+    mReleaseTimeMSec(0.0f),
+    mAttackTime(0.0f),
+    mReleaseTime(0.0f),
+    mSampleRate((float)cSystemSampleRate),
+    mEnvelope(0.0f),
+    mDetectMode(DetectModes::Peak),
+    mSample(0),
+    mAnalogTC(false),
+    mLogDetector(false)
 {
-
 }
 
-//************************************************************************************************
-void EnvelopeDetector::Initialize(const float attackMSec, const float releaseMSec, const bool analogTC,
-  const DetectModes mode, const bool logDetector)
+void EnvelopeDetector::Initialize(const float attackMSec,
+                                  const float releaseMSec,
+                                  const bool analogTC,
+                                  const DetectModes mode,
+                                  const bool logDetector)
 {
   mEnvelope = 0.0f;
   mAnalogTC = analogTC;
@@ -952,7 +910,6 @@ void EnvelopeDetector::Initialize(const float attackMSec, const float releaseMSe
   SetReleaseTime(releaseMSec);
 }
 
-//************************************************************************************************
 void EnvelopeDetector::SetTCModeAnalog(const bool analogTC)
 {
   mAnalogTC = analogTC;
@@ -960,7 +917,6 @@ void EnvelopeDetector::SetTCModeAnalog(const bool analogTC)
   SetReleaseTime(mReleaseTimeMSec);
 }
 
-//************************************************************************************************
 void EnvelopeDetector::SetAttackTime(const float attackMSec)
 {
   mAttackTimeMSec = attackMSec;
@@ -971,7 +927,6 @@ void EnvelopeDetector::SetAttackTime(const float attackMSec)
     mAttackTime = Math::Exp(DIGITAL_TC / (attackMSec * mSampleRate * 0.001f));
 }
 
-//************************************************************************************************
 void EnvelopeDetector::SetReleaseTime(const float releaseMSec)
 {
   mReleaseTimeMSec = releaseMSec;
@@ -982,7 +937,6 @@ void EnvelopeDetector::SetReleaseTime(const float releaseMSec)
     mReleaseTime = Math::Exp(DIGITAL_TC / (releaseMSec * mSampleRate * 0.001f));
 }
 
-//************************************************************************************************
 void EnvelopeDetector::SetDetectMode(const DetectModes mode)
 {
   mAnalogTC = mode;
@@ -991,14 +945,12 @@ void EnvelopeDetector::SetDetectMode(const DetectModes mode)
   SetReleaseTime(mReleaseTimeMSec);
 }
 
-//************************************************************************************************
 void EnvelopeDetector::Reset()
 {
   mEnvelope = 0.0f;
   mSample = 0;
 }
 
-//************************************************************************************************
 float EnvelopeDetector::Detect(float input)
 {
   input = Math::Abs(input);
@@ -1042,20 +994,19 @@ float EnvelopeDetector::Detect(float input)
   return mEnvelope;
 }
 
-//---------------------------------------------------------------------- Dynamics Processor Filter
+//Dynamics Processor Filter
 
-//************************************************************************************************
 DynamicsProcessor::DynamicsProcessor() :
-  mInputGainDB(0),
-  mThresholdDB(0),
-  mAttackMSec(20),
-  mReleaseMSec(1000),
-  mRatio(1),
-  mOutputGainDB(0),
-  mKneeWidth(0),
-  mHalfKnee(0),
-  mProcessorType(Compressor),
-  mAnalog(true)
+    mInputGainDB(0),
+    mThresholdDB(0),
+    mAttackMSec(20),
+    mReleaseMSec(1000),
+    mRatio(1),
+    mOutputGainDB(0),
+    mKneeWidth(0),
+    mHalfKnee(0),
+    mProcessorType(Compressor),
+    mAnalog(true)
 {
   mHalfKnee = mKneeWidth * 0.5f;
 
@@ -1064,34 +1015,43 @@ DynamicsProcessor::DynamicsProcessor() :
   mExpanderRatio = mCompressorRatio - 1.0f;
 
   for (unsigned i = 0; i < cMaxChannels; ++i)
-    Detectors[i].Initialize(mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
+    Detectors[i].Initialize(
+        mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
 }
 
-//************************************************************************************************
-DynamicsProcessor::DynamicsProcessor(const float inputGain, const float threshold, const float attack,
-  const float release, const float ratio, const float outputGain, const float knee, const ProcessorTypes type) :
-  mInputGainDB(inputGain),
-  mThresholdDB(threshold),
-  mAttackMSec(attack),
-  mReleaseMSec(release),
-  mRatio(ratio),
-  mOutputGainDB(outputGain),
-  mKneeWidth(knee),
-  mHalfKnee(0),
-  mProcessorType(type),
-  mAnalog(true)
+DynamicsProcessor::DynamicsProcessor(const float inputGain,
+                                     const float threshold,
+                                     const float attack,
+                                     const float release,
+                                     const float ratio,
+                                     const float outputGain,
+                                     const float knee,
+                                     const ProcessorTypes type) :
+    mInputGainDB(inputGain),
+    mThresholdDB(threshold),
+    mAttackMSec(attack),
+    mReleaseMSec(release),
+    mRatio(ratio),
+    mOutputGainDB(outputGain),
+    mKneeWidth(knee),
+    mHalfKnee(0),
+    mProcessorType(type),
+    mAnalog(true)
 {
   mOutputGain = Math::Pow(10.0f, mOutputGainDB / 20.0f);
   mCompressorRatio = 1.0f / mRatio;
   mExpanderRatio = mCompressorRatio - 1.0f;
 
   for (unsigned i = 0; i < cMaxChannels; ++i)
-    Detectors[i].Initialize(mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
+    Detectors[i].Initialize(
+        mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
 }
 
-//************************************************************************************************
-void DynamicsProcessor::ProcessBuffer(const float *input, const float *envelopeInput, float *output,
-  const unsigned numChannels, const unsigned bufferSize)
+void DynamicsProcessor::ProcessBuffer(const float* input,
+                                      const float* envelopeInput,
+                                      float* output,
+                                      const unsigned numChannels,
+                                      const unsigned bufferSize)
 {
   float gain;
 
@@ -1100,16 +1060,17 @@ void DynamicsProcessor::ProcessBuffer(const float *input, const float *envelopeI
     for (unsigned channel = 0; channel < numChannels; ++channel)
     {
       if (mProcessorType == Compressor || mProcessorType == Limiter)
-        gain = CompressorGain(Detectors[channel].Detect(envelopeInput[i + channel]));
+        gain = CompressorGain(
+            Detectors[channel].Detect(envelopeInput[i + channel]));
       else
-        gain = ExpanderGain(Detectors[channel].Detect(envelopeInput[i + channel]));
+        gain =
+            ExpanderGain(Detectors[channel].Detect(envelopeInput[i + channel]));
 
       output[i + channel] = gain * input[i + channel] * mOutputGain;
     }
   }
 }
 
-//************************************************************************************************
 float DynamicsProcessor::CompressorGain(const float detectorValue)
 {
   float slope;
@@ -1120,8 +1081,8 @@ float DynamicsProcessor::CompressorGain(const float detectorValue)
     slope = mCompressorRatio;
 
   // Soft-knee with detection value in range?
-  if (mKneeWidth > 0 && detectorValue > (mThresholdDB - mHalfKnee)
-    && detectorValue < (mThresholdDB + mHalfKnee))
+  if (mKneeWidth > 0 && detectorValue > (mThresholdDB - mHalfKnee) &&
+      detectorValue < (mThresholdDB + mHalfKnee))
   {
     // Set up for Lagrange interpolation
     double x[2], y[2];
@@ -1146,7 +1107,6 @@ float DynamicsProcessor::CompressorGain(const float detectorValue)
   return Math::Pow(10.0f, gain / 20.0f);
 }
 
-//************************************************************************************************
 float DynamicsProcessor::ExpanderGain(const float detectorValue)
 {
   float slope;
@@ -1157,8 +1117,8 @@ float DynamicsProcessor::ExpanderGain(const float detectorValue)
     slope = mExpanderRatio;
 
   // Soft-knee with detection value in range?
-  if (mKneeWidth > 0 && detectorValue > (mThresholdDB - mHalfKnee)
-    && detectorValue < (mThresholdDB + mHalfKnee))
+  if (mKneeWidth > 0 && detectorValue > (mThresholdDB - mHalfKnee) &&
+      detectorValue < (mThresholdDB + mHalfKnee))
   {
     // Set up for Lagrange interpolation
     double x[2], y[2];
@@ -1183,7 +1143,6 @@ float DynamicsProcessor::ExpanderGain(const float detectorValue)
   return Math::Pow(10.0f, gain / 20.0f);
 }
 
-//************************************************************************************************
 void DynamicsProcessor::SetAttackMSec(const float attack)
 {
   mAttackMSec = attack;
@@ -1192,7 +1151,6 @@ void DynamicsProcessor::SetAttackMSec(const float attack)
     Detectors[i].SetAttackTime(attack);
 }
 
-//************************************************************************************************
 void DynamicsProcessor::SetReleaseMSec(const float release)
 {
   mReleaseMSec = release;
@@ -1201,7 +1159,6 @@ void DynamicsProcessor::SetReleaseMSec(const float release)
     Detectors[i].SetReleaseTime(release);
 }
 
-//************************************************************************************************
 void DynamicsProcessor::SetRatio(const float ratio)
 {
   mRatio = ratio;
@@ -1217,22 +1174,22 @@ void DynamicsProcessor::SetRatio(const float ratio)
   }
 }
 
-//************************************************************************************************
 void DynamicsProcessor::SetOutputGain(const float gainDB)
 {
   mOutputGainDB = gainDB;
   mOutputGain = Math::Pow(10.0f, mOutputGainDB / 20.0f);
 }
 
-//************************************************************************************************
 void DynamicsProcessor::SetKneeWidth(const float kneeWidth)
 {
   mKneeWidth = kneeWidth;
   mHalfKnee = kneeWidth * 0.5f;
 }
 
-//************************************************************************************************
-double DynamicsProcessor::LagrangeInterpolation(double *x, double *y, int howMany, double xBar)
+double DynamicsProcessor::LagrangeInterpolation(double* x,
+                                                double* y,
+                                                int howMany,
+                                                double xBar)
 {
   double interpolatedValue(0.0f);
   double tempValue;
@@ -1253,9 +1210,8 @@ double DynamicsProcessor::LagrangeInterpolation(double *x, double *y, int howMan
   return interpolatedValue;
 }
 
-//------------------------------------------------------------------------------- Equalizer Filter
+//Equalizer Filter
 
-//************************************************************************************************
 Equalizer::Equalizer()
 {
   for (int i = 0; i < EqualizerBands::Count; ++i)
@@ -1264,9 +1220,11 @@ Equalizer::Equalizer()
   SetFilterData();
 }
 
-//************************************************************************************************
-Equalizer::Equalizer(const float below80Hz, const float at150Hz, const float at600Hz,
-  const float at2500Hz, const float above5000Hz)
+Equalizer::Equalizer(const float below80Hz,
+                     const float at150Hz,
+                     const float at600Hz,
+                     const float at2500Hz,
+                     const float above5000Hz)
 {
   mBandGains[EqualizerBands::Below80] = below80Hz;
   mBandGains[EqualizerBands::At150] = at150Hz;
@@ -1277,8 +1235,7 @@ Equalizer::Equalizer(const float below80Hz, const float at150Hz, const float at6
   SetFilterData();
 }
 
-//************************************************************************************************
-Equalizer::Equalizer(const Equalizer& copy) 
+Equalizer::Equalizer(const Equalizer& copy)
 {
   memcpy(mBandGains, copy.mBandGains, sizeof(float) * EqualizerBands::Count);
 
@@ -1288,33 +1245,40 @@ Equalizer::Equalizer(const Equalizer& copy)
   if (!other.LowPassInterpolator.Finished())
   {
     LowPassInterpolator.SetValues(other.LowPassInterpolator.GetStartValue(),
-      other.LowPassInterpolator.GetEndValue(), other.LowPassInterpolator.GetTotalFrames());
-    LowPassInterpolator.JumpForward(other.LowPassInterpolator.GetCurrentFrame());
+                                  other.LowPassInterpolator.GetEndValue(),
+                                  other.LowPassInterpolator.GetTotalFrames());
+    LowPassInterpolator.JumpForward(
+        other.LowPassInterpolator.GetCurrentFrame());
     HighPassInterpolator.SetValues(other.HighPassInterpolator.GetStartValue(),
-      other.HighPassInterpolator.GetEndValue(), other.HighPassInterpolator.GetTotalFrames());
-    HighPassInterpolator.JumpForward(other.HighPassInterpolator.GetCurrentFrame());
+                                   other.HighPassInterpolator.GetEndValue(),
+                                   other.HighPassInterpolator.GetTotalFrames());
+    HighPassInterpolator.JumpForward(
+        other.HighPassInterpolator.GetCurrentFrame());
     Band1Interpolator.SetValues(other.Band1Interpolator.GetStartValue(),
-      other.Band1Interpolator.GetEndValue(), other.Band1Interpolator.GetTotalFrames());
+                                other.Band1Interpolator.GetEndValue(),
+                                other.Band1Interpolator.GetTotalFrames());
     Band1Interpolator.JumpForward(other.Band1Interpolator.GetCurrentFrame());
     Band2Interpolator.SetValues(other.Band2Interpolator.GetStartValue(),
-      other.Band2Interpolator.GetEndValue(), other.Band2Interpolator.GetTotalFrames());
+                                other.Band2Interpolator.GetEndValue(),
+                                other.Band2Interpolator.GetTotalFrames());
     Band2Interpolator.JumpForward(other.Band2Interpolator.GetCurrentFrame());
     Band3Interpolator.SetValues(other.Band3Interpolator.GetStartValue(),
-      other.Band3Interpolator.GetEndValue(), other.Band3Interpolator.GetTotalFrames());
+                                other.Band3Interpolator.GetEndValue(),
+                                other.Band3Interpolator.GetTotalFrames());
     Band3Interpolator.JumpForward(other.Band3Interpolator.GetCurrentFrame());
   }
 }
 
-//************************************************************************************************
 Equalizer::Equalizer(float* values)
 {
   memcpy(mBandGains, values, sizeof(float) * EqualizerBands::Count);
   SetFilterData();
 }
 
-//************************************************************************************************
-void Equalizer::ProcessBuffer(const float* input, float* output, const unsigned numChannels,
-  const unsigned bufferSize)
+void Equalizer::ProcessBuffer(const float* input,
+                              float* output,
+                              const unsigned numChannels,
+                              const unsigned bufferSize)
 {
   Zero::Array<float> resultSamples(numChannels);
 
@@ -1352,36 +1316,37 @@ void Equalizer::ProcessBuffer(const float* input, float* output, const unsigned 
   }
 }
 
-//************************************************************************************************
 float Equalizer::GetBandGain(EqualizerBands::Enum whichBand)
 {
   return mBandGains[whichBand];
 }
 
-//************************************************************************************************
 void Equalizer::SetBandGain(EqualizerBands::Enum whichBand, float gain)
 {
   mBandGains[whichBand] = gain;
 }
 
-//************************************************************************************************
 void Equalizer::InterpolateBands(float* gainValues, float timeToInterpolate)
 {
   unsigned frames = (unsigned)(timeToInterpolate * cSystemSampleRate);
 
-  LowPassInterpolator.SetValues(mBandGains[EqualizerBands::Below80], 
-    gainValues[EqualizerBands::Below80], frames);
-  Band1Interpolator.SetValues(mBandGains[EqualizerBands::At150], 
-    gainValues[EqualizerBands::At150], frames);
-  Band2Interpolator.SetValues(mBandGains[EqualizerBands::At600], 
-    gainValues[EqualizerBands::At600], frames);
-  Band3Interpolator.SetValues(mBandGains[EqualizerBands::At2500], 
-    gainValues[EqualizerBands::At2500], frames);
-  HighPassInterpolator.SetValues(mBandGains[EqualizerBands::Above5000], 
-    gainValues[EqualizerBands::Above5000], frames);
+  LowPassInterpolator.SetValues(mBandGains[EqualizerBands::Below80],
+                                gainValues[EqualizerBands::Below80],
+                                frames);
+  Band1Interpolator.SetValues(mBandGains[EqualizerBands::At150],
+                              gainValues[EqualizerBands::At150],
+                              frames);
+  Band2Interpolator.SetValues(mBandGains[EqualizerBands::At600],
+                              gainValues[EqualizerBands::At600],
+                              frames);
+  Band3Interpolator.SetValues(mBandGains[EqualizerBands::At2500],
+                              gainValues[EqualizerBands::At2500],
+                              frames);
+  HighPassInterpolator.SetValues(mBandGains[EqualizerBands::Above5000],
+                                 gainValues[EqualizerBands::Above5000],
+                                 frames);
 }
 
-//************************************************************************************************
 void Equalizer::MergeWith(Equalizer& otherFilter)
 {
   LowPass.MergeWith(otherFilter.LowPass);
@@ -1391,7 +1356,6 @@ void Equalizer::MergeWith(Equalizer& otherFilter)
   Band3.MergeWith(otherFilter.Band3);
 }
 
-//************************************************************************************************
 void Equalizer::SetFilterData()
 {
   LowPass.SetCutoffFrequency(79.62f);
@@ -1404,23 +1368,20 @@ void Equalizer::SetFilterData()
   Band3.SetQuality(0.669f);
 }
 
-//------------------------------------------------------------------------------------ Reverb Data
+//Reverb Data
 
-//************************************************************************************************
 ReverbData::ReverbData() :
-  PreDelay(0.5f, cSystemSampleRate),
-  InputAP_1(0.5f, cSystemSampleRate),
-  InputAP_2(0.5f, cSystemSampleRate),
-  Comb_1(0.5f, cSystemSampleRate),
-  Comb_2(0.5f, cSystemSampleRate),
-  LPComb_1(0.5f, cSystemSampleRate),
-  LPComb_2(0.5f, cSystemSampleRate),
-  OutputAP(0.5f, cSystemSampleRate)
+    PreDelay(0.5f, cSystemSampleRate),
+    InputAP_1(0.5f, cSystemSampleRate),
+    InputAP_2(0.5f, cSystemSampleRate),
+    Comb_1(0.5f, cSystemSampleRate),
+    Comb_2(0.5f, cSystemSampleRate),
+    LPComb_1(0.5f, cSystemSampleRate),
+    LPComb_2(0.5f, cSystemSampleRate),
+    OutputAP(0.5f, cSystemSampleRate)
 {
-
 }
 
-//************************************************************************************************
 void ReverbData::Initialize(const float lpGain)
 {
   InputLP.Initialize();
@@ -1449,7 +1410,6 @@ void ReverbData::Initialize(const float lpGain)
   OutputAP.ResetDelay();
 }
 
-//************************************************************************************************
 float ReverbData::ProcessSample(const float input)
 {
   float result;
@@ -1468,28 +1428,27 @@ float ReverbData::ProcessSample(const float input)
   LPComb_1.ProcessAudio(result, &lpcomb1result);
   LPComb_2.ProcessAudio(result, &lpcomb2result);
 
-  DampingLP.ProcessAudio(0.15f * (comb1result - comb2result + lpcomb1result - lpcomb2result), &result);
+  DampingLP.ProcessAudio(
+      0.15f * (comb1result - comb2result + lpcomb1result - lpcomb2result),
+      &result);
 
   OutputAP.ProcessAudio(result, &result);
 
   return result;
 }
 
-//----------------------------------------------------------------------------------------- Reverb
+//Reverb
 
-//************************************************************************************************
-Reverb::Reverb() :
-  TimeMSec(1000.0f),
-  LPgain(0.5f),
-  WetValue(0.5f)
+Reverb::Reverb() : TimeMSec(1000.0f), LPgain(0.5f), WetValue(0.5f)
 {
   Initialize();
   SetTime(TimeMSec);
 }
 
-//************************************************************************************************
-bool Reverb::ProcessBuffer(const float *input, float *output, const unsigned numChannels,
-  const unsigned bufferSize)
+bool Reverb::ProcessBuffer(const float* input,
+                           float* output,
+                           const unsigned numChannels,
+                           const unsigned bufferSize)
 {
   bool hasOutput(false);
   for (unsigned i = 0; i < bufferSize; i += numChannels)
@@ -1500,10 +1459,13 @@ bool Reverb::ProcessBuffer(const float *input, float *output, const unsigned num
     // Only process if reverb is turned on
     if (WetValue > 0)
     {
-      for (unsigned channel = 0; channel < numChannels && channel < ChannelCount; ++channel)
+      for (unsigned channel = 0;
+           channel < numChannels && channel < ChannelCount;
+           ++channel)
       {
-        output[i + channel] = ((1.0f - WetValue) * input[i + channel])
-          + (WetValue * Data[channel].ProcessSample(input[i + channel]));
+        output[i + channel] =
+            ((1.0f - WetValue) * input[i + channel]) +
+            (WetValue * Data[channel].ProcessSample(input[i + channel]));
 
         if (Math::Abs(output[i + channel]) > 0.001f)
           hasOutput = true;
@@ -1511,7 +1473,7 @@ bool Reverb::ProcessBuffer(const float *input, float *output, const unsigned num
     }
     else
     {
-      // If not interpolating, copy the rest of the buffer 
+      // If not interpolating, copy the rest of the buffer
       if (WetValueInterpolator.Finished())
       {
         memcpy(output, input, sizeof(float) * (bufferSize - i));
@@ -1526,7 +1488,6 @@ bool Reverb::ProcessBuffer(const float *input, float *output, const unsigned num
   return hasOutput;
 }
 
-//************************************************************************************************
 void Reverb::SetTime(const float timeInMSec)
 {
   TimeMSec = timeInMSec;
@@ -1540,19 +1501,17 @@ void Reverb::SetTime(const float timeInMSec)
   }
 }
 
-//************************************************************************************************
 void Reverb::SetWetLevel(const float wetLevel)
 {
   WetValue = wetLevel;
 }
 
-//************************************************************************************************
 void Reverb::InterpolateWetLevel(const float newWetLevel, const float time)
 {
-  WetValueInterpolator.SetValues(WetValue, newWetLevel, (unsigned)(time * cSystemSampleRate));
+  WetValueInterpolator.SetValues(
+      WetValue, newWetLevel, (unsigned)(time * cSystemSampleRate));
 }
 
-//************************************************************************************************
 void Reverb::Initialize()
 {
   for (unsigned i = 0; i < ChannelCount; ++i)
@@ -1604,34 +1563,29 @@ void Reverb::Initialize()
   Data[6].LPComb_2.SetDelayMSec(42.58f);
 }
 
-//--------------------------------------------------------------------------------- Complex Number
+//Complex Number
 
-//************************************************************************************************
 ComplexNumber ComplexNumber::operator*(const float constant) const
 {
   return ComplexNumber(mReal * constant, mImaginary * constant);
 }
 
-//************************************************************************************************
 ComplexNumber ComplexNumber::operator*(const ComplexNumber& number) const
 {
   return ComplexNumber(mReal * number.mReal - mImaginary * number.mImaginary,
-    mReal * number.mImaginary + mImaginary * number.mReal);
+                       mReal * number.mImaginary + mImaginary * number.mReal);
 }
 
-//************************************************************************************************
 ComplexNumber ComplexNumber::operator+(const ComplexNumber& number) const
 {
   return ComplexNumber(mReal + number.mReal, mImaginary + number.mImaginary);
 }
 
-//************************************************************************************************
 ComplexNumber ComplexNumber::operator-(const ComplexNumber& number) const
 {
   return ComplexNumber(mReal - number.mReal, mImaginary - number.mImaginary);
 }
 
-//************************************************************************************************
 ComplexNumber& ComplexNumber::operator+=(const ComplexNumber& number)
 {
   mReal += number.mReal;
@@ -1639,14 +1593,12 @@ ComplexNumber& ComplexNumber::operator+=(const ComplexNumber& number)
   return *this;
 }
 
-//************************************************************************************************
 void ComplexNumber::Set(float real, float imaginary)
 {
   mReal = real;
   mImaginary = imaginary;
 }
 
-//************************************************************************************************
 float ComplexNumber::Magnitude() const
 {
   if (mReal > 0 || mImaginary > 0)
@@ -1655,22 +1607,21 @@ float ComplexNumber::Magnitude() const
     return 0.0f;
 }
 
-//************************************************************************************************
 float ComplexNumber::MagnitudeSquared() const
 {
   return mReal * mReal + mImaginary * mImaginary;
 }
 
-//------------------------------------------------------------------------- Fast Fourier Transform
+//Fourier Transform
 
-//************************************************************************************************
 void FFT::Forward(ComplexNumber* samples, const int numberOfSamples)
 {
   DoFFT(samples, numberOfSamples, true);
 }
 
-//************************************************************************************************
-void FFT::Forward(const float* input, ComplexNumber* result, const int numberOfSamples)
+void FFT::Forward(const float* input,
+                  ComplexNumber* result,
+                  const int numberOfSamples)
 {
   for (int i = 0; i < numberOfSamples; ++i)
     result[i].Set(input[i], 0.0f);
@@ -1678,7 +1629,6 @@ void FFT::Forward(const float* input, ComplexNumber* result, const int numberOfS
   Forward(result, numberOfSamples);
 }
 
-//************************************************************************************************
 void FFT::Backward(ComplexNumber* samples, const int numberOfSamples)
 {
   DoFFT(samples, numberOfSamples, false);
@@ -1691,7 +1641,6 @@ void FFT::Backward(ComplexNumber* samples, const int numberOfSamples)
   }
 }
 
-//************************************************************************************************
 void SwapFloats(float& first, float& second)
 {
   float temp = first;
@@ -1699,8 +1648,9 @@ void SwapFloats(float& first, float& second)
   second = temp;
 }
 
-//************************************************************************************************
-void FFT::DoFFT(ComplexNumber* samples, const int numberOfSamples, const bool forward)
+void FFT::DoFFT(ComplexNumber* samples,
+                const int numberOfSamples,
+                const bool forward)
 {
   int count(1), numBits(0);
   while (count < numberOfSamples)
@@ -1709,7 +1659,7 @@ void FFT::DoFFT(ComplexNumber* samples, const int numberOfSamples, const bool fo
     ++numBits;
   }
 
-  static int* reverseTable[32] = { nullptr };
+  static int* reverseTable[32] = {nullptr};
   int* table = reverseTable[numBits];
   if (!table)
   {
@@ -1775,9 +1725,8 @@ void FFT::DoFFT(ComplexNumber* samples, const int numberOfSamples, const bool fo
   }
 }
 
-//--------------------------------------------------------------- Fast Fourier Transform Convolver
+//Transform Convolver
 
-//************************************************************************************************
 int NextPowerOf2(const int& value)
 {
   int nextPowerOf2 = 1;
@@ -1787,35 +1736,34 @@ int NextPowerOf2(const int& value)
   return nextPowerOf2;
 }
 
-//************************************************************************************************
 FFTConvolver::FFTConvolver() :
-  mBlockSize(0),
-  mSegmentCount(0),
-  mBufferPosition(0),
-  mCurrentSegment(0)
+    mBlockSize(0),
+    mSegmentCount(0),
+    mBufferPosition(0),
+    mCurrentSegment(0)
 {
-
 }
 
-//************************************************************************************************
 FFTConvolver::~FFTConvolver()
 {
   Reset();
 }
 
-//************************************************************************************************
-bool FFTConvolver::Initialize(int blockSize, const float* impulseResponse, int irLength)
+bool FFTConvolver::Initialize(int blockSize,
+                              const float* impulseResponse,
+                              int irLength)
 {
   Reset();
 
-  //if (blockSize == 0)
+  // if (blockSize == 0)
   //  return false;
 
   //// Remove zeros at end of impulse response
-  //while (irLength > 0 && Math::Abs(impulseResponse[irLength - 1]) < 0.000001f)
+  // while (irLength > 0 && Math::Abs(impulseResponse[irLength - 1]) <
+  // 0.000001f)
   //  --irLength;
 
-  //if (irLength == 0)
+  // if (irLength == 0)
   //  return true;
 
   mBlockSize = NextPowerOf2(blockSize);
@@ -1837,7 +1785,9 @@ bool FFTConvolver::Initialize(int blockSize, const float* impulseResponse, int i
     else
       sizeToProcess = remaining;
     mSegmentsIR.PushBack(ComplexListType(sizeToProcess));
-    FFT::Forward(impulseResponse + (i * mBlockSize), mSegmentsIR.Back().Data(), sizeToProcess);
+    FFT::Forward(impulseResponse + (i * mBlockSize),
+                 mSegmentsIR.Back().Data(),
+                 sizeToProcess);
   }
 
   mConvolvedSamples.Resize(mBlockSize);
@@ -1846,7 +1796,6 @@ bool FFTConvolver::Initialize(int blockSize, const float* impulseResponse, int i
   return true;
 }
 
-//************************************************************************************************
 void FFTConvolver::ProcessBuffer(const float* input, float* output, int length)
 {
   if (mSegmentCount == 0)
@@ -1858,14 +1807,19 @@ void FFTConvolver::ProcessBuffer(const float* input, float* output, int length)
   int samplesProcessed = 0;
   while (samplesProcessed < length)
   {
-    // Process either the rest of the input or the amount that will fit in the stored input buffer
-    int processing = Math::Min(length - samplesProcessed, mBlockSize - mBufferPosition);
+    // Process either the rest of the input or the amount that will fit in the
+    // stored input buffer
+    int processing =
+        Math::Min(length - samplesProcessed, mBlockSize - mBufferPosition);
     // Copy input samples into the stored buffer
-    memcpy(mStoredInputBuffer.Data() + mBufferPosition, input + samplesProcessed,
-      sizeof(float) * processing);
+    memcpy(mStoredInputBuffer.Data() + mBufferPosition,
+           input + samplesProcessed,
+           sizeof(float) * processing);
 
     // Forward FFT
-    FFT::Forward(mStoredInputBuffer.Data(), mSegments[mCurrentSegment].Data(), mBlockSize);
+    FFT::Forward(mStoredInputBuffer.Data(),
+                 mSegments[mCurrentSegment].Data(),
+                 mBlockSize);
 
     // Complex multiplication
     if (mBufferPosition == 0)
@@ -1885,8 +1839,9 @@ void FFTConvolver::ProcessBuffer(const float* input, float* output, int length)
 
     // Add overlap
     for (int i = 0; i < processing; ++i)
-      output[samplesProcessed + i] = mConvolvedSamples[mBufferPosition + i].mReal +
-      mOverlap[mBufferPosition + i].mReal;
+      output[samplesProcessed + i] =
+          mConvolvedSamples[mBufferPosition + i].mReal +
+          mOverlap[mBufferPosition + i].mReal;
 
     // If input buffer full, go to next block
     mBufferPosition += processing;
@@ -1895,8 +1850,9 @@ void FFTConvolver::ProcessBuffer(const float* input, float* output, int length)
       mBufferPosition = 0;
 
       // Save the overlap
-      memcpy(mOverlap.Data(), mConvolvedSamples.Data() + mBlockSize,
-        sizeof(ComplexNumber) * mBlockSize);
+      memcpy(mOverlap.Data(),
+             mConvolvedSamples.Data() + mBlockSize,
+             sizeof(ComplexNumber) * mBlockSize);
 
       // Update current segment
       --mCurrentSegment;
@@ -1908,7 +1864,6 @@ void FFTConvolver::ProcessBuffer(const float* input, float* output, int length)
   }
 }
 
-//************************************************************************************************
 void FFTConvolver::Reset()
 {
   mBlockSize = 0;
@@ -1923,39 +1878,34 @@ void FFTConvolver::Reset()
   mOverlap.Clear();
 }
 
-//---------------------------------------------------------------------------------- ADSR envelope
+//ADSR envelope
 
-//************************************************************************************************
 ADSR::ADSR() :
-  mDelayTime(0.0f),
-  mAttackTime(0.0f),
-  mDecayTime(0.0f),
-  mSustainTime(0.0f),
-  mSustainLevel(0.0f),
-  mReleaseTime(0.0f),
-  mCurrentTime(0.0f),
-  mCurrentState(DelayState),
-  mLastAmplitude(0.0f)
+    mDelayTime(0.0f),
+    mAttackTime(0.0f),
+    mDecayTime(0.0f),
+    mSustainTime(0.0f),
+    mSustainLevel(0.0f),
+    mReleaseTime(0.0f),
+    mCurrentTime(0.0f),
+    mCurrentState(DelayState),
+    mLastAmplitude(0.0f)
 {
-
 }
 
-//************************************************************************************************
 ADSR::ADSR(const ADSR& copy) :
-  mDelayTime(copy.mDelayTime),
-  mAttackTime(copy.mAttackTime),
-  mDecayTime(copy.mDecayTime),
-  mSustainTime(copy.mSustainTime),
-  mSustainLevel(copy.mSustainLevel),
-  mReleaseTime(copy.mReleaseTime),
-  mCurrentTime(copy.mCurrentTime),
-  mCurrentState(copy.mCurrentState),
-  mLastAmplitude(copy.mLastAmplitude)
+    mDelayTime(copy.mDelayTime),
+    mAttackTime(copy.mAttackTime),
+    mDecayTime(copy.mDecayTime),
+    mSustainTime(copy.mSustainTime),
+    mSustainLevel(copy.mSustainLevel),
+    mReleaseTime(copy.mReleaseTime),
+    mCurrentTime(copy.mCurrentTime),
+    mCurrentState(copy.mCurrentState),
+    mLastAmplitude(copy.mLastAmplitude)
 {
-
 }
 
-//************************************************************************************************
 void ADSR::SetValues(const EnvelopeSettings* settings)
 {
   mDelayTime = settings->mDelayTime;
@@ -1972,7 +1922,6 @@ void ADSR::SetValues(const EnvelopeSettings* settings)
   mCurrentState = DelayState;
 }
 
-//************************************************************************************************
 float ADSR::operator()()
 {
   float amplitude(0.0f);
@@ -2035,14 +1984,14 @@ float ADSR::operator()()
   return amplitude;
 }
 
-//************************************************************************************************
 void ADSR::Release()
 {
   // If currently releasing, do nothing
   if (mCurrentState == ReleaseState)
     return;
 
-  // If current amplitude is not at the sustain level, reset the sustain level so release is smooth
+  // If current amplitude is not at the sustain level, reset the sustain level
+  // so release is smooth
   if (mCurrentState != SustainState)
     mSustainLevel = mLastAmplitude;
 
@@ -2050,33 +1999,29 @@ void ADSR::Release()
   mCurrentState = ReleaseState;
 }
 
-//************************************************************************************************
 bool ADSR::IsFinished()
 {
   return mCurrentState == OffState;
 }
 
-//------------------------------------------------------------------ Frequency Modulation Operator
+//Modulation Operator
 
-//************************************************************************************************
 FMOperator::FMOperator() :
-  mFrequency(0.0f),
-  mVolume(0.0f),
-  mPitchOffset(0.0f),
-  mTime(0.0f)
+    mFrequency(0.0f),
+    mVolume(0.0f),
+    mPitchOffset(0.0f),
+    mTime(0.0f)
 {
-
 }
 
-//************************************************************************************************
-//void FMOperator::SetValues(float frequency, float volume, EnvelopeSettings& envelope)
+// void FMOperator::SetValues(float frequency, float volume, EnvelopeSettings&
+// envelope)
 //{
 //  mFrequency = frequency;
 //  mVolume = volume;
 //  Envelope.SetValues(envelope);
 //}
 
-//************************************************************************************************
 void FMOperator::SetOffsetPitch(const float cents)
 {
   if (cents == 0)
@@ -2085,10 +2030,10 @@ void FMOperator::SetOffsetPitch(const float cents)
     mPitchOffset = Math::Pow(2.0f, cents / 1200.0f);
 }
 
-//************************************************************************************************
 float FMOperator::operator()(const float phi)
 {
-  float value = (mVolume/* * Envelope()*/)* Math::Sin((Math::cTwoPi * mFrequency * (float)mTime) + phi);
+  float value = (mVolume /* * Envelope()*/) *
+                Math::Sin((Math::cTwoPi * mFrequency * (float)mTime) + phi);
 
   if (mPitchOffset != 0.0f)
     mTime += cSystemTimeIncrement * mPitchOffset;

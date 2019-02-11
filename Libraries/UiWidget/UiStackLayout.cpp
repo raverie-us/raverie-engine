@@ -1,18 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
 Axis::Enum GetAxis(UiStackLayoutDirection::Enum direction)
 {
-  switch(direction)
+  switch (direction)
   {
   case UiStackLayoutDirection::TopToBottom:
   case UiStackLayoutDirection::BottomToTop:
@@ -27,10 +21,9 @@ Axis::Enum GetAxis(UiStackLayoutDirection::Enum direction)
   }
 }
 
-//******************************************************************************
 int GetSign(UiStackLayoutDirection::Enum direction)
 {
-  switch(direction)
+  switch (direction)
   {
   case UiStackLayoutDirection::BottomToTop:
   case UiStackLayoutDirection::LeftToRight:
@@ -43,8 +36,6 @@ int GetSign(UiStackLayoutDirection::Enum direction)
   }
 }
 
-//----------------------------------------------------------------- Stack Layout
-//******************************************************************************
 ZilchDefineType(UiStackLayout, builder, type)
 {
   ZeroBindDocumented();
@@ -54,7 +45,6 @@ ZilchDefineType(UiStackLayout, builder, type)
   ZilchBindGetterSetterProperty(Spacing);
 }
 
-//******************************************************************************
 void UiStackLayout::Serialize(Serializer& stream)
 {
   UiLayout::Serialize(stream);
@@ -62,23 +52,21 @@ void UiStackLayout::Serialize(Serializer& stream)
   SerializeNameDefault(mSpacing, Vec2::cZero);
 }
 
-//******************************************************************************
 void UiStackLayout::Initialize(CogInitializer& initializer)
 {
   mWidget = GetOwner()->has(UiWidget);
 }
 
-//******************************************************************************
 Vec2 UiStackLayout::Measure(Rectangle& rect)
 {
-  // Axis of Stacking 
+  // Axis of Stacking
   int stackAxis = GetAxis(mStackDirection);
   int opAxis = !stackAxis;
 
   Vec2 neededSize = Vec2::cZero;
 
   UiFilteredChildren r = AllWidgetsInLayout();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     UiWidget* child = r.Front();
     r.PopFront();
@@ -92,7 +80,7 @@ Vec2 UiStackLayout::Measure(Rectangle& rect)
 
     // Only add spacing between widgets
     bool lastWidget = r.Empty();
-    if(!lastWidget)
+    if (!lastWidget)
       neededSize[stackAxis] += mSpacing[stackAxis];
   }
 
@@ -100,11 +88,10 @@ Vec2 UiStackLayout::Measure(Rectangle& rect)
   return neededSize + mPadding.Size();
 }
 
-//******************************************************************************
 void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
-  if(mDebug)
+  if (mDebug)
   {
     ZeroDebugBreak();
     mDebug = false;
@@ -130,7 +117,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 
   // Do a first pass over the children to calculate the sizes we need
   UiFilteredChildren firstPass = AllWidgetsInLayout();
-  while(!firstPass.Empty())
+  while (!firstPass.Empty())
   {
     UiWidget* child = firstPass.Front();
     firstPass.PopFront();
@@ -138,7 +125,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     // Minimum size for the child
     Vec2 childSize = child->Measure(rect);
 
-    if(child->GetSizePolicy(stackAxis) == UiSizePolicy::Flex)
+    if (child->GetSizePolicy(stackAxis) == UiSizePolicy::Flex)
     {
       totalFlex += child->GetFlexSize()[stackAxis];
       flexMinSize += childSize[stackAxis];
@@ -153,7 +140,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 
     // Only add padding between widgets
     bool lastWidget = firstPass.Empty();
-    if(!lastWidget)
+    if (!lastWidget)
       fixedSize += mSpacing[stackAxis];
   }
 
@@ -170,24 +157,25 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   float totalSize = areaSize[stackAxis];
 
   // Flex ratio
-  float flexRatio = ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
+  float flexRatio =
+      ComputeFlexRatio(fixedSize, totalFlex, flexMinSize, totalSize);
 
   // When all the flex objects can't be evenly distributed within the size
-  // allocated for flex objects, we need to assign them slightly "incorrect" sizes.
-  // Example:
-  // We have 300 pixels to Assign to two widgets (both with a flex ratio of 1).
-  // There is a 1 pixel spacing (now 299 pixels for the flex widgets).
-  // Both widgets will get assigned 149.5 pixels. If we were to call SnapToPixels,
-  // they would both be given 150 pixels, going over our size limit (301 total).
-  // This can also happen in the other direction (going under our size limit),
-  // which can cause a small jitter when resizing windows with stack layouts.
-  // To fix this issue, we're going to pass on the remainder of unused size
-  // to the next widget. In the case above, the first would get assigned 149
-  // pixels, and the 0.5 would get passed on to the next, which would get 150.
+  // allocated for flex objects, we need to assign them slightly "incorrect"
+  // sizes. Example: We have 300 pixels to Assign to two widgets (both with a
+  // flex ratio of 1). There is a 1 pixel spacing (now 299 pixels for the flex
+  // widgets). Both widgets will get assigned 149.5 pixels. If we were to call
+  // SnapToPixels, they would both be given 150 pixels, going over our size
+  // limit (301 total). This can also happen in the other direction (going under
+  // our size limit), which can cause a small jitter when resizing windows with
+  // stack layouts. To fix this issue, we're going to pass on the remainder of
+  // unused size to the next widget. In the case above, the first would get
+  // assigned 149 pixels, and the 0.5 would get passed on to the next, which
+  // would get 150.
   float flexRemainder = 0.0f;
 
   UiFilteredChildren secondPass = AllWidgetsInLayout();
-  while(!secondPass.Empty())
+  while (!secondPass.Empty())
   {
     UiWidget* child = secondPass.Front();
     secondPass.PopFront();
@@ -197,12 +185,16 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     // If we're laying out left to right, we want to apply the left margins
     // first, place the widget, then apply the right margins.
     // If we're laying out right to left, we want to do the opposite.
-    // These are lookup tables for which margins to apply given the 
+    // These are lookup tables for which margins to apply given the
     // stack direction. This is an optimization to avoid branching.
-    float marginsStart[4] = { childMargins.Top,    childMargins.Bottom,
-                              childMargins.Left,   childMargins.Right };
-    float marginsEnd[4] = {   childMargins.Bottom, childMargins.Top,
-                              childMargins.Right,  childMargins.Left };
+    float marginsStart[4] = {childMargins.Top,
+                             childMargins.Bottom,
+                             childMargins.Left,
+                             childMargins.Right};
+    float marginsEnd[4] = {childMargins.Bottom,
+                           childMargins.Top,
+                           childMargins.Right,
+                           childMargins.Left};
 
     // Before placing the widget, move over by the margins
     offset[stackAxis] += marginsStart[mStackDirection] * direction;
@@ -216,14 +208,16 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     UiSizePolicy::Enum opPolicy = child->GetSizePolicy(opAxis);
 
     // Stack axis logic
-    if(stackPolicy == UiSizePolicy::Flex)
+    if (stackPolicy == UiSizePolicy::Flex)
     {
-      float size = (child->GetFlexSize()[stackAxis] * flexRatio);// +childSize[stackAxis];
+      float size = (child->GetFlexSize()[stackAxis] *
+                    flexRatio); // +childSize[stackAxis];
 
       // Add in the previous remainder
       size += flexRemainder;
 
-      float flooredSize = Math::Floor(size / cUiWidgetSnapSize) * cUiWidgetSnapSize;
+      float flooredSize =
+          Math::Floor(size / cUiWidgetSnapSize) * cUiWidgetSnapSize;
       childSize[stackAxis] = flooredSize;
 
       // Calculate the new remainder
@@ -248,30 +242,32 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
       if (opPolicy == UiSizePolicy::Fixed)
         childSize[opAxis] = child->GetSize()[opAxis];
 
-      uint alignment = stackAxis ? child->GetHorizontalAlignment() : child->GetVerticalAlignment();
-      CalculateAlignment(opAxis, alignment, areaSize, offset, childSize, childTranslation);
+      uint alignment = stackAxis ? child->GetHorizontalAlignment()
+                                 : child->GetVerticalAlignment();
+      CalculateAlignment(
+          opAxis, alignment, areaSize, offset, childSize, childTranslation);
     }
 
     // Shift ourselves along the off axis based on our margins
-    if(opAxis == 0)
+    if (opAxis == 0)
     {
-      if(child->GetHorizontalAlignment() != UiHorizontalAlignment::Left)
+      if (child->GetHorizontalAlignment() != UiHorizontalAlignment::Left)
         childTranslation[opAxis] -= childMargins.Right;
-      if(child->GetHorizontalAlignment() != UiHorizontalAlignment::Right)
+      if (child->GetHorizontalAlignment() != UiHorizontalAlignment::Right)
         childTranslation[opAxis] += childMargins.Left;
     }
     else
     {
-      if(child->GetVerticalAlignment() != UiVerticalAlignment::Top)
+      if (child->GetVerticalAlignment() != UiVerticalAlignment::Top)
         childTranslation[opAxis] += childMargins.Bottom;
-      if(child->GetVerticalAlignment() != UiVerticalAlignment::Bottom)
+      if (child->GetVerticalAlignment() != UiVerticalAlignment::Bottom)
         childTranslation[opAxis] -= childMargins.Top;
     }
 
-    // When laying out forward, the position we're calculating is in the top 
+    // When laying out forward, the position we're calculating is in the top
     // left. When in reverse, it's the opposite on the stack axis, so we need
     // calculate the actual top left corner for where it should be placed
-    if(reverse)
+    if (reverse)
       childTranslation[stackAxis] -= childSize[stackAxis];
 
     child->SetSize(childSize);
@@ -284,47 +280,44 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     offset[stackAxis] += marginsEnd[mStackDirection] * direction;
 
     bool lastWidget = secondPass.Empty();
-    if(!lastWidget)
+    if (!lastWidget)
       offset[stackAxis] += mSpacing[stackAxis] * direction;
   }
 }
 
-//******************************************************************************
-float UiStackLayout::ComputeFlexRatio(float fixedSize, float totalFlex,
-                                      float flexMinSize, float totalSize)
+float UiStackLayout::ComputeFlexRatio(float fixedSize,
+                                      float totalFlex,
+                                      float flexMinSize,
+                                      float totalSize)
 {
-  float extraSize = totalSize - fixedSize;// -flexMinSize;
+  float extraSize = totalSize - fixedSize; // -flexMinSize;
   // Only flex if there is extra space including min size used by flex controls
-  if(extraSize > 0.0f && totalFlex > 0.0f)
+  if (extraSize > 0.0f && totalFlex > 0.0f)
     return extraSize / totalFlex;
   else
     return 0.0f;
 }
 
-//******************************************************************************
 UiStackLayoutDirection::Enum UiStackLayout::GetStackDirection()
 {
   return mStackDirection;
 }
 
-//******************************************************************************
 void UiStackLayout::SetStackDirection(UiStackLayoutDirection::Enum direction)
 {
   mStackDirection = direction;
   mWidget->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 Vec2 UiStackLayout::GetSpacing()
 {
   return mSpacing;
 }
 
-//******************************************************************************
 void UiStackLayout::SetSpacing(Vec2Param spacing)
 {
   mSpacing = spacing;
   mWidget->MarkAsNeedsUpdate();
 }
 
-}//namespace Zero
+} // namespace Zero

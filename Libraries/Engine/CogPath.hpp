@@ -1,27 +1,34 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CogPath.hpp
-/// Declaration of CogPath class.
-///
-/// Authors: TrevorSundberg
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 namespace Events
 {
-  /// Occurs when any change is made to the cog path that could affect which object it points at
-  DeclareEvent(CogPathCogChanged);
-}
+/// Occurs when any change is made to the cog path that could affect which
+/// object it points at
+DeclareEvent(CogPathCogChanged);
+} // namespace Events
 
 class Cog;
 
-DeclareEnum6(StatusCodeCogPath, OnlySupportsCogTypes, SpaceNotNamed, CogNotNamed, CogsInDifferentSpaces, RelativeToNotSet, CogsDoNotShareRoots);
+DeclareEnum6(StatusCodeCogPath,
+             OnlySupportsCogTypes,
+             SpaceNotNamed,
+             CogNotNamed,
+             CogsInDifferentSpaces,
+             RelativeToNotSet,
+             CogsDoNotShareRoots);
 
-DeclareEnum8(CogPathTokenType, Invalid, Eof, Separator, Self, Parent, CurrentSpace, NamedCog, NamedSpace);
+DeclareEnum8(CogPathTokenType,
+             Invalid,
+             Eof,
+             Separator,
+             Self,
+             Parent,
+             CurrentSpace,
+             NamedCog,
+             NamedSpace);
 
 class CogPathToken
 {
@@ -61,31 +68,36 @@ class CogPathCompiled
 public:
   CogPathCompiled();
 
-  // The name of the space to start from (empty if we're accessing children or the same space)
+  // The name of the space to start from (empty if we're accessing children or
+  // the same space)
   String mSpaceName;
 
-  // Whether this path is defined starting from a named space, the current space, or relative
+  // Whether this path is defined starting from a named space, the current
+  // space, or relative
   CogPathRootType::Enum mRootType;
 
   // The chain (or trail) of things we traverse
   // We use empty strings to represent moving up a parent,
   // and filled strings to mean moving down a child of that name
-  // Also note, if the elements are empty and the root type is Relative, this means 'self'
-  // All other forms of empty elements with non relative root types are NOT legal
+  // Also note, if the elements are empty and the root type is Relative, this
+  // means 'self' All other forms of empty elements with non relative root types
+  // are NOT legal
   Array<CogPathElement> mElements;
 };
 
 class CogPathParser
 {
 public:
-  
   // Call this to parse a full path out!
   void Parse(Status& status, CogPathCompiled& output);
-  
+
   // Internal
   bool Accept(CogPathTokenType::Enum type, String* output);
-  bool Expect(CogPathTokenType::Enum type, String* output, Status& status, StringParam error);
-  
+  bool Expect(CogPathTokenType::Enum type,
+              String* output,
+              Status& status,
+              StringParam error);
+
   bool ParseSeparatedElement(Status& status, CogPathCompiled& output);
   bool ParseElement(Status& status, CogPathCompiled& output);
   bool ParsePath(Status& status, CogPathCompiled& output);
@@ -95,13 +107,13 @@ public:
 };
 
 DeclareBitField7(CogPathFlags,
-  ErrorOnResolveToNull,
-  ErrorOnPathCantCompute,
-  ErrorOnDirectLinkFail,
-  UpdateCogOnPathChange,
-  UpdatePathOnCogChange,
-  UpdateCogOnInitialize,
-  ResolvedNullErrorOccurred);
+                 ErrorOnResolveToNull,
+                 ErrorOnPathCantCompute,
+                 ErrorOnDirectLinkFail,
+                 UpdateCogOnPathChange,
+                 UpdatePathOnCogChange,
+                 UpdateCogOnInitialize,
+                 ResolvedNullErrorOccurred);
 DeclareEnum3(CogPathPreference, CogRelative, SpaceRelative, Absolute);
 
 // A reference counted node that cog paths can share.
@@ -135,31 +147,42 @@ public:
   EventReceiver* GetReceiverObject() override;
   void DispatchEvent(StringParam eventId, Event* event);
 
-  /// A safe and simple way to get a cog from a cog path (the cog path itself can be null)
+  /// A safe and simple way to get a cog from a cog path (the cog path itself
+  /// can be null)
   static Cog* GetCogOrNull(CogPath* path);
 
   /// Component interface
   Component* QueryComponentId(BoundType* typeId);
 
   /// Type safe way of accessing components.
-  template<typename type>
+  template <typename type>
   type* Has();
 
-  /// Creates a new copy of a cog path (since cog paths are reference counted and shared)
+  /// Creates a new copy of a cog path (since cog paths are reference counted
+  /// and shared)
   CogPath Clone();
 
   /// Use to Restore links in serialization
-  Cog* RestoreLink(CogInitializer& initializer, Component* component, StringParam propertyName);
-  Cog* RestoreLink(CogInitializer& initializer, Cog* owner, StringParam propertyName);
-  Cog* RestoreLink(CogInitializer& initializer, Cog* owner, Component* component, StringParam propertyName);
-  
+  Cog* RestoreLink(CogInitializer& initializer,
+                   Component* component,
+                   StringParam propertyName);
+  Cog* RestoreLink(CogInitializer& initializer,
+                   Cog* owner,
+                   StringParam propertyName);
+  Cog* RestoreLink(CogInitializer& initializer,
+                   Cog* owner,
+                   Component* component,
+                   StringParam propertyName);
+
   /// Setting the cog manually may recompute the path if the option is set
-  /// Getting the cog will return whatever cog we already resolved, or null (it will not attempt to resolve)
+  /// Getting the cog will return whatever cog we already resolved, or null (it
+  /// will not attempt to resolve)
   void SetDirectCog(Cog* cog);
   Cog* GetDirectCog();
 
   /// Setting the cog manually may recompute the path if the option is set
-  /// Getting the cog will attempt to resolve the cog if we don't already have one (or if the path options is set, it will always resolve)
+  /// Getting the cog will attempt to resolve the cog if we don't already have
+  /// one (or if the path options is set, it will always resolve)
   void SetCog(Cog* cog);
   Cog* GetCog();
 
@@ -171,19 +194,23 @@ public:
   Cog* GetRelativeTo();
   void SetRelativeTo(Cog* cog);
 
-  /// Is an exception thrown if you try to access the Cog when it's invalid or not found?
+  /// Is an exception thrown if you try to access the Cog when it's invalid or
+  /// not found?
   bool GetErrorOnResolveToNull();
   void SetErrorOnResolveToNull(bool state);
 
-  /// Is it an exception/notification if the path to an object cannot be computed?
+  /// Is it an exception/notification if the path to an object cannot be
+  /// computed?
   bool GetErrorOnPathCantCompute();
   void SetErrorOnPathCantCompute(bool state);
-  
-  /// Is it an exception/notification if a direct link to the object cannot be resolved?
+
+  /// Is it an exception/notification if a direct link to the object cannot be
+  /// resolved?
   bool GetErrorOnDirectLinkFail();
   void SetErrorOnDirectLinkFail(bool state);
 
-  /// When we set the cog path, should we try and resolve the object (this also detects parse errors)
+  /// When we set the cog path, should we try and resolve the object (this also
+  /// detects parse errors)
   bool GetUpdateCogOnPathChange();
   void SetUpdateCogOnPathChange(bool state);
 
@@ -191,7 +218,8 @@ public:
   bool GetUpdatePathOnCogChange();
   void SetUpdatePathOnCogChange(bool state);
 
-  /// Whether the cog path attempts to resolve an object when the object is fully initialized
+  /// Whether the cog path attempts to resolve an object when the object is
+  /// fully initialized
   bool GetUpdateCogOnInitialize();
   void SetUpdateCogOnInitialize(bool state);
 
@@ -208,31 +236,42 @@ public:
   /// Returns true if the object changes, false otherwise
   bool RefreshIfNull();
 
-  /// Resolves a cog from a path and a a relative object (or null for absolute paths)
-  /// Returns null if it fails to find the cog, and will not throw an exception or assert
+  /// Resolves a cog from a path and a a relative object (or null for absolute
+  /// paths) Returns null if it fails to find the cog, and will not throw an
+  /// exception or assert
   static Cog* Resolve(Cog* startFrom, StringParam path);
 
-  /// Computes a path from one object to another (or an absolute path if specified - 'from' can be null)
-  /// If computing the path fails, this will return an empty string
+  /// Computes a path from one object to another (or an absolute path if
+  /// specified - 'from' can be null) If computing the path fails, this will
+  /// return an empty string
   static String ComputePath(Cog* from, Cog* to, CogPathPreference::Enum pref);
 
-  static String ComputePath(
-    Status& status,
-    Cog* from,
-    Cog* to,
-    CogPathPreference::Enum pref0,
-    CogPathPreference::Enum pref1,
-    CogPathPreference::Enum pref2,
-    bool ambiguityIsError);
-  static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref, bool ambiguityIsError);
+  static String ComputePath(Status& status,
+                            Cog* from,
+                            Cog* to,
+                            CogPathPreference::Enum pref0,
+                            CogPathPreference::Enum pref1,
+                            CogPathPreference::Enum pref2,
+                            bool ambiguityIsError);
+  static String ComputePath(Status& status,
+                            Cog* from,
+                            Cog* to,
+                            CogPathPreference::Enum pref,
+                            bool ambiguityIsError);
 
-  static Cog* Resolve(Status& status, Cog* startFrom, StringParam path, bool ambiguityIsError);
-  static Cog* Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path, bool ambiguityIsError);
+  static Cog* Resolve(Status& status,
+                      Cog* startFrom,
+                      StringParam path,
+                      bool ambiguityIsError);
+  static Cog* Resolve(Status& status,
+                      Cog* startFrom,
+                      const CogPathCompiled& path,
+                      bool ambiguityIsError);
 
   HandleOf<CogPathNode> mSharedNode;
 };
 
-template<typename type>
+template <typename type>
 inline type* CogPath::Has()
 {
   return (type*)QueryComponentId(ZilchTypeId(type));
@@ -248,8 +287,8 @@ public:
   CogPath mCogPath;
 };
 
-/// Allows the ability to query for Components directly on the cog path instead of having to first
-/// check the Cog for null.
+/// Allows the ability to query for Components directly on the cog path instead
+/// of having to first check the Cog for null.
 class CogPathMetaComposition : public MetaComposition
 {
 public:
@@ -257,7 +296,9 @@ public:
   CogPathMetaComposition();
 
   virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
-  bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
+  bool CanAddComponent(HandleParam owner,
+                       BoundType* typeToAdd,
+                       AddInfo* info = nullptr) override;
 };
 
 class CogPathMetaSerialization : public MetaSerialization
@@ -265,17 +306,20 @@ class CogPathMetaSerialization : public MetaSerialization
 public:
   ZilchDeclareType(CogPathMetaSerialization, TypeCopyMode::ReferenceType);
 
-  bool SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
+  bool SerializeReferenceProperty(BoundType* meta,
+                                  cstr fieldName,
+                                  Any& value,
+                                  Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
   bool ConvertFromString(StringParam input, Any& output) override;
 };
 
 namespace Serialization
 {
-  template<>
-  struct Policy<CogPath>
-  {
-    static bool Serialize(Serializer& stream, cstr fieldName, CogPath& value);
-  };
-}
-}
+template <>
+struct Policy<CogPath>
+{
+  static bool Serialize(Serializer& stream, cstr fieldName, CogPath& value);
+};
+} // namespace Serialization
+} // namespace Zero

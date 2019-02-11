@@ -1,19 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------------- Ring Buffer
+//Ring Buffer
 
-//**************************************************************************************************
-int RingBuffer::Initialize(unsigned elementSizeBytes, unsigned elementCountInBuffer, void* buffer)
+int RingBuffer::Initialize(unsigned elementSizeBytes,
+                           unsigned elementCountInBuffer,
+                           void* buffer)
 {
   // Check if the number of elements is a power of 2
   if (((elementCountInBuffer - 1) & elementCountInBuffer) != 0)
@@ -35,33 +31,30 @@ int RingBuffer::Initialize(unsigned elementSizeBytes, unsigned elementCountInBuf
   return 0;
 }
 
-//**************************************************************************************************
 void RingBuffer::ResetBuffer()
 {
   // Reset write and read indexes to 0
   WriteIndex = ReadIndex = 0;
 }
 
-//**************************************************************************************************
 unsigned RingBuffer::GetWriteAvailable()
 {
-  // Elements available for writing is the buffer size minus elements available for reading,
-  // limiting the elements written to no more than the buffer size.
+  // Elements available for writing is the buffer size minus elements available
+  // for reading, limiting the elements written to no more than the buffer size.
   return BufferSize - GetReadAvailable();
 }
 
-//**************************************************************************************************
 unsigned RingBuffer::GetReadAvailable()
 {
-  // Because of the limit in GetWriteAvailable, WriteIndex will never be more than BufferSize
-  // greater than ReadIndex, so this will never return more than the BufferSize. 
-  // If WriteIndex - ReadIndex is negative, since the BigMask value is (BufferSize * 2) - 1,
-  // the indexes wrap using BigMask, and BufferSize is a power of 2, the mask will turn the value 
-  // into the corresponding positive number, which will be less than BufferSize.
+  // Because of the limit in GetWriteAvailable, WriteIndex will never be more
+  // than BufferSize greater than ReadIndex, so this will never return more than
+  // the BufferSize. If WriteIndex - ReadIndex is negative, since the BigMask
+  // value is (BufferSize * 2) - 1, the indexes wrap using BigMask, and
+  // BufferSize is a power of 2, the mask will turn the value into the
+  // corresponding positive number, which will be less than BufferSize.
   return (WriteIndex - ReadIndex) & BigMask;
 }
 
-//**************************************************************************************************
 unsigned RingBuffer::Write(const void* data, int elementCount)
 {
   int available = GetWriteAvailable();
@@ -86,12 +79,16 @@ unsigned RingBuffer::Write(const void* data, int elementCount)
     // Copy first section, from index position to end of buffer
     memcpy(Buffer + (index * ElementSizeBytes), data, size1 * ElementSizeBytes);
     // Copy second section, from beginning of buffer to end of elements
-    memcpy(Buffer, (char*)data + (size1 * ElementSizeBytes), (elementCount - size1) * ElementSizeBytes);
+    memcpy(Buffer,
+           (char*)data + (size1 * ElementSizeBytes),
+           (elementCount - size1) * ElementSizeBytes);
   }
   else
   {
     // Write all elements at once
-    memcpy(Buffer + (index * ElementSizeBytes), data, elementCount * ElementSizeBytes);
+    memcpy(Buffer + (index * ElementSizeBytes),
+           data,
+           elementCount * ElementSizeBytes);
   }
 
   // Advance the write index, wrapping at 2 * BufferSize
@@ -101,7 +98,6 @@ unsigned RingBuffer::Write(const void* data, int elementCount)
   return elementCount;
 }
 
-//**************************************************************************************************
 unsigned RingBuffer::Read(void* data, int elementCount)
 {
   int available = GetReadAvailable();
@@ -126,12 +122,16 @@ unsigned RingBuffer::Read(void* data, int elementCount)
     // Copy first section, from index position to end of buffer
     memcpy(data, Buffer + (index * ElementSizeBytes), size1 * ElementSizeBytes);
     // Copy second section, from beginning of buffer to end of elements
-    memcpy((char*)data + (size1 * ElementSizeBytes), Buffer, (elementCount - size1) * ElementSizeBytes);
+    memcpy((char*)data + (size1 * ElementSizeBytes),
+           Buffer,
+           (elementCount - size1) * ElementSizeBytes);
   }
   else
   {
     // Read all elements at once
-    memcpy(data, Buffer + (index * ElementSizeBytes), elementCount * ElementSizeBytes);
+    memcpy(data,
+           Buffer + (index * ElementSizeBytes),
+           elementCount * ElementSizeBytes);
   }
 
   // Advance the read index, wrapping at 2 * BufferSize

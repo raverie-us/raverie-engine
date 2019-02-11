@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,13 +9,13 @@ class ShaderIRTypeMeta;
 
 DeclareEnum5(FragmentType, Vertex, Pixel, Geometry, Compute, None);
 
-//-------------------------------------------------------------------ShaderFieldKey
-/// A typed string for looking up shader fields. This is a specific type to help avoid ambiguities on
-/// HashMap<String, ShaderField*> where it's hard to know what the string's value is. This type implies
-/// that the hashmap is not based upon the field's name, but rather it's key (name:string).
+/// A typed string for looking up shader fields. This is a specific type to help
+/// avoid ambiguities on HashMap<String, ShaderField*> where it's hard to know
+/// what the string's value is. This type implies that the hashmap is not based
+/// upon the field's name, but rather it's key (name:string).
 struct ShaderFieldKey
 {
-  ShaderFieldKey() {};
+  ShaderFieldKey(){};
   ShaderFieldKey(StringParam fieldName, StringParam fieldType);
 
   void Set(StringParam fieldName, StringParam fieldType);
@@ -32,17 +27,15 @@ struct ShaderFieldKey
   String mKey;
 };
 
-//-------------------------------------------------------------------ShaderIRMeta
-/// Base meta type of all shader meta objects. Currently only contains attributes.
+/// Base meta type of all shader meta objects. Currently only contains
+/// attributes.
 class ShaderIRMeta
 {
 public:
-
   bool ContainsAttribute(StringParam attributeName);
   ShaderIRAttributeList mAttributes;
 };
 
-//-------------------------------------------------------------------ShaderIRTypeMeta
 /// Represents a field defined in zilch.
 class ShaderIRFieldMeta : public ShaderIRMeta
 {
@@ -51,14 +44,17 @@ public:
 
   /// Make a key for this field. Used for hashing.
   ShaderFieldKey MakeFieldKey() const;
-  /// Make a key for this field via the given attribute (for the field name). Used for hashing.
+  /// Make a key for this field via the given attribute (for the field name).
+  /// Used for hashing.
   ShaderFieldKey MakeFieldKey(ShaderIRAttribute* attribute) const;
 
   /// Given an attribute, return the field name for this variable. This returns
-  /// the name in the attribute if it exists, otherwise the regular variable name.
+  /// the name in the attribute if it exists, otherwise the regular variable
+  /// name.
   String GetFieldAttributeName(ShaderIRAttribute* attribute) const;
 
-  /// Creates a clone of the current field meta. The given library will take ownership of the cloned field.
+  /// Creates a clone of the current field meta. The given library will take
+  /// ownership of the cloned field.
   ShaderIRFieldMeta* Clone(ZilchShaderIRLibrary* owningLibrary) const;
 
   /// The name of the field in zilch.
@@ -76,7 +72,6 @@ public:
   Zilch::Any mDefaultValueVariant;
 };
 
-//-------------------------------------------------------------------ShaderIRTypeMeta
 /// Represents a function defined in zilch.
 class ShaderIRFunctionMeta : public ShaderIRMeta
 {
@@ -85,23 +80,25 @@ public:
 
   /// The name of the zilch function.
   String mZilchName;
-  /// The zilch function this comes from. Useful for more complicated reflection.
+  /// The zilch function this comes from. Useful for more complicated
+  /// reflection.
   Zilch::Function* mZilchFunction;
 };
 
-//-------------------------------------------------------------------ShaderIRTypeMeta
 /// Represents a type defined in zilch.
 class ShaderIRTypeMeta : public ShaderIRMeta
 {
 public:
   ShaderIRTypeMeta();
 
-  /// Internal function used by shader translation to create a field meta object.
+  /// Internal function used by shader translation to create a field meta
+  /// object.
   ShaderIRFieldMeta* CreateField(ZilchShaderIRLibrary* library);
   /// Find a field meta object by name.
   ShaderIRFieldMeta* FindField(StringParam fieldName);
 
-  /// Internal function used by shader translation to create a function meta object.
+  /// Internal function used by shader translation to create a function meta
+  /// object.
   ShaderIRFunctionMeta* CreateFunction(ZilchShaderIRLibrary* library);
 
   /// The name of the zilch type.
@@ -123,4 +120,4 @@ public:
   mutable Zilch::DestructibleBuffer mComplexUserData;
 };
 
-}//namespace Zero
+} // namespace Zero

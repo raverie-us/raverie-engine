@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 // Straight out of box2d...work on my own full derivation later...
@@ -17,11 +12,12 @@
 // Cdot = -dot(u1, v1 + cross(w1, r1)) - ratio * dot(u2, v2 + cross(w2, r2))
 // J = -[u1 cross(r1, u1) ratio * u2  ratio * cross(r2, u2)]
 // K = J * invM * JT
-//   = invMass1 + invI1 * cross(r1, u1)^2 + ratio^2 * (invMass2 + invI2 * cross(r2, u2)^2)
+//   = invMass1 + invI1 * cross(r1, u1)^2 + ratio^2 * (invMass2 + invI2 *
+//   cross(r2, u2)^2)
 
 namespace Zero
 {
-  
+
 namespace Physics
 {
 
@@ -32,14 +28,21 @@ struct PulleyPolicy : public DefaultFragmentPolicy<PulleyJoint>
 {
   void AxisValue(MoleculeData& data, int atomIndex, PulleyJoint* joint)
   {
-    ErrorIf(atomIndex >= 1, "PulleyJoint only has one atom. Cannot compute atom number %d.", atomIndex);
+    ErrorIf(atomIndex >= 1,
+            "PulleyJoint only has one atom. Cannot compute atom number %d.",
+            atomIndex);
     PulleyAxisValue(joint, joint->mAtoms[atomIndex], 0);
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data, int atomIndex, PulleyJoint* joint, ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data,
+                    int atomIndex,
+                    PulleyJoint* joint,
+                    ConstraintMolecule& mol)
   {
-    ErrorIf(atomIndex >= 1, "PulleyJoint only has one atom. Cannot compute atom number %d.", atomIndex);
+    ErrorIf(atomIndex >= 1,
+            "PulleyJoint only has one atom. Cannot compute atom number %d.",
+            atomIndex);
     PulleyAxisFragment(joint, mol);
 
     return joint->GetLinearBaumgarte();
@@ -87,52 +90,54 @@ void PulleyJoint::OnAllObjectsCreated(CogInitializer& initializer)
 {
   Joint::OnAllObjectsCreated(initializer);
 
-  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  bool dynamicallyCreated =
+      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
 
-  if(!dynamicallyCreated)
+  if (!dynamicallyCreated)
   {
     mJoints[0].mCogPath.RestoreLink(initializer, this, "JointAPath");
     mJoints[1].mCogPath.RestoreLink(initializer, this, "JointBPath");
 
-    for(uint i = 0; i < 2; ++i)
+    for (uint i = 0; i < 2; ++i)
     {
       // If the id we recovered is valid, retrieve the joint
       Cog* cog = mJoints[i].mCogPath.GetCog();
-      if(cog == nullptr)
+      if (cog == nullptr)
       {
         SetValid(false);
         continue;
       }
 
       mJoints[i].mJoint = cog->has(StickJoint);
-      if(mJoints[i].mJoint == nullptr)
+      if (mJoints[i].mJoint == nullptr)
         SetValid(false);
     }
   }
   else
   {
-    // We were dynamically added, find joints on the objects we were connected to
-    for(uint i = 0; i < 2; ++i)
+    // We were dynamically added, find joints on the objects we were connected
+    // to
+    for (uint i = 0; i < 2; ++i)
     {
       Collider* collider = GetCollider(i);
-      if(collider == nullptr)
+      if (collider == nullptr)
       {
         SetValid(false);
         continue;
       }
-      
+
       bool success = FindAndSetJoint(collider, i);
-      if(success == false)
+      if (success == false)
         SetValid(false);
     }
   }
 
-  if(GetActive() == false || GetValid() == false)
+  if (GetActive() == false || GetValid() == false)
     return;
 
   // Make sure both joints get OnAllObjectsCreated called on them
   // (object link and joint deals with a double call)
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
     Cog* cog = mJoints[i].mJoint->GetOwner();
     ObjectLink* link = cog->has(ObjectLink);
@@ -144,22 +149,23 @@ void PulleyJoint::OnAllObjectsCreated(CogInitializer& initializer)
   // All of our joints are now valid. However, we don't know if we are connected
   // to obj0 or obj1 on each joint. This is needed for the proper solving
   // of the jacobian.
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
-    if(GetCollider(i) == mJoints[i].mJoint->GetCollider(0))
+    if (GetCollider(i) == mJoints[i].mJoint->GetCollider(0))
       mJoints[i].mObjId = 0;
     else
       mJoints[i].mObjId = 1;
   }
 
-  // Don't do any final active or valid checks if we're in the editor because we don't
-  // need to modify further state on ourself and we definitely don't
-  // want to modify the other joints.
-  if(GetSpace()->IsEditorMode())
+  // Don't do any final active or valid checks if we're in the editor because we
+  // don't need to modify further state on ourself and we definitely don't want
+  // to modify the other joints.
+  if (GetSpace()->IsEditorMode())
     return;
 
   // If either joint was invalid, then we are also invalid
-  if(mJoints[0].mJoint->GetValid() == false || mJoints[1].mJoint->GetValid() == false)
+  if (mJoints[0].mJoint->GetValid() == false ||
+      mJoints[1].mJoint->GetValid() == false)
   {
     SetValid(false);
     return;
@@ -178,14 +184,14 @@ void PulleyJoint::OnDestroy(uint flags)
 
   // If there are any stick joints still alive then set
   // them to active so that they resume solving
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
     Cog* cog = mJoints[i].mCogPath.GetCog();
-    if(cog == nullptr)
+    if (cog == nullptr)
       continue;
 
     StickJoint* joint = cog->has(StickJoint);
-    if(joint != nullptr)
+    if (joint != nullptr)
       joint->SetActive(true);
   }
 }
@@ -217,7 +223,8 @@ void PulleyJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
+  ComputeMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
 }
 
 void PulleyJoint::WarmStart(MoleculeWalker& molecules)
@@ -245,12 +252,13 @@ void PulleyJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, PulleyPolicy());
 }
 
 void PulleyJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   // Draw a line between the center of the two bound objects
   Vec3 obj0Pos = GetCollider(0)->GetWorldTranslation();
@@ -259,7 +267,8 @@ void PulleyJoint::DebugDraw()
   gDebugDraw->Add(Debug::Line(obj0Pos, obj1Pos).Color(Color::Black));
 }
 
-uint PulleyJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint PulleyJoint::GetAtomIndexFilter(uint atomIndex,
+                                     real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;
@@ -339,33 +348,37 @@ void PulleyJoint::SetJointB(Cog* cog)
 void PulleyJoint::SpecificJointRelink(uint index, Collider* collider)
 {
   bool success = FindAndSetJoint(collider, index);
-  if(!success)
+  if (!success)
     SetValid(false);
 }
 
 void PulleyJoint::RelinkJoint(uint index, Cog* cog)
 {
-  if(cog == nullptr)
+  if (cog == nullptr)
   {
     DoNotifyWarning("Invalid link", "Joint must be linked to an object.");
     return;
   }
 
   StickJoint* stick = cog->has(StickJoint);
-  if(stick == nullptr)
+  if (stick == nullptr)
   {
-    DoNotifyWarning("Invalid link", "Cannot link to an object that doesn't have a StickJoint.");
+    DoNotifyWarning("Invalid link",
+                    "Cannot link to an object that doesn't have a StickJoint.");
     return;
   }
 
-  // Make sure that the joint we're linking to is connected to the collider we're connected to
-  if(stick->GetCollider(0) == GetCollider(index))
+  // Make sure that the joint we're linking to is connected to the collider
+  // we're connected to
+  if (stick->GetCollider(0) == GetCollider(index))
     mJoints[index].mObjId = 0;
-  else if(stick->GetCollider(1) == GetCollider(index))
+  else if (stick->GetCollider(1) == GetCollider(index))
     mJoints[index].mObjId = 1;
   else
   {
-    DoNotifyWarning("Invalid link", "Can only connect to StickJoints that are attached to the same collider as the PulleyJoint.");
+    DoNotifyWarning("Invalid link",
+                    "Can only connect to StickJoints that are attached to the "
+                    "same collider as the PulleyJoint.");
     return;
   }
 
@@ -375,7 +388,7 @@ void PulleyJoint::RelinkJoint(uint index, Cog* cog)
 bool PulleyJoint::FindAndSetJoint(Collider* collider, uint index)
 {
   StickJointRange sticks = FilterJointRange<StickJoint>(collider);
-  if(sticks.Empty())
+  if (sticks.Empty())
     return false;
 
   StickJoint* joint = &sticks.GetConstraint();
@@ -391,9 +404,9 @@ void PulleyJoint::ValidateJoints()
   jointCogs[1] = mJoints[1].mCogPath.GetCog();
   // If either joint is destroyed or the actual joint component
   // is removed then we need to become invalidated
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
-    if(jointCogs[i] == nullptr)
+    if (jointCogs[i] == nullptr)
     {
       mJoints[i].mJoint = nullptr;
       SetValid(false);
@@ -401,7 +414,7 @@ void PulleyJoint::ValidateJoints()
     else
     {
       StickJoint* joint = jointCogs[i]->has(StickJoint);
-      if(joint == nullptr)
+      if (joint == nullptr)
       {
         mJoints[i].mJoint = nullptr;
         SetValid(false);
@@ -411,16 +424,16 @@ void PulleyJoint::ValidateJoints()
 
   // If we became invalidate for whatever reason,
   // then we need to turn any valid joints on
-  if(GetValid() == false)
+  if (GetValid() == false)
   {
-    for(uint i = 0; i < 2; ++i)
+    for (uint i = 0; i < 2; ++i)
     {
-      if(mJoints[i].mJoint != nullptr)
+      if (mJoints[i].mJoint != nullptr)
         mJoints[i].mJoint->SetActive(true);
     }
   }
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

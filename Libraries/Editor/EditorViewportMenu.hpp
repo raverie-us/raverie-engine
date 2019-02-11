@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorViewportMenu.hpp
-/// Declaration of the EditorViewportMenu class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,6 @@ namespace Zero
 class EditorViewport;
 class ToggleIconButton;
 
-//--------------------------------------------------------- Viewport Menu Button
 class ViewportMenuButton : public ButtonBase
 {
 public:
@@ -33,7 +24,6 @@ public:
   Element* mExpandIcon;
 };
 
-//--------------------------------------------------------- Editor Viewport Menu
 class EditorViewportMenu : public Composite
 {
 public:
@@ -64,7 +54,7 @@ public:
 
   /// Once the pop up closes, fade out the menu.
   void OnPopUpClosed(Event*);
-  
+
   /// We don't want to fade out when the mouse leaves if there's an
   /// active menu still showing.
   HandleOf<Widget> mActivePopup;
@@ -85,4 +75,4 @@ public:
   Element* mBackground;
 };
 
-}//namespace Zero
+} // namespace Zero

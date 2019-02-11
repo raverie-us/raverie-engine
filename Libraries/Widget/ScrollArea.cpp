@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ScrollArea.cpp
-/// Implementation of the ScrollArea.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,28 +7,30 @@ namespace Zero
 const cstr cLocation = "EditorUi/Controls/ScrollBar";
 namespace ScrollBarUi
 {
-Tweakable(Vec4,  SliderColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  MouseOverSlider,   Vec4(1,1,1,1), cLocation);
-Tweakable(float, Width,   Pixels(6),     cLocation);
-Tweakable(float, Spacing, Pixels(2),     cLocation);
-}
+Tweakable(Vec4, SliderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MouseOverSlider, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(float, Width, Pixels(6), cLocation);
+Tweakable(float, Spacing, Pixels(2), cLocation);
+} // namespace ScrollBarUi
 
 namespace Events
 {
-  DefineEvent(ScrollUpdated);
+DefineEvent(ScrollUpdated);
 }
 
-//--------------------------------------------------------- File-Scope Functions
-void UpdateVisible(Vec2& size, Vec2Param clientSize, Vec2Param sliderSize, 
+void UpdateVisible(Vec2& size,
+                   Vec2Param clientSize,
+                   Vec2Param sliderSize,
                    ScrollBar** bar)
 {
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
-    if(size[i] < sliderSize[i] * 2)
+    if (size[i] < sliderSize[i] * 2)
     {
       bar[i]->mVisible = false;
     }
-    else if(!bar[i]->mVisible && !bar[i]->mDoNotShow && size[i] < clientSize[i])
+    else if (!bar[i]->mVisible && !bar[i]->mDoNotShow &&
+             size[i] < clientSize[i])
     {
       bar[i]->mVisible = true;
       size[!i] -= sliderSize[!i];
@@ -44,16 +38,17 @@ void UpdateVisible(Vec2& size, Vec2Param clientSize, Vec2Param sliderSize,
   }
 }
 
-//---------------------------------------------------------- Scroll Manipulation
 struct ScrollManipulation : public MouseManipulation
 {
   BaseScrollArea* mScrollArea;
   Vec2 mScrollStart;
   uint mOrientation;
 
-  ScrollManipulation(uint orientation, Mouse* mouse, Composite* owner, 
-                     BaseScrollArea* scrollArea)
-    : MouseManipulation(mouse, owner)
+  ScrollManipulation(uint orientation,
+                     Mouse* mouse,
+                     Composite* owner,
+                     BaseScrollArea* scrollArea) :
+      MouseManipulation(mouse, owner)
   {
     mOrientation = orientation;
     mScrollArea = scrollArea;
@@ -68,24 +63,24 @@ struct ScrollManipulation : public MouseManipulation
 
   void OnMouseMove(MouseEvent* event) override
   {
-    //Update the scroll bars on the object
+    // Update the scroll bars on the object
     Vec2 mouseDelta = event->Position - mMouseStartPosition;
 
-    //Divide by the size of the of the area can scroll in (the scroll area)
+    // Divide by the size of the of the area can scroll in (the scroll area)
     Vec2 scrollRoom = mScrollArea->GetSliderRoom();
     scrollRoom.x = Math::Max(0.01f, scrollRoom.x);
     scrollRoom.y = Math::Max(0.01f, scrollRoom.y);
 
     Vec2 scrollDelta = mouseDelta / scrollRoom;
     Vec2 scrollPos = mScrollStart;
-    scrollPos[mOrientation] = mScrollStart[mOrientation] + 
-                              scrollDelta[mOrientation];
+    scrollPos[mOrientation] =
+        mScrollStart[mOrientation] + scrollDelta[mOrientation];
 
-    mScrollArea->SetScrolledPercentageInternal(scrollPos, ScrollUpdate::ScrollBar, true);
+    mScrollArea->SetScrolledPercentageInternal(
+        scrollPos, ScrollUpdate::ScrollBar, true);
   }
 };
 
-//------------------------------------------------------------------------------
 const String cScrollClientAreaName = "ScrollClientArea";
 const String cScrollClipAreaName = "ScrollClipArea";
 const String cScrollUiName = "ScrollUi";
@@ -95,9 +90,8 @@ const String cScrollerButtonOver = "ButtonBackgroundOver";
 
 const float cScrollSensitivity = 32.0f;
 
-//------------------------------------------------------------------- Scroll Bar
-ScrollBar::ScrollBar(BaseScrollArea* scrollparent, uint orientation)
-  : Composite(scrollparent, AttachType::Direct)
+ScrollBar::ScrollBar(BaseScrollArea* scrollparent, uint orientation) :
+    Composite(scrollparent, AttachType::Direct)
 {
   static const String className = "ScrollBar";
   mDefSet = scrollparent->GetDefinitionSet()->GetDefinitionSet(className);
@@ -138,7 +132,6 @@ ScrollBar::ScrollBar(BaseScrollArea* scrollparent, uint orientation)
   ConnectThisTo(mSlider, Events::RightMouseUp, OnRightMouseUp);
 }
 
-
 ScrollBar::~ScrollBar()
 {
   //
@@ -146,8 +139,8 @@ ScrollBar::~ScrollBar()
 
 void ScrollBar::MouseDownSlider(MouseEvent* event)
 {
-  new ScrollManipulation(mOrientation, event->GetMouse(), mScrollParent, 
-                         mScrollParent);
+  new ScrollManipulation(
+      mOrientation, event->GetMouse(), mScrollParent, mScrollParent);
 }
 
 void ScrollBar::MouseEnterSlider(MouseEvent* event)
@@ -205,14 +198,13 @@ void ScrollBar::OnRightMouseUp(MouseEvent* event)
   event->Handled = true;
 }
 
-//------------------------------------------------------------- Base Scroll Area
 ZilchDefineType(BaseScrollArea, builder, type)
 {
 }
 
-BaseScrollArea::BaseScrollArea(Composite* parent, bool modernStyle)
-  : Composite(parent)
-  , mModernStyle(modernStyle)
+BaseScrollArea::BaseScrollArea(Composite* parent, bool modernStyle) :
+    Composite(parent),
+    mModernStyle(modernStyle)
 {
   mDefSet = parent->GetDefinitionSet();
   mSize = Vec2(100, 100);
@@ -221,14 +213,15 @@ BaseScrollArea::BaseScrollArea(Composite* parent, bool modernStyle)
   mAnimatingToClientOffset = mClientOffset;
   mScrollSpeedScalar = 1.0f;
 
-  if(modernStyle)
+  if (modernStyle)
     mScrollWellSize = mSliderSize = Vec2(7.0f);
   else
-    mScrollWellSize = mSliderSize = Vec2(ScrollBarUi::Width, ScrollBarUi::Width);
+    mScrollWellSize = mSliderSize =
+        Vec2(ScrollBarUi::Width, ScrollBarUi::Width);
 
   mSliderOffset = Vec2(0.0f);
 
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
     mScrollBar[i] = new ScrollBar(this, i);
 }
 
@@ -244,14 +237,15 @@ void BaseScrollArea::DisableScrollBar(uint index)
 
 void BaseScrollArea::OnMouseScroll(MouseEvent* event)
 {
-  if(!event->CtrlPressed)
+  if (!event->CtrlPressed)
   {
     // default scroll wheel behavior is to scroll up and down
-    if(this->IsScrollBarVisible(1) && !event->Handled && !event->ShiftPressed)
+    if (this->IsScrollBarVisible(1) && !event->Handled && !event->ShiftPressed)
     {
       event->Handled = true;
       Vec2 offset = mClientOffset;
-      float offsetValue = event->Scroll.y * cScrollSensitivity * mScrollSpeedScalar;
+      float offsetValue =
+          event->Scroll.y * cScrollSensitivity * mScrollSpeedScalar;
       offset.y += offsetValue;
       this->SetScrolledOffsetInternal(offset, ScrollUpdate::Auto, true);
     }
@@ -260,7 +254,8 @@ void BaseScrollArea::OnMouseScroll(MouseEvent* event)
     {
       event->Handled = true;
       Vec2 offset = mClientOffset;
-      float offsetValue = event->Scroll.y * cScrollSensitivity * mScrollSpeedScalar;
+      float offsetValue =
+          event->Scroll.y * cScrollSensitivity * mScrollSpeedScalar;
       offset.x += offsetValue;
       this->SetScrolledOffsetInternal(offset, ScrollUpdate::Auto, true);
     }
@@ -315,7 +310,7 @@ Vec2 BaseScrollArea::ClampClientOffset(Vec2Param offset)
   scollingArea.x = Math::Max(scollingArea.x, 0.0f);
   scollingArea.y = Math::Max(scollingArea.y, 0.0f);
 
-  // Limit client offset from 0 to negative scroll area 
+  // Limit client offset from 0 to negative scroll area
   clientOffset.x = Math::Clamp(clientOffset.x, -scollingArea.x, 0.0f);
   clientOffset.y = Math::Clamp(clientOffset.y, -scollingArea.y, 0.0f);
 
@@ -326,25 +321,25 @@ void BaseScrollArea::UpdateScrollBars()
 {
   Vec2 newSize = mSize;
   Vec2 newVisibleSize = mSize;
-  Vec2 scrollBarMinSize = Pixels(10,10);
+  Vec2 scrollBarMinSize = Pixels(10, 10);
 
   mScrollBar[0]->mVisible = false;
   mScrollBar[1]->mVisible = false;
   mScrollBar[0]->mSliderVisible = true;
   mScrollBar[1]->mSliderVisible = true;
 
-  //Get the client size (implemented by derived class)
+  // Get the client size (implemented by derived class)
   Vec2 clientSize = this->GetClientSize();
 
-  //Determining if scroll bars are needed requires more than one pass
+  // Determining if scroll bars are needed requires more than one pass
   UpdateVisible(newVisibleSize, clientSize, mScrollWellSize, mScrollBar);
-  //Intentional second call (not a bug)
+  // Intentional second call (not a bug)
   UpdateVisible(newVisibleSize, clientSize, mScrollWellSize, mScrollBar);
 
   Vec2 totalScrollSize = mSize - mScrollWellSize * 2;
 
-  //The vertical scroll bar shrinks when both are visible
-  if(mScrollBar[1]->mVisible && mScrollBar[0]->mVisible)
+  // The vertical scroll bar shrinks when both are visible
+  if (mScrollBar[1]->mVisible && mScrollBar[0]->mVisible)
     totalScrollSize.x = totalScrollSize.x - mScrollWellSize.x;
 
   clientSize.x = Math::Max(Pixels(1), clientSize.x);
@@ -353,18 +348,18 @@ void BaseScrollArea::UpdateScrollBars()
   Vec2 percentageVisible = newVisibleSize / clientSize;
   Vec2 scollerSize = percentageVisible * totalScrollSize;
 
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
-    //scroll area is very small clamp to limit
-    if(scollerSize[i] < scrollBarMinSize[i])
+    // scroll area is very small clamp to limit
+    if (scollerSize[i] < scrollBarMinSize[i])
       scollerSize[i] = scrollBarMinSize[i];
 
-    //If there is not enough room to display the slider, disable it
-    if(scollerSize[i] > totalScrollSize[i])
+    // If there is not enough room to display the slider, disable it
+    if (scollerSize[i] > totalScrollSize[i])
       mScrollBar[i]->mSliderVisible = false;
   }
 
-  //Left over area the scroll moves in.
+  // Left over area the scroll moves in.
   Vec2 scrollRoom = totalScrollSize - scollerSize;
   mScrollSlideRoom = totalScrollSize - scollerSize;
 
@@ -374,11 +369,11 @@ void BaseScrollArea::UpdateScrollBars()
   // Size may have changed so clamp the offset
   mClientOffset = ClampClientOffset(mClientOffset);
 
-  for(uint i = 0; i < 2; ++i)
+  for (uint i = 0; i < 2; ++i)
   {
     ScrollBar& bar = *mScrollBar[i];
 
-    if(mScrollBar[i]->mVisible)
+    if (mScrollBar[i]->mVisible)
     {
       uint oi = !i;
 
@@ -388,35 +383,35 @@ void BaseScrollArea::UpdateScrollBars()
       if (mModernStyle)
         bgPos[oi] -= Pixels(6);
 
-      //Position the up button
+      // Position the up button
       bar.mUp->SetVisible(true);
       bar.mUp->SetTranslation(bgPos);
       bar.mUp->SetSize(mScrollWellSize);
 
-      //Position the slider background
+      // Position the slider background
       bar.mBackground->SetVisible(true);
       bgPos[i] = mScrollWellSize[i];
       bar.mBackground->SetTranslation(bgPos);
 
-      //Size the slider background
+      // Size the slider background
       Vec2 backSize;
       backSize[i] = totalScrollSize[i];
       backSize[oi] = mScrollWellSize[oi];
 
       bar.mBackground->SetSize(backSize);
 
-      //Position the down button
+      // Position the down button
       bgPos[i] = mScrollWellSize[i] + totalScrollSize[i];
       bar.mDown->SetVisible(true);
       bar.mDown->SetTranslation(bgPos);
       bar.mDown->SetSize(mScrollWellSize);
 
-      if(bar.mSliderVisible)
+      if (bar.mSliderVisible)
       {
-        //Set up the slider for this orientation
+        // Set up the slider for this orientation
         bar.mSlider->SetVisible(true);
 
-        //Slider position
+        // Slider position
         Vec3 sliderPos = Vec3::cZero;
         sliderPos[oi] = newSize[oi] - mScrollWellSize[oi];
 
@@ -425,10 +420,11 @@ void BaseScrollArea::UpdateScrollBars()
 
         sliderPos[oi] += mSliderOffset[oi];
 
-        sliderPos[i] = mScrollWellSize[i] + scrolledPercentage[i] * scrollRoom[i];
+        sliderPos[i] =
+            mScrollWellSize[i] + scrolledPercentage[i] * scrollRoom[i];
         bar.mSlider->SetTranslation(sliderPos);
 
-        //Slider size
+        // Slider size
         Vec2 sliderSize;
         sliderSize[i] = scollerSize[i];
         sliderSize[oi] = mSliderSize[oi];
@@ -436,7 +432,7 @@ void BaseScrollArea::UpdateScrollBars()
       }
       else
       {
-        //disable the slider for this orientation
+        // disable the slider for this orientation
         bar.mSlider->SetVisible(false);
       }
     }
@@ -457,16 +453,16 @@ void BaseScrollArea::UpdateTransform()
 
 Vec2 BaseScrollArea::GetScrolledPercentage()
 {
-  //Determine the scroll position by dividing the area
-  //by dividing offset by the area.
+  // Determine the scroll position by dividing the area
+  // by dividing offset by the area.
   Vec2 clientSize = this->GetClientSize();
   Vec2 scollingArea = clientSize - mVisibleSize;
 
-  //prevent divide by zero
-  if(scollingArea.x == 0.0f)
+  // prevent divide by zero
+  if (scollingArea.x == 0.0f)
     scollingArea.x = 1.0f;
 
-  if(scollingArea.y == 0.0f)
+  if (scollingArea.y == 0.0f)
     scollingArea.y = 1.0f;
 
   return -(mClientOffset / scollingArea);
@@ -479,7 +475,8 @@ void BaseScrollArea::SetScrolledPercentage(Vec2 scrollPercentage)
 
 void BaseScrollArea::SetScrolledOffset(Vec2 scrollOffset, bool animate)
 {
-  SetScrolledOffsetInternal(-scrollOffset, ScrollUpdate::External, true, animate);
+  SetScrolledOffsetInternal(
+      -scrollOffset, ScrollUpdate::External, true, animate);
 }
 
 Vec2 BaseScrollArea::GetScrolledOffset()
@@ -492,7 +489,7 @@ void BaseScrollArea::ScrollAreaToView(Vec2 min, Vec2 max, bool animate)
   Vec2 scrollTop = GetScrolledOffset();
   Vec2 viewBottom = scrollTop + GetClientVisibleSize();
 
-  for(uint i=0;i<2;++i)
+  for (uint i = 0; i < 2; ++i)
   {
     if (IsScrollBarVisible(i))
     {
@@ -521,13 +518,12 @@ void BaseScrollArea::ScrollPercent(Vec2 additivePercentage)
 
 void BaseScrollArea::ScrollPixels(Vec2 additivePixels)
 {
-  SetScrolledOffsetInternal(mClientOffset + additivePixels,
-                            ScrollUpdate::External, true);
+  SetScrolledOffsetInternal(
+      mClientOffset + additivePixels, ScrollUpdate::External, true);
 }
 
-void BaseScrollArea::SetScrolledPercentageInternal(Vec2 scrollPercentage, 
-                                                 ScrollUpdate::Enum updateType,
-                                                 bool generateMessages)
+void BaseScrollArea::SetScrolledPercentageInternal(
+    Vec2 scrollPercentage, ScrollUpdate::Enum updateType, bool generateMessages)
 {
   // Clamp scroll to valid range.
   scrollPercentage.x = Math::Clamp(scrollPercentage.x, 0.0f, 1.0f);
@@ -544,10 +540,12 @@ void BaseScrollArea::SetScrolledPercentageInternal(Vec2 scrollPercentage,
   SetScrolledOffsetInternal(clientOffset, updateType, generateMessages);
 }
 
-void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset, ScrollUpdate::Enum updateType,
-                                               bool generateMessages, bool animate)
+void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset,
+                                               ScrollUpdate::Enum updateType,
+                                               bool generateMessages,
+                                               bool animate)
 {
-  if(generateMessages)
+  if (generateMessages)
     MarkAsNeedsUpdate();
 
   Vec2 clampedOffset = ClampClientOffset(clientOffset);
@@ -555,11 +553,16 @@ void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset, ScrollUpd
   mClientOffset = mAnimatingToClientOffset;
   mAnimatingToClientOffset = clampedOffset;
 
-  if(animate)
+  if (animate)
   {
     GetActions()->Cancel();
     ActionSequence* seq = new ActionSequence();
-    seq->Add(AnimatePropertyGetSet(BaseScrollArea, ClientOffset, Ease::Quad::Out, this, 0.2f, clampedOffset));
+    seq->Add(AnimatePropertyGetSet(BaseScrollArea,
+                                   ClientOffset,
+                                   Ease::Quad::Out,
+                                   this,
+                                   0.2f,
+                                   clampedOffset));
     GetActions()->Add(seq, ActionExecuteMode::FrameUpdate);
   }
   else
@@ -567,7 +570,7 @@ void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset, ScrollUpd
     mClientOffset = clampedOffset;
   }
 
-  if(generateMessages)
+  if (generateMessages)
   {
     ObjectEvent e(this);
     DispatchEvent(Events::ScrollUpdated, &e);
@@ -576,15 +579,14 @@ void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset, ScrollUpd
   UpdateArea(updateType);
 }
 
-//------------------------------------------------------------------ Scroll Area
 ZilchDefineType(ScrollArea, builder, type)
 {
 }
 
 const String BackgroundArea = "ScrollBackground";
 
-ScrollArea::ScrollArea(Composite* composite, bool modernStyle)
-  : BaseScrollArea(composite, modernStyle)
+ScrollArea::ScrollArea(Composite* composite, bool modernStyle) :
+    BaseScrollArea(composite, modernStyle)
 {
   // Create the widget the will clip the attached client area widget
   mClipWidget = new Composite(this, AttachType::Direct);
@@ -606,7 +608,10 @@ ScrollArea::ScrollArea(Composite* composite, bool modernStyle)
   mBackground->SetName("ScrollAreaBackground");
 
   // Any scroll in the scroll area (including the scroll bars)
-  Connect(this, Events::MouseScroll, (BaseScrollArea*)this, &BaseScrollArea::OnMouseScroll);
+  Connect(this,
+          Events::MouseScroll,
+          (BaseScrollArea*)this,
+          &BaseScrollArea::OnMouseScroll);
 }
 
 Composite* ScrollArea::GetClientWidget()
@@ -648,7 +653,7 @@ void ScrollArea::UpdateTransform()
 
 void ScrollArea::AttachChildWidget(Widget* widget, AttachType::Enum attachType)
 {
-  if(attachType == AttachType::Direct)
+  if (attachType == AttachType::Direct)
     Composite::AttachChildWidget(widget);
   else
     mClientArea->AttachChildWidget(widget);
@@ -671,4 +676,4 @@ float ScrollArea::GetScrollBarSize()
   return GetScrollBarWidth();
 }
 
-}//namespace Zero
+} // namespace Zero

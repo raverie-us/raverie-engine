@@ -1,25 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceManager.hpp
-/// Declaration of the Resource Manager.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 DeclareEnum3(RemoveMode,
-  // This means the resource is not being removed. This is odd, and should probably be removed,
-  // but it's needed until we split ResourceEvent into a ResourceRemovedEvent.
-  None,
-  // Resource is being unloaded
-  Unloading,
-  // Resource is being removed from project (editor only)
-  Deleted);
+             // This means the resource is not being removed. This is odd, and
+             // should probably be removed, but it's needed until we split
+             // ResourceEvent into a ResourceRemovedEvent.
+             None,
+             // Resource is being unloaded
+             Unloading,
+             // Resource is being removed from project (editor only)
+             Deleted);
 
 // Forward Declarations
 class Archetype;
@@ -31,13 +24,13 @@ struct ResourceAdd;
 // Events
 namespace Events
 {
-  // Sent when a new resource is created (not duplicated)
-  DeclareEvent(ResourceNewlyCreated);
-  DeclareEvent(ResourceAdded);
-  DeclareEvent(ResourceModified);
-  DeclareEvent(ResourceRemoved);
-  DeclareEvent(ResourceReload);
-}
+// Sent when a new resource is created (not duplicated)
+DeclareEvent(ResourceNewlyCreated);
+DeclareEvent(ResourceAdded);
+DeclareEvent(ResourceModified);
+DeclareEvent(ResourceRemoved);
+DeclareEvent(ResourceReload);
+} // namespace Events
 
 /// Event structure sent out in the above events.
 class ResourceEvent : public Event
@@ -73,9 +66,11 @@ public:
 
   BoundType* GetResourceType();
 
-  // Allocates and initializes a new resource. Should be the only method that uses AllocateDefaultConstructed().
+  // Allocates and initializes a new resource. Should be the only method that
+  // uses AllocateDefaultConstructed().
   virtual Resource* CreateNewResourceInternal(StringParam name);
-  // Calls CreateNewResourceInternal and does required setup for runtime resources
+  // Calls CreateNewResourceInternal and does required setup for runtime
+  // resources
   virtual Resource* CreateRuntimeInternal(StringParam name = String());
 
   // Get a resource by NameId string
@@ -90,35 +85,42 @@ public:
   // Get the resource to use when resource can not be found to indicate an error
   Resource* GetFallbackResource();
 
-  //Remove the resource from the resource manager.
+  // Remove the resource from the resource manager.
   void Remove(Resource* resource, RemoveMode::Enum removeMode);
 
-  //Validate that a name of a resource is ok to add
-  //Before calling this, we already check for valid file names,
+  // Validate that a name of a resource is ok to add
+  // Before calling this, we already check for valid file names,
   // and that it won't conflict with another resource of the same name
-  virtual void ValidateNewName(Status& status, StringParam name, BoundType* optionalType);
+  virtual void ValidateNewName(Status& status,
+                               StringParam name,
+                               BoundType* optionalType);
 
-  // Validate that a name is even valid (not considering the current state of the engine).
-  virtual void ValidateRawName(Status& status, StringParam name, BoundType* optionalType);
+  // Validate that a name is even valid (not considering the current state of
+  // the engine).
+  virtual void ValidateRawName(Status& status,
+                               StringParam name,
+                               BoundType* optionalType);
 
-  //List all available resources
+  // List all available resources
   void EnumerateResources(Array<String>& values);
-  //Gets all available resources, values should not be held onto after used.
+  // Gets all available resources, values should not be held onto after used.
   void EnumerateResources(Array<Resource*>& values);
 
-  //Add a new resource with a new name.
+  // Add a new resource with a new name.
   virtual String GetTemplateSourceFile(ResourceAdd& resourceAdd);
 
   ResourceRange AllResources();
 
   // Called after a resource has been duplicated for any custom resource logic
-  virtual void ResourceDuplicated(Resource* resource, Resource* duplicate) {}
+  virtual void ResourceDuplicated(Resource* resource, Resource* duplicate)
+  {
+  }
 
   // Name of the resource type managed by this resource manager.
   String mResourceTypeName;
-  // Resource Type managed by this resource manager. Storing this BoundType* is safe because 
-  // we only have native Resource types. If we ever support non-native Resource types, this will
-  // have to be changed to a handle.
+  // Resource Type managed by this resource manager. Storing this BoundType* is
+  // safe because we only have native Resource types. If we ever support
+  // non-native Resource types, this will have to be changed to a handle.
   BoundType* mResourceType;
   // Name of the resource to use when defaulting a resource field.
   String DefaultResourceName;
@@ -149,25 +151,28 @@ public:
   // Sort weight in the add resource window.
   uint mAddSortWeight;
 
-  // This is currently only used for the import dialog in the add menu. Some of the extension
-  // in this array are not the actual extensions used by the engine, but are filters for use
-  // in the file dialog.
+  // This is currently only used for the import dialog in the add menu. Some of
+  // the extension in this array are not the actual extensions used by the
+  // engine, but are filters for use in the file dialog.
   Array<FileDialogFilter> mOpenFileFilters;
 
   friend class ResourceSystem;
   friend class ResourceLoader;
 
-//Internals
-  //Saves/Loads a resource from a stream object. If saving the resourcePtr
-  //is saved, if loading the new resource is returned.
-  Resource* ResolveResourceStream(cstr fieldName, Serializer& stream, Resource* resourcePtr, 
-                                  ResourceNotFound::Enum ifNotFound, cstr defaultResourceName = nullptr);
+  // Internals
+  // Saves/Loads a resource from a stream object. If saving the resourcePtr
+  // is saved, if loading the new resource is returned.
+  Resource* ResolveResourceStream(cstr fieldName,
+                                  Serializer& stream,
+                                  Resource* resourcePtr,
+                                  ResourceNotFound::Enum ifNotFound,
+                                  cstr defaultResourceName = nullptr);
 
-//protected:
-  //Map of ResourceIds to Resources.
+  // protected:
+  // Map of ResourceIds to Resources.
   ResourceIdMapType ResourceIdMap;
 
-  //Map of ResourceName strings to Resources.
+  // Map of ResourceName strings to Resources.
   typedef HashMap<String, ResourceId> ResourceNameMapType;
   ResourceNameMapType ResourceNameMap;
 
@@ -181,11 +186,11 @@ private:
   Resource* GetResourceByName(StringParam name);
   void MissingResource(StringParam resourceName, ResourceId resourceId);
 
-  // Used internally to allocated the derived resource type, do not call this method.
+  // Used internally to allocated the derived resource type, do not call this
+  // method.
   virtual Resource* AllocateDefaultConstructed() = 0;
 };
 
-//-------------------------------------------------------------- Resource Loader
 
 /// Resource loader interface. Used to load resource of various formats.
 /// A resource manager may provide multiple loaders.
@@ -195,92 +200,159 @@ public:
   ResourceLoader(){};
   virtual ~ResourceLoader(){};
   virtual HandleOf<Resource> LoadFromFile(ResourceEntry& entry) = 0;
-  virtual void ReloadFromFile(Resource* resource, ResourceEntry& entry) {}
-  virtual HandleOf<Resource> LoadFromBlock(ResourceEntry& entry) { return nullptr; }
+  virtual void ReloadFromFile(Resource* resource, ResourceEntry& entry)
+  {
+  }
+  virtual HandleOf<Resource> LoadFromBlock(ResourceEntry& entry)
+  {
+    return nullptr;
+  }
 };
 
-//------------------------------------------------------------ Native Resource Manager Setup
+//Manager Setup
 
 // Adds Resource Typed Static Functions for native resource types
-// CreateRuntime should not be used directly, implement a static CreateRuntime method on the resource type
-// and call the manager's CreateRuntime from there, along with any other required setup of the resource for runtime usage.
-// If creation of a runtime resource in script is intended then bind the resource's CreateRuntime method.
-#define DeclareResourceManager(ManagerType, ManagerResourceType)                                                              \
-  typedef ResourceManager ZilchBase;                                                                                          \
-  typedef ManagerType ZilchSelf;                                                                                              \
-  typedef ManagerResourceType ResourceType;   typedef ManagerResourceType RT;    typedef ManagerType self_type;               \
-  static void Initialize();                                                                                                   \
-  static ManagerType* Instance;                                                                                               \
-  static ManagerType* GetInstance(){return Instance;}                                                                         \
-  static bool IsValid(){return Instance != NULL; }                                                                            \
-  static RT* GetDefault(){return (RT*)Instance->GetDefaultResource();}                                                        \
-  static RT* GetFallback(){return (RT*)Instance->GetFallbackResource();}                                                      \
-  static RT* Find(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ErrorFallback);}     \
-  static RT* Find(StringParam nameId){return (RT*)Instance->GetResource(nameId, ResourceNotFound::ErrorFallback);}            \
-  static RT* FindOrNull(ResourceId resourceId){return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ReturnNull);}  \
-  static RT* FindOrNull(StringParam nameId){return (RT*)Instance->GetResource(nameId, ResourceNotFound::ReturnNull);}         \
-  static RT* CreateNewResource(StringParam name){return (RT*)Instance->CreateNewResourceInternal(name);}                      \
-  private:                                                                                                                    \
-  friend class ManagerResourceType;                                                                                           \
-  static RT* CreateRuntime(StringParam name = String()){return (RT*)Instance->CreateRuntimeInternal(name);}                   \
-  Resource* AllocateDefaultConstructed() override {return new RT();}                                                          \
-  public:
+// CreateRuntime should not be used directly, implement a static CreateRuntime
+// method on the resource type and call the manager's CreateRuntime from there,
+// along with any other required setup of the resource for runtime usage. If
+// creation of a runtime resource in script is intended then bind the resource's
+// CreateRuntime method.
+#define DeclareResourceManager(ManagerType, ManagerResourceType)               \
+  typedef ResourceManager ZilchBase;                                           \
+  typedef ManagerType ZilchSelf;                                               \
+  typedef ManagerResourceType ResourceType;                                    \
+  typedef ManagerResourceType RT;                                              \
+  typedef ManagerType self_type;                                               \
+  static void Initialize();                                                    \
+  static ManagerType* Instance;                                                \
+  static ManagerType* GetInstance()                                            \
+  {                                                                            \
+    return Instance;                                                           \
+  }                                                                            \
+  static bool IsValid()                                                        \
+  {                                                                            \
+    return Instance != NULL;                                                   \
+  }                                                                            \
+  static RT* GetDefault()                                                      \
+  {                                                                            \
+    return (RT*)Instance->GetDefaultResource();                                \
+  }                                                                            \
+  static RT* GetFallback()                                                     \
+  {                                                                            \
+    return (RT*)Instance->GetFallbackResource();                               \
+  }                                                                            \
+  static RT* Find(ResourceId resourceId)                                       \
+  {                                                                            \
+    return (RT*)Instance->GetResource(resourceId,                              \
+                                      ResourceNotFound::ErrorFallback);        \
+  }                                                                            \
+  static RT* Find(StringParam nameId)                                          \
+  {                                                                            \
+    return (RT*)Instance->GetResource(nameId,                                  \
+                                      ResourceNotFound::ErrorFallback);        \
+  }                                                                            \
+  static RT* FindOrNull(ResourceId resourceId)                                 \
+  {                                                                            \
+    return (RT*)Instance->GetResource(resourceId,                              \
+                                      ResourceNotFound::ReturnNull);           \
+  }                                                                            \
+  static RT* FindOrNull(StringParam nameId)                                    \
+  {                                                                            \
+    return (RT*)Instance->GetResource(nameId, ResourceNotFound::ReturnNull);   \
+  }                                                                            \
+  static RT* CreateNewResource(StringParam name)                               \
+  {                                                                            \
+    return (RT*)Instance->CreateNewResourceInternal(name);                     \
+  }                                                                            \
+                                                                               \
+private:                                                                       \
+  friend class ManagerResourceType;                                            \
+  static RT* CreateRuntime(StringParam name = String())                        \
+  {                                                                            \
+    return (RT*)Instance->CreateRuntimeInternal(name);                         \
+  }                                                                            \
+  Resource* AllocateDefaultConstructed() override                              \
+  {                                                                            \
+    return new RT();                                                           \
+  }                                                                            \
+                                                                               \
+public:
 
 // Implement native resource managers
-#define ImplementResourceManager(ManagerType, ManagerResourceType)                                \
-  ManagerType* ManagerType::Instance = NULL;                                                      \
-  void ManagerType::Initialize(){                                                                 \
-  BoundType* metaType = ZilchTypeId(ManagerResourceType);                                         \
-  ManagerType::Instance = new ManagerType(metaType);  }                                           \
+#define ImplementResourceManager(ManagerType, ManagerResourceType)             \
+  ManagerType* ManagerType::Instance = NULL;                                   \
+  void ManagerType::Initialize()                                               \
+  {                                                                            \
+    BoundType* metaType = ZilchTypeId(ManagerResourceType);                    \
+    ManagerType::Instance = new ManagerType(metaType);                         \
+  }
 
 // Initialize a ResourceManager it must be forward declared
-#define InitializeResourceManager(ManagerType)                                                    \
-  ManagerType::Initialize();
+#define InitializeResourceManager(ManagerType) ManagerType::Initialize();
 
-template<typename ManagerType>
-void SerializeResourceImpl(cstr fieldName, Serializer& stream,
-                           HandleOf<typename ManagerType::ResourceType>& resourceRef)
+template <typename ManagerType>
+void SerializeResourceImpl(
+    cstr fieldName,
+    Serializer& stream,
+    HandleOf<typename ManagerType::ResourceType>& resourceRef)
 {
-  resourceRef = (typename ManagerType::ResourceType*)
-    ManagerType::GetInstance()->ResolveResourceStream(fieldName, stream, resourceRef, ResourceNotFound::ReturnDefault);
+  resourceRef =
+      (typename ManagerType::ResourceType*)ManagerType::GetInstance()
+          ->ResolveResourceStream(
+              fieldName, stream, resourceRef, ResourceNotFound::ReturnDefault);
 }
 
-template<typename ManagerType>
-void SerializeResourceImpl(cstr fieldName, Serializer& stream,
-                           HandleOf<typename ManagerType::ResourceType>& resourceRef,
-                           cstr defaultResourceName, bool canBeNull = false)
+template <typename ManagerType>
+void SerializeResourceImpl(
+    cstr fieldName,
+    Serializer& stream,
+    HandleOf<typename ManagerType::ResourceType>& resourceRef,
+    cstr defaultResourceName,
+    bool canBeNull = false)
 {
-  resourceRef = (typename ManagerType::ResourceType*)
-    ManagerType::GetInstance()->ResolveResourceStream(fieldName, stream, resourceRef, ResourceNotFound::ReturnNull, defaultResourceName);
+  resourceRef = (typename ManagerType::ResourceType*)ManagerType::GetInstance()
+                    ->ResolveResourceStream(fieldName,
+                                            stream,
+                                            resourceRef,
+                                            ResourceNotFound::ReturnNull,
+                                            defaultResourceName);
 
   if (canBeNull == false && resourceRef.IsNull())
     resourceRef = ManagerType::GetInstance()->FindOrNull(defaultResourceName);
 }
 
-template<typename ManagerType>
-void SerializeResourceImpl(cstr fieldName, Serializer& stream,
-                           HandleOf<typename ManagerType::ResourceType>& resourceRef,
-                           StringParam defaultResourceName, bool canBeNull = false)
+template <typename ManagerType>
+void SerializeResourceImpl(
+    cstr fieldName,
+    Serializer& stream,
+    HandleOf<typename ManagerType::ResourceType>& resourceRef,
+    StringParam defaultResourceName,
+    bool canBeNull = false)
 {
-  SerializeResourceImpl<ManagerType>(fieldName, stream, resourceRef, defaultResourceName.c_str(), canBeNull);
+  SerializeResourceImpl<ManagerType>(
+      fieldName, stream, resourceRef, defaultResourceName.c_str(), canBeNull);
 }
 
-#define SerializeResourceName(name, managerName) \
-        SerializeResourceImpl<managerName>(#name, stream, name);
+#define SerializeResourceName(name, managerName)                               \
+  SerializeResourceImpl<managerName>(#name, stream, name);
 
-#define SerializeResourceNameDirect(name, managerName) \
-        SerializeResourceImpl<managerName>(#name, stream, name);
+#define SerializeResourceNameDirect(name, managerName)                         \
+  SerializeResourceImpl<managerName>(#name, stream, name);
 
-#define SerializeResource(fieldName, name, managerName) \
-        SerializeResourceImpl<managerName>(fieldName, stream, name);
+#define SerializeResource(fieldName, name, managerName)                        \
+  SerializeResourceImpl<managerName>(fieldName, stream, name);
 
-#define SerializeResourceNameManagerDefault(name, managerName) \
-        SerializeResourceImpl<managerName>(#name, stream, name, managerName::GetInstance()->DefaultResourceName.c_str());
+#define SerializeResourceNameManagerDefault(name, managerName)                 \
+  SerializeResourceImpl<managerName>(                                          \
+      #name,                                                                   \
+      stream,                                                                  \
+      name,                                                                    \
+      managerName::GetInstance()->DefaultResourceName.c_str());
 
-#define SerializeResourceNameDefault(name, managerName, defaultValue) \
-        SerializeResourceImpl<managerName>(#name, stream, name, defaultValue);
+#define SerializeResourceNameDefault(name, managerName, defaultValue)          \
+  SerializeResourceImpl<managerName>(#name, stream, name, defaultValue);
 
-#define SerializeNullableResourceNameDefault(name, managerName, defaultValue) \
-        SerializeResourceImpl<managerName>(#name, stream, name, defaultValue, true);
+#define SerializeNullableResourceNameDefault(name, managerName, defaultValue)  \
+  SerializeResourceImpl<managerName>(#name, stream, name, defaultValue, true);
 
-}//namespace Zero
+} // namespace Zero

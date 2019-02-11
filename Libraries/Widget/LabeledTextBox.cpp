@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
-LabeledTextBox::LabeledTextBox(Composite* parent)
-  : Composite(parent)
+LabeledTextBox::LabeledTextBox(Composite* parent) : Composite(parent)
 {
   SetLayout(CreateRowLayout());
   SetClipping(true);
@@ -24,13 +17,11 @@ LabeledTextBox::LabeledTextBox(Composite* parent)
   mTextBox->SetEditable(true);
 }
 
-//******************************************************************************
 String LabeledTextBox::GetLabelText() const
 {
   return mLabel->GetText();
 }
 
-//******************************************************************************
 void LabeledTextBox::SetLabelText(StringParam labelText)
 {
   mLabel->SetText(labelText);
@@ -38,17 +29,15 @@ void LabeledTextBox::SetLabelText(StringParam labelText)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 String LabeledTextBox::GetText() const
 {
   return mTextBox->GetText();
 }
 
-//******************************************************************************
 void LabeledTextBox::SetText(StringParam text)
 {
   mTextBox->SetText(text);
   MarkAsNeedsUpdate();
 }
 
-}//namespace Zero
+} // namespace Zero

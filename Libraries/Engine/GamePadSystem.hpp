@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GamePadSystem.hpp
-/// Declaration of the GamePadSystem classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -35,38 +27,38 @@ struct Button
 };
 
 DeclareEnum23(Buttons,
-  A,
-  B,
-  X,
-  Y,
-  Start,
-  Back,
-  LeftThumb,
-  RightThumb,
-  LeftShoulder,
-  RightShoulder,
-  DpadUp,
-  DpadDown,
-  DpadLeft,
-  DpadRight,
-  DpadUpFiltered,
-  DpadDownFiltered,
-  DpadLeftFiltered,
-  DpadRightFiltered,
-  StickUp,
-  StickDown,
-  StickLeft,
-  StickRight,
-  AnyButton);
+              A,
+              B,
+              X,
+              Y,
+              Start,
+              Back,
+              LeftThumb,
+              RightThumb,
+              LeftShoulder,
+              RightShoulder,
+              DpadUp,
+              DpadDown,
+              DpadLeft,
+              DpadRight,
+              DpadUpFiltered,
+              DpadDownFiltered,
+              DpadLeftFiltered,
+              DpadRightFiltered,
+              StickUp,
+              StickDown,
+              StickLeft,
+              StickRight,
+              AnyButton);
 
 namespace Events
 {
-  DeclareEvent(ButtonDown);
-  DeclareEvent(ButtonUp);
-  DeclareEvent(GamepadStickFlicked);
-  DeclareEvent(GamepadsUpdated);
-  DeclareEvent(GamepadUpdated);
-}
+DeclareEvent(ButtonDown);
+DeclareEvent(ButtonUp);
+DeclareEvent(GamepadStickFlicked);
+DeclareEvent(GamepadsUpdated);
+DeclareEvent(GamepadUpdated);
+} // namespace Events
 
 DeclareEnum3(FlickedStick, None, Left, Right);
 
@@ -82,13 +74,13 @@ public:
   /// Gamepad that generated this event.
   Gamepad* mGamepad;
 
-  /// When responding to the 'GamepadStickFlicked' event, this will be set to the stick that was flicked
+  /// When responding to the 'GamepadStickFlicked' event, this will be set to
+  /// the stick that was flicked
   FlickedStick::Enum mFlickedStick;
 
   /// The direction of the stick that was flicked (normalized)
   Vec2 mFlickDirection;
 };
-
 
 /// Game pad is a object for getting game pad input.
 class Gamepad : public EventObject
@@ -126,9 +118,9 @@ public:
   /// How long has this button been held down.
   float TimeButtonHeld(int index);
 
-  /// Vibrate this controller for a given time. 
+  /// Vibrate this controller for a given time.
   /// Speed is a value between zero and one.
-  void Vibrate(float time , float LeftSpeed , float RightSpeed);
+  void Vibrate(float time, float LeftSpeed, float RightSpeed);
 
   Button Buttons[Buttons::Size];
 
@@ -139,9 +131,9 @@ public:
   int mGamepadIndex;
 
 private:
-
-  // If the user moves the stick from its base position to the edge, the stick is considered flicked
-  // This property generally should not be read by the user (rather event based)
+  // If the user moves the stick from its base position to the edge, the stick
+  // is considered flicked This property generally should not be read by the
+  // user (rather event based)
   bool mLeftStickFlicked;
   bool mRightStickFlicked;
 
@@ -184,6 +176,7 @@ public:
 
   void OnUpdate(UpdateEvent* event);
   void OnDeviceChanged(Event* event);
+
 private:
   Gamepad* mGamePads[4];
   bool mVibrationIsPaused;
@@ -191,7 +184,7 @@ private:
 
 namespace Z
 {
-extern Gamepads * gGamepads;
+extern Gamepads* gGamepads;
 }
 
-}
+} // namespace Zero

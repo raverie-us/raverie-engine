@@ -1,15 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-bool ZeroLauncherStartup(Engine* engine, StringMap& arguments, StringParam dllPath);
+bool ZeroLauncherStartup(Engine* engine,
+                         StringMap& arguments,
+                         StringParam dllPath);
 
 class ZeroLauncherStartupSettings : public ZeroStartupSettings
 {
@@ -28,4 +25,4 @@ protected:
   void InitializeLibraries(ZeroStartupSettings& settings) override;
 };
 
-}//namespace Zero
+} // namespace Zero

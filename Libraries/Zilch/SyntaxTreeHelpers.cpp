@@ -1,7 +1,4 @@
-/**************************************************************\
-* Author: Trevor Sundberg
-* Copyright 2016, DigiPen Institute of Technology
-\**************************************************************/
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 

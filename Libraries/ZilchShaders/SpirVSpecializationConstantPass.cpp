@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,9 +7,8 @@ namespace Zero
 namespace Events
 {
 ZilchDefineEvent(CollectSpecializationConstants);
-}//namespace Events
+} // namespace Events
 
- //-------------------------------------------------------------------SpecializationConstantEvent
 ZilchDefineType(SpecializationConstantEvent, builder, type)
 {
 }
@@ -31,13 +25,14 @@ int SpecializationConstantEvent::GetFirstId(StringParam name)
   return id;
 }
 
-//-------------------------------------------------------------------SpirVSpecializationConstantPass
 SpirVSpecializationConstantPass::SpirVSpecializationConstantPass()
 {
   mFreezeAllConstants = true;
 }
 
-bool SpirVSpecializationConstantPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+bool SpirVSpecializationConstantPass::RunTranslationPass(
+    ShaderTranslationPassResult& inputData,
+    ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -46,19 +41,27 @@ bool SpirVSpecializationConstantPass::RunTranslationPass(ShaderTranslationPassRe
 
   Array<String> flags;
   // Get the flags for specializations
-  GetSpecializationFlags(flags, inputData.mReflectionData, outputData.mReflectionData);
+  GetSpecializationFlags(
+      flags, inputData.mReflectionData, outputData.mReflectionData);
   bool success = true;
   // Only run the optimizer if there's specialization constant flags.
-  if(!flags.Empty())
-      success = RunOptimizer(SPV_OPTIMIZER_NO_PASS, flags, inputData.mByteStream, outputData.mByteStream);
+  if (!flags.Empty())
+    success = RunOptimizer(SPV_OPTIMIZER_NO_PASS,
+                           flags,
+                           inputData.mByteStream,
+                           outputData.mByteStream);
   else
     // Otherwise, just copy over the stream data
-    outputData.mByteStream.Load(inputData.mByteStream.Data(), inputData.mByteStream.ByteCount());
+    outputData.mByteStream.Load(inputData.mByteStream.Data(),
+                                inputData.mByteStream.ByteCount());
 
   return success;
 }
 
-void SpirVSpecializationConstantPass::GetSpecializationFlags(Array<String>& outFlags, ShaderStageInterfaceReflection& inputStageReflection, ShaderStageInterfaceReflection& outputStageReflection)
+void SpirVSpecializationConstantPass::GetSpecializationFlags(
+    Array<String>& outFlags,
+    ShaderStageInterfaceReflection& inputStageReflection,
+    ShaderStageInterfaceReflection& outputStageReflection)
 {
   // Query for any constants unique to this pass (such as fragment properties)
   SpecializationConstantEvent toSend;
@@ -69,7 +72,7 @@ void SpirVSpecializationConstantPass::GetSpecializationFlags(Array<String>& outF
   // Convert these flags into a better working format
   SetSpecializationValues(outFlags, toSend.mSpecializationOverridesById);
   // If requested, freeze all constants (optimizer only supports all or nothing)
-  if(mFreezeAllConstants)
+  if (mFreezeAllConstants)
   {
     outFlags.PushBack("--freeze-spec-const");
     // Freezing constants means that these are no longer valid specialization
@@ -78,19 +81,23 @@ void SpirVSpecializationConstantPass::GetSpecializationFlags(Array<String>& outF
   }
 }
 
-void SpirVSpecializationConstantPass::SetSpecializationValues(Array<String>& outFlags, HashMap<int, String>& overrides)
+void SpirVSpecializationConstantPass::SetSpecializationValues(
+    Array<String>& outFlags, HashMap<int, String>& overrides)
 {
   AutoDeclare(range, overrides.All());
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     AutoDeclareReference(pair, range.Front());
     int specConstantId = pair.first;
     String specConstantValue = pair.second;
 
-    // If the id exists, set the default value (has to be by string at the moment)
-    String flag = String::Format("--set-spec-const-default-value=%d:%s", specConstantId, specConstantValue.c_str());
+    // If the id exists, set the default value (has to be by string at the
+    // moment)
+    String flag = String::Format("--set-spec-const-default-value=%d:%s",
+                                 specConstantId,
+                                 specConstantValue.c_str());
     outFlags.PushBack(flag);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

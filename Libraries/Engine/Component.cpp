@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,40 +6,44 @@ namespace Zero
 
 namespace Tags
 {
-  DefineTag(Component);
+DefineTag(Component);
 }
 
-//--------------------------------------------------------------------------------- Component Memory
-Memory::Heap* Component::sHeap = new Memory::Heap("Components", Memory::GetNamedHeap("Objects"));
+//Component Memory
+Memory::Heap* Component::sHeap =
+    new Memory::Heap("Components", Memory::GetNamedHeap("Objects"));
 
-void* Component::operator new(size_t size){return sHeap->Allocate(size);}
-void Component::operator delete(void* pMem, size_t size){return sHeap->Deallocate(pMem, size);}
+void* Component::operator new(size_t size)
+{
+  return sHeap->Allocate(size);
+}
+void Component::operator delete(void* pMem, size_t size)
+{
+  return sHeap->Deallocate(pMem, size);
+}
 
-//**************************************************************************************************
 Handle ComponentGetOwner(HandleParam object)
 {
   Component* component = object.Get<Component*>();
-  if(component == nullptr)
+  if (component == nullptr)
     return nullptr;
 
   return component->GetOwner();
 }
 
-//**************************************************************************************************
 ZilchDefineTemplateType(ProxyObject<Component>, builder, type)
 {
 }
 
-//---------------------------------------------------------------------------------------- Component
-//**************************************************************************************************
+//Component
 ZilchDefineType(Component, builder, type)
 {
   ZilchBindDefaultConstructor();
   type->HandleManager = ZilchManagerId(ComponentHandleManager);
 
-  //METAREFACTOR Take care of this stuff (meta components)
-  //type->ShortDescription = GetShortDescriptionComponent;
-  
+  // METAREFACTOR Take care of this stuff (meta components)
+  // type->ShortDescription = GetShortDescriptionComponent;
+
   type->Add(new MetaSerialization());
   type->Add(new MetaOwner(ComponentGetOwner));
   type->Add(new ComponentMetaDataInheritance());
@@ -61,25 +60,21 @@ ZilchDefineType(Component, builder, type)
   ZeroBindTag(Tags::Component);
 }
 
-//**************************************************************************************************
 Component::Component() : mOwner(NULL)
 {
 }
 
-//**************************************************************************************************
 void Component::Delete()
 {
   delete this;
 }
 
-//**************************************************************************************************
 Cog* Component::GetOwner() const
 {
   ErrorIf(mOwner == NULL, "Component is not yet initialized.");
   return mOwner;
 }
 
-//**************************************************************************************************
 Cog* Component::GetOwnerScript() const
 {
   if (mOwner && mOwner->IsInitialized())
@@ -87,7 +82,6 @@ Cog* Component::GetOwnerScript() const
   return nullptr;
 }
 
-//**************************************************************************************************
 Space* Component::GetSpace()
 {
   if (mOwner)
@@ -95,7 +89,6 @@ Space* Component::GetSpace()
   return NULL;
 }
 
-//**************************************************************************************************
 Cog* Component::GetLevelSettings()
 {
   if (mOwner)
@@ -103,7 +96,6 @@ Cog* Component::GetLevelSettings()
   return NULL;
 }
 
-//**************************************************************************************************
 GameSession* Component::GetGameSession()
 {
   if (mOwner)
@@ -111,7 +103,6 @@ GameSession* Component::GetGameSession()
   return NULL;
 }
 
-//**************************************************************************************************
 EventReceiver* Component::GetReceiver()
 {
   if (mOwner)
@@ -119,7 +110,6 @@ EventReceiver* Component::GetReceiver()
   return NULL;
 }
 
-//**************************************************************************************************
 EventDispatcher* Component::GetDispatcher()
 {
   if (mOwner)
@@ -127,7 +117,6 @@ EventDispatcher* Component::GetDispatcher()
   return NULL;
 }
 
-//**************************************************************************************************
 bool Component::IsInitialized()
 {
   if (mOwner)
@@ -135,7 +124,6 @@ bool Component::IsInitialized()
   return false;
 }
 
-//**************************************************************************************************
 void Component::WriteDescription(StringBuilder& builder)
 {
   BoundType* type = ZilchVirtualTypeId(this);
@@ -147,7 +135,6 @@ void Component::WriteDescription(StringBuilder& builder)
     builder << "Null Cog";
 }
 
-//**************************************************************************************************
 String Component::GetDescription()
 {
   StringBuilder builder;
@@ -157,17 +144,19 @@ String Component::GetDescription()
   return builder.ToString();
 }
 
-//**************************************************************************************************
 void Component::DispatchEvent(StringParam eventId, Event* event)
 {
-  ReturnIf(!mOwner,, "The Owner was null (is this being called from a constructor or destructor?)");
+  ReturnIf(!mOwner,
+           ,
+           "The Owner was null (is this being called from a constructor or "
+           "destructor?)");
   mOwner->GetDispatcher()->Dispatch(eventId, event);
 }
 
-
-//------------------------------------------------------------------------- Component Handle Manager
-//**************************************************************************************************
-void ComponentHandleManager::Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags)
+//Component Handle Manager
+void ComponentHandleManager::Allocate(BoundType* type,
+                                      Handle& handleToInitialize,
+                                      size_t customFlags)
 {
   handleToInitialize.Flags |= HandleFlags::NoReferenceCounting;
 
@@ -178,8 +167,9 @@ void ComponentHandleManager::Allocate(BoundType* type, Handle& handleToInitializ
   data.mComponentType = type;
 }
 
-//**************************************************************************************************
-void ComponentHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
+void ComponentHandleManager::ObjectToHandle(const byte* object,
+                                            BoundType* type,
+                                            Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;
@@ -204,11 +194,10 @@ void ComponentHandleManager::ObjectToHandle(const byte* object, BoundType* type,
   }
 }
 
-//**************************************************************************************************
-//Handle to a component is a handle to the cog for the
-//primary id and a sub object if of the component type
-//this allow the Cog to control lifetime and the component
-//to be removed and have the handle still work.
+// Handle to a component is a handle to the cog for the
+// primary id and a sub object if of the component type
+// this allow the Cog to control lifetime and the component
+// to be removed and have the handle still work.
 byte* ComponentHandleManager::HandleToObject(const Handle& handle)
 {
   const ComponentHandleData& data = *(const ComponentHandleData*)(handle.Data);
@@ -231,20 +220,18 @@ byte* ComponentHandleManager::HandleToObject(const Handle& handle)
   return nullptr;
 }
 
-//**************************************************************************************************
 bool ComponentHandleManager::CanDelete(const Handle& handle)
 {
   return true;
 }
 
-//**************************************************************************************************
 void ComponentHandleManager::Delete(const Handle& handle)
 {
   const ComponentHandleData& data = *(const ComponentHandleData*)(handle.Data);
 
-  // METAREFACTOR This is what was previously happening with delete, except this doesn't seem correct
-  // since mRawObject is not set in all cases...
+  // METAREFACTOR This is what was previously happening with delete, except this
+  // doesn't seem correct since mRawObject is not set in all cases...
   zDeallocate(data.mRawObject);
 }
 
-}//namespace Zero
+} // namespace Zero

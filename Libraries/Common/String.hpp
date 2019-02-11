@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file String.hpp
-/// Declaration of the Referenced counted string class.
-///
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Rune.hpp"
@@ -25,11 +17,12 @@ class StringIterator;
 class StringSplitRange;
 
 typedef const String& StringParam;
-// Should later be changed to "String&" without const. Commented out for now to prevent/fix wrong usage
-//typedef const String& StringRef;
+// Should later be changed to "String&" without const. Commented out for now to
+// prevent/fix wrong usage
+// typedef const String& StringRef;
 typedef const StringRange& StringRangeParam;
 
-//----------------------------------------------------------------------- StringStats
+//StringStats
 class StringStats
 {
 public:
@@ -37,20 +30,21 @@ public:
   Atomic<size_t> mTotalCount;
 };
 
-//----------------------------------------------------------------------- Utility
+//Utility
 bool CaseSensitiveCompare(Rune a, Rune b);
 bool CaseInsensitiveCompare(Rune a, Rune b);
 typedef bool (*RuneComparer)(Rune a, Rune b);
 
-//----------------------------------------------------------------------- StringNode
+//StringNode
 struct StringNode
 {
-  typedef char              value_type;
-  typedef size_t            size_type;
-  typedef s32               count_type;
+  typedef char value_type;
+  typedef size_t size_type;
+  typedef s32 count_type;
 
-  // A special flag we use to indicate that the string pool had been destructed, but the node still exists
-  // Note this must be the same hash code as the empty / default string
+  // A special flag we use to indicate that the string pool had been destructed,
+  // but the node still exists Note this must be the same hash code as the empty
+  // / default string
   static const size_type StringPoolFreeHashCode = (size_type)0;
 
   volatile count_type RefCount;
@@ -65,7 +59,7 @@ struct StringNode
   static bool isEqual(StringNode* l, StringNode* r);
 };
 
-//----------------------------------------------------------------------- PoolPolicy
+//PoolPolicy
 class PoolPolicy
 {
 public:
@@ -73,21 +67,20 @@ public:
   bool Equal(const StringNode* lhs, const StringNode* rhs) const;
 };
 
-//----------------------------------------------------------------------- String
 class ZeroShared String
 {
 public:
   ///////Standard typedefs/////////////
-  typedef char              value_type;
-  typedef value_type*       pointer;
+  typedef char value_type;
+  typedef value_type* pointer;
   typedef const value_type* const_pointer;
-  typedef value_type&       reference;
+  typedef value_type& reference;
   typedef const value_type& const_reference;
-  typedef size_t            size_type;
-  typedef s32               count_type;
-  typedef std::ptrdiff_t    difference_type;
-  typedef String            this_type;
-  typedef StringRange       range;
+  typedef size_t size_type;
+  typedef s32 count_type;
+  typedef std::ptrdiff_t difference_type;
+  typedef String this_type;
+  typedef StringRange range;
 
   ///////Iterators/////////////////////
   typedef const value_type* iterator;
@@ -100,14 +93,14 @@ public:
 
   String(StringNode* node);
 
-  //Caution: This is not explicit for ease of use.
+  // Caution: This is not explicit for ease of use.
   String(const_pointer cstring);
   String(StringRange str);
   String(const_pointer cstring, size_type size);
   String(const_pointer cstart, const_pointer cend);
   String(StringIterator begin, StringIterator end);
 
-  //Copy constructor
+  // Copy constructor
   String(const this_type& rhs);
   explicit String(char character);
   explicit String(Rune rune);
@@ -131,7 +124,8 @@ public:
   bool operator!=(const String& right) const;
 
   StringRange SubString(StringIterator begin, StringIterator end) const;
-  StringRange SubStringFromByteIndices(size_t startIndex, size_t endIndex) const;
+  StringRange SubStringFromByteIndices(size_t startIndex,
+                                       size_t endIndex) const;
 
   ///////Iteration/////////////////////////
 
@@ -141,22 +135,28 @@ public:
   static String Format(cstr format, ...);
   static String FormatArgs(cstr format, va_list va);
 
-  // Gets the string node that represents this string (only use in advanced cases)
+  // Gets the string node that represents this string (only use in advanced
+  // cases)
   StringNode* GetNode() const;
 
-  template<typename type>
+  template <typename type>
   friend struct MoveWithoutDestructionOperator;
-  static String ReplaceSub(StringRange source, StringRange text, size_type start, size_type end);
+  static String ReplaceSub(StringRange source,
+                           StringRange text,
+                           size_type start,
+                           size_type end);
 
   StringRange FindFirstOf(Rune value) const;
   StringRange FindFirstOf(StringRangeParam value) const;
   StringRange FindLastOf(Rune value) const;
   StringRange FindLastOf(StringRangeParam value) const;
-  StringRange FindRangeExclusive(StringRangeParam startRange, StringRangeParam endRange);
-  StringRange FindRangeInclusive(StringRangeParam startRange, StringRangeParam endRange);
+  StringRange FindRangeExclusive(StringRangeParam startRange,
+                                 StringRangeParam endRange);
+  StringRange FindRangeInclusive(StringRangeParam startRange,
+                                 StringRangeParam endRange);
   Rune FindFirstNonWhitespaceRune() const;
   Rune FindLastNonWhitespaceRune() const;
-  
+
   /// Returns true if all the characters in a string are upper-case
   bool IsAllUpper() const;
 
@@ -164,34 +164,54 @@ public:
   bool IsAllWhitespace() const;
 
   /// Returns true if the string starts with the given text
-  bool StartsWith(StringRange startsWith, RuneComparer compare = CaseSensitiveCompare) const;
+  bool StartsWith(StringRange startsWith,
+                  RuneComparer compare = CaseSensitiveCompare) const;
 
   /// Returns true if the string starts with the given text
-  static bool StartsWith(StringRange source, StringRange startsWith, RuneComparer compare = CaseSensitiveCompare);
-  
+  static bool StartsWith(StringRange source,
+                         StringRange startsWith,
+                         RuneComparer compare = CaseSensitiveCompare);
+
   static String Repeat(Rune rune, size_t numberOfTimes);
   bool Contains(StringRangeParam value) const;
   int CompareTo(StringRangeParam value) const;
   bool EndsWith(StringRangeParam value) const;
 
-  static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2);
-  static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3);
-  static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3, StringRangeParam string4);
-  static String Join(StringRangeParam separator, const String* strings, size_t stringCount);
-  static String JoinInternal(StringRangeParam separator, const StringRange* values, size_t count);
+  static String Join(StringRangeParam separator,
+                     StringRangeParam string1,
+                     StringRangeParam string2);
+  static String Join(StringRangeParam separator,
+                     StringRangeParam string1,
+                     StringRangeParam string2,
+                     StringRangeParam string3);
+  static String Join(StringRangeParam separator,
+                     StringRangeParam string1,
+                     StringRangeParam string2,
+                     StringRangeParam string3,
+                     StringRangeParam string4);
+  static String Join(StringRangeParam separator,
+                     const String* strings,
+                     size_t stringCount);
+  static String JoinInternal(StringRangeParam separator,
+                             const StringRange* values,
+                             size_t count);
 
-  // A simple policy (to be used with Join below) to convert a the value type of a
-  // range of Strings to StringRanges (aka to convert range.Front() to a StringRange)
+  // A simple policy (to be used with Join below) to convert a the value type of
+  // a range of Strings to StringRanges (aka to convert range.Front() to a
+  // StringRange)
   struct SimplePolicy
   {
     StringRange ToStringRange(StringParam value);
   };
 
-  // Joins the given range with the provided separator. The range is assumed to be copyable
-  // (to get the size of the range) and the policy is expected to have a ToStringRange member
-  // function that takes the type of range.Front() and returns a StringRange.
+  // Joins the given range with the provided separator. The range is assumed to
+  // be copyable (to get the size of the range) and the policy is expected to
+  // have a ToStringRange member function that takes the type of range.Front()
+  // and returns a StringRange.
   template <typename RangeType, typename PolicyType>
-  static String JoinRange(StringRangeParam separator, RangeType range, PolicyType policy);
+  static String JoinRange(StringRangeParam separator,
+                          RangeType range,
+                          PolicyType policy);
 
   template <typename RangeType>
   static String JoinRange(StringRangeParam separator, RangeType range)
@@ -272,4 +292,4 @@ private:
 #define DeclareStringConstant(name) extern const String name;
 #define DefineStringConstant(name) const String name = #name;
 
-}//namespace Zero
+} // namespace Zero

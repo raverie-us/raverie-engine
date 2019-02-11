@@ -1,17 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
 typedef Quaternion Quat;
 
-const Quaternion Quaternion::cIdentity = Quaternion(real(0.0), real(0.0), 
-                                                    real(0.0), real(1.0));
+const Quaternion Quaternion::cIdentity =
+    Quaternion(real(0.0), real(0.0), real(0.0), real(1.0));
 
 Quaternion::Quaternion(real xx, real yy, real zz, real ww)
 {
@@ -106,9 +101,7 @@ Quaternion Quaternion::operator*(QuatParam rhs) const
 
 bool Quaternion::operator==(QuatParam rhs) const
 {
-  return Equal(x, rhs.x) &&
-         Equal(y, rhs.y) &&
-         Equal(z, rhs.z) &&
+  return Equal(x, rhs.x) && Equal(y, rhs.y) && Equal(z, rhs.z) &&
          Equal(w, rhs.w);
 }
 
@@ -132,8 +125,8 @@ void Quaternion::Set(real xx, real yy, real zz, real ww)
 
 bool Quaternion::Valid() const
 {
-  return Math::IsValid(x) && Math::IsValid(y) && 
-         Math::IsValid(z) && Math::IsValid(w);
+  return Math::IsValid(x) && Math::IsValid(y) && Math::IsValid(z) &&
+         Math::IsValid(w);
 }
 
 Vector3& Quaternion::V3()
@@ -177,7 +170,7 @@ real Quaternion::LengthSq(QuatParam value)
 real Quaternion::Normalize(QuatRef value)
 {
   real lengthSq = Quaternion::LengthSq(value);
-  if(Math::Equal(lengthSq, real(0.0)))
+  if (Math::Equal(lengthSq, real(0.0)))
   {
     value.x = real(0.0);
     value.y = value.x;
@@ -185,7 +178,7 @@ real Quaternion::Normalize(QuatRef value)
     value.w = real(1.0);
     return real(0.0);
   }
-  
+
   real length = Math::Rsqrt(lengthSq);
   value *= length;
   return length;
@@ -262,7 +255,9 @@ Quaternion Quaternion::Slerp(QuatParam start, QuatParam end, real tValue)
   return Quaternion::SlerpUnnormalized(startNormalized, endNormalized, tValue);
 }
 
-Quaternion Quaternion::SlerpUnnormalized(QuatParam start, QuatParam end, real tValue)
+Quaternion Quaternion::SlerpUnnormalized(QuatParam start,
+                                         QuatParam end,
+                                         real tValue)
 {
   //
   // Quaternion Interpolation With Extra Spins, pp. 96f, 461f
@@ -271,17 +266,17 @@ Quaternion Quaternion::SlerpUnnormalized(QuatParam start, QuatParam end, real tV
 
   real cosTheta = Dot(start, end);
 
-  // Check to ensure that the shortest path is taken (cosine of the angle between 
-  // the two quaternions is positive).
+  // Check to ensure that the shortest path is taken (cosine of the angle
+  // between the two quaternions is positive).
   bool flip = cosTheta < real(0.0);
-  if(flip)
+  if (flip)
   {
     cosTheta = -cosTheta;
   }
 
   real startVal, endVal;
   const real cSlerpEpsilon = real(0.00001);
-  if((real(1.0) - cosTheta) > cSlerpEpsilon)
+  if ((real(1.0) - cosTheta) > cSlerpEpsilon)
   {
     real theta = Math::ArcCos(cosTheta);
     real sinTheta = Math::Sin(theta);
@@ -296,7 +291,7 @@ Quaternion Quaternion::SlerpUnnormalized(QuatParam start, QuatParam end, real tV
     endVal = real(tValue);
   }
 
-  if(flip)
+  if (flip)
   {
     endVal = -endVal;
   }
@@ -310,7 +305,7 @@ Quaternion Quaternion::Exponent(QuatParam value)
   real angle = value.V3().Length();
   Quat result(value.x, value.y, value.z, real(0.0));
 
-  if(Math::Abs(angle) > Math::Epsilon())
+  if (Math::Abs(angle) > Math::Epsilon())
   {
     result.w = Math::Cos(angle);
     angle = Math::Sin(angle) / angle;
@@ -327,7 +322,7 @@ Quaternion Quaternion::Logarithm(QuatParam value)
   real theta = Math::ArcCos(value.w);
   real sinTheta = Math::Sin(theta);
 
-  if(Math::Abs(sinTheta) > Math::Epsilon())
+  if (Math::Abs(sinTheta) > Math::Epsilon())
   {
     theta = theta / sinTheta;
     result.x *= theta;
@@ -341,21 +336,27 @@ real Quaternion::AngleBetween(QuatParam a, QuatParam b)
 {
   real dot = Dot(a, b);
   dot = Math::Clamp(dot, real(-1.0), real(1.0));
-  //quaternions are a 2-1 mapping, so we could get a rotation that is 400 degrees
-  //instead of 40 degrees, to fix this we can simply abs the dot product. This works
-  //out because we convert our initial [0,360] range to [0,180] then scale up by 2 (2-1 mapping).
+  // quaternions are a 2-1 mapping, so we could get a rotation that is 400
+  // degrees instead of 40 degrees, to fix this we can simply abs the dot
+  // product. This works out because we convert our initial [0,360] range to
+  // [0,180] then scale up by 2 (2-1 mapping).
   real correctedDot = Math::Abs(dot);
   real angle = real(2.0) * Math::ArcCos(correctedDot);
   return angle;
 }
 
-Quaternion Quaternion::Integrate(QuatParam rotation, Vec3Param angularVelocity, real dt)
+Quaternion Quaternion::Integrate(QuatParam rotation,
+                                 Vec3Param angularVelocity,
+                                 real dt)
 {
   Quat result = rotation;
-  
-  Quat velocityQuat(angularVelocity.x * dt, angularVelocity.y * dt, angularVelocity.z * dt, real(0.0));
+
+  Quat velocityQuat(angularVelocity.x * dt,
+                    angularVelocity.y * dt,
+                    angularVelocity.z * dt,
+                    real(0.0));
   velocityQuat *= rotation;
-  
+
   result.x += real(0.5) * velocityQuat.x;
   result.y += real(0.5) * velocityQuat.y;
   result.z += real(0.5) * velocityQuat.z;
@@ -408,7 +409,7 @@ Quaternion Quaternion::Inverted() const
   return Quaternion::Inverted(*this);
 }
 
-//-------------------------------------------------------------------Global Functions
+//Functions
 Quaternion operator*(real lhs, QuatParam rhs)
 {
   return rhs * lhs;
@@ -469,7 +470,6 @@ real AngleBetween(QuatParam a, QuatParam b)
   return Quaternion::AngleBetween(a, b);
 }
 
-//-------------------------------------------------------------------Legacy
 Quaternion CreateDiagonalizer(Mat3Param matrix)
 {
   const uint cMaxSteps = 50;
@@ -477,63 +477,65 @@ Quaternion CreateDiagonalizer(Mat3Param matrix)
   Quaternion quat(real(0.0), real(0.0), real(0.0), real(1.0));
   Matrix3 quatMatrix;
   Matrix3 diagMatrix;
-  for(uint i = 0; i < cMaxSteps; ++i)
+  for (uint i = 0; i < cMaxSteps; ++i)
   {
     ToMatrix3(quat, &quatMatrix);
-    diagMatrix = Multiply(Multiply(quatMatrix, matrix), quatMatrix.Transposed());
+    diagMatrix =
+        Multiply(Multiply(quatMatrix, matrix), quatMatrix.Transposed());
 
-    //Elements not on the diagonal
+    // Elements not on the diagonal
     Vector3 offDiag(diagMatrix(1, 2), diagMatrix(0, 2), diagMatrix(0, 1));
 
-    //Magnitude of the off-diagonal elements
+    // Magnitude of the off-diagonal elements
     Vector3 magDiag = Abs(offDiag);
 
-    //Index of the largest element 
-    uint k = ((magDiag.x > magDiag.y) && (magDiag.x > magDiag.z)) ? 0 :
-             ((magDiag.y > magDiag.z) ? 1 : 2);
+    // Index of the largest element
+    uint k = ((magDiag.x > magDiag.y) && (magDiag.x > magDiag.z))
+                 ? 0
+                 : ((magDiag.y > magDiag.z) ? 1 : 2);
     uint k1 = (k + 1) % 3;
     uint k2 = (k + 2) % 3;
 
-    //Diagonal already
-    if(offDiag[k] == real(0.0))
+    // Diagonal already
+    if (offDiag[k] == real(0.0))
     {
       break;
     }
 
-    real theta = (diagMatrix(k2, k2) - diagMatrix(k1, k1)) / 
-                 (real(2.0) * offDiag[k]);
+    real theta =
+        (diagMatrix(k2, k2) - diagMatrix(k1, k1)) / (real(2.0) * offDiag[k]);
     real sign = Math::GetSign(theta);
-    
-    //Make theta positive
+
+    // Make theta positive
     theta *= sign;
 
-    //Large term in T
-    real thetaTerm = theta < real(1e6) ? Math::Sqrt(Math::Sq(theta) + real(1.0))
-                                       : theta;
+    // Large term in T
+    real thetaTerm =
+        theta < real(1e6) ? Math::Sqrt(Math::Sq(theta) + real(1.0)) : theta;
 
-    //Sign(T) / (|T| + sqrt(T^2 + 1))
+    // Sign(T) / (|T| + sqrt(T^2 + 1))
     real t = sign / (theta + thetaTerm);
 
-    //c = 1 / (t^2 + 1)      t = s / c
+    // c = 1 / (t^2 + 1)      t = s / c
     real c = real(1.0) / Math::Sqrt(Math::Sq(t) + real(1.0));
 
-    //No room for improvement - reached machine precision.
-    if(c == real(1.0))
+    // No room for improvement - reached machine precision.
+    if (c == real(1.0))
     {
       break;
     }
 
-    //Jacobi rotation for this iteration
+    // Jacobi rotation for this iteration
     Quaternion jacobi(real(0.0), real(0.0), real(0.0), real(0.0));
 
-    //Using 1/2 angle identity sin(a/2) = sqrt((1-cos(a))/2)
+    // Using 1/2 angle identity sin(a/2) = sqrt((1-cos(a))/2)
     jacobi[k] = sign * Math::Sqrt((real(1.0) - c) / real(2.0));
 
-    //Since our quat-to-matrix convention was for v*M instead of M*v
+    // Since our quat-to-matrix convention was for v*M instead of M*v
     jacobi.w = Math::Sqrt(real(1.0) - Math::Sq(jacobi[k]));
 
-    //Reached limits of floating point precision
-    if(jacobi.w == real(1.0))
+    // Reached limits of floating point precision
+    if (jacobi.w == real(1.0))
     {
       break;
     }
@@ -545,4 +547,4 @@ Quaternion CreateDiagonalizer(Mat3Param matrix)
   return quat;
 }
 
-}// namespace Math
+} // namespace Math

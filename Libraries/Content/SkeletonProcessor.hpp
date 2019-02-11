@@ -1,7 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,7 +9,9 @@ const String cCogPathParent("../");
 class SkeletonProcessor
 {
 public:
-  SkeletonProcessor(HierarchyDataMap& hierarchyData, MeshDataMap& meshData, String& rootNodeName);
+  SkeletonProcessor(HierarchyDataMap& hierarchyData,
+                    MeshDataMap& meshData,
+                    String& rootNodeName);
 
   void ProcessSkeletonHierarchy(const aiScene* scene);
   String FindSkeletonRootFromBone(String boneName);
@@ -27,4 +26,4 @@ public:
   String& mRootNodeName;
 };
 
-}// namespace Zero
+} // namespace Zero

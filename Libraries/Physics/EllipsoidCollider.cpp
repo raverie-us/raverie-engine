@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -40,12 +35,13 @@ void EllipsoidCollider::DebugDraw()
   Vec3 worldRadii = GetWorldRadii();
 
   // Draw only one disc on the xz plane
-  DebugDrawDisc(pos, rotation.BasisX(), rotation.BasisZ(), worldRadii.x, worldRadii.z);
+  DebugDrawDisc(
+      pos, rotation.BasisX(), rotation.BasisZ(), worldRadii.x, worldRadii.z);
 
   // To help visualize, draw 6 rings around the y-axis. To do this we
   // interpolate across the x-z ellipse to get an axis and radius.
   real increment = Math::cPi / 6.0f;
-  for(real t = 0; t < Math::cPi; t += increment)
+  for (real t = 0; t < Math::cPi; t += increment)
   {
     // Compute the local space point of the ellipse on the x-z plane
     Vec3 xAxis = Math::Cos(t) * rotation.BasisX() * worldRadii.x;
@@ -66,10 +62,12 @@ void EllipsoidCollider::ComputeWorldAabbInternal()
 real EllipsoidCollider::ComputeWorldVolumeInternal()
 {
   Vec3 worldRadii = GetWorldRadii();
-  return real(4.0 / 3.0) * Math::cPi * worldRadii.x * worldRadii.y * worldRadii.z;
+  return real(4.0 / 3.0) * Math::cPi * worldRadii.x * worldRadii.y *
+         worldRadii.z;
 }
 
-void EllipsoidCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
+void EllipsoidCollider::ComputeLocalInverseInertiaTensor(
+    real mass, Mat3Ref localInvInertia)
 {
   Vec3 radii = GetWorldRadii();
   real xSquared = radii.x * radii.x;
@@ -86,14 +84,19 @@ void EllipsoidCollider::ComputeWorldBoundingSphereInternal()
 {
   // Get the maximum of the radii
   Vec3 worldRadii = GetWorldRadii();
-  real maxRadius = Math::Max(Math::Max(worldRadii.x, worldRadii.y), worldRadii.z);
+  real maxRadius =
+      Math::Max(Math::Max(worldRadii.x, worldRadii.y), worldRadii.z);
   mBoundingSphere.mCenter = GetWorldTranslation();
   mBoundingSphere.mRadius = maxRadius;
 }
 
 void EllipsoidCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportEllipsoid(direction, GetWorldTranslation(), GetWorldRadii(), GetWorldRotation(), support);
+  Geometry::SupportEllipsoid(direction,
+                             GetWorldTranslation(),
+                             GetWorldRadii(),
+                             GetWorldRotation(),
+                             support);
 }
 
 Vec3 EllipsoidCollider::GetRadii(void) const
@@ -104,7 +107,7 @@ Vec3 EllipsoidCollider::GetRadii(void) const
 void EllipsoidCollider::SetRadii(Vec3Param radii)
 {
   const float minScale = 0.0001f;
-  mRadii = Math::Max(radii, Vec3(minScale)); 
+  mRadii = Math::Max(radii, Vec3(minScale));
 
   // Since our internal size changed make sure to run all common update code
   InternalSizeChanged();
@@ -115,4 +118,4 @@ Vec3 EllipsoidCollider::GetWorldRadii() const
   return mRadii * GetWorldScale();
 }
 
-}//namespace Zero
+} // namespace Zero

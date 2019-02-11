@@ -1,14 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceTableEditor.hpp
-/// Declaration of the SearcahableResourceTextBox, WeightedTableBar,
-/// ResourceWeightedTableView ResourceTableTreeView and
-/// ResourceTableEditor classes.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -31,13 +21,18 @@ class ResourceTableEditor;
 class ResourceTableSource;
 class ResourceWeightedTableView;
 
-//-------------------------------------------------------------------ResourceTableEntryChangeOp
 class ResourceTableEntryChangeOp : public Operation
 {
 public:
-  ResourceTableEntryChangeOp( ) { mName = "ResourceTableEntryChange"; };
-  ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry, const ResourceTable::ValueType& newValue);
-  ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry);
+  ResourceTableEntryChangeOp()
+  {
+    mName = "ResourceTableEntryChange";
+  };
+  ResourceTableEntryChangeOp(ResourceTableEditor* editor,
+                             ResourceTableEntry* oldEntry,
+                             const ResourceTable::ValueType& newValue);
+  ResourceTableEntryChangeOp(ResourceTableEditor* editor,
+                             ResourceTableEntry* oldEntry);
   void Undo() override;
   void Redo() override;
 
@@ -47,11 +42,11 @@ public:
   ResourceTableEditor* mEditor;
 };
 
-//-------------------------------------------------------------------ResourceTableMaxWeightChangeOp
 class ResourceTableMaxWeightChangeOp : public Operation
 {
 public:
-  ResourceTableMaxWeightChangeOp(ResourceTableEditor* editor, float newMaxWeight);
+  ResourceTableMaxWeightChangeOp(ResourceTableEditor* editor,
+                                 float newMaxWeight);
 
   void Undo() override;
   void Redo() override;
@@ -63,11 +58,11 @@ public:
   Array<float> mOldWeights;
 };
 
-//-------------------------------------------------------------------ResourceTableResourceTypeChangeOp
 class ResourceTableResourceTypeChangeOp : public Operation
 {
 public:
-  ResourceTableResourceTypeChangeOp(ResourceTableEditor* editor, StringParam newType);
+  ResourceTableResourceTypeChangeOp(ResourceTableEditor* editor,
+                                    StringParam newType);
   void Undo() override;
   void Redo() override;
 
@@ -78,11 +73,12 @@ public:
   ResourceTableEditor* mEditor;
 };
 
-//-------------------------------------------------------------------ResourceTableAddRemoveRowOp
 class ResourceTableAddRemoveRowOp : public Operation
 {
 public:
-  ResourceTableAddRemoveRowOp(ResourceTableEditor* editor, ResourceTableEntry* entry, bool add);
+  ResourceTableAddRemoveRowOp(ResourceTableEditor* editor,
+                              ResourceTableEntry* entry,
+                              bool add);
   void Undo() override;
   void Redo() override;
 
@@ -94,11 +90,12 @@ public:
   bool mAdd;
 };
 
-//-------------------------------------------------------------------ResourceTableRowReorderOp
 class ResourceTableRowReorderOp : public Operation
 {
 public:
-  ResourceTableRowReorderOp(ResourceTableEditor* editor, uint oldIndex, uint newIndex);
+  ResourceTableRowReorderOp(ResourceTableEditor* editor,
+                            uint oldIndex,
+                            uint newIndex);
   void Undo() override;
   void Redo() override;
 
@@ -109,11 +106,12 @@ public:
   uint mNewIndex;
 };
 
-//-------------------------------------------------------------------ResourceTableBatchRowReorderOp
 class ResourceTableBatchRowReorderOp : public Operation
 {
 public:
-  ResourceTableBatchRowReorderOp(ResourceTableEditor* editor, Array<int>& oldIndices, Array<int>& newIndices);
+  ResourceTableBatchRowReorderOp(ResourceTableEditor* editor,
+                                 Array<int>& oldIndices,
+                                 Array<int>& newIndices);
   void Undo() override;
   void Redo() override;
 
@@ -126,7 +124,6 @@ public:
   uint mNewIndex;
 };
 
-//-------------------------------------------------------------------SearchableResourceTextBox
 
 /// A "text box" that allows searching of resource types. This wraps itself up
 /// to still pretend (slightly) that it's a text box, however when edited it
@@ -136,7 +133,9 @@ class SearchableResourceTextBox : public Composite
 public:
   typedef SearchableResourceTextBox ZilchSelf;
 
-  SearchableResourceTextBox(Composite* parent, StringParam resourceType, StringParam resourceIdName);
+  SearchableResourceTextBox(Composite* parent,
+                            StringParam resourceType,
+                            StringParam resourceIdName);
 
   void UpdateTransform();
 
@@ -157,7 +156,6 @@ public:
   HandleOf<FloatingSearchView> mActiveSearch;
 };
 
-//-------------------------------------------------------------------WeightedTableBar
 
 /// Bar composite to display the weight of an item. Also allows clicking
 /// and dragging to update the current probability.
@@ -166,7 +164,8 @@ class WeightedTableBar : public Composite
 public:
   typedef WeightedTableBar ZilchSelf;
 
-  WeightedTableBar(Composite* parent, ResourceWeightedTableView* weightedTableView);
+  WeightedTableBar(Composite* parent,
+                   ResourceWeightedTableView* weightedTableView);
 
   void UpdateTransform() override;
 
@@ -185,11 +184,13 @@ public:
   uint mIndex;
 };
 
-//-------------------------------------------------------------------WeightedTableBarDragManipulation
 class WeightedTableBarDragManipulation : public MouseManipulation
 {
 public:
-  WeightedTableBarDragManipulation(MouseEvent* e, Composite* parent, WeightedTableBar* bar, ResourceTableEditor* editor);
+  WeightedTableBarDragManipulation(MouseEvent* e,
+                                   Composite* parent,
+                                   WeightedTableBar* bar,
+                                   ResourceTableEditor* editor);
 
   void OnMouseMove(MouseEvent* e) override;
   void OnMouseUp(MouseEvent* e) override;
@@ -199,8 +200,6 @@ public:
   float mStartProbability;
 };
 
-
-//-------------------------------------------------------------------ResourceWeightedTableView
 
 /// Weighted table view for the resource table. Used primarily to set relative
 /// weights and get a good idea of how probable one item is over another.
@@ -213,11 +212,11 @@ public:
 
   void Setup(ResourceTable* table);
   /// Clears all of the child widgets and rebuilds the table. Used to
-  //easily "refresh" the entire view when the underlying resource has changed.
+  // easily "refresh" the entire view when the underlying resource has changed.
   void Rebuild();
   /// Creates the resource specific widgets (bars, labels, etc...)
   void SetTable(ResourceTable* table);
-  
+
   /// Position and size the sub items
   void UpdateTransform() override;
 
@@ -251,7 +250,7 @@ public:
       mNameTag = NULL;
       mValueTag = NULL;
     }
-    
+
     WeightedTableBar* mBar;
     TextBox* mProbability;
     TextBox* mNameTag;
@@ -263,7 +262,7 @@ public:
 
   typedef Array<Entry> EntryList;
   EntryList mEntries;
-  
+
   /// A scroll area that all of the children widgets are contained within.
   ScrollArea* mScrollArea;
   GraphWidget* mGraph;
@@ -283,7 +282,6 @@ public:
   Thickness mMargins;
 };
 
-//-------------------------------------------------------------------ResourceTableTreeView
 
 /// The tree view editor for resource tables. Allows compactly
 /// viewing and editing of all the items in the tree view.
@@ -310,7 +308,7 @@ public:
 
   /// The actual resource being edited.
   HandleOf<ResourceTable> mTable;
-  
+
   TreeView* mTreeView;
   ResourceTableSource* mSource;
   ResourceTableEditor* mEditor;
@@ -318,7 +316,6 @@ public:
   HandleOf<ContextMenu> mContextMenuHandle;
 };
 
-//-------------------------------------------------------------------ResourceTableEditor
 
 /// The main editor for resource tables. Manages switching between
 /// the tree view and the weighted table view.
@@ -376,4 +373,4 @@ public:
   OperationQueue mQueue;
 };
 
-}//namespace Zero
+} // namespace Zero

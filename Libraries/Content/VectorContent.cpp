@@ -1,17 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file VectorContent.cpp
-/// Implementation of Vector content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//------------------------------------------------------------ Font Content
 ZilchDefineType(FontContent, builder, type)
 {
 }
@@ -35,17 +26,17 @@ ContentItem* MakeFontContent(ContentInitializer& initializer)
   return content;
 }
 
-//------------------------------------------------------------ Font Builder 
 ZilchDefineType(FontBuilder, builder, type)
 {
   ZeroBindDependency(FontContent);
 }
 
-// Note: Since we added more font builders, and we cannot pass the extension into the constructor (builders require a default constructor)
-// then we cannot properly pass the extension in. All the base class does is store it, so above when we create the builder we just immediately
-// set the Extension afterward (this should be refactored later)
-FontBuilder::FontBuilder()
-  :DirectBuilderComponent(0, ".ttf", "Font")
+// Note: Since we added more font builders, and we cannot pass the extension
+// into the constructor (builders require a default constructor) then we cannot
+// properly pass the extension in. All the base class does is store it, so above
+// when we create the builder we just immediately set the Extension afterward
+// (this should be refactored later)
+FontBuilder::FontBuilder() : DirectBuilderComponent(0, ".ttf", "Font")
 {
 }
 
@@ -59,11 +50,12 @@ void CreateVectorContent(ContentSystem* system)
 {
   AddContent<FontContent>(system);
   AddContentComponent<FontBuilder>(system);
-  system->CreatorsByExtension["ttf"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
-  system->CreatorsByExtension["ttc"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
-  system->CreatorsByExtension["otf"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["ttf"] =
+      ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["ttc"] =
+      ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["otf"] =
+      ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
 }
 
-}
-
-
+} // namespace Zero

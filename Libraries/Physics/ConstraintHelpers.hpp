@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -25,22 +20,32 @@ struct JointNode;
 namespace JointHelpers
 {
 
-///Helper to fetch the velocities for the colliders in each edge.
-///Fills a value with zero if no rigid body exists.
-void GetVelocities(RigidBody* body0, RigidBody* body1, JointVelocity& velocities);
+/// Helper to fetch the velocities for the colliders in each edge.
+/// Fills a value with zero if no rigid body exists.
+void GetVelocities(RigidBody* body0,
+                   RigidBody* body1,
+                   JointVelocity& velocities);
 void GetVelocities(Collider* obj0, Collider* obj1, JointVelocity& velocities);
 void GetVelocities(Joint* joint, JointVelocity& velocities);
-///Helper to fetch the mass and inertia for the colliders in each edge.
-///Fills a value with zero if no rigid body exists.
+/// Helper to fetch the mass and inertia for the colliders in each edge.
+/// Fills a value with zero if no rigid body exists.
 void GetMasses(RigidBody* body0, RigidBody* body1, JointMass& masses);
 void GetMasses(Collider* obj0, Collider* obj1, JointMass& masses);
 void GetMasses(Joint* joint, JointMass& masses);
 
 void ForceAwakeJoint(Joint* joint);
 
-void ApplyConstraintImpulse(RigidBody* body0, RigidBody* body1, const Jacobian& jacobian, real lambda);
-void ApplyConstraintImpulse(JointMass& masses, JointVelocity& velocities, const Jacobian& jacobian, real lambda);
-void CommitVelocities(Collider* obj0, Collider* obj1, JointVelocity& velocities);
+void ApplyConstraintImpulse(RigidBody* body0,
+                            RigidBody* body1,
+                            const Jacobian& jacobian,
+                            real lambda);
+void ApplyConstraintImpulse(JointMass& masses,
+                            JointVelocity& velocities,
+                            const Jacobian& jacobian,
+                            real lambda);
+void CommitVelocities(Collider* obj0,
+                      Collider* obj1,
+                      JointVelocity& velocities);
 
 Vec3 WorldToBodyR(Collider* collider, Vec3Param worldVector);
 Vec3 BodyToWorldR(Collider* collider, Vec3Param bodyVector);
@@ -52,8 +57,14 @@ Vec3 BodyRToCenterMassR(Collider* collider, Vec3Param bodyVector);
 
 void UnlinkJointsFromSolver(Collider* collider);
 real GetRelativeAngle(QuatParam rotation, Vec3 localAxis);
-real GetRelativeAngle(QuatParam initial, Mat3Param obj1, Mat3Param obj2, Vec3 localAxis);
-real GetRelativeAngle(QuatParam initial, QuatParam obj1, QuatParam obj2, Vec3 localAxis);
+real GetRelativeAngle(QuatParam initial,
+                      Mat3Param obj1,
+                      Mat3Param obj2,
+                      Vec3 localAxis);
+real GetRelativeAngle(QuatParam initial,
+                      QuatParam obj1,
+                      QuatParam obj2,
+                      Vec3 localAxis);
 
 JointEvent* CreateJointEvent(Joint* joint, StringParam eventName);
 JointEvent* CreateJointEvent(JointMotor* motor, StringParam eventName);
@@ -62,16 +73,23 @@ template <typename EdgeListType>
 void WakeUpConnected(EdgeListType& edgeList)
 {
   typename EdgeListType::range range = edgeList.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     range.Front().mOther->ForceAwake();
 }
 
-}//namespace JointHelpers
+} // namespace JointHelpers
 
-#define DeclareJointAccessors(type, name) \
-  type Get##Name() const { return m##name; } \
-  void Set##Name(const type& var) { m##name = var; JointHelpers::ForceAwakeJoint(this); }
+#define DeclareJointAccessors(type, name)                                      \
+  type Get##Name() const                                                       \
+  {                                                                            \
+    return m##name;                                                            \
+  }                                                                            \
+  void Set##Name(const type& var)                                              \
+  {                                                                            \
+    m##name = var;                                                             \
+    JointHelpers::ForceAwakeJoint(this);                                       \
+  }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

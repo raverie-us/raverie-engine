@@ -1,18 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleAnimator.hpp
-/// Declaration of the Particle animator component classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-/// Particle Animator Interface. Particle Animators effect particles in the system.
+/// Particle Animator Interface. Particle Animators effect particles in the
+/// system.
 class ParticleAnimator : public Component
 {
 public:
@@ -22,8 +15,10 @@ public:
 
   void Initialize(CogInitializer& initializer) override;
 
-  //Particle Animator Interface
-  virtual void Animate(ParticleList* particleList, float dt, Mat4Ref transform) = 0;
+  // Particle Animator Interface
+  virtual void Animate(ParticleList* particleList,
+                       float dt,
+                       Mat4Ref transform) = 0;
 
   Link<ParticleAnimator> link;
   GraphicsSpace* mGraphicsSpace;

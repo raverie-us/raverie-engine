@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -50,37 +45,37 @@ struct TileMapSourceLoadPattern
         FileChunk chunk = file.ReadChunkHeader();
         switch (chunk.Type)
         {
-          case 0:
-            eof = true;
-            break;
+        case 0:
+          eof = true;
+          break;
 
-          case 'posi':
-            LoadArray(position, chunk.Size, file);
-            break;
+        case 'posi':
+          LoadArray(position, chunk.Size, file);
+          break;
 
-          case 'arch':
-            LoadArray(archetype, chunk.Size, file);
-            break;
+        case 'arch':
+          LoadArray(archetype, chunk.Size, file);
+          break;
 
-          case 'spri':
-            LoadArray(sprite, chunk.Size, file);
-            break;
+        case 'spri':
+          LoadArray(sprite, chunk.Size, file);
+          break;
 
-          case 'coll':
-            LoadArray(collision, chunk.Size, file);
-            break;
+        case 'coll':
+          LoadArray(collision, chunk.Size, file);
+          break;
 
-          case 'merg':
-            LoadArray(merge, chunk.Size, file);
-            break;
+        case 'merg':
+          LoadArray(merge, chunk.Size, file);
+          break;
 
-          default:
-            file.SkipChunk(chunk);
-            break;
+        default:
+          file.SkipChunk(chunk);
+          break;
         }
       }
 
-      for(uint i = 0; i < position.Size(); ++i)
+      for (uint i = 0; i < position.Size(); ++i)
       {
         IntVec2 gridPos = position[i];
         TileMap::Tile tile;
@@ -91,9 +86,7 @@ struct TileMapSourceLoadPattern
 
         source->mData[gridPos] = tile;
       }
-
     }
-
   }
 
   template <typename SourceType, typename WriterType>
@@ -129,7 +122,6 @@ struct TileMapSourceLoadPattern
 
     file.EndChunk(mapStart);
   }
-
 };
 
 } // namespace Zero

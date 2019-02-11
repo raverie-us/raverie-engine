@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Document.cpp
-/// Implementation of the Document class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,17 +6,16 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(DocumentRemoved);
-  DefineEvent(DocumentReload);
-}
+DefineEvent(DocumentRemoved);
+DefineEvent(DocumentReload);
+} // namespace Events
 
 ZilchDefineType(Document, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
 }
 
-Document::Document(u64 id)
-  : Id(id)
+Document::Document(u64 id) : Id(id)
 {
   DocumentManager* docManager = DocumentManager::GetInstance();
   docManager->AddDocument(this);
@@ -54,7 +45,6 @@ void Document::ReloadEditor()
   DispatchEvent(Events::DocumentReload, &e);
 }
 
-//------------------------------------------------------------  DocumentManager
 ZilchDefineType(DocumentManager, builder, type)
 {
 }
@@ -70,7 +60,7 @@ DocumentManager::~DocumentManager()
 {
   // Delete all documents we still own. Due to order of destruction,
   // scripts can still exist in this map when this type is destructed.
-  for(auto range = Documents.Values(); !range.Empty(); range.PopFront())
+  for (auto range = Documents.Values(); !range.Empty(); range.PopFront())
   {
     Document* document = range.Front();
     delete document;
@@ -85,28 +75,28 @@ void DocumentManager::AddDocument(Document* document)
 
 void DocumentManager::OnResourceRemoved(ResourceEvent* event)
 {
-  Document* document = Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
+  Document* document =
+      Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
   if (document)
   {
     ObjectEvent e(this);
     document->DispatchEvent(Events::DocumentRemoved, &e);
     Documents.Erase(document->Id);
-    ErrorIf(document->mEditCounter!=0, "Still edit.");
+    ErrorIf(document->mEditCounter != 0, "Still edit.");
     delete document;
   }
 }
 
 void DocumentManager::OnResourceModified(ResourceEvent* event)
 {
-  Document* document = Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
+  Document* document =
+      Documents.FindValue((u64)event->EventResource->mResourceId, nullptr);
   if (document)
     document->ReloadEditor();
 }
 
-//------------------------------------------------------------ String Document
 StringDocument::StringDocument()
 {
-
 }
 
 StringRange StringDocument::GetTextData()
@@ -126,7 +116,6 @@ String StringDocument::FileType()
 
 void StringDocument::Save(StringRange data)
 {
-
 }
 
 String StringDocument::GetPath()
@@ -139,10 +128,9 @@ DocumentResource* StringDocument::GetResource()
   return nullptr;
 }
 
-//------------------------------------------------------------Resource Document
 
-ResourceDocument::ResourceDocument(DocumentResource* resource)
-  : Document((u64)resource->mResourceId)
+ResourceDocument::ResourceDocument(DocumentResource* resource) :
+    Document((u64)resource->mResourceId)
 {
   mResource = resource;
 }
@@ -167,7 +155,7 @@ void ResourceDocument::Save(StringRange data)
   mResource->SetAndSaveData(data);
 }
 
-String  ResourceDocument::GetPath()
+String ResourceDocument::GetPath()
 {
   return mResource->LoadPath;
 }
@@ -182,7 +170,6 @@ DocumentResource* ResourceDocument::GetResource()
   return mResource;
 }
 
-//------------------------------------------------------------File Document
 
 FileDocument::FileDocument(StringParam name, StringParam fullPath)
 {
@@ -222,4 +209,4 @@ DocumentResource* FileDocument::GetResource()
   return nullptr;
 }
 
-}//namespace Zero
+} // namespace Zero

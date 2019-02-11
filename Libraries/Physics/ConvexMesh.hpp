@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Benjamin Strukus, Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ ConvexMesh
 /// A convex mesh meant for use with dynamic rigid bodies. Computes efficient
 /// contact information compared to a regular physics mesh. This mesh also
 /// defines a volume which means mass properties can be computed.
@@ -17,8 +11,9 @@ class ConvexMesh : public GenericPhysicsMesh
 {
 public:
   ZilchDeclareType(ConvexMesh, TypeCopyMode::ReferenceType);
-  
-  //-------------------------------------------------------------------Resource Interface
+
+  //-------------------------------------------------------------------Resource
+  //Interface
   void Serialize(Serializer& stream) override;
   void Initialize();
   void OnResourceModified() override;
@@ -28,16 +23,17 @@ public:
   HandleOf<ConvexMesh> RuntimeClone();
   /// Creates a ConvexMesh for run-time modifications.
   static HandleOf<ConvexMesh> CreateRuntime();
-  
+
   //-------------------------------------------------------------------Internal
   /// Finds the first triangle hit by the local-space ray.
-  bool CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);
+  bool CastRay(const Ray& localRay,
+               ProxyResult& result,
+               BaseCastFilter& filter);
   void Draw(Mat4Param transform);
-  
+
   void BuildFromPointSet(const Vec3Array& points);
 };
 
-//---------------------------------------------------------- Convex Mesh Manager
 class ConvexMeshManager : public ResourceManager
 {
 public:
@@ -50,4 +46,4 @@ public:
   Array<ConvexMeshReference> mModifiedMeshes;
 };
 
-}//namespace Zero
+} // namespace Zero

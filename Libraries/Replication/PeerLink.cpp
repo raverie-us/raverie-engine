@@ -1,49 +1,44 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  PeerLink                                       //
-//---------------------------------------------------------------------------------//
+//                                  PeerLink //
 
 void PeerLink::ResetSession()
 {
   /// Operating Data
-  mTheirGuid            = 0;
-  mOurIpAddress         = IpAddress();
+  mTheirGuid = 0;
+  mOurIpAddress = IpAddress();
   LinkInbox defaultInbox(this);
-  mInbox                = ZeroMove(defaultInbox);
+  mInbox = ZeroMove(defaultInbox);
   LinkOutbox defaultOutbox(this);
-  mOutbox               = ZeroMove(defaultOutbox);
+  mOutbox = ZeroMove(defaultOutbox);
 
   /// State Data
-  mConnectRequested           = false;
+  mConnectRequested = false;
   mConnectRequestExtraData.Clear(true);
-  mDisconnectRequested        = false;
+  mDisconnectRequested = false;
   mDisconnectRequestExtraData.Clear(true);
-  mConnectResponded           = UserConnectResponse::Pending;
+  mConnectResponded = UserConnectResponse::Pending;
   mConnectResponseExtraData.Clear(true);
-  mStateACKId                 = 0;
-  mSessionCompleted           = false;
+  mStateACKId = 0;
+  mSessionCompleted = false;
 
   /// Frame Data
-  mOutgoingBandwidth     = 0;
+  mOutgoingBandwidth = 0;
   mOutgoingFrameCapacity = 0;
-  mOutgoingFrameSize     = 0;
+  mOutgoingFrameSize = 0;
 
   InitializeStats();
   Assert(mState == LinkState::Disconnected);
 }
 
-PeerLink::PeerLink(Peer* peer, const IpAddress& ipAddress, TransmissionDirection::Enum creationDirection)
-  : BandwidthStats<false>(),
+PeerLink::PeerLink(Peer* peer,
+                   const IpAddress& ipAddress,
+                   TransmissionDirection::Enum creationDirection) :
+    BandwidthStats<false>(),
 
     /// Operating Data
     mPeer(peer),
@@ -85,27 +80,27 @@ PeerLink::PeerLink(Peer* peer, const IpAddress& ipAddress, TransmissionDirection
   Assert(mTheirIpAddress.IsValid());
 }
 
-bool PeerLink::operator ==(const PeerLink& rhs) const
+bool PeerLink::operator==(const PeerLink& rhs) const
 {
   return mTheirIpAddress == rhs.mTheirIpAddress;
 }
-bool PeerLink::operator !=(const PeerLink& rhs) const
+bool PeerLink::operator!=(const PeerLink& rhs) const
 {
   return mTheirIpAddress != rhs.mTheirIpAddress;
 }
-bool PeerLink::operator  <(const PeerLink& rhs) const
+bool PeerLink::operator<(const PeerLink& rhs) const
 {
   return mTheirIpAddress < rhs.mTheirIpAddress;
 }
-bool PeerLink::operator ==(const IpAddress& rhs) const
+bool PeerLink::operator==(const IpAddress& rhs) const
 {
   return mTheirIpAddress == rhs;
 }
-bool PeerLink::operator !=(const IpAddress& rhs) const
+bool PeerLink::operator!=(const IpAddress& rhs) const
 {
   return mTheirIpAddress != rhs;
 }
-bool PeerLink::operator  <(const IpAddress& rhs) const
+bool PeerLink::operator<(const IpAddress& rhs) const
 {
   return mTheirIpAddress < rhs;
 }
@@ -130,7 +125,7 @@ TransmissionDirection::Enum PeerLink::GetCreationDirection() const
 
 LinkStatus::Enum PeerLink::GetStatus() const
 {
-  switch(mState)
+  switch (mState)
   {
   // LinkStatus::Disconnected
   default:
@@ -184,12 +179,12 @@ InternetProtocol::Enum PeerLink::GetInternetProtocol() const
 bool PeerLink::Connect(const BitStream& extraData)
 {
   // Link not disconnected?
-  if(GetState() != LinkState::Disconnected)
+  if (GetState() != LinkState::Disconnected)
     return false;
 
   // Initiate connect request
   // Will be sent later on update
-  mConnectRequested        = true;
+  mConnectRequested = true;
   mConnectRequestExtraData = extraData;
   mConnectRequestExtraData.ClearBitsRead();
 
@@ -200,12 +195,13 @@ bool PeerLink::Connect(const BitStream& extraData)
 bool PeerLink::RespondToConnectRequest(bool accept, const BitStream& extraData)
 {
   // Link not attempting connection?
-  if(GetState() != LinkState::ReceivedConnectRequest)
+  if (GetState() != LinkState::ReceivedConnectRequest)
     return false;
 
   // Initiate connect response
   // Will be sent later on update
-  mConnectResponded         = accept ? UserConnectResponse::Accept : UserConnectResponse::Deny;
+  mConnectResponded =
+      accept ? UserConnectResponse::Accept : UserConnectResponse::Deny;
   mConnectResponseExtraData = extraData;
   mConnectResponseExtraData.ClearBitsRead();
 
@@ -217,13 +213,13 @@ bool PeerLink::Disconnect(const BitStream& extraData)
 {
   // Link not connected and not attempting connection?
   LinkStatus::Enum linkStatus = GetStatus();
-  if(linkStatus != LinkStatus::Connected
-  && linkStatus != LinkStatus::AttemptingConnection)
+  if (linkStatus != LinkStatus::Connected &&
+      linkStatus != LinkStatus::AttemptingConnection)
     return false;
 
   // Initiate disconnect notice
   // Will be sent later on update
-  mDisconnectRequested        = true;
+  mDisconnectRequested = true;
   mDisconnectRequestExtraData = extraData;
   mDisconnectRequestExtraData.ClearBitsRead();
 
@@ -231,10 +227,16 @@ bool PeerLink::Disconnect(const BitStream& extraData)
   return true;
 }
 
-MessageReceiptId PeerLink::Send(Status& status, const Message& message,         bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
+MessageReceiptId PeerLink::Send(Status& status,
+                                const Message& message,
+                                bool reliable,
+                                MessageChannelId channelId,
+                                bool receipt,
+                                MessagePriority priority,
+                                TimeMs lifetime)
 {
   // Relative message type outside of user range?
-  if(message.GetType() >= GetUserMessageTypeCount())
+  if (message.GetType() >= GetUserMessageTypeCount())
   {
     // Failure
     status.SetFailed("User message type is out of range");
@@ -248,12 +250,25 @@ MessageReceiptId PeerLink::Send(Status& status, const Message& message,         
   messageCopy.mType = RelativeToAbsolute(messageCopy.mType);
 
   // Send message
-  return SendInternal(status, ZeroMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
+  return SendInternal(status,
+                      ZeroMove(messageCopy),
+                      reliable,
+                      channelId,
+                      receipt,
+                      priority,
+                      lifetime,
+                      false);
 }
-MessageReceiptId PeerLink::Send(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
+MessageReceiptId PeerLink::Send(Status& status,
+                                MoveReference<Message> message,
+                                bool reliable,
+                                MessageChannelId channelId,
+                                bool receipt,
+                                MessagePriority priority,
+                                TimeMs lifetime)
 {
   // Relative message type outside of user range?
-  if(message->GetType() >= GetUserMessageTypeCount())
+  if (message->GetType() >= GetUserMessageTypeCount())
   {
     // Failure
     status.SetFailed("User message type is out of range");
@@ -264,7 +279,14 @@ MessageReceiptId PeerLink::Send(Status& status, MoveReference<Message> message, 
   message->mType = RelativeToAbsolute(message->mType);
 
   // Send message
-  return SendInternal(status, ZeroMove(message), reliable, channelId, receipt, priority, lifetime, false);
+  return SendInternal(status,
+                      ZeroMove(message),
+                      reliable,
+                      channelId,
+                      receipt,
+                      priority,
+                      lifetime,
+                      false);
 }
 
 TimeMs PeerLink::GetLocalTime() const
@@ -294,7 +316,8 @@ TimeMs PeerLink::RemoteToLocalTime(TimeMs remoteTime) const
   return remoteTime - GetLocalToRemoteTimeDifference();
 }
 
-void PeerLink::SetLocalToRemoteTimeDifference(TimeMs localToRemoteTimeDifference)
+void PeerLink::SetLocalToRemoteTimeDifference(
+    TimeMs localToRemoteTimeDifference)
 {
   mLocalToRemoteTimeDifference = localToRemoteTimeDifference;
 }
@@ -316,12 +339,14 @@ void* PeerLink::GetUserData() const
 // Outgoing Message Channel Management
 //
 
-OutMessageChannel* PeerLink::OpenOutgoingChannel(TransferMode::Enum transferMode)
+OutMessageChannel*
+PeerLink::OpenOutgoingChannel(TransferMode::Enum transferMode)
 {
   return mOutbox.OpenOutgoingChannel(transferMode);
 }
 
-OutMessageChannel* PeerLink::GetOutgoingChannel(MessageChannelId channelId) const
+OutMessageChannel*
+PeerLink::GetOutgoingChannel(MessageChannelId channelId) const
 {
   return mOutbox.GetOutgoingChannel(channelId);
 }
@@ -367,22 +392,23 @@ uint PeerLink::GetIncomingChannelCount() const
 LinkPlugin* PeerLink::AddPlugin(LinkPlugin* plugin, StringParam name)
 {
   // Plugin of that name is already active?
-  if(mPlugins.FindPointer(name))
+  if (mPlugins.FindPointer(name))
     return nullptr;
 
   // Plugin of that name was just added?
-  if(mAddedPlugins.FindPointer(name))
+  if (mAddedPlugins.FindPointer(name))
     return nullptr;
 
   // Plugin uses a custom message type range?
   MessageType count = plugin->GetMessageTypeCount();
-  if(count)
+  if (count)
   {
     // Not enough message types available to satisfy the plugin?
     MessageType available = GetUserMessageTypeCount();
-    if(count > available)
+    if (count > available)
     {
-      Error("Unable to add plugin - Not enough message types available to satisfy the plugin");
+      Error("Unable to add plugin - Not enough message types available to "
+            "satisfy the plugin");
       return nullptr;
     }
 
@@ -390,7 +416,7 @@ LinkPlugin* PeerLink::AddPlugin(LinkPlugin* plugin, StringParam name)
     plugin->SetMessageTypeStart(mUserMessageTypeStart);
 
     // User message types exhausted?
-    if(count == available)
+    if (count == available)
       mUserMessageTypeStart = 0;
     else
       mUserMessageTypeStart += count;
@@ -408,7 +434,7 @@ LinkPlugin* PeerLink::GetPlugin(StringParam name) const
 {
   // Find active plugin
   LinkPluginSet::pointer result = mPlugins.FindPointer(name);
-  if(result) // Found?
+  if (result) // Found?
     return *result;
   else
     return nullptr;
@@ -426,12 +452,12 @@ void PeerLink::RemovePlugin(StringParam name)
 {
   // Find active plugin
   LinkPluginSet::iterator iter = mPlugins.FindIterator(name);
-  if(iter != mPlugins.End()) // Found?
+  if (iter != mPlugins.End()) // Found?
   {
     // Add plugin to removed plugins
     // Will be uninitialized later on update
     LinkPluginSet::pointer_bool_pair result = mRemovedPlugins.Insert(*iter);
-    Assert(result.second);  // (Insertion should have succeeded)
+    Assert(result.second); // (Insertion should have succeeded)
 
     // Remove plugin from active plugins
     mPlugins.Erase(iter);
@@ -439,7 +465,7 @@ void PeerLink::RemovePlugin(StringParam name)
 }
 void PeerLink::RemovePlugins()
 {
-  while(!mPlugins.Empty())
+  while (!mPlugins.Empty())
     RemovePlugin(mPlugins.Back()->GetName());
 }
 
@@ -465,12 +491,16 @@ void PeerLink::ResetConfig()
 
 void PeerLink::SetSendRate(uint sendRate)
 {
-  mSendRate = std::max(uint(1), sendRate); //Clamp(sendRate, uint(5), uint(60)); //HACK
+  mSendRate =
+      std::max(uint(1), sendRate); // Clamp(sendRate, uint(5), uint(60)); //HACK
 
   // TODO: Update this after implementing AIMD
-  // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for messages)
-  // Update outgoing bandwidth
-  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) / double(1000));
+  // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for
+  // messages) Update outgoing bandwidth
+  SetOutgoingBandwidth(
+      (double(GetSendRate()) *
+       double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) /
+      double(1000));
 }
 uint PeerLink::GetSendRate() const
 {
@@ -479,12 +509,16 @@ uint PeerLink::GetSendRate() const
 
 void PeerLink::SetPacketDataBytes(Bytes packetDataBytes)
 {
-  mPacketDataBytes = Clamp(packetDataBytes, MinPacketDataBytes, MaxPacketDataBytes);
+  mPacketDataBytes =
+      Clamp(packetDataBytes, MinPacketDataBytes, MaxPacketDataBytes);
 
   // TODO: Update this after implementing AIMD
-  // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for messages)
-  // Update outgoing bandwidth
-  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) / double(1000));
+  // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for
+  // messages) Update outgoing bandwidth
+  SetOutgoingBandwidth(
+      (double(GetSendRate()) *
+       double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) /
+      double(1000));
 }
 Bytes PeerLink::GetPacketDataBytes() const
 {
@@ -509,7 +543,8 @@ TimeMs PeerLink::GetFloorRoundTripTime() const
   return mFloorRoundTripTime;
 }
 
-void PeerLink::SetPacketSequenceHistoryRangeFactor(float packetSequenceHistoryRangeFactor)
+void PeerLink::SetPacketSequenceHistoryRangeFactor(
+    float packetSequenceHistoryRangeFactor)
 {
   mPacketSequenceHistoryRangeFactor = packetSequenceHistoryRangeFactor;
 }
@@ -518,7 +553,8 @@ float PeerLink::GetPacketSequenceHistoryRangeFactor() const
   return mPacketSequenceHistoryRangeFactor;
 }
 
-void PeerLink::SetPacketSequenceHistoryRateFactor(float packetSequenceHistoryRateFactor)
+void PeerLink::SetPacketSequenceHistoryRateFactor(
+    float packetSequenceHistoryRateFactor)
 {
   mPacketSequenceHistoryRateFactor = packetSequenceHistoryRateFactor;
 }
@@ -581,10 +617,10 @@ float PeerLink::GetDisconnectAttemptFactor() const
   return mDisconnectAttemptFactor;
 }
 
-Array< Pair<String, String> > PeerLink::GetConfigSummary() const
+Array<Pair<String, String>> PeerLink::GetConfigSummary() const
 {
   // TODO
-  return Array< Pair<String, String> >();
+  return Array<Pair<String, String>>();
 }
 String PeerLink::GetConfigSummaryString() const
 {
@@ -622,10 +658,10 @@ TimeMs PeerLink::GetMaxInternalRoundTripTime() const
   return mInternalRoundTripTimeMax;
 }
 
-Array< Pair< String, Array<String> > > PeerLink::GetStatsSummary() const
+Array<Pair<String, Array<String>>> PeerLink::GetStatsSummary() const
 {
   // TODO
-  return Array< Pair< String, Array<String> > >();
+  return Array<Pair<String, Array<String>>>();
 }
 String PeerLink::GetStatsSummaryString() const
 {
@@ -666,8 +702,7 @@ Bits PeerLink::GetOutgoingFrameSize() const
 
 float PeerLink::GetOutgoingFrameFill() const
 {
-  return float(mOutgoingFrameSize)
-       / float(mOutgoingFrameCapacity);
+  return float(mOutgoingFrameSize) / float(mOutgoingFrameCapacity);
 }
 
 //
@@ -679,14 +714,17 @@ void PeerLink::ResetStats()
   BandwidthStats<false>::ResetStats();
 
   mRoundTripTimeUpdated = false;
-  mRoundTripTimeMin     = 0;
-  mRoundTripTimeAvg     = 0;
-  mRoundTripTimeMax     = 0;
+  mRoundTripTimeMin = 0;
+  mRoundTripTimeAvg = 0;
+  mRoundTripTimeMax = 0;
 
   // TODO: Update this after implementing AIMD
-  // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for messages)
-  // Update outgoing bandwidth
-  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) / double(1000));
+  // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for
+  // messages) Update outgoing bandwidth
+  SetOutgoingBandwidth(
+      (double(GetSendRate()) *
+       double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) /
+      double(1000));
 }
 
 void PeerLink::InitializeStats()
@@ -701,7 +739,7 @@ void PeerLink::InitializeStats()
 
 void PeerLink::UpdateRoundTripTime(TimeMs sample, TimeMs floor)
 {
-  if(mRoundTripTimeUpdated)
+  if (mRoundTripTimeUpdated)
   {
     mRoundTripTimeMin = std::min(mRoundTripTimeMin, sample);
     mRoundTripTimeAvg = Average(mRoundTripTimeAvg, sample, 0.1);
@@ -709,31 +747,48 @@ void PeerLink::UpdateRoundTripTime(TimeMs sample, TimeMs floor)
   }
   else
   {
-    mRoundTripTimeMin     = sample;
-    mRoundTripTimeAvg     = sample;
-    mRoundTripTimeMax     = sample;
+    mRoundTripTimeMin = sample;
+    mRoundTripTimeAvg = sample;
+    mRoundTripTimeMax = sample;
     mRoundTripTimeUpdated = true;
   }
 
-  mInternalRoundTripTimeMin = std::max(std::min(mInternalRoundTripTimeMin, sample), floor);
-  mInternalRoundTripTimeAvg = std::max(Average(mInternalRoundTripTimeAvg, sample, 0.1), floor);
-  mInternalRoundTripTimeMax = std::max(std::max(mInternalRoundTripTimeMax, sample), floor);
+  mInternalRoundTripTimeMin =
+      std::max(std::min(mInternalRoundTripTimeMin, sample), floor);
+  mInternalRoundTripTimeAvg =
+      std::max(Average(mInternalRoundTripTimeAvg, sample, 0.1), floor);
+  mInternalRoundTripTimeMax =
+      std::max(std::max(mInternalRoundTripTimeMax, sample), floor);
 }
 
-MessageReceiptId PeerLink::SendInternal(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime, bool isProtocol)
+MessageReceiptId PeerLink::SendInternal(Status& status,
+                                        MoveReference<Message> message,
+                                        bool reliable,
+                                        MessageChannelId channelId,
+                                        bool receipt,
+                                        MessagePriority priority,
+                                        TimeMs lifetime,
+                                        bool isProtocol)
 {
-  MessageReceiptId receiptId = mOutbox.PushMessage(status, ZeroMove(message), reliable, channelId, receipt, priority, lifetime, isProtocol);
-  Assert(isProtocol ? status.Succeeded() : true); // (All protocol sends should succeed)
-  Assert(receipt ? receiptId : true); // (All receipted messages should be given a non-zero receipt ID)
+  MessageReceiptId receiptId = mOutbox.PushMessage(status,
+                                                   ZeroMove(message),
+                                                   reliable,
+                                                   channelId,
+                                                   receipt,
+                                                   priority,
+                                                   lifetime,
+                                                   isProtocol);
+  Assert(isProtocol ? status.Succeeded()
+                    : true);          // (All protocol sends should succeed)
+  Assert(receipt ? receiptId : true); // (All receipted messages should be given
+                                      // a non-zero receipt ID)
   return receiptId;
 }
 
 bool PeerLink::AbsoluteIsInRange(MessageType absoluteType) const
 {
   MessageType count = GetUserMessageTypeCount();
-  return count
-       ? AbsoluteToRelative(absoluteType) <= (count - 1)
-       : false;
+  return count ? AbsoluteToRelative(absoluteType) <= (count - 1) : false;
 }
 MessageType PeerLink::RelativeToAbsolute(MessageType relativeType) const
 {
@@ -749,14 +804,14 @@ MessageType PeerLink::AbsoluteToRelative(MessageType absoluteType) const
 
 void PeerLink::SetState(LinkState::Enum state)
 {
-  LinkState::Enum  prevState  = mState;
+  LinkState::Enum prevState = mState;
   LinkStatus::Enum prevStatus = GetStatus();
 
-  mState     = state;
+  mState = state;
   mStateTime = GetLocalTime();
 
   // State changed?
-  if(prevState != mState)
+  if (prevState != mState)
   {
     // [Link Plugin Event]
     PluginEventOnStateChange(prevState);
@@ -767,7 +822,7 @@ void PeerLink::SetState(LinkState::Enum state)
 
   // Status changed?
   LinkStatus::Enum curStatus = GetStatus();
-  if(prevStatus != curStatus)
+  if (prevStatus != curStatus)
   {
     // [Link Plugin Event]
     PluginEventOnStatusChange(prevStatus);
@@ -777,8 +832,7 @@ void PeerLink::SetState(LinkState::Enum state)
   }
 
   // Link just became disconnected?
-  if(prevState != mState
-  && mState == LinkState::Disconnected)
+  if (prevState != mState && mState == LinkState::Disconnected)
   {
     // This session is now complete
     // All link session data will be reset on the next user update call
@@ -790,13 +844,16 @@ void PeerLink::SetState(LinkState::Enum state)
 void PeerLink::ReceivePacket(MoveReference<InPacket> inPacket)
 {
   // [Link Plugin Event] Stop?
-  if(!PluginEventOnPacketReceive(*inPacket))
+  if (!PluginEventOnPacketReceive(*inPacket))
     return;
 
   // Update Stats
   UpdatePacketsReceived();
-  TimeMs lastReceiveDuration = std::max(mInbox.GetLastReceiveDuration(), TimeMs(1));
-  UpdateIncomingBandwidthUsage((double(inPacket->GetTotalBits()) / double(1000)) * (double(cOneSecondTimeMs) / double(lastReceiveDuration)));
+  TimeMs lastReceiveDuration =
+      std::max(mInbox.GetLastReceiveDuration(), TimeMs(1));
+  UpdateIncomingBandwidthUsage(
+      (double(inPacket->GetTotalBits()) / double(1000)) *
+      (double(cOneSecondTimeMs) / double(lastReceiveDuration)));
   UpdateReceiveRate(uint(cOneSecondTimeMs / lastReceiveDuration));
   UpdateReceivedPacketBytes(BITS_TO_BYTES(inPacket->GetTotalBits()));
 
@@ -807,7 +864,7 @@ void PeerLink::ReceivePacket(MoveReference<InPacket> inPacket)
 void PeerLink::SendPacket(OutPacket& outPacket)
 {
   // [Link Plugin Event] Stop?
-  if(!PluginEventOnPacketSend(outPacket))
+  if (!PluginEventOnPacketSend(outPacket))
     return;
 
   // Get packet size (in bits)
@@ -819,7 +876,9 @@ void PeerLink::SendPacket(OutPacket& outPacket)
   // Update Stats
   UpdatePacketsSent();
   TimeMs lastSendDuration = std::max(mOutbox.GetLastSendDuration(), TimeMs(1));
-  UpdateOutgoingBandwidthUsage((double(outPacketBits) / double(1000)) * (double(cOneSecondTimeMs) / double(lastSendDuration)));
+  UpdateOutgoingBandwidthUsage(
+      (double(outPacketBits) / double(1000)) *
+      (double(cOneSecondTimeMs) / double(lastSendDuration)));
   UpdateSendRate(uint(cOneSecondTimeMs / lastSendDuration));
   UpdateSentPacketBytes(BITS_TO_BYTES(outPacketBits));
 
@@ -832,7 +891,7 @@ void PeerLink::SendPacket(OutPacket& outPacket)
 void PeerLink::UpdateLinkState()
 {
   // Session is complete?
-  if(mSessionCompleted)
+  if (mSessionCompleted)
   {
     // Reset all link session data so the link may be reused
     ResetSession();
@@ -840,7 +899,7 @@ void PeerLink::UpdateLinkState()
 
   // Get current time and delta time
   TimeMs now = GetLocalTime();
-  float  dt  = TimeMsToFloatSeconds(GetLocalDeltaTime());
+  float dt = TimeMsToFloatSeconds(GetLocalDeltaTime());
 
   // Set the amount of outgoing bandwidth available since our last update
   Bits newFrameCapacity = Bits(GetOutgoingBandwidth() * double(1000) * dt);
@@ -848,13 +907,14 @@ void PeerLink::UpdateLinkState()
 
   // Deduct 'earned' frame capacity from our outstanding frame size
   Bits currentFrameSize = GetOutgoingFrameSize();
-  Bits newFrameSize = currentFrameSize - Math::Min(currentFrameSize, newFrameCapacity);
+  Bits newFrameSize =
+      currentFrameSize - Math::Min(currentFrameSize, newFrameCapacity);
   SetOutgoingFrameSize(newFrameSize);
 
   //
   // Remove Plugins
   //
-  forRange(LinkPlugin* plugin, mRemovedPlugins.All())
+  forRange(LinkPlugin * plugin, mRemovedPlugins.All())
   {
     // Uninitialize plugin
     plugin->Uninitialize();
@@ -867,14 +927,14 @@ void PeerLink::UpdateLinkState()
   //
   // Add Plugins
   //
-  forRange(LinkPlugin* plugin, mAddedPlugins.All())
+  forRange(LinkPlugin * plugin, mAddedPlugins.All())
   {
     // Initialize plugin
-    if(plugin->Initialize(this)) // Continue?
+    if (plugin->Initialize(this)) // Continue?
     {
       // Add plugin to active plugins
       LinkPluginSet::pointer_bool_pair result = mPlugins.Insert(plugin);
-      Assert(result.second);  // (Insertion should have succeeded)
+      Assert(result.second); // (Insertion should have succeeded)
     }
     // Stop?
     else
@@ -904,7 +964,7 @@ void PeerLink::UpdateLinkState()
 
   // Update link state
 UpdateLinkState:
-  switch(mState)
+  switch (mState)
   {
   default:
     Assert(false);
@@ -914,350 +974,61 @@ UpdateLinkState:
   //       LinkStatus::Disconnected       //
   //--------------------------------------//
   case LinkState::Disconnected:
+  {
+    //
+    // Check for pending connect requests
+    //
+
+    // Received connect request message?
+    forRange(Message & message,
+             protocolMessages.All()) if (message.GetType() ==
+                                         ProtocolMessageType::ConnectRequest)
     {
-      //
-      // Check for pending connect requests
-      //
-
-      // Received connect request message?
-      forRange(Message& message, protocolMessages.All())
-        if(message.GetType() == ProtocolMessageType::ConnectRequest)
-        {
-          // Connection limit has not been reached?
-          if((GetPeer()->GetLinkCount(LinkStatus::Connected)
-            + GetPeer()->GetLinkCount(LinkStatus::AttemptingConnection)) < GetPeer()->GetConnectionLimit())
-          {
-            // Read connect request message
-            ConnectRequestData connectRequestData;
-            if(message.GetData().Read(connectRequestData)) // Successful?
-            {
-              // Clear bits read
-              message.GetData().ClearBitsRead();
-
-              // Set our IP address (as seen from their perspective)
-              mOurIpAddress = connectRequestData.mIpAddress;
-
-              // Set difference between our local time values and their remote time values
-              TimeMs localNow  = now;
-              TimeMs remoteNow = connectRequestData.mTimestamp;
-              mLocalToRemoteTimeDifference = (remoteNow - localNow);
-
-              // [Link Event]
-              LinkEventConnectRequested(TransmissionDirection::Incoming, connectRequestData);
-
-              // Change link state
-              SetState(LinkState::ReceivedConnectRequest);
-
-              // [Link Plugin Event]
-              PluginEventOnConnectRequestReceive(message);
-
-              // Update link state again
-              goto UpdateLinkState;
-            }
-          }
-          // Connection limit has been reached?
-          else
-          {
-            // Create connect response message
-            Message connectResponseMessage(ProtocolMessageType::ConnectResponse);
-
-            ConnectResponseData connectResponseData;
-            connectResponseData.mIpAddress       = GetTheirIpAddress();
-            connectResponseData.mTimestamp       = now;
-            connectResponseData.mConnectResponse = ConnectResponse::DenyFull;
-
-            connectResponseMessage.GetData().Write(connectResponseData);
-
-            // Store connect response message copy
-            Message connectResponseMessageCopy(connectResponseMessage);
-
-            // Send connect response message
-            Status status;
-            mStateACKId = SendInternal(status, ZeroMove(connectResponseMessage), true, 0, true);
-
-            // [Link Event]
-            LinkEventConnectResponded(TransmissionDirection::Outgoing, connectResponseData);
-
-            // Change link state
-            SetState(LinkState::SentNegativeConnectResponse);
-
-            // [Link Plugin Event]
-            PluginEventOnConnectResponseSend(connectResponseMessageCopy);
-
-            // Update link state again
-            goto UpdateLinkState;
-
-            break;
-          }
-        }
-
-      // Outgoing connect requested?
-      if(mConnectRequested)
+      // Connection limit has not been reached?
+      if ((GetPeer()->GetLinkCount(LinkStatus::Connected) +
+           GetPeer()->GetLinkCount(LinkStatus::AttemptingConnection)) <
+          GetPeer()->GetConnectionLimit())
       {
-        // Create connect request message
-        Message connectRequestMessage(ProtocolMessageType::ConnectRequest);
-
+        // Read connect request message
         ConnectRequestData connectRequestData;
-        connectRequestData.mIpAddress = GetTheirIpAddress();
-        connectRequestData.mTimestamp = now;
-        connectRequestData.mExtraData = mConnectRequestExtraData;
-
-        connectRequestMessage.GetData().Write(connectRequestData);
-
-        // Store connect request message copy
-        Message connectRequestMessageCopy(connectRequestMessage);
-
-        // Send connect request message
-        Status status;
-        SendInternal(status, ZeroMove(connectRequestMessage), true);
-
-        // [Link Event]
-        LinkEventConnectRequested(TransmissionDirection::Outgoing, connectRequestData);
-
-        // Change link state
-        SetState(LinkState::SentConnectRequest);
-
-        // [Link Plugin Event]
-        PluginEventOnConnectRequestSend(connectRequestMessageCopy);
-      }
-    }
-    break;
-
-  case LinkState::SentDisconnectNotice:
-    {
-      //
-      // Determine if our disconnect notice was ACKd before proceeding to the fully disconnected state
-      // This lets our user ensure their disconnects are graceful, if they don't mind waiting for a reply
-      //
-      Assert(mStateACKId);
-
-      // Received ACK receipt message for our previously sent disconnect notice?
-      bool ACKd = false;
-      forRange(Message& message, protocolMessages.All())
-        if(message.GetType() == LinkEventMessageType::Receipt)
+        if (message.GetData().Read(connectRequestData)) // Successful?
         {
-          // Read receipt message
-          ReceiptData receiptData;
-          if(message.GetData().Read(receiptData)) // Successful?
-          {
-            // Is ACK receipt for our previously sent disconnect notice?
-            if(receiptData.mReceiptId == mStateACKId
-            && receiptData.mReceipt == Receipt::ACK)
-            {
-              ACKd = true;
-              break;
-            }
-          }
-        }
+          // Clear bits read
+          message.GetData().ClearBitsRead();
 
-      // ACKd or (RTT/2) * DisconnectAttemptFactor has elapsed?
-      if(ACKd
-      || GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetDisconnectAttemptFactor()))
-      {
-        // Change link state
-        SetState(LinkState::Disconnected);
-      }
-    }
-    break;
+          // Set our IP address (as seen from their perspective)
+          mOurIpAddress = connectRequestData.mIpAddress;
 
-  case LinkState::ReceivedDisconnectNotice:
-    {
-      //
-      // Give our peer time to send out our ACK to their disconnect notice message
-      // So the remote peer can proceed to the fully disconnected state gracefully
-      //
-
-      // (RTT/2) * DisconnectAttemptFactor has elapsed?
-      if(GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetDisconnectAttemptFactor()))
-      {
-        // Change link state
-        SetState(LinkState::Disconnected);
-      }
-    }
-    break;
-
-  case LinkState::SentNegativeConnectResponse:
-    {
-      //
-      // Determine if our negative connect response was ACKd before proceeding to the fully disconnected state
-      // This lets our user ensure their negative connect responses are graceful, if they don't mind waiting for a reply
-      //
-      Assert(mStateACKId);
-
-      // Received ACK receipt message for our previously sent negative connect response?
-      bool ACKd = false;
-      forRange(Message& message, protocolMessages.All())
-        if(message.GetType() == LinkEventMessageType::Receipt)
-        {
-          // Read receipt message
-          ReceiptData receiptData;
-          if(message.GetData().Read(receiptData)) // Successful?
-          {
-            // Is ACK receipt for our previously sent negative connect response?
-            if(receiptData.mReceiptId == mStateACKId
-            && receiptData.mReceipt == Receipt::ACK)
-            {
-              ACKd = true;
-              break;
-            }
-          }
-        }
-
-      // ACKd or (RTT/2) * ConnectAttemptFactor has elapsed?
-      if(ACKd
-      || GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
-      {
-        // Change link state
-        SetState(LinkState::Disconnected);
-      }
-    }
-    break;
-
-  case LinkState::ReceivedNegativeConnectResponse:
-    {
-      //
-      // Give our peer time to send out our ACK to their negative connect response message
-      // So the remote peer can proceed to the fully disconnected state gracefully
-      //
-
-      // (RTT/2) * ConnectAttemptFactor has elapsed?
-      if(GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
-      {
-        // Change link state
-        SetState(LinkState::Disconnected);
-      }
-    }
-    break;
-
-  //--------------------------------------//
-  //   LinkStatus::AttemptingConnection   //
-  //--------------------------------------//
-  case LinkState::SentConnectRequest:
-    {
-      //
-      // Check for pending connect responses or timeout
-      //
-
-      // Received connect response message?
-      forRange(Message& message, protocolMessages.All())
-        if(message.GetType() == ProtocolMessageType::ConnectResponse)
-        {
-          // Read connect response message
-          ConnectResponseData connectResponseData;
-          if(message.GetData().Read(connectResponseData)) // Successful?
-          {
-            // Clear bits read
-            message.GetData().ClearBitsRead();
-
-            // Set our IP address (as seen from their perspective)
-            mOurIpAddress = connectResponseData.mIpAddress;
-
-            // Set difference between our local time values and their remote time values
-            TimeMs localNow  = now;
-            TimeMs remoteNow = connectResponseData.mTimestamp;
-            mLocalToRemoteTimeDifference = (remoteNow - localNow);
-
-            // [Link Event]
-            LinkEventConnectResponded(TransmissionDirection::Incoming, connectResponseData);
-
-            // Handle connect response
-            switch(connectResponseData.mConnectResponse)
-            {
-            // Positive connect response?
-            case ConnectResponse::Accept:
-              // Change link state
-              SetState(LinkState::Connected);
-              break;
-
-            // Negative connect response?
-            default:
-              Assert(false);
-            case ConnectResponse::Deny:
-            case ConnectResponse::DenyFull:
-              // Change link state
-              SetState(LinkState::ReceivedNegativeConnectResponse);
-              break;
-            }
-
-            // [Link Plugin Event]
-            PluginEventOnConnectResponseReceive(message);
-            break;
-          }
-        }
-
-      // Else, Disconnect requested or (RTT/2) * ConnectAttemptFactor has elapsed?
-      if(mState == LinkState::SentConnectRequest)
-      {
-        if(mDisconnectRequested)
-        {
-          // Change link state
-          SetState(LinkState::Disconnected);
-        }
-#if PEER_LINK_ENABLE_FAIL_CONNECT_VIA_TIMEOUT
-        else if(GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
-        {
-          // Create connect response message
-          Message connectResponseMessage(ProtocolMessageType::ConnectResponse);
-
-          ConnectResponseData connectResponseData;
-          connectResponseData.mIpAddress       = GetInternetProtocol() == InternetProtocol::V4 ? GetPeer()->GetLocalIpv4Address() : GetPeer()->GetLocalIpv6Address();
-          connectResponseData.mTimestamp       = now;
-          connectResponseData.mConnectResponse = ConnectResponse::DenyTimeout;
-
-          connectResponseMessage.GetData().Write(connectResponseData);
+          // Set difference between our local time values and their remote time
+          // values
+          TimeMs localNow = now;
+          TimeMs remoteNow = connectRequestData.mTimestamp;
+          mLocalToRemoteTimeDifference = (remoteNow - localNow);
 
           // [Link Event]
-          LinkEventConnectResponded(TransmissionDirection::Incoming, connectResponseData);
+          LinkEventConnectRequested(TransmissionDirection::Incoming,
+                                    connectRequestData);
 
           // Change link state
-          SetState(LinkState::ReceivedNegativeConnectResponse);
+          SetState(LinkState::ReceivedConnectRequest);
 
           // [Link Plugin Event]
-          PluginEventOnConnectResponseReceive(connectResponseMessage);
+          PluginEventOnConnectRequestReceive(message);
+
+          // Update link state again
+          goto UpdateLinkState;
         }
-#endif
       }
-    }
-    break;
-
-  case LinkState::ReceivedConnectRequest:
-    {
-      //
-      // Reply to connect request or timeout
-      //
-
-      // Determine the appropriate connect response with respect to our peer's desired connect response mode
-      UserConnectResponse::Enum response = UserConnectResponse::Pending;
-      BitStream                 extraData;
-      switch(GetPeer()->GetConnectResponseMode())
-      {
-      case ConnectResponseMode::Accept:
-        response = UserConnectResponse::Accept;
-        break;
-
-      case ConnectResponseMode::Deny:
-        response = UserConnectResponse::Deny;
-        break;
-
-      default:
-        Assert(false);
-      case ConnectResponseMode::Custom:
-        response  = mConnectResponded;
-        extraData = mConnectResponseExtraData;
-        break;
-      }
-
-      // Connect response determined?
-      if(response != UserConnectResponse::Pending)
+      // Connection limit has been reached?
+      else
       {
         // Create connect response message
         Message connectResponseMessage(ProtocolMessageType::ConnectResponse);
 
         ConnectResponseData connectResponseData;
-        connectResponseData.mIpAddress       = GetTheirIpAddress();
-        connectResponseData.mTimestamp       = now;
-        connectResponseData.mConnectResponse = (response == UserConnectResponse::Accept) ? ConnectResponse::Accept : ConnectResponse::Deny;
-        connectResponseData.mExtraData       = extraData;
+        connectResponseData.mIpAddress = GetTheirIpAddress();
+        connectResponseData.mTimestamp = now;
+        connectResponseData.mConnectResponse = ConnectResponse::DenyFull;
 
         connectResponseMessage.GetData().Write(connectResponseData);
 
@@ -1266,136 +1037,460 @@ UpdateLinkState:
 
         // Send connect response message
         Status status;
-        MessageReceiptId receiptId = SendInternal(status, ZeroMove(connectResponseMessage), true, 0, true);
+        mStateACKId = SendInternal(
+            status, ZeroMove(connectResponseMessage), true, 0, true);
 
         // [Link Event]
-        LinkEventConnectResponded(TransmissionDirection::Outgoing, connectResponseData);
+        LinkEventConnectResponded(TransmissionDirection::Outgoing,
+                                  connectResponseData);
 
-        // Positive connect response?
-        if(connectResponseData.mConnectResponse == ConnectResponse::Accept)
-        {
-          // Change link state
-          SetState(LinkState::Connected);
-        }
-        // Negative connect response?
-        else
-        {
-          mStateACKId = receiptId;
-
-          // Change link state
-          SetState(LinkState::SentNegativeConnectResponse);
-        }
+        // Change link state
+        SetState(LinkState::SentNegativeConnectResponse);
 
         // [Link Plugin Event]
         PluginEventOnConnectResponseSend(connectResponseMessageCopy);
-      }
 
-      // Else, Disconnect requested or (RTT/2) * ConnectAttemptFactor has elapsed?
-      if(mState == LinkState::ReceivedConnectRequest)
+        // Update link state again
+        goto UpdateLinkState;
+
+        break;
+      }
+    }
+
+    // Outgoing connect requested?
+    if (mConnectRequested)
+    {
+      // Create connect request message
+      Message connectRequestMessage(ProtocolMessageType::ConnectRequest);
+
+      ConnectRequestData connectRequestData;
+      connectRequestData.mIpAddress = GetTheirIpAddress();
+      connectRequestData.mTimestamp = now;
+      connectRequestData.mExtraData = mConnectRequestExtraData;
+
+      connectRequestMessage.GetData().Write(connectRequestData);
+
+      // Store connect request message copy
+      Message connectRequestMessageCopy(connectRequestMessage);
+
+      // Send connect request message
+      Status status;
+      SendInternal(status, ZeroMove(connectRequestMessage), true);
+
+      // [Link Event]
+      LinkEventConnectRequested(TransmissionDirection::Outgoing,
+                                connectRequestData);
+
+      // Change link state
+      SetState(LinkState::SentConnectRequest);
+
+      // [Link Plugin Event]
+      PluginEventOnConnectRequestSend(connectRequestMessageCopy);
+    }
+  }
+  break;
+
+  case LinkState::SentDisconnectNotice:
+  {
+    //
+    // Determine if our disconnect notice was ACKd before proceeding to the
+    // fully disconnected state This lets our user ensure their disconnects are
+    // graceful, if they don't mind waiting for a reply
+    //
+    Assert(mStateACKId);
+
+    // Received ACK receipt message for our previously sent disconnect notice?
+    bool ACKd = false;
+    forRange(Message & message,
+             protocolMessages.All()) if (message.GetType() ==
+                                         LinkEventMessageType::Receipt)
+    {
+      // Read receipt message
+      ReceiptData receiptData;
+      if (message.GetData().Read(receiptData)) // Successful?
       {
-        if(mDisconnectRequested
-        || GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
+        // Is ACK receipt for our previously sent disconnect notice?
+        if (receiptData.mReceiptId == mStateACKId &&
+            receiptData.mReceipt == Receipt::ACK)
         {
-          // Change link state
-          SetState(LinkState::Disconnected);
+          ACKd = true;
+          break;
         }
       }
     }
-    break;
+
+    // ACKd or (RTT/2) * DisconnectAttemptFactor has elapsed?
+    if (ACKd || GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) *
+                                      GetDisconnectAttemptFactor()))
+    {
+      // Change link state
+      SetState(LinkState::Disconnected);
+    }
+  }
+  break;
+
+  case LinkState::ReceivedDisconnectNotice:
+  {
+    //
+    // Give our peer time to send out our ACK to their disconnect notice message
+    // So the remote peer can proceed to the fully disconnected state gracefully
+    //
+
+    // (RTT/2) * DisconnectAttemptFactor has elapsed?
+    if (GetStateDuration() >
+        ((GetAvgInternalRoundTripTime() / 2) * GetDisconnectAttemptFactor()))
+    {
+      // Change link state
+      SetState(LinkState::Disconnected);
+    }
+  }
+  break;
+
+  case LinkState::SentNegativeConnectResponse:
+  {
+    //
+    // Determine if our negative connect response was ACKd before proceeding to
+    // the fully disconnected state This lets our user ensure their negative
+    // connect responses are graceful, if they don't mind waiting for a reply
+    //
+    Assert(mStateACKId);
+
+    // Received ACK receipt message for our previously sent negative connect
+    // response?
+    bool ACKd = false;
+    forRange(Message & message,
+             protocolMessages.All()) if (message.GetType() ==
+                                         LinkEventMessageType::Receipt)
+    {
+      // Read receipt message
+      ReceiptData receiptData;
+      if (message.GetData().Read(receiptData)) // Successful?
+      {
+        // Is ACK receipt for our previously sent negative connect response?
+        if (receiptData.mReceiptId == mStateACKId &&
+            receiptData.mReceipt == Receipt::ACK)
+        {
+          ACKd = true;
+          break;
+        }
+      }
+    }
+
+    // ACKd or (RTT/2) * ConnectAttemptFactor has elapsed?
+    if (ACKd || GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) *
+                                      GetConnectAttemptFactor()))
+    {
+      // Change link state
+      SetState(LinkState::Disconnected);
+    }
+  }
+  break;
+
+  case LinkState::ReceivedNegativeConnectResponse:
+  {
+    //
+    // Give our peer time to send out our ACK to their negative connect response
+    // message So the remote peer can proceed to the fully disconnected state
+    // gracefully
+    //
+
+    // (RTT/2) * ConnectAttemptFactor has elapsed?
+    if (GetStateDuration() >
+        ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
+    {
+      // Change link state
+      SetState(LinkState::Disconnected);
+    }
+  }
+  break;
+
+  //--------------------------------------//
+  //   LinkStatus::AttemptingConnection   //
+  //--------------------------------------//
+  case LinkState::SentConnectRequest:
+  {
+    //
+    // Check for pending connect responses or timeout
+    //
+
+    // Received connect response message?
+    forRange(Message & message,
+             protocolMessages.All()) if (message.GetType() ==
+                                         ProtocolMessageType::ConnectResponse)
+    {
+      // Read connect response message
+      ConnectResponseData connectResponseData;
+      if (message.GetData().Read(connectResponseData)) // Successful?
+      {
+        // Clear bits read
+        message.GetData().ClearBitsRead();
+
+        // Set our IP address (as seen from their perspective)
+        mOurIpAddress = connectResponseData.mIpAddress;
+
+        // Set difference between our local time values and their remote time
+        // values
+        TimeMs localNow = now;
+        TimeMs remoteNow = connectResponseData.mTimestamp;
+        mLocalToRemoteTimeDifference = (remoteNow - localNow);
+
+        // [Link Event]
+        LinkEventConnectResponded(TransmissionDirection::Incoming,
+                                  connectResponseData);
+
+        // Handle connect response
+        switch (connectResponseData.mConnectResponse)
+        {
+        // Positive connect response?
+        case ConnectResponse::Accept:
+          // Change link state
+          SetState(LinkState::Connected);
+          break;
+
+        // Negative connect response?
+        default:
+          Assert(false);
+        case ConnectResponse::Deny:
+        case ConnectResponse::DenyFull:
+          // Change link state
+          SetState(LinkState::ReceivedNegativeConnectResponse);
+          break;
+        }
+
+        // [Link Plugin Event]
+        PluginEventOnConnectResponseReceive(message);
+        break;
+      }
+    }
+
+    // Else, Disconnect requested or (RTT/2) * ConnectAttemptFactor has elapsed?
+    if (mState == LinkState::SentConnectRequest)
+    {
+      if (mDisconnectRequested)
+      {
+        // Change link state
+        SetState(LinkState::Disconnected);
+      }
+#if PEER_LINK_ENABLE_FAIL_CONNECT_VIA_TIMEOUT
+      else if (GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) *
+                                     GetConnectAttemptFactor()))
+      {
+        // Create connect response message
+        Message connectResponseMessage(ProtocolMessageType::ConnectResponse);
+
+        ConnectResponseData connectResponseData;
+        connectResponseData.mIpAddress =
+            GetInternetProtocol() == InternetProtocol::V4
+                ? GetPeer()->GetLocalIpv4Address()
+                : GetPeer()->GetLocalIpv6Address();
+        connectResponseData.mTimestamp = now;
+        connectResponseData.mConnectResponse = ConnectResponse::DenyTimeout;
+
+        connectResponseMessage.GetData().Write(connectResponseData);
+
+        // [Link Event]
+        LinkEventConnectResponded(TransmissionDirection::Incoming,
+                                  connectResponseData);
+
+        // Change link state
+        SetState(LinkState::ReceivedNegativeConnectResponse);
+
+        // [Link Plugin Event]
+        PluginEventOnConnectResponseReceive(connectResponseMessage);
+      }
+#endif
+    }
+  }
+  break;
+
+  case LinkState::ReceivedConnectRequest:
+  {
+    //
+    // Reply to connect request or timeout
+    //
+
+    // Determine the appropriate connect response with respect to our peer's
+    // desired connect response mode
+    UserConnectResponse::Enum response = UserConnectResponse::Pending;
+    BitStream extraData;
+    switch (GetPeer()->GetConnectResponseMode())
+    {
+    case ConnectResponseMode::Accept:
+      response = UserConnectResponse::Accept;
+      break;
+
+    case ConnectResponseMode::Deny:
+      response = UserConnectResponse::Deny;
+      break;
+
+    default:
+      Assert(false);
+    case ConnectResponseMode::Custom:
+      response = mConnectResponded;
+      extraData = mConnectResponseExtraData;
+      break;
+    }
+
+    // Connect response determined?
+    if (response != UserConnectResponse::Pending)
+    {
+      // Create connect response message
+      Message connectResponseMessage(ProtocolMessageType::ConnectResponse);
+
+      ConnectResponseData connectResponseData;
+      connectResponseData.mIpAddress = GetTheirIpAddress();
+      connectResponseData.mTimestamp = now;
+      connectResponseData.mConnectResponse =
+          (response == UserConnectResponse::Accept) ? ConnectResponse::Accept
+                                                    : ConnectResponse::Deny;
+      connectResponseData.mExtraData = extraData;
+
+      connectResponseMessage.GetData().Write(connectResponseData);
+
+      // Store connect response message copy
+      Message connectResponseMessageCopy(connectResponseMessage);
+
+      // Send connect response message
+      Status status;
+      MessageReceiptId receiptId =
+          SendInternal(status, ZeroMove(connectResponseMessage), true, 0, true);
+
+      // [Link Event]
+      LinkEventConnectResponded(TransmissionDirection::Outgoing,
+                                connectResponseData);
+
+      // Positive connect response?
+      if (connectResponseData.mConnectResponse == ConnectResponse::Accept)
+      {
+        // Change link state
+        SetState(LinkState::Connected);
+      }
+      // Negative connect response?
+      else
+      {
+        mStateACKId = receiptId;
+
+        // Change link state
+        SetState(LinkState::SentNegativeConnectResponse);
+      }
+
+      // [Link Plugin Event]
+      PluginEventOnConnectResponseSend(connectResponseMessageCopy);
+    }
+
+    // Else, Disconnect requested or (RTT/2) * ConnectAttemptFactor has elapsed?
+    if (mState == LinkState::ReceivedConnectRequest)
+    {
+      if (mDisconnectRequested ||
+          GetStateDuration() >
+              ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
+      {
+        // Change link state
+        SetState(LinkState::Disconnected);
+      }
+    }
+  }
+  break;
 
   //--------------------------------------//
   //        LinkStatus::Connected         //
   //--------------------------------------//
   case LinkState::Connected:
+  {
+    //
+    // Check for disconnection via request, timeout, or latency
+    //
+
+    // Received disconnect notice message?
+    forRange(Message & message,
+             protocolMessages.All()) if (message.GetType() ==
+                                         ProtocolMessageType::DisconnectNotice)
     {
-      //
-      // Check for disconnection via request, timeout, or latency
-      //
-
-      // Received disconnect notice message?
-      forRange(Message& message, protocolMessages.All())
-        if(message.GetType() == ProtocolMessageType::DisconnectNotice)
-        {
-          // Read disconnect notice message
-          DisconnectNoticeData disconnectNoticeData;
-          if(message.GetData().Read(disconnectNoticeData)) // Successful?
-          {
-            // Clear bits read
-            message.GetData().ClearBitsRead();
-
-            // [Link Event]
-            LinkEventDisconnectNoticed(TransmissionDirection::Incoming, disconnectNoticeData);
-
-            // Change link state
-            SetState(LinkState::ReceivedDisconnectNotice);
-
-            // [Link Plugin Event]
-            PluginEventOnDisconnectNoticeReceive(message);
-            break;
-          }
-        }
-
-      // Else
-      if(mState == LinkState::Connected)
+      // Read disconnect notice message
+      DisconnectNoticeData disconnectNoticeData;
+      if (message.GetData().Read(disconnectNoticeData)) // Successful?
       {
-        // Determine if we should disconnect
-        bool                   shouldDisconnect = false;
-        DisconnectReason::Enum disconnectReason = DisconnectReason::Request;
+        // Clear bits read
+        message.GetData().ClearBitsRead();
 
-        // Outgoing disconnect requested?
-        if(mDisconnectRequested)
-        {
-          shouldDisconnect = true;
-          disconnectReason = DisconnectReason::Request;
-        }
-#if PEER_LINK_ENABLE_DISCONNECT_VIA_LATENCY
-        // RTT exceeds LatencyLimit?
-        else if(GetAvgInternalRoundTripTime() > GetLatencyLimit())
-        {
-          shouldDisconnect = true;
-          disconnectReason = DisconnectReason::Latency;
-        }
-#endif
-#if PEER_LINK_ENABLE_DISCONNECT_VIA_TIMEOUT
-        // (RTT/2) * TimeoutFactor elapsed without receiving any Packets?
-        else if(mInbox.GetLastReceiveDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetTimeoutFactor()))
-        {
-          shouldDisconnect = true;
-          disconnectReason = DisconnectReason::Timeout;
-        }
-#endif
+        // [Link Event]
+        LinkEventDisconnectNoticed(TransmissionDirection::Incoming,
+                                   disconnectNoticeData);
 
-        // Should we disconnect?
-        if(shouldDisconnect)
-        {
-          // Create disconnect notice message
-          Message disconnectNoticeMessage(ProtocolMessageType::DisconnectNotice);
+        // Change link state
+        SetState(LinkState::ReceivedDisconnectNotice);
 
-          DisconnectNoticeData disconnectNoticeData;
-          disconnectNoticeData.mDisconnectReason = disconnectReason;
-          disconnectNoticeData.mExtraData        = mDisconnectRequested ? mDisconnectRequestExtraData : BitStream();
-
-          disconnectNoticeMessage.GetData().Write(disconnectNoticeData);
-
-          // Store disconnect notice message copy
-          Message disconnectNoticeMessageCopy(disconnectNoticeMessage);
-
-          // Send disconnect notice message
-          Status status;
-          mStateACKId = SendInternal(status, ZeroMove(disconnectNoticeMessage), true, 0, true);
-
-          // [Link Event]
-          LinkEventDisconnectNoticed(TransmissionDirection::Outgoing, disconnectNoticeData);
-
-          // Change link state
-          SetState(LinkState::SentDisconnectNotice);
-
-          // [Link Plugin Event]
-          PluginEventOnDisconnectNoticeSend(disconnectNoticeMessageCopy);
-        }
+        // [Link Plugin Event]
+        PluginEventOnDisconnectNoticeReceive(message);
+        break;
       }
     }
-    break;
+
+    // Else
+    if (mState == LinkState::Connected)
+    {
+      // Determine if we should disconnect
+      bool shouldDisconnect = false;
+      DisconnectReason::Enum disconnectReason = DisconnectReason::Request;
+
+      // Outgoing disconnect requested?
+      if (mDisconnectRequested)
+      {
+        shouldDisconnect = true;
+        disconnectReason = DisconnectReason::Request;
+      }
+#if PEER_LINK_ENABLE_DISCONNECT_VIA_LATENCY
+      // RTT exceeds LatencyLimit?
+      else if (GetAvgInternalRoundTripTime() > GetLatencyLimit())
+      {
+        shouldDisconnect = true;
+        disconnectReason = DisconnectReason::Latency;
+      }
+#endif
+#if PEER_LINK_ENABLE_DISCONNECT_VIA_TIMEOUT
+      // (RTT/2) * TimeoutFactor elapsed without receiving any Packets?
+      else if (mInbox.GetLastReceiveDuration() >
+               ((GetAvgInternalRoundTripTime() / 2) * GetTimeoutFactor()))
+      {
+        shouldDisconnect = true;
+        disconnectReason = DisconnectReason::Timeout;
+      }
+#endif
+
+      // Should we disconnect?
+      if (shouldDisconnect)
+      {
+        // Create disconnect notice message
+        Message disconnectNoticeMessage(ProtocolMessageType::DisconnectNotice);
+
+        DisconnectNoticeData disconnectNoticeData;
+        disconnectNoticeData.mDisconnectReason = disconnectReason;
+        disconnectNoticeData.mExtraData =
+            mDisconnectRequested ? mDisconnectRequestExtraData : BitStream();
+
+        disconnectNoticeMessage.GetData().Write(disconnectNoticeData);
+
+        // Store disconnect notice message copy
+        Message disconnectNoticeMessageCopy(disconnectNoticeMessage);
+
+        // Send disconnect notice message
+        Status status;
+        mStateACKId = SendInternal(
+            status, ZeroMove(disconnectNoticeMessage), true, 0, true);
+
+        // [Link Event]
+        LinkEventDisconnectNoticed(TransmissionDirection::Outgoing,
+                                   disconnectNoticeData);
+
+        // Change link state
+        SetState(LinkState::SentDisconnectNotice);
+
+        // [Link Plugin Event]
+        PluginEventOnDisconnectNoticeSend(disconnectNoticeMessageCopy);
+      }
+    }
+  }
+  break;
   } // (Update Link State)
   protocolMessages.Clear();
 
@@ -1407,22 +1502,21 @@ UpdateLinkState:
   //
   // Update Plugins
   //
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnUpdate();
+  forRange(LinkPlugin * plugin, mPlugins.All()) plugin->OnUpdate();
 }
 void PeerLink::ProcessReceivedCustomMessages()
 {
   // Get received custom messages
   Array<Message>& customMessages = mInbox.mReleasedCustomMessages;
-  if(customMessages.Empty()) // None?
+  if (customMessages.Empty()) // None?
     return;
 
   // For all custom messages
   Array<Message>::iterator iter = customMessages.Begin();
-  for( ; iter != customMessages.End(); ++iter)
+  for (; iter != customMessages.End(); ++iter)
   {
     // Process custom message
-    if(!ProcessReceivedCustomMessage(*iter, false)) // Stop processing?
+    if (!ProcessReceivedCustomMessage(*iter, false)) // Stop processing?
     {
       ++iter; // (Advance to include this message in the erase below)
       break;
@@ -1435,7 +1529,7 @@ void PeerLink::ProcessReceivedCustomMessages()
 bool PeerLink::ProcessReceivedCustomMessage(Message& message, bool isEvent)
 {
   // Is an event message?
-  if(isEvent)
+  if (isEvent)
   {
     // Let user process the custom message
     return GetPeer()->mProcessReceivedCustomMessageFn(this, message);
@@ -1443,11 +1537,12 @@ bool PeerLink::ProcessReceivedCustomMessage(Message& message, bool isEvent)
 
   // Attempt to receive the custom message as a plugin message
   bool continueProcessingCustomMessages = true;
-  bool belongsToPlugin = AttemptPluginMessageReceive(ZeroMove(message), continueProcessingCustomMessages);
-  if(!belongsToPlugin) // Not a plugin message?
+  bool belongsToPlugin = AttemptPluginMessageReceive(
+      ZeroMove(message), continueProcessingCustomMessages);
+  if (!belongsToPlugin) // Not a plugin message?
   {
     // Should be a user type
-    if(AbsoluteIsInRange(message.GetType()))
+    if (AbsoluteIsInRange(message.GetType()))
     {
       // Convert absolute message type to relative message type
       message.mType = AbsoluteToRelative(message.mType);
@@ -1466,60 +1561,60 @@ bool PeerLink::ProcessReceivedCustomMessage(Message& message, bool isEvent)
 void PeerLink::PluginEventOnConnectRequestSend(Message& message)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnConnectRequestSend(message);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnConnectRequestSend(message);
 }
 void PeerLink::PluginEventOnConnectRequestReceive(Message& message)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnConnectRequestReceive(message);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnConnectRequestReceive(message);
 }
 
 void PeerLink::PluginEventOnConnectResponseSend(Message& message)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnConnectResponseSend(message);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnConnectResponseSend(message);
 }
 void PeerLink::PluginEventOnConnectResponseReceive(Message& message)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnConnectResponseReceive(message);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnConnectResponseReceive(message);
 }
 
 void PeerLink::PluginEventOnDisconnectNoticeSend(Message& message)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnDisconnectNoticeSend(message);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnDisconnectNoticeSend(message);
 }
 void PeerLink::PluginEventOnDisconnectNoticeReceive(Message& message)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnDisconnectNoticeReceive(message);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnDisconnectNoticeReceive(message);
 }
 
 void PeerLink::PluginEventOnStateChange(LinkState::Enum prevState)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnStateChange(prevState);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnStateChange(prevState);
 }
 void PeerLink::PluginEventOnStatusChange(LinkStatus::Enum prevStatus)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnStatusChange(prevStatus);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnStatusChange(prevStatus);
 }
 
 bool PeerLink::PluginEventOnPacketSend(OutPacket& packet)
 {
   // Ask all plugins if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(!plugin->OnPacketSend(packet)) // Stop?
+  forRange(LinkPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnPacketSend(packet)) // Stop?
       return false;
 
   // Continue
@@ -1528,8 +1623,8 @@ bool PeerLink::PluginEventOnPacketSend(OutPacket& packet)
 bool PeerLink::PluginEventOnPacketReceive(InPacket& packet)
 {
   // Ask all plugins if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(!plugin->OnPacketReceive(packet)) // Stop?
+  forRange(LinkPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnPacketReceive(packet)) // Stop?
       return false;
 
   // Continue
@@ -1539,18 +1634,20 @@ bool PeerLink::PluginEventOnPacketReceive(InPacket& packet)
 bool PeerLink::PluginEventOnMessageSend(OutMessage& message)
 {
   // Ask all plugins if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(!plugin->OnMessageSend(message)) // Stop?
+  forRange(LinkPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnMessageSend(message)) // Stop?
       return false;
 
   // Continue
   return true;
 }
-bool PeerLink::PluginEventOnMessageReceipt(OutMessage& message, Receipt::Enum receipt)
+bool PeerLink::PluginEventOnMessageReceipt(OutMessage& message,
+                                           Receipt::Enum receipt)
 {
   // Ask all plugins if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(!plugin->OnMessageReceipt(message, receipt)) // Stop?
+  forRange(
+      LinkPlugin * plugin,
+      mPlugins.All()) if (!plugin->OnMessageReceipt(message, receipt)) // Stop?
       return false;
 
   // Continue
@@ -1559,8 +1656,8 @@ bool PeerLink::PluginEventOnMessageReceipt(OutMessage& message, Receipt::Enum re
 bool PeerLink::PluginEventOnMessageReceive(Message& message)
 {
   // Ask all plugins if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(!plugin->OnMessageReceive(message)) // Stop?
+  forRange(LinkPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnMessageReceive(message)) // Stop?
       return false;
 
   // Continue
@@ -1569,21 +1666,25 @@ bool PeerLink::PluginEventOnMessageReceive(Message& message)
 
 bool PeerLink::PluginEventOnPluginMessageSend(OutMessage& message)
 {
-  // Ask all plugins if this message type is intended for them and if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(plugin->AbsoluteIsInRange(message.GetType())) // Belongs to this plugin?
-    {
-      // Convert absolute message type to relative message type
-      message.mType = plugin->AbsoluteToRelative(message.mType);
+  // Ask all plugins if this message type is intended for them and if they wish
+  // to continue
+  forRange(
+      LinkPlugin * plugin,
+      mPlugins.All()) if (plugin
+                              ->AbsoluteIsInRange(
+                                  message.GetType())) // Belongs to this plugin?
+  {
+    // Convert absolute message type to relative message type
+    message.mType = plugin->AbsoluteToRelative(message.mType);
 
-      // Stop?
-      bool result = plugin->OnPluginMessageSend(message);
+    // Stop?
+    bool result = plugin->OnPluginMessageSend(message);
 
-      // Convert relative message type back to absolute message type
-      message.mType = plugin->RelativeToAbsolute(message.mType);
+    // Convert relative message type back to absolute message type
+    message.mType = plugin->RelativeToAbsolute(message.mType);
 
-      return result;
-    }
+    return result;
+  }
 
   // Continue
   return true;
@@ -1592,8 +1693,9 @@ bool PeerLink::PluginEventOnPluginMessageSend(OutMessage& message)
 bool PeerLink::PluginEventOnIncomingChannelOpen(MessageChannelId channelId)
 {
   // Ask all plugins if they wish to continue
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(!plugin->OnIncomingChannelOpen(channelId)) // Stop?
+  forRange(
+      LinkPlugin * plugin,
+      mPlugins.All()) if (!plugin->OnIncomingChannelOpen(channelId)) // Stop?
       return false;
 
   // Continue
@@ -1602,52 +1704,65 @@ bool PeerLink::PluginEventOnIncomingChannelOpen(MessageChannelId channelId)
 void PeerLink::PluginEventOnIncomingChannelClose(MessageChannelId channelId)
 {
   // Notify all plugins
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    plugin->OnIncomingChannelClose(channelId);
+  forRange(LinkPlugin * plugin, mPlugins.All())
+      plugin->OnIncomingChannelClose(channelId);
 }
 
-bool PeerLink::AttemptPluginMessageReceipt(MoveReference<OutMessage> message, Receipt::Enum receipt)
+bool PeerLink::AttemptPluginMessageReceipt(MoveReference<OutMessage> message,
+                                           Receipt::Enum receipt)
 {
   // Ask all plugins if this message type is intended for them
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(plugin->AbsoluteIsInRange(message->GetType())) // Belongs to this plugin?
-    {
-      // Convert absolute message type to relative message type
-      message->mType = plugin->AbsoluteToRelative(message->mType);
+  forRange(
+      LinkPlugin * plugin,
+      mPlugins
+          .All()) if (plugin
+                          ->AbsoluteIsInRange(
+                              message->GetType())) // Belongs to this plugin?
+  {
+    // Convert absolute message type to relative message type
+    message->mType = plugin->AbsoluteToRelative(message->mType);
 
-      // [Link Plugin Event]
-      plugin->OnPluginMessageReceipt(ZeroMove(message), receipt);
-      return true;
-    }
+    // [Link Plugin Event]
+    plugin->OnPluginMessageReceipt(ZeroMove(message), receipt);
+    return true;
+  }
 
   // Is user message
   return false;
 }
-bool PeerLink::AttemptPluginMessageReceive(MoveReference<Message> message, bool& continueProcessingCustomMessages)
+bool PeerLink::AttemptPluginMessageReceive(
+    MoveReference<Message> message, bool& continueProcessingCustomMessages)
 {
   // Ask all plugins if this message type is intended for them
-  forRange(LinkPlugin* plugin, mPlugins.All())
-    if(plugin->AbsoluteIsInRange(message->GetType())) // Belongs to this plugin?
-    {
-      // Convert absolute message type to relative message type
-      message->mType = plugin->AbsoluteToRelative(message->mType);
+  forRange(
+      LinkPlugin * plugin,
+      mPlugins
+          .All()) if (plugin
+                          ->AbsoluteIsInRange(
+                              message->GetType())) // Belongs to this plugin?
+  {
+    // Convert absolute message type to relative message type
+    message->mType = plugin->AbsoluteToRelative(message->mType);
 
-      // [Link Plugin Event]
-      plugin->OnPluginMessageReceive(ZeroMove(message), continueProcessingCustomMessages);
-      return true;
-    }
+    // [Link Plugin Event]
+    plugin->OnPluginMessageReceive(ZeroMove(message),
+                                   continueProcessingCustomMessages);
+    return true;
+  }
 
   // Is user message
   return false;
 }
 
-void PeerLink::LinkEventConnectRequested(TransmissionDirection::Enum direction, const ConnectRequestData& connectRequestData)
+void PeerLink::LinkEventConnectRequested(
+    TransmissionDirection::Enum direction,
+    const ConnectRequestData& connectRequestData)
 {
   // Create connect requested event message
   Message connectRequestedMessage(LinkEventMessageType::ConnectRequested);
 
   ConnectRequestedData connectRequestedData;
-  connectRequestedData.mDirection          = direction;
+  connectRequestedData.mDirection = direction;
   connectRequestedData.mConnectRequestData = connectRequestData;
 
   connectRequestedMessage.GetData().Write(connectRequestedData);
@@ -1655,13 +1770,15 @@ void PeerLink::LinkEventConnectRequested(TransmissionDirection::Enum direction, 
   // Push connect requested event message
   PushUserEventMessage(ZeroMove(connectRequestedMessage));
 }
-void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction, const ConnectResponseData& connectResponseData)
+void PeerLink::LinkEventConnectResponded(
+    TransmissionDirection::Enum direction,
+    const ConnectResponseData& connectResponseData)
 {
   // Create connect responded event message
   Message connectRespondedMessage(LinkEventMessageType::ConnectResponded);
 
   ConnectRespondedData connectRespondedData;
-  connectRespondedData.mDirection           = direction;
+  connectRespondedData.mDirection = direction;
   connectRespondedData.mConnectResponseData = connectResponseData;
 
   connectRespondedMessage.GetData().Write(connectRespondedData);
@@ -1669,13 +1786,15 @@ void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction, 
   // Push connect responded event message
   PushUserEventMessage(ZeroMove(connectRespondedMessage));
 }
-void PeerLink::LinkEventDisconnectNoticed(TransmissionDirection::Enum direction, const DisconnectNoticeData& disconnectNoticeData)
+void PeerLink::LinkEventDisconnectNoticed(
+    TransmissionDirection::Enum direction,
+    const DisconnectNoticeData& disconnectNoticeData)
 {
   // Create disconnect noticed event message
   Message disconnectNoticedMessage(LinkEventMessageType::DisconnectNoticed);
 
   DisconnectNoticedData disconnectNoticedData;
-  disconnectNoticedData.mDirection            = direction;
+  disconnectNoticedData.mDirection = direction;
   disconnectNoticedData.mDisconnectNoticeData = disconnectNoticeData;
 
   disconnectNoticedMessage.GetData().Write(disconnectNoticedData);
@@ -1683,13 +1802,15 @@ void PeerLink::LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
   // Push disconnect noticed event message
   PushUserEventMessage(ZeroMove(disconnectNoticedMessage));
 }
-void PeerLink::LinkEventIncomingChannelOpened(MessageChannelId channelId, TransferMode::Enum transferMode)
+void PeerLink::LinkEventIncomingChannelOpened(MessageChannelId channelId,
+                                              TransferMode::Enum transferMode)
 {
   // Create incoming channel opened event message
-  Message incomingChannelOpenedMessage(LinkEventMessageType::IncomingChannelOpened);
+  Message incomingChannelOpenedMessage(
+      LinkEventMessageType::IncomingChannelOpened);
 
   IncomingChannelOpenedData incomingChannelOpenedData;
-  incomingChannelOpenedData.mChannelId    = channelId;
+  incomingChannelOpenedData.mChannelId = channelId;
   incomingChannelOpenedData.mTransferMode = transferMode;
 
   incomingChannelOpenedMessage.GetData().Write(incomingChannelOpenedData);
@@ -1700,7 +1821,8 @@ void PeerLink::LinkEventIncomingChannelOpened(MessageChannelId channelId, Transf
 void PeerLink::LinkEventIncomingChannelClosed(MessageChannelId channelId)
 {
   // Create incoming channel closed event message
-  Message incomingChannelClosedMessage(LinkEventMessageType::IncomingChannelClosed);
+  Message incomingChannelClosedMessage(
+      LinkEventMessageType::IncomingChannelClosed);
 
   IncomingChannelClosedData incomingChannelClosedData;
   incomingChannelClosedData.mChannelId = channelId;
@@ -1736,19 +1858,21 @@ void PeerLink::LinkEventStatusChange(LinkStatus::Enum newStatus)
   // Push status change event message
   PushUserEventMessage(ZeroMove(statusChangeMessage));
 }
-void PeerLink::LinkEventReceipt(MessageReceiptId receiptId, Receipt::Enum receipt, bool forUser)
+void PeerLink::LinkEventReceipt(MessageReceiptId receiptId,
+                                Receipt::Enum receipt,
+                                bool forUser)
 {
   // Create receipt event message
   Message receiptMessage(LinkEventMessageType::Receipt);
 
   ReceiptData receiptData;
   receiptData.mReceiptId = receiptId;
-  receiptData.mReceipt   = receipt;
+  receiptData.mReceipt = receipt;
 
   receiptMessage.GetData().Write(receiptData);
 
   // Push receipt event message
-  if(forUser)
+  if (forUser)
     PushUserEventMessage(ZeroMove(receiptMessage));
   else
     PushProtocolEventMessage(ZeroMove(receiptMessage));
@@ -1763,9 +1887,7 @@ void PeerLink::PushProtocolEventMessage(MoveReference<Message> message)
   mInbox.PushProtocolEventMessage(ZeroMove(message));
 }
 
-//---------------------------------------------------------------------------------//
-//                                 LinkPlugin                                      //
-//---------------------------------------------------------------------------------//
+//                                 LinkPlugin //
 
 LinkPlugin::~LinkPlugin()
 {
@@ -1775,27 +1897,27 @@ LinkPlugin::~LinkPlugin()
 // Member Functions
 //
 
-bool LinkPlugin::operator ==(const LinkPlugin& rhs) const
+bool LinkPlugin::operator==(const LinkPlugin& rhs) const
 {
   return mName == rhs.mName;
 }
-bool LinkPlugin::operator !=(const LinkPlugin& rhs) const
+bool LinkPlugin::operator!=(const LinkPlugin& rhs) const
 {
   return mName != rhs.mName;
 }
-bool LinkPlugin::operator  <(const LinkPlugin& rhs) const
+bool LinkPlugin::operator<(const LinkPlugin& rhs) const
 {
   return mName < rhs.mName;
 }
-bool LinkPlugin::operator ==(const String& rhs) const
+bool LinkPlugin::operator==(const String& rhs) const
 {
   return mName == rhs;
 }
-bool LinkPlugin::operator !=(const String& rhs) const
+bool LinkPlugin::operator!=(const String& rhs) const
 {
   return mName != rhs;
 }
-bool LinkPlugin::operator  <(const String& rhs) const
+bool LinkPlugin::operator<(const String& rhs) const
 {
   return mName < rhs;
 }
@@ -1815,10 +1937,16 @@ PeerLink* LinkPlugin::GetLink() const
   return mLink;
 }
 
-MessageReceiptId LinkPlugin::Send(Status& status, const Message& message,         bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
+MessageReceiptId LinkPlugin::Send(Status& status,
+                                  const Message& message,
+                                  bool reliable,
+                                  MessageChannelId channelId,
+                                  bool receipt,
+                                  MessagePriority priority,
+                                  TimeMs lifetime)
 {
   // Plugin not initialized?
-  if(!IsInitialized())
+  if (!IsInitialized())
   {
     // Failure
     status.SetFailed("Plugin is not initialized");
@@ -1826,7 +1954,7 @@ MessageReceiptId LinkPlugin::Send(Status& status, const Message& message,       
   }
 
   // Relative message type outside of plugin range?
-  if(message.GetType() >= GetMessageTypeCount())
+  if (message.GetType() >= GetMessageTypeCount())
   {
     // Failure
     status.SetFailed("Plugin message type is out of range");
@@ -1840,12 +1968,25 @@ MessageReceiptId LinkPlugin::Send(Status& status, const Message& message,       
   messageCopy.mType = RelativeToAbsolute(messageCopy.mType);
 
   // Send message
-  return mLink->SendInternal(status, ZeroMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
+  return mLink->SendInternal(status,
+                             ZeroMove(messageCopy),
+                             reliable,
+                             channelId,
+                             receipt,
+                             priority,
+                             lifetime,
+                             false);
 }
-MessageReceiptId LinkPlugin::Send(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
+MessageReceiptId LinkPlugin::Send(Status& status,
+                                  MoveReference<Message> message,
+                                  bool reliable,
+                                  MessageChannelId channelId,
+                                  bool receipt,
+                                  MessagePriority priority,
+                                  TimeMs lifetime)
 {
   // Plugin not initialized?
-  if(!IsInitialized())
+  if (!IsInitialized())
   {
     // Failure
     status.SetFailed("Plugin is not initialized");
@@ -1853,7 +1994,7 @@ MessageReceiptId LinkPlugin::Send(Status& status, MoveReference<Message> message
   }
 
   // Relative message type outside of plugin range?
-  if(message->GetType() >= GetMessageTypeCount())
+  if (message->GetType() >= GetMessageTypeCount())
   {
     // Failure
     status.SetFailed("Plugin message type is out of range");
@@ -1864,11 +2005,18 @@ MessageReceiptId LinkPlugin::Send(Status& status, MoveReference<Message> message
   message->mType = RelativeToAbsolute(message->mType);
 
   // Send message
-  return mLink->SendInternal(status, ZeroMove(message), reliable, channelId, receipt, priority, lifetime, false);
+  return mLink->SendInternal(status,
+                             ZeroMove(message),
+                             reliable,
+                             channelId,
+                             receipt,
+                             priority,
+                             lifetime,
+                             false);
 }
 
-LinkPlugin::LinkPlugin(size_t messageTypeCount)
-  : mName(),
+LinkPlugin::LinkPlugin(size_t messageTypeCount) :
+    mName(),
     mLink(nullptr),
     mMessageTypeStart(0),
     mMessageTypeCount(MessageType(messageTypeCount))
@@ -1900,10 +2048,10 @@ void LinkPlugin::Uninitialize()
 
 bool LinkPlugin::AbsoluteIsInRange(MessageType absoluteType) const
 {
-  if(!mMessageTypeCount)
+  if (!mMessageTypeCount)
     return false;
 
-  if(absoluteType < mMessageTypeStart)
+  if (absoluteType < mMessageTypeStart)
     return false;
 
   return AbsoluteToRelative(absoluteType) <= (mMessageTypeCount - 1);

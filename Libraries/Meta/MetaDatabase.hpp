@@ -1,21 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Joshua Claeys
-/// Copyright 2016-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 namespace Events
 {
-  DeclareEvent(MetaModified);
-  DeclareEvent(MetaRemoved);
-}//namespace Events
+DeclareEvent(MetaModified);
+DeclareEvent(MetaRemoved);
+} // namespace Events
 
-
- //---------------------------------------------------------------------------------- Meta Type Event
+//Meta Type Event
 class MetaLibraryEvent : public Event
 {
 public:
@@ -23,7 +17,7 @@ public:
   LibraryRef mLibrary;
 };
 
-//-------------------------------------------------------------------------- Meta Serialize Property
+//Meta Serialize Property
 class MetaSerializedProperty : public ReferenceCountedEventObject
 {
 public:
@@ -38,9 +32,10 @@ public:
   IntrusiveLink(MetaSerializedProperty, mLink);
 };
 
-typedef InList<MetaSerializedProperty, &MetaSerializedProperty::mLink> MetaPropertyDefaultsList;
+typedef InList<MetaSerializedProperty, &MetaSerializedProperty::mLink>
+    MetaPropertyDefaultsList;
 
-//------------------------------------------------------------------------------------ Meta Database
+//Meta Database
 class MetaDatabase : public ExplicitSingleton<MetaDatabase, EventObject>
 {
 public:
@@ -65,14 +60,16 @@ public:
   Array<LibraryRef> mLibraries;
   Array<LibraryRef> mNativeLibraries;
 
-  // There is a time where new libraries should be alive at the same time as old libraries that are being replaced
-  // During this time, we patch components with their new types. We must keep the old removed libraries until
-  // we're done fully patching. After we can call ClearRemovedLibraries to release the final reference count
+  // There is a time where new libraries should be alive at the same time as old
+  // libraries that are being replaced During this time, we patch components
+  // with their new types. We must keep the old removed libraries until we're
+  // done fully patching. After we can call ClearRemovedLibraries to release the
+  // final reference count
   Array<LibraryRef> mRemovedLibraries;
 
-  // Currently, this assumes all Composition types are native, therefor it's okay to store
-  // a direct pointer. Should maybe change this.
+  // Currently, this assumes all Composition types are native, therefor it's
+  // okay to store a direct pointer. Should maybe change this.
   Array<BoundType*> mCompositionTypes;
 };
 
-}//namespace Zero
+} // namespace Zero

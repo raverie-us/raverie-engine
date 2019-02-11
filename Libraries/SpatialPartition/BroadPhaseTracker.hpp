@@ -1,19 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BroadPhaseTracker.hpp
-/// Declaration of the BroadPhaseTracker class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-DeclareEnum8(BPStats, Insertion, Removal, Update, Collision,
-                      Construction, RayCast, VolumeCast, Cleanup);
+DeclareEnum8(BPStats,
+             Insertion,
+             Removal,
+             Update,
+             Collision,
+             Construction,
+             RayCast,
+             VolumeCast,
+             Cleanup);
 
 /// The statistics for a single broad phases entire life.
 class Statistics
@@ -83,13 +82,17 @@ public:
 
   Statistics* GetStatistics(uint type, uint index);
 
-  /// The results of collision detection should be reported through 
-  /// this function.  Each index represents the lexicographical id of the 
-  /// objects that collided.  This function will compare the results with 
+  /// The results of collision detection should be reported through
+  /// this function.  Each index represents the lexicographical id of the
+  /// objects that collided.  This function will compare the results with
   /// what each broad phase has recorded and report any discrepancies.
   virtual void RecordFrameResults(const Array<NodePointerPair>& results);
 
-  virtual bool IsTracking(){return true;}
+  virtual bool IsTracking()
+  {
+    return true;
+  }
+
 public:
   /// Draws all broad phases (if they have something to draw).
   /// Not every algorithm will use the level.
@@ -98,7 +101,8 @@ public:
   /// Fills out the proxy for the broadphase at the position specified by data.
   /// The proxy can be thought of as a handle, an object should do nothing more
   /// than hold onto it and give it to broadphase when it wants to do something.
-  virtual void CreateProxy(uint type, BroadPhaseProxy& proxy, 
+  virtual void CreateProxy(uint type,
+                           BroadPhaseProxy& proxy,
                            BroadPhaseData& data);
   /// Batch version of CreateProxy.
   virtual void CreateProxies(uint type, BroadPhaseObjectArray& objects);
@@ -107,7 +111,8 @@ public:
   /// Batch version of RemoveProxy.
   virtual void RemoveProxies(uint type, ProxyHandleArray& proxies);
   /// Updates the given proxy to the position specified by data.
-  virtual void UpdateProxy(uint type, BroadPhaseProxy& proxy, 
+  virtual void UpdateProxy(uint type,
+                           BroadPhaseProxy& proxy,
                            BroadPhaseData& data);
   /// Batch version of UpdateProxy.
   virtual void UpdateProxies(uint type, BroadPhaseObjectArray& objects);
@@ -115,8 +120,11 @@ public:
   /// Used to determine intersection of objects in this broadphase with other
   /// objects in the same broadphase. Mainly a physics things.
   void SelfQuery(ClientPairArray& results) override;
-  /// Internal function or query. Finds all overlaps in the broadphase of the given type.
-  void Query(BroadPhaseData& data, ClientPairArray& results, uint broadphaseType);
+  /// Internal function or query. Finds all overlaps in the broadphase of the
+  /// given type.
+  void Query(BroadPhaseData& data,
+             ClientPairArray& results,
+             uint broadphaseType);
   /// Finds everything that is in contact with the data.
   void Query(BroadPhaseData& data, ClientPairArray& results) override;
   /// Batch version of Query.
@@ -124,7 +132,7 @@ public:
   /// Queries both the dynamic and static broadphase.
   void QueryBoth(BroadPhaseData& data, ClientPairArray& results) override;
 
-  /// Tells the structure that it has all of the data it will ever have. Used 
+  /// Tells the structure that it has all of the data it will ever have. Used
   /// mainly for static BroadPhases.
   virtual void Construct();
 
@@ -135,15 +143,19 @@ public:
   virtual void Cleanup();
 
 private:
-  virtual void CastIntoBroadphase(uint broadPhaseType, CastDataParam data, 
-                               ProxyCastResults& results, CastFunction func);
+  virtual void CastIntoBroadphase(uint broadPhaseType,
+                                  CastDataParam data,
+                                  ProxyCastResults& results,
+                                  CastFunction func);
 
   uint GetNewProxyIndex(uint type);
 
-  void RegisterCollisions(uint type, uint broadPhaseId, 
-                ClientPairArray& currentResults, ClientPairArray& finalResults);
+  void RegisterCollisions(uint type,
+                          uint broadPhaseId,
+                          ClientPairArray& currentResults,
+                          ClientPairArray& finalResults);
 
-  /// Tells the tracker that there was a pair of objects sent to be 
+  /// Tells the tracker that there was a pair of objects sent to be
   /// checked for collision.  Returns whether or not the object was added.
   /// True if it was a new pairId, false if it was already entered in.
   bool RegisterCollision(uint type, BroadPhaseId id, NodePointerPair pair);
@@ -171,4 +183,4 @@ private:
   IndexArray mProxyFreeIndices[BroadPhase::Size];
 };
 
-}//namespace Zero
+} // namespace Zero

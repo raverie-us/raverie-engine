@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,28 +6,27 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(RigidBodySlept);
-  DeclareEvent(RigidBodyAwoke);
-  DeclareEvent(CollisionStarted);
-  DeclareEvent(CollisionPersisted);
-  DeclareEvent(CollisionEnded);
-  DeclareEvent(GroupCollisionStarted);
-  DeclareEvent(GroupCollisionPersisted);
-  DeclareEvent(GroupCollisionEnded);
-  DeclareEvent(GroupCollisionPreSolve);
-  DeclareEvent(PhysicsUpdateFinished);
-}//namespace Events
+DeclareEvent(RigidBodySlept);
+DeclareEvent(RigidBodyAwoke);
+DeclareEvent(CollisionStarted);
+DeclareEvent(CollisionPersisted);
+DeclareEvent(CollisionEnded);
+DeclareEvent(GroupCollisionStarted);
+DeclareEvent(GroupCollisionPersisted);
+DeclareEvent(GroupCollisionEnded);
+DeclareEvent(GroupCollisionPreSolve);
+DeclareEvent(PhysicsUpdateFinished);
+} // namespace Events
 
 struct CollisionFilter;
 struct CollisionFilterBlock;
 
 namespace Physics
 {
-  struct Manifold;
-  struct ManifoldPoint;
-}//namespace Physics
+struct Manifold;
+struct ManifoldPoint;
+} // namespace Physics
 
-//--------------------------------------------------------- Base Collision Event
 /// Common interface for all collision events. Contains shared methods
 /// to access contact information for a collision.
 class BaseCollisionEvent : public Event
@@ -42,7 +36,7 @@ public:
 
   BaseCollisionEvent();
   void Set(Physics::Manifold* manifold, StringParam eventType);
-  
+
   /// The object that this event was sent to.
   Cog* GetObject();
   /// The other object in this collision.
@@ -55,8 +49,9 @@ public:
   /// A range for iterating through all contact points.
   ContactPointRange GetContactPoints();
 
-  /// Convenience function to return the first ContactPoint. Some logic only cares about
-  /// one point of information. In a more general case all points should be iterated over.
+  /// Convenience function to return the first ContactPoint. Some logic only
+  /// cares about one point of information. In a more general case all points
+  /// should be iterated over.
   ContactPoint GetFirstPoint();
 
   // C++ helpers for those who want to efficiently fetch the collider
@@ -65,20 +60,27 @@ public:
   Collider* GetCollider();
   Collider* GetOtherCollider();
 
-  // Update the collider order (who is "A" and who is "B") to match the filter's order.
+  // Update the collider order (who is "A" and who is "B") to match the filter's
+  // order.
   void MatchCollisionFilterOrder(CollisionFilter* filter);
-  
+
   /// Returns the manifold point at the given index. This is
   /// for C++ use and only for those who know what they are doing.
   const Physics::ManifoldPoint& GetPoint(uint index);
 
   /// Used to determine what kind of collision this is during event sending.
-  enum CollisionType{CollisionStarted, CollisionPersisted, CollisionEnded};
+  enum CollisionType
+  {
+    CollisionStarted,
+    CollisionPersisted,
+    CollisionEnded
+  };
   CollisionType mCollisionType;
   /// The event name that will be sent (CollisionStarted, etc...)
   String mEventType;
   /// Internal index used to "flip the manifold data" when sending to the second
-  /// object. This effectively reverses all the data (aka, the normal is negated for object B).
+  /// object. This effectively reverses all the data (aka, the normal is negated
+  /// for object B).
   uint mObjectIndex;
 
 protected:
@@ -86,8 +88,8 @@ protected:
   Physics::Manifold* mManifold;
 };
 
-//-------------------------------------------------------------- Collision Event
-/// Information about a collision in physics. Sent when collisions start, persist, or end.
+/// Information about a collision in physics. Sent when collisions start,
+/// persist, or end.
 class CollisionEvent : public BaseCollisionEvent
 {
 public:
@@ -95,10 +97,13 @@ public:
 
   CollisionEvent();
   void Set(Physics::Manifold* manifold, StringParam eventType);
-  void Set(Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType);
+  void Set(Physics::Manifold* manifold,
+           const Physics::ManifoldPoint& point,
+           StringParam eventType);
 
-  /// Convenience function to return the first ContactPoint. Some logic only cares about
-  /// one point of information. In a more general case all points should be iterated over.
+  /// Convenience function to return the first ContactPoint. Some logic only
+  /// cares about one point of information. In a more general case all points
+  /// should be iterated over.
   ContactPoint GetFirstPoint();
 
   // @JoshD: Legacy?
@@ -116,7 +121,6 @@ public:
   static String GetEventName(BaseCollisionEvent::CollisionType type);
 };
 
-//-------------------------------------------------------- CollisionGroupEvent
 /// An event sent out when specified by a CollisionFilter in a CollisionTable.
 /// Used to hook up events based upon certain CollisionGroup types colliding.
 class CollisionGroupEvent : public BaseCollisionEvent
@@ -128,7 +132,10 @@ public:
 
   /// Sets the two colliders with the given pair. Takes care of making sure the
   /// collider ordering matches the filter order.
-  void Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType);
+  void Set(Physics::Manifold* manifold,
+           const CollisionFilter& pair,
+           CollisionFilterBlock* block,
+           StringParam eventType);
 
   /// Returns the CollisionGroup name of object A
   String GetTypeAName();
@@ -145,29 +152,31 @@ private:
   friend class PhysicsSpace;
 };
 
-//-------------------------------------------------------------------PreSolveEvent
 /// Event sent out when a CollisionFilter contains a PreSolveBlock. This
 /// event is sent out after collision detection but before collision resolution.
 /// This can be used to alter the state of the two objects in a collision
-/// before they're resolved (e.g. turn one from static to dynamic). Warning: Do not
-/// delete objects or do any other significant changes as this may destabilize the system.
+/// before they're resolved (e.g. turn one from static to dynamic). Warning: Do
+/// not delete objects or do any other significant changes as this may
+/// destabilize the system.
 class PreSolveEvent : public BaseCollisionEvent
 {
 public:
   ZilchDeclareType(PreSolveEvent, TypeCopyMode::ReferenceType);
 
-   PreSolveEvent();
-   void Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock);
+  PreSolveEvent();
+  void Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock);
 
-   /// The restitution to use for solving this pair. Allows custom overriding for this pair.
-   real GetRestitution();
-   void SetRestitution(real restitution);
-   /// The friction to use for solving this pair. Allows custom overriding for this pair.
-   real GetFriction();
-   void SetFriction(real friction);
+  /// The restitution to use for solving this pair. Allows custom overriding for
+  /// this pair.
+  real GetRestitution();
+  void SetRestitution(real restitution);
+  /// The friction to use for solving this pair. Allows custom overriding for
+  /// this pair.
+  real GetFriction();
+  void SetFriction(real friction);
 
-   CollisionFilterBlock* mBlock;
-   Link<PreSolveEvent> mEventLink;
+  CollisionFilterBlock* mBlock;
+  Link<PreSolveEvent> mEventLink;
 };
 
-}//namespace Zero
+} // namespace Zero

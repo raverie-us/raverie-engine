@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Includes
@@ -23,26 +18,23 @@ public:
   typedef Id id_type;
 
   /// Default Constructor
-  IdSequence()
-    : mNext(1),
-      mMissing(),
-      mVerified(0)
+  IdSequence() : mNext(1), mMissing(), mVerified(0)
   {
   }
 
   /// Move Constructor
-  IdSequence(MoveReference<IdSequence> rhs)
-    : mNext(rhs->mNext),
+  IdSequence(MoveReference<IdSequence> rhs) :
+      mNext(rhs->mNext),
       mMissing(ZeroMove(rhs->mMissing)),
       mVerified(rhs->mVerified)
   {
   }
 
   /// Move Assignment Operator
-  IdSequence& operator =(MoveReference<IdSequence> rhs)
+  IdSequence& operator=(MoveReference<IdSequence> rhs)
   {
-    mNext     = rhs->mNext;
-    mMissing  = ZeroMove(rhs->mMissing);
+    mNext = rhs->mNext;
+    mMissing = ZeroMove(rhs->mMissing);
     mVerified = rhs->mVerified;
 
     return *this;
@@ -52,14 +44,14 @@ public:
   bool IsDuplicate(Id id) const
   {
     // Before Verified?
-    if(id <= mVerified)
+    if (id <= mVerified)
       return true;
     // Between Verified and Next?
-    else if(id < mNext)
+    else if (id < mNext)
     {
       // Not Missing?
       typename ArraySet<Id>::const_iterator iter = mMissing.FindIterator(id);
-      if(iter == mMissing.End())
+      if (iter == mMissing.End())
         return true;
     }
 
@@ -77,27 +69,27 @@ public:
     //
 
     // Before Verified?
-    if(id <= mVerified)
+    if (id <= mVerified)
       return false; // Duplicate
     // Between Verified and Next?
-    else if(id < mNext)
+    else if (id < mNext)
     {
       // Not Missing?
       typedef typename ArraySet<Id>::iterator iterator;
       iterator iter = mMissing.FindIterator(id);
-      if(iter == mMissing.End())
+      if (iter == mMissing.End())
         return false; /// Duplicate
       // Otherwise,
       mMissing.Erase(iter); /// Erase Missing entry
     }
     // Is Next?
-    else if(id == mNext)
+    else if (id == mNext)
       ++mNext;
     // After Next?
     else
     {
       Assert(id > mNext);
-      while(mNext != id)
+      while (mNext != id)
       {
         mMissing.Insert(mNext);
         ++mNext;
@@ -113,7 +105,8 @@ public:
     return true;
   }
 
-  /// Returns true if the specified ID is verified (preceding sequence is complete), else false
+  /// Returns true if the specified ID is verified (preceding sequence is
+  /// complete), else false
   bool IsVerified(Id id) const
   {
     return id <= mVerified;
@@ -123,27 +116,25 @@ public:
   struct IdSequenceHistory
   {
     /// Default Constructor
-    IdSequenceHistory()
-      : mNext(0),
-        mHistory()
+    IdSequenceHistory() : mNext(0), mHistory()
     {
     }
 
     /// Constructor
-    IdSequenceHistory(Id next, MoveReference<BitStream> history)
-      : mNext(next),
+    IdSequenceHistory(Id next, MoveReference<BitStream> history) :
+        mNext(next),
         mHistory(ZeroMove(history))
     {
     }
 
     /// Move Constructor
-    IdSequenceHistory(MoveReference<IdSequenceHistory> rhs)
-      : mNext(rhs->mNext),
+    IdSequenceHistory(MoveReference<IdSequenceHistory> rhs) :
+        mNext(rhs->mNext),
         mHistory(ZeroMove(rhs->mHistory))
     {
     }
 
-    Id        mNext;    /// Next expected ID
+    Id mNext;           /// Next expected ID
     BitStream mHistory; /// History bitfield
   };
 
@@ -154,14 +145,13 @@ public:
 
     // Generate history bitfield
     BitStream history;
-    Id        current = mNext;
-    while(range)
+    Id current = mNext;
+    while (range)
     {
       --current;
 
       // Verified, or not missing?
-      if(IsVerified(current)
-      || !mMissing.Contains(current))
+      if (IsVerified(current) || !mMissing.Contains(current))
         history.WriteBit(true);
       else
         history.WriteBit(false);
@@ -173,18 +163,19 @@ public:
   }
 
 private:
-  Id           mNext;     /// Next expected cursor
-  ArraySet<Id> mMissing;  /// Missing SequenceNumbers (between verified and next)
-  Id           mVerified; /// Verified complete (gap-free) cursor
+  Id mNext;              /// Next expected cursor
+  ArraySet<Id> mMissing; /// Missing SequenceNumbers (between verified and next)
+  Id mVerified;          /// Verified complete (gap-free) cursor
 };
 
 /// IdSequence Move-Without-Destruction Operator
 template <typename Id>
-struct MoveWithoutDestructionOperator< IdSequence<Id> >
+struct MoveWithoutDestructionOperator<IdSequence<Id>>
 {
-  static inline void MoveWithoutDestruction(IdSequence<Id>* dest, IdSequence<Id>* source)
+  static inline void MoveWithoutDestruction(IdSequence<Id>* dest,
+                                            IdSequence<Id>* source)
   {
-    new(dest) IdSequence<Id>(ZeroMove(*source));
+    new (dest) IdSequence<Id>(ZeroMove(*source));
   }
 };
 

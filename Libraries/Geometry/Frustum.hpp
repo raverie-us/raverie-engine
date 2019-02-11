@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Frustum.hpp
-/// Declaration of the Frustum class.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +7,7 @@ namespace Zero
 struct Aabb;
 struct Sphere;
 
-//Planes are defined as:
+// Planes are defined as:
 /*     4---------------5  A - Front Plane
       /|              /|  B - Back Plane
      / |      B     /  |  C - Right Plane
@@ -34,29 +26,37 @@ struct Frustum
   Frustum(Plane* planes);
   ~Frustum();
 
-  ///Sets all the planes.
+  /// Sets all the planes.
   void Set(Plane* planes);
 
   // Accessor to set planes for script
   Plane& Get(uint index);
   void Set(uint index, const Plane& plane);
 
-  ///Generates a Frustum from the give points.  Point order is described above.
+  /// Generates a Frustum from the give points.  Point order is described above.
   void Generate(Vec3 points[8]);
-  void Generate(Vec3Param frontCenter, Vec3Param direction, Vec3Param up, Vec3Param dimensions);
+  void Generate(Vec3Param frontCenter,
+                Vec3Param direction,
+                Vec3Param up,
+                Vec3Param dimensions);
   /// Implicitly builds frustum down -Z
-  void Generate(Vec3Param position, Mat3Param basis, float near, float far, float aspect, float fov);
+  void Generate(Vec3Param position,
+                Mat3Param basis,
+                float near,
+                float far,
+                float aspect,
+                float fov);
 
-  ///Calculates the 8 points of the Aabb.
+  /// Calculates the 8 points of the Aabb.
   void GetPoints(Vec3 points[8]) const;
-  ///Returns an Aabb encasing the frustum.
+  /// Returns an Aabb encasing the frustum.
   Aabb GetAabb() const;
 
-  ///Tests if the given point is inside the frustum.
+  /// Tests if the given point is inside the frustum.
   bool Overlaps(Vec3Param point);
-  ///Tests if the given Aabb is inside the frustum.
+  /// Tests if the given Aabb is inside the frustum.
   bool Overlaps(const Aabb& aabb);
-  ///Tests if the given Sphere is inside the frustum.
+  /// Tests if the given Sphere is inside the frustum.
   bool Overlaps(const Sphere& sphere);
 
   const Vec4* GetIntersectionData() const;
@@ -73,11 +73,14 @@ struct Frustum
   Frustum Transform(Mat4Param transformation) const;
   Frustum UniformTransform(Mat4Param transformation) const;
   Frustum TransformInverse(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Frustum TransformedShapeType;
 
-  enum {PlaneDim = 6};
+  enum
+  {
+    PlaneDim = 6
+  };
   Plane Planes[PlaneDim];
 };
 
-}//namespace Zero
+} // namespace Zero

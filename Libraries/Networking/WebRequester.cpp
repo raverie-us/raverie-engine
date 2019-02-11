@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TcpSocket.cpp
-/// Implementation of the TcpSocket class.
-///
-/// Authors: Trevor Sundberg.
-/// Copyright 2010-2014, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,13 +6,13 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(WebResponseHeadersInternal);
-  DefineEvent(WebResponsePartialDataInternal);
-  DefineEvent(WebResponseCompleteInternal);
-  DefineEvent(WebResponseHeaders);
-  DefineEvent(WebResponsePartialData);
-  DefineEvent(WebResponseComplete);
-}
+DefineEvent(WebResponseHeadersInternal);
+DefineEvent(WebResponsePartialDataInternal);
+DefineEvent(WebResponseCompleteInternal);
+DefineEvent(WebResponseHeaders);
+DefineEvent(WebResponsePartialData);
+DefineEvent(WebResponseComplete);
+} // namespace Events
 
 static const String cCacheDirectory("ZeroCache");
 
@@ -52,7 +44,6 @@ ZilchDefineType(AsyncWebRequest, builder, type)
   ZilchBindFieldGetterProperty(mError);
 }
 
-//--------------------------------------------------------------------BlockingWebRequest
 InList<AsyncWebRequest> AsyncWebRequest::mActiveRequests;
 ThreadLock AsyncWebRequest::mActiveRequestsLock;
 
@@ -101,16 +92,17 @@ void AsyncWebRequest::CancelAllActiveRequests()
   // the destructor locking the list.
   Array<HandleOf<AsyncWebRequest>> requestsToCancel;
   mActiveRequestsLock.Lock();
-  forRange(AsyncWebRequest& request, mActiveRequests)
-    requestsToCancel.PushBack(&request);
+  forRange(AsyncWebRequest & request, mActiveRequests)
+      requestsToCancel.PushBack(&request);
   mActiveRequestsLock.Unlock();
 
   // Iterate through the list and cancel each request.
-  forRange(HandleOf<AsyncWebRequest>& request, requestsToCancel)
-    request->Cancel();
+  forRange(HandleOf<AsyncWebRequest> & request, requestsToCancel)
+      request->Cancel();
 
-  // Destructing the temporary array should release the last handles to the requests.
-  // If any others are still being held onto, they at least should not be running.
+  // Destructing the temporary array should release the last handles to the
+  // requests. If any others are still being held onto, they at least should not
+  // be running.
 }
 
 String AsyncWebRequest::GetData()
@@ -123,7 +115,8 @@ String GetCacheFile(StringParam url)
   // Make sure the URL is encoded to a valid file-name.
   // We don't use post data or request headers here.
   String fileName = UrlParamEncode(url);
-  String cacheDirectory = FilePath::Combine(GetTemporaryDirectory(), cCacheDirectory);
+  String cacheDirectory =
+      FilePath::Combine(GetTemporaryDirectory(), cCacheDirectory);
   CreateDirectoryAndParents(cacheDirectory);
   String cacheFile = FilePath::Combine(cacheDirectory, fileName);
   return cacheFile;
@@ -137,15 +130,18 @@ void AsyncWebRequest::Run()
   // Clear stored data and progress.
   ClearResponseData();
 
-  // If we allow caching then we need to check if we already cached this file/url...
+  // If we allow caching then we need to check if we already cached this
+  // file/url...
   if (mForceCacheSeconds != 0)
   {
-    // If we successfully loaded a file from the cache, then send the completed event and return.
+    // If we successfully loaded a file from the cache, then send the completed
+    // event and return.
     if (SendCompletedCacheResponse(false))
       return;
   }
 
-  // This data is immutable while running the request. We should never modify it.
+  // This data is immutable while running the request. We should never modify
+  // it.
   mRequest.mUrl = mUrl;
   mRequest.mPostData = mPostData;
   mRequest.mAdditionalRequestHeaders = mAdditionalRequestHeaders;
@@ -162,7 +158,7 @@ void AsyncWebRequest::Cancel()
 {
   if (!mRequest.IsRunning())
     return;
-  
+
   mRequest.Cancel();
   ++mVersion;
 }
@@ -193,15 +189,15 @@ void AsyncWebRequest::ClearResponseData()
 }
 
 AsyncWebRequest::AsyncWebRequest() :
-  mStoreData(true),
-  mResponseCode(WebResponseCode::NoServerResponse),
-  mTotalDownloaded(0),
-  mTotalExpected(0),
-  mProgress(0.0f),
-  mProgressType(ProgressType::None),
-  mVersion(0),
-  mSendEventsOnRequestThread(false),
-  mForceCacheSeconds(0)
+    mStoreData(true),
+    mResponseCode(WebResponseCode::NoServerResponse),
+    mTotalDownloaded(0),
+    mTotalExpected(0),
+    mProgress(0.0f),
+    mProgressType(ProgressType::None),
+    mVersion(0),
+    mSendEventsOnRequestThread(false),
+    mForceCacheSeconds(0)
 {
   mActiveRequestsLock.Lock();
   mActiveRequests.PushBack(this);
@@ -212,9 +208,13 @@ AsyncWebRequest::AsyncWebRequest() :
   mRequest.mOnDataReceived = &OnDataReceived;
   mRequest.mOnComplete = &OnComplete;
 
-  ConnectThisTo(this, Events::WebResponseHeadersInternal, OnWebResponseHeadersInternal);
-  ConnectThisTo(this, Events::WebResponsePartialDataInternal, OnWebResponsePartialDataInternal);
-  ConnectThisTo(this, Events::WebResponseCompleteInternal, OnWebResponseCompleteInternal);
+  ConnectThisTo(
+      this, Events::WebResponseHeadersInternal, OnWebResponseHeadersInternal);
+  ConnectThisTo(this,
+                Events::WebResponsePartialDataInternal,
+                OnWebResponsePartialDataInternal);
+  ConnectThisTo(
+      this, Events::WebResponseCompleteInternal, OnWebResponseCompleteInternal);
 }
 
 bool AsyncWebRequest::SendCompletedCacheResponse(bool ignoreTime)
@@ -264,7 +264,9 @@ bool AsyncWebRequest::SendCompletedCacheResponse(bool ignoreTime)
   return false;
 }
 
-void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request)
+void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers,
+                                        WebResponseCode::Enum code,
+                                        WebRequest* request)
 {
   // This can be called within a thread!
   AsyncWebRequest* self = (AsyncWebRequest*)request->mUserData;
@@ -274,8 +276,9 @@ void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebRespons
   forRange(StringParam header, headers)
   {
     // Create a case insensitive regex to search for content length.
-    static const Regex cContentLengthRegex("content-length:\\s*([0-9]*)\\s*", RegexFlavor::EcmaScript, false);
-    
+    static const Regex cContentLengthRegex(
+        "content-length:\\s*([0-9]*)\\s*", RegexFlavor::EcmaScript, false);
+
     cContentLengthRegex.Search(header, matches);
     if (matches.Size() == 2)
     {
@@ -288,7 +291,8 @@ void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebRespons
   toSend->mAsyncWebRequest = self;
   toSend->mVersion = self->mVersion;
   toSend->mTotalExpected = totalBytesExpected;
-  toSend->mProgressType = totalBytesExpected ? ProgressType::Normal : ProgressType::Indeterminate;
+  toSend->mProgressType =
+      totalBytesExpected ? ProgressType::Normal : ProgressType::Indeterminate;
   toSend->mResponseCode = code;
   toSend->mResponseHeaders = headers;
 
@@ -300,7 +304,8 @@ void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebRespons
 
 void AsyncWebRequest::OnWebResponseHeadersInternal(WebResponseEvent* event)
 {
-  // If the user cancelled the request, ignore any incoming old events by comparing versions.
+  // If the user cancelled the request, ignore any incoming old events by
+  // comparing versions.
   if (event->mVersion != mVersion)
     return;
 
@@ -316,7 +321,10 @@ void AsyncWebRequest::OnWebResponseHeadersInternal(WebResponseEvent* event)
   DispatchEvent(Events::WebResponseHeaders, event);
 }
 
-void AsyncWebRequest::OnDataReceived(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request)
+void AsyncWebRequest::OnDataReceived(const byte* data,
+                                     size_t size,
+                                     u64 totalDownloaded,
+                                     WebRequest* request)
 {
   // This can be called within a thread!
   AsyncWebRequest* self = (AsyncWebRequest*)request->mUserData;
@@ -330,32 +338,38 @@ void AsyncWebRequest::OnDataReceived(const byte* data, size_t size, u64 totalDow
   toSend->mVersion = self->mVersion;
   toSend->mData = strData;
 
-  // We always get total downloaded from the callback because in some implementations (Emscripten)
-  // we don't support partial binary downloads (only get the entire buffer at the end) but it does at least
-  // give us the total downloaded amount.
+  // We always get total downloaded from the callback because in some
+  // implementations (Emscripten) we don't support partial binary downloads
+  // (only get the entire buffer at the end) but it does at least give us the
+  // total downloaded amount.
   toSend->mTotalDownloaded = totalDownloaded;
 
   if (self->mSendEventsOnRequestThread)
     self->DispatchEvent(Events::WebResponsePartialDataInternal, toSend);
   else
-    Z::gDispatch->Dispatch(self, Events::WebResponsePartialDataInternal, toSend);
+    Z::gDispatch->Dispatch(
+        self, Events::WebResponsePartialDataInternal, toSend);
 }
 
 void AsyncWebRequest::OnWebResponsePartialDataInternal(WebResponseEvent* event)
 {
-  // If the user cancelled the request, ignore any incoming old events by comparing versions.
+  // If the user cancelled the request, ignore any incoming old events by
+  // comparing versions.
   if (event->mVersion != mVersion)
     return;
 
   event->mResponseCode = mResponseCode;
   event->mResponseHeaders = mResponseHeaders;
 
-  // We can't just accumulate mData.SizeInBytes() because we may not actually get partial data
-  // on some platforms (however we are guaranteed to get the total downloaded amount as a number on all platforms).
+  // We can't just accumulate mData.SizeInBytes() because we may not actually
+  // get partial data on some platforms (however we are guaranteed to get the
+  // total downloaded amount as a number on all platforms).
   mTotalDownloaded = event->mTotalDownloaded;
   event->mTotalExpected = mTotalExpected;
 
-  mProgress = mTotalExpected ? (float)(mTotalDownloaded / (double)mTotalExpected) : 0.0f;
+  mProgress = mTotalExpected
+                  ? (float)(mTotalDownloaded / (double)mTotalExpected)
+                  : 0.0f;
   event->mProgress = mProgress;
   event->mProgressType = mProgressType;
 
@@ -385,7 +399,8 @@ void AsyncWebRequest::OnComplete(Status& status, WebRequest* request)
 
 void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
 {
-  // If the user cancelled the request, ignore any incoming old events by comparing versions.
+  // If the user cancelled the request, ignore any incoming old events by
+  // comparing versions.
   if (event->mVersion != mVersion)
     return;
 
@@ -407,7 +422,8 @@ void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
     // If the request came in OK from the server with no errors...
     if (event->mResponseCode == WebResponseCode::OK && event->mError.Empty())
     {
-      // If we allow caching then we need to check if we already cached this file/url...
+      // If we allow caching then we need to check if we already cached this
+      // file/url...
       if (mForceCacheSeconds != 0)
       {
         String cacheFile = GetCacheFile(mUrl);
@@ -416,8 +432,9 @@ void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
     }
     else
     {
-      // We failed the request, but if we have caching enabled then attempt to load the file
-      // from the cache and send it as a complete event (even though the request failed).
+      // We failed the request, but if we have caching enabled then attempt to
+      // load the file from the cache and send it as a complete event (even
+      // though the request failed).
       if (mForceCacheSeconds != 0)
       {
         // Early out, since we don't want to send the actual event.
@@ -426,7 +443,6 @@ void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
       }
     }
   }
-
 
   DispatchEvent(Events::WebResponseComplete, event);
 }
@@ -446,11 +462,11 @@ ZilchDefineType(WebResponseEvent, builder, type)
 }
 
 WebResponseEvent::WebResponseEvent() :
-  mResponseCode(WebResponseCode::NoServerResponse),
-  mTotalDownloaded(0),
-  mTotalExpected(0),
-  mProgress(0.0f),
-  mProgressType(ProgressType::None)
+    mResponseCode(WebResponseCode::NoServerResponse),
+    mTotalDownloaded(0),
+    mTotalExpected(0),
+    mProgress(0.0f),
+    mProgressType(ProgressType::None)
 {
 }
 
@@ -477,7 +493,8 @@ JsonValue* WebResponseEvent::ReadJson(Status& status)
 
   static const String cOrigin = "WebResponseEvent";
   CompilationErrors errors;
-  JsonValue* value = Zilch::JsonReader::ReadIntoTreeFromString(errors, mData, cOrigin, nullptr);
+  JsonValue* value = Zilch::JsonReader::ReadIntoTreeFromString(
+      errors, mData, cOrigin, nullptr);
   if (!value)
   {
     status.SetFailed("Failed to parse JSON");
@@ -506,8 +523,7 @@ ZilchDefineType(WebRequester, builder, type)
   ZilchBindMemberProperty(mCancelOnDestruction);
 }
 
-WebRequester::WebRequester() :
-  mCancelOnDestruction(true)
+WebRequester::WebRequester() : mCancelOnDestruction(true)
 {
 }
 
@@ -525,7 +541,8 @@ void WebRequester::Initialize(CogInitializer& initializer)
 
 void WebRequester::Serialize(Serializer& stream)
 {
-  stream.SerializeFieldDefault("Url", mSerializedUrl, String(Urls::cUserWebRequesterDefault));
+  stream.SerializeFieldDefault(
+      "Url", mSerializedUrl, String(Urls::cUserWebRequesterDefault));
   SerializeNameDefault(mCancelOnDestruction, true);
 }
 
@@ -556,8 +573,8 @@ void WebRequester::Clear()
 void WebRequester::CancelActiveRequests()
 {
   // Cancel all active web requests.
-  forRange(HandleOf<AsyncWebRequest>& request, mActiveRequests)
-    request->Cancel();
+  forRange(HandleOf<AsyncWebRequest> & request, mActiveRequests)
+      request->Cancel();
   mActiveRequests.Clear();
 }
 
@@ -599,12 +616,14 @@ HandleOf<AsyncWebRequest> WebRequester::ReplaceRequest()
   // If we had a request previously, then copy the old data over.
   if (previousRequest)
   {
-    // We only need to keep the previous requests alive (the current is kept alive by mRequest).
+    // We only need to keep the previous requests alive (the current is kept
+    // alive by mRequest).
     mActiveRequests.PushBack(previousRequestHandle);
 
     request->mUrl = previousRequest->mUrl;
     request->mPostData = previousRequest->mPostData;
-    request->mAdditionalRequestHeaders = previousRequest->mAdditionalRequestHeaders;
+    request->mAdditionalRequestHeaders =
+        previousRequest->mAdditionalRequestHeaders;
   }
 
   return previousRequestHandle;

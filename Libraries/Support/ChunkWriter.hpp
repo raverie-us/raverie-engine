@@ -1,23 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ChunkWriter.hpp
-/// Simple binary chunk based file writer.
-///
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "File.hpp"
 
 namespace Zero
 {
 
-template<typename streamType>
+template <typename streamType>
 class ChunkWriter
 {
 public:
-  static const uint HeaderSize = sizeof(u32)*2;
+  static const uint HeaderSize = sizeof(u32) * 2;
   typedef unsigned short StringLengthType;
 
   ChunkWriter(){};
@@ -42,26 +34,26 @@ public:
 
   void EndChunk(u32 chunkStartPos)
   {
-    u32 curPos =  (u32)file.Tell();
+    u32 curPos = (u32)file.Tell();
     u32 chunksize = curPos - chunkStartPos;
 
     // Move pass the header
     file.Seek(chunkStartPos + sizeof(u32));
-    file.Write((byte*)&chunksize , sizeof(uint));
+    file.Write((byte*)&chunksize, sizeof(uint));
     file.Seek(curPos);
   }
 
   // Writing Functions
-  template<typename type>
+  template <typename type>
   void Write(const type& data)
   {
-    file.Write((byte*)&data , sizeof(type));
+    file.Write((byte*)&data, sizeof(type));
   }
 
-  template<typename type>
+  template <typename type>
   void Write(type* data, uint count)
   {
-    file.Write((byte*)data , sizeof(type) * count);
+    file.Write((byte*)data, sizeof(type) * count);
   }
 
   void Write(String& str)
@@ -70,16 +62,16 @@ public:
     Write(str.Data(), str.SizeInBytes());
   }
 
-  void WriteChunk(u32 chunkType , uint chunkSize)
+  void WriteChunk(u32 chunkType, uint chunkSize)
   {
     Write(chunkType);
     Write(chunkSize);
   };
 
-  //File output
+  // File output
   streamType file;
 };
 
 typedef ChunkWriter<File> ChunkFileWriter;
 
-}
+} // namespace Zero

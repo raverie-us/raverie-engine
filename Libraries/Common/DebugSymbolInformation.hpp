@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,8 +18,9 @@ struct SymbolInfo
   size_t mLineNumber;
 };
 
-/// Stores the addresses of all functions in a callstack. Used to efficiently capture callstacks to
-/// then later look-up symbol information. Hard-coded max for now (no allocations).
+/// Stores the addresses of all functions in a callstack. Used to efficiently
+/// capture callstacks to then later look-up symbol information. Hard-coded max
+/// for now (no allocations).
 struct CallStackAddresses
 {
   const static int mMaxCallstacks = 150;
@@ -42,25 +38,34 @@ struct CallStackSymbolInfos
   size_t mCaptureSymbolCount;
 };
 
-// Given a process fill out the information for the symbol at the mAddress   location on the SymbolInfo class.
+// Given a process fill out the information for the symbol at the mAddress
+// location on the SymbolInfo class.
 void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo);
-/// Capture the current callstack into memory addresses. This is more efficient than actually looking up
-/// symbol information which can be done at a later time. Default frames to skip is 1 so that this function is ignored.
-size_t GetStackAddresses(CallStackAddresses& callStack, size_t stacksToCapture = CallStackAddresses::mMaxCallstacks, size_t framesToSkip = 1);
+/// Capture the current callstack into memory addresses. This is more efficient
+/// than actually looking up symbol information which can be done at a later
+/// time. Default frames to skip is 1 so that this function is ignored.
+size_t
+GetStackAddresses(CallStackAddresses& callStack,
+                  size_t stacksToCapture = CallStackAddresses::mMaxCallstacks,
+                  size_t framesToSkip = 1);
 /// Convert the stack address pointers to the actual symbol information.
-void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& callStackSymbols);
+void GetStackInfo(CallStackAddresses& callStackAddresses,
+                  CallStackSymbolInfos& callStackSymbols);
 
-// A simple stack walker that isn't fully flushed out but is much easier to follow than the StackWalker class.
+// A simple stack walker that isn't fully flushed out but is much easier to
+// follow than the StackWalker class.
 class SimpleStackWalker
 {
 public:
-  virtual ~SimpleStackWalker() {};
+  virtual ~SimpleStackWalker(){};
 
-  void ShowCallstack(void* context, StringParam extraSymbolPaths = String(), int stacksToSkip = 1);
+  void ShowCallstack(void* context,
+                     StringParam extraSymbolPaths = String(),
+                     int stacksToSkip = 1);
   virtual void AddSymbolInformation(SymbolInfo& symbolInfo);
   virtual String GetFinalOutput();
 
   StringBuilder mBuilder;
 };
 
-}//namespace Zero
+} // namespace Zero

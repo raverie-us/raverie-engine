@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ColorPicker.hpp
-/// Declaration of the ColorPicker Composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,20 +13,22 @@ class TextButton;
 
 namespace Events
 {
-  DeclareEvent(FinalColorPicked);
-  DeclareEvent(ColorChanged);
-  DeclareEvent(ColorPickCancelled);
-}
+DeclareEvent(FinalColorPicked);
+DeclareEvent(ColorChanged);
+DeclareEvent(ColorPickCancelled);
+} // namespace Events
 
 class ColorEvent : public Event
 {
 public:
   ZilchDeclareType(ColorEvent, TypeCopyMode::ReferenceType);
-  ColorEvent(Vec4Param color){Color = color;}
+  ColorEvent(Vec4Param color)
+  {
+    Color = color;
+  }
   Vec4 Color;
 };
 
-//---------------------------------------------------------------- ColorDropper
 
 // Eye Dropper for picking colors from desktop
 class ColorEyeDropper : public MouseManipulation
@@ -51,7 +45,6 @@ public:
 // Open the eye dropper
 ColorEyeDropper* OpenEyeDropper(Mouse* mouse, Composite* parent);
 
-//---------------------------------------------------------------- Color Display
 
 // Widget that display color in a box
 class ColorDisplay : public Composite
@@ -63,13 +56,13 @@ public:
   void SetInvalid();
   void UpdateTransform();
   void SetColor(Vec4Param color);
+
 private:
   PixelBuffer* mColorBuffer;
   TextureView* mColorDisplay;
   Label* mText;
 };
 
-//----------------------------------------------------------------- Color Picker
 
 /// Color Picker widget
 class ColorPicker : public Composite
@@ -119,6 +112,7 @@ public:
 
   /// Gets the state on whether we are accepting the changes of the picked color
   bool IsColorPicked();
+
 private:
   friend class BlockManipulator;
   friend class SliderManipulator;
@@ -158,11 +152,11 @@ private:
   void UpdateRGBFromSelection();
 
   /// Used by the manipulators to set the selections.
-  void  SetColorBlockSelectionValue(Vec2Param val);
-  Vec2  GetColorBlockSelectionValue();
-  void  SetColorSliderSelectionValue(float val);
+  void SetColorBlockSelectionValue(Vec2Param val);
+  Vec2 GetColorBlockSelectionValue();
+  void SetColorSliderSelectionValue(float val);
   float GetColorSliderSelectionValue();
-  void  SetAlphaSliderSelectionValue(float val);
+  void SetAlphaSliderSelectionValue(float val);
   float GetAlphaSliderSelectionValue();
 
   /// Button response.
@@ -205,7 +199,15 @@ private:
   /// Static instance of the color picker.
   static ColorPicker* Instance;
 
-  enum {Hue, Saturation, Value, Red, Green, Blue};
+  enum
+  {
+    Hue,
+    Saturation,
+    Value,
+    Red,
+    Green,
+    Blue
+  };
 
   /// The target that we're modifying.
   HandleOf<Widget> mTarget;
@@ -214,7 +216,7 @@ private:
   ColorDisplay* mFinalColorDisplay;
 
   // Color block
-  Composite*   mColorBlockArea;
+  Composite* mColorBlockArea;
   PixelBuffer* mColorBlockBuffer;
   TextureView* mColorBlockDisplay;
   ImageWidget* mColorBlockSelection;
@@ -228,7 +230,7 @@ private:
   PixelBuffer* mAlphaSliderBuffer;
   TextureView* mAlphaSliderDisplay;
   ImageWidget* mAlphaSliderSelection;
-  
+
   // Alpha text box
   Label* mAlphaLabel;
   TextBox* mAlphaTextBox;
@@ -263,9 +265,9 @@ private:
   /// The current mode we're in.
   uint mMode;
 
-  /// Used to determine if we should send a cancel 
+  /// Used to determine if we should send a cancel
   /// event when the window is closed.
   bool mColorPicked;
 };
 
-}//namespace Zero
+} // namespace Zero

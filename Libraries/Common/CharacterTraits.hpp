@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CharacterTraits.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "EnumDeclaration.hpp"
 #include "Typedefs.hpp"
@@ -14,7 +6,14 @@
 namespace Zero
 {
 
-DeclareBitField7(CharacterBits, Graphical, Alpha, Number, WhiteSpace, Lower, Symbol, Control);
+DeclareBitField7(CharacterBits,
+                 Graphical,
+                 Alpha,
+                 Number,
+                 WhiteSpace,
+                 Lower,
+                 Symbol,
+                 Control);
 
 int IsSpace(Rune r);
 int IsGraph(Rune r);
@@ -35,4 +34,4 @@ int ToUpper(Rune r);
 
 bool IsHex(Rune r);
 
-}//namespace Zero
+} // namespace Zero

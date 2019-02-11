@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationControls.cpp
-/// Implementation of AnimationControls helper class.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,15 +7,14 @@ namespace Zero
 namespace AnimTrackUi
 {
 const cstr cLocation = "EditorUi/AnimationEditor/TrackView";
-Tweakable(Vec4, BackgroundColor,       Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ErrorToolTopBorder,    Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ErrorBgColorPrimary,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ErrorBgColorSecondary, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, DisabledText,          Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, HintColor,             Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ErrorToolTopBorder, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ErrorBgColorPrimary, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ErrorBgColorSecondary, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, DisabledText, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, HintColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace AnimTrackUi
 
-//------------------------------------------------------------------ Data Source
 const u64 cRootId = (u64)-1;
 
 class AnimationTrackSource : public DataSource
@@ -40,14 +31,14 @@ public:
   }
 
   //****************************************************************************
-  //Data base Indexing
+  // Data base Indexing
   DataEntry* GetRoot() override
   {
     return mRichAnimation->mRoot;
   }
 
   //****************************************************************************
-  //Safe Indexing
+  // Safe Indexing
   DataEntry* ToEntry(DataIndex index) override
   {
     return mRichAnimation->mTrackMap.FindValue(index.Id, nullptr);
@@ -75,17 +66,19 @@ public:
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
     TrackNode* trackInfo = (TrackNode*)dataEntry;
     return trackInfo->Children[index];
   }
 
   //****************************************************************************
-  //Tree expanding
+  // Tree expanding
   bool IsExpandable(DataEntry* dataEntry) override
   {
-    if(dataEntry == mRichAnimation->mRoot)
+    if (dataEntry == mRichAnimation->mRoot)
       return true;
     // If it has children, it's expandable
     TrackNode* trackInfo = (TrackNode*)dataEntry;
@@ -93,34 +86,34 @@ public:
   }
 
   //****************************************************************************
-  //Data Base Cell Modification and Inspection
+  // Data Base Cell Modification and Inspection
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     TrackNode* track = (TrackNode*)dataEntry;
 
     // For the name column, simply use the tracks name
-    if(column == CommonColumns::Name)
+    if (column == CommonColumns::Name)
     {
       variant = track;
     }
-    else if(column == CommonColumns::ToolTip)
+    else if (column == CommonColumns::ToolTip)
     {
       Cog* animGraphObject = mEditorData->mEditor->GetAnimationGraphObject();
       Status status;
       track->IsValid(animGraphObject, status);
       variant = status.Message;
     }
-    else if(column == CommonColumns::Icon)
+    else if (column == CommonColumns::Icon)
     {
-      // If the selected object doesn't have the object (Cog, Component, 
+      // If the selected object doesn't have the object (Cog, Component,
       // or property) represented by the track, display an error icon
       Cog* animGraphObject = mEditorData->mEditor->GetAnimationGraphObject();
       Status status;
       TrackNode* invalidNode = track->IsValid(animGraphObject, status);
 
-      if(status.Failed())
+      if (status.Failed())
       {
-        if(track == invalidNode)
+        if (track == invalidNode)
           variant = String("InvalidObjectTrack");
         else
           variant = String("InvalidSubTrack");
@@ -129,24 +122,24 @@ public:
       {
         // If it's a component track, use the name of the component because
         // it will map to an icon
-        if(track->Type == TrackType::Component)
+        if (track->Type == TrackType::Component)
           variant = track->Name;
         // Object tracks will just use the Object icon
-        else if(track->Type == TrackType::Object)
+        else if (track->Type == TrackType::Object)
           variant = String("ItemIcon");
         // (Sub)Property tracks have no icon for now
         else
           variant = String("");
       }
     }
-    else if(column == "TrackColor")
+    else if (column == "TrackColor")
     {
       // If the track is selected, use its display color
-      if(mEditorData->mVisiblePropertyTracks.Count(track) > 0)
+      if (mEditorData->mVisiblePropertyTracks.Count(track) > 0)
       {
         Vec4 color;
 
-        if(track->IsDisabled())
+        if (track->IsDisabled())
           color = Vec4(AnimTrackUi::DisabledText);
         else
           color = track->mDisplayColor;
@@ -175,19 +168,22 @@ public:
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     TrackNode* track = (TrackNode*)dataEntry;
-    if(track->Type != TrackType::Object || track->IsRoot())
+    if (track->Type != TrackType::Object || track->IsRoot())
     {
-      DoNotifyWarning("Failed to rename track", "Can only rename object tracks.");
+      DoNotifyWarning("Failed to rename track",
+                      "Can only rename object tracks.");
       return false;
     }
 
     Status status;
     track->Rename(variant.Get<String>(), status);
 
-    if(status.Failed())
+    if (status.Failed())
     {
       DoNotifyWarning("Failed to rename track", status.Message);
       return true;
@@ -197,16 +193,14 @@ public:
   }
 };
 
-//------------------------------------------------------- Animation Track Editor
 /// Displays the color of the curve next to the name of the track
 class AnimationNameEditor : public InPlaceTextEditor
 {
 public:
   //****************************************************************************
-  AnimationNameEditor(Composite* parent, u32 flags) 
-    : InPlaceTextEditor(parent, flags)
+  AnimationNameEditor(Composite* parent, u32 flags) :
+      InPlaceTextEditor(parent, flags)
   {
-    
   }
 
   //****************************************************************************
@@ -215,15 +209,15 @@ public:
     TrackNode* track = variant.Get<TrackNode*>();
 
     Any text;
-    if(track->Name == "/")
+    if (track->Name == "/")
       text = String("Root");
-    else if(track->mDisabled)
+    else if (track->mDisabled)
       text = BuildString(track->Name, " (Disabled)");
     else
       text = track->Name;
-    
-    mText->mText->SetColor(Vec4(1,1,1,1));
-    if(track->IsDisabled())
+
+    mText->mText->SetColor(Vec4(1, 1, 1, 1));
+    if (track->IsDisabled())
       mText->mText->SetColor(AnimTrackUi::DisabledText);
 
     InPlaceTextEditor::SetVariant(text);
@@ -236,18 +230,19 @@ public:
     String text = mText->GetText();
 
     StringRange found = text.FindFirstOf(" (Disabled)");
-    if(!found.Empty())
+    if (!found.Empty())
       mText->SetText(text.SubString(text.Begin(), found.Begin()));
     InPlaceTextEditor::Edit();
   }
 };
 
-ValueEditor* CreateAnimationNameEditor(Composite* composite, AnyParam data, u32 flags)
+ValueEditor* CreateAnimationNameEditor(Composite* composite,
+                                       AnyParam data,
+                                       u32 flags)
 {
   return new AnimationNameEditor(composite, flags);
 }
 
-//------------------------------------------------------- Animation Track Editor
 /// Displays the color of the curve next to the name of the track
 class AnimationTrackColor : public ValueEditor
 {
@@ -256,8 +251,7 @@ public:
   Vec4 mColor;
 
   //****************************************************************************
-  AnimationTrackColor(Composite* parent) 
-    : ValueEditor(parent)
+  AnimationTrackColor(Composite* parent) : ValueEditor(parent)
   {
     static const String className = "AnimatorUI";
     mDefSet = mDefSet->GetDefinitionSet(className);
@@ -293,7 +287,6 @@ public:
   }
 };
 
-//******************************************************************************
 ValueEditor* CreateTrackColor(Composite* parent, AnyParam data, u32 flags)
 {
   return new AnimationTrackColor(parent);
@@ -307,14 +300,13 @@ void RegisterAnimationTrackViewEditors()
   factory->RegisterEditor("AnimationName", CreateAnimationNameEditor);
 }
 
-//--------------------------------------------------------- Animation Track View
 ZilchDefineType(AnimationTrackView, builder, type)
 {
 }
 
-//******************************************************************************
-AnimationTrackView::AnimationTrackView(Composite* parent, AnimationEditor* editor)
-  : Composite(parent)
+AnimationTrackView::AnimationTrackView(Composite* parent,
+                                       AnimationEditor* editor) :
+    Composite(parent)
 {
   mEditor = editor;
   mEditorData = nullptr;
@@ -363,20 +355,18 @@ AnimationTrackView::AnimationTrackView(Composite* parent, AnimationEditor* edito
   ConnectThisTo(editor, Events::Deactivated, OnAnimatorDeactivated);
 }
 
-//******************************************************************************
 void AnimationTrackView::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   UpdateToolTip();
 
   WidgetRect local = GetLocalRect();
-  local.RemoveThickness(Thickness(1,1,1,1));
+  local.RemoveThickness(Thickness(1, 1, 1, 1));
   PlaceWithRect(local, mTree);
   mTree->Refresh();
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void AnimationTrackView::SetAnimationEditorData(AnimationEditorData* editorData)
 {
   mEditorData = editorData;
@@ -395,7 +385,8 @@ void AnimationTrackView::SetAnimationEditorData(AnimationEditorData* editorData)
   DisconnectAll(richAnimation, this);
 
   ConnectThisTo(selection, Events::DataSelectionFinal, OnTracksSelected);
-  ConnectThisTo(editorData, Events::TrackSelectionModified, OnSelectionModified);
+  ConnectThisTo(
+      editorData, Events::TrackSelectionModified, OnSelectionModified);
   ConnectThisTo(mSource, Events::DataActivated, OnDataActivated);
 
   mTree->SetDataSource(mSource);
@@ -405,56 +396,54 @@ void AnimationTrackView::SetAnimationEditorData(AnimationEditorData* editorData)
 
   ConnectThisTo(richAnimation, Events::TrackAdded, OnTrackAdded);
 
-  // Expand all 
+  // Expand all
   DataSelection* expanded = mTree->GetExpanded();
-  forRange(TrackNode* track, richAnimation->allTracks())
+  forRange(TrackNode * track, richAnimation->allTracks())
   {
-    if(track->IsRoot() || track->Parent->IsRoot())
+    if (track->IsRoot() || track->Parent->IsRoot())
       expanded->Select(mSource->ToIndex(track));
-    else if(track->Type != TrackType::Object)
+    else if (track->Type != TrackType::Object)
       expanded->Select(mSource->ToIndex(track));
   }
 
   UpdateToolTip();
 }
 
-//******************************************************************************
 void AnimationTrackView::SetSelection(Array<TrackNode*>& selection)
 {
   // Clear the selection
   DataSelection* dataSelection = mTree->GetSelection();
   dataSelection->SelectNone();
 
-  for(uint i = 0; i < selection.Size(); ++i)
+  for (uint i = 0; i < selection.Size(); ++i)
   {
     DataIndex index = mSource->ToIndex(selection[i]);
     dataSelection->Select(index);
   }
 }
 
-//******************************************************************************
-void AddPropertyTracks(TrackNode* root, HashSet<TrackNode*>& selection, 
+void AddPropertyTracks(TrackNode* root,
+                       HashSet<TrackNode*>& selection,
                        bool childrenObjects)
 {
-  if(root->Type == TrackType::Property || root->Type == TrackType::SubProperty)
+  if (root->Type == TrackType::Property || root->Type == TrackType::SubProperty)
     selection.Insert(root);
 
-  for(uint i = 0; i < root->Children.Size(); ++i)
+  for (uint i = 0; i < root->Children.Size(); ++i)
   {
     TrackNode* curr = root->Children[i];
-    if(curr->Type != TrackType::Object || childrenObjects)
+    if (curr->Type != TrackType::Object || childrenObjects)
       AddPropertyTracks(curr, selection, childrenObjects);
   }
 }
 
-//******************************************************************************
 void AnimationTrackView::FocusOnObject(TrackNode* track)
 {
   HashSet<TrackNode*> propertyTracks;
   AddPropertyTracks(track, propertyTracks, false);
 
   Array<TrackNode*> selection;
-  forRange(TrackNode* info, propertyTracks.All())
+  forRange(TrackNode * info, propertyTracks.All())
   {
     selection.PushBack(info);
   }
@@ -466,14 +455,12 @@ void AnimationTrackView::FocusOnObject(TrackNode* track)
   mEditorData->SetSelection(selection);
 }
 
-//******************************************************************************
 void AnimationTrackView::Hide()
 {
   mTree->SetActive(false);
   mToolTip.SafeDestroy();
 }
 
-//******************************************************************************
 void AnimationTrackView::Show()
 {
   mTree->SetActive(true);
@@ -482,24 +469,23 @@ void AnimationTrackView::Show()
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationTrackView::UpdateToolTip()
 {
   // If the tree is disabled (we're hidden)
-  if(!mTree->GetActive())
+  if (!mTree->GetActive())
     return;
 
   // The tooltip should only be visible if there are visible tracks
   bool active = false;
-  if(mSource)
+  if (mSource)
   {
     DataEntry* root = mSource->GetRoot();
-    if(mSource->ChildCount(root) == 0)
+    if (mSource->ChildCount(root) == 0)
       active = true;
   }
 
   // If it shouldn't be displayed, delete it if it's already there
-  if(!active)
+  if (!active)
   {
     mToolTip.SafeDestroy();
     return;
@@ -507,37 +493,38 @@ void AnimationTrackView::UpdateToolTip()
 
   // Create the tooltip if it isn't already there
   ToolTip* toolTip = mToolTip;
-  if(toolTip == nullptr)
+  if (toolTip == nullptr)
   {
     toolTip = new ToolTip(GetRootWidget());
-    toolTip->SetText("Press the key icon next to a property in the property grid to create a key frame.");
+    toolTip->SetText("Press the key icon next to a property in the property "
+                     "grid to create a key frame.");
     mToolTip = toolTip;
   }
-    
+
   // Place the tooltip around the track view
   ToolTipPlacement placement;
   WidgetRect rect = GetScreenRect();
   rect.SizeX -= Pixels(5);
   placement.SetScreenRect(rect);
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
-                        IndicatorSide::Top, IndicatorSide::Bottom);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        IndicatorSide::Top,
+                        IndicatorSide::Bottom);
   toolTip->SetArrowTipTranslation(placement);
 }
 
-//******************************************************************************
 void AnimationTrackView::OnAnimatorDeactivated(Event* event)
 {
   mToolTip.SafeDestroy();
 }
 
-//******************************************************************************
 void AnimationTrackView::OnSelectionModified(Event* e)
 {
   // Clear the selection
   DataSelection* dataSelection = mTree->GetSelection();
   dataSelection->SelectNone();
 
-  forRange(TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
+  forRange(TrackNode * track, mEditorData->mVisiblePropertyTracks.All())
   {
     DataIndex index = mSource->ToIndex(track);
     dataSelection->Select(index);
@@ -547,13 +534,11 @@ void AnimationTrackView::OnSelectionModified(Event* e)
   mTree->Refresh();
 }
 
-//******************************************************************************
 void AnimationTrackView::OnDataActivated(DataEvent* e)
 {
-  mEditor->GetGraph()->FocusOnSelectedCurves(IntVec2(1,1));
+  mEditor->GetGraph()->FocusOnSelectedCurves(IntVec2(1, 1));
 }
 
-//******************************************************************************
 void AnimationTrackView::OnTreeRightClick(TreeEvent* e)
 {
   // The index of the row that was right clicked
@@ -563,27 +548,28 @@ void AnimationTrackView::OnTreeRightClick(TreeEvent* e)
   TrackNode* track = (TrackNode*)(mSource->ToEntry(rowIndex));
 
   // Cannot delete root track
-  if(track->IsRoot())
+  if (track->IsRoot())
     return;
 
   // Create a context menu under the mouse
   ContextMenu* menu = new ContextMenu(e->Row);
-  Mouse* mouse = Z::gMouse;;
-  menu->SetBelowMouse(mouse, Pixels(0,0));
-  
-  if(track->Type == TrackType::Object)
+  Mouse* mouse = Z::gMouse;
+  ;
+  menu->SetBelowMouse(mouse, Pixels(0, 0));
+
+  if (track->Type == TrackType::Object)
   {
     ConnectMenu(menu, "Rename", OnRename, false);
   }
 
-  if(track->Type == TrackType::SubProperty)
+  if (track->Type == TrackType::SubProperty)
   {
     ConnectMenu(menu, "Clear Keys", OnClearKeys, false);
   }
   else
   {
     // Add an option to delete the track
-    if(track->mDisabled)
+    if (track->mDisabled)
     {
       ConnectMenu(menu, "Enable", OnToggleEnable, false);
     }
@@ -599,14 +585,12 @@ void AnimationTrackView::OnTreeRightClick(TreeEvent* e)
   mCommandIndex = rowIndex;
 }
 
-//******************************************************************************
 void AnimationTrackView::OnRename(Event* e)
 {
   TreeRow* row = mTree->FindRowByIndex(mCommandIndex);
   row->Edit(CommonColumns::Name);
 }
 
-//******************************************************************************
 void AnimationTrackView::OnToggleEnable(Event* e)
 {
   TrackNode* track = (TrackNode*)(mSource->ToEntry(mCommandIndex));
@@ -615,21 +599,18 @@ void AnimationTrackView::OnToggleEnable(Event* e)
   mTree->Refresh();
 }
 
-//******************************************************************************
 void AnimationTrackView::OnClearKeys(Event* e)
 {
   TrackNode* track = (TrackNode*)(mSource->ToEntry(mCommandIndex));
   track->ClearKeyFrames();
 }
 
-//******************************************************************************
 void AnimationTrackView::OnDeleteTrack(Event* e)
 {
   TrackNode* track = (TrackNode*)(mSource->ToEntry(mCommandIndex));
   track->Destroy();
 }
 
-//******************************************************************************
 void AnimationTrackView::OnTracksSelected(Event* e)
 {
   // Get the selection
@@ -642,7 +623,7 @@ void AnimationTrackView::OnTracksSelected(Event* e)
   // Build the track selection
   HashSet<TrackNode*> propertyTracks;
 
-  for(uint i = 0; i < selectedIndices.Size(); ++i)
+  for (uint i = 0; i < selectedIndices.Size(); ++i)
   {
     // Get the track info
     DataEntry* entry = mSource->ToEntry(selectedIndices[i]);
@@ -652,7 +633,7 @@ void AnimationTrackView::OnTracksSelected(Event* e)
   }
 
   Array<TrackNode*> selection;
-  forRange(TrackNode* info, propertyTracks.All())
+  forRange(TrackNode * info, propertyTracks.All())
   {
     selection.PushBack(info);
   }
@@ -661,7 +642,6 @@ void AnimationTrackView::OnTracksSelected(Event* e)
   mEditorData->SetSelection(selection);
 }
 
-//******************************************************************************
 void AnimationTrackView::OnTrackAdded(TrackEvent* e)
 {
   // We have to refresh the tree to make sure it creates a row for the new track
@@ -672,4 +652,4 @@ void AnimationTrackView::OnTrackAdded(TrackEvent* e)
   mTree->ShowRow(index);
 }
 
-}//namespace Zero
+} // namespace Zero

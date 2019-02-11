@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------Orientation
 ZilchDefineType(Orientation, builder, type)
 {
   ZeroBindComponent();
@@ -20,7 +14,8 @@ ZilchDefineType(Orientation, builder, type)
   ZilchBindMethod(DebugDrawBases);
 
   ZilchBindGetterSetterProperty(DefaultOrientationBases);
-  ZilchBindGetterSetterProperty(LocalOrientationBasis)->Add(new EditorRotationBasis("OrientationBasisGizmo"));
+  ZilchBindGetterSetterProperty(LocalOrientationBasis)
+      ->Add(new EditorRotationBasis("OrientationBasisGizmo"));
 
   ZilchBindGetter(OrientationRight);
   ZilchBindGetter(OrientationUp);
@@ -66,19 +61,21 @@ void Orientation::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mGlobalUp, Vec3::cYAxis);
   SerializeNameDefault(mLocalOrientationBasis, Quat::cIdentity);
-  SerializeEnumNameDefault(OrientationBases, mDefaultBases, OrientationBases::ForwardNegativeZUpY);
+  SerializeEnumNameDefault(
+      OrientationBases, mDefaultBases, OrientationBases::ForwardNegativeZUpY);
 }
 
 void Orientation::Initialize(CogInitializer& initializer)
 {
-  mTransform =  GetOwner()->has(Transform);
+  mTransform = GetOwner()->has(Transform);
 }
 
 void Orientation::DebugDraw()
 {
   // This is commented out for now so that this doesn't conflict with gizmos.
-  // Maybe re-enable when we have per-object or per-property selection for debug drawing.
-  //DebugDrawBases();
+  // Maybe re-enable when we have per-object or per-property selection for debug
+  // drawing.
+  // DebugDrawBases();
 }
 
 void Orientation::DebugDrawBases()
@@ -88,9 +85,12 @@ void Orientation::DebugDrawBases()
   Vec3 worldUp = GetWorldUp();
   Vec3 worldForward = GetWorldForward();
 
-  gDebugDraw->Add(Debug::Line(pos, pos + worldRight).HeadSize(0.1f).Color(Color::Red));
-  gDebugDraw->Add(Debug::Line(pos, pos + worldUp).HeadSize(0.1f).Color(Color::Green));
-  gDebugDraw->Add(Debug::Line(pos, pos + worldForward).HeadSize(0.1f).Color(Color::Blue));
+  gDebugDraw->Add(
+      Debug::Line(pos, pos + worldRight).HeadSize(0.1f).Color(Color::Red));
+  gDebugDraw->Add(
+      Debug::Line(pos, pos + worldUp).HeadSize(0.1f).Color(Color::Green));
+  gDebugDraw->Add(
+      Debug::Line(pos, pos + worldForward).HeadSize(0.1f).Color(Color::Blue));
 }
 
 OrientationBases::Enum Orientation::GetDefaultOrientationBases()
@@ -100,41 +100,41 @@ OrientationBases::Enum Orientation::GetDefaultOrientationBases()
 
 void Orientation::SetDefaultOrientationBases(OrientationBases::Enum value)
 {
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
   {
     // @JoshD: Can't do this now due to cyclic side-effects
-    //OperationQueue::RegisterSideEffect(this, "LocalBasis", GetLocalBasis());
+    // OperationQueue::RegisterSideEffect(this, "LocalBasis", GetLocalBasis());
   }
 
   mDefaultBases = value;
   // Nothing to do special when going to custom (the basis doesn't change)
-  if(value == OrientationBases::Custom)
+  if (value == OrientationBases::Custom)
     return;
-  
+
   // Find what our desired forward and up are from the enum
   Vec3 forward = Vec3::cZAxis;
   Vec3 up = Vec3::cYAxis;
-  if(value == OrientationBases::ForwardZUpY)
+  if (value == OrientationBases::ForwardZUpY)
   {
     Vec3 forward = Vec3::cZAxis;
     Vec3 up = Vec3::cYAxis;
   }
-  else if(value == OrientationBases::ForwardNegativeZUpY)
+  else if (value == OrientationBases::ForwardNegativeZUpY)
   {
     forward = -Vec3::cZAxis;
     up = Vec3::cYAxis;
   }
-  else if(value == OrientationBases::ForwardXUpY)
+  else if (value == OrientationBases::ForwardXUpY)
   {
     forward = Vec3::cXAxis;
     up = Vec3::cYAxis;
   }
-  else if(value == OrientationBases::ForwardXUpZ)
+  else if (value == OrientationBases::ForwardXUpZ)
   {
     forward = Vec3::cXAxis;
     up = Vec3::cZAxis;
   }
-  else if(value == OrientationBases::ForwardYUpZ)
+  else if (value == OrientationBases::ForwardYUpZ)
   {
     forward = Vec3::cYAxis;
     up = Vec3::cZAxis;
@@ -152,8 +152,9 @@ Quat Orientation::GetLocalOrientationBasis()
 void Orientation::SetLocalOrientationBasis(QuatParam localOrientationBasis)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
-    OperationQueue::RegisterSideEffect(this, "DefaultOrientationBases", GetDefaultOrientationBases());
+  if (OperationQueue::IsListeningForSideEffects())
+    OperationQueue::RegisterSideEffect(
+        this, "DefaultOrientationBases", GetDefaultOrientationBases());
 
   mLocalOrientationBasis = localOrientationBasis;
   mDefaultBases = OrientationBases::Custom;
@@ -206,7 +207,8 @@ Vec3 Orientation::GetWorldForward()
 
 Quat Orientation::GetLocalToWorldRotation()
 {
-  // To go from local space into world space is simply the transform's world rotation
+  // To go from local space into world space is simply the transform's world
+  // rotation
   return mTransform->GetWorldRotation();
 }
 
@@ -217,9 +219,11 @@ Quat Orientation::GetWorldToLocalRotation()
 
 Quat Orientation::GetOrientationToLocalRotation()
 {
-  // To go from orientation to local is the basis defined by this orientation. This might seem backwards,
-  // but the change of basis from orientation space to local space is one that takes the orientation space
-  // vector (such as the right vector in orientation space which is (1, 0, 0))  and transforms it into local space (LocalRight).
+  // To go from orientation to local is the basis defined by this orientation.
+  // This might seem backwards, but the change of basis from orientation space
+  // to local space is one that takes the orientation space vector (such as the
+  // right vector in orientation space which is (1, 0, 0))  and transforms it
+  // into local space (LocalRight).
   return mLocalOrientationBasis;
 }
 
@@ -246,9 +250,10 @@ Vec3 Orientation::GetGlobalUp()
 
 void Orientation::SetGlobalUp(Vec3Param globalUp)
 {
-  if(globalUp == Vec3::cZero)
+  if (globalUp == Vec3::cZero)
   {
-    DoNotifyWarning("Invalid Global Up", "The global up cannot be the zero vector");
+    DoNotifyWarning("Invalid Global Up",
+                    "The global up cannot be the zero vector");
     return;
   }
   mGlobalUp = globalUp;
@@ -284,7 +289,8 @@ void Orientation::LookAtPointWithUp(Vec3Param lookPoint, Vec3Param up)
   LookAtDirectionWithUp(lookPoint - worldPos, up);
 }
 
-Quat Orientation::GetLookAtPointWithUpRotation(Vec3Param lookPoint, Vec3Param up)
+Quat Orientation::GetLookAtPointWithUpRotation(Vec3Param lookPoint,
+                                               Vec3Param up)
 {
   Vec3 worldPos = mTransform->GetWorldTranslation();
   return GetLookAtDirectionWithUpRotation(lookPoint - worldPos, up);
@@ -311,11 +317,13 @@ void Orientation::LookAtDirectionWithUp(Vec3Param lookDir, Vec3Param up)
   mTransform->SetWorldRotation(destRot);
 }
 
-Quat Orientation::GetLookAtDirectionWithUpRotation(Vec3Param lookDir, Vec3Param up)
+Quat Orientation::GetLookAtDirectionWithUpRotation(Vec3Param lookDir,
+                                                   Vec3Param up)
 {
-  // Deal with bad values (lookDir can easily be 0 if the user is specifying a movement
-  // direction and chooses not to move that frame, hence no rotation should happen)
-  if(lookDir.LengthSq() == real(0.0) || up.LengthSq() == real(0.0))
+  // Deal with bad values (lookDir can easily be 0 if the user is specifying a
+  // movement direction and chooses not to move that frame, hence no rotation
+  // should happen)
+  if (lookDir.LengthSq() == real(0.0) || up.LengthSq() == real(0.0))
     return GetOrientationToLocalRotation();
 
   // The forward vector needs to be normalized
@@ -323,15 +331,16 @@ Quat Orientation::GetLookAtDirectionWithUpRotation(Vec3Param lookDir, Vec3Param 
   // Make sure the up vector is orthonormal to the forward vector
   Vec3 worldUp = Math::ProjectOnPlane(up, worldForward);
   worldUp = worldUp.AttemptNormalized();
-  // Now we can compute right (should be unit length since forward and up are perpendicular)
+  // Now we can compute right (should be unit length since forward and up are
+  // perpendicular)
   Vec3 worldRight = Math::Cross(worldForward, worldUp);
 
   // Compute the rotation of our desired end orientation
   Quat destRot = Math::ToQuaternion(worldForward, worldUp, worldRight);
 
-  // To end up in our destination orientation, we have to undo our local orientation so
-  // that we're aligned with the world bases, then we can just apply the desired
-  // rotation to get the correct end result
+  // To end up in our destination orientation, we have to undo our local
+  // orientation so that we're aligned with the world bases, then we can just
+  // apply the desired rotation to get the correct end result
   Quat worldRot = destRot * GetLocalToOrientationRotation();
   worldRot.Normalize();
 
@@ -343,24 +352,32 @@ float Orientation::GetAbsoluteAngle()
   return AbsoluteAngle(this->GetOwner());
 }
 
-float Orientation::ComputeSignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector)
+float Orientation::ComputeSignedAngle(Vec3Param up,
+                                      Vec3Param forward,
+                                      Vec3Param newVector)
 {
   return SignedAngle(up, forward, newVector);
 }
 
-void Orientation::GetLocalBasisVectors(Vec3& localRight, Vec3& localUp, Vec3& localForward)
+void Orientation::GetLocalBasisVectors(Vec3& localRight,
+                                       Vec3& localUp,
+                                       Vec3& localForward)
 {
   Quat orientationToLocal = GetOrientationToLocalRotation();
-  // Transform all vectors at the same time, this avoids re-calculating the rotation several times
+  // Transform all vectors at the same time, this avoids re-calculating the
+  // rotation several times
   localRight = Math::Multiply(orientationToLocal, GetOrientationRight());
   localUp = Math::Multiply(orientationToLocal, GetOrientationUp());
   localForward = Math::Multiply(orientationToLocal, GetOrientationForward());
 }
 
-void Orientation::GetWorldBasisVectors(Vec3& worldRight, Vec3& worldUp, Vec3& worldForward)
+void Orientation::GetWorldBasisVectors(Vec3& worldRight,
+                                       Vec3& worldUp,
+                                       Vec3& worldForward)
 {
   Quat orientationToWorld = GetOrientationToWorldRotation();
-  // Transform all vectors at the same time, this avoids re-calculating the rotation several times
+  // Transform all vectors at the same time, this avoids re-calculating the
+  // rotation several times
   worldRight = Math::Multiply(orientationToWorld, GetOrientationRight());
   worldUp = Math::Multiply(orientationToWorld, GetOrientationUp());
   worldForward = Math::Multiply(orientationToWorld, GetOrientationForward());
@@ -382,7 +399,9 @@ Vec3 Orientation::ComputeNormalizedWorldVector(Vec3Param orientationVector)
   return worldVector;
 }
 
-float Orientation::SignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector)
+float Orientation::SignedAngle(Vec3Param up,
+                               Vec3Param forward,
+                               Vec3Param newVector)
 {
   // Get the right vector
   Vec3 right = Math::Cross(forward, up);
@@ -398,7 +417,8 @@ float Orientation::SignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVec
   // If we're actually on the left side...
   if (rightDot > 0.0f)
   {
-    // Compute the real final angle given the quadrant it's in (kinda like atan2)
+    // Compute the real final angle given the quadrant it's in (kinda like
+    // atan2)
     finalAngle = -finalAngle;
   }
 
@@ -406,7 +426,9 @@ float Orientation::SignedAngle(Vec3Param up, Vec3Param forward, Vec3Param newVec
   return finalAngle;
 }
 
-float Orientation::AbsoluteAngle(Vec3Param up, Vec3Param forward, Vec3Param newVector)
+float Orientation::AbsoluteAngle(Vec3Param up,
+                                 Vec3Param forward,
+                                 Vec3Param newVector)
 {
   // Get the right vector
   Vec3 right = Math::Cross(forward, up);
@@ -422,7 +444,8 @@ float Orientation::AbsoluteAngle(Vec3Param up, Vec3Param forward, Vec3Param newV
   // If we're actually on the left side...
   if (rightDot > 0.0f)
   {
-    // Compute the real final angle given the quadrant it's in (kinda like atan2)
+    // Compute the real final angle given the quadrant it's in (kinda like
+    // atan2)
     finalAngle = Math::cPi * 2.0f - finalAngle;
   }
 
@@ -442,8 +465,9 @@ float Orientation::AbsoluteAngle(Cog* cog)
   ToWorld(cog, &upNew, &forwardNew);
 
   // Get the angle between the forward vectors
-  // We assume that the up and upNew are actually the same vector (no rotation that would cause up to be different)
-  // Otherwise, this function would not work very well...
+  // We assume that the up and upNew are actually the same vector (no rotation
+  // that would cause up to be different) Otherwise, this function would not
+  // work very well...
   return AbsoluteAngle(up, forward, forwardNew);
 }
 
@@ -451,19 +475,19 @@ void Orientation::LocalVectors(Cog* cog, Vec3* upOut, Vec3* forwardOut)
 {
   Orientation* orientation = nullptr;
   // Try and get an orientation from this cog
-  if(cog != nullptr)
+  if (cog != nullptr)
     orientation = cog->has(Orientation);
 
   // If we didn't have a valid cog or the cog didn't have an orientation
   // component, try and get one from the space
-  if(orientation == nullptr)
+  if (orientation == nullptr)
   {
     Space* space = cog->GetSpace();
     orientation = space->has(Orientation);
   }
 
   // If we managed to get a valid orientation component then get it's vectors
-  if(orientation != nullptr)
+  if (orientation != nullptr)
   {
     Vec3 right;
     orientation->GetLocalBasisVectors(right, *upOut, *forwardOut);
@@ -486,11 +510,12 @@ void Orientation::WorldVectors(Cog* cog, Vec3* upOut, Vec3* forwardOut)
 
 void Orientation::ToWorld(Cog* cog, Vec3* upOut, Vec3* forwardOut)
 {
-  // If this cog has a transform the take the vectors from local space to world space
-  if(cog != nullptr)
+  // If this cog has a transform the take the vectors from local space to world
+  // space
+  if (cog != nullptr)
   {
     Transform* transform = cog->has(Transform);
-    if(transform != nullptr)
+    if (transform != nullptr)
     {
       // Transform the forward and up vectors and then normalize them
       (*forwardOut) = transform->TransformNormal(*forwardOut);

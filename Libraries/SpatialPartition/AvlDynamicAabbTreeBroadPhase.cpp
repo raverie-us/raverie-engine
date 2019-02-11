@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AvlDynamicAabbTreeBroadPhase.cpp
-/// Implementation of the AvlDynamicAabbTreeBroadPhase class.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "SpatialPartition/AvlDynamicAabbTreeBroadPhase.hpp"
@@ -19,12 +11,10 @@ ZilchDefineType(AvlDynamicAabbTreeBroadPhase, builder, type)
 
 AvlDynamicAabbTreeBroadPhase::AvlDynamicAabbTreeBroadPhase()
 {
-
 }
 
 AvlDynamicAabbTreeBroadPhase::~AvlDynamicAabbTreeBroadPhase()
 {
-
 }
 
-}//namespace Zero
+} // namespace Zero

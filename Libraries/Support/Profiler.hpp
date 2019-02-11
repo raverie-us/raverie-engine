@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Profiler.hpp
-/// Declaration of the Profile Record, Manager, and Block class.
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Typedefs.hpp"
@@ -35,7 +27,11 @@ public:
   void Add(cstr parentName, Record* record);
   float GetTimeInSeconds(ProfileTime time);
   ProfileTime GetTime();
-  Array<Record*>::range GetRecords(){ return mRecordList.All(); }
+  Array<Record*>::range GetRecords()
+  {
+    return mRecordList.All();
+  }
+
 private:
   Array<Record*> mRecordList;
   Timer mTimer;
@@ -53,17 +49,32 @@ public:
 
   void Initialize(cstr name, cstr parentName, u32 color = 0);
 
-  //Display information
+  // Display information
   void SetName(cstr name);
-  cstr GetName(){return mName;};
-  u32 GetColor(){return mColor;}
-  void SetColor(u32 newColor){mColor = newColor;};
+  cstr GetName()
+  {
+    return mName;
+  };
+  u32 GetColor()
+  {
+    return mColor;
+  }
+  void SetColor(u32 newColor)
+  {
+    mColor = newColor;
+  };
 
   typedef InListBaseLink<Record>::range RangeType;
-  RangeType GetChildren(){return mChildren.All();}
-  ProfileTime GetTotalTime(){return mTotalTime;};
+  RangeType GetChildren()
+  {
+    return mChildren.All();
+  }
+  ProfileTime GetTotalTime()
+  {
+    return mTotalTime;
+  };
 
-  //Running Average
+  // Running Average
   void Update();
   float SmoothAverage();
   float Average();
@@ -73,8 +84,12 @@ public:
   void EnterRecord(ProfileTime time);
   void Clear();
 
-  Record(const Record&){}
-  void operator=(const Record&){}
+  Record(const Record&)
+  {
+  }
+  void operator=(const Record&)
+  {
+  }
 
   static const uint cSampleCount = 512;
   static uint sSampleIndex;
@@ -85,22 +100,21 @@ public:
   void AverageRunningSample();
 
 private:
-
-  //Display information
+  // Display information
   u32 mColor;
   cstr mName;
 
-  //General measurement
+  // General measurement
   u32 mHits;
   ProfileTime mTotalTime;
   ProfileTime mMaxTime;
 
-  //Running Average
+  // Running Average
   float mSmoothAvg;
   float mInstantAvg;
   ProfileTime mOldTicks;
 
-  //Graph
+  // Graph
   void AddChild(Record* record);
   Record* mParent;
   InListBaseLink<Record> mChildren;
@@ -119,30 +133,28 @@ public:
 
 void PrintProfileGraph();
 
-}//namespace Profile
-}//namespace Zero
+} // namespace Profile
+} // namespace Zero
 
 #define ZPROFILE_ENABLED 1
 
 #if ZPROFILE_ENABLED
 
-#define ProfileScopeFunction() \
-  static Zero::Profile::Record __LocalRecord(__FUNCTION__); \
-  Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+#  define ProfileScopeFunction()                                               \
+    static Zero::Profile::Record __LocalRecord(__FUNCTION__);                  \
+    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#define ProfileScope(name) \
-  static Zero::Profile::Record __LocalRecord(name); \
-  Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+#  define ProfileScope(name)                                                   \
+    static Zero::Profile::Record __LocalRecord(name);                          \
+    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#define ProfileScopeTree(name, parentName, color) \
-  static Zero::Profile::Record __LocalRecord(name, parentName, color); \
-  Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+#  define ProfileScopeTree(name, parentName, color)                            \
+    static Zero::Profile::Record __LocalRecord(name, parentName, color);       \
+    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#define ProfileScopeRecord(recordName) \
-  Zero::Profile::ScopeTimer __ScopedBlock(&recordName);
+#  define ProfileScopeRecord(recordName)                                       \
+    Zero::Profile::ScopeTimer __ScopedBlock(&recordName);
 
 #else
 
-
 #endif
-

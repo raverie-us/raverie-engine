@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SceneGraph.cpp
-/// Declaration of the SceneGraph Resource class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------ SceneGraphMaterial
+//SceneGraphMaterial
 SceneGraphMaterial::SceneGraphMaterial()
 {
   UsageCount = 0;
@@ -25,7 +17,7 @@ void SceneGraphMaterial::Serialize(Serializer& stream)
   SerializeName(Attributes);
 }
 
-//------------------------------------------------------------------------ SceneGraphSource
+//SceneGraphSource
 ZilchDefineType(SceneGraphSource, builder, type)
 {
 }
@@ -48,8 +40,8 @@ void SceneGraphSource::Serialize(Serializer& stream)
 
 void SceneGraphSource::MapNames()
 {
-  forRange(SceneGraphMaterial* mat, Materials.All())
-    MaterialsByName[mat->Name] = mat;
+  forRange(SceneGraphMaterial * mat, Materials.All())
+      MaterialsByName[mat->Name] = mat;
 }
 
 SceneGraphNode::SceneGraphNode()
@@ -82,4 +74,4 @@ void SceneGraphNode::Serialize(Serializer& stream)
   SerializeName(Children);
 }
 
-}
+} // namespace Zero

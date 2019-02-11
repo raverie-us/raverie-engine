@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ColorGradient.cpp
-/// Implementation of the ColorGradient resource.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------------- Color Gradient
 ZilchDefineType(ColorGradient, builder, type)
 {
   ZeroBindDocumented();
@@ -22,7 +13,6 @@ ZilchDefineType(ColorGradient, builder, type)
 /// Constructor.
 ColorGradient::ColorGradient()
 {
-
 }
 
 /// Meta object initialization.
@@ -43,7 +33,6 @@ void ColorGradient::Serialize(Serializer& stream)
 /// Initializes the gradient.
 void ColorGradient::Initialize()
 {
-
 }
 
 /// Inserts a new color into the gradient at the given interpolant value.
@@ -64,11 +53,10 @@ Vec4 ColorGradient::Sample(float t)
   return mGradient.Sample(t);
 }
 
-//------------------------------------------------------- Color Gradient Manager
 ImplementResourceManager(ColorGradientManager, ColorGradient);
 
-ColorGradientManager::ColorGradientManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+ColorGradientManager::ColorGradientManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("ColorGradient", new TextDataFileLoader<ColorGradientManager>());
   DefaultResourceName = "DefaultColorGradient";
@@ -87,4 +75,4 @@ ColorGradient* ColorGradientManager::CreateNewResourceInternal(StringParam name)
   return gradient;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,8 +8,8 @@ String GroupFilterDisplay(CollisionFilter* filter)
 {
   String typeAName = filter->GetTypeADisplayName();
   String typeBName = filter->GetTypeBDisplayName();
-  return String::Format("Filter: (%s / %s)", 
-    typeAName.c_str(), typeBName.c_str());
+  return String::Format(
+      "Filter: (%s / %s)", typeAName.c_str(), typeBName.c_str());
 }
 
 ZilchDefineType(CollisionFilter, builder, type)
@@ -42,7 +37,7 @@ CollisionFilter::~CollisionFilter()
 
 void CollisionFilter::SetPair(ResourceId first, ResourceId second)
 {
-  if(first < second)
+  if (first < second)
     mPair = ResourcePair(first, second);
   else
     mPair = ResourcePair(second, first);
@@ -54,7 +49,7 @@ void CollisionFilter::SetPair(ResourceId first, ResourceId second)
 void CollisionFilter::Serialize(Serializer& stream)
 {
   // We're saving so save the resource's ids
-  if(stream.GetMode() == SerializerMode::Saving)
+  if (stream.GetMode() == SerializerMode::Saving)
   {
     HandleOf<CollisionGroup> group1;
     group1 = CollisionGroupManager::Find(TypeA);
@@ -79,7 +74,8 @@ void CollisionFilter::Serialize(Serializer& stream)
 
   // Serialize our composition of constraint config blocks
   BoundType* selfBoundType = this->ZilchGetDerivedType();
-  CollisionFilterMetaComposition* factory = selfBoundType->Has<CollisionFilterMetaComposition>();
+  CollisionFilterMetaComposition* factory =
+      selfBoundType->Has<CollisionFilterMetaComposition>();
   factory->SerializeArray(stream, mBlocks);
 }
 
@@ -90,26 +86,30 @@ void CollisionFilter::SetDefaults()
 }
 
 CollisionFilterCollisionFlags::Enum CollisionFilter::GetCollisionFlag()
-{  
+{
   // Convert the bitfield to the corresponding enum value
-  if(mFilterFlags.IsSet(FilterFlags::SkipResolution | FilterFlags::SkipDetectingCollision) == false)
+  if (mFilterFlags.IsSet(FilterFlags::SkipResolution |
+                         FilterFlags::SkipDetectingCollision) == false)
     return CollisionFilterCollisionFlags::Resolve;
-  else if(mFilterFlags.IsSet(FilterFlags::SkipDetectingCollision))
+  else if (mFilterFlags.IsSet(FilterFlags::SkipDetectingCollision))
     return CollisionFilterCollisionFlags::SkipDetection;
   else
     return CollisionFilterCollisionFlags::SkipResolution;
 }
 
-void CollisionFilter::SetCollisionFlag(CollisionFilterCollisionFlags::Enum state)
+void CollisionFilter::SetCollisionFlag(
+    CollisionFilterCollisionFlags::Enum state)
 {
   // Convert the enum to the corresponding bit field value
-  mFilterFlags.ClearFlag(FilterFlags::SkipResolution | FilterFlags::SkipDetectingCollision);
-  if(state == CollisionFilterCollisionFlags::SkipDetection)
+  mFilterFlags.ClearFlag(FilterFlags::SkipResolution |
+                         FilterFlags::SkipDetectingCollision);
+  if (state == CollisionFilterCollisionFlags::SkipDetection)
     mFilterFlags.SetFlag(FilterFlags::SkipDetectingCollision);
-  else if(state == CollisionFilterCollisionFlags::SkipResolution)
+  else if (state == CollisionFilterCollisionFlags::SkipResolution)
     mFilterFlags.SetFlag(FilterFlags::SkipResolution);
 
-  // We've change the bitfield states, rebuild the cached data used during runtime
+  // We've change the bitfield states, rebuild the cached data used during
+  // runtime
   mTable->ReconfigureGroups();
 }
 
@@ -136,7 +136,7 @@ CollisionGroup* CollisionFilter::GetCollisionGroupB() const
 String CollisionFilter::GetTypeAName() const
 {
   CollisionGroup* group = CollisionGroupManager::Find(TypeA);
-  if(group != nullptr)
+  if (group != nullptr)
     return group->ResourceIdName;
   return String();
 }
@@ -144,7 +144,7 @@ String CollisionFilter::GetTypeAName() const
 String CollisionFilter::GetTypeBName() const
 {
   CollisionGroup* group = CollisionGroupManager::Find(TypeB);
-  if(group != nullptr)
+  if (group != nullptr)
     return group->ResourceIdName;
   return String();
 }
@@ -152,7 +152,7 @@ String CollisionFilter::GetTypeBName() const
 String CollisionFilter::GetTypeADisplayName() const
 {
   CollisionGroup* group = CollisionGroupManager::Find(TypeA);
-  if(group != nullptr)
+  if (group != nullptr)
     return group->Name;
   return String();
 }
@@ -160,7 +160,7 @@ String CollisionFilter::GetTypeADisplayName() const
 String CollisionFilter::GetTypeBDisplayName() const
 {
   CollisionGroup* group = CollisionGroupManager::Find(TypeB);
-  if(group != nullptr)
+  if (group != nullptr)
     return group->Name;
   return String();
 }
@@ -172,13 +172,15 @@ CollisionFilter* CollisionFilter::Clone() const
   clone->mFilterFlags = mFilterFlags;
 
   // Copy all blocks
-  for(size_t i = 0; i < mBlocks.Size(); ++i)
+  for (size_t i = 0; i < mBlocks.Size(); ++i)
   {
-    // Create a new copy of the same block type by getting the bound type then going
-    // through the meta composition to allocate the block type
+    // Create a new copy of the same block type by getting the bound type then
+    // going through the meta composition to allocate the block type
     BoundType* boundType = mBlocks[i]->ZilchGetDerivedType();
-    CollisionFilterMetaComposition* metaComposition = boundType->HasInherited<CollisionFilterMetaComposition>();
-    HandleOf<CollisionFilterBlock> newBlockHandle = metaComposition->AllocateBlock(boundType, false);
+    CollisionFilterMetaComposition* metaComposition =
+        boundType->HasInherited<CollisionFilterMetaComposition>();
+    HandleOf<CollisionFilterBlock> newBlockHandle =
+        metaComposition->AllocateBlock(boundType, false);
     CollisionFilterBlock* newBlock = newBlockHandle;
     // Deep copy the block
     *newBlock = *mBlocks[i];
@@ -204,18 +206,19 @@ HandleOf<CollisionFilterBlock> CollisionFilter::GetById(BoundType* typeId)
 {
   // There's no easy way to turn the id to a block without a linear search,
   // luckily there aren't many block types so it doesn't matter now
-  for(uint i = 0; i < mBlocks.Size(); ++i)
+  for (uint i = 0; i < mBlocks.Size(); ++i)
   {
     // See if this block has the type id we want
     CollisionFilterBlock* block = mBlocks[i];
-    if(ZilchVirtualTypeId(block) == typeId)
+    if (ZilchVirtualTypeId(block) == typeId)
       return block;
   }
-  
+
   return Handle();
 }
 
-void CollisionFilter::Add(const HandleOf<CollisionFilterBlock>& blockHandle, int index)
+void CollisionFilter::Add(const HandleOf<CollisionFilterBlock>& blockHandle,
+                          int index)
 {
   CollisionFilterBlock* block = blockHandle;
   // Add the block to the filter
@@ -231,9 +234,9 @@ bool CollisionFilter::Remove(const HandleOf<CollisionFilterBlock>& blockHandle)
   CollisionFilterBlock* block = blockHandle;
   // Try to find the index of this block
   uint index = mBlocks.FindIndex(block);
-  if(index >= mBlocks.Size())
+  if (index >= mBlocks.Size())
     return false;
-  
+
   // If we found it then remove the block, also make sure to clear
   // the flag on the filter used for quick block checking
   mBlocks.EraseAt(index);
@@ -252,4 +255,4 @@ bool CollisionFilter::operator==(const CollisionFilter& rhs) const
   return mPair == rhs.mPair;
 }
 
-}//namespace Zero
+} // namespace Zero

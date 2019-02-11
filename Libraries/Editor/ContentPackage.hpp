@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentPackage.hpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -24,7 +17,9 @@ struct ContentPackageEntry
 
 struct ContentPackageListing
 {
-  ContentPackageListing(){}
+  ContentPackageListing()
+  {
+  }
   ~ContentPackageListing();
 
   /// File or source folder.
@@ -40,15 +35,20 @@ struct ContentPackageListing
 };
 
 // Load the listing of files contained within a resource package file
-void LoadContentPackageListing(ContentPackageListing& listing, StringParam sourcePackageFile);
+void LoadContentPackageListing(ContentPackageListing& listing,
+                               StringParam sourcePackageFile);
 
 // Export give content listing to the destination package file
-void ExportContentPackageListing(ContentPackageListing& listing, StringParam destPackageFile);
+void ExportContentPackageListing(ContentPackageListing& listing,
+                                 StringParam destPackageFile);
 
 // Build content pPackage listing from current loaded content library
-void BuildContentPackageListingFromLibrary(ContentPackageListing& listing, ContentLibrary* library);
+void BuildContentPackageListingFromLibrary(ContentPackageListing& listing,
+                                           ContentLibrary* library);
 
 // Import a content package listing from a sourcePackageFile
-void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary* library, StringParam sourcePackageFile);
+void ImportContentPackageListing(ContentPackageListing& listing,
+                                 ContentLibrary* library,
+                                 StringParam sourcePackageFile);
 
-}//namespace Zero
+} // namespace Zero

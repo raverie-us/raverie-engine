@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file FindDialog.hpp
-/// Declaration of the FindDialog class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,7 +13,6 @@ class Label;
 class DocumentEditor;
 class ScriptEditor;
 
-
 DeclareEnum2(EolDirection, Forwards, Backwards);
 DeclareEnum2(Direction, Down, Up);
 
@@ -30,8 +21,8 @@ class FindTextDialog : public Composite
 {
 public:
   // Type-defines
-  typedef FindTextDialog            ZilchSelf;
-  typedef Array<String>             StrArray;
+  typedef FindTextDialog ZilchSelf;
+  typedef Array<String> StrArray;
   typedef ContainerSource<StrArray> StrSource;
 
   // Constructor
@@ -64,7 +55,6 @@ public:
   static FindTextDialog* Instance;
 
 private:
-
   // A helper function for default modes
   void DefaultLookIn();
 
@@ -74,12 +64,14 @@ private:
   // Occurs when we change the character mode
   void CharacterModeChanged(ObjectEvent* event);
 
-  // This function tracks if we press enter/return in either the find/replace text boxes
+  // This function tracks if we press enter/return in either the find/replace
+  // text boxes
   void SubmitTextBox(KeyboardEvent* event, TextBox* textBox);
   void SubmitSearchOnFindReturn(KeyboardEvent* event);
   void SubmitSearchOnReplaceReturn(KeyboardEvent* event);
 
-  // when the find textbox is changed, this is called and will check for invalid symbols
+  // when the find textbox is changed, this is called and will check for invalid
+  // symbols
   void CheckForInvalidInput(ObjectEvent* event);
 
   // Occurs when we click the go button
@@ -90,14 +82,14 @@ private:
   {
     IntrusiveLink(SearchResult, link);
 
-    size_t  Line;
-    String  WholeLine;
-    size_t  PositionBegin;
-    size_t  PositionEnd;
+    size_t Line;
+    String WholeLine;
+    size_t PositionBegin;
+    size_t PositionEnd;
   };
 
   // Tells us that a given cursor position is not within a region
-  static const size_t CursorNotInRegion = (size_t) -1;
+  static const size_t CursorNotInRegion = (size_t)-1;
 
   // Defines a region of text and where it comes from
   struct SearchRegion
@@ -107,13 +99,13 @@ private:
     // Constructor
     SearchRegion();
 
-    String                FileName;
-    DocumentEditor*       Editor;
-    DocumentResource*     Resource;
-    StringRange           RegionText;
-    StringRange           WholeText;
-    InList<SearchResult>  Results;
-    size_t                CursorPos;
+    String FileName;
+    DocumentEditor* Editor;
+    DocumentResource* Resource;
+    StringRange RegionText;
+    StringRange WholeText;
+    InList<SearchResult> Results;
+    size_t CursorPos;
   };
 
   // Get the search regions based on the options given
@@ -143,14 +135,18 @@ private:
   // Perform the actual searching, and fill in the context with the results
   void DoSearchAndGetContext();
 
-  // Get the find regex (this may be different than the find text, due to options)
+  // Get the find regex (this may be different than the find text, due to
+  // options)
   String GetFindRegex();
 
   // Advance an input string to the end of a line
-  static const char* MoveToEol(StringRange wholeString, const char* currentPosition, EolDirection::Enum direction);
+  static const char* MoveToEol(StringRange wholeString,
+                               const char* currentPosition,
+                               EolDirection::Enum direction);
 
   // Get the entire line as a string range
-  static StringRange GetWholeLine(StringRange wholeString, const char* currentPosition);
+  static StringRange GetWholeLine(StringRange wholeString,
+                                  const char* currentPosition);
 
   // Count the number of lines in a given string range
   static size_t CountLines(StringRange input);
@@ -166,7 +162,8 @@ private:
   typename T::pointer GetNext(T& list)
   {
     // If we're searching downward... (or we don't care about search direction)
-    if (mDirection->GetActive() == false || mDirection->GetSelectedItem() == Direction::Down)
+    if (mDirection->GetActive() == false ||
+        mDirection->GetSelectedItem() == Direction::Down)
     {
       return &list.Front();
     }
@@ -182,7 +179,8 @@ private:
   void PopNext(T& list)
   {
     // If we're searching downward... (or we don't care about search direction)
-    if (mDirection->GetActive() == false || mDirection->GetSelectedItem() == Direction::Down)
+    if (mDirection->GetActive() == false ||
+        mDirection->GetSelectedItem() == Direction::Down)
     {
       return list.PopFront();
     }
@@ -193,9 +191,8 @@ private:
     }
   }
 
-
 private:
-  //Helpers
+  // Helpers
 
   // Add current document region
   bool AddCurrentDocument();
@@ -216,12 +213,13 @@ private:
     ~Context();
 
     // Members
-    InList<SearchRegion>  Regions;
-    size_t                TotalResults;
-    Regex                 FindRegex;
+    InList<SearchRegion> Regions;
+    size_t TotalResults;
+    Regex FindRegex;
   };
 
-  // Store the context (null if the context was ever cleared and needs to be rebuilt)
+  // Store the context (null if the context was ever cleared and needs to be
+  // rebuilt)
   Context* mContext;
 
   // Are we in all mode?
@@ -230,7 +228,7 @@ private:
   // Are we in replace mode?
   bool mReplaceMode;
 
-  // What we want to find 
+  // What we want to find
   TextBox* mFind;
 
   // Store the replace label
@@ -241,13 +239,14 @@ private:
 
   Status mFindTextBoxStatus;
 
-  // What we want to replace 
+  // What we want to replace
   TextBox* mReplace;
 
   // Do the action
   TextButton* mGo;
 
-  // What search mode are we in? (find next, find all, replace next, replace all...)
+  // What search mode are we in? (find next, find all, replace next, replace
+  // all...)
   ComboBox* mSearchMode;
   CStrSourceSpaced mSearchModeSource;
 
@@ -262,14 +261,16 @@ private:
   ComboBox* mDirection;
   CStrSourceStd mDirectionSource;
 
-  // Whether we're normally searching, searching with extended characters, or using regular expressions
+  // Whether we're normally searching, searching with extended characters, or
+  // using regular expressions
   ComboBox* mCharacterMode;
   StringSource mCharacterModeArray;
 
   // Store the regex-flavor label
   Label* mRegexFlavorLabel;
 
-  // The flavor of regular expression that we're using (only available when char-mode is regex)
+  // The flavor of regular expression that we're using (only available when
+  // char-mode is regex)
   ComboBox* mRegexFlavor;
   CStrSourceStd mRegexFlavorSource;
 
@@ -296,8 +297,8 @@ public:
   // Occurs when we click the go button
   void StartSearch(ObjectEvent* event);
   void AddCurrentDocument();
-private:
 
+private:
   // The find script
   ScriptEditor* mFind;
 
@@ -311,4 +312,4 @@ private:
   TextCheckBox* mRootObjectsOnly;
 };
 
-}//namespace Zero
+} // namespace Zero

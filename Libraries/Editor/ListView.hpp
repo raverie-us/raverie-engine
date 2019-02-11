@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Ryan Edgemon
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,7 +7,6 @@ namespace Zero
 class ListRow;
 class ListColumnHeader;
 
-//----------------------------------------------------------------- ListView ---
 class ListView : public Composite
 {
 public:
@@ -22,36 +16,36 @@ public:
   static const float cResizerWidth;
 
   ListView(Composite* parent);
-  ~ListView( );
+  ~ListView();
 
-  void UpdateTransform( ) override;
-  bool TakeFocusOverride( ) override;
+  void UpdateTransform() override;
+  bool TakeFocusOverride() override;
 
-  void ClearAllRows( );
+  void ClearAllRows();
   ListRow* FindRowByIndex(DataIndex& index);
 
   void SetFormat(TreeFormatting* format);
   void SetDataSource(DataSource* dataSource);
 
   /// Updates the transform of each column.
-  void UpdateColumnTransforms( );
+  void UpdateColumnTransforms();
   /// Creates / Updates the headers.
-  void UpdateHeaders( );
+  void UpdateHeaders();
   /// Creates / Updates the separators.
-  void UpdateSeparators( );
+  void UpdateSeparators();
   /// Rebuild Separators.
-  void UpdateColumnSeparators( );
+  void UpdateColumnSeparators();
   /// Calculate the new text widget sizes after updating columns and headers.
-  void UpdateTextUI( );
+  void UpdateTextUI();
   /// After a view-rebuild calculate the new view size.
-  void UpdateSize( );
+  void UpdateSize();
   /// Expands all UI of the last row on the y-axis by 1.  Used when the
   /// ListView's final size is odd on the y-axis.
-  void RedoLastRowUI( );
-
+  void RedoLastRowUI();
 
 public:
-  /// Formatting option to fit each column to the max-row's text size in that column.
+  /// Formatting option to fit each column to the max-row's text size in that
+  /// column.
   Array<bool> mFitToText;
   /// Headers for each column
   Array<ListColumnHeader*> mHeaders;
@@ -77,7 +71,6 @@ public:
   HashMap<u64, ListRow*> mRowMap;
 };
 
-//------------------------------------------------------------------ ListRow ---
 class ListRow : public TreeBase
 {
 public:
@@ -87,22 +80,22 @@ public:
   static const float cRowColor[];
 
   ListRow(ListView* listView, ListRow* rowParent, DataEntry* entry);
-  ~ListRow( );
+  ~ListRow();
 
   /// Compositions Interface
-  void OnDestroy( ) override;
+  void OnDestroy() override;
 
-  bool IsRoot( );
+  bool IsRoot();
 
   /// Widget interface
-  void UpdateTransform( ) override;
+  void UpdateTransform() override;
   void UpdateColumnsTransform();
 
   void RecursiveDestroy();
-  void DestroyChildren( );
+  void DestroyChildren();
   void RebuildChildren();
 
-  void Refresh( );
+  void Refresh();
 
   void UpdateBgColor(uint index);
 
@@ -124,7 +117,6 @@ public:
   Array<Label*> mColumnContent;
 };
 
-//--------------------------------------------------------- ListColumnHeader ---
 class ListColumnHeader : public Composite
 {
 public:
@@ -137,7 +129,7 @@ public:
 
   void SetText(StringParam name);
 
-  void UpdateTransform( );
+  void UpdateTransform();
 
 public:
   Element* mBackground;
@@ -146,5 +138,4 @@ public:
   ListView* mList;
 };
 
-
-}  // namespace Zero
+} // namespace Zero

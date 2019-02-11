@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Triangulator.hpp
-/// Interface for Seidel's triangulation algorithm.
-/// 
-/// Authors: Killian Koenig
-/// Copyright 2013, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Geometry
@@ -47,7 +39,7 @@ namespace Geometry
 //              - lie in the vertex array
 // indices - resulting index buffer
 
-DeclareEnum4(FillRule,  NonZeroWinding, EvenOddWinding, All, PositiveWinding);
+DeclareEnum4(FillRule, NonZeroWinding, EvenOddWinding, All, PositiveWinding);
 
 bool Triangulate(const Zero::Array<Vec2>& vertices,
                  const Zero::Array<uint>& contourSizes,
@@ -55,15 +47,15 @@ bool Triangulate(const Zero::Array<Vec2>& vertices,
                  FillRule::Type rule = FillRule::EvenOddWinding);
 
 // Wrapper for easy of use on single contour shapes
-bool Triangulate(const Zero::Array<Vec2>& vertices, 
-                 Zero::Array<uint>* indices);
+bool Triangulate(const Zero::Array<Vec2>& vertices, Zero::Array<uint>* indices);
 
-////////////////////////////////////////////////////////////////////////////////
-//  
+//
 //  Internal (for debugging)
 //
-////////////////////////////////////////////////////////////////////////////////  
 
-bool BuildSet(const Zero::TrapezoidMap& map, Zero::Array<uint>* indices, s32 seed, FillRule::Type rule);
+bool BuildSet(const Zero::TrapezoidMap& map,
+              Zero::Array<uint>* indices,
+              s32 seed,
+              FillRule::Type rule);
 
-} // Geometry
+} // namespace Geometry

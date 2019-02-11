@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Reals.hpp"
@@ -18,11 +13,10 @@ typedef const Vector2& Vec2Param;
 typedef Vector2& Vec2Ref;
 typedef Vector2* Vec2Ptr;
 
-//--------------------------------------------------------------------- Vector 2
 /// Two dimensional vector.
 struct ZeroShared Vector2
 {
-  Vector2() {};
+  Vector2(){};
   explicit Vector2(real x, real y);
   explicit Vector2(real xy);
   explicit Vector2(ConstRealPointer data);
@@ -52,9 +46,9 @@ struct ZeroShared Vector2
   // Comparison operators
   bool operator==(Vec2Param rhs) const;
   bool operator!=(Vec2Param rhs) const;
-  BoolVec2 operator< (Vec2Param rhs) const;
+  BoolVec2 operator<(Vec2Param rhs) const;
   BoolVec2 operator<=(Vec2Param rhs) const;
-  BoolVec2 operator> (Vec2Param rhs) const;
+  BoolVec2 operator>(Vec2Param rhs) const;
   BoolVec2 operator>=(Vec2Param rhs) const;
 
   /// Set all of elements to 0.
@@ -63,7 +57,7 @@ struct ZeroShared Vector2
   void Set(real x, real y);
   /// Set all elements to the same value.
   void Splat(real value);
-  
+
   /// Compute the dot product of two vectors.
   static real Dot(Vec2Param lhs, Vec2Param rhs);
   /// Equivalent to Cross(Vec3(lhs.x, lhs.y, 0), Vec3(rhs.x, rhs.y, 0))
@@ -84,9 +78,11 @@ struct ZeroShared Vector2
   static real Normalize(Vec2Ref value);
   /// Calculate and return a unit-length copy of the given vector.
   static Vector2 Normalized(Vec2Param value);
-  /// Try to normalize the given vector if possible. Safeguards against zero divisions.
+  /// Try to normalize the given vector if possible. Safeguards against zero
+  /// divisions.
   static real AttemptNormalize(Vec2Ref value);
-  /// Attempts to return a normalized given vector. Safeguards against zero divisions.
+  /// Attempts to return a normalized given vector. Safeguards against zero
+  /// divisions.
   static Vector2 AttemptNormalized(Vec2Param value);
 
   /// Fused multiply add:  v0 + v1 * scalar
@@ -101,10 +97,13 @@ struct ZeroShared Vector2
   /// Returns a vector with the component-wise max between two vectors.
   static Vector2 Max(Vec2Param lhs, Vec2Param rhs);
   /// Returns a vector where each component is clamped between min and max.
-  static Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue) ;
+  static Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue);
   /// Same as clamp, however it fills out whether or not anything was clamped.
   /// Useful when an assert message should be shown if anything was clamped.
-  static Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped);
+  static Vector2 DebugClamp(Vec2Param value,
+                            Vec2Param minValue,
+                            Vec2Param maxValue,
+                            bool& wasClamped);
 
   /// Return a copy of this vector with each element has been floored.
   static Vector2 Floor(Vec2Param value);
@@ -115,16 +114,19 @@ struct ZeroShared Vector2
   /// Return a copy of this vector with each element has been rounded.
   static Vector2 Round(Vec2Param value);
 
-  /// Linearly interpolate between the two vectors, the t-value is restricted to [0, 1].
+  /// Linearly interpolate between the two vectors, the t-value is restricted to
+  /// [0, 1].
   static Vector2 Lerp(Vec2Param start, Vec2Param end, real tValue);
-  /// Spherical linear interpolation. Interpolates along the surface of the unit sphere.
-  /// Normalizes input, checks for degenerate/ambiguous cases.
+  /// Spherical linear interpolation. Interpolates along the surface of the unit
+  /// sphere. Normalizes input, checks for degenerate/ambiguous cases.
   static Vector2 Slerp(Vec2Param start, Vec2Param end, real tValue);
-  /// Same as Slerp except this function assumes the user has deal with degenerate/ambiguous cases.
-  /// Used when multiple calls are made to Slerp and the user wants to fix degeneracies once ahead of time.
+  /// Same as Slerp except this function assumes the user has deal with
+  /// degenerate/ambiguous cases. Used when multiple calls are made to Slerp and
+  /// the user wants to fix degeneracies once ahead of time.
   static Vector2 SlerpFast(Vec2Param start, Vec2Param end, real tValue);
-  /// Same as Slerp except this function does not normalize the input vectors. This is the 'pure' mathematical
-  /// Slerp function. This effectively traces along an ellipse defined by the two input vectors.
+  /// Same as Slerp except this function does not normalize the input vectors.
+  /// This is the 'pure' mathematical Slerp function. This effectively traces
+  /// along an ellipse defined by the two input vectors.
   static Vector2 SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue);
 
   /// Projects the input vector onto the given vector (must be normalized)
@@ -132,15 +134,20 @@ struct ZeroShared Vector2
   /// Projects the input vector onto a plane (the normal must be normalized)
   static Vector2 ProjectOnPlane(Vec2Param input, Vec2Param planeNormal);
   /// Calculates the reflection vector across a given vector.
-  static Vector2 ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector);
+  static Vector2 ReflectAcrossVector(Vec2Param input,
+                                     Vec2Param normalizedVector);
   /// Calculates the reflection vector across a given plane.
   static Vector2 ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal);
-  /// Calculates the refraction vector through a plane given a certain index of refraction.
-  static Vector2 Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex);
+  /// Calculates the refraction vector through a plane given a certain index of
+  /// refraction.
+  static Vector2 Refract(Vec2Param input,
+                         Vec2Param planeNormal,
+                         real refractionIndex);
   /// Get the angle between the two vectors in radians.
   static real AngleBetween(Vec2Param a, Vec2Param b);
 
-  /// Returns if all elements of the two vectors are within epsilon of each other
+  /// Returns if all elements of the two vectors are within epsilon of each
+  /// other
   static bool ApproximatelyEqual(Vec2Param lhs, Vec2Param rhs, real epsilon);
   /// Checks to see if the values of this vector's elements are usable.
   bool Valid() const;
@@ -162,10 +169,11 @@ struct ZeroShared Vector2
   /// Calculate and return a unit-length copy of this vector.
   Vector2 Normalized() const;
   /// Attempt to give this vector a length of 1, but checks if it's possible.
-  /// Instead of crashing, will return 0 if the vector was not able to be 
+  /// Instead of crashing, will return 0 if the vector was not able to be
   /// normalized.
   real AttemptNormalize();
-  /// Attempts to return a normalized copy of this vector. Safeguards against zero divisions.
+  /// Attempts to return a normalized copy of this vector. Safeguards against
+  /// zero divisions.
   Vector2 AttemptNormalized() const;
 
   /// Projects this vector onto the given vector (must be normalized)
@@ -176,14 +184,14 @@ struct ZeroShared Vector2
   Vector2 ReflectAcrossVector(Vec2Param normalizedVector) const;
   /// Calculates the reflection vector across a given plane.
   Vector2 ReflectAcrossPlane(Vec2Param planeNormal) const;
-  /// Calculates the refraction vector through a plane given a certain index of refraction.
+  /// Calculates the refraction vector through a plane given a certain index of
+  /// refraction.
   Vector2 Refract(Vec2Param planeNormal, real refractionIndex) const;
 
   /// Flips this vector so it's pointing in the opposite direction.
   Vec2Ref Negate();
 
-  union
-  {
+  union {
     struct
     {
       real x, y;
@@ -219,9 +227,11 @@ ZeroShared real DistanceSq(Vec2Param lhs, Vec2Param rhs);
 ZeroShared real Normalize(Vec2Ref value);
 /// Calculate and return a unit-length copy of the given vector.
 ZeroShared Vector2 Normalized(Vec2Param value);
-/// Try to normalize the given vector if possible. Safeguards against zero divisions.
+/// Try to normalize the given vector if possible. Safeguards against zero
+/// divisions.
 ZeroShared real AttemptNormalize(Vec2Ref value);
-/// Attempts to return a normalized given vector. Safeguards against zero divisions.
+/// Attempts to return a normalized given vector. Safeguards against zero
+/// divisions.
 ZeroShared Vector2 AttemptNormalized(Vec2Param value);
 
 /// Fused multiply add:  v0 + v1 * scalar
@@ -236,10 +246,15 @@ ZeroShared Vector2 Min(Vec2Param lhs, Vec2Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
 ZeroShared Vector2 Max(Vec2Param lhs, Vec2Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector2 Clamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue);
+ZeroShared Vector2 Clamp(Vec2Param value,
+                         Vec2Param minValue,
+                         Vec2Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector2 DebugClamp(Vec2Param value, Vec2Param minValue, Vec2Param maxValue, bool& wasClamped);
+ZeroShared Vector2 DebugClamp(Vec2Param value,
+                              Vec2Param minValue,
+                              Vec2Param maxValue,
+                              bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
 ZeroShared Vector2 Floor(Vec2Param value);
@@ -250,32 +265,40 @@ ZeroShared Vector2 Truncate(Vec2Param value);
 /// Return a copy of this vector with each element has been rounded.
 ZeroShared Vector2 Round(Vec2Param value);
 
-/// Linearly interpolate between the two vectors, the t-value is restricted to [0, 1].
+/// Linearly interpolate between the two vectors, the t-value is restricted to
+/// [0, 1].
 ZeroShared Vector2 Lerp(Vec2Param start, Vec2Param end, real tValue);
-/// Spherical linear interpolation. Interpolates along the surface of the unit sphere.
-/// Normalizes input, checks for degenerate/ambiguous cases.
+/// Spherical linear interpolation. Interpolates along the surface of the unit
+/// sphere. Normalizes input, checks for degenerate/ambiguous cases.
 ZeroShared Vector2 Slerp(Vec2Param start, Vec2Param end, real tValue);
-/// Same as Slerp except this function assumes the user has deal with degenerate/ambiguous cases.
-/// Used when multiple calls are made to Slerp and the user wants to fix degeneracies once ahead of time.
+/// Same as Slerp except this function assumes the user has deal with
+/// degenerate/ambiguous cases. Used when multiple calls are made to Slerp and
+/// the user wants to fix degeneracies once ahead of time.
 ZeroShared Vector2 SlerpFast(Vec2Param start, Vec2Param end, real tValue);
-/// Same as Slerp except this function does not normalize the input vectors. This is the 'pure' mathematical
-/// Slerp function. This effectively traces along an ellipse defined by the two input vectors.
-ZeroShared Vector2 SlerpUnnormalized(Vec2Param start, Vec2Param end, real tValue);
+/// Same as Slerp except this function does not normalize the input vectors.
+/// This is the 'pure' mathematical Slerp function. This effectively traces
+/// along an ellipse defined by the two input vectors.
+ZeroShared Vector2 SlerpUnnormalized(Vec2Param start,
+                                     Vec2Param end,
+                                     real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
 ZeroShared Vector2 ProjectOnVector(Vec2Param input, Vec2Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
 ZeroShared Vector2 ProjectOnPlane(Vec2Param input, Vec2Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector2 ReflectAcrossVector(Vec2Param input, Vec2Param normalizedVector);
+ZeroShared Vector2 ReflectAcrossVector(Vec2Param input,
+                                       Vec2Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
 ZeroShared Vector2 ReflectAcrossPlane(Vec2Param input, Vec2Param planeNormal);
-/// Calculates the refraction vector through a plane given a certain index of refraction.
-ZeroShared Vector2 Refract(Vec2Param input, Vec2Param planeNormal, real refractionIndex);
+/// Calculates the refraction vector through a plane given a certain index of
+/// refraction.
+ZeroShared Vector2 Refract(Vec2Param input,
+                           Vec2Param planeNormal,
+                           real refractionIndex);
 /// Get the angle between the two vectors in radians.
 ZeroShared real AngleBetween(Vec2Param a, Vec2Param b);
 
-//-------------------------------------------------------------------Legacy
 
 /// Clamps each component of a vector between min/max.
 ZeroShared void Clamp(Vec2Ptr vec, real min, real max);
@@ -286,4 +309,4 @@ ZeroShared void Negate(Vec2Ptr vec);
 /// Returns a vector pointing in the opposite direction of the given vector.
 ZeroShared Vector2 Negated(Vec2Param vec);
 
-}// namespace Math
+} // namespace Math

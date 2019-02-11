@@ -1,48 +1,52 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-//**************************************************************************************************
-inline Vec2 Align(TextAlign::Enum textAlignement, Vec2& cur, float textOnLineSize, float lineSize, float scale)
+inline Vec2 Align(TextAlign::Enum textAlignement,
+                  Vec2& cur,
+                  float textOnLineSize,
+                  float lineSize,
+                  float scale)
 {
   float extraSpaceOnLine = lineSize - textOnLineSize;
   switch (textAlignement)
   {
-    case TextAlign::Right: return Vec2(cur.x + extraSpaceOnLine, cur.y);
-    case TextAlign::Center: return Vec2(cur.x + Snap(extraSpaceOnLine * 0.5f, scale), cur.y);
-    case TextAlign::Left: // default
-    default: return cur;
+  case TextAlign::Right:
+    return Vec2(cur.x + extraSpaceOnLine, cur.y);
+  case TextAlign::Center:
+    return Vec2(cur.x + Snap(extraSpaceOnLine * 0.5f, scale), cur.y);
+  case TextAlign::Left: // default
+  default:
+    return cur;
   }
 }
 
-//**************************************************************************************************
 inline StringRange SkipRestOfLine(StringRange range)
 {
-  while(!range.Empty())
+  while (!range.Empty())
   {
-    //Check for '\r'
-    if(range.Front() == '\r' )
+    // Check for '\r'
+    if (range.Front() == '\r')
     {
       range.PopFront();
-      //Check for new line '\r\n'
-      if(!range.Empty() && range.Front() == '\n')
+      // Check for new line '\r\n'
+      if (!range.Empty() && range.Front() == '\n')
         range.PopFront();
       return range;
     }
 
-    //Check for '\n'
-    if(range.Front() == '\n')
+    // Check for '\n'
+    if (range.Front() == '\n')
     {
       range.PopFront();
       return range;
     }
 
-    //Eat whitespace
-    if(IsSpace(range.Front()))
+    // Eat whitespace
+    if (IsSpace(range.Front()))
       range.PopFront();
     else
       return range;
@@ -51,9 +55,15 @@ inline StringRange SkipRestOfLine(StringRange range)
   return range;
 }
 
-//**************************************************************************************************
 template <typename FontProcessor>
-void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum align, Vec2 pixelScale, Vec2 textAreaSize, bool clipText = false)
+void AddTextRange(FontProcessor& processor,
+                  RenderFont* font,
+                  StringRange text,
+                  Vec2 textStart,
+                  TextAlign::Enum align,
+                  Vec2 pixelScale,
+                  Vec2 textAreaSize,
+                  bool clipText = false)
 {
   String displayText(text);
   if (clipText)
@@ -64,7 +74,8 @@ void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, 
       if (align == TextAlign::Right)
         textStart.x = Math::Round(textAreaSize.x - sizeOfCharacters);
       else if (align == TextAlign::Center)
-        textStart.x = Math::Round(textAreaSize.x * 0.5f) - (sizeOfCharacters * 0.5f);
+        textStart.x =
+            Math::Round(textAreaSize.x * 0.5f) - (sizeOfCharacters * 0.5f);
     }
     else
     {
@@ -84,7 +95,7 @@ void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, 
 
   Vec2 pos = textStart;
 
-  forRange (Rune current, displayText.All())
+  forRange(Rune current, displayText.All())
   {
     RenderRune& r = font->GetRenderRune(current);
 
@@ -97,16 +108,21 @@ void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, 
   }
 }
 
-//**************************************************************************************************
 template <typename FontProcessor>
-Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum textAlign, Vec2 pixelScale, Vec2 textAreaSize)
+Vec2 ProcessTextRange(FontProcessor& processor,
+                      RenderFont* font,
+                      StringRange text,
+                      Vec2 textStart,
+                      TextAlign::Enum textAlign,
+                      Vec2 pixelScale,
+                      Vec2 textAreaSize)
 {
   Vec2 t = textStart;
 
   float lineSize = textAreaSize.x;
   float lineHeight = font->mLineHeight * pixelScale.y;
   float maxLineWidth = 0.0f;
-  while(!text.Empty())
+  while (!text.Empty())
   {
     // Clip Text at bottom
     if (Math::Abs(t.y + lineHeight - textStart.y) > textAreaSize.y)
@@ -115,7 +131,8 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
     uint charactersLeft = text.ComputeRuneCount();
 
     // Get number of characters till line end or new line.
-    uint charactersTilLineEnd = font->GetPosition(text, lineSize, pixelScale.x, TextRounding::LastCharacter);
+    uint charactersTilLineEnd = font->GetPosition(
+        text, lineSize, pixelScale.x, TextRounding::LastCharacter);
 
     if (charactersTilLineEnd >= charactersLeft)
     {
@@ -123,7 +140,13 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
       float textSize = font->MeasureText(text, pixelScale.x).x;
       maxLineWidth = Math::Max(maxLineWidth, textSize);
       Vec2 textStart = Align(textAlign, t, textSize, lineSize, pixelScale.x);
-      AddTextRange(processor, font, text, textStart, textAlign, pixelScale, textAreaSize);
+      AddTextRange(processor,
+                   font,
+                   text,
+                   textStart,
+                   textAlign,
+                   pixelScale,
+                   textAreaSize);
       // No more text to render
       text = StringRange();
     }
@@ -134,11 +157,11 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
       uint charactersToDraw = charactersTilLineEnd;
       StringIterator toDraw = text.Begin() + charactersToDraw;
       // Try to find a space to break the line
-      while(toDraw.Data() > text.Data() && !IsSpace(toDraw.ReadCurrentRune()))
+      while (toDraw.Data() > text.Data() && !IsSpace(toDraw.ReadCurrentRune()))
         --toDraw;
 
       // no white space found for split, just chop at last valid character
-      if(toDraw.Data() == text.Data())
+      if (toDraw.Data() == text.Data())
         toDraw = text.Begin() + charactersTilLineEnd;
 
       // Get spit text
@@ -148,7 +171,13 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
       maxLineWidth = Math::Max(maxLineWidth, textSize);
       Vec2 textStart = Align(textAlign, t, textSize, lineSize, pixelScale.x);
 
-      AddTextRange(processor, font, rangeToDraw, textStart, textAlign, pixelScale, textAreaSize);
+      AddTextRange(processor,
+                   font,
+                   rangeToDraw,
+                   textStart,
+                   textAlign,
+                   pixelScale,
+                   textAreaSize);
 
       // build a range of what is left to draw
       text = StringRange(rangeToDraw.End(), text.End());
@@ -157,7 +186,7 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
       text = SkipRestOfLine(text);
     }
 
-    //Move down a line and continue
+    // Move down a line and continue
     t.y += font->mLineHeight * pixelScale.y;
   }
 
@@ -168,7 +197,9 @@ Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange te
 class FontProcessor
 {
 public:
-  FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor);
+  FontProcessor(RenderQueues* renderQueues,
+                ViewNode* viewNode,
+                Vec4 vertexColor);
   void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale);
 
   RenderQueues* mRenderQueues;
@@ -200,7 +231,9 @@ public:
 class FontProcessorNoRender
 {
 public:
-  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale) {}
+  void ProcessRenderRune(RenderRune& rune, Vec2 position, Vec2 pixelScale)
+  {
+  }
 };
 
 } // namespace Zero

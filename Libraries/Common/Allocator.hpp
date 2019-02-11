@@ -1,23 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Allocator.hpp
-/// Declaration of the  Allocator interface and the Default Allocator.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 #ifndef UseMemoryGraph
-#define UseMemoryGraph 1
+#  define UseMemoryGraph 1
 #endif
 
 #if UseMemoryGraph
 
-#include "Graph.hpp"
-#include "Heap.hpp"
+#  include "Graph.hpp"
+#  include "Heap.hpp"
 
 #else
 
@@ -41,16 +33,25 @@ public:
   }
 };
 
-//Default allocator of Standard Memory. This allocator
-//is used by default for all the containers.
+// Default allocator of Standard Memory. This allocator
+// is used by default for all the containers.
 class ZeroShared DefaultAllocator : public StandardMemory
 {
 public:
-  enum{ cAlignment = 4 };
-  void* Allocate(size_t numberOfBytes) { return zAllocate(numberOfBytes); };
-  void Deallocate(void* ptr, size_t numberOfBytes) { zDeallocate(ptr); }
+  enum
+  {
+    cAlignment = 4
+  };
+  void* Allocate(size_t numberOfBytes)
+  {
+    return zAllocate(numberOfBytes);
+  };
+  void Deallocate(void* ptr, size_t numberOfBytes)
+  {
+    zDeallocate(ptr);
+  }
 };
 
-}//namespace Zero
+} // namespace Zero
 
 #endif // UseMemoryGraph

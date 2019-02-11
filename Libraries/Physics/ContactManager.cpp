@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,8 +10,9 @@ Memory::Pool* sContactPool = nullptr;
 
 ContactManager::ContactManager()
 {
-  if(sContactPool == nullptr)
-    sContactPool = new Memory::Pool("Contacts", Memory::GetNamedHeap("Physics"), sizeof(Contact), 1000);
+  if (sContactPool == nullptr)
+    sContactPool = new Memory::Pool(
+        "Contacts", Memory::GetNamedHeap("Physics"), sizeof(Contact), 1000);
   mContactPool = sContactPool;
   mSpace = nullptr;
 }
@@ -38,7 +34,7 @@ Contact* ContactManager::AddManifold(Manifold& manifold)
 
   Contact* contact = ContactAlreadyExistsNew(&manifold);
   // If the contact didn't already exist, create it
-  if(!contact)
+  if (!contact)
   {
     contact = mContactPool->AllocateType<Contact>();
 
@@ -50,12 +46,12 @@ Contact* ContactManager::AddManifold(Manifold& manifold)
 
     // If it was not valid, then make it not active so it doesn't resolve,
     // but it will persist so collision events will work properly.
-    if(!valid)
+    if (!valid)
       contact->SetActive(false);
 
     // Can't change state in the middle of looping, otherwise broadphase
     // can get false positives due to order dependency on contact adding.
-    
+
     eventManager->BatchCollisionStartedEvent(contact->mManifold, mSpace);
   }
   else
@@ -74,7 +70,7 @@ void ContactManager::RemoveManifold(Manifold* manifold)
 {
   Contact* contact = ContactAlreadyExistsNew(manifold);
   // If the contact existed for this manifold, remove it
-  if(contact)
+  if (contact)
     Remove(contact, false);
 }
 
@@ -88,23 +84,25 @@ void ContactManager::Remove(Contact* contact, bool sendImmediately)
   // Wake up both objects.
   Manifold* manifold = contact->GetManifold();
 
-  //if(manifold->ContactCount > 0)
+  // if(manifold->ContactCount > 0)
   {
     manifold->Objects.A->ForceAwake();
     manifold->Objects.B->ForceAwake();
   }
 
-  mSpace->mEventManager->BatchCollisionEndedEvent(manifold, mSpace, sendImmediately);
+  mSpace->mEventManager->BatchCollisionEndedEvent(
+      manifold, mSpace, sendImmediately);
 
-  // We want the CollisionEnded event to have access to the manifold, but the contact
-  // owns the manifold and would delete it, so delay destruct the contacts
+  // We want the CollisionEnded event to have access to the manifold, but the
+  // contact owns the manifold and would delete it, so delay destruct the
+  // contacts
   mContactsToDestroy.PushBack(contact);
 }
 
 void ContactManager::DestroyContacts()
 {
   // Actually delete the memory of all the contacts
-  while(!mContactsToDestroy.Empty())
+  while (!mContactsToDestroy.Empty())
   {
     Contact* contact = &mContactsToDestroy.Front();
     mContactsToDestroy.PopFront();
@@ -121,7 +119,7 @@ Contact* ContactAlreadyExistsNew(Manifold* manifold)
   Contact* contact = nullptr;
 
   Collider::ContactEdgeList::range range;
-  if(collider1->mContactCount < collider2->mContactCount)
+  if (collider1->mContactCount < collider2->mContactCount)
   {
     range = collider1->mContactEdges.All();
     otherCollider = collider2;
@@ -134,16 +132,16 @@ Contact* ContactAlreadyExistsNew(Manifold* manifold)
 
   // Loop through all of the edges on object 1 and check to see if any of them
   // are connected to the other object in the manifold.
-  while(!range.Empty())
+  while (!range.Empty())
   {
     ContactEdge& edge = range.Front();
     range.PopFront();
 
     // Constraint is not between the two objects of the manifold, don't care
-    if(edge.mOther != otherCollider)
+    if (edge.mOther != otherCollider)
       continue;
 
-    if(edge.mContact->GetManifold()->ContactId != manifold->ContactId)
+    if (edge.mContact->GetManifold()->ContactId != manifold->ContactId)
       continue;
 
     // The objects on this constraint match the manifold, we want this one.
@@ -157,22 +155,21 @@ Contact* ContactAlreadyExistsDebug(Manifold* manifold)
 {
   Collider* collider1 = manifold->Objects[0];
   Collider* collider2 = manifold->Objects[1];
-  Contact* contact1 = nullptr,
-         * contact2 = nullptr;
+  Contact *contact1 = nullptr, *contact2 = nullptr;
 
   Collider::ContactEdgeList::range range = collider1->mContactEdges.All();
   // Loop through all of the edges on object 1 and check to see if any of them
   // are connected to the other object in the manifold.
-  while(!range.Empty())
+  while (!range.Empty())
   {
     ContactEdge& edge = range.Front();
     range.PopFront();
 
     // Constraint is not between the two objects of the manifold, don't care
-    if(edge.mOther != collider2)
+    if (edge.mOther != collider2)
       continue;
 
-    if(edge.mContact->GetManifold()->ContactId != manifold->ContactId)
+    if (edge.mContact->GetManifold()->ContactId != manifold->ContactId)
       continue;
 
     // The objects on this constraint match the manifold, we want this one.
@@ -183,16 +180,16 @@ Contact* ContactAlreadyExistsDebug(Manifold* manifold)
   range = collider2->mContactEdges.All();
   // Loop through all of the edges on object 1 and check to see if any of them
   // are connected to the other object in the manifold.
-  while(!range.Empty())
+  while (!range.Empty())
   {
     ContactEdge& edge = range.Front();
     range.PopFront();
 
     // Constraint is not between the two objects of the manifold, don't care
-    if(edge.mOther != collider1)
+    if (edge.mOther != collider1)
       continue;
 
-    if(edge.mContact->GetManifold()->ContactId != manifold->ContactId)
+    if (edge.mContact->GetManifold()->ContactId != manifold->ContactId)
       continue;
 
     // The objects on this constraint match the manifold, we want this one.
@@ -200,11 +197,12 @@ Contact* ContactAlreadyExistsDebug(Manifold* manifold)
     break;
   }
 
-  ErrorIf(contact1 != contact2, "Contact was on one collider but not the other!");
+  ErrorIf(contact1 != contact2,
+          "Contact was on one collider but not the other!");
 
   return contact1;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

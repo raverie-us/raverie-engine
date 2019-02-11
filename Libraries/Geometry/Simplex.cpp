@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Simplex.cpp
-/// .
-///
-/// Authors: Nathan Carlson
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Intersection
@@ -33,7 +25,7 @@ Vec3 Simplex::GetSupportVector(void)
   return mSupportVector;
 }
 
-void Simplex::AddPoint(const CSOVertex &point)
+void Simplex::AddPoint(const CSOVertex& point)
 {
   for (uint i = 0; i < mCount; ++i)
   {
@@ -49,11 +41,17 @@ void Simplex::Update(void)
 {
   switch (mCount)
   {
-    // Closest geometry on a point simplex
-    // is the simplex itself
-    case 2: HandleLineSegment(); break;
-    case 3: HandleTriangle();    break;
-    case 4: HandleTetrahedron(); break;
+  // Closest geometry on a point simplex
+  // is the simplex itself
+  case 2:
+    HandleLineSegment();
+    break;
+  case 3:
+    HandleTriangle();
+    break;
+  case 4:
+    HandleTetrahedron();
+    break;
   }
 
   ComputeSupportVector();
@@ -174,7 +172,8 @@ void Simplex::HandleTetrahedron(void)
   // Closest geometry is tetrahedron
 }
 
-bool Simplex::TestTriangle(uint i0, uint i1, uint i2, bool &leftEdge, bool &rightEdge)
+bool Simplex::TestTriangle(
+    uint i0, uint i1, uint i2, bool& leftEdge, bool& rightEdge)
 {
   Vec3 p0 = mPoints[i0].cso;
   Vec3 p1 = mPoints[i1].cso;
@@ -246,15 +245,16 @@ void Simplex::ComputeSupportVector(void)
     mSupportVector.ZeroOut();
   }
 
-  // If the result is the zero vector, then the origin is contained in our simplex
-  // In the case of a degenerate triangle it is logically invalid to say that
-  // the origin is contained and that more progress can't be made.
-  // If that happens, a false collision will be returned when failing to complete the simplex.
-  // Note: This will incorrectly return collision if it happens in a true/false only query.
+  // If the result is the zero vector, then the origin is contained in our
+  // simplex In the case of a degenerate triangle it is logically invalid to say
+  // that the origin is contained and that more progress can't be made. If that
+  // happens, a false collision will be returned when failing to complete the
+  // simplex. Note: This will incorrectly return collision if it happens in a
+  // true/false only query.
   if (mSupportVector.Length() < Gjk::sEpsilon)
     mContainsOrigin = true;
   else
     mSupportVector.Normalize();
 }
 
-}// namespace Intersection
+} // namespace Intersection

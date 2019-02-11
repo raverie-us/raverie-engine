@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Editor Main
 class EditorMain : public Editor
 {
 public:
@@ -55,21 +49,22 @@ public:
   void ShowRenderGroupHierarchies(CommandEvent* event);
   LibraryView* CreateLibraryView(bool showCore, bool autoDock = true);
   void AttachDocumentEditor(StringParam name, DocumentEditor* docEditor);
-  DocumentEditor* OpenTextString(StringParam name, StringParam text, StringParam extension = String()) override;
+  DocumentEditor* OpenTextString(StringParam name,
+                                 StringParam text,
+                                 StringParam extension = String()) override;
   DocumentEditor* OpenTextFile(StringParam filename) override;
   DocumentEditor* OpenDocumentResource(DocumentResource* docResource) override;
   DocumentEditor* OpenTextFileAuto(StringParam file) override;
   void OnScriptError(ScriptEvent* event);
   void OnDebuggerPaused(ScriptEvent* event);
   void OnDebuggerResumed(ScriptEvent* event);
-  
+
   void OnBlockingTaskStart(BlockingTaskEvent* event);
   void OnBlockingTaskFinish(Event* event);
 
   void OnNotifyEvent(NotifyEvent* event);
   void StressTest(CommandEvent* event);
   void OnMainClick(MouseEvent* event);
-
 };
 
-}//namespace Zero
+} // namespace Zero

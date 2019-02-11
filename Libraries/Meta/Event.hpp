@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Event.hpp
-/// Object Event / Messaging System used by engine for cross game object and 
-/// system communication.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,9 +6,8 @@ namespace Zero
 class EventReceiver;
 class EventDispatcher;
 
-//------------------------------------------------------------------------ Event
 
-///Base event class. All events types inherit from this class.
+/// Base event class. All events types inherit from this class.
 class Event : public ThreadSafeId<u32, Object>
 {
 public:
@@ -43,8 +33,7 @@ public:
   bool mTerminated;
 };
 
-//----------------------------------------------------------------- Object Event
-///Simple event for general signals.
+/// Simple event for general signals.
 class ObjectEvent : public Event
 {
 public:
@@ -53,22 +42,22 @@ public:
   Object* GetSource();
 
   Object* Source;
-  ObjectEvent() : Source(nullptr) {}
-  ObjectEvent(Object* source)
-    :Source(source)
+  ObjectEvent() : Source(nullptr)
+  {
+  }
+  ObjectEvent(Object* source) : Source(source)
   {
   }
 };
-
 
 DeclareBitField3(ConnectionFlags, Invalid, DoNotDisconnect, Script);
 
 /// Makes sure a given event string matches a given event type.
 /// This should ALWAYS be called before attaching to a receiver and a dispatcher
-/// If it returns false, meaning it did not validate, it should not be attached to either!
+/// If it returns false, meaning it did not validate, it should not be attached
+/// to either!
 bool ValidateEvent(StringParam eventId, BoundType* typeSent);
 
-//------------------------------------------------------------- Event Connection
 /// A event connection between two objects.
 class EventConnection
 {
@@ -84,24 +73,27 @@ public:
   BitField<ConnectionFlags::Enum> Flags;
 
   /// Invoke the event
-  virtual void Invoke(Event* event)=0;
+  virtual void Invoke(Event* event) = 0;
   virtual void DebugDraw(){};
-  
-  virtual DataBlock GetFunctionPointer()=0;
+
+  virtual DataBlock GetFunctionPointer() = 0;
   size_t Hash();
   bool operator==(EventConnection& lhs);
 
-  /// A helper that connects this connection to both receiver (tests for validation too)
-  void ConnectToReceiverAndDispatcher(
-    StringParam eventId, EventReceiver* receiver, EventDispatcher* dispatcher);
+  /// A helper that connects this connection to both receiver (tests for
+  /// validation too)
+  void ConnectToReceiverAndDispatcher(StringParam eventId,
+                                      EventReceiver* receiver,
+                                      EventDispatcher* dispatcher);
 
-  /// Removes this specific event connection from the dispatcher it is attached to
+  /// Removes this specific event connection from the dispatcher it is attached
+  /// to
   void DisconnectSelf();
 
   /// The ThisObject is the object listening to the event
   /// if the connection is a member function, not the object
   /// that dispatches the event. It normally is the owner
-  /// of the EventReceiver but can be different when the object is 
+  /// of the EventReceiver but can be different when the object is
   /// a component listening to a composition which owns the Receiver.
   ObjPtr ThisObject;
   /// Link for all connections on a receiver
@@ -115,7 +107,8 @@ public:
   EventDispatcher* mDispatcher;
   /// The type that the event is registered for (the parameter type)
   BoundType* EventType;
-  /// Name identifier of the event, used by receiver since its connections aren't mapped
+  /// Name identifier of the event, used by receiver since its connections
+  /// aren't mapped
   String mEventId;
 
   // Keeps handles alive until a safe time for destruction.
@@ -126,9 +119,9 @@ public:
 
 typedef InList<EventConnection, &EventConnection::DispatcherLink> DispatchList;
 typedef InList<EventConnection, &EventConnection::ReceiverLink> ReceiverList;
-typedef InList<EventConnection, &EventConnection::DisconnectLink> DisconnectList;
+typedef InList<EventConnection, &EventConnection::DisconnectLink>
+    DisconnectList;
 
-//--------------------------------------------------------------- Event Receiver
 /// Object needed to receive events from other objects. Cleans up connections
 /// on destruction.
 class EventReceiver
@@ -157,7 +150,6 @@ private:
   ReceiverList mConnections;
 };
 
-//---------------------------------------------------------- Event Dispatch List
 /// Object that stores a list of event connections to invoke when Dispatched.
 class EventDispatchList
 {
@@ -184,7 +176,7 @@ private:
   DispatchList mConnections;
 };
 
-//------------------------------------------------------------- Event Connection Hash Policy
+//Hash Policy
 struct ConnectionPointerHashPolicy
 {
   // Hashing operator
@@ -200,9 +192,8 @@ struct ConnectionPointerHashPolicy
   }
 };
 
-//------------------------------------------------------------- Event Dispatcher
-/// Object that enables the dispatching of events. This class allows other 
-/// objects to connect to events using if they have an EventReceiver. 
+/// Object that enables the dispatching of events. This class allows other
+/// objects to connect to events using if they have an EventReceiver.
 /// Cleans up connections on destruction.
 class EventDispatcher
 {
@@ -222,7 +213,7 @@ public:
 
   bool IsUniqueConnection(EventConnection* connection);
 
-  /// Remove all connections with the given 'this' 
+  /// Remove all connections with the given 'this'
   /// object from all event lists
   /// See EventConnection::ThisObject
   void Disconnect(ObjPtr thisObject);
@@ -246,17 +237,19 @@ private:
   HashSet<EventConnection*, ConnectionPointerHashPolicy> mUniqueConnections;
 };
 
-//--------------------------------------------------- Member Function Connection
-template<typename classType, typename eventType>
+template <typename classType, typename eventType>
 struct MemberFunctionConnection : public EventConnection
 {
   typedef void (classType::*FuncType)(eventType*);
-  typedef void (classType::**FuncPointer)(eventType*);
+  typedef void (classType::** FuncPointer)(eventType*);
   FuncType MyFunction;
   classType* MyObject;
 
-  MemberFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, classType* instance, FuncType func)
-  : EventConnection(dispatcher, eventId)
+  MemberFunctionConnection(EventDispatcher* dispatcher,
+                           StringParam eventId,
+                           classType* instance,
+                           FuncType func) :
+      EventConnection(dispatcher, eventId)
   {
     MyObject = instance;
     MyFunction = func;
@@ -277,26 +270,34 @@ struct MemberFunctionConnection : public EventConnection
 
 DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
 
-///Create an event connection
-template<typename targetType, typename classType, typename eventType>
-inline void Connect(targetType* dispatcherObject, StringParam eventId,
-                    classType* receiver, void (classType::*function)(eventType*),
-                    ConnectNotify::Enum notify = ConnectNotify::Exception)
+    /// Create an event connection
+    template <typename targetType, typename classType, typename eventType>
+    inline void Connect(targetType* dispatcherObject,
+                        StringParam eventId,
+                        classType* receiver,
+                        void (classType::*function)(eventType*),
+                        ConnectNotify::Enum notify = ConnectNotify::Exception)
 {
   ReturnIf(dispatcherObject == nullptr, , "Dispatcher object is null");
-  ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
+  ReturnIf(
+      receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
   EventDispatcher* dispatcher = dispatcherObject->GetDispatcher();
   ReturnIf(dispatcher == nullptr, , "Dispatcher is null");
 
-  MemberFunctionConnection<classType, eventType>* connection = 
-          new MemberFunctionConnection<classType, eventType>(dispatcher, eventId, receiver, function);
+  MemberFunctionConnection<classType, eventType>* connection =
+      new MemberFunctionConnection<classType, eventType>(
+          dispatcher, eventId, receiver, function);
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
     if (notify != ConnectNotify::Ignore)
     {
       String className = ZilchTypeId(targetType)->ToString();
-      String error = String::Format("The event id '%s' already has a connection to this event handler for class %s", eventId.c_str(), className.c_str());
+      String error =
+          String::Format("The event id '%s' already has a connection to this "
+                         "event handler for class %s",
+                         eventId.c_str(),
+                         className.c_str());
       if (notify == ConnectNotify::ExceptionAssert)
         DoNotifyExceptionAssert("Duplicate Event Connection", error);
       else
@@ -307,40 +308,52 @@ inline void Connect(targetType* dispatcherObject, StringParam eventId,
     return;
   }
 
-  // For safety, we store the event's type on the connection so we can validate it
+  // For safety, we store the event's type on the connection so we can validate
+  // it
   BoundType* type = ZilchTypeId(eventType);
   connection->EventType = type;
   ErrorIf(type->IsInitialized() == false,
-    "The event type was never initialized using ZilchDeclareType / ZilchDefineType / ZilchInitializeType");
+          "The event type was never initialized using ZilchDeclareType / "
+          "ZilchDefineType / ZilchInitializeType");
 
-  connection->ConnectToReceiverAndDispatcher(eventId, receiver->GetReceiver(), dispatcher);
+  connection->ConnectToReceiverAndDispatcher(
+      eventId, receiver->GetReceiver(), dispatcher);
 }
 
 #define DeclareEvent(name) extern const String name
 
 #define DefineEvent(name) const String name = #name
 
-#define ConnectThisTo(target, eventname, handle) \
-  do { ::Zero::Connect(target, eventname, this, &ZilchSelf::handle, ::Zero::ConnectNotify::ExceptionAssert); } while (false)
+#define ConnectThisTo(target, eventname, handle)                               \
+  do                                                                           \
+  {                                                                            \
+    ::Zero::Connect(target,                                                    \
+                    eventname,                                                 \
+                    this,                                                      \
+                    &ZilchSelf::handle,                                        \
+                    ::Zero::ConnectNotify::ExceptionAssert);                   \
+  } while (false)
 
-#define DisconnectAll(sender, receiver) sender->GetDispatcher()->Disconnect(receiver);
+#define DisconnectAll(sender, receiver)                                        \
+  sender->GetDispatcher()->Disconnect(receiver);
 
-#define SignalObjectEvent(event)                                 \
-   do                                                            \
-   {                                                             \
-     ObjectEvent objectEvent(this);                              \
-     GetOwner()->GetDispatcher()->Dispatch(event, &objectEvent); \
-   } while(false)
+#define SignalObjectEvent(event)                                               \
+  do                                                                           \
+  {                                                                            \
+    ObjectEvent objectEvent(this);                                             \
+    GetOwner()->GetDispatcher()->Dispatch(event, &objectEvent);                \
+  } while (false)
 
-//--------------------------------------------------- Static Function Connection
-template<typename eventType>
+template <typename eventType>
 struct StaticFunctionConnection : public EventConnection
 {
   typedef void (*FuncType)(eventType*);
   typedef void (**FuncPointer)(eventType*);
   FuncType MyFunction;
-  StaticFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, FuncType func)
-    : EventConnection(dispatcher, eventId)
+  StaticFunctionConnection(EventDispatcher* dispatcher,
+                           StringParam eventId,
+                           FuncType func) :
+      EventConnection(dispatcher, eventId)
   {
     MyFunction = func;
   }
@@ -358,28 +371,39 @@ struct StaticFunctionConnection : public EventConnection
 
 namespace Events
 {
-  DeclareEvent(ObjectDestroyed);
-}//namespace Events
+DeclareEvent(ObjectDestroyed);
+} // namespace Events
 
 namespace Tags
 {
-  DeclareTag(Event);
+DeclareTag(Event);
 }
 
-//----------------------------------------------------------------- Event Object
-///Helper class for simple adding of Event Dispatching and Receiving
+/// Helper class for simple adding of Event Dispatching and Receiving
 class EventObject : public Object
 {
 public:
   ZilchDeclareType(EventObject, TypeCopyMode::ReferenceType);
 
-  //Object Interface
-  EventDispatcher* GetDispatcherObject() override { return GetDispatcher(); }
-  EventReceiver* GetReceiverObject() override { return GetReceiver(); }
+  // Object Interface
+  EventDispatcher* GetDispatcherObject() override
+  {
+    return GetDispatcher();
+  }
+  EventReceiver* GetReceiverObject() override
+  {
+    return GetReceiver();
+  }
 
   void DispatchEvent(StringParam eventId, Event* event);
-  EventDispatcher* GetDispatcher() { return &mDispatcher; }
-  EventReceiver* GetReceiver() { return &mTracker; }
+  EventDispatcher* GetDispatcher()
+  {
+    return &mDispatcher;
+  }
+  EventReceiver* GetReceiver()
+  {
+    return &mTracker;
+  }
 
   /// Check if anyone has signed up for a particular event.
   bool HasReceivers(StringParam eventId);
@@ -389,4 +413,4 @@ protected:
   EventDispatcher mDispatcher;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,4 +7,4 @@ namespace Zero
 void ComputeMass(RigidBody* body);
 void ComputeInertia(RigidBody* body);
 
-}//namespace Zero
+} // namespace Zero

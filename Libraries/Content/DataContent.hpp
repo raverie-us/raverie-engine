@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DataContent.hpp
-/// Declaration of the Data content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -39,7 +31,7 @@ public:
 
   String GetOutputFile();
 
-  //BuilderComponent Interface
+  // BuilderComponent Interface
   void Generate(ContentInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
@@ -49,4 +41,4 @@ public:
   void BuildListing(ResourceListing& listing) override;
 };
 
-}//namespace Zero
+} // namespace Zero

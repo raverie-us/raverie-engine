@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file OsShared.hpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,4 +11,4 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} // namespace Zero

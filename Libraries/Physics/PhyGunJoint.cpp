@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -28,7 +23,7 @@ namespace Zero
 namespace Physics
 {
 
-JointInfo PhyGunJoint::sInfo = JointInfo(6,0);
+JointInfo PhyGunJoint::sInfo = JointInfo(6, 0);
 
 ImplementJointType(PhyGunJoint);
 
@@ -110,12 +105,13 @@ void PhyGunJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void PhyGunJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
 
   // Get the world anchor values
@@ -126,11 +122,13 @@ void PhyGunJoint::DebugDraw()
   Vec3 obj0Pos = obj0->GetWorldTranslation();
 
   // Draw lines from each object's center to its respective anchor
-  gDebugDraw->Add(Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
+  gDebugDraw->Add(
+      Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
   // Draw a line between the anchors
-  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1]).Color(Color::Gray));
+  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1])
+                      .Color(Color::Gray));
 
-  DrawAngleAtomFragment(mReferenceAngle, GetCollider(0),GetCollider(1));
+  DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
 
   // Get each object's current rotation
   Quat obj0CurrRot = Math::ToQuaternion(obj0->GetWorldRotation());
@@ -142,12 +140,13 @@ void PhyGunJoint::DebugDraw()
   DrawBasisFragment(obj0, obj0Rot);
 }
 
-uint PhyGunJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint PhyGunJoint::GetAtomIndexFilter(uint atomIndex,
+                                     real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 3)
+  if (atomIndex < 3)
     return LinearAxis;
-  else if(atomIndex < 6)
+  else if (atomIndex < 6)
     return AngularAxis;
   return 0;
 }
@@ -175,7 +174,7 @@ void PhyGunJoint::SetLocalPoint(Vec3Param bodyPoint)
 Vec3 PhyGunJoint::GetWorldPoint()
 {
   Collider* collider0 = GetCollider(0);
-  if(collider0 == nullptr)
+  if (collider0 == nullptr)
     return Vec3::cZero;
   return JointHelpers::BodyRToWorldPoint(collider0, mAnchors.mBodyR[0]);
 }
@@ -183,7 +182,7 @@ Vec3 PhyGunJoint::GetWorldPoint()
 void PhyGunJoint::SetWorldPoint(Vec3Param worldPoint)
 {
   Collider* collider0 = GetCollider(0);
-  if(collider0 != nullptr)
+  if (collider0 != nullptr)
     mAnchors.mBodyR[0] = JointHelpers::WorldPointToBodyR(collider0, worldPoint);
 }
 
@@ -207,6 +206,6 @@ void PhyGunJoint::SetWorldRotation(QuatParam worldRotation)
   mReferenceAngle[0] = worldRotation.Conjugated();
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

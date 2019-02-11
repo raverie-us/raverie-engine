@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationGraph.Cpp
-/// Implementation of the AnimationGraph Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,10 +7,10 @@ namespace Zero
 namespace AnimGraphUi
 {
 const cstr cLocation = "EditorUi/AnimationEditor/AnimGraph";
-Tweakable(Vec4, BackgroundColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, GridLineColor,     Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, GridHalfLineColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, GridLineColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, GridHalfLineColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace AnimGraphUi
 
 // The amount of room on the left of the graph reserved for the hash mark labels
 const float cIndentSize = Pixels(30);
@@ -29,28 +21,24 @@ const Vec2 cFocusPadding = Pixels(15, 15);
 // The time taken to animate focusing on the curves
 const float cFocusTime = 0.3f;
 
-//******************************************************************************
 void Expand(Vec2* min, Vec2* max, Vec2Param pos)
 {
   *min = Math::Min(*min, pos);
   *max = Math::Max(*max, pos);
 }
 
-//------------------------------------------------------- Animation Curve Editor
-//******************************************************************************
-AnimationCurveEditor::AnimationCurveEditor(AnimationGraphEditor* parent)
-  : CurveEditor(parent)
+AnimationCurveEditor::AnimationCurveEditor(AnimationGraphEditor* parent) :
+    CurveEditor(parent)
 {
   mGraph = parent;
   mClampMouseDrag = false;
 }
 
-//******************************************************************************
 void AnimationCurveEditor::GetSelectedControlPoints(HashSet<ControlPoint*>& set)
 {
-  forRange(Draggable* selected, mSelection.All())
+  forRange(Draggable * selected, mSelection.All())
   {
-    if(ControlPoint* controlPoint = Type::DynamicCast<ControlPoint*>(selected))
+    if (ControlPoint* controlPoint = Type::DynamicCast<ControlPoint*>(selected))
     {
       set.Insert(controlPoint);
     }
@@ -62,7 +50,6 @@ void AnimationCurveEditor::GetSelectedControlPoints(HashSet<ControlPoint*>& set)
   }
 }
 
-//******************************************************************************
 bool AnimationCurveEditor::GetSelectionAabb(Vec2* min, Vec2* max)
 {
   // Need at least 2 control points in the selection
@@ -71,11 +58,11 @@ bool AnimationCurveEditor::GetSelectionAabb(Vec2* min, Vec2* max)
 
   GetSelectedControlPoints(sControlPoints);
 
-  if(sControlPoints.Size() < 2)
+  if (sControlPoints.Size() < 2)
     return false;
 
   // Expand the Aabb by the control points and their tangents
-  forRange(ControlPoint* controlPoint, sControlPoints.All())
+  forRange(ControlPoint * controlPoint, sControlPoints.All())
   {
     Vec2 graphPos = controlPoint->GetGraphPosition();
 
@@ -83,32 +70,30 @@ bool AnimationCurveEditor::GetSelectionAabb(Vec2* min, Vec2* max)
     // non-weighted tangents)
     Vec2 tanIn = ToGraphPosition(controlPoint->GetPixelPosition() +
                                  controlPoint->mTangentIn->GetPixelDirection());
-    Vec2 tanOut = ToGraphPosition(controlPoint->GetPixelPosition() +
-                                controlPoint->mTangentOut->GetPixelDirection());
+    Vec2 tanOut =
+        ToGraphPosition(controlPoint->GetPixelPosition() +
+                        controlPoint->mTangentOut->GetPixelDirection());
     Expand(min, max, graphPos);
 
-    if(controlPoint->mCurve->mControlPoints.Front() != controlPoint)
+    if (controlPoint->mCurve->mControlPoints.Front() != controlPoint)
       Expand(min, max, tanIn);
-    if(controlPoint->mCurve->mControlPoints.Back() != controlPoint)
+    if (controlPoint->mCurve->mControlPoints.Back() != controlPoint)
       Expand(min, max, tanOut);
   }
 
   return true;
 }
 
-//******************************************************************************
 Vec2 AnimationCurveEditor::ToPixelPosition(Vec2 graphPos)
 {
   return mGraph->ToPixelPosition(graphPos);
 }
 
-//******************************************************************************
 Vec2 AnimationCurveEditor::ToGraphPosition(Vec2 pixelPos)
 {
   return mGraph->ToGraphPosition(pixelPos);
 }
 
-//******************************************************************************
 Vec2 AnimationCurveEditor::ClampPixelPosition(Vec2 pixelPos)
 {
   // First clamp it so that the point cannot be dragged outside of
@@ -125,7 +110,6 @@ Vec2 AnimationCurveEditor::ClampPixelPosition(Vec2 pixelPos)
   return ToPixelPosition(graphPos);
 }
 
-//******************************************************************************
 void AnimationCurveEditor::MouseDragUpdate(MouseEvent* e)
 {
   Vec2 local = ToLocal(e->Position);
@@ -134,23 +118,23 @@ void AnimationCurveEditor::MouseDragUpdate(MouseEvent* e)
   const float maxSpeed = Pixels(3);
   Vec2 scroll = Vec2::cZero;
 
-  if(local.x < cDragSize)
+  if (local.x < cDragSize)
   {
     float percent = 1.0f - (local.x / cDragSize);
     scroll.x = -percent * maxSpeed;
   }
-  else if(local.x > mSize.x - cDragSize)
+  else if (local.x > mSize.x - cDragSize)
   {
     float percent = 1.0f - (mSize.x - local.x) / cDragSize;
     scroll.x = percent * maxSpeed;
   }
 
-  if(local.y < cDragSize)
+  if (local.y < cDragSize)
   {
     float percent = 1.0f - (local.y / cDragSize);
     scroll.y = -percent * maxSpeed;
   }
-  else if(local.y > mSize.y - cDragSize)
+  else if (local.y > mSize.y - cDragSize)
   {
     float percent = 1.0f - (mSize.y - local.y) / cDragSize;
     scroll.y = percent * maxSpeed;
@@ -161,7 +145,6 @@ void AnimationCurveEditor::MouseDragUpdate(MouseEvent* e)
   mGraph->mGraphData->ScrollPixels(scroll);
 }
 
-//******************************************************************************
 String AnimationCurveEditor::GraphToDisplayTextX(float graphValue)
 {
   // We want the edit text to be in frames, not time
@@ -169,7 +152,6 @@ String AnimationCurveEditor::GraphToDisplayTextX(float graphValue)
   return CurveEditor::GraphToDisplayTextX(settings->mEditFps * graphValue);
 }
 
-//******************************************************************************
 float AnimationCurveEditor::DisplayTextToGraphX(StringParam displayText)
 {
   // We want the edit text to be in frames, not time
@@ -180,11 +162,9 @@ float AnimationCurveEditor::DisplayTextToGraphX(StringParam displayText)
   return position / settings->mEditFps;
 }
 
-//------------------------------------------------------- Animation Curve Object
-//******************************************************************************
 AnimationCurveObject::AnimationCurveObject(AnimationGraphEditor* editor,
-                                           TrackNode* track)
-  : CurveObject(editor->mCurveEditor)
+                                           TrackNode* track) :
+    CurveObject(editor->mCurveEditor)
 {
   mGraph = editor;
   mIgnoreAnimationEvents = false;
@@ -204,7 +184,6 @@ AnimationCurveObject::AnimationCurveObject(AnimationGraphEditor* editor,
   ConnectThisTo(mTrack, Events::TrackDeleted, OnTrackDeleted);
 }
 
-//******************************************************************************
 void AnimationCurveObject::GetCurve(Vec3Array& curve)
 {
   float editFps = mGraph->mEditor->GetSettings()->mEditFps;
@@ -224,22 +203,19 @@ void AnimationCurveObject::GetCurve(Vec3Array& curve)
   }
 }
 
-//******************************************************************************
 TrackNode* AnimationCurveObject::GetTrack()
 {
   return mTrack;
 }
 
-//******************************************************************************
 void AnimationCurveObject::BuildCurve(TrackNode* track)
 {
-  forRange(KeyFrame* keyFrame, track->mKeyFrames.AllValues())
+  forRange(KeyFrame * keyFrame, track->mKeyFrames.AllValues())
   {
     CreateControlPoint(keyFrame);
   }
 }
 
-//******************************************************************************
 void AnimationCurveObject::CreateControlPoint(KeyFrame* keyFrame)
 {
   mIgnoreAnimationEvents = true;
@@ -261,10 +237,9 @@ void AnimationCurveObject::CreateControlPoint(KeyFrame* keyFrame)
   mIgnoreAnimationEvents = false;
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnControlPointAdded(CurveEvent* e)
 {
-  if(mIgnoreAnimationEvents)
+  if (mIgnoreAnimationEvents)
     return;
 
   // We can ignore any changes to the animation because we're making them
@@ -295,10 +270,9 @@ void AnimationCurveObject::OnControlPointAdded(CurveEvent* e)
   mEditor->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnControlPointModified(CurveEvent* e)
 {
-  if(mIgnoreAnimationEvents)
+  if (mIgnoreAnimationEvents)
     return;
 
   // We can ignore any changes to the animation because we're making them
@@ -326,11 +300,10 @@ void AnimationCurveObject::OnControlPointModified(CurveEvent* e)
   mEditor->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnControlPointDeleted(CurveEvent* event)
 {
   // Do nothing if we're the ones modifying the curve
-  if(mIgnoreAnimationEvents)
+  if (mIgnoreAnimationEvents)
     return;
 
   // We can ignore any changes to the animation because we're making them
@@ -348,22 +321,20 @@ void AnimationCurveObject::OnControlPointDeleted(CurveEvent* event)
   mEditor->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnKeyFrameAdded(KeyFrameEvent* event)
 {
   // Do nothing if we're the ones modifying the curve
-  if(mIgnoreAnimationEvents)
+  if (mIgnoreAnimationEvents)
     return;
 
   // Create a control point for the key frame
   CreateControlPoint(event->mKeyFrame);
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnKeyFrameModified(KeyFrameEvent* event)
 {
   // Do nothing if we're the ones modifying the curve
-  if(mIgnoreAnimationEvents)
+  if (mIgnoreAnimationEvents)
     return;
 
   KeyFrame* keyFrame = event->mKeyFrame;
@@ -371,8 +342,9 @@ void AnimationCurveObject::OnKeyFrameModified(KeyFrameEvent* event)
   // Find the control point associated with the key frame that was modified
   ControlPoint* controlPoint = mKeysToControlPoints.FindValue(keyFrame, NULL);
 
-  ErrorIf(controlPoint == NULL, "Modified key frame does not correspond to a "
-                                "control point in the curve editor.");
+  ErrorIf(controlPoint == NULL,
+          "Modified key frame does not correspond to a "
+          "control point in the curve editor.");
 
   // Set the position of the key frame
   Vec2 position = keyFrame->GetGraphPosition();
@@ -384,18 +356,17 @@ void AnimationCurveObject::OnKeyFrameModified(KeyFrameEvent* event)
   mIgnoreAnimationEvents = false;
 
   Sort(mControlPoints.All(), SortByX());
-  
+
   // No need to grab tangents as the curve editor is the only way
   // to modify the tangents
 
   mEditor->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnKeyFrameDeleted(KeyFrameEvent* event)
 {
   // Do nothing if we're the ones modifying the curve
-  if(mIgnoreAnimationEvents)
+  if (mIgnoreAnimationEvents)
     return;
 
   KeyFrame* keyFrame = event->mKeyFrame;
@@ -417,19 +388,16 @@ void AnimationCurveObject::OnKeyFrameDeleted(KeyFrameEvent* event)
   mEditor->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationCurveObject::OnTrackDeleted(TrackEvent* event)
 {
   Destroy();
 }
 
-//------------------------------------------------------------------ Graph Lines
 class GraphDrawer : public Widget
 {
 public:
   //****************************************************************************
-  GraphDrawer(Composite* parent, AnimationGraphEditor* graph)
-    : Widget(parent)
+  GraphDrawer(Composite* parent, AnimationGraphEditor* graph) : Widget(parent)
   {
     mScrub = NULL;
     mGraph = graph;
@@ -443,7 +411,8 @@ public:
   }
 
   //****************************************************************************
-  //void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx,
+  // void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform&
+  // colorTx,
   //          DrawParams& params) override
   //{
   //  DrawVerticalLines(render);
@@ -456,7 +425,11 @@ public:
   //  }
   //}
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect)
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -471,11 +444,15 @@ public:
       DrawPlayHead(viewBlock, frameBlock, clipRect, lines);
     }
 
-    CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
+    CreateRenderData(
+        viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
   }
 
   //****************************************************************************
-  void DrawVerticalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawVerticalLines(ViewBlock& viewBlock,
+                         FrameBlock& frameBlock,
+                         WidgetRect clipRect,
+                         Array<StreamedVertex>& lines)
   {
     Vec4 color = AnimGraphUi::GridLineColor;
 
@@ -483,16 +460,17 @@ public:
     startPos = Math::Max(startPos, Pixels(30));
 
     // A vertical line across on the left
-    lines.PushBack(StreamedVertex(Vec3(startPos,0,0), Vec2(0, 0), color));
-    lines.PushBack(StreamedVertex(Vec3(startPos,mSize.y,0), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(Vec3(startPos, 0, 0), Vec2(0, 0), color));
+    lines.PushBack(
+        StreamedVertex(Vec3(startPos, mSize.y, 0), Vec2(0, 0), color));
 
     // Draw the full vertical lines
     forRange(auto entry, mGraphData->GetWidthHashes(mSize.x))
     {
-      if(entry.Position < 0.0f)
+      if (entry.Position < 0.0f)
         continue;
       Vec3 start = ToVector3(mGraph->ToPixelPosition(Vec2(entry.Position, 0)));
-      if(start.x < cIndentSize)
+      if (start.x < cIndentSize)
         continue;
       start.y = 0;
       Vec3 end = start + Vec3(0, mSize.y, 0);
@@ -505,10 +483,10 @@ public:
     color = AnimGraphUi::GridHalfLineColor;
     forRange(auto entry, mGraphData->GetWidthHashes(mSize.x, true))
     {
-      if(entry.Position < 0.0f)
+      if (entry.Position < 0.0f)
         continue;
       Vec3 start = ToVector3(mGraph->ToPixelPosition(Vec2(entry.Position, 0)));
-      if(start.x < cIndentSize)
+      if (start.x < cIndentSize)
         continue;
       start.y = 0;
       Vec3 end = start + Vec3(0, mSize.y, 0);
@@ -519,7 +497,10 @@ public:
   }
 
   //****************************************************************************
-  void DrawHorizontalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawHorizontalLines(ViewBlock& viewBlock,
+                           FrameBlock& frameBlock,
+                           WidgetRect clipRect,
+                           Array<StreamedVertex>& lines)
   {
     Vec4 color = AnimGraphUi::GridLineColor;
 
@@ -549,8 +530,11 @@ public:
       lines.PushBack(StreamedVertex(SnapToPixels(end), Vec2(0, 0), color));
     }
 
-    ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
-    FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(AnimationConstants::cHashColor));
+    ViewNode& viewNode =
+        AddRenderNodes(viewBlock, frameBlock, clipRect, mFont->mTexture);
+    FontProcessor fontProcessor(frameBlock.mRenderQueues,
+                                &viewNode,
+                                ToFloatColor(AnimationConstants::cHashColor));
 
     // Draw labels
     forRange(auto entry, mGraphData->GetHeightHashes(mSize.y))
@@ -563,33 +547,49 @@ public:
       textPos.x = startPos - textSize.x - Pixels(6);
       textPos.y += Pixels(-7);
 
-      ProcessTextRange(fontProcessor, mFont, entry.Label, textPos, TextAlign::Left, Vec2(1, 1), textSize);
+      ProcessTextRange(fontProcessor,
+                       mFont,
+                       entry.Label,
+                       textPos,
+                       TextAlign::Left,
+                       Vec2(1, 1),
+                       textSize);
     }
   }
 
   //****************************************************************************
-  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawGhostPlayHead(ViewBlock& viewBlock,
+                         FrameBlock& frameBlock,
+                         WidgetRect clipRect,
+                         Array<StreamedVertex>& lines)
   {
-    if(!mScrub->mShowGhostPlayHead)
+    if (!mScrub->mShowGhostPlayHead)
       return;
 
     float localX = mScrub->ToPixels(mScrub->mGhostPlayHead);
 
     Vec4 color = AnimScrubberUi::GhostPlayHeadColor;
 
-    lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, Pixels(1), 0)), Vec2(0, 0), color));
-    lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, mSize.y,   0)), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(
+        SnapToPixels(Vec3(localX, Pixels(1), 0)), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(
+        SnapToPixels(Vec3(localX, mSize.y, 0)), Vec2(0, 0), color));
   }
 
   //****************************************************************************
-  void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawPlayHead(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    WidgetRect clipRect,
+                    Array<StreamedVertex>& lines)
   {
     float localX = mScrub->ToPixels(mScrub->GetPlayHead());
 
     Vec4 color = AnimScrubberUi::PlayHeadColor;
 
-    lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, Pixels(1), 0)), Vec2(0, 0), color));
-    lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, mSize.y,   0)), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(
+        SnapToPixels(Vec3(localX, Pixels(1), 0)), Vec2(0, 0), color));
+    lines.PushBack(StreamedVertex(
+        SnapToPixels(Vec3(localX, mSize.y, 0)), Vec2(0, 0), color));
   }
 
   RenderFont* mFont;
@@ -598,16 +598,14 @@ public:
   AnimationScrubber* mScrub;
 };
 
-//------------------------------------------------------------ Graph Manipulator
-//******************************************************************************
 class GraphManipulator : public MouseManipulation
 {
 public:
   AnimationGraphEditor* mGraph;
 
   //****************************************************************************
-  GraphManipulator(Mouse* mouse, AnimationGraphEditor* graph)
-    : MouseManipulation(mouse, graph)
+  GraphManipulator(Mouse* mouse, AnimationGraphEditor* graph) :
+      MouseManipulation(mouse, graph)
   {
     mGraph = graph;
   }
@@ -615,7 +613,8 @@ public:
   //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
-    mGraph->mGraphData->ScrollPixels(Vec2(event->Movement.x, -event->Movement.y));
+    mGraph->mGraphData->ScrollPixels(
+        Vec2(event->Movement.x, -event->Movement.y));
     mGraph->MarkAsNeedsUpdate();
   }
 
@@ -627,11 +626,10 @@ public:
   }
 };
 
-//-------------------------------------------------------------- Animation Graph
-//******************************************************************************
 AnimationGraphEditor::AnimationGraphEditor(Composite* parent,
-                             AnimationEditor* editor, ScrollingGraph* graphData)
-  : Composite(parent)
+                                           AnimationEditor* editor,
+                                           ScrollingGraph* graphData) :
+    Composite(parent)
 {
   mScrubber = NULL;
   mEditor = editor;
@@ -654,14 +652,12 @@ AnimationGraphEditor::AnimationGraphEditor(Composite* parent,
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
 }
 
-//******************************************************************************
 void AnimationGraphEditor::SetScrubber(AnimationScrubber* scrubber)
 {
   mScrubber = scrubber;
   mGraphDrawer->SetScrubber(scrubber);
 }
 
-//******************************************************************************
 void AnimationGraphEditor::SetToolBox(AnimationToolBox* toolBox)
 {
   mCurveEditor->RegisterToolBar(toolBox->mCurveToolBar);
@@ -670,18 +666,18 @@ void AnimationGraphEditor::SetToolBox(AnimationToolBox* toolBox)
   mCurveEditor->RegisterWeightedTangentsButton(toolBox->mWeightedTangents);
 }
 
-//******************************************************************************
-void AnimationGraphEditor::SetAnimationEditorData(AnimationEditorData* editorData)
+void AnimationGraphEditor::SetAnimationEditorData(
+    AnimationEditorData* editorData)
 {
   mEditorData = editorData;
 
   DisconnectAll(mEditorData, this);
-  ConnectThisTo(mEditorData, Events::TrackSelectionModified, OnSelectionModified);
+  ConnectThisTo(
+      mEditorData, Events::TrackSelectionModified, OnSelectionModified);
 
   RebuildCurves();
 }
 
-//******************************************************************************
 void AnimationGraphEditor::UpdateTransform()
 {
   mBackground->SetSize(mSize);
@@ -692,7 +688,6 @@ void AnimationGraphEditor::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void AnimationGraphEditor::Hide()
 {
   mEnabled = false;
@@ -700,14 +695,12 @@ void AnimationGraphEditor::Hide()
   mCurveEditor->ClearSelection();
 }
 
-//******************************************************************************
 void AnimationGraphEditor::Show()
 {
   mEnabled = true;
   mCurveEditor->Show();
 }
 
-//******************************************************************************
 Vec2 AnimationGraphEditor::ToPixelPosition(Vec2Param graphPos)
 {
   // This is with [0,0] in the upper left corner
@@ -716,28 +709,26 @@ Vec2 AnimationGraphEditor::ToPixelPosition(Vec2Param graphPos)
   // We want [0,0] to be in the lower left corner
   pixelPos.y = mSize.y - pixelPos.y;
 
-  return pixelPos + Vec2(cIndentSize,0);
+  return pixelPos + Vec2(cIndentSize, 0);
 }
 
-//******************************************************************************
 Vec2 AnimationGraphEditor::ToGraphPosition(Vec2Param pixelPos)
 {
   // The given pixel position's origin is in the upper left corner, so we need
   // to convert it to where the origin is in the lower left corner (flip the y)
   Vec2 truePixelPos = pixelPos;
   truePixelPos.y = mSize.y - truePixelPos.y;
-  return mGraphData->ToGraphSpace(truePixelPos - Vec2(cIndentSize,0));
+  return mGraphData->ToGraphSpace(truePixelPos - Vec2(cIndentSize, 0));
 }
 
-//******************************************************************************
 bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
 {
   ErrorIf(track->mPropertyType != ZilchTypeId(float), "Invalid track type.");
 
-  if(track->mKeyFrames.Empty())
+  if (track->mKeyFrames.Empty())
     return false;
 
-  for(uint i = 0; i < track->mKeyFrames.Size(); ++i)
+  for (uint i = 0; i < track->mKeyFrames.Size(); ++i)
   {
     KeyFrame* keyFrame = track->mKeyFrames[i].second;
 
@@ -747,9 +738,9 @@ bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
 
     // We want to ignore the tangent in on the first key frame, and the tangent
     // out on the last key frame
-    if(i == 0)
+    if (i == 0)
       tanIn = Vec2::cZero;
-    if(i == track->mKeyFrames.Size() - 1)
+    if (i == track->mKeyFrames.Size() - 1)
       tanOut = Vec2::cZero;
 
     // If we expand the aabb by all control points and the tangents of the
@@ -762,7 +753,6 @@ bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
   return true;
 }
 
-//******************************************************************************
 void AnimationGraphEditor::FocusOnSelectedCurves(IntVec2Param axes)
 {
   // Build an Aabb around all selected tracks
@@ -771,14 +761,14 @@ void AnimationGraphEditor::FocusOnSelectedCurves(IntVec2Param axes)
 
   // First attempt to get an aabb from the selected key frames
   bool validAabb = mCurveEditor->GetSelectionAabb(&min, &max);
-  
+
   // If there were no selected key frames, focus on the selected tracks
-  if(!validAabb)
+  if (!validAabb)
   {
-    forRange(TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
+    forRange(TrackNode * track, mEditorData->mVisiblePropertyTracks.All())
     {
       // Expand the aabb
-      if(track->mPropertyType == ZilchTypeId(float))
+      if (track->mPropertyType == ZilchTypeId(float))
         validAabb |= ExpandAabbByTrack(&min, &max, track);
     }
   }
@@ -786,17 +776,18 @@ void AnimationGraphEditor::FocusOnSelectedCurves(IntVec2Param axes)
   min.x = Math::Max(0.0f, min.x);
 
   // If there is an area to zoom in on, zoom
-  if(validAabb)
+  if (validAabb)
   {
-    // If it's a straight horizontal line, expand the aabb a little by a set amount
-    if(max.y - min.y == 0.0f)
+    // If it's a straight horizontal line, expand the aabb a little by a set
+    // amount
+    if (max.y - min.y == 0.0f)
     {
       max.y += 1.0f;
       min.y -= 1.0f;
     }
 
     // Same for if it's a single key frame (no width)
-    if(max.x - min.x == 0.0f)
+    if (max.x - min.x == 0.0f)
     {
       max.x += 1.0f;
       min.x = 0.0f;
@@ -813,11 +804,10 @@ void AnimationGraphEditor::FocusOnSelectedCurves(IntVec2Param axes)
   }
 }
 
-//******************************************************************************
 /// This function attempts to generate similar, yet contrasting colors.
 /// This is accomplished by walking the Hue (HSV) around a circle,
 /// alternating between rotating slightly, and jumping across the circle.
-/// It will also slightly modify the saturation and value (HSV) of the 
+/// It will also slightly modify the saturation and value (HSV) of the
 /// color for every other index.
 ByteColor GetNextCurveColor(uint index)
 {
@@ -837,12 +827,12 @@ ByteColor GetNextCurveColor(uint index)
   // around it, so I'm simply skipping this index. The algorithm may
   // eventually get back to this color, but what's important is that it
   // doesn't show up early on
-  if(index >= 3)
+  if (index >= 3)
     index += 1;
 
-  for(uint i = 0; i < index; ++i)
+  for (uint i = 0; i < index; ++i)
   {
-    if(i % 2 == 0)
+    if (i % 2 == 0)
     {
       // Jump across the color wheel
       hue += 180.0f;
@@ -865,44 +855,44 @@ ByteColor GetNextCurveColor(uint index)
   // Bring the hue back to [0-360]
   hue = Math::FMod(hue, 360.0f);
 
-  // Convert to HSV 
-  Vec4 color = HSVToFloatColor(hue / 360.0f, saturation / 100.0f, value / 100.0f);
+  // Convert to HSV
+  Vec4 color =
+      HSVToFloatColor(hue / 360.0f, saturation / 100.0f, value / 100.0f);
   return ToByteColor(color);
 }
 
-//******************************************************************************
 ByteColor AnimationGraphEditor::GetTrackColor(TrackNode* track,
-                              HashSet<ByteColor>& takenColors, uint& colorIndex)
+                                              HashSet<ByteColor>& takenColors,
+                                              uint& colorIndex)
 {
   ByteColor color;
 
   /// Assign set colors for vector type tracks
-  if(track->Name == "X" || track->Name == "R")
+  if (track->Name == "X" || track->Name == "R")
     color = ByteColorRGBA(240, 73, 80, 255);
-  else if(track->Name == "Y" || track->Name == "G")
+  else if (track->Name == "Y" || track->Name == "G")
     color = ByteColorRGBA(112, 246, 79, 255);
-  else if(track->Name == "Z" || track->Name == "B")
+  else if (track->Name == "Z" || track->Name == "B")
     color = ByteColorRGBA(50, 118, 181, 255);
-  else if(track->Name == "W" || track->Name == "A")
+  else if (track->Name == "W" || track->Name == "A")
     color = ByteColorRGBA(255, 255, 255, 255);
   else
   {
     // If it was already assigned a color, use that instead
-    if(track->mDisplayColor.LengthSq() != 0.0f)
+    if (track->mDisplayColor.LengthSq() != 0.0f)
       color = ToByteColor(track->mDisplayColor);
     // Otherwise, Assign it the next color
     else
       color = GetNextCurveColor(colorIndex++);
 
     // If the color is already taken, continue to check for a new color
-    while(takenColors.Count(color) > 0)
+    while (takenColors.Count(color) > 0)
       color = GetNextCurveColor(colorIndex++);
   }
 
   return color;
 }
 
-//******************************************************************************
 void AnimationGraphEditor::RebuildCurves()
 {
   // Pull out all the existing curve editors
@@ -912,7 +902,7 @@ void AnimationGraphEditor::RebuildCurves()
   /// tracks, if they already have an editor, remove it from this extra list.
   /// Once we're done, any left in this list can be deleted
   Array<AnimationCurveObject*> existingCurveObjects(curveCount);
-  for(uint i = 0; i < curveCount; ++i)
+  for (uint i = 0; i < curveCount; ++i)
   {
     CurveObject* curveObject = mCurveEditor->mCurves[i];
     existingCurveObjects[i] = static_cast<AnimationCurveObject*>(curveObject);
@@ -926,21 +916,21 @@ void AnimationGraphEditor::RebuildCurves()
 
   uint colorIndex = 0;
 
-  forRange(TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
+  forRange(TrackNode * track, mEditorData->mVisiblePropertyTracks.All())
   {
     BoundType* keyType = track->mPropertyType;
 
     // Only create graphs for tracks whose key values are floats
-    if(keyType != ZilchTypeId(float))
+    if (keyType != ZilchTypeId(float))
       continue;
 
     AnimationCurveObject* curveObject = NULL;
 
     // Check to see if this track already existed
-    for(uint i = 0; i < existingCurveObjects.Size(); ++i)
+    for (uint i = 0; i < existingCurveObjects.Size(); ++i)
     {
       AnimationCurveObject* currentCurve = existingCurveObjects[i];
-      if(currentCurve->GetTrack() == track)
+      if (currentCurve->GetTrack() == track)
       {
         curveObject = currentCurve;
 
@@ -953,7 +943,7 @@ void AnimationGraphEditor::RebuildCurves()
 
     // If we didn't find a curve editor that already existed for this track,
     // we have to create a new one
-    if(curveObject == NULL)
+    if (curveObject == NULL)
     {
       // Create the curve editor
       curveObject = new AnimationCurveObject(this, track);
@@ -978,24 +968,23 @@ void AnimationGraphEditor::RebuildCurves()
   }
 
   // If auto focus is set, focus on the selected curves
-  if(mEditor->GetSettings()->mAutoFocus)
-    FocusOnSelectedCurves(IntVec2(1,1));
+  if (mEditor->GetSettings()->mAutoFocus)
+    FocusOnSelectedCurves(IntVec2(1, 1));
 
   // Destroy all the curve editors for tracks that are no longer selected
-  forRange(AnimationCurveObject* curve, existingCurveObjects.All())
+  forRange(AnimationCurveObject * curve, existingCurveObjects.All())
   {
     curve->Destroy();
   }
 }
 
-//******************************************************************************
 void AnimationGraphEditor::Zoom(MouseEvent* e, Vec2Param axis)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   Vec2 zoomPos = mCurveEditor->ToLocal(e->Position);
-  Vec2 zoom = Vec2(1,1) * e->Scroll.y * 0.02f * mGraphData->GetZoom();
+  Vec2 zoom = Vec2(1, 1) * e->Scroll.y * 0.02f * mGraphData->GetZoom();
 
   // Flip the Y
   zoomPos.y = mCurveEditor->GetSize().y - zoomPos.y;
@@ -1006,38 +995,33 @@ void AnimationGraphEditor::Zoom(MouseEvent* e, Vec2Param axis)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnSelectionModified(Event* e)
 {
   RebuildCurves();
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnAnimationModified(Event* e)
 {
   RebuildCurves();
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMiddleMouseDown(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   new GraphManipulator(e->GetMouse(), this);
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMouseScroll(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Zoom on both axes
   Zoom(e, Vec2(1, 1));
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMouseScrollNegativeArea(MouseEvent* e)
 {
   // Zoom on only the y
@@ -1046,14 +1030,13 @@ void AnimationGraphEditor::OnMouseScrollNegativeArea(MouseEvent* e)
   e->Handled = true;
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMouseMove(MouseEvent* e)
 {
   mScrubber->mShowGhostPlayHead = (mCurveEditor->GetMouseOverCurve() != NULL);
-  mScrubber->mGhostPlayHead = ToGraphPosition(ToLocal(Z::gMouse->GetClientPosition())).x;
+  mScrubber->mGhostPlayHead =
+      ToGraphPosition(ToLocal(Z::gMouse->GetClientPosition())).x;
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMouseEnterCurve(CurveEvent* e)
 {
   // Grab the track who's curve was just entered
@@ -1067,23 +1050,20 @@ void AnimationGraphEditor::OnMouseEnterCurve(CurveEvent* e)
   mEditor->SetStatusText(node->Path, color);
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMouseExitCurve(CurveEvent* e)
 {
   mEditor->SetStatusText(String());
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnKeyDown(KeyboardEvent* e)
 {
   // Forward the event to the curve editor
   mCurveEditor->DispatchEvent(Events::KeyDown, e);
 }
 
-//******************************************************************************
 void AnimationGraphEditor::OnMouseEnter(MouseEvent* e)
 {
   this->SoftTakeFocus();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,7 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "String.hpp"
 
@@ -27,8 +24,9 @@ public:
   size_t SizeInBytes() const;
 
   byte* Data();
-  
+
   bool IsEmpty() const;
+
 private:
   void InternalDeepCopy(const WString& rhs);
   size_t mSize;
@@ -36,10 +34,10 @@ private:
   static wchar_t mEmptyReturn;
 };
 
-String  Narrow(const wchar_t* wstr);
-String  Narrow(const WString& wstr);
-WString Widen (const char* str);
-WString Widen (const String& str);
+String Narrow(const wchar_t* wstr);
+String Narrow(const WString& wstr);
+WString Widen(const char* str);
+WString Widen(const String& str);
 int Utf16ToUtf8(int utf16);
 
-} //namespace Zero
+} // namespace Zero

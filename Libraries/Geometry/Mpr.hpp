@@ -1,27 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Mpr.hpp
-/// Interface for the MPR collision detection algorithm.
-/// 
-/// Authors: Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Intersection
 {
 
-//-------------------------------------------------------------------------- Mpr
 class Mpr
 {
 public:
-  Intersection::Type Test(const SupportShape* shapeA, 
-                          const SupportShape* shapeB, 
+  Intersection::Type Test(const SupportShape* shapeA,
+                          const SupportShape* shapeB,
                           Intersection::Manifold* manifold = nullptr);
 
-  ///Check to see if (and when) two moving shapes are intersecting
-  Intersection::Type SweptTest(const SupportShape* shapeA, 
+  /// Check to see if (and when) two moving shapes are intersecting
+  Intersection::Type SweptTest(const SupportShape* shapeA,
                                const SupportShape* shapeB,
                                Intersection::Manifold* manifold = nullptr);
 
@@ -34,54 +25,57 @@ private:
     Swept
   };
 
-  ///Calculate the CSO's center bases off of the centers of the two shapes
+  /// Calculate the CSO's center bases off of the centers of the two shapes
   void CalculateCenter(void);
 
-  ///Calculate the relative motion of the two shapes
+  /// Calculate the relative motion of the two shapes
   void CalculateTranslation(void);
 
-  ///Get the point furthest in the stored direction on the CSO and store the 
-  ///results in the specified index. Returns false if any error occurs due to
-  ///invalid data.
+  /// Get the point furthest in the stored direction on the CSO and store the
+  /// results in the specified index. Returns false if any error occurs due to
+  /// invalid data.
   bool Support(uint index);
 
-  ///Compute the initial portal to start the algorithm
+  /// Compute the initial portal to start the algorithm
   bool InitialPortal(void);
 
-  ///Iterate over the CSO hull to find a portal which Contains the origin ray
+  /// Iterate over the CSO hull to find a portal which Contains the origin ray
   bool Discover(void);
 
-  ///Move the portal closer to the surface of the CSO, attempting to increase 
-  ///the accuracy of the closest features of the two shapes
+  /// Move the portal closer to the surface of the CSO, attempting to increase
+  /// the accuracy of the closest features of the two shapes
   bool Refine(bool onSurface);
 
-  ///Initialize the algorithm before it is run
-  void Init(const SupportShape* shapeA, const SupportShape* shapeB, 
+  /// Initialize the algorithm before it is run
+  void Init(const SupportShape* shapeA,
+            const SupportShape* shapeB,
             AlgorithmType algorithmType);
 
-  ///Swap the two support points at the given indexes
+  /// Swap the two support points at the given indexes
   void Swap(uint a, uint b);
 
-  ///Assign the point at the source index to the point at the destination index
+  /// Assign the point at the source index to the point at the destination index
   void Assign(uint source, uint destination);
 
-  ///Determine if origin is inside the tetrahedron built from support points
+  /// Determine if origin is inside the tetrahedron built from support points
   bool OriginInsideTetrahedron(void);
 
-  ///Determine if origin is outside the tetrahedron built from support points
+  /// Determine if origin is outside the tetrahedron built from support points
   bool OriginOutsideTetrahedron(void);
 
-  ///Determine if the origin is close to the portal's surface
+  /// Determine if the origin is close to the portal's surface
   bool PortalCloseToSurface(void);
 
-  ///Find the point furthest in the direction of either the origin or the 
-  ///translation vector's endpoint
+  /// Find the point furthest in the direction of either the origin or the
+  /// translation vector's endpoint
   void TranslationSupport(void);
 
-  ///Fill the manifold with all of the information about the collision
+  /// Fill the manifold with all of the information about the collision
   void FillManifold(Intersection::Manifold& manifold);
 
-  bool PortalFaceCheck(uint pointA, uint pointB, uint offPoint, 
+  bool PortalFaceCheck(uint pointA,
+                       uint pointB,
+                       uint offPoint,
                        bool& originRayNotInsidePortal);
 
   Vec3 mCenter[2];
@@ -96,4 +90,4 @@ private:
   AlgorithmType mAlgorithmType;
   const SupportShape* mShapes[2];
 };
-}// namespace Intersection
+} // namespace Intersection

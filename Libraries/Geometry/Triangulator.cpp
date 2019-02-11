@@ -1,17 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Triangulator.cpp
-/// Implementation for Seidel's triangulation algorithm.
-/// 
-/// Authors: Killian Koenig
-/// Copyright 2013, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 using Zero::Array;
-using Zero::Link;
 using Zero::InList;
+using Zero::Link;
 using Zero::TrapezoidMap;
 
 namespace Geometry
@@ -21,7 +13,7 @@ namespace
 {
 
 struct ContourVertex
-{ 
+{
   Link<ContourVertex> link;
   Link<ContourVertex> windingLink;
   TrapezoidMap::VertexId Index;
@@ -52,20 +44,19 @@ bool FillRule_All(s32 winding, s32 depth)
 
 typedef bool (*FillRuleFunc)(s32, s32);
 
-static const FillRuleFunc fillRuleFunctions[4] = 
-{ 
-  FillRule_NonZeroWinding,
-  FillRule_EvenOddWinding,
-  FillRule_All,
-  FillRule_PositiveWinding
-};
+static const FillRuleFunc fillRuleFunctions[4] = {FillRule_NonZeroWinding,
+                                                  FillRule_EvenOddWinding,
+                                                  FillRule_All,
+                                                  FillRule_PositiveWinding};
 
 bool EqualsExact(const Vec2& a, const Vec2& b)
 {
   return a.x == b.x && a.y == b.y;
 }
 
-bool IsVertexConvex(ContourVertex* curr, const Array<Vec2>& vertexBuffer, InList<ContourVertex>& vertices)
+bool IsVertexConvex(ContourVertex* curr,
+                    const Array<Vec2>& vertexBuffer,
+                    InList<ContourVertex>& vertices)
 {
   ContourVertex* prev = vertices.PrevWrap(curr);
   ContourVertex* next = vertices.NextWrap(curr);
@@ -83,11 +74,11 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
 {
   // Build chain so that the first and last vertices create the base edge
   InList<ContourVertex> vertices;
-  for(size_t i = 0; i < mountain.Size(); ++i)
+  for (size_t i = 0; i < mountain.Size(); ++i)
   {
     ContourVertex* vertex = &mountain[i];
-    if(!vertices.Empty() && 
-       EqualsExact(vertexBuffer[vertex->Index], vertexBuffer[vertices.Back().Index]))
+    if (!vertices.Empty() && EqualsExact(vertexBuffer[vertex->Index],
+                                         vertexBuffer[vertices.Back().Index]))
     {
       continue;
     }
@@ -97,22 +88,22 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
 
   // Build a separate list of convex vertices
   InList<ContourVertex, &ContourVertex::windingLink> convexList;
-  forRange(ContourVertex& curr, vertices.All())
+  forRange(ContourVertex & curr, vertices.All())
   {
     curr.IsReflex = !IsVertexConvex(&curr, vertexBuffer, vertices);
-    if(!curr.IsReflex && !curr.IsBase)
+    if (!curr.IsReflex && !curr.IsBase)
     {
       convexList.PushBack(&curr);
     }
   }
 
   // Due to properties of monotone mountains, all convex vertices are ears
-  while(!convexList.Empty())
+  while (!convexList.Empty())
   {
     ContourVertex* v2 = &convexList.Front();
     ContourVertex* v1 = vertices.PrevWrap(v2);
-    ContourVertex* v3 = vertices.NextWrap(v2); 
-    
+    ContourVertex* v3 = vertices.NextWrap(v2);
+
     // Fill out the index buffer for this triangle
     indices->PushBack(v1->Index);
     indices->PushBack(v2->Index);
@@ -122,13 +113,15 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
     convexList.Erase(v2);
 
     // Removing the ear will potentially create new ears
-    if(v1->IsReflex && !v1->IsBase && IsVertexConvex(v1, vertexBuffer, vertices))
+    if (v1->IsReflex && !v1->IsBase &&
+        IsVertexConvex(v1, vertexBuffer, vertices))
     {
       v1->IsReflex = false;
       convexList.PushBack(v1);
     }
 
-    if(v3->IsReflex && !v3->IsBase && IsVertexConvex(v3, vertexBuffer, vertices))
+    if (v3->IsReflex && !v3->IsBase &&
+        IsVertexConvex(v3, vertexBuffer, vertices))
     {
       v3->IsReflex = false;
       convexList.PushBack(v3);
@@ -138,19 +131,22 @@ bool TriangulateMountain(const Array<Vec2>& vertexBuffer,
   return vertices.Empty();
 }
 
-}
+} // namespace
 
-bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule::Type rule)
+bool BuildSet(const TrapezoidMap& map,
+              Array<uint>* indices,
+              s32 seed,
+              FillRule::Type rule)
 {
   FillRuleFunc func = fillRuleFunctions[rule];
 
   Array<bool> alreadyUsedLeft(map.mRegions.GetCapacity());
-  for(size_t i = 0; i < alreadyUsedLeft.Size(); ++i)
+  for (size_t i = 0; i < alreadyUsedLeft.Size(); ++i)
   {
     alreadyUsedLeft[i] = false;
-  } 
+  }
   Array<bool> alreadyUsedRight(map.mRegions.GetCapacity());
-  for(size_t i = 0; i < alreadyUsedRight.Size(); ++i)
+  for (size_t i = 0; i < alreadyUsedRight.Size(); ++i)
   {
     alreadyUsedRight[i] = false;
   }
@@ -159,19 +155,20 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
   ContourVertex vertex;
   vertex.IsBase = false;
 
-  for(s32 i = 0; i < map.mRegions.GetCapacity(); ++i)
+  for (s32 i = 0; i < map.mRegions.GetCapacity(); ++i)
   {
-    if(seed != -1 && seed != i) continue;
-    
+    if (seed != -1 && seed != i)
+      continue;
+
     const TrapezoidMap::Region* region = map.mRegions.GetElement(i);
-    if(region->NodeIndex != -1)
+    if (region->NodeIndex != -1)
     {
-      if(region->Depth > 0 && func(region->WindingOrder, region->Depth))
+      if (region->Depth > 0 && func(region->WindingOrder, region->Depth))
       {
-        if(map.mEndIndex[region->TopVertex] != region->BotVertex &&
-           map.mEndIndex[region->BotVertex] != region->TopVertex)
+        if (map.mEndIndex[region->TopVertex] != region->BotVertex &&
+            map.mEndIndex[region->BotVertex] != region->TopVertex)
         {
-          if(!alreadyUsedLeft[i])
+          if (!alreadyUsedLeft[i])
           {
             TrapezoidMap::VertexId baseId = map.mTopIndex[region->LeftEdge];
             mountain.Clear();
@@ -187,40 +184,40 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
             const TrapezoidMap::Region* curr = region;
             const TrapezoidMap::Region* prev = curr;
 
-            while(map.mTopIndex[curr->LeftEdge] == baseId)
+            while (map.mTopIndex[curr->LeftEdge] == baseId)
             {
               prev = curr;
-              alreadyUsedLeft[map.mRegions.GetIndex(prev)] = true; 
+              alreadyUsedLeft[map.mRegions.GetIndex(prev)] = true;
 
               TrapezoidMap::RegionId next = curr->BotNeighbor[0];
-              if(next == -1)
+              if (next == -1)
               {
-                break;    
+                break;
               }
               curr = map.mRegions.GetElement(next);
             }
 
             // Add diagonal
             curr = prev;
-            while(curr->TopVertex != baseId && curr->TopVertex != -1)
+            while (curr->TopVertex != baseId && curr->TopVertex != -1)
             {
               // Add right edge endpoint
               vertex.Index = curr->TopVertex;
               mountain.PushBack(vertex);
 
               TrapezoidMap::RegionId next = curr->TopNeighbor[0];
-              if(next == -1)
+              if (next == -1)
               {
                 break;
               }
               curr = map.mRegions.GetElement(next);
-              alreadyUsedLeft[map.mRegions.GetIndex(curr)] = true; 
+              alreadyUsedLeft[map.mRegions.GetIndex(curr)] = true;
             }
 
             TriangulateMountain(map.mVertices, mountain, indices);
           }
 
-          if(!alreadyUsedRight[i])
+          if (!alreadyUsedRight[i])
           {
             TrapezoidMap::VertexId baseId = map.mTopIndex[region->RightEdge];
             mountain.Clear();
@@ -236,15 +233,15 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
             // Use region graph to get to bottom of base edge
             const TrapezoidMap::Region* curr = region;
             const TrapezoidMap::Region* prev = curr;
-            while(map.mTopIndex[curr->RightEdge] == baseId)
+            while (map.mTopIndex[curr->RightEdge] == baseId)
             {
               prev = curr;
-              alreadyUsedRight[map.mRegions.GetIndex(prev)] = true;                                          
-              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1 
-                                          ? curr->BotNeighbor[1]
-                                          : curr->BotNeighbor[0];
+              alreadyUsedRight[map.mRegions.GetIndex(prev)] = true;
+              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1
+                                                ? curr->BotNeighbor[1]
+                                                : curr->BotNeighbor[0];
 
-              if(next == -1)
+              if (next == -1)
               {
                 break;
               }
@@ -253,26 +250,26 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
 
             // Add diagonal
             curr = prev;
-            while(curr->TopVertex != baseId && curr->TopVertex != -1)
+            while (curr->TopVertex != baseId && curr->TopVertex != -1)
             {
               // Add right edge endpoint
               vertex.Index = curr->TopVertex;
               mountain.PushBack(vertex);
-              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1 
-                                          ? curr->TopNeighbor[1]
-                                          : curr->TopNeighbor[0];
-              if(next == -1)
+              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1
+                                                ? curr->TopNeighbor[1]
+                                                : curr->TopNeighbor[0];
+              if (next == -1)
               {
                 break;
               }
               curr = map.mRegions.GetElement(next);
-              alreadyUsedRight[map.mRegions.GetIndex(curr)] = true;     
+              alreadyUsedRight[map.mRegions.GetIndex(curr)] = true;
             }
 
-            if(mountain.Empty() == false)
+            if (mountain.Empty() == false)
             {
               Zero::Reverse(mountain.Begin(), mountain.End());
-              TriangulateMountain(map.mVertices, mountain, indices); 
+              TriangulateMountain(map.mVertices, mountain, indices);
             }
           }
         }
@@ -280,135 +277,137 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
     }
   }
 
-  for(s32 i = 0; i < map.mRegions.GetCapacity(); ++i)
+  for (s32 i = 0; i < map.mRegions.GetCapacity(); ++i)
   {
-    if(seed != -1 && seed != i)
+    if (seed != -1 && seed != i)
     {
       continue;
     }
-    
-    if(alreadyUsedLeft[i] || alreadyUsedRight[i])
+
+    if (alreadyUsedLeft[i] || alreadyUsedRight[i])
     {
       continue;
     }
 
     const TrapezoidMap::Region* region = map.mRegions.GetElement(i);
-    if(region->NodeIndex != -1)
+    if (region->NodeIndex != -1)
     {
-      if(region->Depth > 0 && func(region->WindingOrder, region->Depth))
+      if (region->Depth > 0 && func(region->WindingOrder, region->Depth))
       {
-          if(map.mTopIndex[region->LeftEdge] == map.mTopIndex[region->RightEdge])
+        if (map.mTopIndex[region->LeftEdge] == map.mTopIndex[region->RightEdge])
+        {
+          const TrapezoidMap::Region* below =
+              map.mRegions.GetElement(region->BotNeighbor[0]);
+
+          if (!map.IsAboveInternal(map.mBotIndex[region->LeftEdge],
+                                   map.mBotIndex[region->RightEdge]))
           {
-              const TrapezoidMap::Region* below = map.mRegions.GetElement(region->BotNeighbor[0]);
-          
-                if(!map.IsAboveInternal(map.mBotIndex[region->LeftEdge], map.mBotIndex[region->RightEdge]))
-                {
-                  TrapezoidMap::VertexId baseId = map.mTopIndex[region->LeftEdge];
-                  mountain.Clear();
-                  // Add base edge
-                  vertex.IsBase = true;
-                  vertex.Index = map.mTopIndex[region->LeftEdge];
-                  mountain.PushBack(vertex);
-                  vertex.Index = map.mBotIndex[region->LeftEdge];
-                  mountain.PushBack(vertex);
-                  vertex.IsBase = false;
+            TrapezoidMap::VertexId baseId = map.mTopIndex[region->LeftEdge];
+            mountain.Clear();
+            // Add base edge
+            vertex.IsBase = true;
+            vertex.Index = map.mTopIndex[region->LeftEdge];
+            mountain.PushBack(vertex);
+            vertex.Index = map.mBotIndex[region->LeftEdge];
+            mountain.PushBack(vertex);
+            vertex.IsBase = false;
 
-                  // Use region graph to get to bottom of base edge
-                  const TrapezoidMap::Region* curr = region;
-                  const TrapezoidMap::Region* prev = curr;
+            // Use region graph to get to bottom of base edge
+            const TrapezoidMap::Region* curr = region;
+            const TrapezoidMap::Region* prev = curr;
 
-                  while(map.mTopIndex[curr->LeftEdge] == baseId)
-                  {
-                    prev = curr;
-                    alreadyUsedLeft[map.mRegions.GetIndex(prev)] = true; 
+            while (map.mTopIndex[curr->LeftEdge] == baseId)
+            {
+              prev = curr;
+              alreadyUsedLeft[map.mRegions.GetIndex(prev)] = true;
 
-                    TrapezoidMap::RegionId next = curr->BotNeighbor[0];
-                    if(next == -1)
-                    {
-                      break;    
-                    }
-                    curr = map.mRegions.GetElement(next);
-                  }
+              TrapezoidMap::RegionId next = curr->BotNeighbor[0];
+              if (next == -1)
+              {
+                break;
+              }
+              curr = map.mRegions.GetElement(next);
+            }
 
-                  // Add diagonal
-                  curr = prev;
-                  while(curr->TopVertex != baseId && curr->TopVertex != -1)
-                  {
-                    // Add right edge endpoint
-                    vertex.Index = curr->TopVertex;
-                    mountain.PushBack(vertex);
+            // Add diagonal
+            curr = prev;
+            while (curr->TopVertex != baseId && curr->TopVertex != -1)
+            {
+              // Add right edge endpoint
+              vertex.Index = curr->TopVertex;
+              mountain.PushBack(vertex);
 
-                    TrapezoidMap::RegionId next = curr->TopNeighbor[0];
-                    if(next == -1)
-                    {
-                      break;
-                    }
-                    curr = map.mRegions.GetElement(next);
-                    alreadyUsedLeft[map.mRegions.GetIndex(curr)] = true; 
-                  }
+              TrapezoidMap::RegionId next = curr->TopNeighbor[0];
+              if (next == -1)
+              {
+                break;
+              }
+              curr = map.mRegions.GetElement(next);
+              alreadyUsedLeft[map.mRegions.GetIndex(curr)] = true;
+            }
 
-                  TriangulateMountain(map.mVertices, mountain, indices);
-                }
-                else
-                {
-                  TrapezoidMap::VertexId baseId = map.mTopIndex[region->RightEdge];
-                  mountain.Clear();
+            TriangulateMountain(map.mVertices, mountain, indices);
+          }
+          else
+          {
+            TrapezoidMap::VertexId baseId = map.mTopIndex[region->RightEdge];
+            mountain.Clear();
 
-                  // Add base edge
-                  vertex.IsBase = true;
-                  vertex.Index = map.mTopIndex[region->RightEdge];
-                  mountain.PushBack(vertex);
-                  vertex.Index = map.mBotIndex[region->RightEdge];
-                  mountain.PushBack(vertex);
-                  vertex.IsBase = false;
+            // Add base edge
+            vertex.IsBase = true;
+            vertex.Index = map.mTopIndex[region->RightEdge];
+            mountain.PushBack(vertex);
+            vertex.Index = map.mBotIndex[region->RightEdge];
+            mountain.PushBack(vertex);
+            vertex.IsBase = false;
 
-                  // Use region graph to get to bottom of base edge
-                  const TrapezoidMap::Region* curr = region;
-                  const TrapezoidMap::Region* prev = curr;
-                  while(map.mTopIndex[curr->RightEdge] == baseId)
-                  {
-                    prev = curr;
-                    alreadyUsedRight[map.mRegions.GetIndex(prev)] = true;                                          
-                    TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1 
+            // Use region graph to get to bottom of base edge
+            const TrapezoidMap::Region* curr = region;
+            const TrapezoidMap::Region* prev = curr;
+            while (map.mTopIndex[curr->RightEdge] == baseId)
+            {
+              prev = curr;
+              alreadyUsedRight[map.mRegions.GetIndex(prev)] = true;
+              TrapezoidMap::RegionId next = curr->BotNeighbor[1] != -1
                                                 ? curr->BotNeighbor[1]
                                                 : curr->BotNeighbor[0];
 
-                    if(next == -1)
-                    {
-                      break;
-                    }
-                    curr = map.mRegions.GetElement(next);
-                  }
+              if (next == -1)
+              {
+                break;
+              }
+              curr = map.mRegions.GetElement(next);
+            }
 
-                  // Add diagonal
-                  curr = prev;
-                  while(curr->TopVertex != baseId && curr->TopVertex != -1)
-                  {
-                    // Add right edge endpoint
-                    vertex.Index = curr->TopVertex;
-                    mountain.PushBack(vertex);
-                    TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1 
+            // Add diagonal
+            curr = prev;
+            while (curr->TopVertex != baseId && curr->TopVertex != -1)
+            {
+              // Add right edge endpoint
+              vertex.Index = curr->TopVertex;
+              mountain.PushBack(vertex);
+              TrapezoidMap::RegionId next = curr->TopNeighbor[1] != -1
                                                 ? curr->TopNeighbor[1]
                                                 : curr->TopNeighbor[0];
-                    if(next == -1)
-                    {
-                      break;
-                    }
-                    curr = map.mRegions.GetElement(next);
-                    alreadyUsedRight[map.mRegions.GetIndex(curr)] = true;     
-                  }
+              if (next == -1)
+              {
+                break;
+              }
+              curr = map.mRegions.GetElement(next);
+              alreadyUsedRight[map.mRegions.GetIndex(curr)] = true;
+            }
 
-                  if(mountain.Empty() == false)
-                  {
-                    Zero::Reverse(mountain.Begin(), mountain.End());
-                    TriangulateMountain(map.mVertices, mountain, indices); 
-                  }
-                }
+            if (mountain.Empty() == false)
+            {
+              Zero::Reverse(mountain.Begin(), mountain.End());
+              TriangulateMountain(map.mVertices, mountain, indices);
+            }
           }
+        }
       }
     }
   }
-  
+
   return true;
 }
 
@@ -428,6 +427,4 @@ bool Triangulate(const Array<Vec2>& vertices, Array<uint>* indices)
   return Triangulate(vertices, contourSizes, indices);
 }
 
-
-} // Geometry
-
+} // namespace Geometry

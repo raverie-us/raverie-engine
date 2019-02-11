@@ -1,23 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Shapes.hpp
-/// Declaration of the Ray, Segment, Triangle, Obb, Ellipsoid, Cylinder
-/// and Capsule classes. Also Contains conversion functions to and from shapes.
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//add closest point on for each
+// add closest point on for each
 
-//-------------------------------------------------------------------------- Ray
-///An object to represent a ray. Used to simplify ray usage and to more easily
-///deal with intersection functions.
+/// An object to represent a ray. Used to simplify ray usage and to more easily
+/// deal with intersection functions.
 struct Ray
 {
   Ray();
@@ -31,7 +21,7 @@ struct Ray
   Ray TransformInverse(Mat4Param transformation) const;
   Ray Transform(Mat4Param transformation) const;
   Ray UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Ray TransformedShapeType;
 
   Vec3 Start;
@@ -40,12 +30,13 @@ struct Ray
 
 typedef const Ray& RayParam;
 
-//---------------------------------------------------------------------- Segment
-///An object to represent a segment. Used to simplify segment usage and to more
-///easily deal with intersection functions.
+/// An object to represent a segment. Used to simplify segment usage and to more
+/// easily deal with intersection functions.
 struct Segment
 {
-  Segment() {}
+  Segment()
+  {
+  }
   Segment(Vec3Param start, Vec3Param end);
 
   Vec3 GetPoint(real t) const;
@@ -53,24 +44,25 @@ struct Segment
 
   Segment Transform(Mat4Param transformation) const;
   Segment UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Segment TransformedShapeType;
 
   Vec3 Start;
   Vec3 End;
 };
 
-//--------------------------------------------------------------------- Triangle
-///An object to represent a triangle. Used to simplify triangle usage and to
-///more easily deal with intersection functions.
+/// An object to represent a triangle. Used to simplify triangle usage and to
+/// more easily deal with intersection functions.
 struct Triangle
 {
-  Triangle() {}
+  Triangle()
+  {
+  }
   Triangle(Vec3Param point1, Vec3Param point2, Vec3Param point3);
 
   /// Index operators.
   Vec3& operator[](uint index);
-  const Vec3& operator[](uint index)const;
+  const Vec3& operator[](uint index) const;
 
   /// Returns the averaged center of the triangle
   Vec3 GetCenter() const;
@@ -86,7 +78,9 @@ struct Triangle
   /// stored in the parameter.
   void Support(Vec3Param direction, Vec3Ptr support) const;
   /// Get the vector to the shape's known future position.
-  void GetTranslation(Vec3Ref translation) const {}
+  void GetTranslation(Vec3Ref translation) const
+  {
+  }
 
   /// Returns the area of the triangle.
   real GetArea() const;
@@ -96,7 +90,7 @@ struct Triangle
 
   Triangle Transform(Mat4Param transformation) const;
   Triangle UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Triangle TransformedShapeType;
 
   Vec3 p0, p1, p2;
@@ -104,14 +98,18 @@ struct Triangle
 
 typedef Array<Triangle> TriangleArray;
 
-//-------------------------------------------------------------------SweptTriangle
 /// A triangle that has been swept along an axis vector.
 /// Used to make thick triangles, primarily for the height map.
 struct SweptTriangle
 {
-  SweptTriangle() {}
+  SweptTriangle()
+  {
+  }
   SweptTriangle(Triangle& triangle, Vec3Param scaledDirection);
-  SweptTriangle(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param scaledDirection);
+  SweptTriangle(Vec3Param point1,
+                Vec3Param point2,
+                Vec3Param point3,
+                Vec3Param scaledDirection);
 
   /// Index operators.
   Vec3& operator[](uint index);
@@ -130,20 +128,24 @@ struct SweptTriangle
 
   SweptTriangle Transform(Mat4Param transformation) const;
   SweptTriangle UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef SweptTriangle TransformedShapeType;
 
   Triangle BaseTri;
   Vec3 ScaledDir;
 };
 
-//-------------------------------------------------------------------Tetrahedron
-///An object to represent a tetrahedra. Used to simplify tetrahedra usage and to
-///more easily deal with intersection functions.
+/// An object to represent a tetrahedra. Used to simplify tetrahedra usage and
+/// to more easily deal with intersection functions.
 struct Tetrahedron
 {
-  Tetrahedron() {}
-  Tetrahedron(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param point4);
+  Tetrahedron()
+  {
+  }
+  Tetrahedron(Vec3Param point1,
+              Vec3Param point2,
+              Vec3Param point3,
+              Vec3Param point4);
 
   /// Index operators.
   Vec3& operator[](uint index);
@@ -166,20 +168,23 @@ struct Tetrahedron
 
   Tetrahedron Transform(Mat4Param transformation) const;
   Tetrahedron UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Tetrahedron TransformedShapeType;
 
   Vec3 p0, p1, p2, p3;
 };
 
-//-------------------------------------------------------------------------- Obb
-///An object to represent a Oriented Bounding Box. Used to simplify OBB usage
-///and to more easily deal with intersection functions.
+/// An object to represent a Oriented Bounding Box. Used to simplify OBB usage
+/// and to more easily deal with intersection functions.
 struct Obb
 {
-  Obb() {}
-  Obb(Vec3Param center, Vec3Param radii, Mat3Param basis)
-    : Center(center), HalfExtents(radii), Basis(basis)
+  Obb()
+  {
+  }
+  Obb(Vec3Param center, Vec3Param radii, Mat3Param basis) :
+      Center(center),
+      HalfExtents(radii),
+      Basis(basis)
   {
   }
 
@@ -189,7 +194,7 @@ struct Obb
 
   Obb Transform(Mat4Param transformation) const;
   Obb UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Obb TransformedShapeType;
 
   Vec3 Center;
@@ -197,14 +202,17 @@ struct Obb
   Mat3 Basis;
 };
 
-//-------------------------------------------------------------------- Ellipsoid
-///An object to represent a ellipsoid. Used to simplify ellipsoid usage and to
-///more easily deal with intersection functions.
+/// An object to represent a ellipsoid. Used to simplify ellipsoid usage and to
+/// more easily deal with intersection functions.
 struct Ellipsoid
 {
-  Ellipsoid() {}
-  Ellipsoid(Vec3Param center, Vec3Param radii, Mat3Param basis)
-    : Center(center), Radii(radii), Basis(basis)
+  Ellipsoid()
+  {
+  }
+  Ellipsoid(Vec3Param center, Vec3Param radii, Mat3Param basis) :
+      Center(center),
+      Radii(radii),
+      Basis(basis)
   {
   }
 
@@ -213,7 +221,7 @@ struct Ellipsoid
 
   Ellipsoid Transform(Mat4Param transformation) const;
   Ellipsoid UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Ellipsoid TransformedShapeType;
 
   Vec3 Center;
@@ -221,14 +229,17 @@ struct Ellipsoid
   Mat3 Basis;
 };
 
-//--------------------------------------------------------------------- Cylinder
-///An object to represent a cylinder. Used to simplify cylinder
-///usage and to more easily deal with intersection functions.
+/// An object to represent a cylinder. Used to simplify cylinder
+/// usage and to more easily deal with intersection functions.
 struct Cylinder
 {
-  Cylinder() {}
-  Cylinder(Vec3Param pointA, Vec3Param pointB, real radius)
-    : PointA(pointA), PointB(pointB), Radius(radius)
+  Cylinder()
+  {
+  }
+  Cylinder(Vec3Param pointA, Vec3Param pointB, real radius) :
+      PointA(pointA),
+      PointB(pointB),
+      Radius(radius)
   {
   }
 
@@ -247,7 +258,7 @@ struct Cylinder
 
   Cylinder Transform(Mat4Param transformation) const;
   Cylinder UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Cylinder TransformedShapeType;
 
   Vec3 PointA;
@@ -255,14 +266,17 @@ struct Cylinder
   real Radius;
 };
 
-//---------------------------------------------------------------------- Capsule
-///An object to represent a capsule. Used to simplify capsule
-///usage and to more easily deal with intersection functions.
+/// An object to represent a capsule. Used to simplify capsule
+/// usage and to more easily deal with intersection functions.
 struct Capsule
 {
-  Capsule() {}
-  Capsule(Vec3Param pointA, Vec3Param pointB, real radius)
-    : PointA(pointA), PointB(pointB), Radius(radius)
+  Capsule()
+  {
+  }
+  Capsule(Vec3Param pointA, Vec3Param pointB, real radius) :
+      PointA(pointA),
+      PointB(pointB),
+      Radius(radius)
   {
   }
 
@@ -284,7 +298,7 @@ struct Capsule
 
   Capsule Transform(Mat4Param transformation) const;
   Capsule UniformTransform(Mat4Param transformation) const;
-  ///Typedef for templated code to know what the transformed type is.
+  /// Typedef for templated code to know what the transformed type is.
   typedef Capsule TransformedShapeType;
 
   Vec3 PointA;
@@ -292,4 +306,4 @@ struct Capsule
   real Radius;
 };
 
-}//namespace Zero
+} // namespace Zero

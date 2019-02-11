@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AudioContent.cpp
-/// Implementation of the Audio content classes.
-/// 
-/// Authors: Chris Peters, Andrea Ellinger
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "../Sound/SoundStandard.hpp"
 
@@ -21,7 +13,6 @@ AudioContent::AudioContent()
   EditMode = ContentEditMode::ContentItem;
 }
 
-//---------------------------------------------------------------------- Factory
 
 ContentItem* MakeAudioContent(ContentInitializer& initializer)
 {
@@ -36,7 +27,7 @@ ContentItem* MakeAudioContent(ContentInitializer& initializer)
   return content;
 }
 
-//------------------------------------------------------------------- SoundBuilder
+//SoundBuilder
 ZilchDefineType(SoundBuilder, builder, type)
 {
   ZeroBindDependency(AudioContent);
@@ -45,8 +36,11 @@ ZilchDefineType(SoundBuilder, builder, type)
 
   ZilchBindFieldProperty(Name);
   ZilchBindFieldProperty(mFileLoadType);
-  ZilchBindFieldProperty(mNormalize)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mMaxVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mNormalize);
+  ZilchBindFieldProperty(mNormalize)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mMaxVolume)
+      ->Add(new EditorSlider(0.0f, 1.0f, 0.1f))
+      ->ZeroFilterBool(mNormalize);
 }
 
 void SoundBuilder::Generate(ContentInitializer& initializer)
@@ -60,13 +54,15 @@ void SoundBuilder::Serialize(Serializer& stream)
 {
   SerializeName(Name);
   SerializeName(mResourceId);
-  SerializeEnumNameDefault(AudioFileLoadType, mFileLoadType, AudioFileLoadType::Auto);
+  SerializeEnumNameDefault(
+      AudioFileLoadType, mFileLoadType, AudioFileLoadType::Auto);
   SerializeNameDefault(mNormalize, false);
   SerializeNameDefault(mMaxVolume, 0.9f);
 
-  // This should be removed at the next major version (makes sure that we keep the streaming
-  // setting for existing sounds)
-  if (stream.GetType() != SerializerType::Binary && stream.GetMode() == SerializerMode::Loading)
+  // This should be removed at the next major version (makes sure that we keep
+  // the streaming setting for existing sounds)
+  if (stream.GetType() != SerializerType::Binary &&
+      stream.GetMode() == SerializerMode::Loading)
   {
     SerializeNameDefault(mStreamed, false);
     if (mStreamed)
@@ -81,7 +77,8 @@ void SoundBuilder::BuildContent(BuildOptions& options)
 {
   Status status;
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
-  String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
+  String destFile =
+      FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
 
   // Create the AudioFile object and open the source file
   AudioFileData audioFile = AudioFileEncoder::OpenFile(status, sourceFile);
@@ -89,7 +86,8 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   if (status.Succeeded())
   {
     // Encode the file and write it out to disk
-    AudioFileEncoder::WriteFile(status, destFile, audioFile, mNormalize, mMaxVolume);
+    AudioFileEncoder::WriteFile(
+        status, destFile, audioFile, mNormalize, mMaxVolume);
 
     if (status.Failed())
       DoNotifyWarning("Error Processing Audio File", status.Message);
@@ -105,7 +103,7 @@ bool SoundBuilder::NeedsBuilding(BuildOptions& options)
 
 void SoundBuilder::BuildListing(ResourceListing& listing)
 {
-  //Data is the same but loaders are different for streamed and direct load.
+  // Data is the same but loaders are different for streamed and direct load.
   if (mFileLoadType == AudioFileLoadType::StreamFromFile)
     LoaderType = "StreamedSound";
   else if (mFileLoadType == AudioFileLoadType::Uncompressed)
@@ -116,7 +114,6 @@ void SoundBuilder::BuildListing(ResourceListing& listing)
   DirectBuilderComponent::BuildListing(listing);
 }
 
-//------------------------------------------------------------------------------
 void CreateAudioContent(ContentSystem* system)
 {
   AddContent<AudioContent>(system);
@@ -127,4 +124,4 @@ void CreateAudioContent(ContentSystem* system)
   system->CreatorsByExtension["ogg"] = audioContent;
 }
 
-}//namespace Zero
+} // namespace Zero

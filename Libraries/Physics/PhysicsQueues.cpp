@@ -1,20 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-  
+
 namespace Physics
 {
 
 PhysicsQueue::PhysicsQueue()
 {
-
 }
 
 void PhysicsQueue::Queue(TransformAction& action)
@@ -46,17 +40,19 @@ void PhysicsQueue::Empty()
   mBroadPhaseAction.EmptyState();
 }
 
-void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& dynamicBatch, Collider* collider)
+void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch,
+                                BroadPhaseBatch& dynamicBatch,
+                                Collider* collider)
 {
   typedef BroadPhaseAction BPAction;
   BPAction& action = mBroadPhaseAction;
 
   byte& state = mBroadPhaseAction.mState;
 
-  //deal with dynamic states
-  if(action.IsSet(BPAction::DynamicRemoval))
+  // deal with dynamic states
+  if (action.IsSet(BPAction::DynamicRemoval))
     dynamicBatch.removals.PushBack(&mProxy);
-  else if(action.IsSet(BPAction::DynamicInsert))
+  else if (action.IsSet(BPAction::DynamicInsert))
   {
     BroadPhaseData bpData;
     ColliderToBroadPhaseData(collider, bpData);
@@ -64,10 +60,10 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& d
     dynamicBatch.inserts.PushBack(bpObject);
   }
 
-  //deal with static states
-  if(action.IsSet(BPAction::StaticRemoval))
+  // deal with static states
+  if (action.IsSet(BPAction::StaticRemoval))
     staticBatch.removals.PushBack(&mProxy);
-  else if(action.IsSet(BPAction::StaticInsert))
+  else if (action.IsSet(BPAction::StaticInsert))
   {
     BroadPhaseData bpData;
     ColliderToBroadPhaseData(collider, bpData);
@@ -75,24 +71,25 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& d
     staticBatch.inserts.PushBack(bpObject);
   }
 
-  //deal with updates
-  if(!action.IsSet(BPAction::Static | BPAction::Dynamic) && 
-     action.IsSet(BPAction::Update))
+  // deal with updates
+  if (!action.IsSet(BPAction::Static | BPAction::Dynamic) &&
+      action.IsSet(BPAction::Update))
   {
     BroadPhaseData bpData;
     ColliderToBroadPhaseData(collider, bpData);
     BroadPhaseObject bpObject(&mProxy, bpData);
 
-    if(action.IsSet(BPAction::CurrStateStatic))
+    if (action.IsSet(BPAction::CurrStateStatic))
       staticBatch.updates.PushBack(bpObject);
-    else if(action.IsSet(BPAction::CurrStateDynamic))
+    else if (action.IsSet(BPAction::CurrStateDynamic))
       dynamicBatch.updates.PushBack(bpObject);
     else
       ErrorIf(true, "No states were set for this object's broadphase queue.");
   }
 }
 
-void PhysicsQueue::ColliderToBroadPhaseData(Collider* collider, BroadPhaseData& data)
+void PhysicsQueue::ColliderToBroadPhaseData(Collider* collider,
+                                            BroadPhaseData& data)
 {
   data.mAabb = collider->mAabb;
   data.mClientData = (void*)collider;
@@ -109,6 +106,6 @@ bool PhysicsQueue::IsQueued() const
   return mBroadPhaseAction.IsSet(BroadPhaseAction::CurrStateQueued);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -33,7 +28,7 @@ struct StickJoint : public Joint
   DeclareAnchorAccessors(StickJoint, mAnchors);
 
   StickJoint();
-  
+
   // Component Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -70,8 +65,8 @@ struct StickJoint : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::StickJoint StickJoint;
 
-}//namespace Zero
+} // namespace Zero

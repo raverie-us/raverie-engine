@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Importer.hpp"
 #include "FileSystem.hpp"
@@ -15,7 +10,6 @@
 namespace Zero
 {
 
-//------------------------------------------------------------ Importer 
 const uint Importer::cEmptyPackageSize = 8;
 
 ImporterResult::Type Importer::CheckForImport()
@@ -46,8 +40,10 @@ ImporterResult::Type Importer::CheckForImport()
 
   String applicationPath = GetApplication();
   String applicationName = FilePath::GetFileName(applicationPath);
-  String destinationApplication = FilePath::Combine(mOutputDirectory, ZeroEngineExecutable);
-  if (applicationName != ZeroEngineExecutable && !FileExists(destinationApplication))
+  String destinationApplication =
+      FilePath::Combine(mOutputDirectory, ZeroEngineExecutable);
+  if (applicationName != ZeroEngineExecutable &&
+      !FileExists(destinationApplication))
   {
     ZPrint("Copying exe to output directory\n");
 
@@ -63,12 +59,13 @@ ImporterResult::Type Importer::CheckForImport()
   {
     ZPrint("Extracting packaged exe resources\n");
 
-    //Extract critical blocking resources (loading, etc)
+    // Extract critical blocking resources (loading, etc)
     Archive engineArchive(ArchiveMode::Decompressing);
     engineArchive.ReadBuffer(ArchiveReadFlags::All, buffer);
-    engineArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer, mOutputDirectory);
+    engineArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer,
+                                    mOutputDirectory);
 
-    //Extract the project package
+    // Extract the project package
     byte* data = buffer.GetCurrent();
     size_t size = buffer.Size() - buffer.Tell();
     ByteBufferBlock importBuffer(data, size, false);
@@ -89,12 +86,15 @@ OsInt Importer::DoImport(ByteBufferBlock& buffer)
 {
   Archive projectArchive(ArchiveMode::Decompressing);
 
-  //Read all the entries
-  projectArchive.ReadBuffer(ArchiveReadFlags::Enum(ArchiveReadFlags::Entries | ArchiveReadFlags::Data), buffer);
-  //Only decompress and overwrite if the files are newer
-  //this allows packaged exes to 'install' by running once
-  projectArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer, mOutputDirectory);
+  // Read all the entries
+  projectArchive.ReadBuffer(ArchiveReadFlags::Enum(ArchiveReadFlags::Entries |
+                                                   ArchiveReadFlags::Data),
+                            buffer);
+  // Only decompress and overwrite if the files are newer
+  // this allows packaged exes to 'install' by running once
+  projectArchive.ExportToDirectory(ArchiveExportMode::OverwriteIfNewer,
+                                   mOutputDirectory);
   return 0;
 }
 
-}
+} // namespace Zero

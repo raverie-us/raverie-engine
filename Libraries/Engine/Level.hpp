@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,7 +6,7 @@ namespace Zero
 
 /// A level is resource that stores a set of objects that can be loaded into
 /// a space. Level is different from most resource types in that it does
-/// not really store the level data on the object but always loads the 
+/// not really store the level data on the object but always loads the
 /// data from the file system.
 class Level : public Resource
 {
@@ -21,18 +16,18 @@ public:
   Level();
   ~Level();
 
-  //Resource interface
+  // Resource interface
   void UpdateContentItem(ContentItem* contentItem) override;
 
-  //Save the current contents of the space into the level.
+  // Save the current contents of the space into the level.
   void SaveSpace(Space* space);
 
-  //Load the level contents into the space.
+  // Load the level contents into the space.
   void LoadSpace(Space* space);
 
   String GetLoadPath();
 
-  ///Path to level file.
+  /// Path to level file.
   String LoadPath;
   DataNode* mCacheTree;
 };
@@ -47,4 +42,4 @@ public:
   static void ClearCachedLevels();
 };
 
-}
+} // namespace Zero

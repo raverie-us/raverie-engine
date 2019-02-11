@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ObjectView.cpp
-/// 
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,12 +6,12 @@ namespace Zero
 
 namespace Column
 {
-  const String Icon = "Icon";
-  const String Description = "Description";
-  const String File = "File";
-  const String Line = "Line";
-  const String Library = "Library";
-}
+const String Icon = "Icon";
+const String Description = "Description";
+const String File = "File";
+const String Line = "Line";
+const String Library = "Library";
+} // namespace Column
 
 struct ScriptError
 {
@@ -29,7 +21,6 @@ struct ScriptError
   String Library;
 };
 
-//------------------------------------------------------------------ Data Source
 class ErrorListSource : public DataSource
 {
 public:
@@ -40,7 +31,7 @@ public:
     // Root
     mErrors.PushBack(new ScriptError());
 
-    for(uint i = 0; i < 10; ++i)
+    for (uint i = 0; i < 10; ++i)
     {
       ScriptError* error = new ScriptError();
       error->Description = "expected an indented block";
@@ -50,15 +41,15 @@ public:
     }
   }
 
-  //DataSource Interface
-  
-  //Data base Indexing
+  // DataSource Interface
+
+  // Data base Indexing
   DataEntry* GetRoot() override
   {
     return mErrors[0];
   }
 
-  //Safe Indexing
+  // Safe Indexing
   DataEntry* ToEntry(DataIndex index) override
   {
     return mErrors[(uint)index.Id];
@@ -73,7 +64,7 @@ public:
   DataEntry* Parent(DataEntry* dataEntry) override
   {
     ScriptError* root = mErrors[0];
-    if(dataEntry == root)
+    if (dataEntry == root)
       return NULL;
     return root;
   }
@@ -81,68 +72,70 @@ public:
   uint ChildCount(DataEntry* dataEntry) override
   {
     ScriptError* root = mErrors[0];
-    if(dataEntry == root)
+    if (dataEntry == root)
       return mErrors.Size() - 1;
     return 0;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
     ScriptError* root = mErrors[0];
-    if(dataEntry == root)
+    if (dataEntry == root)
       return mErrors[index + 1];
     return NULL;
   }
 
-  //Tree expanding
+  // Tree expanding
   bool IsExpandable(DataEntry* dataEntry) override
   {
     ScriptError* root = mErrors[0];
-    if(dataEntry == root)
+    if (dataEntry == root)
       return true;
     return false;
   }
 
-  //Data Base Cell Modification and Inspection
+  // Data Base Cell Modification and Inspection
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
-    //error C2061:
+    // error C2061:
     ScriptError* error = (ScriptError*)dataEntry;
     static const String RedX("RedX");
     static const String FrozenTestBed("FrozenTestBed");
 
-    if(column == Column::Icon)
+    if (column == Column::Icon)
     {
       variant = RedX;
     }
-    if(column == Column::Description)
+    if (column == Column::Description)
     {
-      variant =  error->Description;
+      variant = error->Description;
     }
-    if(column == Column::File)
+    if (column == Column::File)
     {
       variant = error->File;
     }
-    if(column == Column::Line)
+    if (column == Column::Line)
     {
       variant = String::Format("%i", error->Line);
     }
-    if(column == Column::Library)
+    if (column == Column::Library)
     {
       variant = FrozenTestBed;
     }
   }
 
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     // Cannot modify anything
     return false;
   }
 };
 
-//------------------------------------------------------------------ Object View
-ErrorList::ErrorList(Composite* parent)
-  :Composite(parent)
+ErrorList::ErrorList(Composite* parent) : Composite(parent)
 {
   this->SetLayout(CreateStackLayout());
   mTree = new TreeView(this);
@@ -162,7 +155,7 @@ ErrorList::~ErrorList()
 
 void ErrorList::ClearErrors()
 {
-  forRange(ScriptError* error, mSource->mErrors.All())
+  forRange(ScriptError * error, mSource->mErrors.All())
   {
     delete error;
   }
@@ -173,10 +166,11 @@ void ErrorList::ClearErrors()
 void ErrorList::OnScriptError(Event* event)
 {
   ScriptError* error = new ScriptError();
-  // This was originally python specific, this should be remade to be more generic
-  //error->Description = event->Message;
-  //error->File = FilePath::GetFileName(event->Location.FileName);
-  //error->Line = event->Location.LineNumber;
+  // This was originally python specific, this should be remade to be more
+  // generic
+  // error->Description = event->Message;
+  // error->File = FilePath::GetFileName(event->Location.FileName);
+  // error->Line = event->Location.LineNumber;
   mSource->mErrors.PushBack(error);
   mTree->Refresh();
 }
@@ -188,7 +182,8 @@ void ErrorList::UpdateTransform()
 
 void ErrorList::BuildFormat(TreeFormatting& formatting)
 {
-  formatting.Flags.SetFlag(FormatFlags::ShowHeaders | FormatFlags::ShowSeparators);
+  formatting.Flags.SetFlag(FormatFlags::ShowHeaders |
+                           FormatFlags::ShowSeparators);
 
   // Icon
   ColumnFormat* format = &formatting.Columns.PushBack();
@@ -241,4 +236,4 @@ void ErrorList::OnDataActivated(DataEvent* event)
   // Open the file and go to that error
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,11 +9,19 @@ struct TransformProxyObjectEvent;
 
 struct ConstraintInfo;
 
-DeclareBitField7(CarWheelFlags, IsDriveWheel, IsInContact, InEditor, ChildedWheel, IsSliding, Is2DWheel, Active);
+DeclareBitField7(CarWheelFlags,
+                 IsDriveWheel,
+                 IsInContact,
+                 InEditor,
+                 ChildedWheel,
+                 IsSliding,
+                 Is2DWheel,
+                 Active);
 
-/// A wheel for a high speed physics based car. Each wheel contains properties to describe
-/// how to interact with the world (eg. spring forces, friction, etc...).
-struct PhysicsCarWheel: public Component
+/// A wheel for a high speed physics based car. Each wheel contains properties
+/// to describe how to interact with the world (eg. spring forces, friction,
+/// etc...).
+struct PhysicsCarWheel : public Component
 {
   ZilchDeclareType(PhysicsCarWheel, TypeCopyMode::ReferenceType);
 
@@ -74,7 +77,8 @@ struct PhysicsCarWheel: public Component
   /// Should this wheel calculate forces for the current PhysicsCar.
   bool GetActive();
   void SetActive(bool active);
-  /// The local position on the car body that the wheel starts at (raycasts from).
+  /// The local position on the car body that the wheel starts at (raycasts
+  /// from).
   Vec3 GetWheelLocalStartPosition();
   void SetWheelLocalStartPosition(Vec3Param localStartPosition);
   /// How much this wheel steers. [0, 1] where 1 is the max steering of the car.
@@ -90,20 +94,23 @@ struct PhysicsCarWheel: public Component
   /// The radius of the wheel.
   real GetRadius();
   void SetRadius(real radius);
-  /// The minimum length of the spring of the wheel. If a wheel cast hits an object
-  /// at a time before min but after start then the wheel will still collide with
-  /// this object but the spring forces and visuals will be at the min spring length.
-  /// This is useful for putting the starting raycast position inside of the object
-  /// so as to avoid tunneling but still having the wheel only visually display where it should.
+  /// The minimum length of the spring of the wheel. If a wheel cast hits an
+  /// object at a time before min but after start then the wheel will still
+  /// collide with this object but the spring forces and visuals will be at the
+  /// min spring length. This is useful for putting the starting raycast
+  /// position inside of the object so as to avoid tunneling but still having
+  /// the wheel only visually display where it should.
   real GetSpringMinLength();
   void SetSpringMinLength(real value);
-  /// The t value to start the raycast at. This t value is 0 at the wheel position
-  /// and travels in the direction of the wheel spring direction. This value is used
-  /// to modify where the raycast actually starts relative to the start position.
+  /// The t value to start the raycast at. This t value is 0 at the wheel
+  /// position and travels in the direction of the wheel spring direction. This
+  /// value is used to modify where the raycast actually starts relative to the
+  /// start position.
   real GetSpringStartLength();
   void SetSpringStartLength(real value);
-  /// The maximum length of the spring of the wheel. If the wheel hits something further
-  /// away than this length (plus the wheel radius) then that object will be ignored.
+  /// The maximum length of the spring of the wheel. If the wheel hits something
+  /// further away than this length (plus the wheel radius) then that object
+  /// will be ignored.
   real GetSpringMaxLength();
   void SetSpringMaxLength(real value);
   /// The maximum force that the wheel's spring can exert.
@@ -152,24 +159,26 @@ struct PhysicsCarWheel: public Component
   Vec3 GetWorldForwardAxis();
   /// The current world-space spring axis of the wheel.
   Vec3 GetWorldSpringAxis();
-  /// The velocity of the center of the wheel while taking into account the car's velocity.
+  /// The velocity of the center of the wheel while taking into account the
+  /// car's velocity.
   Vec3 GetWorldLinearVelocity();
   /// The axis that represents the world angular velocity of the wheel.
   Vec3 GetWorldAngularVelocity();
-  
 
   real mSteerFactor;
-  /// Used to alter the direction this wheel turns when the motor receives power.
-  /// Typically set to 1 or -1. Useful to cause a wheel to temporarily rotate backwards
-  /// without having to change its basis.
+  /// Used to alter the direction this wheel turns when the motor receives
+  /// power. Typically set to 1 or -1. Useful to cause a wheel to temporarily
+  /// rotate backwards without having to change its basis.
   real mDriveFactor;
   real mMaxBrakeStrength;
   real mRadius;
   /// The frequency at which the spring of this wheel oscillates per second
   real mFrequencyHz;
-  /// The damping ratio when the spring is compressing (0: no damping, 1 critical damping)
+  /// The damping ratio when the spring is compressing (0: no damping, 1
+  /// critical damping)
   real mDampingCompressionRatio;
-  /// The damping ratio when the spring is relaxing (0: no damping, 1 critical damping)
+  /// The damping ratio when the spring is relaxing (0: no damping, 1 critical
+  /// damping)
   real mDampingRelaxationRatio;
   Vec3 mWheelLocalStartPosition;
   Vec3 mBodyWheelSpringDir;
@@ -184,7 +193,7 @@ struct PhysicsCarWheel: public Component
   Quat mPreRotation;
   real mCurrRotation;
 
-  //working
+  // working
   Vec3 mWorldWheelStartPosition;
   Vec3 mWorldWheelSpringDir;
   Vec3 mWorldWheelForwardDir;
@@ -209,9 +218,10 @@ struct PhysicsCarWheel: public Component
   BitField<CarWheelFlags::Enum> mFlags;
 
   PhysicsCar* mCarBody;
-  
-  /// Used with Coulomb's friction to determine when the wheel will start slipping
-  /// in the forward direction. (i.e. the friction is bound by muS * Fnormal).
+
+  /// Used with Coulomb's friction to determine when the wheel will start
+  /// slipping in the forward direction. (i.e. the friction is bound by muS *
+  /// Fnormal).
   real mForwardStaticFriction;
   /// Determines the force applied in the forward direction when the wheel is
   /// in dynamic friction and therefore slipping. (i.e. force = muK * Fnormal)
@@ -225,7 +235,8 @@ struct PhysicsCarWheel: public Component
   real mSideDynamicFriction;
   /// Artificially increases the grip of the car (where 2 is twice the grip).
   /// The total grip scalar is computed as CarGripScalar * WheelGripScalar
-  /// so the total car can be easily tweaked while allowing individual wheel tweaks.
+  /// so the total car can be easily tweaked while allowing individual wheel
+  /// tweaks.
   real mGripScalar;
 
   /// The accumulated forward impulse from driving/braking.
@@ -233,10 +244,12 @@ struct PhysicsCarWheel: public Component
   real mTotalForwardImpulse;
   /// The accumulated side impulse from fixing drifting or sliding.
   real mTotalSideImpulse;
-  /// The final grip of the wheel in the forward direction (used to compute the actual grip).
+  /// The final grip of the wheel in the forward direction (used to compute the
+  /// actual grip).
   real mForwardGrip;
-  /// The final grip of the wheel in the side direction (used to compute the actual grip).
+  /// The final grip of the wheel in the side direction (used to compute the
+  /// actual grip).
   real mSideGrip;
 };
 
-}//namespace Zero
+} // namespace Zero

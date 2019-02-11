@@ -1,25 +1,21 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-VertexDescriptionBuilder::VertexDescriptionBuilder()
-  : mCurrentOffset(0),
-  mIndex(0)
+VertexDescriptionBuilder::VertexDescriptionBuilder() :
+    mCurrentOffset(0),
+    mIndex(0)
 {
-
 }
 
 VertexDescriptionBuilder::~VertexDescriptionBuilder()
 {
-
 }
 
-FixedVertexDescription& VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMesh* mesh)
+FixedVertexDescription&
+VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMesh* mesh)
 {
   if (mesh->HasPositions())
     AddAttribute(VertexSemantic::Position, VertexElementType::Real, 3);
@@ -47,21 +43,27 @@ FixedVertexDescription& VertexDescriptionBuilder::SetupDescriptionFromMesh(aiMes
 
   if (mesh->HasBones())
   {
-    AddAttribute(VertexSemantic::BoneWeights, VertexElementType::Real, cMaxBonesWeights);
-    AddAttribute(VertexSemantic::BoneIndices, VertexElementType::Byte, cMaxBonesWeights);
+    AddAttribute(
+        VertexSemantic::BoneWeights, VertexElementType::Real, cMaxBonesWeights);
+    AddAttribute(
+        VertexSemantic::BoneIndices, VertexElementType::Byte, cMaxBonesWeights);
   }
 
   mVertexDescription.mVertexSize = mCurrentOffset;
-  // if we have filled up and used every vertex description slot we don't need to mark none to signify the end
+  // if we have filled up and used every vertex description slot we don't need
+  // to mark none to signify the end
   if (mIndex != (VertexSemantic::Size - 1))
     AddAttribute(VertexSemantic::None, VertexElementType::Byte, 0);
 
   return mVertexDescription;
 }
 
-void VertexDescriptionBuilder::AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count)
+void VertexDescriptionBuilder::AddAttribute(VertexSemantic::Enum semantic,
+                                            VertexElementType::Enum type,
+                                            byte count)
 {
-  mVertexDescription.mAttributes[mIndex++] = VertexAttribute(semantic, type, count, mCurrentOffset);
+  mVertexDescription.mAttributes[mIndex++] =
+      VertexAttribute(semantic, type, count, mCurrentOffset);
   mCurrentOffset += count * GetElementSize(type);
 }
 
@@ -87,4 +89,4 @@ FixedVertexDescription VertexDescriptionBuilder::GetDescription()
   return mVertexDescription;
 }
 
-}// namespace Zero
+} // namespace Zero

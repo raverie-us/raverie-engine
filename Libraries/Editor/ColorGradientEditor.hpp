@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ColorGradientEditor.hpp
-/// Declaration of the ColorGradientEditor Composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +9,6 @@ class PixelBuffer;
 class DisplayVisual;
 class ColorEvent;
 
-//------------------------------------------------------------------ GradientKey
 namespace GradientEditing
 {
 
@@ -29,7 +20,7 @@ public:
 
   /// Update the translation of the object when anything changes
   void UpdateTransform() override;
-  
+
   /// Mouse event response.
   void OnMouseDrag(MouseEvent* event);
   void OnRightClick(MouseEvent* event);
@@ -64,22 +55,24 @@ public:
   ColorGradientEditor* mGradientEditor;
 };
 
-}//namespace GradientEditing
+} // namespace GradientEditing
 
-//------------------------------------------------------------------- Key Drawer
 class GradientKeyDrawer : public Widget
 {
 public:
   GradientKeyDrawer(ColorGradientEditor* gradientEditor);
 
   /// Draw the widget.
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
 private:
   ColorGradientEditor* mGradientEditor;
 };
 
-//-------------------------------------------------------- Color Gradient Editor
 class ColorGradientEditor : public Composite
 {
 public:
@@ -155,4 +148,4 @@ private:
 
 void DrawColorGradient(ColorGradient* gradient, PixelBuffer* buffer);
 
-}//namespace Zero
+} // namespace Zero

@@ -1,21 +1,18 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-PhysicsMeshProcessor::PhysicsMeshProcessor(PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap)
-  : mBuilder(physicsMeshBuilder),
+PhysicsMeshProcessor::PhysicsMeshProcessor(
+    PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap) :
+    mBuilder(physicsMeshBuilder),
     mMeshDataMap(meshDataMap)
 {
 }
 
 PhysicsMeshProcessor::~PhysicsMeshProcessor()
 {
-
 }
 
 void PhysicsMeshProcessor::BuildPhysicsMesh(String outputPath)
@@ -30,7 +27,8 @@ void PhysicsMeshProcessor::BuildPhysicsMesh(String outputPath)
   {
     GeometryResourceEntry& entry = mBuilder->Meshes[i];
     MeshData& meshData = mMeshDataMap[i];
-    String physicsMeshFile = FilePath::CombineWithExtension(outputPath, entry.mName, extension);
+    String physicsMeshFile =
+        FilePath::CombineWithExtension(outputPath, entry.mName, extension);
     meshData.mPhysicsMeshName = physicsMeshFile;
 
     BinaryFileSaver saver;
@@ -56,10 +54,11 @@ void PhysicsMeshProcessor::BuildPhysicsMesh(String outputPath)
 
     saver.Close();
   }
-
 }
 
-void PhysicsMeshProcessor::WriteStaticMesh(VertexPositionArray& vertices, IndexArray& indices, Serializer& saver)
+void PhysicsMeshProcessor::WriteStaticMesh(VertexPositionArray& vertices,
+                                           IndexArray& indices,
+                                           Serializer& saver)
 {
   // Start the PhysicsMesh node
   saver.StartPolymorphic("PhysicsMesh");
@@ -72,7 +71,9 @@ void PhysicsMeshProcessor::WriteStaticMesh(VertexPositionArray& vertices, IndexA
   saver.EndPolymorphic();
 }
 
-void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices, IndexArray& indices, Serializer& saver)
+void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices,
+                                           IndexArray& indices,
+                                           Serializer& saver)
 {
   // Start the ConvexMesh node
   saver.StartPolymorphic("ConvexMesh");
@@ -85,15 +86,13 @@ void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices, IndexA
   // Get the triangle count
   uint triCount = indices.Size() / 3;
 
-  //Calculate the volume of the mesh
-  float volume = Geometry::CalculateTriMeshVolume(&vertices.Front(),
-    (uint*)(&indices.Front()),
-                                                  triCount);
+  // Calculate the volume of the mesh
+  float volume = Geometry::CalculateTriMeshVolume(
+      &vertices.Front(), (uint*)(&indices.Front()), triCount);
 
-  //Calculate the center of mass of the mesh
-  Vec3 centerOfMass = Geometry::CalculateTriMeshCenterOfMass(&vertices.Front(),
-    (uint*)(&indices.Front()),
-                                                             triCount);
+  // Calculate the center of mass of the mesh
+  Vec3 centerOfMass = Geometry::CalculateTriMeshCenterOfMass(
+      &vertices.Front(), (uint*)(&indices.Front()), triCount);
 
   // Save the volume
   saver.SerializeField("Volume", volume);
@@ -101,52 +100,55 @@ void PhysicsMeshProcessor::WriteConvexMesh(VertexPositionArray& vertices, IndexA
   saver.SerializeField("CenterOfMass", centerOfMass);
 
   // Save the Bsp-Tree
-  //WriteBspTree(saver, vertices, indices);
+  // WriteBspTree(saver, vertices, indices);
 
   saver.EndPolymorphic();
 }
 
-void PhysicsMeshProcessor::WriteAabbTree(VertexPositionArray& vertices, IndexArray& indices, Serializer& saver)
+void PhysicsMeshProcessor::WriteAabbTree(VertexPositionArray& vertices,
+                                         IndexArray& indices,
+                                         Serializer& saver)
 {
-  //Build the Aabb-Tree
+  // Build the Aabb-Tree
   StaticAabbTree<uint> aabbTree;
   aabbTree.SetPartitionMethod(PartitionMethods::MinimizeVolumeSum);
 
-  //Dummy proxy. They will not be needed.
+  // Dummy proxy. They will not be needed.
   BroadPhaseProxy proxy;
 
-  //Populate the Aabb-Tree
+  // Populate the Aabb-Tree
   for (uint i = 0; i < indices.Size(); i += 3)
   {
-    //Grab the vertices of the triangle
+    // Grab the vertices of the triangle
     Vec3 p0, p1, p2;
     p0 = vertices[indices[i]];
     p1 = vertices[indices[i + 1]];
     p2 = vertices[indices[i + 2]];
 
-    //Build the Aabb of the triangle
+    // Build the Aabb of the triangle
     Aabb aabb;
     aabb.Compute(p0);
     aabb.Expand(p1);
     aabb.Expand(p2);
 
-    //Create the broad phase data.
+    // Create the broad phase data.
     BaseBroadPhaseData<uint> data;
     data.mClientData = i;
     data.mAabb = aabb;
 
-    //Insert it into the tree
+    // Insert it into the tree
     aabbTree.CreateProxy(proxy, data);
   }
 
-  //Construct the tree
+  // Construct the tree
   aabbTree.Construct();
 
-  //Save the tree
+  // Save the tree
   SerializeAabbTree(saver, aabbTree);
 }
 
-uint PhysicsMeshProcessor::RemoveDegenerateTriangles(VertexPositionArray& vertices, IndexArray& indicies)
+uint PhysicsMeshProcessor::RemoveDegenerateTriangles(
+    VertexPositionArray& vertices, IndexArray& indicies)
 {
   Array<IndexType> filteredIndices;
   filteredIndices.Reserve(indicies.Size());
@@ -178,4 +180,4 @@ uint PhysicsMeshProcessor::RemoveDegenerateTriangles(VertexPositionArray& vertic
   return amountRemoved;
 }
 
-}// namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,7 +6,6 @@ namespace Zero
 
 String GetEulaFilePath(Cog* configCog);
 
-//------------------------------------------------------------------------- Eula
 class EulaWindow : public Composite
 {
 public:
@@ -26,4 +20,4 @@ public:
   void OnCancel(Event*);
 };
 
-}//namespace Zero
+} // namespace Zero

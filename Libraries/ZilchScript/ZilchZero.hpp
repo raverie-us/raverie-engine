@@ -1,15 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------- Zilch Component
+//Zilch Component
 /// A base class for all Zilch components defined in script
 class ZilchComponent : public Component
 {
@@ -26,7 +21,7 @@ public:
   void Delete() override;
 };
 
-//-------------------------------------------------------------------------------------- Zilch Event
+//Zilch Event
 /// A base class for all Zilch events defined in script
 class ZilchEvent : public Event
 {
@@ -38,8 +33,9 @@ public:
   void Delete() override;
 };
 
-//------------------------------------------------------------------------------------- Zilch Object
-/// A base class for any object in Zilch that we want to have properties / meta / send and receive events
+//Zilch Object
+/// A base class for any object in Zilch that we want to have properties / meta
+/// / send and receive events
 class ZilchObject : public EventObject
 {
 public:
@@ -53,4 +49,4 @@ public:
 
 DeclareEnum2(FindZilchComponentResult, Success, NameConflictedWithNative);
 
-}
+} // namespace Zero

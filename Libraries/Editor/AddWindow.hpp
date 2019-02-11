@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,11 +6,11 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(AddWindowCancelled);
-  DeclareEvent(ResourceTypeSelected);
-  DeclareEvent(ResourceTemplateSelected);
-  DeclareEvent(PostAddResource);
-}
+DeclareEvent(AddWindowCancelled);
+DeclareEvent(ResourceTypeSelected);
+DeclareEvent(ResourceTemplateSelected);
+DeclareEvent(PostAddResource);
+} // namespace Events
 
 class ReourceManagersDataSource;
 class AddResourceWindow;
@@ -25,14 +20,15 @@ class ResourceTemplateDisplay;
 class ResourceTemplateDataSource;
 class ImportButton;
 
-// After we create a new Resource, it will be assigned to the object and property defined here.
+// After we create a new Resource, it will be assigned to the object and
+// property defined here.
 struct PostAddOp
 {
   Array<Handle> mObjects;
   PropertyPath mProperty;
 };
 
-//------------------------------------------------------------------------------ Post Add Resource Event
+//Post Add Resource Event
 class PostAddResourceEvent : public Event
 {
 public:
@@ -45,9 +41,11 @@ public:
 };
 
 // Open an add window
-AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window = nullptr, StringParam resourceName = "");
+AddResourceWindow* OpenAddWindow(BoundType* resourceType,
+                                 Window** window = nullptr,
+                                 StringParam resourceName = "");
 
-//------------------------------------------------------------------------------ Add Resource Window
+//Add Resource Window
 class AddResourceWindow : public Composite
 {
 public:
@@ -73,7 +71,7 @@ public:
   /// Add a list of tags to the resource being added
   void AddTags(TagList& tags);
 
-  ///ResourceTemplateSearch will take focus
+  /// ResourceTemplateSearch will take focus
   void TemplateSearchTakeFocus();
 
   PostAddOp mPostAdd;
@@ -91,7 +89,7 @@ private:
   ResourceTemplateDisplay* mResourceTemplateDisplay;
 };
 
-//----------------------------------------------------------------------------- Resource Type Search
+//Resource Type Search
 class ResourceTypeSearch : public ColoredComposite
 {
 public:
@@ -116,7 +114,8 @@ private:
   void OnKeyDown(KeyboardEvent* e);
   void OnSearchKeyPreview(KeyboardEvent* e);
 
-  /// When they hit 'Enter' on a selected Resource type, we want to notify a type was selected.
+  /// When they hit 'Enter' on a selected Resource type, we want to notify a
+  /// type was selected.
   void OnEnter(Event*);
 
   void OnResourceTypeSelected(Event*);
@@ -128,7 +127,7 @@ private:
   Array<String> mValidResourceTypes;
 };
 
-//------------------------------------------------------------------------- Resource Template Search
+//Resource Template Search
 class ResourceTemplateSearch : public ColoredComposite
 {
 public:
@@ -166,7 +165,7 @@ private:
   ItemList* mTemplateList;
 };
 
-//------------------------------------------------------------------------ Resource Template Display
+//Resource Template Display
 class ResourceTemplateDisplay : public ColoredComposite
 {
 public:
@@ -187,7 +186,9 @@ private:
   void BuildContentLibraryList();
   void CreateNameToolTip(StringParam message);
   void RemoveNameToolTip();
-  void CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
+  void CreateTagToolTip(
+      StringParam message,
+      ToolTipColorScheme::Enum tagColor = ToolTipColorScheme::Default);
   void RemoveTagToolTip();
   void OnTextTypedTag(Event*);
   void OnKeyDownNameField(KeyboardEvent* e);
@@ -219,7 +220,7 @@ private:
   HandleOf<ToolTip> mTagsToolTip;
 };
 
-//------------------------------------------------------------------------ Resource Template Display
+//Resource Template Display
 class ImportButton : public ColoredComposite
 {
 public:

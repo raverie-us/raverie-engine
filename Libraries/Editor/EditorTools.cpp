@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorTools.cpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -25,17 +18,18 @@ void SetupTools(Editor* editor)
 {
   ToolControl* Tools = new ToolControl(editor);
   editor->Tools = Tools;
-  //editor->MetaGizmos = new ToolControl(editor);
+  // editor->MetaGizmos = new ToolControl(editor);
 
   // Select Tool
-  Cog* tool = Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("SelectTool"));
+  Cog* tool =
+      Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("SelectTool"));
   Tools->mSelectTool = tool->has(SelectTool);
 
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("TranslateTool"));
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("RotateTool"));
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("ScaleTool"));
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("ManipulatorTool"));
-         
+
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("TileEditor2D"));
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("HeightMapTool"));
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("JointTool"));
@@ -46,10 +40,10 @@ void SetupTools(Editor* editor)
 
   Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("ParentingTool"));
 
-  //Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("GeometryBuilderTool"));
+  // Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("GeometryBuilderTool"));
 
   // Old tools
-  if(Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
   {
     Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("SpringTools"));
   }
@@ -57,10 +51,10 @@ void SetupTools(Editor* editor)
   CommandManager* commands = CommandManager::GetInstance();
 
   // Add commands for all tools
-  forRange(ToolData* data, Tools->mTools.mToolArray.All())
+  forRange(ToolData * data, Tools->mTools.mToolArray.All())
   {
     commands->AddCommand(data->GetName(), new ToolSelectionCommand(), true);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

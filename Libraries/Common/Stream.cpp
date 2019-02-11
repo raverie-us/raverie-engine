@@ -1,14 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-void Stream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
+void Stream::ReadMemoryBlock(Status& status,
+                             ByteBufferBlock& block,
+                             size_t sizeInBytes)
 {
   byte* data = (byte*)zAllocate(sizeInBytes);
   if (data == nullptr)
@@ -44,7 +41,9 @@ size_t Stream::Peek(byte* data, size_t sizeInBytes)
   return result;
 }
 
-void Stream::PeekMemoryBlock(Status& status, ByteBufferBlock& block, size_t size)
+void Stream::PeekMemoryBlock(Status& status,
+                             ByteBufferBlock& block,
+                             size_t size)
 {
   u64 position = Tell();
   ReadMemoryBlock(status, block, size);
@@ -79,36 +78,34 @@ void Stream::WriteByteAt(byte value, size_t index)
   return WriteByte(value);
 }
 
-
-FixedMemoryStream::FixedMemoryStream() :
-  FixedMemoryStream(nullptr, 0)
+FixedMemoryStream::FixedMemoryStream() : FixedMemoryStream(nullptr, 0)
 {
 }
 
 FixedMemoryStream::FixedMemoryStream(byte* data, size_t size) :
-  mData(data),
-  mSize(size),
-  mCurrent(0)
+    mData(data),
+    mSize(size),
+    mCurrent(0)
 {
 }
 
 FixedMemoryStream::FixedMemoryStream(ByteBuffer::Block& block) :
-  FixedMemoryStream(block.Data, block.Size)
+    FixedMemoryStream(block.Data, block.Size)
 {
 }
 
 FixedMemoryStream::FixedMemoryStream(DataBlock& block) :
-  FixedMemoryStream(block.Data, block.Size)
+    FixedMemoryStream(block.Data, block.Size)
 {
 }
 
 FixedMemoryStream::FixedMemoryStream(ByteBufferBlock& block) :
-  FixedMemoryStream(block.GetBegin(), block.Size())
+    FixedMemoryStream(block.GetBegin(), block.Size())
 {
 }
 
 FixedMemoryStream::FixedMemoryStream(StringParam string) :
-  FixedMemoryStream((byte*)string.Data(), string.SizeInBytes())
+    FixedMemoryStream((byte*)string.Data(), string.SizeInBytes())
 {
 }
 
@@ -191,7 +188,9 @@ void FixedMemoryStream::Flush()
 {
 }
 
-void FixedMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
+void FixedMemoryStream::ReadMemoryBlock(Status& status,
+                                        ByteBufferBlock& block,
+                                        size_t sizeInBytes)
 {
   if (!HasData())
   {
@@ -207,8 +206,6 @@ void FixedMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, 
   mCurrent += sizeInBytes;
 }
 
-
-
 ByteBufferMemoryStream::ByteBufferMemoryStream()
 {
 }
@@ -219,22 +216,23 @@ ByteBufferMemoryStream::ByteBufferMemoryStream(const byte* data, size_t size)
 }
 
 ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBuffer::Block& block) :
-  ByteBufferMemoryStream(block.Data, block.Size)
+    ByteBufferMemoryStream(block.Data, block.Size)
 {
 }
 
 ByteBufferMemoryStream::ByteBufferMemoryStream(const DataBlock& block) :
-  ByteBufferMemoryStream(block.Data, block.Size)
+    ByteBufferMemoryStream(block.Data, block.Size)
 {
 }
 
 ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBufferBlock& block) :
-  ByteBufferMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
+    ByteBufferMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(),
+                           const_cast<ByteBufferBlock&>(block).Size())
 {
 }
 
 ByteBufferMemoryStream::ByteBufferMemoryStream(const Array<byte>& block) :
-  ByteBufferMemoryStream(block.Data(), block.Size())
+    ByteBufferMemoryStream(block.Data(), block.Size())
 {
 }
 
@@ -245,9 +243,8 @@ u64 ByteBufferMemoryStream::Size()
 
 bool ByteBufferMemoryStream::Seek(u64 filePosition, SeekOrigin::Enum origin)
 {
-  Error(
-    "Seek is not currently supported on ByteBufferMemoryStream. "
-    "ByteBuffer needs to implement a full Seek instead of just Backup.");
+  Error("Seek is not currently supported on ByteBufferMemoryStream. "
+        "ByteBuffer needs to implement a full Seek instead of just Backup.");
   return false;
 }
 
@@ -286,34 +283,34 @@ void ByteBufferMemoryStream::Flush()
 {
 }
 
-
 ArrayByteMemoryStream::ArrayByteMemoryStream()
 {
 }
 
 ArrayByteMemoryStream::ArrayByteMemoryStream(const byte* data, size_t size) :
-  mCurrent(0)
+    mCurrent(0)
 {
   mBuffer.Insert(mBuffer.Begin(), data, data + size);
 }
 
 ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBuffer::Block& block) :
-  ArrayByteMemoryStream(block.Data, block.Size)
+    ArrayByteMemoryStream(block.Data, block.Size)
 {
 }
 
 ArrayByteMemoryStream::ArrayByteMemoryStream(const DataBlock& block) :
-  ArrayByteMemoryStream(block.Data, block.Size)
+    ArrayByteMemoryStream(block.Data, block.Size)
 {
 }
 
 ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBufferBlock& block) :
-  ArrayByteMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
+    ArrayByteMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(),
+                          const_cast<ByteBufferBlock&>(block).Size())
 {
 }
 
 ArrayByteMemoryStream::ArrayByteMemoryStream(const Array<byte>& block) :
-  ArrayByteMemoryStream(block.Data(), block.Size())
+    ArrayByteMemoryStream(block.Data(), block.Size())
 {
 }
 
@@ -396,7 +393,9 @@ void ArrayByteMemoryStream::Flush()
 {
 }
 
-void ArrayByteMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
+void ArrayByteMemoryStream::ReadMemoryBlock(Status& status,
+                                            ByteBufferBlock& block,
+                                            size_t sizeInBytes)
 {
   if (!HasData())
   {
@@ -412,4 +411,4 @@ void ArrayByteMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& blo
   mCurrent += sizeInBytes;
 }
 
-}//namespace Zero
+} // namespace Zero

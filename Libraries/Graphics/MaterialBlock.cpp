@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -11,7 +10,6 @@ ZilchDefineTemplateType(ProxyObject<MaterialBlock>, builder, type)
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-//**************************************************************************************************
 ZilchDefineType(MaterialBlock, builder, type)
 {
   type->CreatableInScript = true;
@@ -21,41 +19,40 @@ ZilchDefineType(MaterialBlock, builder, type)
   type->Add(new MetaSerialization());
 }
 
-//**************************************************************************************************
-MaterialBlock::MaterialBlock() :
-  mOwner(nullptr)
+MaterialBlock::MaterialBlock() : mOwner(nullptr)
 {
 }
 
-//**************************************************************************************************
 void MaterialBlock::Serialize(Serializer& stream)
 {
   MetaSerializeProperties(this, stream);
 }
 
-//**************************************************************************************************
 void MaterialBlock::MarkAsModified()
 {
   if (mOwner != nullptr)
     mOwner->ResourceModified();
 }
 
-//**************************************************************************************************
 IndexRange MaterialBlock::AddShaderInputs(Array<ShaderInput>& shaderInputs)
 {
   IndexRange range;
 
-  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  ZilchShaderGenerator* shaderGenerator =
+      Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
   range.start = shaderInputs.Size();
 
   BoundType* materialType = ZilchVirtualTypeId(this);
-  forRange (Property* metaProperty, materialType->GetProperties())
+  forRange(Property * metaProperty, materialType->GetProperties())
   {
-    ShaderInputType::Enum type = MaterialFactory::GetInstance()->GetShaderInputType(metaProperty->PropertyType);
+    ShaderInputType::Enum type =
+        MaterialFactory::GetInstance()->GetShaderInputType(
+            metaProperty->PropertyType);
     Any value = metaProperty->GetValue(this);
-    
-    ShaderInput shaderInput = shaderGenerator->CreateShaderInput(materialType->Name, metaProperty->Name, type, value);
+
+    ShaderInput shaderInput = shaderGenerator->CreateShaderInput(
+        materialType->Name, metaProperty->Name, type, value);
     if (shaderInput.mShaderInputType != ShaderInputType::Invalid)
       shaderInputs.PushBack(shaderInput);
   }
@@ -64,7 +61,6 @@ IndexRange MaterialBlock::AddShaderInputs(Array<ShaderInput>& shaderInputs)
   return range;
 }
 
-//**************************************************************************************************
 // Helper function for fragment properties.
 static byte* GetFragmentMemberPointer(Call& call, MaterialBlock* materialBlock)
 {
@@ -73,24 +69,24 @@ static byte* GetFragmentMemberPointer(Call& call, MaterialBlock* materialBlock)
   return fragmentMemory + memberOffset;
 }
 
-//**************************************************************************************************
 void FragmentConstructor(Call& call, ExceptionReport& report)
 {
   // Get the allocated memory.
   byte* memory = call.GetHandle(Call::This).Dereference();
 
   // Initialize base class.
-  MaterialBlock* materialBlock = new(memory) MaterialBlock;
+  MaterialBlock* materialBlock = new (memory) MaterialBlock;
 
   // Get default values stored on BoundType.
-  ByteBufferBlock& defaultMemory = materialBlock->ZilchGetDerivedType()->ComplexUserData.ReadObject<ByteBufferBlock>(0);
+  ByteBufferBlock& defaultMemory =
+      materialBlock->ZilchGetDerivedType()
+          ->ComplexUserData.ReadObject<ByteBufferBlock>(0);
 
   // Initialize derived class.
   byte* fragmentMemory = memory + sizeof(MaterialBlock);
   memcpy(fragmentMemory, defaultMemory.GetBegin(), defaultMemory.Size());
 }
 
-//**************************************************************************************************
 void FragmentDestructor(Call& call, ExceptionReport& report)
 {
   // All fragment data is pod, nothing to destruct.
@@ -100,37 +96,40 @@ void FragmentDestructor(Call& call, ExceptionReport& report)
   materialBlock->~MaterialBlock();
 }
 
-//**************************************************************************************************
 void FragmentGetter(Call& call, ExceptionReport& report)
 {
   // Get pointer to the property.
   MaterialBlock* materialBlock = call.Get<MaterialBlock*>(Call::This);
   byte* memberPtr = GetFragmentMemberPointer(call, materialBlock);
 
-  // Get the type's size off of the return type so that we don't need to store it.
-  size_t returnSize = call.GetFunction()->FunctionType->Return->GetCopyableSize();
+  // Get the type's size off of the return type so that we don't need to store
+  // it.
+  size_t returnSize =
+      call.GetFunction()->FunctionType->Return->GetCopyableSize();
   // Copy member to return value.
   memcpy(call.GetReturnUnchecked(), memberPtr, returnSize);
   call.MarkReturnAsSet();
 }
 
-//**************************************************************************************************
 void FragmentSetter(Call& call, ExceptionReport& report)
 {
   // Get pointer to the property.
   MaterialBlock* materialBlock = call.Get<MaterialBlock*>(Call::This);
   byte* memberPtr = GetFragmentMemberPointer(call, materialBlock);
 
-  // Get the type's size off of the parameter type so that we don't need to store it.
-  size_t memberSize = call.GetFunction()->FunctionType->Parameters[0].ParameterType->GetCopyableSize();
+  // Get the type's size off of the parameter type so that we don't need to
+  // store it.
+  size_t memberSize = call.GetFunction()
+                          ->FunctionType->Parameters[0]
+                          .ParameterType->GetCopyableSize();
   // Copy parameter value to member.
   memcpy(memberPtr, call.GetParameterUnchecked(0), memberSize);
 
-  // If this fragment belongs to a Material, this will tell it that its shader inputs have changed.
+  // If this fragment belongs to a Material, this will tell it that its shader
+  // inputs have changed.
   materialBlock->MarkAsModified();
 }
 
-//**************************************************************************************************
 void FragmentTextureGetter(Call& call, ExceptionReport& report)
 {
   // Get pointer to the property.
@@ -144,7 +143,6 @@ void FragmentTextureGetter(Call& call, ExceptionReport& report)
   call.Set<Texture*>(Call::Return, texture);
 }
 
-//**************************************************************************************************
 void FragmentTextureSetter(Call& call, ExceptionReport& report)
 {
   // Get pointer to the property.
@@ -159,7 +157,8 @@ void FragmentTextureSetter(Call& call, ExceptionReport& report)
   else
     *(u64*)memberPtr = 0;
 
-  // If this fragment belongs to a Material, this will tell it that its shader inputs have changed.
+  // If this fragment belongs to a Material, this will tell it that its shader
+  // inputs have changed.
   materialBlock->MarkAsModified();
 }
 

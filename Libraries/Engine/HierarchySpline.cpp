@@ -1,27 +1,22 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------HierarchySpline
 ZilchDefineType(HierarchySpline, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
-  
+
   ZeroBindEvent(Events::QuerySpline, SplineEvent);
   ZeroBindEvent(Events::SplineModified, SplineEvent);
 
   ZilchBindGetter(Spline);
   ZilchBindGetterSetterProperty(Closed)->ZeroSerialize(false);
-  ZilchBindGetterSetterProperty(SplineType)->ZeroSerialize(SplineType::CatmullRom);
+  ZilchBindGetterSetterProperty(SplineType)
+      ->ZeroSerialize(SplineType::CatmullRom);
   ZilchBindGetterSetterProperty(Error)->ZeroSerialize(real(0.01f));
   ZilchBindGetterSetterProperty(DebugDrawSpline)->ZeroSerialize(true);
   ZilchBindGetterSetterProperty(SplineColor)->ZeroSerialize(Vec4(0, 0, 0, 1));
@@ -66,7 +61,7 @@ void HierarchySpline::OnAllObjectsCreated(CogInitializer& initializer)
 
 void HierarchySpline::DebugDraw()
 {
-  if(!mDebugDrawSpline)
+  if (!mDebugDrawSpline)
     return;
 
   mSpline->DebugDraw(mSplineColor);
@@ -132,7 +127,7 @@ void HierarchySpline::SetSplineColor(Vec4 splineColor)
 
 void HierarchySpline::RebuildIfModified()
 {
-  if(!mIsModified)
+  if (!mIsModified)
     return;
 
   ForceRebuild();
@@ -146,18 +141,18 @@ void HierarchySpline::ForceRebuild()
   controlPoints->Clear();
   // Add all children's positions as control points
   AutoDeclare(childrenRange, GetOwner()->GetChildren());
-  for(; !childrenRange.Empty(); childrenRange.PopFront())
+  for (; !childrenRange.Empty(); childrenRange.PopFront())
   {
     Cog& child = childrenRange.Front();
     // When we're rebuilding because of a child being destroyed, the child
     // still exists until the end of the function call. To avoid this we simply
     // skip any child that is being destroyed.
-    if(child.GetMarkedForDestruction())
+    if (child.GetMarkedForDestruction())
       continue;
 
     // Add the world translation of this cog (if it has a transform)
     Transform* transform = child.has(Transform);
-    if(transform != nullptr)
+    if (transform != nullptr)
       controlPoints->Add(transform->GetWorldTranslation());
   }
 
@@ -179,7 +174,7 @@ SplineSampleData HierarchySpline::SampleDistance(real distance)
 
 void HierarchySpline::OnQuerySpline(SplineEvent* e)
 {
-  // If the spline is being requested before the first frame update, we want to 
+  // If the spline is being requested before the first frame update, we want to
   // make sure it's built
   RebuildIfModified();
   e->mSpline = mSpline;
@@ -187,7 +182,7 @@ void HierarchySpline::OnQuerySpline(SplineEvent* e)
 
 void HierarchySpline::OnFrameUpdate(UpdateEvent* e)
 {
-  // To avoid traversing children multiple times during transform updates, 
+  // To avoid traversing children multiple times during transform updates,
   // we rebuild every frame. The user can also manually rebuild if they desire
   RebuildIfModified();
   DebugDraw();
@@ -195,7 +190,8 @@ void HierarchySpline::OnFrameUpdate(UpdateEvent* e)
 
 void HierarchySpline::OnChildAttached(HierarchyEvent* e)
 {
-  // A new child was added to us, connect all the required evens and mark ourself as modified
+  // A new child was added to us, connect all the required evens and mark
+  // ourself as modified
   ConnectChildEvents(e->Child);
   mIsModified = true;
 }
@@ -214,7 +210,8 @@ void HierarchySpline::OnMarkModified(Event* e)
 
 void HierarchySpline::ConnectChildEvents(Cog* child)
 {
-  // Disconnect any connections we have to this child (so we don't get duplicate events)
+  // Disconnect any connections we have to this child (so we don't get duplicate
+  // events)
   DisconnectAll(child, this);
   // Listen for transform update so we can rebuild the spline when a child moves
   ConnectThisTo(child, Events::TransformUpdated, OnMarkModified);
@@ -226,11 +223,11 @@ void HierarchySpline::GetChildrenConnections()
 {
   // Add connections for all children
   AutoDeclare(childrenRange, GetOwner()->GetChildren());
-  for(; !childrenRange.Empty(); childrenRange.PopFront())
+  for (; !childrenRange.Empty(); childrenRange.PopFront())
   {
     Cog& child = childrenRange.Front();
     ConnectChildEvents(&child);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

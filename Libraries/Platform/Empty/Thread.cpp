@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Dane Curbow, Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -29,9 +24,13 @@ bool Thread::IsValid()
   return false;
 }
 
-bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
+bool Thread::Initialize(EntryFunction entryFunction,
+                        void* instance,
+                        StringParam threadName)
 {
-  Error("Cannot initialize thread '%s' on a single threaded platform (check Zero::ThreadingEnabled)", threadName.c_str());
+  Error("Cannot initialize thread '%s' on a single threaded platform (check "
+        "Zero::ThreadingEnabled)",
+        threadName.c_str());
   return false;
 }
 
@@ -74,4 +73,4 @@ size_t Thread::GetCurrentThreadId()
   return 0;
 }
 
-}//namespace Zero
+} // namespace Zero

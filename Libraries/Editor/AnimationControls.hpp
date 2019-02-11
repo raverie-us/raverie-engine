@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationControls.hpp
-/// Declaration of AnimationControls Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -27,10 +19,9 @@ class StringSource;
 
 namespace CurveEditing
 {
-  class CurveEditorToolbar;
+class CurveEditorToolbar;
 }
 
-//------------------------------------------------------------- Animation Button
 class AnimationButton : public Composite
 {
 public:
@@ -44,7 +35,6 @@ public:
   Element* mImage;
 };
 
-//----------------------------------------------------------- Animation Selector
 class AnimationSelector : public Composite
 {
 public:
@@ -68,7 +58,6 @@ public:
   AnimationEditor* mEditor;
 };
 
-//----------------------------------------------------------- Animation Tool Box
 class AnimationToolBox : public Composite
 {
 public:
@@ -114,7 +103,6 @@ public:
   Label* mStatusText;
 };
 
-//---------------------------------------------------------------- Play Controls
 class AnimationControls;
 class PlayControls : public Composite
 {
@@ -136,7 +124,6 @@ public:
   AnimationControls* mControls;
 };
 
-//----------------------------------------------------------- Animation Controls
 DeclareEnum3(PreviewDirection, Paused, Forward, Backward);
 class AnimationControls : public Composite
 {
@@ -181,7 +168,7 @@ private:
   /// Returns whether or not it wrapped, or if it would have wrapped
   /// if wrap had been set.
   bool UpdateToTime(float time, bool wrap, bool clampToDuration = false);
-  
+
   void OnMouseEnterPlaybackSpeed(MouseEvent* e);
   void OnMouseExitPlaybackSpeed(MouseEvent* e);
 
@@ -194,7 +181,7 @@ private:
   IconButton* mButtonShiftRight;
   IconButton* mButtonEnd;
   IconButton* mButtonSettings;
-  
+
   SelectorButton* mPlayModeSelector;
 
   /// Controls the playback speed.
@@ -226,4 +213,4 @@ private:
   AnimationEditorData* mEditorData;
 };
 
-}//namespace Zero
+} // namespace Zero

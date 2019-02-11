@@ -1,15 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
-//----------------------------------------------------------------------------- Pitch Change Handler
+//Pitch Change Handler
 
 class PitchChangeHandler
 {
@@ -17,7 +12,8 @@ public:
   PitchChangeHandler();
 
   // Must be called before ProcessBuffer
-  void CalculateBufferSize(unsigned outputSampleCount, unsigned numberOfChannels);
+  void CalculateBufferSize(unsigned outputSampleCount,
+                           unsigned numberOfChannels);
   // Interpolates the audio samples in inputSamples into outputBuffer
   void ProcessBuffer(BufferType* inputBuffer, BufferType* outputBuffer);
   // Returns the current pitch factor
@@ -25,12 +21,19 @@ public:
   // Sets the pitch factor over the specified number of seconds
   void SetPitchFactor(float factor, float timeToInterpolate);
   // Returns how many frames should be in the input
-  unsigned GetInputFrameCount() { return mInputFrameCount; }
+  unsigned GetInputFrameCount()
+  {
+    return mInputFrameCount;
+  }
   // Returns how many samples should be in the input
-  unsigned GetInputSampleCount() { return mInputSampleCount; }
+  unsigned GetInputSampleCount()
+  {
+    return mInputSampleCount;
+  }
   // Resets the LastSamples buffer to zero
   void ResetLastSamples();
-  // Resets back to the start of the last mix (for evaluating multiple times per mix)
+  // Resets back to the start of the last mix (for evaluating multiple times per
+  // mix)
   void ResetToStartOfMix();
   // Returns true if the pitch is currently being interpolated
   bool Interpolating();

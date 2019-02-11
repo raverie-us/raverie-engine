@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorSupport.cpp
-/// Implementation of the Editor support classes EditorSpace and Selection.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,10 +6,10 @@ namespace Zero
 
 namespace Z
 {
-  RuntimeEditor* gRuntimeEditor = NULL;
-  bool EditorDebugFeatures = false;
-  bool DeveloperMode = false;
-}
+RuntimeEditor* gRuntimeEditor = NULL;
+bool EditorDebugFeatures = false;
+bool DeveloperMode = false;
+} // namespace Z
 
 namespace SpecialCogNames
 {
@@ -27,7 +19,7 @@ const String WorldAnchor = "WorldAnchor";
 const String LevelGeometry = "LevelGeometry";
 const String Main = "Main";
 const String ViewCube = "ViewCube";
-}
+} // namespace SpecialCogNames
 
 namespace CoreArchetypes
 {
@@ -60,6 +52,6 @@ const String DefaultSpace = "DefaultSpace";
 const String EmptyTile = "EmptyTile";
 const String ViewCube = "ViewCube";
 const String Wedge = "Wedge";
-}
+} // namespace CoreArchetypes
 
-}//namespace Zero
+} // namespace Zero

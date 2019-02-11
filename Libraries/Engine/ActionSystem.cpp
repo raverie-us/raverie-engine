@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ActionSystem.cpp
-/// Implementation of the ActionSystem and ActionSpace.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------Action Space
+//Space
 ZilchDefineType(ActionSpace, builder, type)
 {
   ZeroBindComponent();
@@ -22,7 +14,6 @@ ZilchDefineType(ActionSpace, builder, type)
 
 ActionSpace::ActionSpace()
 {
-
 }
 ActionSpace::~ActionSpace()
 {
@@ -44,13 +35,14 @@ void ActionSpace::OnActionLogicUpdate(UpdateEvent* updateEvent)
   UpdateActions(updateEvent, ActionExecuteMode::LogicUpdate);
 }
 
-void ActionSpace::UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enum mode)
+void ActionSpace::UpdateActions(UpdateEvent* updateEvent,
+                                ActionExecuteMode::Enum mode)
 {
   float dt = updateEvent->Dt;
   float rDt = updateEvent->RealDt;
 
   InList<Actions>::iterator actionListIt = ActiveLists.Begin();
-  while(actionListIt != ActiveLists.End())
+  while (actionListIt != ActiveLists.End())
   {
     InList<Actions>::iterator next = actionListIt;
     ++next;
@@ -59,4 +51,4 @@ void ActionSpace::UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enu
   }
 }
 
-}//namespace Zero
+} // namespace Zero

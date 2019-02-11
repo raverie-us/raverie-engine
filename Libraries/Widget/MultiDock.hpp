@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MultiDock.hpp
-/// Declaration of the Multi Dock classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +7,6 @@ namespace Zero
 class MultiDock;
 class Window;
 
-//----------------------------------------------------------------- Multi-Docker
 class MultiDocker : public Docker
 {
 public:
@@ -25,7 +16,10 @@ public:
   MultiDocker(Widget* widget, MultiDock* owner);
 
   // Docker interface
-  DockArea::Enum GetDockArea() override {return Area;}
+  DockArea::Enum GetDockArea() override
+  {
+    return Area;
+  }
   void Dock(Widget* widget, DockArea::Enum mode) override;
   void Zoom(Widget* widget) override;
   void WidgetDestroyed(Widget* widget) override;
@@ -41,7 +35,6 @@ public:
   uint DockShell;
 };
 
-//----------------------------------------------------------------- Docking Area
 
 struct DockingArea
 {
@@ -59,9 +52,8 @@ struct DockingShell
   DockingArea DockAreas[DockArea::Count];
 };
 
-//------------------------------------------------------------------- Multi-Dock
 
-///Multi dock widget is a composite widget that supports dockable children.
+/// Multi dock widget is a composite widget that supports dockable children.
 class MultiDock : public Composite
 {
 public:
@@ -74,7 +66,7 @@ public:
   Window* GetCenterWindow();
 
   void AttachChildWidget(Widget* widget, AttachType::Enum attachType) override;
-  void UpdateTransform() override; 
+  void UpdateTransform() override;
 
   void SetExploded(bool exploded, bool animate);
   void CancelZoom();
@@ -90,4 +82,4 @@ public:
   Vec2 mAnimateSize;
 };
 
-}//namespace Zero
+} // namespace Zero

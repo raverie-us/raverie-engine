@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Fill Layout
 class UiFillLayout : public UiLayout
 {
 public:
@@ -27,4 +21,4 @@ public:
   static void FillToRectangle(RectangleParam rect, UiWidget* widget);
 };
 
-}//namespace Zero
+} // namespace Zero

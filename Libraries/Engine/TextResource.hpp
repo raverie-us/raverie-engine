@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextResource.hpp
-/// Declaration of simple text resource.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -25,10 +17,10 @@ public:
   void ReloadData(StringRange data) override;
   String GetFormat() override;
 
-  //On save new
+  // On save new
   void Save(StringParam filename) override;
 
-  //Text stored on block;
+  // Text stored on block;
   String GetText();
   void SetText(StringParam newText);
 
@@ -44,4 +36,4 @@ public:
   TextBlockManager(BoundType* resourceType);
 };
 
-}
+} // namespace Zero

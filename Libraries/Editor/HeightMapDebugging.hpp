@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,7 +7,6 @@ namespace Zero
 class HeightMap;
 class UpdateEvent;
 
-//-------------------------------------------------------------------HeightMapDebugDrawer
 /// Helper class to draw information about a height map. Currently draws
 /// triangles and is used by other debug helper classes.
 class HeightMapDebugDrawer : public Component
@@ -27,7 +21,9 @@ public:
   void DebugDraw() override;
 
   void DrawPatch(IntVec2Param patchIndex);
-  void DrawCell(IntVec2Param patchIndex, IntVec2Param cellIndex, bool skippedCell);
+  void DrawCell(IntVec2Param patchIndex,
+                IntVec2Param cellIndex,
+                bool skippedCell);
   void DrawRayProjection(Vec3Param start, Vec3Param dir, float maxT);
   void DrawAabbProjection(const Aabb& aabb);
 
@@ -38,9 +34,9 @@ public:
   Transform* mTransform;
 };
 
-//-------------------------------------------------------------------HeightMapAabbChecker
-/// Helper class to debug iterating over all triangles within an aabb. Uses the aabb of
-/// the current object to test against the height-map specified by the given cogpath property.
+/// Helper class to debug iterating over all triangles within an aabb. Uses the
+/// aabb of the current object to test against the height-map specified by the
+/// given cogpath property.
 class HeightMapAabbChecker : public Component
 {
 public:
@@ -60,4 +56,4 @@ public:
   bool mSkipNonCollidingCells;
 };
 
-}//namespace Zero
+} // namespace Zero

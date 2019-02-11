@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ImageContent.cpp
-/// Implementation of the Image content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,7 +16,7 @@ ImageContent::ImageContent()
 
 void ImageContent::BuildContent(BuildOptions& options)
 {
-  forRange (BuilderComponent* bc, Builders.All())
+  forRange(BuilderComponent * bc, Builders.All())
   {
     if (bc->NeedsBuilding(options))
       bc->BuildContent(options);
@@ -46,27 +38,31 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
 {
   ImageContent* content = new ImageContent();
 
-  String fullPath = FilePath::Combine(initializer.Library->SourcePath, initializer.Filename);
+  String fullPath =
+      FilePath::Combine(initializer.Library->SourcePath, initializer.Filename);
 
   content->Filename = initializer.Filename;
 
   String extension = FilePath::GetExtension(initializer.Filename);
 
-  bool isSprite = initializer.BuilderType == "SpriteSource" || initializer.Options && initializer.Options->mImageOptions->mImportImages == ImageImport::Sprites;
+  bool isSprite = initializer.BuilderType == "SpriteSource" ||
+                  initializer.Options &&
+                      initializer.Options->mImageOptions->mImportImages ==
+                          ImageImport::Sprites;
 
   if (isSprite)
   {
     ImageInfo imageInfo;
 
     bool reaImage = ReadImageInfo(fullPath, imageInfo);
-    if(!reaImage)
+    if (!reaImage)
     {
       initializer.Success = false;
       initializer.Message = "Invalid image file.";
       return content;
     }
 
-    if(imageInfo.Width > cMaxSpriteSize || imageInfo.Height > cMaxSpriteSize)
+    if (imageInfo.Width > cMaxSpriteSize || imageInfo.Height > cMaxSpriteSize)
     {
       initializer.Success = false;
       initializer.Message = "Sprite is too large, must be within 4096x4096.";
@@ -98,22 +94,22 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
   return content;
 }
 
-//---------------------------------------------------------------- Registration
 
 void CreateImageContent(ContentSystem* system)
 {
   AddContentComponent<TextureInfo>(system);
   AddContentComponent<TextureBuilder>(system);
-  //AddContentComponent<HeightToNormalBuilder>(system);
+  // AddContentComponent<HeightToNormalBuilder>(system);
   AddContentComponent<SpriteSourceBuilder>(system);
 
   AddContent<ImageContent>(system);
 
-  ContentTypeEntry imageContent(ZilchTypeId(ImageContent), MakeImageContentItem);
+  ContentTypeEntry imageContent(ZilchTypeId(ImageContent),
+                                MakeImageContentItem);
 
   // The extensions returned are always without the '.', e.g. "png"
   forRange(StringParam extension, GetSupportedImageLoadExtensions())
-    system->CreatorsByExtension[extension] = imageContent;
+      system->CreatorsByExtension[extension] = imageContent;
 }
 
 void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters)
@@ -129,7 +125,7 @@ void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters)
   filters.PushBack(FileDialogFilter("All Images", builder.ToString()));
 
   forRange(StringParam extension, GetSupportedImageLoadExtensions())
-    filters.PushBack(FileDialogFilter(BuildString("*.", extension)));
+      filters.PushBack(FileDialogFilter(BuildString("*.", extension)));
 }
 
-}//namespace Zero
+} // namespace Zero

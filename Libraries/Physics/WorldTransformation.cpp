@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,7 +7,7 @@ namespace Zero
 WorldTransformation::WorldTransformation()
 {
   mWorldOffset.ZeroOut();
-  //set values to something that won't explode later
+  // set values to something that won't explode later
   mBodyToWorld.SetIdentity();
   mWorldScale = Vec3(1, 1, 1);
   mWorldRotation.SetIdentity();
@@ -35,85 +30,92 @@ void WorldTransformation::SetTransform(Transform* transform)
 
 void WorldTransformation::ReadTransform(PhysicsNode* owner)
 {
-  ErrorIf(!mTransform, "No transform object ever set on the physics world transform.");
+  ErrorIf(!mTransform,
+          "No transform object ever set on the physics world transform.");
 
   PhysicsNode* parent = owner->mParent;
   RigidBody* body = owner->mBody;
   Collider* collider = owner->mCollider;
 
   // Read the raw transform values
-  if(mTransform->GetInWorld())
+  if (mTransform->GetInWorld())
   {
     mLocalScale = mTransform->GetWorldScale();
-    mLocalRotation = Math::ToMatrix3(mTransform->GetWorldRotation().Normalized());
+    mLocalRotation =
+        Math::ToMatrix3(mTransform->GetWorldRotation().Normalized());
     mLocalTranslation = mTransform->GetWorldTranslation();
   }
   else
   {
     mLocalScale = mTransform->GetLocalScale();
-    mLocalRotation = Math::ToMatrix3(mTransform->GetLocalRotation().Normalized());
+    mLocalRotation =
+        Math::ToMatrix3(mTransform->GetLocalRotation().Normalized());
     mLocalTranslation = mTransform->GetLocalTranslation();
   }
 
-  //if we have a collider, make sure to transform
-  //the translation offset into world space
-  if(collider)
+  // if we have a collider, make sure to transform
+  // the translation offset into world space
+  if (collider)
     mWorldOffset = TransformNormal(collider->mTranslationOffset);
 }
-    
-void WorldTransformation::ComputeTransformation(WorldTransformation* parent, 
+
+void WorldTransformation::ComputeTransformation(WorldTransformation* parent,
                                                 PhysicsNode* owner)
 {
-  //if we are marked as in world, we simply just build
-  //up our world and body to world values from our local
-  if(mTransform->GetInWorld())
+  // if we are marked as in world, we simply just build
+  // up our world and body to world values from our local
+  if (mTransform->GetInWorld())
   {
     mWorldScale = mLocalScale;
-    mWorldRotation = mLocalRotation;  
+    mWorldRotation = mLocalRotation;
     mWorldTranslation = mLocalTranslation;
-    mBodyToWorld = Math::BuildTransform(mWorldTranslation, mWorldRotation, mWorldScale);
-    if(owner->mCollider)
+    mBodyToWorld =
+        Math::BuildTransform(mWorldTranslation, mWorldRotation, mWorldScale);
+    if (owner->mCollider)
       mWorldOffset = TransformNormal(owner->mCollider->mTranslationOffset);
     return;
   }
 
-  //otherwise, we have to build ourself up from our parent's body to world.
-  //however, we may not have a parent node or we may have cog's between us
-  //and our parent node. Therefore we have to build up the transform from
-  //us to our nearest parentNode (or until the root if we have no parentNode).
-  //Our parent node will already have it's body to world cached so we can early out there
+  // otherwise, we have to build ourself up from our parent's body to world.
+  // however, we may not have a parent node or we may have cog's between us
+  // and our parent node. Therefore we have to build up the transform from
+  // us to our nearest parentNode (or until the root if we have no parentNode).
+  // Our parent node will already have it's body to world cached so we can early
+  // out there
 
-  Mat4 toWorldTransform = Math::BuildTransform(mLocalTranslation,mLocalRotation,mLocalScale);
+  Mat4 toWorldTransform =
+      Math::BuildTransform(mLocalTranslation, mLocalRotation, mLocalScale);
 
-  //get the cog of the parent node (if we have a parent node)
+  // get the cog of the parent node (if we have a parent node)
   Cog* parentNodeCog = nullptr;
-  if(parent)
+  if (parent)
     parentNodeCog = parent->mTransform->GetOwner();
 
-  //loop over all of the in between nodes (or just up to the root if parent was null)
+  // loop over all of the in between nodes (or just up to the root if parent was
+  // null)
   Cog* parentCog = owner->GetTransform()->mTransform->GetOwner()->GetParent();
-  while(parentCog != parentNodeCog)
+  while (parentCog != parentNodeCog)
   {
     Transform* parentT = parentCog->has(Transform);
     parentCog = parentCog->GetParent();
 
-    if(parentT == nullptr)
+    if (parentT == nullptr)
       continue;
 
     Mat4 parentLocalMatrix = parentT->GetLocalMatrix();
     toWorldTransform = parentLocalMatrix * toWorldTransform;
   }
 
-  //if we had a parent node, we have to do the final
-  //step of applying it's body to world transform)
-  if(parent)
+  // if we had a parent node, we have to do the final
+  // step of applying it's body to world transform)
+  if (parent)
     toWorldTransform = parent->mBodyToWorld * toWorldTransform;
 
-  //now just build our body to world, decompose it to the world values and also
-  //build the offset value
+  // now just build our body to world, decompose it to the world values and also
+  // build the offset value
   mBodyToWorld = toWorldTransform;
   mBodyToWorld.Decompose(&mWorldScale, &mWorldRotation, &mWorldTranslation);
-  if(owner->mCollider)
+  if (owner->mCollider)
     mWorldOffset = TransformNormal(owner->mCollider->mTranslationOffset);
 }
 
@@ -155,7 +157,8 @@ Vec3 WorldTransformation::GetLocalTranslation() const
 Mat4 WorldTransformation::GetWorldMatrix() const
 {
   Mat4 matrix;
-  matrix.BuildTransform(mWorldTranslation + mWorldOffset, mWorldRotation, mWorldScale);
+  matrix.BuildTransform(
+      mWorldTranslation + mWorldOffset, mWorldRotation, mWorldScale);
   return matrix;
 }
 
@@ -209,7 +212,8 @@ Vec3 WorldTransformation::InverseTransformNormal(Vec3Param normal) const
   return result / mWorldScale;
 }
 
-Vec3 WorldTransformation::InverseTransformSurfaceNormal(Vec3Param direction) const
+Vec3 WorldTransformation::InverseTransformSurfaceNormal(
+    Vec3Param direction) const
 {
   Vec3 result = Math::TransposedTransform(mWorldRotation, direction);
   return result * mWorldScale;
@@ -236,4 +240,4 @@ bool WorldTransformation::IsUniformlyScaled()
   return mWorldScale.x == mWorldScale.y && mWorldScale.y == mWorldScale.z;
 }
 
-}//namespace Zero
+} // namespace Zero

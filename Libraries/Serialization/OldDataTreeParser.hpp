@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,7 +7,6 @@ namespace Zero
 class DataNode;
 struct DataTreeContext;
 
-//------------------------------------------------------------ Data Tree Grammar
 class DataTreeGrammar
 {
 public:
@@ -33,7 +27,7 @@ public:
   GrammarRule<Character>* mTrue;
   GrammarRule<Character>* mFalse;
   GrammarRule<Character>* mVar;
-  
+
   // Parser
   GrammarSet<Token> mParserGrammar;
   GrammarRule<Token>* mParserStart;
@@ -43,7 +37,6 @@ public:
   GrammarRule<Token>* mValue;
 };
 
-//------------------------------------------------------------- Data Tree Parser
 class OldDataTreeParser
 {
 public:
@@ -54,9 +47,15 @@ public:
   /// Parser template interface.
   void StartRule(GrammarRule<Token>* rule);
   void EndRule(ParseNodeInfo<Token>* info);
-  void TokenParsed(ParseNodeInfo<Token>* info) {}
-  void StartParsing() {}
-  void EndParsing() {}
+  void TokenParsed(ParseNodeInfo<Token>* info)
+  {
+  }
+  void StartParsing()
+  {
+  }
+  void EndParsing()
+  {
+  }
 
   /// Set all flags on nodes based on the read in attributes.
   void PostProcessAttributes(DataNode* node);
@@ -69,4 +68,4 @@ public:
   DataNode* mLastEndedNode;
 };
 
-}//namespace Zero
+} // namespace Zero

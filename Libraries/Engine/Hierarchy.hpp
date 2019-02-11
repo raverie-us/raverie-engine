@@ -1,35 +1,28 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Hierarchy.hpp
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//Info used during attach/detach to know who the
-//original pair was being attached/detached.
+// Info used during attach/detach to know who the
+// original pair was being attached/detached.
 struct AttachmentInfo
 {
   Cog* Parent;
   Cog* Child;
 };
 
-//------------------------------------------------------------------------------------------- Events
+//Events
 namespace Events
 {
-  DeclareEvent(Attached);
-  DeclareEvent(Detached);
-  DeclareEvent(ChildAttached);
-  DeclareEvent(ChildDetached);
-  DeclareEvent(ChildrenOrderChanged);
-}// namespace Events
+DeclareEvent(Attached);
+DeclareEvent(Detached);
+DeclareEvent(ChildAttached);
+DeclareEvent(ChildDetached);
+DeclareEvent(ChildrenOrderChanged);
+} // namespace Events
 
-//---------------------------------------------------------------------------------- Hierarchy Event
+//Hierarchy Event
 class HierarchyEvent : public Event
 {
 public:
@@ -39,9 +32,9 @@ public:
   Cog* Child;
 };
 
-//---------------------------------------------------------------------------------------- Hierarchy
-/// Component that gives an game object the ability to have child objects and Contains a list
-/// of children.
+//Hierarchy
+/// Component that gives an game object the ability to have child objects and
+/// Contains a list of children.
 class Hierarchy : public Component
 {
 public:
@@ -58,9 +51,12 @@ public:
   void TransformUpdate(TransformUpdateInfo& info) override;
   void AttachTo(AttachmentInfo& info) override;
   void Detached(AttachmentInfo& info) override;
-  
+
   // We do custom serialization for Hierarchy
-  bool ShouldSerialize() override { return false; }
+  bool ShouldSerialize() override
+  {
+    return false;
+  }
 
   HierarchyList Children;
   HierarchyList::range GetChildren();
@@ -68,7 +64,7 @@ public:
   void DestroyChildren();
 };
 
-//---------------------------------------------------------------------------- Hierarchy Composition
+//Hierarchy Composition
 class HierarchyComposition : public MetaComposition
 {
 public:
@@ -85,4 +81,4 @@ public:
 class Transform;
 void RelativeAttach(Transform* child, Transform* parent);
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2012-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -26,4 +21,4 @@ void ColliderOnDestroy(Collider* collider, bool dynamicallyDestroyed);
 void PhysicsAttachTo(PhysicsNode* node, AttachmentInfo& info);
 void PhysicsDetach(PhysicsNode* node, AttachmentInfo& info);
 
-}//namespace Zero
+} // namespace Zero

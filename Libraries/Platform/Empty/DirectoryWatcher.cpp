@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -10,16 +7,15 @@ namespace Zero
 class TrackedFile
 {
 public:
-  TrackedFile()
-    : mVisited(false)
+  TrackedFile() : mVisited(false)
   {
   }
 
-  TrackedFile(FileEntry& entry)
-    : mFilename(entry.mFileName),
-    mFileSize(GetFileSize(entry.GetFullPath())),
-    mLastWrite(GetFileModifiedTime(entry.GetFullPath())),
-    mVisited(false)
+  TrackedFile(FileEntry& entry) :
+      mFilename(entry.mFileName),
+      mFileSize(GetFileSize(entry.GetFullPath())),
+      mLastWrite(GetFileModifiedTime(entry.GetFullPath())),
+      mVisited(false)
   {
   }
 
@@ -42,10 +38,10 @@ public:
     return true;
   }
 
-  String   mFilename;
-  u64      mFileSize;
+  String mFilename;
+  u64 mFileSize;
   TimeType mLastWrite;
-  bool     mVisited;
+  bool mVisited;
 };
 
 OsInt DirectoryWatcher::RunThreadEntryPoint()
@@ -56,12 +52,11 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
 
   HashSet<TrackedFile> fileEntries;
 
-  //Loop until cancel
+  // Loop until cancel
   for (;;)
   {
     // Mark any existing file entries as not visited,
-    forRange(TrackedFile& fileEntry, fileEntries)
-      fileEntry.mVisited = false;
+    forRange(TrackedFile & fileEntry, fileEntries) fileEntry.mVisited = false;
 
     // Iterate over the watched directory and get all the file entries
     FileRange dir(mDirectoryToWatch);
@@ -80,7 +75,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
       if (fileEntries.Contains(fileEntry))
       {
         TrackedFile& existingEntry = *fileEntries.FindPointer(fileEntry);
-        // If the file already exists mark it as visited to identify removed files
+        // If the file already exists mark it as visited to identify removed
+        // files
         existingEntry.mVisited = true;
         if (existingEntry != fileEntry)
         {
@@ -103,7 +99,7 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
 
     // Check for entries that are no longer present, notify files as removed
     Array<TrackedFile> toRemove;
-    forRange(TrackedFile& fileEntry, fileEntries)
+    forRange(TrackedFile & fileEntry, fileEntries)
     {
       if (fileEntry.mVisited == false)
       {
@@ -116,9 +112,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
     }
 
     // Erase the removed files from being tracked
-    forRange(TrackedFile& fileEntry, toRemove)
-      fileEntries.Erase(fileEntry);
+    forRange(TrackedFile & fileEntry, toRemove) fileEntries.Erase(fileEntry);
   }
 }
 
-}// namespace Zero
+} // namespace Zero

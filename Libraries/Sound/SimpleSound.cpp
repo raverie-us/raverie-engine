@@ -1,17 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//------------------------------------------------------------------------------------- Simple Sound
+//Simple Sound
 
-//**************************************************************************************************
 ZilchDefineType(SimpleSound, builder, type)
 {
   ZeroBindComponent();
@@ -32,22 +26,18 @@ ZilchDefineType(SimpleSound, builder, type)
   ZilchBindMethod(Stop);
 }
 
-//**************************************************************************************************
-SimpleSound::SimpleSound() : 
-  mInstance(nullptr), 
-  mStartPlaying(true), 
-  mPositional(false)
+SimpleSound::SimpleSound() :
+    mInstance(nullptr),
+    mStartPlaying(true),
+    mPositional(false)
 {
-  
 }
 
-//**************************************************************************************************
 SimpleSound::~SimpleSound()
 {
   Stop();
 }
 
-//**************************************************************************************************
 void SimpleSound::Initialize(CogInitializer& initializer)
 {
   // Get the sound space
@@ -60,7 +50,6 @@ void SimpleSound::Initialize(CogInitializer& initializer)
     Play();
 }
 
-//**************************************************************************************************
 void SimpleSound::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mStartPlaying, true);
@@ -68,10 +57,9 @@ void SimpleSound::Serialize(Serializer& stream)
   SerializeResourceName(mCue, SoundCueManager);
 }
 
-//**************************************************************************************************
 HandleOf<SoundInstance> SimpleSound::Play()
 {
-  SoundInstance *sound = mInstance;
+  SoundInstance* sound = mInstance;
 
   // If the sound is currently playing, stop it
   if (sound)
@@ -82,7 +70,8 @@ HandleOf<SoundInstance> SimpleSound::Play()
 
   if (mSpace)
   {
-    // Play the instance on the emitter (has dependency on SoundEmitter so will always be valid)
+    // Play the instance on the emitter (has dependency on SoundEmitter so will
+    // always be valid)
     if (mPositional)
       mInstance = GetOwner()->has(SoundEmitter)->PlayCue(mCue);
     // If not positional, play on the SoundSpace
@@ -93,36 +82,32 @@ HandleOf<SoundInstance> SimpleSound::Play()
   return mInstance;
 }
 
-//**************************************************************************************************
 void SimpleSound::Stop()
 {
-  SoundInstance *sound = mInstance;
+  SoundInstance* sound = mInstance;
   if (sound)
     sound->Stop();
 }
 
-//**************************************************************************************************
 bool SimpleSound::GetPaused()
 {
-  SoundInstance *sound = mInstance;
+  SoundInstance* sound = mInstance;
   if (sound)
     return sound->GetPaused();
   else
     return false;
 }
 
-//**************************************************************************************************
 void SimpleSound::SetPaused(bool pause)
 {
-  SoundInstance *sound = mInstance;
+  SoundInstance* sound = mInstance;
   if (sound)
     sound->SetPaused(pause);
 }
 
-//**************************************************************************************************
 bool SimpleSound::GetIsPlaying()
 {
-  SoundInstance *sound = mInstance;
+  SoundInstance* sound = mInstance;
   if (sound)
     return sound->GetIsPlaying();
   else

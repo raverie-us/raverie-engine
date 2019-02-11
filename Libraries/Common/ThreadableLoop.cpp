@@ -1,17 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
 ThreadableLoop::ThreadableLoop(StringParam threadName) :
-  mResult(0),
-  mCompleted(false)
+    mResult(0),
+    mCompleted(false)
 {
   if (ThreadingEnabled)
     mThread.Initialize(&ThreadableLoop::ThreadFunction, this, threadName);
@@ -62,4 +57,4 @@ OsInt ThreadableLoop::ThreadFunction(void* userData)
   return self->mResult;
 }
 
-}//namespace Zero
+} // namespace Zero

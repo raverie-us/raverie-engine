@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------TypeDependencyCollector
-TypeDependencyCollector::TypeDependencyCollector(ZilchShaderIRLibrary* owningLibrary)
+TypeDependencyCollector::TypeDependencyCollector(
+    ZilchShaderIRLibrary* owningLibrary)
 {
   mOwningLibrary = owningLibrary;
   mCapabilities.InsertOrIgnore(spv::CapabilityLinkage);
@@ -24,29 +19,29 @@ TypeDependencyCollector::TypeDependencyCollector(ZilchShaderIRLibrary* owningLib
 
 void TypeDependencyCollector::Collect(ZilchShaderIRType* type)
 {
-  if(type == nullptr)
+  if (type == nullptr)
     return;
 
-  if(mReferencedTypes.ContainsKey(type))
+  if (mReferencedTypes.ContainsKey(type))
     return;
 
   // @JoshD: Value types should always be visited before pointers...
-  if(!mReferencedTypes.ContainsKey(type->mDereferenceType))
+  if (!mReferencedTypes.ContainsKey(type->mDereferenceType))
     Collect(type->mDereferenceType);
 
-  if(type->mComponentType != nullptr)
+  if (type->mComponentType != nullptr)
     Collect(type->mComponentType);
   // Walk all parameters of this type
-  for(size_t i = 0; i < type->mParameters.Size(); ++i)
+  for (size_t i = 0; i < type->mParameters.Size(); ++i)
     Collect(type->mParameters[i]);
 
-  if(!mReferencedTypes.ContainsKey(type))
+  if (!mReferencedTypes.ContainsKey(type))
     AddTypeReference(type);
 
   // Walk any pointer types if necessary
   Collect(type->mPointerType);
 
-  for(size_t i = 0; i < type->mFunctions.Size(); ++i)
+  for (size_t i = 0; i < type->mFunctions.Size(); ++i)
   {
     Collect(type->mFunctions[i]);
   }
@@ -54,14 +49,13 @@ void TypeDependencyCollector::Collect(ZilchShaderIRType* type)
 
 void TypeDependencyCollector::Collect(ZilchShaderIRFunction* function)
 {
-  if(mReferencedFunctions.ContainsKey(function))
+  if (mReferencedFunctions.ContainsKey(function))
     return;
   mReferencedFunctions.InsertOrError(function);
 
-
   Collect(function->mFunctionType);
   Collect(&function->mParameterBlock);
-  for(size_t i = 0; i < function->mBlocks.Size(); ++i)
+  for (size_t i = 0; i < function->mBlocks.Size(); ++i)
   {
     Collect(function->mBlocks[i]);
   }
@@ -69,12 +63,12 @@ void TypeDependencyCollector::Collect(ZilchShaderIRFunction* function)
 
 void TypeDependencyCollector::Collect(BasicBlock* block)
 {
-  for(size_t i = 0; i < block->mLines.Size(); ++i)
+  for (size_t i = 0; i < block->mLines.Size(); ++i)
   {
     Collect(block->mLines[i]);
   }
   // @JoshD: Flip the order of these two later when a diff is cleaner to do.
-  for(size_t i = 0; i < block->mLocalVariables.Size(); ++i)
+  for (size_t i = 0; i < block->mLocalVariables.Size(); ++i)
   {
     Collect(block->mLocalVariables[i]);
   }
@@ -82,16 +76,19 @@ void TypeDependencyCollector::Collect(BasicBlock* block)
 
 void TypeDependencyCollector::Collect(ZilchShaderIROp* op)
 {
-  if(op->mResultType != nullptr)
+  if (op->mResultType != nullptr)
     Collect(op->mResultType);
 
   // Check for global variables
-  if(op->mOpType == OpType::OpVariable)
+  if (op->mOpType == OpType::OpVariable)
   {
-    ZilchShaderIRConstantLiteral* storageClassLiteral = op->mArguments[0]->As<ZilchShaderIRConstantLiteral>();
-    spv::StorageClass storageClass = (spv::StorageClass)storageClassLiteral->mValue.Get<int>();
-    // If this is a global variable the add it to the global variable list and collect all arguments as normal
-    if(IsGlobalStorageClass(storageClass))
+    ZilchShaderIRConstantLiteral* storageClassLiteral =
+        op->mArguments[0]->As<ZilchShaderIRConstantLiteral>();
+    spv::StorageClass storageClass =
+        (spv::StorageClass)storageClassLiteral->mValue.Get<int>();
+    // If this is a global variable the add it to the global variable list and
+    // collect all arguments as normal
+    if (IsGlobalStorageClass(storageClass))
     {
       AddGlobalReference(op);
       CollectArguments(op);
@@ -100,24 +97,30 @@ void TypeDependencyCollector::Collect(ZilchShaderIROp* op)
   }
 
   // Check if an op requires a capability, if so add it.
-  // @JoshD: Can an op require more than one capability? They're nested so I'm not sure (primarily with Kernel)
-  spv::Capability* requiredCapability = mRequiredCapabilities.FindPointer(op->mOpType);
-  if(requiredCapability != nullptr)
+  // @JoshD: Can an op require more than one capability? They're nested so I'm
+  // not sure (primarily with Kernel)
+  spv::Capability* requiredCapability =
+      mRequiredCapabilities.FindPointer(op->mOpType);
+  if (requiredCapability != nullptr)
     mCapabilities.InsertOrIgnore(*requiredCapability);
 
-  if(op->mOpType == OpType::OpBranchConditional)
+  if (op->mOpType == OpType::OpBranchConditional)
   {
-    // Only collect on the conditional, not on the branch targets in order to avoid infinite loops
+    // Only collect on the conditional, not on the branch targets in order to
+    // avoid infinite loops
     Collect(op->mArguments[0]);
     return;
   }
 
   CollectArguments(op);
 
-  // Handle constants (have to add them to a separate map). These should be added after collecting
-  // all arguments so that composite instructions are guaranteed to have already visited their constituents.
-  if(op->mOpType == OpType::OpConstant || op->mOpType == OpType::OpConstantComposite ||
-    op->mOpType == OpType::OpSpecConstant || op->mOpType == OpType::OpSpecConstantComposite)
+  // Handle constants (have to add them to a separate map). These should be
+  // added after collecting all arguments so that composite instructions are
+  // guaranteed to have already visited their constituents.
+  if (op->mOpType == OpType::OpConstant ||
+      op->mOpType == OpType::OpConstantComposite ||
+      op->mOpType == OpType::OpSpecConstant ||
+      op->mOpType == OpType::OpSpecConstantComposite)
   {
     AddConstantReference(op);
   }
@@ -125,11 +128,11 @@ void TypeDependencyCollector::Collect(ZilchShaderIROp* op)
 
 void TypeDependencyCollector::CollectArguments(ZilchShaderIROp* op)
 {
-  for(size_t i = 0; i < op->mArguments.Size(); ++i)
+  for (size_t i = 0; i < op->mArguments.Size(); ++i)
   {
     IZilchShaderIR* arg = op->mArguments[i];
     // Don't walk blocks or we'll get infinite loops (covered by the function)
-    if(arg->mIRType == ZilchShaderIRBaseType::Block)
+    if (arg->mIRType == ZilchShaderIRBaseType::Block)
       continue;
     Collect(arg);
   }
@@ -142,15 +145,15 @@ void TypeDependencyCollector::Collect(ZilchShaderExtensionImport* op)
 
 void TypeDependencyCollector::Collect(IZilchShaderIR* instruction)
 {
-  if(instruction->mIRType == ZilchShaderIRBaseType::DataType)
+  if (instruction->mIRType == ZilchShaderIRBaseType::DataType)
     Collect(instruction->As<ZilchShaderIRType>());
-  else if(instruction->mIRType == ZilchShaderIRBaseType::Op)
+  else if (instruction->mIRType == ZilchShaderIRBaseType::Op)
     Collect(instruction->As<ZilchShaderIROp>());
-  else if(instruction->mIRType == ZilchShaderIRBaseType::Function)
+  else if (instruction->mIRType == ZilchShaderIRBaseType::Function)
     Collect(instruction->As<ZilchShaderIRFunction>());
-  else if(instruction->mIRType == ZilchShaderIRBaseType::Block)
+  else if (instruction->mIRType == ZilchShaderIRBaseType::Block)
     Collect(instruction->As<BasicBlock>());
-  else if(instruction->mIRType == ZilchShaderIRBaseType::Extension)
+  else if (instruction->mIRType == ZilchShaderIRBaseType::Extension)
     Collect(instruction->As<ZilchShaderExtensionImport>());
 }
 
@@ -169,7 +172,7 @@ void TypeDependencyCollector::AddConstantReference(ZilchShaderIROp* op)
 void TypeDependencyCollector::AddGlobalReference(ZilchShaderIROp* op)
 {
   // Don't process a global more than once
-  if(mTypesConstantsAndGlobals.ContainsKey(op))
+  if (mTypesConstantsAndGlobals.ContainsKey(op))
     return;
 
   mReferencedGlobals.InsertOrIgnore(op);
@@ -177,7 +180,8 @@ void TypeDependencyCollector::AddGlobalReference(ZilchShaderIROp* op)
 
   // Try to add the global variable's initializer function
   GlobalVariableData* globalVarData = mOwningLibrary->FindGlobalVariable(op);
-  if(globalVarData != nullptr && globalVarData->mInitializerFunction != nullptr)
+  if (globalVarData != nullptr &&
+      globalVarData->mInitializerFunction != nullptr)
   {
     // Make sure to collect all referenced objects in the initializer function
     Collect(globalVarData->mInitializerFunction);
@@ -185,14 +189,15 @@ void TypeDependencyCollector::AddGlobalReference(ZilchShaderIROp* op)
   }
 }
 
-bool TypeDependencyCollector::IsGlobalStorageClass(spv::StorageClass storageClass)
+bool TypeDependencyCollector::IsGlobalStorageClass(
+    spv::StorageClass storageClass)
 {
   return storageClass == spv::StorageClassUniform ||
-    storageClass == spv::StorageClassUniformConstant || 
-    storageClass == spv::StorageClassStorageBuffer || 
-    storageClass == spv::StorageClassInput || 
-    storageClass == spv::StorageClassOutput || 
-    storageClass == spv::StorageClassPrivate;
+         storageClass == spv::StorageClassUniformConstant ||
+         storageClass == spv::StorageClassStorageBuffer ||
+         storageClass == spv::StorageClassInput ||
+         storageClass == spv::StorageClassOutput ||
+         storageClass == spv::StorageClassPrivate;
 }
 
-}//namespace Zero
+} // namespace Zero

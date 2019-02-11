@@ -1,28 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//----------------------------------------------------------------------- Threaded Volume Modifier
+//Threaded Volume Modifier
 
-//************************************************************************************************
 InstanceVolumeModifier::InstanceVolumeModifier() :
-  mCurrentVolume(1.0f),
-  mLifetimeFrames(0),
-  mLifetimeFrameCounter(0)
+    mCurrentVolume(1.0f),
+    mLifetimeFrames(0),
+    mLifetimeFrameCounter(0)
 {
-
 }
 
-//************************************************************************************************
-void InstanceVolumeModifier::ApplyVolume(float *sampleBuffer, const unsigned bufferSize,
-  const unsigned numberOfChannels)
+void InstanceVolumeModifier::ApplyVolume(float* sampleBuffer,
+                                         const unsigned bufferSize,
+                                         const unsigned numberOfChannels)
 {
   if (!Active)
     return;
@@ -36,7 +29,8 @@ void InstanceVolumeModifier::ApplyVolume(float *sampleBuffer, const unsigned buf
   }
 
   // If not interpolating and volume is close to 1.0, don't do anything
-  if (Interpolator.Finished() && AudioConstants::IsWithinLimit(mCurrentVolume, 1.0f, 0.01f))
+  if (Interpolator.Finished() &&
+      AudioConstants::IsWithinLimit(mCurrentVolume, 1.0f, 0.01f))
     return;
 
   // If we are not interpolating, apply the same volume to all samples
@@ -58,17 +52,21 @@ void InstanceVolumeModifier::ApplyVolume(float *sampleBuffer, const unsigned buf
   }
 }
 
-//************************************************************************************************
-void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume,
-  const float time, const float lifetime)
+void InstanceVolumeModifier::Reset(const float startVolume,
+                                   const float endVolume,
+                                   const float time,
+                                   const float lifetime)
 {
-  Reset(startVolume, endVolume, (unsigned)(time * AudioConstants::cSystemSampleRate),
-    (unsigned)(lifetime * AudioConstants::cSystemSampleRate));
+  Reset(startVolume,
+        endVolume,
+        (unsigned)(time * AudioConstants::cSystemSampleRate),
+        (unsigned)(lifetime * AudioConstants::cSystemSampleRate));
 }
 
-//************************************************************************************************
-void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume,
-  const unsigned frames, const unsigned lifetimeFrames)
+void InstanceVolumeModifier::Reset(const float startVolume,
+                                   const float endVolume,
+                                   const unsigned frames,
+                                   const unsigned lifetimeFrames)
 {
   mCurrentVolume = startVolume;
   Interpolator.SetValues(startVolume, endVolume, frames);
@@ -77,13 +75,11 @@ void InstanceVolumeModifier::Reset(const float startVolume, const float endVolum
   Active = true;
 }
 
-//************************************************************************************************
 float InstanceVolumeModifier::GetCurrentVolume()
 {
   return mCurrentVolume;
 }
 
-//************************************************************************************************
 float InstanceVolumeModifier::GetFutureVolume(unsigned frames)
 {
   if (Interpolator.Finished())
@@ -91,6 +87,5 @@ float InstanceVolumeModifier::GetFutureVolume(unsigned frames)
   else
     return Interpolator.ValueAtIndex(Interpolator.GetCurrentFrame() + frames);
 }
-
 
 } // namespace Zero

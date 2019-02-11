@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file OrientationGizmoViewport.hpp
-/// Declaration of the OrientationGizmoViewport class.
-///
-/// Authors: Nathan Carlson
-/// Copyright 2013-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -46,4 +38,4 @@ private:
   Raycaster mRayCaster;
 };
 
-}//namespace Zero
+} // namespace Zero

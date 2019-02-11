@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,4 +19,4 @@ bool SetGamepadVibration(size_t gamepadIndex, float leftSpeed, float rightSpeed)
   return false;
 }
 
-}//namespace Zero
+} // namespace Zero

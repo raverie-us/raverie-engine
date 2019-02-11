@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationEditor.cpp
-/// Implementation of AnimationEditor Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,58 +7,58 @@ namespace Zero
 namespace AnimEditorUi
 {
 const cstr cLocation = "EditorUi/AnimationEditor";
-Tweakable(float, ControlsWidth,           Pixels(238), cLocation);
-Tweakable(float, ScrubberHeight,          Pixels(65), cLocation);
-Tweakable(Vec4, InactiveKeyColor,         Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ActiveKeyColor,           Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, NegativeXColor,           Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, NegativeXHighlight,       Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ErrorStateColor,          Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ErrorStateHighlightColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(float, ControlsWidth, Pixels(238), cLocation);
+Tweakable(float, ScrubberHeight, Pixels(65), cLocation);
+Tweakable(Vec4, InactiveKeyColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ActiveKeyColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, NegativeXColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, NegativeXHighlight, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ErrorStateColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ErrorStateHighlightColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace AnimEditorUi
 
-//******************************************************************************
 /// Callback for adding custom icons to the property grid
-Widget* CreateKeyFrameIcon(Composite* parent, HandleParam object, 
-                           Property* metaProperty, void* clientData)
+Widget* CreateKeyFrameIcon(Composite* parent,
+                           HandleParam object,
+                           Property* metaProperty,
+                           void* clientData)
 {
-  // Only add the key icon to objects with valid properties that are not 
+  // Only add the key icon to objects with valid properties that are not
   // on the Cog object (we only want component properties)
-  if(metaProperty && object.Get<Component*>() != nullptr)
+  if (metaProperty && object.Get<Component*>() != nullptr)
   {
     // Create the icon
-    Widget* icon = new PropertyKeyIcon(parent, object, metaProperty,
-                                       (AnimationEditor*)clientData);
-    
+    Widget* icon = new PropertyKeyIcon(
+        parent, object, metaProperty, (AnimationEditor*)clientData);
+
     // Looks best translated down a bit
-    icon->SetTranslation(Pixels(0,4,0));
+    icon->SetTranslation(Pixels(0, 4, 0));
 
     return icon;
   }
   return nullptr;
 }
 
-//******************************************************************************
 Animation* FindFirstAnimationOnCog(Cog* cog)
 {
   AnimationManager* animManager = AnimationManager::GetInstance();
 
   // Check all properties on all components of the object
-  forRange(Component* component, cog->GetComponents())
+  forRange(Component * component, cog->GetComponents())
   {
     BoundType* componentType = ZilchVirtualTypeId(component);
-    forRange(Property* metaProperty, componentType->GetProperties())
+    forRange(Property * metaProperty, componentType->GetProperties())
     {
       // If it's an Animation, return it
-      if(metaProperty->PropertyType == ZilchTypeId(Animation))
+      if (metaProperty->PropertyType == ZilchTypeId(Animation))
       {
         // Look up the animation by its name and id
         String animName = metaProperty->GetValue(component).ToString();
-        Animation* animation = (Animation*)animManager->GetResource(animName,
-                                                  ResourceNotFound::ReturnNull);
+        Animation* animation = (Animation*)animManager->GetResource(
+            animName, ResourceNotFound::ReturnNull);
 
         // Only return if we found a valid animation, otherwise continue
-        if(animation)
+        if (animation)
           return animation;
       }
     }
@@ -75,12 +67,12 @@ Animation* FindFirstAnimationOnCog(Cog* cog)
   return nullptr;
 }
 
-
-//--------------------------------------------------------------- Key Frame Icon
-//******************************************************************************
-PropertyKeyIcon::PropertyKeyIcon(Composite* parent, HandleParam object,
-                                 Property* metaProperty, AnimationEditor* editor)
-  : Composite(parent), mEditor(editor)
+PropertyKeyIcon::PropertyKeyIcon(Composite* parent,
+                                 HandleParam object,
+                                 Property* metaProperty,
+                                 AnimationEditor* editor) :
+    Composite(parent),
+    mEditor(editor)
 {
   mComponentHandle = object;
   mProperty = metaProperty;
@@ -88,16 +80,16 @@ PropertyKeyIcon::PropertyKeyIcon(Composite* parent, HandleParam object,
   mIcon = this->CreateAttached<Element>("AnimatorCreateKeyDisabled");
 
   // Don't add types that we cannot animate
-  if(!ValidPropertyTrack(metaProperty))
+  if (!ValidPropertyTrack(metaProperty))
     mIcon->SetActive(false);
 
   // If the property already has key frames, create the red key frame icon
-  if(mEditor->HasKeyFrames(object, mProperty))
+  if (mEditor->HasKeyFrames(object, mProperty))
     mIcon->SetColor(AnimEditorUi::ActiveKeyColor);
   else
     mIcon->SetColor(AnimEditorUi::InactiveKeyColor);
 
-  mIcon->SetColor(Vec4(1,1,1,1) * 0.9f);
+  mIcon->SetColor(Vec4(1, 1, 1, 1) * 0.9f);
 
   ConnectThisTo(mIcon, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(mIcon, Events::LeftClick, OnLeftClick);
@@ -109,10 +101,9 @@ PropertyKeyIcon::PropertyKeyIcon(Composite* parent, HandleParam object,
   mMouseOver = false;
 }
 
-//******************************************************************************
 void PropertyKeyIcon::UpdateTransform()
 {
-  if(mComponentHandle.IsNull())
+  if (mComponentHandle.IsNull())
   {
     Composite::UpdateTransform();
     return;
@@ -121,30 +112,28 @@ void PropertyKeyIcon::UpdateTransform()
   float highlight = mMouseOver ? 1.2f : 1.0f;
   Vec4 color;
 
-  if(mEditor->HasKeyFrames(mComponentHandle, mProperty))
+  if (mEditor->HasKeyFrames(mComponentHandle, mProperty))
     color = AnimEditorUi::ActiveKeyColor;
   else
     color = AnimEditorUi::InactiveKeyColor;
 
   color *= highlight;
-  color = Math::Clamp(color, Vec4::cZero, Vec4(1,1,1,1));
+  color = Math::Clamp(color, Vec4::cZero, Vec4(1, 1, 1, 1));
   color.w = 1.0f;
   mIcon->SetColor(color);
 
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void PropertyKeyIcon::OnMouseEnter(Event* e)
 {
   mMouseOver = true;
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void PropertyKeyIcon::OnLeftClick(Event* e)
 {
-  if(mComponentHandle.IsNull())
+  if (mComponentHandle.IsNull())
     return;
 
   // Create a key frame
@@ -152,21 +141,20 @@ void PropertyKeyIcon::OnLeftClick(Event* e)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void PropertyKeyIcon::OnMouseExit(Event* e)
 {
   mMouseOver = false;
   MarkAsNeedsUpdate();
 }
 
-//------------------------------------------------------------- Animation Editor
 ZilchDefineType(AnimationEditor, builder, type)
 {
 }
 
-//******************************************************************************
-AnimationEditor::AnimationEditor(Composite* parent)
-  : Composite(parent), mGraphData(Vec2(60,20)), mOnionSkinning(this)
+AnimationEditor::AnimationEditor(Composite* parent) :
+    Composite(parent),
+    mGraphData(Vec2(60, 20)),
+    mOnionSkinning(this)
 {
   mMainViewport = nullptr;
   static const String className = "AnimatorUI";
@@ -183,14 +171,17 @@ AnimationEditor::AnimationEditor(Composite* parent)
   mGraphData.SetZoom(Vec2(25.0f, 1.8f));
   mGraphData.Translation = Vec2(0, 4.5f);
 
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
   Composite* toolArea = new Composite(this);
   toolArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
-  toolArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2,0), Thickness::cZero));
+  toolArea->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(2, 0), Thickness::cZero));
   {
     mSelector = new AnimationSelector(toolArea, this);
-    mSelector->SetSizing(SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
+    mSelector->SetSizing(
+        SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
 
     mToolBox = new AnimationToolBox(toolArea, this);
     mToolBox->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
@@ -201,31 +192,41 @@ AnimationEditor::AnimationEditor(Composite* parent)
 
   Composite* topArea = new Composite(this);
   topArea->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
-  topArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2,0), Thickness(Pixels(0,-1,0,0))));
+  topArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
+                                       Pixels(2, 0),
+                                       Thickness(Pixels(0, -1, 0, 0))));
   {
     // Create the track view
     mTrackView = new AnimationTrackView(topArea, this);
-    mTrackView->SetSizing(SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
+    mTrackView->SetSizing(
+        SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
     mSettingsView = new AnimationSettingsView(topArea, this);
-    mSettingsView->SetSizing(SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
+    mSettingsView->SetSizing(
+        SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
     mSettingsView->SetActive(false);
 
     // Create the graph
     mGraph = new AnimationGraphEditor(topArea, this, &mGraphData);
     mGraph->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
-    //mDopeSheet = new AnimationDopeSheet(this, mScrubber);
+    // mDopeSheet = new AnimationDopeSheet(this, mScrubber);
   }
 
   Composite* bottomArea = new Composite(this);
-  bottomArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, AnimEditorUi::ScrubberHeight);
-  bottomArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2,0), Thickness(Pixels(0,-1,0,0))));
+  bottomArea->SetSizing(
+      SizeAxis::Y, SizePolicy::Fixed, AnimEditorUi::ScrubberHeight);
+  bottomArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
+                                          Pixels(2, 0),
+                                          Thickness(Pixels(0, -1, 0, 0))));
   {
     // Create the controls
     mControls = new AnimationControls(bottomArea, this);
-    mControls->SetSizing(SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
-    //ConnectThisTo(mControls->mButtonSettings, Events::LeftClick, OnSettingsPressed);
+    mControls->SetSizing(
+        SizeAxis::X, SizePolicy::Fixed, AnimEditorUi::ControlsWidth);
+    // ConnectThisTo(mControls->mButtonSettings, Events::LeftClick,
+    // OnSettingsPressed);
 
-    // Create and connect to the scrubber (we want to know when play head has changed)
+    // Create and connect to the scrubber (we want to know when play head has
+    // changed)
     mScrubber = new AnimationScrubber(bottomArea, this, &mGraphData);
     mScrubber->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
     ConnectThisTo(mScrubber, Events::PlayHeadModified, OnPlayHeadModified);
@@ -235,7 +236,8 @@ AnimationEditor::AnimationEditor(Composite* parent)
   mGraph->SetScrubber(mScrubber);
   mGraph->SetToolBox(mToolBox);
 
-  ConnectThisTo(mScrubber->mNegativeArea, Events::LeftClick, OnMouseDownNegativeX);
+  ConnectThisTo(
+      mScrubber->mNegativeArea, Events::LeftClick, OnMouseDownNegativeX);
   ConnectThisTo(mGraph->mNegativeArea, Events::LeftClick, OnMouseDownNegativeX);
 
   // Initialize the error state text
@@ -259,15 +261,13 @@ AnimationEditor::AnimationEditor(Composite* parent)
   ConnectThisTo(this, Events::Deactivated, OnAnimatorDeactivated);
 }
 
-//******************************************************************************
 AnimationEditor::~AnimationEditor()
 {
   // Clean up all cached data
-  forRange(AnimationEditorData* cachedData, mCachedAnimationData.Values())
-    delete cachedData;
+  forRange(AnimationEditorData * cachedData,
+           mCachedAnimationData.Values()) delete cachedData;
 }
 
-//******************************************************************************
 void AnimationEditor::UpdateTransform()
 {
   mErrorStateText->SizeToContents();
@@ -280,24 +280,23 @@ void AnimationEditor::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void AnimationEditor::SetPropertyView(MainPropertyView* view)
 {
   mPropertyView = view;
   ConnectThisTo(view, Events::ContextMenuCreated, OnPropertyContextMenu);
 }
 
-//******************************************************************************
 void AnimationEditor::SetAnimation(Animation* animation)
 {
-  if(Cog* animGraphObject = mAnimGraphObject)
+  if (Cog* animGraphObject = mAnimGraphObject)
   {
     SimpleAnimation* simpleAnim = animGraphObject->has(SimpleAnimation);
 
-    if(simpleAnim == nullptr)
+    if (simpleAnim == nullptr)
     {
       OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
-      if(QueueAddComponent(opQueue, animGraphObject, ZilchTypeId(SimpleAnimation)))
+      if (QueueAddComponent(
+              opQueue, animGraphObject, ZilchTypeId(SimpleAnimation)))
         simpleAnim = animGraphObject->has(SimpleAnimation);
     }
     ReturnIf(simpleAnim == nullptr, , "Could not add SimpleAnimation");
@@ -306,19 +305,16 @@ void AnimationEditor::SetAnimation(Animation* animation)
   }
 }
 
-//******************************************************************************
 void AnimationEditor::SetStatusText(StringParam text, ByteColor color)
 {
   mToolBox->SetStatusText(text, color);
 }
 
-//******************************************************************************
 ErrorState::Type AnimationEditor::GetErrorState()
 {
   return mErrorState;
 }
 
-//******************************************************************************
 bool AnimationEditor::TakeFocusOverride()
 {
   this->HardTakeFocus();
@@ -328,36 +324,32 @@ bool AnimationEditor::TakeFocusOverride()
   return true;
 }
 
-//******************************************************************************
 void AnimationEditor::UpdateToScrubber()
 {
   UpdateToTime(mScrubber->GetPlayHead());
 }
 
-//******************************************************************************
 Cog* AnimationEditor::GetAnimationGraphObject()
 {
   return mAnimGraphObject;
 }
 
-//******************************************************************************
 Cog* AnimationEditor::GetSelectedObject()
 {
   return mSelectedObject;
 }
 
-//******************************************************************************
 bool AnimationEditor::HasKeyFrames(HandleParam componentInstance,
                                    Property* metaProperty)
 {
-  if(mEditorData == nullptr)
+  if (mEditorData == nullptr)
     return false;
 
   RichAnimation* richAnimation = mEditorData->mRichAnimation;
 
   // Grab the component and object from the instance
   Component* component = componentInstance.Get<Component*>();
-  if(component == nullptr)
+  if (component == nullptr)
     return false;
   Cog* object = component->GetOwner();
 
@@ -365,41 +357,36 @@ bool AnimationEditor::HasKeyFrames(HandleParam componentInstance,
   String objectPath = GetObjectPath(object, mAnimGraphObject);
   TrackNode* objectTrack = richAnimation->GetObjectTrack(objectPath, false);
 
-  if(objectTrack == nullptr)
+  if (objectTrack == nullptr)
     return false;
 
   // Find the property track (it will be created if it doesn't exist)
   String propertyPath = GetPropertyPath(component, metaProperty);
-  TrackNode* propertyTrack = richAnimation->GetPropertyTrack(objectTrack,
-                                   propertyPath, componentInstance.StoredType, false);
+  TrackNode* propertyTrack = richAnimation->GetPropertyTrack(
+      objectTrack, propertyPath, componentInstance.StoredType, false);
   return propertyTrack != nullptr;
 }
 
-//******************************************************************************
 AnimationScrubber* AnimationEditor::GetScrubber()
 {
   return mScrubber;
 }
 
-//******************************************************************************
 AnimationGraphEditor* AnimationEditor::GetGraph()
 {
   return mGraph;
 }
 
-//******************************************************************************
 AnimationSettings* AnimationEditor::GetSettings()
 {
   return &mSettings;
 }
 
-//******************************************************************************
 AnimationEditorData* AnimationEditor::GetEditorData()
 {
   return mEditorData;
 }
 
-//******************************************************************************
 void AnimationEditor::UpdateNegativeArea()
 {
   Widget* graphArea = mGraph->mNegativeArea;
@@ -425,7 +412,7 @@ void AnimationEditor::UpdateNegativeArea()
 
   // If the mouse is over either controls, interpolate to the highlighted color
   Vec4 endColor = AnimEditorUi::NegativeXColor;
-  if(graphArea->IsMouseOver() || scrubberArea->IsMouseOver())
+  if (graphArea->IsMouseOver() || scrubberArea->IsMouseOver())
     endColor = AnimEditorUi::NegativeXHighlight;
 
   // Compute and set the final color
@@ -434,49 +421,47 @@ void AnimationEditor::UpdateNegativeArea()
   scrubberArea->SetColor(finalColor);
 }
 
-//******************************************************************************
 Cog* FindAnimationGraphObject(Cog* object)
 {
-  if(object == nullptr)
+  if (object == nullptr)
     return nullptr;
-  if(object->has(AnimationGraph))
+  if (object->has(AnimationGraph))
     return object;
   return FindAnimationGraphObject(object->GetParent());
 }
 
-//******************************************************************************
 void AnimationEditor::OnSelectionFinal(SelectionChangedEvent* event)
 {
   // Do nothing if we're not active
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   Cog* primary = event->Selection->GetPrimaryAs<Cog>();
   ObjectSelected(primary);
 }
 
-//******************************************************************************
 void AnimationEditor::ObjectSelected(Cog* cog)
 {
   mOnionSkinning.Clear();
 
-  mPropertyView->GetPropertyView()->RemoveCustomPropertyIcon(&CreateKeyFrameIcon);
+  mPropertyView->GetPropertyView()->RemoveCustomPropertyIcon(
+      &CreateKeyFrameIcon);
 
   // Do nothing if we're not active
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // If it's the same object as before, we're refreshing
   bool refreshing = (cog == mSelectedObject);
 
   // If we're refreshing, we don't need to re-connect everything
-  if(!refreshing)
+  if (!refreshing)
   {
-    if(Cog* oldSelectedObject = mSelectedObject)
+    if (Cog* oldSelectedObject = mSelectedObject)
       oldSelectedObject->GetReceiver()->Disconnect(this);
   }
 
-  if(cog)
+  if (cog)
   {
     // Set the new selected object
     mSelectedObject = cog;
@@ -491,10 +476,9 @@ void AnimationEditor::ObjectSelected(Cog* cog)
     return;
   }
 
-
   // Connect to get property changed events only if we're not refreshing.
   // If we are refreshing, we should already be connected
-  if(!refreshing)
+  if (!refreshing)
   {
     ConnectThisTo(cog, Events::PropertyModified, OnPropertyChanged);
     ConnectThisTo(cog, Events::ComponentsModified, OnComponentsChanged);
@@ -505,30 +489,33 @@ void AnimationEditor::ObjectSelected(Cog* cog)
     ErrorIf(widget == nullptr, "Couldn't find window containing object.");
 
     // No need to do anything if the last object was in the same viewport
-    if((Viewport*)mMainViewport != widget)
+    if ((Viewport*)mMainViewport != widget)
     {
       // If there was a previous viewport, we no longer care about
       // input from it
-      if(Viewport* viewport = mMainViewport)
+      if (Viewport* viewport = mMainViewport)
         viewport->GetReceiver()->Disconnect(this);
 
       // Set the new viewport
-      EditorViewport* editorViewport = Type::DynamicCast<EditorViewport*>(widget);
-      ReturnIf(editorViewport == nullptr, , "Widget found was not an EditorViewport.");
+      EditorViewport* editorViewport =
+          Type::DynamicCast<EditorViewport*>(widget);
+      ReturnIf(editorViewport == nullptr,
+               ,
+               "Widget found was not an EditorViewport.");
 
       mMainViewport = editorViewport->GetReactiveViewport();
 
       // Connect to keyboard events
-      if(Viewport* viewport = mMainViewport)
+      if (Viewport* viewport = mMainViewport)
         ConnectThisTo(viewport, Events::KeyDown, OnKeyDownViewport);
     }
   }
 
   // If there is no animGraph in the selection, we're in an invalid state
-  if(!mAnimGraphObject.IsValid())
+  if (!mAnimGraphObject.IsValid())
   {
     // If we have an object selected,
-    if(mSelectedObject.IsValid())
+    if (mSelectedObject.IsValid())
       SetErrorState(ErrorState::NoAnimGraph);
     else
       SetErrorState(ErrorState::NoObject);
@@ -543,15 +530,15 @@ void AnimationEditor::ObjectSelected(Cog* cog)
   Animation* animation = nullptr;
 
   // First check for the animation on the SimpleAnimation component
-  if(SimpleAnimation* autoPlay = animGraphCog->has(SimpleAnimation))
+  if (SimpleAnimation* autoPlay = animGraphCog->has(SimpleAnimation))
     animation = autoPlay->GetAnimation();
 
   // If we didn't find an animation, attempt to find it on any other component
-  if(animation == nullptr)
+  if (animation == nullptr)
     animation = FindFirstAnimationOnCog(animGraphCog);
 
   // We cannot edit non-writable animations
-  if(animation == nullptr || !animation->IsWritable())
+  if (animation == nullptr || !animation->IsWritable())
   {
     SetErrorState(ErrorState::ReadOnly);
 
@@ -561,7 +548,7 @@ void AnimationEditor::ObjectSelected(Cog* cog)
   }
 
   // If it comes from geometry content, we would need to copy it
-  if(Type::DynamicCast<GeometryContent*>(animation->mContentItem))
+  if (Type::DynamicCast<GeometryContent*>(animation->mContentItem))
   {
     SetErrorState(ErrorState::AnimationFromGeometry);
 
@@ -569,13 +556,14 @@ void AnimationEditor::ObjectSelected(Cog* cog)
     return;
   }
 
-  mPropertyView->GetPropertyView()->AddCustomPropertyIcon(&CreateKeyFrameIcon, this);
+  mPropertyView->GetPropertyView()->AddCustomPropertyIcon(&CreateKeyFrameIcon,
+                                                          this);
 
   // We have a valid object
   SetErrorState(ErrorState::None);
 
   // Do nothing if we already have this animation selected
-  if((Animation*)mAnimation != animation)
+  if ((Animation*)mAnimation != animation)
   {
     // Set the animation
     mAnimation = animation;
@@ -599,22 +587,22 @@ void AnimationEditor::ObjectSelected(Cog* cog)
   String objectPath = GetObjectPath(mSelectedObject, mAnimGraphObject);
   RichAnimation* richAnimation = mEditorData->mRichAnimation;
   TrackNode* objectTrack = richAnimation->GetObjectTrack(objectPath, false);
-  if(objectTrack && !refreshing)
+  if (objectTrack && !refreshing)
     mTrackView->FocusOnObject(objectTrack);
 
   // Update the scrubber
   UpdateToTime(mScrubber->GetPlayHead());
 }
 
-//******************************************************************************
 AnimationEditorData* AnimationEditor::GetEditorData(Cog* animGraphCog,
                                                     Animation* animation)
 {
   ResourceId animationId = animation->mResourceId;
 
   // Check to see if it has already been created
-  AnimationEditorData* data = mCachedAnimationData.FindValue(animationId, nullptr);
-  if(data == nullptr)
+  AnimationEditorData* data =
+      mCachedAnimationData.FindValue(animationId, nullptr);
+  if (data == nullptr)
   {
     data = new AnimationEditorData(this, animGraphCog, animation, &mGraphData);
     mCachedAnimationData.Insert(animationId, data);
@@ -622,11 +610,10 @@ AnimationEditorData* AnimationEditor::GetEditorData(Cog* animGraphCog,
   return data;
 }
 
-//******************************************************************************
 void AnimationEditor::HideControls()
 {
   // No need to do anything it there is no valid animation anyways
-  if(mEditorData == nullptr)
+  if (mEditorData == nullptr)
     return;
 
   mControls->Hide();
@@ -637,11 +624,10 @@ void AnimationEditor::HideControls()
   mToolBox->Hide();
 }
 
-//******************************************************************************
 void AnimationEditor::ShowControls()
 {
   // No need to do anything it there is no valid animation anyways
-  if(mEditorData == nullptr)
+  if (mEditorData == nullptr)
     return;
 
   mControls->Show();
@@ -652,23 +638,20 @@ void AnimationEditor::ShowControls()
   mToolBox->Show();
 }
 
-//******************************************************************************
 void AnimationEditor::RefreshSelection()
 {
   ObjectSelected(mSelectedObject);
 }
 
-//******************************************************************************
 void AnimationEditor::OnAnimationModified(Event* e)
 {
   TabModifiedEvent eventToSend(true);
   GetDispatcher()->Dispatch(Events::TabModified, &eventToSend);
 }
 
-//******************************************************************************
 void AnimationEditor::OnSave(Event* e)
 {
-  if(mEditorData)
+  if (mEditorData)
   {
     mEditorData->SaveRichAnimation();
 
@@ -677,15 +660,14 @@ void AnimationEditor::OnSave(Event* e)
   }
 }
 
-//******************************************************************************
 void AnimationEditor::OnPropertyChanged(PropertyEvent* event)
 {
   // Do nothing if we're not active
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // No need to do anything if the animGraph isn't valid
-  if(!mAnimGraphObject.IsValid())
+  if (!mAnimGraphObject.IsValid())
     return;
 
   // If the current animation was set on the SimpleAnimation component, we want
@@ -697,15 +679,15 @@ void AnimationEditor::OnPropertyChanged(PropertyEvent* event)
   Property* property = event->mProperty.GetPropertyFromRoot(event->mObject);
   String propertyName = property->Name;
 
-  if(componentName == "SimpleAnimation")
+  if (componentName == "SimpleAnimation")
   {
-    if(propertyName == "Animation")
+    if (propertyName == "Animation")
     {
       // We need to set the Animation because the it isn't set until
       // after we get this event
       Animation* animation = event->mNewValue.Get<Animation*>();
 
-      if(animation)
+      if (animation)
         SetAnimation(animation);
 
       // Refresh the selection to edit the new animation
@@ -717,60 +699,57 @@ void AnimationEditor::OnPropertyChanged(PropertyEvent* event)
 
   // Validate the animation
   Animation* animation = mAnimation;
-  if(animation == nullptr)
+  if (animation == nullptr)
     return;
 
   // Do nothing if auto-key is disabled
-  if(!mSettings.mAutoKey)
+  if (!mSettings.mAutoKey)
     return;
 
   // Create the key frame at the play head
   CreateKeyFrameAtPlayHead(property, Handle(event->mObject), &event->mNewValue);
 }
 
-//******************************************************************************
 void AnimationEditor::OnComponentsChanged(ObjectEvent* event)
 {
   // Do nothing if we're not active
-  if(GetActive() == false)
+  if (GetActive() == false)
     return;
-  
+
   // If it was the selected object that changed, refresh the selection
   // in case the AnimationGraph was added / removed
-  if(event->Source == (Object*)mSelectedObject)
+  if (event->Source == (Object*)mSelectedObject)
     RefreshSelection();
 }
 
-//******************************************************************************
 void AnimationEditor::OnPlayHeadModified(Event* event)
 {
   UpdateToScrubber();
 }
 
-//******************************************************************************
 void AnimationEditor::OnAnimatorDeactivated(Event* event)
 {
   mErrorToolTip.SafeDestroy();
-  mPropertyView->GetPropertyView()->RemoveCustomPropertyIcon(&CreateKeyFrameIcon);
+  mPropertyView->GetPropertyView()->RemoveCustomPropertyIcon(
+      &CreateKeyFrameIcon);
 }
 
-//******************************************************************************
 void AnimationEditor::UpdateToTime(float t)
 {
-  if(Cog* cog = mAnimGraphObject)
+  if (Cog* cog = mAnimGraphObject)
   {
     AnimationGraph* animGraph = cog->has(AnimationGraph);
 
-    if(animGraph)
+    if (animGraph)
     {
-      AnimationNode* node = BuildBasic(animGraph, mAnimation, t, AnimationPlayMode::PlayOnce);
+      AnimationNode* node =
+          BuildBasic(animGraph, mAnimation, t, AnimationPlayMode::PlayOnce);
       animGraph->SetActiveNode(node);
       animGraph->ForceUpdate();
     }
   }
 }
 
-//******************************************************************************
 void AnimationEditor::SetErrorState(ErrorState::Type state)
 {
   // Set the state
@@ -783,26 +762,26 @@ void AnimationEditor::SetErrorState(ErrorState::Type state)
   SetStatusText(String());
 
   // Hide all controls if there's an error state
-  if(active)
+  if (active)
     HideControls();
 
   // Set the error text based on the state
-  if(state == ErrorState::NoObject)
+  if (state == ErrorState::NoObject)
   {
     mErrorStateText->SetText("No Object Selected");
     SetStatusText("Select an object");
   }
-  else if(state == ErrorState::NoAnimGraph)
+  else if (state == ErrorState::NoAnimGraph)
   {
     mErrorStateText->SetText("Click to add Animation Graph +");
     SetStatusText("No AnimationGraph");
   }
-  else if(state == ErrorState::AnimationFromGeometry)
+  else if (state == ErrorState::AnimationFromGeometry)
   {
     mErrorStateText->SetText("Convert to Rich Animation +");
     SetStatusText("Invalid Animation source");
   }
-  else if(state == ErrorState::ReadOnly)
+  else if (state == ErrorState::ReadOnly)
   {
     mErrorStateText->SetText("Click to create new Animation +");
     SetStatusText("No Animation selected");
@@ -814,26 +793,24 @@ void AnimationEditor::SetErrorState(ErrorState::Type state)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 TrackNode* FindTranslationTrack(TrackNode* root)
 {
-  if(root->Path == "Transform.Translation")
+  if (root->Path == "Transform.Translation")
     return root;
 
-  forRange(TrackNode* child, root->Children.All())
+  forRange(TrackNode * child, root->Children.All())
   {
     TrackNode* ret = FindTranslationTrack(child);
-    if(ret)
+    if (ret)
       return ret;
   }
   return nullptr;
 }
 
-//******************************************************************************
 void AnimationEditor::OnUpdate(UpdateEvent* e)
 {
   // Flush any changes to the animation
-  if(mEditorData)
+  if (mEditorData)
   {
     // Flush any changes made on the rich animation
     mEditorData->mRichAnimation->Flush();
@@ -851,7 +828,6 @@ void AnimationEditor::OnUpdate(UpdateEvent* e)
   mOnionSkinning.Update();
 }
 
-//******************************************************************************
 void AnimationEditor::SendHighlightEvent(float dt)
 {
   // Create the event to send
@@ -861,7 +837,7 @@ void AnimationEditor::SendHighlightEvent(float dt)
   eventToSend.mState = false;
 
   // If there are no current errors, query to see if auto key is on
-  if(mErrorState == ErrorState::None)
+  if (mErrorState == ErrorState::None)
     eventToSend.mState = mSettings.mAutoKey;
 
   // Flashing Red color
@@ -874,9 +850,9 @@ void AnimationEditor::SendHighlightEvent(float dt)
   mPropertyView->DispatchBubble(Events::HighlightBorder, &eventToSend);
 
   // Find and highlight the window containing the selected object
-  if(Cog* selected = mSelectedObject)
+  if (Cog* selected = mSelectedObject)
   {
-    if(Viewport* viewport = mMainViewport)
+    if (Viewport* viewport = mMainViewport)
     {
       eventToSend.mWidget = viewport;
       viewport->DispatchBubble(Events::HighlightBorder, &eventToSend);
@@ -884,71 +860,72 @@ void AnimationEditor::SendHighlightEvent(float dt)
   }
 
   // If we are in auto key mode, display AutoKey text in the error state text
-  if(eventToSend.mState)
+  if (eventToSend.mState)
   {
     mErrorStateText->SetText("Auto Key");
-    mErrorStateText->SetColor(Vec4(1,0,0,0.15f));
+    mErrorStateText->SetColor(Vec4(1, 0, 0, 0.15f));
 
     MarkAsNeedsUpdate();
   }
 
   // Update the visibility of the error text
-  if(mErrorState == ErrorState::None)
+  if (mErrorState == ErrorState::None)
     mErrorStateText->SetActive(eventToSend.mState);
 }
 
-//******************************************************************************
 void AnimationEditor::OnKeyDownViewport(KeyboardEvent* e)
 {
   // Do nothing if we're not active or we're in an error state
-  if(!GetActive() || mErrorState != ErrorState::None)
+  if (!GetActive() || mErrorState != ErrorState::None)
     return;
 
-  if(e->Key == Keys::K)
+  if (e->Key == Keys::K)
   {
     // We want to create a key frame at the play head
     float playHead = mScrubber->GetPlayHead();
 
     bool validTrackFound = false;
-    forRange(TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
+    forRange(TrackNode * track, mEditorData->mVisiblePropertyTracks.All())
     {
-      if(track->Type != TrackType::Property && track->Type != TrackType::SubProperty)
+      if (track->Type != TrackType::Property &&
+          track->Type != TrackType::SubProperty)
         continue;
 
       // Query the value
       Any currentValue = track->SampleObject(mAnimGraphObject);
 
       // Create a key frame at the current play head
-      // This can be invalid if the 
-      if(currentValue.IsNotNull())
+      // This can be invalid if the
+      if (currentValue.IsNotNull())
       {
         track->UpdateOrCreateKeyAtTime(playHead, currentValue);
         validTrackFound = true;
       }
     }
 
-    if(validTrackFound == false)
-      DoNotifyWarning("Cannot Create Key Frame", "Cannot create a key frame "
+    if (validTrackFound == false)
+      DoNotifyWarning("Cannot Create Key Frame",
+                      "Cannot create a key frame "
                       "with no tracks selected.");
     e->Handled = true;
   }
 }
 
-//******************************************************************************
 void AnimationEditor::OnKeyDown(KeyboardEvent* e)
 {
-  if(mEditorData == nullptr)
+  if (mEditorData == nullptr)
     return;
 
-  if(e->Key == Keys::F)
+  if (e->Key == Keys::F)
   {
-    IntVec2 axes(1,1);
+    IntVec2 axes(1, 1);
 
     // Only zoom on the x-axis is the mouse is over the scrubber
-    if(mScrubber->IsMouseOver())
+    if (mScrubber->IsMouseOver())
       axes.y = 0;
-    // Only zoom on the y-axis if the mouse is over the negative area in the graph
-    else if(mGraph->mNegativeArea->IsMouseOver())
+    // Only zoom on the y-axis if the mouse is over the negative area in the
+    // graph
+    else if (mGraph->mNegativeArea->IsMouseOver())
       axes.x = 0;
 
     mGraph->FocusOnSelectedCurves(axes);
@@ -961,63 +938,59 @@ void AnimationEditor::OnKeyDown(KeyboardEvent* e)
   UpdateArrowMovement(e);
 }
 
-//******************************************************************************
 void AnimationEditor::OnKeyRepeated(KeyboardEvent* e)
 {
   UpdateArrowMovement(e);
 }
 
-//******************************************************************************
 void AnimationEditor::UpdateArrowMovement(KeyboardEvent* e)
 {
   float scrollSpeed = Pixels(5);
-  if(e->ShiftPressed)
+  if (e->ShiftPressed)
     scrollSpeed = Pixels(25);
 
   Vec2 movement = Vec2::cZero;
-  if(e->Key == Keys::Left)
+  if (e->Key == Keys::Left)
     movement.x += 1.0f;
-  if(e->Key == Keys::Right)
+  if (e->Key == Keys::Right)
     movement.x -= 1.0f;
-  if(e->Key == Keys::Up)
+  if (e->Key == Keys::Up)
     movement.y -= 1.0f;
-  if(e->Key == Keys::Down)
+  if (e->Key == Keys::Down)
     movement.y += 1.0f;
 
   mGraphData.ScrollPixels(movement * scrollSpeed);
 }
 
-//******************************************************************************
 void AnimationEditor::OnPropertyContextMenu(ContextMenuEvent* e)
 {
   DirectProperty* property = e->Source.Get<DirectProperty*>();
   if (property == nullptr)
     return;
 
-  if(mErrorState == ErrorState::None)
+  if (mErrorState == ErrorState::None)
   {
     // Do nothing if the property is not supported by the animation system
-    if(!ValidPropertyTrack(property->mProperty))
+    if (!ValidPropertyTrack(property->mProperty))
       return;
 
     mContextMenuProperty = property->mProperty;
     mContextMenuInstance = property->mInstance;
     ContextMenuEntry* keyFrameCreate = e->RootEntry->AddEntry("Key Frame");
-    ConnectThisTo(keyFrameCreate, Zero::Events::MenuItemSelected, OnCreateKeyFrame);
+    ConnectThisTo(
+        keyFrameCreate, Zero::Events::MenuItemSelected, OnCreateKeyFrame);
   }
 }
 
-//******************************************************************************
 void AnimationEditor::OnCreateKeyFrame(Event* e)
 {
   // Create a key frame. Pass in NULL for the value to let it query the object
   CreateKeyFrameAtPlayHead(mContextMenuProperty, mContextMenuInstance, nullptr);
 }
 
-//******************************************************************************
 void AnimationEditor::OnMouseEnterErrorText(MouseEvent* event)
 {
-  if(mErrorState != ErrorState::NoObject)
+  if (mErrorState != ErrorState::NoObject)
     mErrorStateText->SetColor(AnimEditorUi::ErrorStateHighlightColor);
 
   mErrorToolTip.SafeDestroy();
@@ -1025,31 +998,36 @@ void AnimationEditor::OnMouseEnterErrorText(MouseEvent* event)
 
   ToolTipPlacement placement;
   placement.SetScreenRect(mErrorStateText->GetScreenRect());
-  
-  placement.SetPriority(IndicatorSide::Top, IndicatorSide::Bottom,
-                        IndicatorSide::Left, IndicatorSide::Right);
+
+  placement.SetPriority(IndicatorSide::Top,
+                        IndicatorSide::Bottom,
+                        IndicatorSide::Left,
+                        IndicatorSide::Right);
   mErrorToolTip = toolTip;
 
-  if(mErrorState == ErrorState::NoObject)
-    toolTip->SetText("Select an object in the level to add or edit an animation");
-  else if(mErrorState == ErrorState::NoAnimGraph)
-    toolTip->SetText("The AnimationGraph component is responsible for running Animations on objects.");
-  else if(mErrorState == ErrorState::ReadOnly)
+  if (mErrorState == ErrorState::NoObject)
+    toolTip->SetText(
+        "Select an object in the level to add or edit an animation");
+  else if (mErrorState == ErrorState::NoAnimGraph)
+    toolTip->SetText("The AnimationGraph component is responsible for running "
+                     "Animations on objects.");
+  else if (mErrorState == ErrorState::ReadOnly)
     toolTip->SetText("Click to create a new Rich Animation");
-  else if(mErrorState == ErrorState::ReadOnly)
-    toolTip->SetText("Click to convert the animation to a Rich Animation format");
+  else if (mErrorState == ErrorState::ReadOnly)
+    toolTip->SetText(
+        "Click to convert the animation to a Rich Animation format");
 
   toolTip->SetArrowTipTranslation(placement);
 }
 
-//******************************************************************************
 void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
 {
   mErrorToolTip.SafeDestroy();
 
-  bool hasEditorConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig) != nullptr;
+  bool hasEditorConfig =
+      Z::gEngine->GetConfigCog()->has(DeveloperConfig) != nullptr;
 
-  if(mErrorState == ErrorState::NoAnimGraph)
+  if (mErrorState == ErrorState::NoAnimGraph)
   {
     // Add a animGraph to the selected object
     Cog* cog = mSelectedObject;
@@ -1063,16 +1041,16 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
     // Refresh the selection
     RefreshSelection();
 
-    // The mouse should still be over the error state text, so 
+    // The mouse should still be over the error state text, so
     // keep it highlighted
-    if(mErrorState == ErrorState::ReadOnly)
+    if (mErrorState == ErrorState::ReadOnly)
       mErrorStateText->SetColor(AnimEditorUi::ErrorStateHighlightColor);
   }
-  else if(mErrorState == ErrorState::ReadOnly)
+  else if (mErrorState == ErrorState::ReadOnly)
   {
     OpenAnimationAddWindow();
   }
-  else if(mErrorState == ErrorState::AnimationFromGeometry && hasEditorConfig)
+  else if (mErrorState == ErrorState::AnimationFromGeometry && hasEditorConfig)
   {
     Animation* oldAnimation = mAnimation;
 
@@ -1083,13 +1061,14 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
     Animation* newAnimation = AnimationManager::FindOrNull(newName);
 
     // If we didn't create it
-    if(newAnimation == nullptr)
+    if (newAnimation == nullptr)
     {
       ResourceAdd resourceAdd;
       resourceAdd.Library = Z::gEditor->mProjectLibrary;
       resourceAdd.Name = newName;
       resourceAdd.Template = AnimationManager::FindOrNull("RichAnimation");
-      newAnimation = (Animation*)AddNewResource(AnimationManager::GetInstance(), resourceAdd);
+      newAnimation = (Animation*)AddNewResource(AnimationManager::GetInstance(),
+                                                resourceAdd);
     }
 
     // Convert the animation from geometry to a rich animation
@@ -1105,7 +1084,7 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
     Cog* cog = mAnimGraphObject;
     // Set the new animation on the AutoPlayAnimation and refresh
     SimpleAnimation* autoPlay = cog->has(SimpleAnimation);
-    if(autoPlay == nullptr)
+    if (autoPlay == nullptr)
     {
       OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
       if (QueueAddComponent(opQueue, cog, ZilchTypeId(SimpleAnimation)))
@@ -1118,20 +1097,17 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
   }
 }
 
-//******************************************************************************
 void AnimationEditor::OnMouseExitErrorText(MouseEvent* event)
 {
   mErrorToolTip.SafeDestroy();
   mErrorStateText->SetColor(AnimEditorUi::ErrorStateColor);
 }
 
-//******************************************************************************
 void AnimationEditor::OnMouseDownNegativeX(MouseEvent* event)
 {
   mGraphData.PanToTranslation(Vec2(0, mGraphData.Translation.y), 0.4f);
 }
 
-//******************************************************************************
 void AnimationEditor::OpenAnimationAddWindow()
 {
   AddResourceWindow* addWidget = OpenAddWindow(ZilchTypeId(Animation));
@@ -1142,47 +1118,43 @@ void AnimationEditor::OpenAnimationAddWindow()
   ConnectThisTo(Z::gResources, Events::ResourceAdded, OnAnimationAdded);
 }
 
-//******************************************************************************
 void AnimationEditor::OnAnimationAdded(ResourceEvent* e)
 {
   Z::gResources->GetReceiver()->Disconnect(this);
 
   Cog* cog = mAnimGraphObject;
-  if(cog && (ZilchVirtualTypeId(e->EventResource) == ZilchTypeId(Animation)))
+  if (cog && (ZilchVirtualTypeId(e->EventResource) == ZilchTypeId(Animation)))
   {
     // Set the new animation on the AutoPlayAnimation and refresh
     SimpleAnimation* autoPlay = cog->has(SimpleAnimation);
-    if(autoPlay == nullptr)
+    if (autoPlay == nullptr)
     {
       OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
       if (QueueAddComponent(opQueue, cog, ZilchTypeId(SimpleAnimation)))
         autoPlay = cog->has(SimpleAnimation);
     }
-    if(autoPlay)
+    if (autoPlay)
       autoPlay->SetAnimation((Animation*)e->EventResource);
     RefreshSelection();
   }
 }
 
-//******************************************************************************
 void AnimationEditor::OnAnimationAddCancel(Event* e)
 {
   Z::gResources->GetReceiver()->Disconnect(this);
 }
 
-//******************************************************************************
 void AnimationEditor::OnSettingsPressed(MouseEvent* event)
 {
   mSettingsView->SetActive(!mSettingsView->GetActive());
 }
 
-//******************************************************************************
 void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property,
                                                HandleParam componentInstance,
                                                Any* newValue)
 {
   // Do nothing if the property is not supported by the animation system
-  if(!ValidPropertyTrack(property))
+  if (!ValidPropertyTrack(property))
     return;
 
   RichAnimation* richAnimation = mEditorData->mRichAnimation;
@@ -1197,7 +1169,7 @@ void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property,
 
   // If we weren't given a value, query the object for its current value
   Any val;
-  if(newValue != nullptr)
+  if (newValue != nullptr)
     val = *newValue;
   else
     val = property->GetValue(component);
@@ -1205,12 +1177,11 @@ void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property,
   BoundType* componentTypeId = ZilchVirtualTypeId(component);
 
   // Attempt to find the property track
-  TrackNode* propertyTrack = richAnimation->GetPropertyTrack(object,
-                                              mAnimGraphObject, componentTypeId,
-                                              property->Name);
+  TrackNode* propertyTrack = richAnimation->GetPropertyTrack(
+      object, mAnimGraphObject, componentTypeId, property->Name);
 
   // If the property type has changed, notify the user and don't do anything
-  if(property->PropertyType != propertyTrack->mPropertyType)
+  if (property->PropertyType != propertyTrack->mPropertyType)
   {
     String message = String::Format("The property '%s' has changed types.",
                                     propertyTrack->Path.c_str());
@@ -1226,7 +1197,6 @@ void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property,
   mEditorData->AddToSelection(propertyTrack);
 }
 
-//******************************************************************************
 Archetype* GetAnimationPreviewArchetype(Animation* animation)
 {
   String previewArchetypeName;
@@ -1234,35 +1204,37 @@ Archetype* GetAnimationPreviewArchetype(Animation* animation)
   ContentItem* contentItem = animation->mContentItem;
 
   // Check both types of animations for the preview archetype
-  if(GeneratedArchetype* genAchetype = contentItem->has(GeneratedArchetype))
+  if (GeneratedArchetype* genAchetype = contentItem->has(GeneratedArchetype))
     return ArchetypeManager::Find(genAchetype->mResourceId);
 
-//   if(AnimationBuilder* builder = contentItem->has(AnimationBuilder))
-//     previewArchetypeName = builder->mPreviewArchetype;
-//   else if(RichAnimationBuilder* builder = contentItem->has(RichAnimationBuilder))
-//     previewArchetypeName = builder->mPreviewArchetype;
+  //   if(AnimationBuilder* builder = contentItem->has(AnimationBuilder))
+  //     previewArchetypeName = builder->mPreviewArchetype;
+  //   else if(RichAnimationBuilder* builder =
+  //   contentItem->has(RichAnimationBuilder))
+  //     previewArchetypeName = builder->mPreviewArchetype;
 
   // Look up the archetype
   return ArchetypeManager::FindOrNull(previewArchetypeName);
 }
 
-//******************************************************************************
-Cog* CreateAnimationPreview(Space* space, Animation* animation,
+Cog* CreateAnimationPreview(Space* space,
+                            Animation* animation,
                             Archetype* archetype)
 {
   // Look up the archetype if it wasn't given
-  if(archetype == nullptr)
+  if (archetype == nullptr)
     archetype = GetAnimationPreviewArchetype(animation);
 
-  if(archetype)
+  if (archetype)
   {
     Cog* object = space->CreateAt(archetype->ResourceIdName, Vec3(0, 0, 0));
-    
-    if(AnimationGraph* animGraph = object->has(AnimationGraph))
+
+    if (AnimationGraph* animGraph = object->has(AnimationGraph))
     {
       animGraph->SetPreviewMode();
 
-      AnimationNode* node = BuildBasic(animGraph, animation, 0, AnimationPlayMode::Loop);
+      AnimationNode* node =
+          BuildBasic(animGraph, animation, 0, AnimationPlayMode::Loop);
       animGraph->SetActiveNode(node);
     }
 
@@ -1272,4 +1244,4 @@ Cog* CreateAnimationPreview(Space* space, Animation* animation,
   return nullptr;
 }
 
-} //namespace Zero
+} // namespace Zero

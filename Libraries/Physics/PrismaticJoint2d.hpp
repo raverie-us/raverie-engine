@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -72,8 +67,8 @@ struct PrismaticJoint2d : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::PrismaticJoint2d PrismaticJoint2d;
 
-}//namespace Zero
+} // namespace Zero

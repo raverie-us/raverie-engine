@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -44,7 +39,6 @@ ZilchDefineType(MetaCompositionWrapper, builder, type)
 {
 }
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(EditorLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -132,7 +126,8 @@ ZilchDefineStaticLibrary(EditorLibrary)
   // Commands
   ZilchInitializeType(Command);
   ZilchInitializeType(CogCommand);
-  ZilchInitializeTypeAs(EditorScriptObjects<CogCommand>, "EditorScriptObjectsCogCommand");
+  ZilchInitializeTypeAs(EditorScriptObjects<CogCommand>,
+                        "EditorScriptObjectsCogCommand");
   ZilchInitializeType(CogCommandManager);
 
   // Data Editors
@@ -186,9 +181,9 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ObjectTranslateGizmo);
   ZilchInitializeType(ObjectScaleGizmo);
   ZilchInitializeType(ObjectRotateGizmo);
-  //ZilchInitializeType(CogSizerGizmo);
-  //ZilchInitializeType(SizerGizmoEvent);
-  //ZilchInitializeType(SizerGizmo);
+  // ZilchInitializeType(CogSizerGizmo);
+  // ZilchInitializeType(SizerGizmoEvent);
+  // ZilchInitializeType(SizerGizmo);
   ZilchInitializeType(RotationBasisGizmoMetaTransform);
   ZilchInitializeType(RotationBasisGizmoInitializationEvent);
   ZilchInitializeType(RotationBasisGizmo);
@@ -203,8 +198,9 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(MultiConvexMeshPoint);
   ZilchInitializeType(MultiConvexMeshPropertyViewInfo);
   ZilchInitializeType(MultiConvexMeshEditor);
-  // METAREFACTOR they should always be initialized, but hidden with an attribute
-  if(Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  // METAREFACTOR they should always be initialized, but hidden with an
+  // attribute
+  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
   {
     ZilchInitializeType(HeightMapDebugDrawer);
     ZilchInitializeType(HeightMapAabbChecker);
@@ -239,8 +235,9 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(SpringPointProxy);
   ZilchInitializeType(SpringPointProxyProperty);
 
-  // METAREFACTOR this should always be initialized, but hidden with an attribute
-  if(Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr)
+  // METAREFACTOR this should always be initialized, but hidden with an
+  // attribute
+  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr)
     ZilchInitializeType(SpringTools);
 
   ZilchInitializeType(HeightMapSubTool);
@@ -288,7 +285,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(RenderGroupHierarchies);
 
   ZilchInitializeType(DirectProperty);
-  
+
   // Animator
   ZilchInitializeType(AnimationEditorData);
   ZilchInitializeType(AnimationSettings);
@@ -301,13 +298,12 @@ ZilchDefineStaticLibrary(EditorLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void EditorLibrary::Initialize()
 {
   BuildStaticLibrary();
 
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
-  
+
   BackgroundTasks::Initialize();
   DocumentManager::Initialize();
   Exporter::Initialize();
@@ -330,7 +326,6 @@ void EditorLibrary::Initialize()
   InitializeResourceManager(TilePaletteSourceManager);
 }
 
-//**************************************************************************************************
 void EditorLibrary::Shutdown()
 {
   HotKeyCommands::Destroy();
@@ -346,4 +341,4 @@ void EditorLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

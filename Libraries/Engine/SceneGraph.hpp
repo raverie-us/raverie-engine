@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SceneGraph.hpp
-/// Declaration of the SceneGraph class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,9 +13,9 @@ public:
   SceneGraphMaterial();
 
   uint UsageCount;
-  //Name of material
+  // Name of material
   String Name;
-  //Attributes of material
+  // Attributes of material
   HashMap<String, String> Attributes;
 
   Material* LoadedMaterial;
@@ -42,27 +34,26 @@ public:
   SceneGraphNode();
   ~SceneGraphNode();
 
-  //Mesh used for this Node
+  // Mesh used for this Node
   String MeshName;
   String SkeletonRootNodePath;
   String PhysicsMeshName;
 
-  //Is this node a skeleton root
+  // Is this node a skeleton root
   bool IsSkeletonRoot;
 
-  //Materials use for this object
+  // Materials use for this object
   Array<String> Materials;
-  //Attributes of Node
+  // Attributes of Node
   HashMap<String, String> Attributes;
-  //Child Nodes
+  // Child Nodes
   Array<SceneGraphNode*> Children;
 
   void Serialize(Serializer& stream);
 };
 
-
-// Scene graph resource is used to load scene graphs from external resources/content.
-// Used during content importing.
+// Scene graph resource is used to load scene graphs from external
+// resources/content. Used during content importing.
 class SceneGraphSource
 {
 public:
@@ -73,10 +64,10 @@ public:
   SceneGraphSource();
   ~SceneGraphSource();
 
-  //Root of Scene Graph
+  // Root of Scene Graph
   SceneGraphNode* Root;
 
-  //Materials in Scene Graph
+  // Materials in Scene Graph
   Array<SceneGraphMaterial*> Materials;
 
   HashMap<String, SceneGraphMaterial*> MaterialsByName;
@@ -86,4 +77,4 @@ public:
   void Serialize(Serializer& stream);
 };
 
-}
+} // namespace Zero

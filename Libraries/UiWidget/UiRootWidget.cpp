@@ -1,28 +1,20 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
 void WidgetFlagCallback(Cog* cog, uint flag, FlagOperation::Enum operation)
 {
-  if(UiWidget* widget = cog->has(UiWidget))
+  if (UiWidget* widget = cog->has(UiWidget))
   {
-    if(operation == FlagOperation::Set)
+    if (operation == FlagOperation::Set)
       widget->mFlags.SetFlag(flag);
     else
       widget->mFlags.ClearFlag(flag);
   }
 }
 
-//------------------------------------------------------------------ Root Widget
-//******************************************************************************
 ZilchDefineType(UiRootWidget, builder, type)
 {
   ZeroBindDocumented();
@@ -44,7 +36,7 @@ ZilchDefineType(UiRootWidget, builder, type)
   ZeroBindEvent(Events::HoverKeyUp, KeyboardEvent);
   ZeroBindEvent(Events::HoverKeyRepeated, KeyboardEvent);
 
-  //ZilchBindFieldProperty(mSnapSize);
+  // ZilchBindFieldProperty(mSnapSize);
 
   ZilchBindFieldProperty(mMouseHoverTime);
   ZilchBindFieldProperty(mMouseHoldTime);
@@ -62,10 +54,9 @@ ZilchDefineType(UiRootWidget, builder, type)
   // Methods
   ZilchBindMethod(Update);
   ZilchBindMethod(Render);
-  //ZilchBindMethod(DispatchAt);
+  // ZilchBindMethod(DispatchAt);
 }
 
-//******************************************************************************
 UiRootWidget::UiRootWidget()
 {
   mSnapSize = 1.0f;
@@ -100,7 +91,6 @@ UiRootWidget::UiRootWidget()
   mStencilTestSettings.mDepthSettings = depthSettings;
 }
 
-//******************************************************************************
 void UiRootWidget::Serialize(Serializer& stream)
 {
   UiWidget::Serialize(stream);
@@ -112,7 +102,6 @@ void UiRootWidget::Serialize(Serializer& stream)
   SerializeNameDefault(mDebugMouseInteraction, false);
 }
 
-//******************************************************************************
 void UiRootWidget::Initialize(CogInitializer& initializer)
 {
   UiWidget::Initialize(initializer);
@@ -131,7 +120,8 @@ void UiRootWidget::Initialize(CogInitializer& initializer)
     ConnectThisTo(GetOwner(), Events::MouseMove, OnMouseEvent);
     ConnectThisTo(GetOwner(), Events::MouseUpdate, OnMouseUpdate);
 
-    // We want to the root widget to know when the mouse has exited the entire thing
+    // We want to the root widget to know when the mouse has exited the entire
+    // thing
     ConnectThisTo(GetOwner(), Events::MouseExit, OnMouseEvent);
 
     // Keyboard events
@@ -144,14 +134,13 @@ void UiRootWidget::Initialize(CogInitializer& initializer)
   ConnectThisTo(GetOwner(), Events::KeyRepeated, OnWidgetKeyDown);
 }
 
-//******************************************************************************
 void UiRootWidget::Update()
 {
   // Until the TransformUpdateState is fully functional, we should always update
   bool alwaysUpdate = true;
 
   // Update the widget tree if we need to be updated
-  if(mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
+  if (mTransformUpdateState != UiTransformUpdateState::Updated || alwaysUpdate)
   {
     UiTransformUpdateEvent e;
     e.mRootWidget = this;
@@ -159,8 +148,9 @@ void UiRootWidget::Update()
   }
 }
 
-//******************************************************************************
-UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool interactiveOnly)
+UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint,
+                                  UiWidget* ignore,
+                                  bool interactiveOnly)
 {
   // Walk in reverse to hit the most recently created first
   uint size = mOnTopWidgets.Size();
@@ -168,51 +158,53 @@ UiWidget* UiRootWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool i
   {
     UiWidget* onTopWidget = mOnTopWidgets[i];
 
-    // Temporarily clear OnTop so that the CastPoint function properly processes this widget
+    // Temporarily clear OnTop so that the CastPoint function properly processes
+    // this widget
     onTopWidget->mFlags.ClearFlag(UiWidgetFlags::OnTop);
 
-    UiWidget* hitWidget = onTopWidget->CastPoint(worldPoint, ignore, interactiveOnly);
+    UiWidget* hitWidget =
+        onTopWidget->CastPoint(worldPoint, ignore, interactiveOnly);
 
     // Re-set the on top flag
     onTopWidget->mFlags.SetFlag(UiWidgetFlags::OnTop);
-    
-    if(hitWidget)
+
+    if (hitWidget)
       return hitWidget;
   }
 
   return UiWidget::CastPoint(worldPoint, ignore, interactiveOnly);
 }
 
-//******************************************************************************
 void UiRootWidget::UpdateMouseTimers(float dt, ViewportMouseEvent* e)
 {
-  // Widgets could have moved from under the mouse, so update what the mouse is over
+  // Widgets could have moved from under the mouse, so update what the mouse is
+  // over
   MouseMove(e);
 
   UiWidget* hoverWidget = mMouseOverWidget;
 
-  if(hoverWidget)
+  if (hoverWidget)
   {
     Cog* hoverCog = hoverWidget->GetOwner();
 
     // Update the hover timer
     mCurrHoverTime += dt;
 
-    //DebugPrint("Update Mouse Over %0.3f\n", mCurrHoverTime);
+    // DebugPrint("Update Mouse Over %0.3f\n", mCurrHoverTime);
 
-    if(mCurrHoverTime >= mMouseHoverTime)
+    if (mCurrHoverTime >= mMouseHoverTime)
     {
       mCurrHoverTime = -Math::PositiveMax();
-      //DebugPrint("Mouse Hover %s\n", hoverCog->mObjectName.c_str());
+      // DebugPrint("Mouse Hover %s\n", hoverCog->mObjectName.c_str());
       hoverCog->DispatchEvent(Events::MouseHover, e);
       hoverCog->DispatchUp(Events::MouseHover, e);
     }
 
-    if(mMouseButtonDownCount > 0)
+    if (mMouseButtonDownCount > 0)
     {
       mCurrHoldTime += dt;
 
-      if(mCurrHoldTime > mMouseHoldTime)
+      if (mCurrHoldTime > mMouseHoldTime)
       {
         mCurrHoldTime = -Math::PositiveMax();
         hoverCog->DispatchEvent(Events::MouseHold, e);
@@ -233,20 +225,17 @@ void UiRootWidget::UpdateMouseTimers(float dt, ViewportMouseEvent* e)
   mTimeSinceLastClick += dt;
 }
 
-//******************************************************************************
 void UiRootWidget::PerformKeyDown(Keys::Enum key)
 {
-
 }
 
-//******************************************************************************
 void UiRootWidget::PerformKeyUp(Keys::Enum key)
 {
-
 }
 
-//******************************************************************************
-void SendKeyboardEvent(KeyboardEvent* e, Cog* cog, StringParam previewEventId,
+void SendKeyboardEvent(KeyboardEvent* e,
+                       Cog* cog,
+                       StringParam previewEventId,
                        cstr eventPreAppend)
 {
   e->Handled = false;
@@ -255,104 +244,100 @@ void SendKeyboardEvent(KeyboardEvent* e, Cog* cog, StringParam previewEventId,
   cog->DispatchEvent(previewEventId, e);
   cog->DispatchUp(previewEventId, e);
 
-  if(e->Handled || e->HandledEventScript)
+  if (e->Handled || e->HandledEventScript)
     return;
 
   // Send out the general key down
   String eventId = cKeyboardEventsFromState[e->State];
 
   // Used to pre-append "Hover" to the beginning of each event
-  if(eventPreAppend)
+  if (eventPreAppend)
     eventId = BuildString(eventPreAppend, eventId);
 
   cog->DispatchEvent(eventId, e);
   cog->DispatchUp(eventId, e);
 }
 
-//******************************************************************************
 void UiRootWidget::PerformKeyboardEvent(KeyboardEvent* e)
 {
   // Keyboard events first go to the widget in focus
-  if(UiWidget* focusWidget = mFocusWidget)
+  if (UiWidget* focusWidget = mFocusWidget)
   {
-    //e->Handled = false;
+    // e->Handled = false;
     SendKeyboardEvent(e, focusWidget->GetOwner(), Events::KeyPreview, nullptr);
   }
 
-  // If the widget in focus doesn't handle the event, we want to send it to the widget
-  // the mouse is currently over
-  if(e->Handled || e->HandledEventScript)
+  // If the widget in focus doesn't handle the event, we want to send it to the
+  // widget the mouse is currently over
+  if (e->Handled || e->HandledEventScript)
     return;
 
-  // Pre-append "Hover" to each event so that the widget knows the context of the event
-  if(UiWidget* mouseOver = mMouseOverWidget)
-    SendKeyboardEvent(e, mouseOver->GetOwner(), Events::HoverKeyPreview, "Hover");
+  // Pre-append "Hover" to each event so that the widget knows the context of
+  // the event
+  if (UiWidget* mouseOver = mMouseOverWidget)
+    SendKeyboardEvent(
+        e, mouseOver->GetOwner(), Events::HoverKeyPreview, "Hover");
 }
 
-//******************************************************************************
 void UiRootWidget::PerformMouseMove(Vec2Param newRootPoint)
 {
-
 }
 
-//******************************************************************************
-void UiRootWidget::PerformMouseDown(MouseButtons::Enum button, Vec2Param rootPoint)
+void UiRootWidget::PerformMouseDown(MouseButtons::Enum button,
+                                    Vec2Param rootPoint)
 {
-  //ViewportMouseEvent e;
-  //BuildMouseEvent(rootPoint, &e);
+  // ViewportMouseEvent e;
+  // BuildMouseEvent(rootPoint, &e);
 }
 
-//******************************************************************************
-void UiRootWidget::PerformMouseUp(MouseButtons::Enum button, Vec2Param rootPoint)
+void UiRootWidget::PerformMouseUp(MouseButtons::Enum button,
+                                  Vec2Param rootPoint)
 {
-
 }
 
-//******************************************************************************
 void UiRootWidget::PerformMouseScroll(Vec2Param rootPoint, Vec2Param scroll)
 {
-
 }
 
-//******************************************************************************
-void UiRootWidget::BuildMouseEvent(ViewportMouseEvent* e, Vec2Param rootPoint,
+void UiRootWidget::BuildMouseEvent(ViewportMouseEvent* e,
+                                   Vec2Param rootPoint,
                                    MouseButtons::Enum button)
 {
-  //Mouse* mouse = Z::gMouse;
+  // Mouse* mouse = Z::gMouse;
   //
-  //e->Button = button;
-  //e->EventMouse = mouse;
+  // e->Button = button;
+  // e->EventMouse = mouse;
   //
   ////e->Source = mMouseOverCog;
   //
-  //e->mWorldRay = Ray(Vec3(rootPoint), Vec3(0, 0, -1));
-  //e->Position = mouse->GetScreenPosition();
-  //e->Movement = mouse->GetScreenMovement();
+  // e->mWorldRay = Ray(Vec3(rootPoint), Vec3(0, 0, -1));
+  // e->Position = mouse->GetScreenPosition();
+  // e->Movement = mouse->GetScreenMovement();
   //
 }
 
-//******************************************************************************
 void UiRootWidget::PerformMouseEvent(ViewportMouseEvent* e)
 {
   // A mouse event has to be associated with the space the Ui is in
-  if(e->GetViewport()->GetTargetSpace() != GetSpace())
+  if (e->GetViewport()->GetTargetSpace() != GetSpace())
   {
-    //DoNotifyExceptionAssert("")
+    // DoNotifyExceptionAssert("")
     return;
   }
 
-  // If the mouse left the root widget, we need to tell the mouse over widget that it has exited
-  if(e->EventId == Events::MouseExit)
+  // If the mouse left the root widget, we need to tell the mouse over widget
+  // that it has exited
+  if (e->EventId == Events::MouseExit)
     MouseOver(e, nullptr);
 
   // Update what widget the mouse is over
-  if(e->EventId == Events::MouseMove)
+  if (e->EventId == Events::MouseMove)
     MouseMove(e);
 
   UiWidget* mouseOverWidget = mMouseOverWidget;
 
   // Send the event to the mouse over object
-  if(mouseOverWidget)
+  if (mouseOverWidget)
   {
     // Set the correct hit object
     e->mHitObject = mouseOverWidget->GetOwner();
@@ -364,29 +349,27 @@ void UiRootWidget::PerformMouseEvent(ViewportMouseEvent* e)
   }
 }
 
-//******************************************************************************
 float GetLargestAxis(Vec2 dragMovemvent)
 {
   return Math::Max(Math::Abs(dragMovemvent.x), Math::Abs(dragMovemvent.y));
 }
 
-//******************************************************************************
 void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
 {
   UiWidget* mouseOverWidget = mMouseOverWidget;
 
   // Set the correct hit object
-  if(mouseOverWidget)
+  if (mouseOverWidget)
     e->mHitObject = mouseOverWidget->GetOwner();
 
   MouseButtons::Enum button = e->Button;
 
   // Change focus to widgets that were clicked on
-  if(e->ButtonDown)
+  if (e->ButtonDown)
   {
     ++mMouseButtonDownCount;
 
-    if(mouseOverWidget)
+    if (mouseOverWidget)
     {
       UiWidget* focusWidget = mouseOverWidget;
       do
@@ -407,12 +390,12 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
   }
   // If we load a level containing Ui on mouse down, the mouse up event
   // could be sent to this widget
-  else if(mMouseDownWidget != nullptr)
+  else if (mMouseDownWidget != nullptr)
   {
     --mMouseButtonDownCount;
 
     // Send the click event if we're over the same widget the mouse went down on
-    if((UiWidget*)mMouseDownWidget == mouseOverWidget)
+    if ((UiWidget*)mMouseDownWidget == mouseOverWidget)
     {
       Cog* mouseOverCog = mouseOverWidget->GetOwner();
       String clickEventId = NamedMouseClick[button];
@@ -421,10 +404,11 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
 
       // Send the DoubleClick event if we're within the time limit
       bool buttonsAreTheSame = (mLastClickedButton == button);
-      bool distanceIsSmall = GetLargestAxis(e->Position - mLastClickPosition) < 4.0f;
+      bool distanceIsSmall =
+          GetLargestAxis(e->Position - mLastClickPosition) < 4.0f;
       bool doubleClickTime = mTimeSinceLastClick < mDoubleClickTime;
 
-      if(buttonsAreTheSame && distanceIsSmall && doubleClickTime)
+      if (buttonsAreTheSame && distanceIsSmall && doubleClickTime)
       {
         mouseOverCog->DispatchEvent(Events::DoubleClick, e);
         mouseOverCog->DispatchUp(Events::DoubleClick, e);
@@ -440,12 +424,13 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
   }
 
   // Send the event to the mouse over object
-  if(mouseOverWidget)
+  if (mouseOverWidget)
   {
     Cog* mouseOverCog = mouseOverWidget->GetOwner();
 
     // Send generic mouse down / up
-    String genericEventName = e->ButtonDown ? Events::MouseDown : Events::MouseUp;
+    String genericEventName =
+        e->ButtonDown ? Events::MouseDown : Events::MouseUp;
     mouseOverCog->DispatchEvent(genericEventName, e);
     mouseOverCog->DispatchUp(genericEventName, e);
 
@@ -455,58 +440,62 @@ void UiRootWidget::PerformMouseButton(ViewportMouseEvent* e)
   }
 }
 
-//******************************************************************************
 void UiRootWidget::MouseMove(ViewportMouseEvent* e)
 {
   // We want to send mouse events to the widget that the mouse is over
   UiWidget* newMouseOver = CastPoint(ToVector2(e->mHitPosition), nullptr, true);
-  while(newMouseOver && !newMouseOver->GetInteractive())
+  while (newMouseOver && !newMouseOver->GetInteractive())
     newMouseOver = newMouseOver->mParent;
-  
+
   MouseOver(e, newMouseOver);
 }
 
-//******************************************************************************
 void UiRootWidget::MouseOver(ViewportMouseEvent* e, UiWidget* newMouseOver)
 {
   UiWidget* oldMouseOver = mMouseOverWidget;
 
   // If the mouse has moved to a new object, we want to send MouseEnter and Exit
   // events to both object
-  if(newMouseOver != oldMouseOver)
+  if (newMouseOver != oldMouseOver)
   {
     Cog* oldMouseOverCog = (oldMouseOver) ? oldMouseOver->GetOwner() : nullptr;
     Cog* newMouseOverCog = (newMouseOver) ? newMouseOver->GetOwner() : nullptr;
 
-    //ViewportMouseEvent mouseOut(*e);
-    //mouseOut.Source = oldMouseOverCog
-    //ViewportMouseEvent mouseIn(*e);
-    //mouseOut.Source = newMouseOverCog
+    // ViewportMouseEvent mouseOut(*e);
+    // mouseOut.Source = oldMouseOverCog
+    // ViewportMouseEvent mouseIn(*e);
+    // mouseOut.Source = newMouseOverCog
 
     cstr op = (mDebugMouseInteraction) ? "Over" : nullptr;
 
-    if(newMouseOver)
+    if (newMouseOver)
       e->mHitObject = newMouseOver->GetOwner();
 
-    SendHierarchyEvents(op, oldMouseOverCog, newMouseOverCog, e, e,
-      Events::MouseExit, Events::MouseEnter,
-      Events::MouseExitHierarchy, Events::MouseEnterHierarchy,
-      UiWidgetFlags::MouseOver, UiWidgetFlags::MouseOverHierarchy,
-      &WidgetFlagCallback);
+    SendHierarchyEvents(op,
+                        oldMouseOverCog,
+                        newMouseOverCog,
+                        e,
+                        e,
+                        Events::MouseExit,
+                        Events::MouseEnter,
+                        Events::MouseExitHierarchy,
+                        Events::MouseEnterHierarchy,
+                        UiWidgetFlags::MouseOver,
+                        UiWidgetFlags::MouseOverHierarchy,
+                        &WidgetFlagCallback);
 
     mMouseOverWidget = newMouseOver;
-    //DebugPrint("Mouse now over %s\n", newMouseOverCog->mObjectName.c_str());
+    // DebugPrint("Mouse now over %s\n", newMouseOverCog->mObjectName.c_str());
     mCurrHoverTime = 0.0f;
     mCurrHoldTime = 0.0f;
   }
 }
 
-//******************************************************************************
 void UiRootWidget::DispatchAt(DispatchAtParams& params)
 {
-  //Widget* hit = mWidget->CastPoint(params.Position, params.Ignore);
+  // Widget* hit = mWidget->CastPoint(params.Position, params.Ignore);
   //
-  //if(hit)
+  // if(hit)
   //{
   //  if(params.BubbleEvent)
   //    hit->DispatchBubble(params.EventId, params.EventObject);
@@ -517,34 +506,32 @@ void UiRootWidget::DispatchAt(DispatchAtParams& params)
   //}
 }
 
-//******************************************************************************
 void UiRootWidget::SetOsWindow(OsWindow* window)
 {
   // Disconnect from all Reactive events
   DisconnectAll(GetOwner(), this);
 
-  //ConnectThisTo(osWindow, Events::OsResized, OnOsResize);
-  //ConnectThisTo(osWindow, Events::OsMouseDown, OnOsMouseDown);
-  //ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
-  //ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
+  // ConnectThisTo(osWindow, Events::OsResized, OnOsResize);
+  // ConnectThisTo(osWindow, Events::OsMouseDown, OnOsMouseDown);
+  // ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
+  // ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
   //
-  //ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
+  // ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
   //
-  //ConnectThisTo(osWindow, Events::OsKeyTyped, OnOsKeyTyped);
-  //ConnectThisTo(osWindow, Events::OsKeyRepeated, OnOsKeyDown);
-  //ConnectThisTo(osWindow, Events::OsKeyDown, OnOsKeyDown);
-  //ConnectThisTo(osWindow, Events::OsKeyUp, OnOsKeyUp);
+  // ConnectThisTo(osWindow, Events::OsKeyTyped, OnOsKeyTyped);
+  // ConnectThisTo(osWindow, Events::OsKeyRepeated, OnOsKeyDown);
+  // ConnectThisTo(osWindow, Events::OsKeyDown, OnOsKeyDown);
+  // ConnectThisTo(osWindow, Events::OsKeyUp, OnOsKeyUp);
   //
-  //ConnectThisTo(osWindow, Events::OsFocusGained, OnOsFocusGained);
-  //ConnectThisTo(osWindow, Events::OsFocusLost, OnOsFocusLost);
+  // ConnectThisTo(osWindow, Events::OsFocusGained, OnOsFocusGained);
+  // ConnectThisTo(osWindow, Events::OsFocusLost, OnOsFocusLost);
   //
-  //ConnectThisTo(osWindow, Events::OsMouseFileDrop, OnOsMouseDrop);
-  //ConnectThisTo(osWindow, Events::OsPaint, OnOsPaint);
+  // ConnectThisTo(osWindow, Events::OsMouseFileDrop, OnOsMouseDrop);
+  // ConnectThisTo(osWindow, Events::OsPaint, OnOsPaint);
   //
-  //ConnectThisTo(osWindow, Events::OsClose, OnClose);
+  // ConnectThisTo(osWindow, Events::OsClose, OnClose);
 }
 
-//******************************************************************************
 void UiRootWidget::OnMouseEvent(ViewportMouseEvent* e)
 {
   if (mIgnoreEvents)
@@ -566,7 +553,6 @@ void UiRootWidget::OnMouseEvent(ViewportMouseEvent* e)
   e->Terminate();
 }
 
-//******************************************************************************
 void UiRootWidget::OnMouseButton(ViewportMouseEvent* e)
 {
   if (mIgnoreEvents)
@@ -580,7 +566,6 @@ void UiRootWidget::OnMouseButton(ViewportMouseEvent* e)
   e->Terminate();
 }
 
-//******************************************************************************
 void UiRootWidget::OnMouseUpdate(ViewportMouseEvent* e)
 {
   if (mIgnoreEvents)
@@ -594,18 +579,18 @@ void UiRootWidget::OnMouseUpdate(ViewportMouseEvent* e)
   e->Terminate();
 }
 
-//******************************************************************************
 void UiRootWidget::OnKeyboardEvent(KeyboardEvent* e)
 {
   if (mIgnoreEvents)
     return;
-  
-  // We're connecting for keyboard on the global keyboard, which gets events after the event
-  // is dispatched through the old widget system.
-  // The GameWidget sets handled to true after going to the Space to ensure that editor shortcuts
-  // aren't executed while in game. So, by the time we get this, the event is handled. However,
-  // we don't want all events to be immediately handled, so we have to set it back to false.
-  // This should be removed by either not connecting to the global keyboard, or with input refactor.
+
+  // We're connecting for keyboard on the global keyboard, which gets events
+  // after the event is dispatched through the old widget system. The GameWidget
+  // sets handled to true after going to the Space to ensure that editor
+  // shortcuts aren't executed while in game. So, by the time we get this, the
+  // event is handled. However, we don't want all events to be immediately
+  // handled, so we have to set it back to false. This should be removed by
+  // either not connecting to the global keyboard, or with input refactor.
   e->Handled = false;
 
   mIgnoreEvents = true;
@@ -613,24 +598,29 @@ void UiRootWidget::OnKeyboardEvent(KeyboardEvent* e)
   mIgnoreEvents = false;
 
   // See the comment above the Terminate call in 'OnMouseEvent'
-  //e->Terminate();
+  // e->Terminate();
 
   e->Handled = true;
 }
 
-//******************************************************************************
-void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color,
-                        RenderTarget* depth, MaterialBlock* renderPass)
+void UiRootWidget::Render(RenderTasksEvent* e,
+                          RenderTarget* color,
+                          RenderTarget* depth,
+                          MaterialBlock* renderPass)
 {
-  if(e == nullptr || color == nullptr || depth == nullptr || renderPass == nullptr)
+  if (e == nullptr || color == nullptr || depth == nullptr ||
+      renderPass == nullptr)
   {
-    DoNotifyExceptionAssert("Cannot render Widgets", "All parameters must be satisfied.");
+    DoNotifyExceptionAssert("Cannot render Widgets",
+                            "All parameters must be satisfied.");
     return;
   }
 
-  if(!IsDepthStencilFormat(depth->mTexture->mFormat))
+  if (!IsDepthStencilFormat(depth->mTexture->mFormat))
   {
-    DoNotifyExceptionAssert("Cannot render Widgets", "Depth target must have stencil (Depth24Stencil8).");
+    DoNotifyExceptionAssert(
+        "Cannot render Widgets",
+        "Depth target must have stencil (Depth24Stencil8).");
     return;
   }
 
@@ -642,7 +632,8 @@ void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color,
 
   // Render all widgets
   Vec4 colorTransform(1);
-  RenderWidgets(e, color, depth, renderPass, this, colorTransform, &floatingWidgets);
+  RenderWidgets(
+      e, color, depth, renderPass, this, colorTransform, &floatingWidgets);
 
   // Render all floating widgets
   forRange(CachedFloatingWidget cachedWidget, floatingWidgets.All())
@@ -656,19 +647,23 @@ void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color,
   FlushGraphicals(e, color, depth, renderPass);
 }
 
-//******************************************************************************
-void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
-                              MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform,
-                              Array<CachedFloatingWidget>* floatingWidgets)
+void UiRootWidget::RenderWidgets(RenderTasksEvent* e,
+                                 RenderTarget* color,
+                                 RenderTarget* depth,
+                                 MaterialBlock* renderPass,
+                                 UiWidget* widget,
+                                 Vec4Param colorTransform,
+                                 Array<CachedFloatingWidget>* floatingWidgets)
 {
   // Don't render inactive, destroyed, or editor hidden widgets
   Cog* widgetCog = widget->GetOwner();
   bool spaceInEditMode = GetSpace()->IsEditorMode();
   bool editorHidden = (spaceInEditMode && widgetCog->GetEditorViewportHidden());
-  if(!widget->GetActive() || widgetCog->GetMarkedForDestruction() || editorHidden)
+  if (!widget->GetActive() || widgetCog->GetMarkedForDestruction() ||
+      editorHidden)
     return;
 
-  if(floatingWidgets && widget->GetOnTop())
+  if (floatingWidgets && widget->GetOnTop())
   {
     floatingWidgets->PushBack(CachedFloatingWidget(widget, colorTransform));
     return;
@@ -679,7 +674,7 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, Rende
   Vec4 localColor = hierarchyColor * widget->mLocalColor;
 
   // Set the color on graphicals
-  if(Sprite* sprite = widgetCog->has(Sprite))
+  if (Sprite* sprite = widgetCog->has(Sprite))
     sprite->mVertexColor = localColor;
   else if (SpriteText* spriteText = widgetCog->has(SpriteText))
     spriteText->mVertexColor = localColor;
@@ -688,33 +683,40 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e, RenderTarget* color, Rende
   {
     // Write out stencil if we're clipping our children
     if (widget->GetClipChildren())
-      AddGraphical(e, color, depth, renderPass, widgetCog, StencilDrawMode::Add, 1);
+      AddGraphical(
+          e, color, depth, renderPass, widgetCog, StencilDrawMode::Add, 1);
 
     // Add the widget to be rendered
-    AddGraphical(e, color, depth, renderPass, widgetCog, StencilDrawMode::Test, 0);
+    AddGraphical(
+        e, color, depth, renderPass, widgetCog, StencilDrawMode::Test, 0);
 
     // Recurse to all children
-    forRange(UiWidget& child, widget->GetChildren())
-      RenderWidgets(e, color, depth, renderPass, &child, hierarchyColor, floatingWidgets);
+    forRange(UiWidget & child, widget->GetChildren()) RenderWidgets(
+        e, color, depth, renderPass, &child, hierarchyColor, floatingWidgets);
 
     // Remove the written stencil data
     if (widget->GetClipChildren())
-      AddGraphical(e, color, depth, renderPass, widgetCog, StencilDrawMode::Remove, -1);
+      AddGraphical(
+          e, color, depth, renderPass, widgetCog, StencilDrawMode::Remove, -1);
   }
 }
 
-//******************************************************************************
-void UiRootWidget::AddGraphical(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth,
-                              MaterialBlock* renderPass, Cog* widgetCog,
-                              StencilDrawMode::Enum stencilMode, uint stencilIncrement)
+void UiRootWidget::AddGraphical(RenderTasksEvent* e,
+                                RenderTarget* color,
+                                RenderTarget* depth,
+                                MaterialBlock* renderPass,
+                                Cog* widgetCog,
+                                StencilDrawMode::Enum stencilMode,
+                                uint stencilIncrement)
 {
-  if(Graphical* graphical = widgetCog->has(Graphical))
+  if (Graphical* graphical = widgetCog->has(Graphical))
   {
     if (graphical->GetVisible() == false)
       return;
 
-    // If the stencil mode has changed, we need to commit all graphicals from the last group
-    if(mStencilDrawMode != stencilMode)
+    // If the stencil mode has changed, we need to commit all graphicals from
+    // the last group
+    if (mStencilDrawMode != stencilMode)
       FlushGraphicals(e, color, depth, renderPass);
 
     mStencilDrawMode = stencilMode;
@@ -723,24 +725,26 @@ void UiRootWidget::AddGraphical(RenderTasksEvent* e, RenderTarget* color, Render
   }
 }
 
-//******************************************************************************
-void UiRootWidget::FlushGraphicals(RenderTasksEvent* e, RenderTarget* color,
-                                 RenderTarget* depth, MaterialBlock* renderPass)
+void UiRootWidget::FlushGraphicals(RenderTasksEvent* e,
+                                   RenderTarget* color,
+                                   RenderTarget* depth,
+                                   MaterialBlock* renderPass)
 {
-  if(mGraphicals.GetCount() == 0)
+  if (mGraphicals.GetCount() == 0)
     return;
 
-  if(mStencilDrawMode == StencilDrawMode::Add)
+  if (mStencilDrawMode == StencilDrawMode::Add)
   {
     mStencilAddSettings.SetDepthTarget(depth);
     e->AddRenderTaskRenderPass(mStencilAddSettings, mGraphicals, *renderPass);
   }
-  else if(mStencilDrawMode == StencilDrawMode::Remove)
+  else if (mStencilDrawMode == StencilDrawMode::Remove)
   {
     mStencilRemoveSettings.SetDepthTarget(depth);
-    e->AddRenderTaskRenderPass(mStencilRemoveSettings, mGraphicals, *renderPass);
+    e->AddRenderTaskRenderPass(
+        mStencilRemoveSettings, mGraphicals, *renderPass);
   }
-  else if(mStencilDrawMode == StencilDrawMode::Test)
+  else if (mStencilDrawMode == StencilDrawMode::Test)
   {
     mStencilTestSettings.SetColorTarget(color);
     mStencilTestSettings.SetDepthTarget(depth);
@@ -751,12 +755,11 @@ void UiRootWidget::FlushGraphicals(RenderTasksEvent* e, RenderTarget* color,
   mGraphicals.Clear();
 }
 
-//******************************************************************************
 void UiRootWidget::SetFocusWidget(UiWidget* newFocus)
 {
   UiWidget* oldFocus = mFocusWidget;
 
-  //Do not change it the object is already the focus object
+  // Do not change it the object is already the focus object
   if (oldFocus != newFocus)
   {
     Cog* oldFocusCog = (oldFocus) ? oldFocus->GetOwner() : nullptr;
@@ -767,55 +770,56 @@ void UiRootWidget::SetFocusWidget(UiWidget* newFocus)
     // Send the Focus to the Hierarchy
     UiFocusEvent focusEvent(newFocus, oldFocus);
 
-    SendHierarchyEvents(op, oldFocusCog, newFocusCog, &focusEvent, &focusEvent,
-      Events::UiFocusLost, Events::UiFocusGained,
-      Events::UiFocusLostHierarchy, Events::UiFocusGainedHierarchy,
-      UiWidgetFlags::HasFocus, UiWidgetFlags::HierarchyHasFocus,
-      &WidgetFlagCallback);
+    SendHierarchyEvents(op,
+                        oldFocusCog,
+                        newFocusCog,
+                        &focusEvent,
+                        &focusEvent,
+                        Events::UiFocusLost,
+                        Events::UiFocusGained,
+                        Events::UiFocusLostHierarchy,
+                        Events::UiFocusGainedHierarchy,
+                        UiWidgetFlags::HasFocus,
+                        UiWidgetFlags::HierarchyHasFocus,
+                        &WidgetFlagCallback);
 
     // Store the current focus object
     mFocusWidget = newFocus;
   }
 }
 
-//******************************************************************************
 UiWidget* UiRootWidget::GetFocusWidget()
 {
   return mFocusWidget;
 }
 
-//******************************************************************************
 UiWidget* UiRootWidget::GetMouseOverWidget()
 {
   return mMouseOverWidget;
 }
 
-//******************************************************************************
 UiWidget* UiRootWidget::GetMouseDownWidget()
 {
   return mMouseDownWidget;
 }
 
-//******************************************************************************
 void UiRootWidget::OnWidgetKeyDown(KeyboardEvent* e)
 {
   if (e->Handled || e->HandledEventScript)
     return;
 
-  if(UiWidget* focusWidget = GetFocusWidget())
+  if (UiWidget* focusWidget = GetFocusWidget())
     focusWidget->TabJump(e);
 }
 
-//******************************************************************************
 void UiRootWidget::SetDebugSelected(Cog* selected)
 {
   mDebugSelectedWidget = selected;
 }
 
-//******************************************************************************
 Cog* UiRootWidget::GetDebugSelected()
 {
   return mDebugSelectedWidget.GetOwner();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,15 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------------------------ Startup
+//Startup
 // Handles all platform agnostic initialization
 class ZeroStartup
 {
@@ -24,4 +19,4 @@ protected:
   ZilchSetup* mZilchSetup;
 };
 
-}//namespace Zero
+} // namespace Zero

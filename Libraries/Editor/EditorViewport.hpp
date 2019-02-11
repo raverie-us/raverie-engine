@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorViewport.hpp
-/// Declaration of the EditorViewport class.
-///
-/// Authors: Chris Peters, Joshua Claeys, Nathan Carlson
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -31,7 +23,6 @@ DeclareEnum2(OwnerShip, Owner, Sharing);
 // Mouse operations for selection and dragging
 DeclareEnum4(MouseMode, Default, Select, Camera, Drag);
 
-//-------------------------------------------------------------- Editor Viewport
 /// Editor Viewport. Uses tools to edit target space.
 class EditorViewport : public Composite
 {
@@ -86,7 +77,7 @@ public:
   EditorViewportMenu* mMenu;
   Element* mMenuToggleButton;
   bool mMenuHidden;
-  
+
   /// Used to stop the tab from ever showing modified for this viewport
   bool mIgnoreSpaceModifications;
 
@@ -94,7 +85,7 @@ public:
 
   void ConfigureViewCube(bool active, real viewportSize);
 
-// Event Handlers
+  // Event Handlers
   void OnMouseEnterMenuToggle(Event* e);
   void OnMouseExitMenuToggle(Event* e);
   void OnMenuToggleClicked(Event* e);
@@ -138,5 +129,4 @@ public:
   void OnSettingsChanged(Event* event);
 };
 
-
-}//namespace Zero
+} // namespace Zero

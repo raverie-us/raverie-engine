@@ -1,36 +1,33 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Claeys, Trevor Sundberg
-/// Copyright 2016-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------------------------ Proxy Objects
+//Proxy Objects
 DeclareEnum2(ProxyReason, TypeDidntExist, AllocationException);
 
-//------------------------------------------------------------------------------------------ Actions
-DeclareEnum2(EnumerateAction,
-  // All Components that could ever be dynamically added to the object type
-  All,
-  // All Components that can currently be added to the given object.
-  // This does dependency checking.
-  AllAddableToObject);
+//Actions
+DeclareEnum2(
+    EnumerateAction,
+    // All Components that could ever be dynamically added to the object type
+    All,
+    // All Components that can currently be added to the given object.
+    // This does dependency checking.
+    AllAddableToObject);
 
-//----------------------------------------------------------------------------------- Meta Component
-//SetupMode is used for dynamic addition setup
-DeclareEnum4(SetupMode,
-  FromDataOnly,         // Object can be setup from data only.
-  DefaultConstructor,   // Default constructor will setup the object
-  DefaultSerialization, // Default serialization will setup the object
-  CallSetDefaults       // Calling SetDefaults will setup the object
+//Meta Component SetupMode is used for dynamic addition setup
+DeclareEnum4(
+    SetupMode,
+    FromDataOnly,         // Object can be setup from data only.
+    DefaultConstructor,   // Default constructor will setup the object
+    DefaultSerialization, // Default serialization will setup the object
+    CallSetDefaults       // Calling SetDefaults will setup the object
 );
 
 // A meta component describes everything we need to know for a component.
-// When accessing these on a component type, it should generally be with Has, not HasInherited.
+// When accessing these on a component type, it should generally be with Has,
+// not HasInherited.
 class CogComponentMeta : public ReferenceCountedEventObject
 {
 public:
@@ -56,7 +53,7 @@ public:
   HashSet<String> mTags;
 };
 
-//----------------------------------------------------------------------------------------- Add Info
+//Add Info
 /// Gives information about why a Component cannot be added.
 struct AddInfo
 {
@@ -65,17 +62,20 @@ struct AddInfo
   String Reason;
 };
 
-//---------------------------------------------------------------------------- Meta Creation Context
-/// When the operation system creates multiple components in the same batch, some systems (such as
-/// Cog Components) require knowledge of all the created components. In the case of Cog Components,
-/// we want to send the 'AllObjectsInitialized' event only once when all Components have been added.
+//Meta Creation Context
+/// When the operation system creates multiple components in the same batch,
+/// some systems (such as Cog Components) require knowledge of all the created
+/// components. In the case of Cog Components, we want to send the
+/// 'AllObjectsInitialized' event only once when all Components have been added.
 /// This will also be useful when we make a generic object factory.
 struct MetaCreationContext
 {
-  virtual ~MetaCreationContext() {}
+  virtual ~MetaCreationContext()
+  {
+  }
 };
 
-//--------------------------------------------------------------------------------- Meta Composition
+//Meta Composition
 /// Meta Interface for polymorphic, dynamic containment of objects / components.
 class MetaComposition : public ReferenceCountedEventObject
 {
@@ -85,40 +85,48 @@ public:
   /// Constructor.
   MetaComposition(BoundType* componentType);
 
-  //---------------------------------------------------------------------------------------- Queries
+  //----------------------------------------------------------------------------------------
+  //Queries
   /// Returns how many Components the given instance has.
   virtual uint GetComponentCount(HandleParam owner);
 
   /// Returns whether or not the given object contains the given component type.
   virtual bool HasComponent(HandleParam owner, BoundType* componentType);
 
-  /// Gets the component with the given type. Default behavior is to walk all components.
-  /// This should be overridden to be more optimal on derived types.
+  /// Gets the component with the given type. Default behavior is to walk all
+  /// components. This should be overridden to be more optimal on derived types.
   virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
 
   /// Returns the component at the given index.
   virtual Handle GetComponentAt(HandleParam owner, uint index);
 
-  /// Gets the component with the given unique id (child id). This allows multiple
-  /// components of the same type to be referenced.
+  /// Gets the component with the given unique id (child id). This allows
+  /// multiple components of the same type to be referenced.
   virtual Handle GetComponentUniqueId(HandleParam owner, u64 uniqueId);
 
   /// Returns the index of the given Component type.
   virtual uint GetComponentIndex(HandleParam owner, BoundType* componentType);
 
-  /// Returns the index of the given Component. By default, calls the pure virtual
-  /// GetComponentIndex that takes the type. This could be overridden to be more optimal.
+  /// Returns the index of the given Component. By default, calls the pure
+  /// virtual GetComponentIndex that takes the type. This could be overridden to
+  /// be more optimal.
   virtual uint GetComponentIndex(HandleParam owner, HandleParam component);
 
-  //----------------------------------------------------------------------------------- Modification
-  /// Fills out the given array with all dynamically addable types. The owner is only required
-  /// if querying for all addable to object.
-  virtual void Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action,
+  //-----------------------------------------------------------------------------------
+  //Modification
+  /// Fills out the given array with all dynamically addable types. The owner is
+  /// only required if querying for all addable to object.
+  virtual void Enumerate(Array<BoundType*>& addTypes,
+                         EnumerateAction::Enum action,
                          HandleParam owner = nullptr);
-  void Enumerate(Array<String>& addTypes, EnumerateAction::Enum action, HandleParam owner = nullptr);
+  void Enumerate(Array<String>& addTypes,
+                 EnumerateAction::Enum action,
+                 HandleParam owner = nullptr);
 
   /// Checks dependencies to see if a component of the given type can be added.
-  virtual bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr);
+  virtual bool CanAddComponent(HandleParam owner,
+                               BoundType* typeToAdd,
+                               AddInfo* info = nullptr);
 
   /// Creates an object of the given type.
   virtual Handle MakeObject(BoundType* typeToCreate);
@@ -127,44 +135,68 @@ public:
   /// See the comment above 'MetaCreationContext'.
   virtual MetaCreationContext* GetCreationContext();
 
-  /// Allocates and adds the component to the object at the given index. Default index puts the
-  /// component at the back of all components.
-  virtual void AddComponent(HandleParam owner, HandleParam component, int index = -1,
-                            bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr);
-  virtual void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1,
-                            bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr);
+  /// Allocates and adds the component to the object at the given index. Default
+  /// index puts the component at the back of all components.
+  virtual void AddComponent(HandleParam owner,
+                            HandleParam component,
+                            int index = -1,
+                            bool ignoreDependencies = false,
+                            MetaCreationContext* creationContext = nullptr);
+  virtual void AddComponent(HandleParam owner,
+                            BoundType* typeToAdd,
+                            int index = -1,
+                            bool ignoreDependencies = false,
+                            MetaCreationContext* creationContext = nullptr);
 
-  /// See the comment above 'MetaCreationContext'. Once all components are created, this function
-  /// will be called and any post-creation logic can be executed. e.g. Cog initializer can send
-  /// the AllObjectsInitialized event to all newly created components.
+  /// See the comment above 'MetaCreationContext'. Once all components are
+  /// created, this function will be called and any post-creation logic can be
+  /// executed. e.g. Cog initializer can send the AllObjectsInitialized event to
+  /// all newly created components.
   virtual void FinalizeCreation(MetaCreationContext* context);
 
-  /// Checks dependencies to see if the component can be removed. If it can't be removed, the reason
-  /// will be filled out explaining why.
-  virtual bool CanRemoveComponent(HandleParam owner, HandleParam component, String& reason);
-  bool CanRemoveComponent(HandleParam owner, BoundType* componentType, String& reason);
+  /// Checks dependencies to see if the component can be removed. If it can't be
+  /// removed, the reason will be filled out explaining why.
+  virtual bool CanRemoveComponent(HandleParam owner,
+                                  HandleParam component,
+                                  String& reason);
+  bool CanRemoveComponent(HandleParam owner,
+                          BoundType* componentType,
+                          String& reason);
 
-  /// Removes the given component. Success or failure will be in the Status object. This function
-  /// assumes that the operation has already been validated through 'CanRemoveComponent'.
-  virtual void RemoveComponent(HandleParam owner, HandleParam component,
+  /// Removes the given component. Success or failure will be in the Status
+  /// object. This function assumes that the operation has already been
+  /// validated through 'CanRemoveComponent'.
+  virtual void RemoveComponent(HandleParam owner,
+                               HandleParam component,
                                bool ignoreDependencies = false);
 
-  /// Checks whether or not the given component can be moved to the given destination. If it cannot
-  /// be moved because of a dependency, the infringing component will be returned.
-  bool CanMoveComponent(HandleParam owner, HandleParam component, uint destination,
-                        Handle& blockingComponent, String& reason);
+  /// Checks whether or not the given component can be moved to the given
+  /// destination. If it cannot be moved because of a dependency, the infringing
+  /// component will be returned.
+  bool CanMoveComponent(HandleParam owner,
+                        HandleParam component,
+                        uint destination,
+                        Handle& blockingComponent,
+                        String& reason);
 
-  /// Attempts to move the given component to the given index. If it cannot be moved there due to
-  /// moving before a dependency or after a dependent, it will return the blocking component.
-  virtual void MoveComponent(HandleParam owner, HandleParam component, uint destination);
+  /// Attempts to move the given component to the given index. If it cannot be
+  /// moved there due to moving before a dependency or after a dependent, it
+  /// will return the blocking component.
+  virtual void MoveComponent(HandleParam owner,
+                             HandleParam component,
+                             uint destination);
 
-  //-------------------------------------------------------------------------------- Component Range
+  //--------------------------------------------------------------------------------
+  //Component Range
   struct ComponentRange
   {
     bool Empty();
     Handle Front();
     void PopFront();
-    ComponentRange& All() { return *this; }
+    ComponentRange& All()
+    {
+      return *this;
+    }
 
     Handle mOwner;
     MetaComposition* mComposition;
@@ -180,27 +212,30 @@ public:
   /// The type of Component contained in the composition.
   BoundType* mComponentType;
 
-  /// Some compositions are only there for accessing components, not adding them (e.g. CogPath).
+  /// Some compositions are only there for accessing components, not adding them
+  /// (e.g. CogPath).
   bool mSupportsComponentAddition;
   bool mSupportsComponentRemoval;
   bool mSupportsComponentReorder;
-  
+
   HashMap<String, BoundType*> mComponentTypes;
 };
 
-//--------------------------------------------------------------------------------------- Meta Owner
-typedef Handle(*GetOwnerFunction)(HandleParam object);
+//Meta Owner
+typedef Handle (*GetOwnerFunction)(HandleParam object);
 
 /// Used to generically get the owner of an object.
 class MetaOwner : public ReferenceCountedEventObject
 {
 public:
   ZilchDeclareType(MetaOwner, TypeCopyMode::ReferenceType);
-  MetaOwner(GetOwnerFunction func) : mGetOwner(func) {}
+  MetaOwner(GetOwnerFunction func) : mGetOwner(func)
+  {
+  }
 
   Handle GetOwner(HandleParam object);
 
   GetOwnerFunction mGetOwner;
 };
 
-}//namespace Zero
+} // namespace Zero

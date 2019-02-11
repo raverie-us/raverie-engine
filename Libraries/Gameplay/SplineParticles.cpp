@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleLogic.cpp
-/// Implementation of the Particle system component classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,10 +6,9 @@ namespace Zero
 
 namespace
 {
-  Math::Random gRandom;
+Math::Random gRandom;
 }
 
-//******************************************************************************
 void GenerateSplineBasis(Vec3* normal, Vec3Param splineTangent, Mat4* mat)
 {
   Vec3 crossA = Cross(splineTangent, *normal);
@@ -30,7 +21,6 @@ void GenerateSplineBasis(Vec3* normal, Vec3Param splineTangent, Mat4* mat)
   mat->SetBasis(2, *normal, 0);
 }
 
-//******************************************************************************
 Vec3 GetSplineNormal(float radians, Vec3* normal, Vec3Param splineTangent)
 {
   Vec3 localSpin(0, Math::Cos(radians), Math::Sin(radians));
@@ -38,13 +28,11 @@ Vec3 GetSplineNormal(float radians, Vec3* normal, Vec3Param splineTangent)
 
   Mat4 rotation;
   GenerateSplineBasis(normal, splineTangent, &rotation);
-  
+
   return Math::TransformNormal(rotation, localSpin);
 }
 
-//------------------------------------------------------ Spline Particle Emitter
 
-//******************************************************************************
 ZilchDefineType(SplineParticleEmitter, builder, type)
 {
   ZeroBindComponent();
@@ -53,17 +41,17 @@ ZilchDefineType(SplineParticleEmitter, builder, type)
 
   ZilchBindFieldProperty(mEmitRadius);
   ZilchBindFieldProperty(mSpawnT)->Add(new EditorSlider(0, 1, 0.001f));
-  ZilchBindFieldProperty(mSpawnTVariance)->Add(new EditorSlider(0, 0.5f, 0.001f));
+  ZilchBindFieldProperty(mSpawnTVariance)
+      ->Add(new EditorSlider(0, 0.5f, 0.001f));
   ZilchBindFieldProperty(mClampT);
   ZilchBindFieldProperty(mTargetSplineCog);
   ZilchBindGetterSetterProperty(Spline);
 
   // EmitterSize on the base doesn't do anything, so hide it
   // METAREFACTOR - What should we do here..?
-  //meta->GetProperty("EmitterSize")->SetHidden(true);
+  // meta->GetProperty("EmitterSize")->SetHidden(true);
 }
 
-//******************************************************************************
 void SplineParticleEmitter::Serialize(Serializer& stream)
 {
   ParticleEmitterShared::Serialize(stream);
@@ -74,32 +62,30 @@ void SplineParticleEmitter::Serialize(Serializer& stream)
   SerializeNameDefault(mTargetSplineCog, CogPath("."));
 }
 
-//******************************************************************************
 void SplineParticleEmitter::Initialize(CogInitializer& initializer)
 {
   ParticleEmitter::Initialize(initializer);
-  ConnectThisTo(&mTargetSplineCog, Events::CogPathCogChanged, OnTargetSplineCogPathChanged);
+  ConnectThisTo(&mTargetSplineCog,
+                Events::CogPathCogChanged,
+                OnTargetSplineCogPathChanged);
 }
 
-//******************************************************************************
 void SplineParticleEmitter::OnAllObjectsCreated(CogInitializer& initializer)
 {
   mTargetSplineCog.RestoreLink(initializer, GetOwner(), "TargetSplineCog");
   FindSpline();
 }
 
-//******************************************************************************
 void SplineParticleEmitter::OnTargetSplineCogPathChanged(Event* e)
 {
   FindSpline();
 }
 
-//******************************************************************************
 void SplineParticleEmitter::FindSpline()
 {
   // Send an event to our target cog to find a spline
   Cog* target = mTargetSplineCog.GetCog();
-  if(target != nullptr)
+  if (target != nullptr)
   {
     SplineEvent toSend;
     target->DispatchEvent(Events::QuerySpline, &toSend);
@@ -108,9 +94,11 @@ void SplineParticleEmitter::FindSpline()
   }
 }
 
-//******************************************************************************
-int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt, 
-                                   Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
+int SplineParticleEmitter::EmitParticles(ParticleList* particleList,
+                                         float dt,
+                                         Mat4Ref transform,
+                                         Vec3Param emitterVelocity,
+                                         float timeAlive)
 {
   // If there are no particles to emit, no need to do anything
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
@@ -118,7 +106,7 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
     return 0;
 
   Spline* spline = mSpline;
-  if(spline == nullptr)
+  if (spline == nullptr)
     return 0;
 
   Vec3 newPosition = GetTranslationFrom(transform);
@@ -130,14 +118,14 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
   // into local space before using it
   Transform* trans = GetOwner()->has(Transform);
 
-  for(int p = 0; p < particlesToEmit; ++p)
+  for (int p = 0; p < particlesToEmit; ++p)
   {
     // Create a new particle
     Particle* newParticle = particleList->AllocateParticle();
-    
+
     // Generate a normalized time to sample the curve and clamp if specified
     float t = gRandom.FloatVariance(mSpawnT, mSpawnTVariance);
-    if(mClampT)
+    if (mClampT)
       t = Math::Clamp(t, 0.0f, 1.0f);
 
     // Sample the curve
@@ -147,12 +135,13 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
     // The curve always samples in world space, so bring the sample back into
     // local space
     Vec3 startingPoint = trans->TransformPointInverse(sample.mPoint);
-    
+
     // Random velocity
-    Vec3 velocity = mStartVelocity + gRandom.PointOnUnitSphere() * mRandomVelocity;
+    Vec3 velocity =
+        mStartVelocity + gRandom.PointOnUnitSphere() * mRandomVelocity;
 
     // No need to generate an orthonormal basis if it won't be used
-    if(mTangentVelocity.LengthSq() > 0.0f || mEmitRadius > 0.0f)
+    if (mTangentVelocity.LengthSq() > 0.0f || mEmitRadius > 0.0f)
     {
       // Generate the orthonormal basis from the local tangent
       Vec3 tangent = trans->TransformNormalInverse(sample.mTangent);
@@ -168,15 +157,15 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
       startingPoint += dir * mEmitRadius * fill;
 
       // Add tangent velocity
-      velocity += tangent * mTangentVelocity.z + 
-                  crossA * mTangentVelocity.y + 
+      velocity += tangent * mTangentVelocity.z + crossA * mTangentVelocity.y +
                   normal * mTangentVelocity.x;
     }
 
     newParticle->Time = 0;
     newParticle->Size = gRandom.FloatVariance(mSize, mSizeVariance);
 
-    newParticle->Velocity = Math::TransformNormal(transform, velocity) + emitterVelocity * mEmitterVelocityPercent;
+    newParticle->Velocity = Math::TransformNormal(transform, velocity) +
+                            emitterVelocity * mEmitterVelocityPercent;
 
     newParticle->Position = Math::TransformPoint(transform, startingPoint);
 
@@ -191,13 +180,13 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
 
     newParticle->WanderAngle = gRandom.FloatRange(0.0f, 2 * Math::cTwoPi);
 
-    if(mRandomSpin)
+    if (mRandomSpin)
       newParticle->Rotation = gRandom.FloatRange(0.0f, 2 * Math::cTwoPi);
     else
       newParticle->Rotation = 0;
 
-    newParticle->RotationalVelocity = gRandom.FloatVariance(Math::DegToRad(mSpin), 
-      Math::DegToRad(mSpinVariance));
+    newParticle->RotationalVelocity = gRandom.FloatVariance(
+        Math::DegToRad(mSpin), Math::DegToRad(mSpinVariance));
 
     particleList->AddParticle(newParticle);
   }
@@ -205,20 +194,16 @@ int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt,
   return particlesToEmit;
 }
 
-//******************************************************************************
 Spline* SplineParticleEmitter::GetSpline() const
 {
   return mSpline;
 }
 
-//******************************************************************************
 void SplineParticleEmitter::SetSpline(Spline* spline)
 {
   mSpline = spline;
 }
 
-//----------------------------------------------------- Spline Particle Animator
-//******************************************************************************
 ZilchDefineType(SplineParticleAnimator, builder, type)
 {
   ZeroBindComponent();
@@ -231,23 +216,27 @@ ZilchDefineType(SplineParticleAnimator, builder, type)
   ZilchBindGetterSetterProperty(Speed);
   ZilchBindFieldProperty(mAutoCalculateLifetime);
 
-  ZilchBindFieldProperty(mHelix)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mHelix)->AddAttribute(
+      PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mHelixRadius)->ZeroFilterBool(mHelix);
   ZilchBindFieldProperty(mHelixWaveLength)->ZeroFilterBool(mHelix);
   ZilchBindFieldProperty(mHelixOffset)->ZeroFilterBool(mHelix);
 
-  ZilchBindFieldProperty(mMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mSpringFrequencyHz)->ZeroFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
-  ZilchBindFieldProperty(mSpringDampingRatio)->ZeroFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+  ZilchBindFieldProperty(mMode)->AddAttribute(
+      PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mSpringFrequencyHz)
+      ->ZeroFilterEquality(
+          mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+  ZilchBindFieldProperty(mSpringDampingRatio)
+      ->ZeroFilterEquality(
+          mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
 }
 
-//******************************************************************************
 SplineParticleAnimator::~SplineParticleAnimator()
 {
   AnimatorList::Unlink(this);
 }
 
-//******************************************************************************
 void SplineParticleAnimator::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mSpeed, 3.0f);
@@ -258,20 +247,20 @@ void SplineParticleAnimator::Serialize(Serializer& stream)
   SerializeNameDefault(mHelixWaveLength, 3.0f);
   SerializeNameDefault(mHelixOffset, 0.0f);
 
-  SerializeEnumNameDefault(SplineAnimatorMode, mMode, SplineAnimatorMode::Exact);
+  SerializeEnumNameDefault(
+      SplineAnimatorMode, mMode, SplineAnimatorMode::Exact);
   SerializeNameDefault(mSpringFrequencyHz, 6.0f);
   SerializeNameDefault(mSpringDampingRatio, 0.2f);
 }
 
-//******************************************************************************
 void SplineParticleAnimator::Initialize(CogInitializer& initializer)
 {
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
   mEmitter = GetOwner()->has(SplineParticleEmitter);
 }
 
-//******************************************************************************
-void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
+void SplineParticleAnimator::Animate(ParticleList* particleList,
+                                     float dt,
                                      Mat4Ref transform)
 {
   // Spring constants
@@ -282,7 +271,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
   const float detInv = 1.0f / (f + hhoo);
 
   Spline* spline = mEmitter->GetSpline();
-  if(spline == nullptr)
+  if (spline == nullptr)
     return;
 
   float curveLength = spline->GetTotalDistance();
@@ -295,7 +284,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
   float timeToFinish = curveLength / mSpeed;
 
   // Update the base lifetime if specified
-  if(mAutoCalculateLifetime)
+  if (mAutoCalculateLifetime)
     mEmitter->mLifetime = timeToFinish;
 
   // Sampling the curve is always in world space, so we need to bring it back
@@ -314,14 +303,14 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
   Vec3 crossA, previousNormal;
   GenerateOrthonormalBasis(startTangent, &crossA, &previousNormal);
 
-  forRange(Particle* p, particleList->All())
+  forRange(Particle * p, particleList->All())
   {
     // How far (in meters) the particle has traveled
     float distanceTraveled = p->Time * mSpeed;
 
     // The percentage of the spline the particle has traveled
     float percentTraveled = distanceTraveled / curveLength;
-    
+
     // The sample value for where the particle currently is
     float sampleTime = percentTraveled;
 
@@ -336,7 +325,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
     // depending on which mode we're in
     Vec3 splineSample = trans->TransformPointInverse(sample.mPoint);
 
-    if(mHelix)
+    if (mHelix)
     {
       float radians = distanceTraveled / mHelixWaveLength * Math::cTwoPi;
 
@@ -356,7 +345,7 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
     // In world / local space
     splineSample = Math::TransformPoint(transform, splineSample);
 
-    if(mMode == SplineAnimatorMode::Exact)
+    if (mMode == SplineAnimatorMode::Exact)
     {
       // Update the velocity so that Beam rendering still works
       p->Velocity = (splineSample - p->Position);
@@ -372,7 +361,6 @@ void SplineParticleAnimator::Animate(ParticleList* particleList, float dt,
   }
 }
 
-//******************************************************************************
 void SplineParticleAnimator::SetSpeed(float speed)
 {
   mSpeed = speed;
@@ -381,20 +369,20 @@ void SplineParticleAnimator::SetSpeed(float speed)
   ParticleSystem* data = GetOwner()->has(ParticleSystem);
 
   // No need to re-base everything if we aren't changing the lifetime
-  if(!mAutoCalculateLifetime || data == nullptr)
+  if (!mAutoCalculateLifetime || data == nullptr)
     return;
 
   Spline* spline = mEmitter->mSpline;
-  if(spline == nullptr)
+  if (spline == nullptr)
     return;
 
   float curveLength = spline->GetTotalDistance();
 
   /// The time required for each particle to travel the entire spline
   float timeToFinish = curveLength / speed;
-  
-  // Re-base each particles lifetime so that 
-  forRange(Particle* p, data->AllParticles())
+
+  // Re-base each particles lifetime so that
+  forRange(Particle * p, data->AllParticles())
   {
     float percentAlive = p->Time / p->Lifetime;
 
@@ -403,10 +391,9 @@ void SplineParticleAnimator::SetSpeed(float speed)
   }
 }
 
-//******************************************************************************
 float SplineParticleAnimator::GetSpeed()
 {
   return mSpeed;
 }
 
-}//namespace Zero
+} // namespace Zero

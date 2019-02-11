@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -35,24 +30,27 @@ Linear Constraint:
   Ji   : [0, -iA, 0, iB]
 
 
-  normally i = 0 and i = 1 are not solved. The are only solved when limits are present
-  (not currently solved because I haven't done limits with this yet)
+  normally i = 0 and i = 1 are not solved. The are only solved when limits are
+present (not currently solved because I haven't done limits with this yet)
 */
 
 /// The GearJoint's policy for Atom updating as well as Molecule computing.
 struct ConeTwistPolicy : public DefaultFragmentPolicy<UniversalJoint>
 {
-  void ErrorFragment(int atomIndex, UniversalJoint* joint, ImpulseLimitAtom& molLimit)
+  void ErrorFragment(int atomIndex,
+                     UniversalJoint* joint,
+                     ImpulseLimitAtom& molLimit)
   {
     uint flag = 1 << atomIndex;
     real desiredConstraintValue = 0;
     uint filter = joint->GetAtomIndexFilter(atomIndex, desiredConstraintValue);
     ConstraintAtom& atom = joint->mAtoms[atomIndex];
 
-    // Compute the error of this constraint. Have to compute the error at this time
-    // so that the limit values are known
-    if(filter & UniversalJoint::LinearAxis)
-      ComputeError(atom, molLimit,joint->mNode->mLimit, desiredConstraintValue, flag);
+    // Compute the error of this constraint. Have to compute the error at this
+    // time so that the limit values are known
+    if (filter & UniversalJoint::LinearAxis)
+      ComputeError(
+          atom, molLimit, joint->mNode->mLimit, desiredConstraintValue, flag);
     else
       atom.mConstraintValue = real(0.0);
 
@@ -60,7 +58,10 @@ struct ConeTwistPolicy : public DefaultFragmentPolicy<UniversalJoint>
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data, int atomIndex, UniversalJoint* joint, ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data,
+                    int atomIndex,
+                    UniversalJoint* joint,
+                    ConstraintMolecule& mol)
   {
     real baumgarte = 0.1f;
     uint axisIndex = atomIndex % 3;
@@ -68,14 +69,14 @@ struct ConeTwistPolicy : public DefaultFragmentPolicy<UniversalJoint>
     uint filter = joint->GetAtomIndexFilter(atomIndex, desiredConstraintValue);
 
     // Compute the linear or angular fragment Jacobian
-    if(filter & UniversalJoint::LinearAxis)
+    if (filter & UniversalJoint::LinearAxis)
     {
-      LinearAxisFragment(data.mAnchors, data.LinearAxes[axisIndex],mol);
-      baumgarte = joint->GetLinearBaumgarte(); 
+      LinearAxisFragment(data.mAnchors, data.LinearAxes[axisIndex], mol);
+      baumgarte = joint->GetLinearBaumgarte();
     }
-    else if(filter & UniversalJoint::AngularAxis)
+    else if (filter & UniversalJoint::AngularAxis)
     {
-      baumgarte = joint->GetAngularBaumgarte(); 
+      baumgarte = joint->GetAngularBaumgarte();
       // Compute the linear axis fragment Jacobian
       Mat3 rot0 = joint->GetCollider(0)->GetWorldRotation();
       Mat3 rot1 = joint->GetCollider(1)->GetWorldRotation();
@@ -153,20 +154,20 @@ void UniversalJoint::ComputeInitialConfiguration()
   Vec3 axis = p1 - p0;
   real length = axis.AttemptNormalize();
   // If we got an invalid axis then just use the y axis...
-  if(length == real(0.0))
+  if (length == real(0.0))
     axis = Vec3::cYAxis;
 
   Vec3 worldAxis0, worldAxis1;
   Math::GenerateOrthonormalBasis(axis, &worldAxis0, &worldAxis1);
 
   Collider* collider0 = GetCollider(0);
-  if(collider0 != nullptr)
+  if (collider0 != nullptr)
   {
     mBody0Axis0 = Physics::JointHelpers::WorldToBodyR(collider0, worldAxis0);
     mBody0Axis1 = Physics::JointHelpers::WorldToBodyR(collider0, worldAxis1);
   }
   Collider* collider1 = GetCollider(1);
-  if(collider1 != nullptr)
+  if (collider1 != nullptr)
   {
     mBody1Axis0 = Physics::JointHelpers::WorldToBodyR(collider1, worldAxis0);
     mBody1Axis1 = Physics::JointHelpers::WorldToBodyR(collider1, worldAxis1);
@@ -184,7 +185,7 @@ void UniversalJoint::UpdateAtoms()
 {
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
-  
+
   UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
 }
 
@@ -198,7 +199,8 @@ void UniversalJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
+  ComputeMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
 }
 
 void UniversalJoint::WarmStart(MoleculeWalker& molecules)
@@ -226,12 +228,13 @@ void UniversalJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, ConeTwistPolicy());
 }
 
 void UniversalJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
 
   WorldAnchorAtom anchors(mAnchors, GetCollider(0), GetCollider(1));
@@ -255,12 +258,13 @@ void UniversalJoint::DebugDraw()
   gDebugDraw->Add(Debug::Line(point1, point1 + worldB1A1).Color(Color::Blue));
 }
 
-uint UniversalJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint UniversalJoint::GetAtomIndexFilter(uint atomIndex,
+                                        real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 3)
+  if (atomIndex < 3)
     return LinearAxis;
-  else if(atomIndex < 6)
+  else if (atomIndex < 6)
     return AngularAxis;
   return 0;
 }
@@ -325,6 +329,6 @@ void UniversalJoint::SetLocalAxis1OfBodyB(Vec3Param axis)
   mBody1Axis1 = axis;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

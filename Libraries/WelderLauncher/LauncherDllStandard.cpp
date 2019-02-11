@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,11 +8,10 @@ const String mLauncherBoldFont = "NotoSans-Bold";
 
 ZilchDefineEnum(LauncherStartupArguments);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(LauncherDllLibrary)
 {
   builder.CreatableInScriptDefault = false;
-  
+
   // Enums
   ZilchInitializeEnum(LauncherStartupArguments);
 
@@ -40,7 +34,6 @@ void LauncherDllLibrary::Initialize()
 
 void LauncherDllLibrary::Shutdown()
 {
-
 }
 
-}//namespace Zero
+} // namespace Zero

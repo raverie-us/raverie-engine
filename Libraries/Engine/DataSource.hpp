@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DataSource.hpp
-/// Declaration of the data source object.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,22 +8,27 @@ typedef void* DataItem;
 typedef void* ContextPtr;
 class MetaDropEvent;
 
-//------------------------------------------------------------------- Data Index
-//Safe handle for elements in a data base.
+// Safe handle for elements in a data base.
 struct DataIndex
 {
-  DataIndex()
-    : Id(0)
-  {}
-  DataIndex(u64 id)
-    : Id(id)
-  {}
+  DataIndex() : Id(0)
+  {
+  }
+  DataIndex(u64 id) : Id(id)
+  {
+  }
   u64 Id;
-  bool IsValid() { return Id != 0; }
-  bool operator == (const DataIndex& other) { return Id == other.Id; }
+  bool IsValid()
+  {
+    return Id != 0;
+  }
+  bool operator==(const DataIndex& other)
+  {
+    return Id == other.Id;
+  }
 };
 
-//Data events
+// Data events
 namespace Events
 {
 // Data source has been invalided and must be refreshed.
@@ -57,9 +54,8 @@ DeclareEvent(DataCommandsQuery);
 DeclareEvent(DataCommandRun);
 // Data has been replaced (i.e. when an Archetype is rebuilt)
 DeclareEvent(DataReplaced);
-}
+} // namespace Events
 
-//------------------------------------------------------------------- Data Event
 class DataEvent : public Event
 {
 public:
@@ -78,18 +74,18 @@ public:
 
 typedef void DataEntry;
 
-//Common Columns
+// Common Columns
 namespace CommonColumns
 {
-  // Name of Entry
-  extern const String Name;
-  // Type of Entry
-  extern const String Type;
-  // Icon to use for entry
-  extern const String Icon;
-  // Used for display tooltips on data
-  extern const String ToolTip;
-}
+// Name of Entry
+extern const String Name;
+// Type of Entry
+extern const String Type;
+// Icon to use for entry
+extern const String Icon;
+// Used for display tooltips on data
+extern const String ToolTip;
+} // namespace CommonColumns
 
 DeclareEnum3(InsertMode, On, After, Before);
 
@@ -101,81 +97,123 @@ DeclareEnum3(InsertMode, On, After, Before);
 // If 'Invalid' is set, it will simply display the error tooltip.
 DeclareEnum3(InsertError, None, Invalid, NotSupported);
 
-//Value that can be used for the root index
+// Value that can be used for the root index
 const DataIndex cRootIndex = DataIndex(u64(-1));
 
-//------------------------------------------------------------- Data Base Source
-//Data Base Source is used to access tree data sources.
+// Data Base Source is used to access tree data sources.
 class DataSource : public EventObject
 {
 public:
-  DataSource() {}
+  DataSource()
+  {
+  }
   virtual ~DataSource();
 
   /// Data base Indexing
-  virtual DataEntry* FindEntryByName(StringParam name) { return nullptr; }
+  virtual DataEntry* FindEntryByName(StringParam name)
+  {
+    return nullptr;
+  }
   virtual DataEntry* GetRoot() = 0;
 
   /// Safe Indexing
   virtual DataEntry* ToEntry(DataIndex index) = 0;
   virtual DataIndex ToIndex(DataEntry* dataEntry) = 0;
-  virtual Handle ToHandle(DataEntry* dataEntry){return Handle();}
+  virtual Handle ToHandle(DataEntry* dataEntry)
+  {
+    return Handle();
+  }
 
   /// Tree Walking
   virtual DataEntry* Parent(DataEntry* dataEntry) = 0;
   virtual uint ChildCount(DataEntry* dataEntry) = 0;
-  virtual DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) = 0;
+  virtual DataEntry* GetChild(DataEntry* dataEntry,
+                              uint index,
+                              DataEntry* prev) = 0;
 
   /// Query to see if the data source has need for expandable rows.
   ///   Ex: The TreeView can check it's associated data source, and if this
   ///       returns false - each TreeRow's UI will not reserve an area in their
   ///       row to display the expand/collapse icon.
-  virtual bool IsExpandable() { return true; }
+  virtual bool IsExpandable()
+  {
+    return true;
+  }
   /// Tree expanding
   virtual bool IsExpandable(DataEntry* dataEntry) = 0;
-  virtual void Expand(DataEntry* dataEntry) {}
-  virtual void Collapse(DataEntry* dataEntry) {}
+  virtual void Expand(DataEntry* dataEntry)
+  {
+  }
+  virtual void Collapse(DataEntry* dataEntry)
+  {
+  }
 
   /// Data Base Cell Modification and Inspection
-  virtual void GetData(DataEntry* dataEntry,       Any& variant, StringParam column) = 0;
-  virtual bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) = 0;
+  virtual void GetData(DataEntry* dataEntry,
+                       Any& variant,
+                       StringParam column) = 0;
+  virtual bool SetData(DataEntry* dataEntry,
+                       const Any& variant,
+                       StringParam column) = 0;
 
   /// Sorting
-  /// Short children of entry by column. If the dataEntry is null, sort everything
-  virtual void Sort(DataEntry* dataEntry, StringParam column, bool sortFlip) {};
+  /// Short children of entry by column. If the dataEntry is null, sort
+  /// everything
+  virtual void Sort(DataEntry* dataEntry, StringParam column, bool sortFlip){};
 
   /// Tree Modification
-  virtual void CanMove(Status& status, DataEntry* source,
-                       DataEntry* destination, InsertMode::Type insertMode);
-  virtual void BeginBatchMove(){}
-  virtual bool Move(DataEntry* destinationEntry, DataEntry* movingEntry,
-                    InsertMode::Type insertMode) { return false; }
-  virtual bool Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove,
+  virtual void CanMove(Status& status,
+                       DataEntry* source,
+                       DataEntry* destination,
+                       InsertMode::Type insertMode);
+  virtual void BeginBatchMove()
+  {
+  }
+  virtual bool Move(DataEntry* destinationEntry,
+                    DataEntry* movingEntry,
+                    InsertMode::Type insertMode)
+  {
+    return false;
+  }
+  virtual bool Move(DataEntry* destinationEntry,
+                    Array<DataIndex>& indicesToMove,
                     InsertMode::Type insertMode);
-  virtual void EndBatchMove(){}
-  virtual bool Remove(DataEntry* dataEntry) { return false; }
+  virtual void EndBatchMove()
+  {
+  }
+  virtual bool Remove(DataEntry* dataEntry)
+  {
+    return false;
+  }
 
   /// Whether or not the entry is considered valid. Used to disable or
   /// invalidate elements of the tree.
-  virtual bool IsValid(DataEntry* entry) {return true;}
+  virtual bool IsValid(DataEntry* entry)
+  {
+    return true;
+  }
 
   /// Allows the data source to handle custom drops on rows.
-  virtual void OnMetaDrop(MetaDropEvent* e, DataEntry* mouseOver, InsertMode::Enum mode) {}
+  virtual void OnMetaDrop(MetaDropEvent* e,
+                          DataEntry* mouseOver,
+                          InsertMode::Enum mode)
+  {
+  }
 };
 
-//-------------------------------------------------------------------ArrayDataSource
-//A data source to wrap an array.
+// A data source to wrap an array.
 class ArrayDataSource : public DataSource
 {
 public:
-
   static const u64 RootIndex = (u64)-1;
 
   /// Return the size of the contained array
   virtual u64 GetArraySize() = 0;
-  /// Fills out the variant with the data of the given column at the given array index
-  virtual void GetData(u64 index,       Any& any, StringParam column) = 0;
-  /// Sets the data of the given column at the given array index with the passed in variant.
+  /// Fills out the variant with the data of the given column at the given array
+  /// index
+  virtual void GetData(u64 index, Any& any, StringParam column) = 0;
+  /// Sets the data of the given column at the given array index with the passed
+  /// in variant.
   virtual void SetData(u64 index, const Any& any, StringParam column) = 0;
 
   // Helpers to get an array index from an entry or index
@@ -188,21 +226,26 @@ public:
   DataIndex ToIndex(DataEntry* dataEntry) override;
   DataEntry* Parent(DataEntry* dataEntry) override;
   uint ChildCount(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override;
   bool IsExpandable(DataEntry* dataEntry) override;
-  void GetData(DataEntry* dataEntry,       Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry, const Any& variant, StringParam column) override;
+  void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
+  bool SetData(DataEntry* dataEntry,
+               const Any& variant,
+               StringParam column) override;
 };
 
-//--------------------------------------------------------------- Data Selection
 /// Data Index Selection Object. Interface for managing a DataSource's
 /// selection state.
 class DataSelection : public EventObject
 {
 public:
   DataSource* mSource;
-  DataSelection() : mSupportsMultiSelect(true) {}
-  virtual ~DataSelection() {};
+  DataSelection() : mSupportsMultiSelect(true)
+  {
+  }
+  virtual ~DataSelection(){};
 
   /// Get all selected objects
   virtual void GetSelected(Array<DataIndex>& selected) = 0;
@@ -234,7 +277,6 @@ public:
   bool mSupportsMultiSelect;
 };
 
-//---------------------------------------------------------- Hash Data Selection
 /// Simple DataSelection that uses a hash map.
 class HashDataSelection : public DataSelection
 {
@@ -243,8 +285,7 @@ public:
 
   void GetSelected(Array<DataIndex>& selected) override
   {
-    forRange(u64 u, mSelection.All())
-      selected.PushBack(u);
+    forRange(u64 u, mSelection.All()) selected.PushBack(u);
   }
 
   bool IsSelected(DataIndex index) override
@@ -285,7 +326,7 @@ public:
 
   void GetSelected(Array<DataIndex>& selected) override
   {
-    if(mSelected.IsValid())
+    if (mSelected.IsValid())
       selected.PushBack(mSelected);
   }
 
@@ -317,8 +358,7 @@ public:
   }
 };
 
-//------------------------------------------------------------------ List Source
-///ListSource class for list boxes
+/// ListSource class for list boxes
 class ListSource : public EventObject
 {
 public:
@@ -330,28 +370,28 @@ public:
   virtual uint GetCount() = 0;
   virtual void Selected(DataIndex index);
   virtual String GetStringValueAt(DataIndex index) = 0;
-  virtual String GetDescriptionAt(DataIndex index) { return ""; };
+  virtual String GetDescriptionAt(DataIndex index)
+  {
+    return "";
+  };
 };
 
-//---------------------------------------------------------- Container To String
 struct ContainerToString
 {
-  template<typename type>
+  template <typename type>
   String Convert(const type& instance)
   {
     return ToString(instance);
   }
 };
 
-//------------------------------------------------------------- Container Source
-template<typename type, typename StringConverter = ContainerToString>
+template <typename type, typename StringConverter = ContainerToString>
 class ContainerSource : public ListSource
 {
 };
 
-//----------------------------------------------------- Container Source (Array)
-template<typename type, typename StringConverter >
-class ContainerSource< Array<type>, StringConverter > : public ListSource
+template <typename type, typename StringConverter>
+class ContainerSource<Array<type>, StringConverter> : public ListSource
 {
 public:
   typedef Array<type> containerType;
@@ -363,40 +403,63 @@ public:
 
   containerType* mData;
 
-  void SetSource(containerType* data){mData = data;}
-  virtual bool IsCollection(){return true;}
-  virtual uint GetCount(){return mData->Size();}
+  void SetSource(containerType* data)
+  {
+    mData = data;
+  }
+  virtual bool IsCollection()
+  {
+    return true;
+  }
+  virtual uint GetCount()
+  {
+    return mData->Size();
+  }
 
-  uint Size(){return mData->Size();}
-  type& operator[](uint index){return (*mData)[index];}
-  bool Empty(){return mData->Empty();}
-  void Clear(){mData->Clear();}
+  uint Size()
+  {
+    return mData->Size();
+  }
+  type& operator[](uint index)
+  {
+    return (*mData)[index];
+  }
+  bool Empty()
+  {
+    return mData->Empty();
+  }
+  void Clear()
+  {
+    mData->Clear();
+  }
 
   String GetStringValueAt(DataIndex index) override
   {
-    return mConverter.Convert( (*mData)[ (uint)index.Id] );
+    return mConverter.Convert((*mData)[(uint)index.Id]);
   }
-
 };
 
-//---------------------------------------------------------------- cstr ToString
 struct CStrToString
 {
-  String Convert(cstr input) { return ToString(input); }
+  String Convert(cstr input)
+  {
+    return ToString(input);
+  }
 };
 
-//----------------------------------------------- Add Spaces To Upper Camel Case
 struct AddSpacesToUpperCamelCase
 {
   String Convert(cstr input);
 };
 
-//---------------------------------------------------------- const cstr[] Source
-template<typename StringConverter>
+template <typename StringConverter>
 class CStrSource : public ListSource
 {
 public:
-  CStrSource( ) { mData = nullptr; }
+  CStrSource()
+  {
+    mData = nullptr;
+  }
 
   // Takes in a pointer to a null terminated array of c-strings.
   CStrSource(const cstr data[])
@@ -418,13 +481,12 @@ public:
     const cstr* start = mData;
 
     // Compute the size by looping until we find the null terminator
-    while(*start != nullptr)
+    while (*start != nullptr)
     {
       // Increment the size and start
       ++mSize;
       ++start;
     }
-
   }
 
   String GetStringValueAt(DataIndex index) override
@@ -432,48 +494,54 @@ public:
     return mConverter.Convert(mData[(uint)index.Id]);
   }
 
-  inline String operator[](uint index) { return GetStringValueAt(index); }
+  inline String operator[](uint index)
+  {
+    return GetStringValueAt(index);
+  }
 
-  uint Size( ) { return mSize; }
-  uint GetCount( ) override { return mSize; }
+  uint Size()
+  {
+    return mSize;
+  }
+  uint GetCount() override
+  {
+    return mSize;
+  }
 
-  bool Empty( ) { return (mSize == 0); }
+  bool Empty()
+  {
+    return (mSize == 0);
+  }
 
- 
 public:
   size_t mSize;
   const cstr* mData;
   StringConverter mConverter;
-
 };
 
 typedef CStrSource<CStrToString> CStrSourceStd;
 typedef CStrSource<AddSpacesToUpperCamelCase> CStrSourceSpaced;
 
-
-//---------------------------------------------------------------- String Source
-class StringSource : public ContainerSource< Array<String> >
+class StringSource : public ContainerSource<Array<String>>
 {
 public:
   Array<String> Strings;
 
   uint GetIndexOfString(StringParam string)
   {
-    for(uint i=0;i<Strings.Size();++i)
+    for (uint i = 0; i < Strings.Size(); ++i)
     {
-      if(Strings[i] == string)
+      if (Strings[i] == string)
         return i;
     }
     return 0;
   }
 
-  StringSource()
-    : ContainerSource< Array<String> >(&Strings)
+  StringSource() : ContainerSource<Array<String>>(&Strings)
   {
   }
 };
 
-//------------------------------------------------------------------ Enum Source
 /// A source provider for enums.
 class EnumSource : public ListSource
 {
@@ -487,11 +555,12 @@ public:
   void FillOutDescriptions();
 
   /// Get the number of elements in the enum.
-  uint GetCount( ) override;
+  uint GetCount() override;
 
   /// Get the enum name at a particular index.
   String GetStringValueAt(DataIndex index) override;
-  /// Get the description (documentation) for the corresponding enum at the same index.
+  /// Get the description (documentation) for the corresponding enum at the same
+  /// index.
   String GetDescriptionAt(DataIndex index) override;
 
 private:
@@ -501,4 +570,4 @@ private:
   Array<String> mDescriptions;
 };
 
-}//namespace Zero
+} // namespace Zero

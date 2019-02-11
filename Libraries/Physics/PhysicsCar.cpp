@@ -1,14 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//-------------------------------------------------------------------PhysicsCar
 ZilchDefineType(PhysicsCar, builder, type)
 {
   ZeroBindComponent();
@@ -25,8 +19,10 @@ ZilchDefineType(PhysicsCar, builder, type)
   ZilchBindFieldProperty(mGripScalar);
   ZilchBindFieldProperty(mAntiLockBrakes);
   ZilchBindFieldProperty(mTorqueGovernor);
-  ZilchBindFieldProperty(mWheelFrictionSideRollCoef)->Add(new EditorSlider(0, 1, 0.001));
-  ZilchBindFieldProperty(mWheelFrictionFrontRollCoef)->Add(new EditorSlider(0, 1, 0.001));
+  ZilchBindFieldProperty(mWheelFrictionSideRollCoef)
+      ->Add(new EditorSlider(0, 1, 0.001));
+  ZilchBindFieldProperty(mWheelFrictionFrontRollCoef)
+      ->Add(new EditorSlider(0, 1, 0.001));
 
   ZilchBindGetterSetter(Steer);
   ZilchBindGetterSetter(Gas);
@@ -76,7 +72,7 @@ void PhysicsCar::Initialize(CogInitializer& initializer)
 
   mBody = GetOwner()->has(RigidBody);
 
-  if(initializer.mSpace->IsEditorMode())
+  if (initializer.mSpace->IsEditorMode())
     mFlags.SetFlag(CarFlags::InEditor);
 
   Transform* transform = GetOwner()->has(Transform);
@@ -97,7 +93,7 @@ void PhysicsCar::OnDestroy(uint flags)
 
 void PhysicsCar::DebugDraw()
 {
-  //debug draw each wheel as long as it is valid
+  // debug draw each wheel as long as it is valid
   // WheelCollection::WheelArray& wheels = mWheelCollection.mWheels;
   // for(uint i = 0; i < wheels.Size(); ++i)
   // {
@@ -110,22 +106,23 @@ void PhysicsCar::TransformUpdate(TransformUpdateInfo& info)
 {
   // We want to move our wheels if we were moved in the editor,
   // but we do not want to do this if we are actually running in the game
-  if(!mFlags.IsSet(CarFlags::InEditor) || !mFlags.IsSet(CarFlags::OnAllObjectsCreatedCalled))
+  if (!mFlags.IsSet(CarFlags::InEditor) ||
+      !mFlags.IsSet(CarFlags::OnAllObjectsCreatedCalled))
     return;
 
   // If we have wheels to update, forcibly update the physics transform
   // so that the wheels will be properly updated
-  if(mWheelRefs.Size() != 0)
+  if (mWheelRefs.Size() != 0)
   {
     Transform* transform = GetOwner()->has(Transform);
     mWorldTransform.Set(transform->GetWorldMatrix());
   }
 
   // Update each wheel's position
-  for(uint i = 0; i < mWheelRefs.Size(); ++i)
+  for (uint i = 0; i < mWheelRefs.Size(); ++i)
   {
     PhysicsCarWheel* carWheel = mWheelRefs[i].GetCarWheel();
-    if(carWheel != nullptr)
+    if (carWheel != nullptr)
       carWheel->UpdateTransformRelativeToParent();
   }
 }
@@ -135,7 +132,7 @@ void PhysicsCar::AddWheelCog(Cog* wheelCog)
   CarWheelRef& wheelRef = mWheelRefs.PushBack();
   wheelRef.mWheelId = wheelCog;
   PhysicsCarWheel* carWheel = wheelRef.GetCarWheel();
-  if(carWheel != nullptr)
+  if (carWheel != nullptr)
   {
     carWheel->mCarBody = this;
     carWheel->UpdateLocalPointOnCar(true);
@@ -145,17 +142,17 @@ void PhysicsCar::AddWheelCog(Cog* wheelCog)
 
 void PhysicsCar::RemoveWheelCog(Cog* wheelCog)
 {
-  if(wheelCog == nullptr)
+  if (wheelCog == nullptr)
     return;
 
-  for(size_t i = 0; i < mWheelRefs.Size(); ++i)
+  for (size_t i = 0; i < mWheelRefs.Size(); ++i)
   {
     Cog* checkingCog = mWheelRefs[i].GetCog();
-    if(checkingCog != wheelCog)
+    if (checkingCog != wheelCog)
       continue;
 
     PhysicsCarWheel* carWheel = checkingCog->has(PhysicsCarWheel);
-    if(carWheel != nullptr)
+    if (carWheel != nullptr)
       carWheel->mCarBody = nullptr;
 
     mWheelRefs.EraseAt(i);
@@ -165,10 +162,10 @@ void PhysicsCar::RemoveWheelCog(Cog* wheelCog)
 
 void PhysicsCar::ClearWheels()
 {
-  for(size_t i = 0; i < mWheelRefs.Size(); ++i)
+  for (size_t i = 0; i < mWheelRefs.Size(); ++i)
   {
     PhysicsCarWheel* carWheel = mWheelRefs[i].GetCarWheel();
-    if(carWheel != nullptr)
+    if (carWheel != nullptr)
       carWheel->mCarBody = nullptr;
   }
   mWheelRefs.Clear();
@@ -176,13 +173,13 @@ void PhysicsCar::ClearWheels()
 
 void PhysicsCar::Update(real dt)
 {
-  if(mActive == false)
+  if (mActive == false)
     return;
 
   Transform* transform = GetOwner()->has(Transform);
   mWorldTransform.Set(transform->GetWorldMatrix());
 
-  if(!mBody->IsDynamic())
+  if (!mBody->IsDynamic())
     return;
 
   CacheActiveWheels();
@@ -198,13 +195,13 @@ void PhysicsCar::Update(real dt)
   CalculateFrictionImpulses(dt);
   EndFrictionCalculations(dt);
 
-  if(mFlags.IsSet(CarFlags::DebugDraw))
+  if (mFlags.IsSet(CarFlags::DebugDraw))
     DebugDraw();
 }
 
 void PhysicsCar::UpdatePositions(real dt)
 {
-  if(mActive == false)
+  if (mActive == false)
     return;
 
   UpdateWheelTransforms(dt);
@@ -213,45 +210,45 @@ void PhysicsCar::UpdatePositions(real dt)
 void PhysicsCar::CacheActiveWheels()
 {
   mActiveWheels.Clear();
-  for(size_t i = 0; i < mWheelRefs.Size(); ++i)
+  for (size_t i = 0; i < mWheelRefs.Size(); ++i)
   {
     PhysicsCarWheel* carWheel = mWheelRefs[i].GetCarWheel();
-    if(carWheel == nullptr)
+    if (carWheel == nullptr)
       continue;
 
     carWheel->mCarBody = this;
-    if(carWheel->GetActive())
+    if (carWheel->GetActive())
       mActiveWheels.PushBack(carWheel);
   }
 }
 
 void PhysicsCar::UpdateWheelData()
 {
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->UpdateWheelData();
 }
 
 void PhysicsCar::CastWheelPositions()
 {
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->CastWheelPosition();
 }
 
 void PhysicsCar::CalculateSpringForces()
 {
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->CalculateSpringForce();
 }
 
 void PhysicsCar::ApplySpringForces(real dt)
 {
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->ApplySpringForce(dt);
 }
 
 void PhysicsCar::BeginFrictionCalculations(real dt)
 {
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->BeginIteration();
 }
 
@@ -259,16 +256,16 @@ void PhysicsCar::CalculateFrictionImpulses(real dt)
 {
   // Iterate over all the wheels multiple times to converge
   // to a global answer (hardcoded 5 for now...)
-  for(uint iteration = 0; iteration < 5; ++iteration)
+  for (uint iteration = 0; iteration < 5; ++iteration)
   {
-    for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+    for (size_t i = 0; i < mActiveWheels.Size(); ++i)
       mActiveWheels[i]->SolveFrictionImpulse(dt);
   }
 }
 
 void PhysicsCar::EndFrictionCalculations(real dt)
 {
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->FinishedIteration(dt);
 }
 
@@ -279,7 +276,7 @@ void PhysicsCar::UpdateWheelTransforms(real dt)
   Transform* t = GetOwner()->has(Transform);
   mWorldTransform.Set(t->GetWorldMatrix());
 
-  for(size_t i = 0; i < mActiveWheels.Size(); ++i)
+  for (size_t i = 0; i < mActiveWheels.Size(); ++i)
     mActiveWheels[i]->UpdateWheelTransform(dt);
 }
 
@@ -290,7 +287,7 @@ bool PhysicsCar::GetDebugDraw()
 
 void PhysicsCar::SetDebugDraw(bool state)
 {
-  mFlags.SetState(CarFlags::DebugDraw,state);
+  mFlags.SetState(CarFlags::DebugDraw, state);
 }
 
 real PhysicsCar::GetSteer()
@@ -329,15 +326,14 @@ void PhysicsCar::SetBrake(real brake)
 uint PhysicsCar::NumberOfWheelsInContact()
 {
   uint numberInContact = 0;
-  for(uint i = 0; i < mActiveWheels.Size(); ++i)
+  for (uint i = 0; i < mActiveWheels.Size(); ++i)
   {
-    if(mActiveWheels[i]->GetIsInContact())
+    if (mActiveWheels[i]->GetIsInContact())
       ++numberInContact;
   }
   return numberInContact;
 }
 
-//-------------------------------------------------------------------CarWheelRef
 ZilchDefineType(PhysicsCar::CarWheelRef, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -351,13 +347,12 @@ Cog* PhysicsCar::CarWheelRef::GetCog()
 PhysicsCarWheel* PhysicsCar::CarWheelRef::GetCarWheel()
 {
   Cog* cog = GetCog();
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   return cog->has(PhysicsCarWheel);
 }
 
-//-------------------------------------------------------------------CarWheelArray
 ZilchDefineType(PhysicsCar::CarWheelArray, builder, type)
 {
   ZeroBindDocumented();
@@ -374,9 +369,10 @@ PhysicsCar::CarWheelArray::CarWheelArray()
 Cog* PhysicsCar::CarWheelArray::Get(int index)
 {
   int count = mCarBody->mWheelRefs.Size();
-  if(index >= count)
+  if (index >= count)
   {
-    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format(
+        "Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return nullptr;
   }
@@ -388,4 +384,4 @@ int PhysicsCar::CarWheelArray::GetCount()
   return mCarBody->mWheelRefs.Size();
 }
 
-}//namespace Zero
+} // namespace Zero

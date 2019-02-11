@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StringReplacement.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "StringBuilder.hpp"
 #include "Algorithm.hpp"
@@ -18,48 +10,51 @@ namespace Zero
 struct TestLetterIndex
 {
   uint index;
-  TestLetterIndex(uint i)
-    :index(i)
-  {}
+  TestLetterIndex(uint i) : index(i)
+  {
+  }
 
-  template<typename arrayType>
+  template <typename arrayType>
   bool operator()(const arrayType& a, Rune b)
   {
-    if(index < a.SizeInBytes())
+    if (index < a.SizeInBytes())
       return b > a[index];
     else
       return true;
   }
 
-  template<typename arrayType>
+  template <typename arrayType>
   bool operator()(Rune a, const arrayType& b)
   {
-    if(index < b.SizeInBytes())
+    if (index < b.SizeInBytes())
       return a < b[index];
     else
       return false;
   }
 };
 
-void Replace(StringBuilder& output, Replacements& replacements, StringParam source)
+void Replace(StringBuilder& output,
+             Replacements& replacements,
+             StringParam source)
 {
   // This algorithm assumes the replacements are sorted by match string
   Sort(replacements.All());
 
   StringRange sourceText = source.All();
-  while(!sourceText.Empty())
+  while (!sourceText.Empty())
   {
     ReplaceRange possibleMatches = replacements.All();
     int letterIndex = 0;
 
-    while(!possibleMatches.Empty())
+    while (!possibleMatches.Empty())
     {
-      //Ran out of letters
-      if(letterIndex == sourceText.SizeInBytes())
+      // Ran out of letters
+      if (letterIndex == sourceText.SizeInBytes())
       {
-        for(ReplaceRange range = replacements.All(); !range.Empty(); range.PopFront())
+        for (ReplaceRange range = replacements.All(); !range.Empty();
+             range.PopFront())
         {
-          if(range.Front().MatchString == sourceText)
+          if (range.Front().MatchString == sourceText)
           {
             output << possibleMatches.Front().ReplaceString;
             sourceText = StringRange();
@@ -72,19 +67,24 @@ void Replace(StringBuilder& output, Replacements& replacements, StringParam sour
       }
 
       Rune currentLetter = sourceText.Front();
-      ReplaceRange lower = LowerBound(possibleMatches, currentLetter, TestLetterIndex(letterIndex));
-      ReplaceRange upper = UpperBound(possibleMatches, currentLetter, TestLetterIndex(letterIndex));
+      ReplaceRange lower = LowerBound(
+          possibleMatches, currentLetter, TestLetterIndex(letterIndex));
+      ReplaceRange upper = UpperBound(
+          possibleMatches, currentLetter, TestLetterIndex(letterIndex));
       ReplaceRange refinedMatches = ReplaceRange(lower.Begin(), upper.Begin());
 
-      if(refinedMatches.Empty())
+      if (refinedMatches.Empty())
       {
         String& match = possibleMatches.Front().MatchString;
-        StringRange lastText = StringRange(sourceText.Begin(), sourceText.Begin() + letterIndex);
-        //The front will always be the shortest
-        if(match == lastText)
+        StringRange lastText =
+            StringRange(sourceText.Begin(), sourceText.Begin() + letterIndex);
+        // The front will always be the shortest
+        if (match == lastText)
         {
           output << possibleMatches.Front().ReplaceString;
-          sourceText = StringRange(sourceText.mOriginalString, sourceText.Data() + match.SizeInBytes(), sourceText.End().Data());
+          sourceText = StringRange(sourceText.mOriginalString,
+                                   sourceText.Data() + match.SizeInBytes(),
+                                   sourceText.End().Data());
           break;
         }
         else
@@ -96,15 +96,19 @@ void Replace(StringBuilder& output, Replacements& replacements, StringParam sour
       }
       else
       {
-        if(refinedMatches.Length() == 1)
+        if (refinedMatches.Length() == 1)
         {
-          //Only one possible match
+          // Only one possible match
           String& match = refinedMatches.Front().MatchString;
-          if(sourceText.SizeInBytes() >= match.SizeInBytes() && 
-            match == StringRange(sourceText.Data(), sourceText.Data(), sourceText.Data() + match.SizeInBytes()))
+          if (sourceText.SizeInBytes() >= match.SizeInBytes() &&
+              match == StringRange(sourceText.Data(),
+                                   sourceText.Data(),
+                                   sourceText.Data() + match.SizeInBytes()))
           {
-            output << refinedMatches.Front().ReplaceString ;
-            sourceText = StringRange(sourceText.Data() + match.SizeInBytes(), sourceText.Data() + match.SizeInBytes(), sourceText.End().Data());
+            output << refinedMatches.Front().ReplaceString;
+            sourceText = StringRange(sourceText.Data() + match.SizeInBytes(),
+                                     sourceText.Data() + match.SizeInBytes(),
+                                     sourceText.End().Data());
             break;
           }
           else
@@ -116,7 +120,7 @@ void Replace(StringBuilder& output, Replacements& replacements, StringParam sour
         }
         else
         {
-          //Next letter
+          // Next letter
           possibleMatches = refinedMatches;
           ++letterIndex;
         }
@@ -132,7 +136,9 @@ String Replace(Replacements& replacements, StringParam source)
   return output.ToString();
 }
 
-String Replace(StringParam matchString, StringParam replaceString, StringParam source)
+String Replace(StringParam matchString,
+               StringParam replaceString,
+               StringParam source)
 {
   Replacements replacements;
 
@@ -143,4 +149,4 @@ String Replace(StringParam matchString, StringParam replaceString, StringParam s
   return Replace(replacements, source);
 }
 
-}
+} // namespace Zero

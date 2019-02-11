@@ -1,26 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MainPropertyView.cpp
-/// 
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------------- Main Property View
 ZilchDefineType(MainPropertyView, builder, type)
 {
 }
 
-//******************************************************************************
-MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection,
-                                   OperationQueue* queue)
-  : Composite(parent)
+MainPropertyView::MainPropertyView(Composite* parent,
+                                   MetaSelection* selection,
+                                   OperationQueue* queue) :
+    Composite(parent)
 {
   // The name of this widget
   SetName("Properties");
@@ -36,11 +27,13 @@ MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection,
   // Default size
   SetSize(Pixels(280, 600));
 
-  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0,5), Thickness::cZero));
+  this->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(0, 5), Thickness::cZero));
 
   // Create the row of buttons up top
   mButtonRow = new Composite(this);
-  mButtonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(2,0), Thickness(1, 0, 0, 0)));
+  mButtonRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(2, 0), Thickness(1, 0, 0, 0)));
   {
     // Previous button
     IconButton* previousButton = new IconButton(mButtonRow);
@@ -87,7 +80,6 @@ MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection,
   mSpecialEdit = new MetaSelection();
 }
 
-//******************************************************************************
 MainPropertyView::~MainPropertyView()
 {
   SafeDelete(mUndoInterface);
@@ -96,18 +88,17 @@ MainPropertyView::~MainPropertyView()
   SafeDelete(mSelectionHistory);
 }
 
-//******************************************************************************
 void MainPropertyView::EditObject(HandleParam object, bool advanceHistory)
 {
   mUndoInterface->mOperationQueue = mPrimaryOpQueue;
   mSpecialEdit->Clear();
 
   // Advance the selection history if specified
-  if(advanceHistory)
+  if (advanceHistory)
     mSelectionHistory->Advance(object);
 
   // If it is a resource, we want to enable the resource preview UI
-  if(object.Get<Resource*>())
+  if (object.Get<Resource*>())
   {
     EditResource(object);
     return;
@@ -115,10 +106,10 @@ void MainPropertyView::EditObject(HandleParam object, bool advanceHistory)
 
   // If it's a meta selection, we want to display the primary object if
   // there's only one object, or enable multi edit if there are more than one
-  if(MetaSelection* selection = object.Get<MetaSelection*>())
+  if (MetaSelection* selection = object.Get<MetaSelection*>())
   {
     // Special logic for if we're multi-selecting resources
-    if(selection->ContainsType<Resource>())
+    if (selection->ContainsType<Resource>())
     {
       EditResources(selection);
       return;
@@ -129,10 +120,11 @@ void MainPropertyView::EditObject(HandleParam object, bool advanceHistory)
       mMultiInterface->mSelection = selection;
 
       // Set the object
-      if(selection->Count() > 1)
+      if (selection->Count() > 1)
         mPropertyView->SetObject(selection, mMultiInterface);
       else
-        mPropertyView->SetObject(selection->GetPrimaryAs<Object>(), mUndoInterface);
+        mPropertyView->SetObject(selection->GetPrimaryAs<Object>(),
+                                 mUndoInterface);
     }
   }
   else
@@ -146,11 +138,10 @@ void MainPropertyView::EditObject(HandleParam object, bool advanceHistory)
   ClearPreview();
 }
 
-//******************************************************************************
 void MainPropertyView::Refresh()
 {
   Handle object = mPropertyView->GetObject();
-  if(ShouldDisplayNetPropertyIcon(object))
+  if (ShouldDisplayNetPropertyIcon(object))
     mPropertyView->AddCustomPropertyIcon(CreateNetPropertyIcon, mPropertyView);
   else
     mPropertyView->RemoveCustomPropertyIcon(CreateNetPropertyIcon);
@@ -158,7 +149,6 @@ void MainPropertyView::Refresh()
   mPropertyView->Refresh();
 }
 
-//******************************************************************************
 void MainPropertyView::HardReset()
 {
   ClearPreview();
@@ -166,36 +156,31 @@ void MainPropertyView::HardReset()
   mPropertyView->SetObject(Handle());
 }
 
-//******************************************************************************
 SelectionHistory* MainPropertyView::GetHistory()
 {
   return mSelectionHistory;
 }
 
-//******************************************************************************
 PropertyView* MainPropertyView::GetPropertyView()
 {
   return mPropertyView;
 }
 
-//******************************************************************************
 void MainPropertyView::OnSelectionChanged(SelectionChangedEvent* e)
 {
-  if(!e->Selection->Empty())
+  if (!e->Selection->Empty())
     Z::gEditor->ShowWindow("Properties");
 }
 
-//******************************************************************************
 void MainPropertyView::OnSelectionFinal(SelectionChangedEvent* e)
 {
   // We don't want to advance the selection history if the selection was just
   // updated from an Archetype rebuild
   EditObject(e->Selection, !e->Updated);
-  if(!e->Selection->Empty())
+  if (!e->Selection->Empty())
     Z::gEditor->ShowWindow("Properties");
 }
 
-//******************************************************************************
 void MainPropertyView::OnSelectedArchetypeReplaced(CogReplaceEvent* e)
 {
   Cog* newCog = e->mNewCog;
@@ -207,57 +192,50 @@ void MainPropertyView::OnSelectedArchetypeReplaced(CogReplaceEvent* e)
   mPropertyView->SetObject(newCog, mUndoInterface);
 }
 
-//******************************************************************************
 void MainPropertyView::OnPreviousPressed(Event* e)
 {
   mSelectionHistory->Previous();
 }
 
-//******************************************************************************
 void MainPropertyView::OnNextPressed(Event* e)
 {
   mSelectionHistory->Next();
 }
 
-//******************************************************************************
 void MainPropertyView::OnShowPressed(Event* e)
 {
   mSelectionHistory->ShowObject();
 }
 
-//******************************************************************************
 void MainPropertyView::OnExternalEdit(Event* e)
 {
   MetaSelection* selection = mSelectionHistory->mCurrent;
-  if(selection == nullptr)
+  if (selection == nullptr)
     return;
 
   // Open each resource with an external editor
-  forRange(Resource* resource, selection->AllOfType<Resource>())
+  forRange(Resource * resource, selection->AllOfType<Resource>())
   {
     EditResourceExternal(resource);
   }
 }
 
-//******************************************************************************
 void MainPropertyView::OnReloadContent(Event* e)
 {
   MetaSelection* selection = mSelectionHistory->mCurrent;
-  if(selection == nullptr)
+  if (selection == nullptr)
     return;
 
   // Reload each resource
-  forRange(Resource* resource, selection->AllOfType<Resource>())
+  forRange(Resource * resource, selection->AllOfType<Resource>())
   {
     ReloadResource(resource);
   }
 
   // Reselect the resource
   Z::gEditor->mMainPropertyView->GetHistory()->Reselect();
-
 }
 
-//******************************************************************************
 void MainPropertyView::EditResource(HandleParam object)
 {
   Resource* resource = object.Get<Resource*>(GetOptions::AssertOnNull);
@@ -265,13 +243,13 @@ void MainPropertyView::EditResource(HandleParam object)
   // Preview the object
   Handle editObject = PreviewResource(object);
 
-  if(Archetype* archetype = object.Get<Archetype*>())
+  if (Archetype* archetype = object.Get<Archetype*>())
   {
     // We want to use a local operation queue for editing the archetype object
     mLocalOpQueue->ClearAll();
     mUndoInterface->mOperationQueue = mLocalOpQueue;
 
-    if(Cog* cog = editObject.Get<Cog*>())
+    if (Cog* cog = editObject.Get<Cog*>())
     {
       cog->SetArchetypeDefinitionMode();
       ConnectThisTo(cog, Events::CogReplaced, OnSelectedArchetypeReplaced);
@@ -280,14 +258,15 @@ void MainPropertyView::EditResource(HandleParam object)
     // Edit the archetype object in the preview
     mPropertyView->SetObject(editObject, mUndoInterface);
   }
-  //for some reason the resource is occasionally null, for now just guard against it
-  else if(resource != nullptr)
+  // for some reason the resource is occasionally null, for now just guard
+  // against it
+  else if (resource != nullptr)
   {
     // The object we're editing should either be the resource itself,
     // of whatever the content item specifies should be edited
     ContentItem* contentItem = resource->mContentItem;
     Object* editingObject = resource;
-    if(contentItem != nullptr)
+    if (contentItem != nullptr)
       editingObject = contentItem->GetEditingObject(resource);
 
     // Edit the final object
@@ -297,11 +276,10 @@ void MainPropertyView::EditResource(HandleParam object)
   AddResourceButtons();
 }
 
-//******************************************************************************
 void MainPropertyView::EditResources(MetaSelection* selection)
 {
   // If there's only one resource in the selection, no need for the extra logic
-  if(selection->Count() == 1)
+  if (selection->Count() == 1)
   {
     EditResource(selection->GetPrimaryAs<Object>());
     return;
@@ -320,18 +298,18 @@ void MainPropertyView::EditResources(MetaSelection* selection)
   uint count = 0;
 
   // Add all resources
-  forRange(Resource* resource, selection->AllOfType<Resource>())
+  forRange(Resource * resource, selection->AllOfType<Resource>())
   {
     bool addedSpecialEdit = false;
 
-    if(count < cMaxItems)
+    if (count < cMaxItems)
     {
       // Create the preview widget
-      PreviewWidget* preview = group->AddPreviewWidget(resource->Name, resource,
-                                                       PreviewImportance::High);
+      PreviewWidget* preview = group->AddPreviewWidget(
+          resource->Name, resource, PreviewImportance::High);
 
       // If it's a resource, we want to edit the object from the preview
-      if(preview && ZilchVirtualTypeId(resource)->IsA(ZilchTypeId(Archetype)))
+      if (preview && ZilchVirtualTypeId(resource)->IsA(ZilchTypeId(Archetype)))
       {
         mSpecialEdit->Add(preview->GetEditObject());
         addedSpecialEdit = true;
@@ -340,12 +318,13 @@ void MainPropertyView::EditResources(MetaSelection* selection)
 
     ++count;
 
-    // If it was an archetype, the special object was already added to the selection
-    if(!addedSpecialEdit)
+    // If it was an archetype, the special object was already added to the
+    // selection
+    if (!addedSpecialEdit)
     {
       // Get the object we should be editing from the content item
       Object* editingObject = resource;
-      if(resource->mContentItem != nullptr)
+      if (resource->mContentItem != nullptr)
         editingObject = resource->mContentItem->GetEditingObject(resource);
 
       // Add the object
@@ -360,19 +339,18 @@ void MainPropertyView::EditResources(MetaSelection* selection)
 
   mPreviewTile = group;
 
-  // 
+  //
   MetaSelection* selectionToEdit = selection;
-  if(mSpecialEdit->Count() > 0)
+  if (mSpecialEdit->Count() > 0)
     selectionToEdit = mSpecialEdit;
 
   mMultiInterface->mSelection = selectionToEdit;
   mPropertyView->SetObject(selectionToEdit, mMultiInterface);
 }
 
-//******************************************************************************
 void MainPropertyView::AddResourceButtons()
 {
-  if(mExternalEditButton)
+  if (mExternalEditButton)
     return;
 
   // External edit button
@@ -394,25 +372,24 @@ void MainPropertyView::AddResourceButtons()
   mButtonRow->MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainPropertyView::DestroyResourceButtons()
 {
   mExternalEditButton.SafeDestroy();
   mReloadResourceButton.SafeDestroy();
 }
 
-//******************************************************************************
 Handle MainPropertyView::PreviewResource(HandleParam object)
 {
   // Clear any old preview object
   ClearPreview();
 
   Resource* resource = object.Get<Resource*>();
-  if(resource == nullptr)
+  if (resource == nullptr)
     return Handle();
 
   // Create the preview widget
-  PreviewWidget* tile = ResourcePreview::CreatePreviewWidget(mPreviewArea, resource->Name, resource, PreviewImportance::High);
+  PreviewWidget* tile = ResourcePreview::CreatePreviewWidget(
+      mPreviewArea, resource->Name, resource, PreviewImportance::High);
   mPreviewTile = tile;
 
   if (tile == nullptr)
@@ -430,7 +407,6 @@ Handle MainPropertyView::PreviewResource(HandleParam object)
   return tile->GetEditObject();
 }
 
-//******************************************************************************
 void MainPropertyView::ClearPreview()
 {
   this->MarkAsNeedsUpdate();
@@ -439,4 +415,4 @@ void MainPropertyView::ClearPreview()
   mPreviewArea->SetActive(false);
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,16 +7,14 @@ namespace Zero
 /// Forward Declarations.
 class TextButton;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  // Sent when the modal was closed
-  DeclareEvent(ModalClosed);
-  DeclareEvent(ModalConfirmResult);
-  DeclareEvent(ModalButtonPressed);
-}
+// Sent when the modal was closed
+DeclareEvent(ModalClosed);
+DeclareEvent(ModalConfirmResult);
+DeclareEvent(ModalButtonPressed);
+} // namespace Events
 
-//--------------------------------------------------------- Modal Confirm Result
 class ModalConfirmEvent : public Event
 {
 public:
@@ -35,8 +28,8 @@ public:
   String mStringUserData;
 };
 
-//--------------------------------------------------------- Modal Confirm Result
-/// Event for the ModalButtonsAction class to send that a button with a given name was pressed.
+/// Event for the ModalButtonsAction class to send that a button with a given
+/// name was pressed.
 class ModalButtonEvent : public Event
 {
 public:
@@ -48,7 +41,6 @@ public:
   String mStringUserData;
 };
 
-//------------------------------------------------------------------------ Modal
 DeclareEnum2(ModalSizeMode, Fixed, Percentage);
 
 class Modal : public Composite
@@ -83,12 +75,12 @@ public:
   /// Dims and blocks input to everything behind the modal.
   Element* mBackground;
 
-  /// Any custom data the user wants to attach to the modal to make callbacks easier.
+  /// Any custom data the user wants to attach to the modal to make callbacks
+  /// easier.
   void* mUserData;
   String mStringUserData;
 };
 
-//------------------------------------------------------------------ Modal Strip
 /// A Modal with a horizontal strip down the center. Attaching widgets
 /// to this Modal will attach them to the strip.
 class ModalStrip : public Modal
@@ -120,7 +112,6 @@ public:
   Composite* mStripArea;
 };
 
-//--------------------------------------------------------- Modal Confirm Action
 class ModalConfirmAction : public ModalStrip
 {
 public:
@@ -128,7 +119,9 @@ public:
   typedef ModalConfirmAction ZilchSelf;
 
   /// Constructor.
-  ModalConfirmAction(Composite* parent, StringParam title, float fadeInTime = 0.25f);
+  ModalConfirmAction(Composite* parent,
+                     StringParam title,
+                     float fadeInTime = 0.25f);
 
   void Close(float fadeOutTime = 0.15f) override;
 
@@ -150,7 +143,6 @@ public:
   TextButton* mCancel;
 };
 
-//--------------------------------------------------------- ModalButtonsAction
 // A modal that has an array of buttons
 class ModalButtonsAction : public ModalStrip
 {
@@ -159,12 +151,23 @@ public:
   typedef ModalButtonsAction ZilchSelf;
 
   /// Construct an with an array of buttons
-  ModalButtonsAction(Composite* parent, StringParam title, Array<String>& buttonNames, StringParam extraText = String(), float fadeInTime = 0.25f);
-  /// Construct with the given string as the only button (just a helper to make construction easier)
-  ModalButtonsAction(Composite* parent, StringParam title, StringParam buttonName, StringParam extraText = String(), float fadeInTime = 0.25f);
-  
+  ModalButtonsAction(Composite* parent,
+                     StringParam title,
+                     Array<String>& buttonNames,
+                     StringParam extraText = String(),
+                     float fadeInTime = 0.25f);
+  /// Construct with the given string as the only button (just a helper to make
+  /// construction easier)
+  ModalButtonsAction(Composite* parent,
+                     StringParam title,
+                     StringParam buttonName,
+                     StringParam extraText = String(),
+                     float fadeInTime = 0.25f);
+
   /// The actual helper that makes the buttons (do not call directly)
-  void CreateButtons(StringParam title, Array<String>& buttonNames, StringParam extraText);
+  void CreateButtons(StringParam title,
+                     Array<String>& buttonNames,
+                     StringParam extraText);
 
   void Close(float fadeOutTime = 0.15f) override;
 
@@ -183,4 +186,4 @@ public:
   Array<TextButton*> mButtons;
 };
 
-}//namespace Zero
+} // namespace Zero

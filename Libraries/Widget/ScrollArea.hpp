@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ScrollArea.hpp
-/// Declaration of the ScrollArea.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,12 +6,11 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(ScrollUpdated);
+DeclareEvent(ScrollUpdated);
 }
 
 class BaseScrollArea;
 
-//------------------------------------------------------------------- Scroll Bar
 /// Scroll bar class.
 class ScrollBar : public Composite
 {
@@ -50,15 +41,14 @@ public:
   bool mDoNotShow;
   BaseScrollArea* mScrollParent;
 
-  Element* mUp;   //up or left
-  Element* mDown; //down or right
+  Element* mUp;   // up or left
+  Element* mDown; // down or right
   Element* mSlider;
   Element* mBackground;
 };
 
 DeclareEnum3(ScrollUpdate, Auto, ScrollBar, External);
 
-//------------------------------------------------------------- Base Scroll Area
 /// ScrollArea is a composite widget with scroll bars.
 class BaseScrollArea : public Composite
 {
@@ -69,7 +59,10 @@ public:
   ~BaseScrollArea();
 
   void DisableScrollBar(uint axis);
-  bool IsScrollBarVisible(uint axis) { return mScrollBar[axis]->mVisible; }
+  bool IsScrollBarVisible(uint axis)
+  {
+    return mScrollBar[axis]->mVisible;
+  }
 
   /// Set the scrolled percentage (0 to 1)
   void SetScrolledPercentage(Vec2 scrollPos);
@@ -84,7 +77,10 @@ public:
   void ScrollAreaToView(Vec2 min, Vec2 max, bool animate = false);
 
   /// Current offset of the client area
-  Vec2 GetClientOffset() { return mClientOffset; }
+  Vec2 GetClientOffset()
+  {
+    return mClientOffset;
+  }
   void SetClientOffset(Vec2Param offset)
   {
     mClientOffset = offset;
@@ -95,16 +91,22 @@ public:
   Vec4 GetClientArea();
 
   /// Visible Client Area scroll area size with scroll bars removed
-  virtual Vec2 GetClientVisibleSize() { return mVisibleSize; }
+  virtual Vec2 GetClientVisibleSize()
+  {
+    return mVisibleSize;
+  }
 
   void ScrollPercent(Vec2 additivePercentage);
   void ScrollPixels(Vec2 additivePixels);
 
   void OnMouseScroll(MouseEvent* event);
-  void SetScrolledPercentageInternal(Vec2 scrollPercentage, ScrollUpdate::Enum updateType, 
-                                    bool generateMessages);
-  void SetScrolledOffsetInternal(Vec2Param scrollOffset, ScrollUpdate::Enum updateType, 
-                                  bool generateMessages, bool animate = false);
+  void SetScrolledPercentageInternal(Vec2 scrollPercentage,
+                                     ScrollUpdate::Enum updateType,
+                                     bool generateMessages);
+  void SetScrolledOffsetInternal(Vec2Param scrollOffset,
+                                 ScrollUpdate::Enum updateType,
+                                 bool generateMessages,
+                                 bool animate = false);
   // Changing the client area size
   virtual Vec2 GetClientSize() = 0;
   virtual void SetClientSize(Vec2 newSize) = 0;
@@ -142,8 +144,7 @@ private:
   Vec2 mSliderOffset;
 };
 
-//------------------------------------------------------------------ Scroll Area
-//Scrollable area. Attach objects to the Client Composite;
+// Scrollable area. Attach objects to the Client Composite;
 class ScrollArea : public BaseScrollArea
 {
 public:
@@ -152,7 +153,10 @@ public:
   ScrollArea(Composite* composite, bool modernStyle = false);
 
   Composite* GetClientWidget();
-  Spacer* GetBackground() { return mBackground; }
+  Spacer* GetBackground()
+  {
+    return mBackground;
+  }
 
   void SetClientSize(Vec2 newSize) override;
   Vec2 GetClientSize() override;
@@ -160,7 +164,7 @@ public:
   void AttachChildWidget(Widget* widget, AttachType::Enum attachType) override;
   void UpdateTransform() override;
   bool TakeFocusOverride() override;
-  
+
   void UpdateArea(ScrollUpdate::Enum type);
   float GetScrollBarSize();
 
@@ -169,4 +173,4 @@ public:
   Composite* mClipWidget;
 };
 
-}//namespace Zero
+} // namespace Zero

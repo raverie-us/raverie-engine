@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ImageContent.hpp
-/// Declaration of the Image content class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------- Image Content
 /// Image content is 2d image data loaded from
 /// image files. Used to generate textures, sprites, etc.
 class ImageContent : public ContentComposition
@@ -28,4 +19,4 @@ public:
 
 void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters);
 
-}//namespace Zero
+} // namespace Zero

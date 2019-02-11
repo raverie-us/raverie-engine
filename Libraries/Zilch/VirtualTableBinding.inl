@@ -1,7 +1,4 @@
-/**************************************************************\
-* Author: Trevor Sundberg
-* Copyright 2016, DigiPen Institute of Technology
-\**************************************************************/
+// MIT Licensed (see LICENSE.md).
 
 virtual size_t Get0()
 {
@@ -7009,4 +7006,3 @@ virtual size_t Get1000()
   this->InstanceDebugIsVirtual = true;
   return 1000;
 }
-

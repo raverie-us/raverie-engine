@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-EM_JS(void, IFrameCreate, (int32_t id),
-{
-  if (!document) return;
+EM_JS(void, IFrameCreate, (int32_t id), {
+  if (!document)
+    return;
   var iframe = document.createElement('iframe');
   iframe.id = id.toString();
   iframe.style.border = '0px';
@@ -18,47 +13,47 @@ EM_JS(void, IFrameCreate, (int32_t id),
   document.body.appendChild(iframe);
 });
 
-EM_JS(void, IFrameDestroy, (int32_t id),
-{
-  if (!document) return;
+EM_JS(void, IFrameDestroy, (int32_t id), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   iframe.remove();
 });
 
-EM_JS(void, IFrameSetSize, (int32_t id, int32_t w, int32_t h),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetSize, (int32_t id, int32_t w, int32_t h), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
-  iframe.style.width  = w + 'px';
+  iframe.style.width = w + 'px';
   iframe.style.height = h + 'px';
 });
 
-EM_JS(void, IFrameSetClientPosition, (int32_t id, int32_t x, int32_t y),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetClientPosition, (int32_t id, int32_t x, int32_t y), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
-  iframe.style.left  = x + 'px';
+  iframe.style.left = x + 'px';
   iframe.style.top = y + 'px';
 });
 
-EM_JS(void, IFrameSetZIndex, (int32_t id, int32_t zindex),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetZIndex, (int32_t id, int32_t zindex), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   iframe.style.zIndex = zindex;
 });
 
-EM_JS(void, IFrameSetTransparent, (int32_t id, int32_t transparent),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetTransparent, (int32_t id, int32_t transparent), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
@@ -69,9 +64,9 @@ EM_JS(void, IFrameSetTransparent, (int32_t id, int32_t transparent),
     iframe.style.background = null;
 });
 
-EM_JS(void, IFrameSetBackgroundColor, (int32_t id, const char* color),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetBackgroundColor, (int32_t id, const char* color), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
@@ -79,9 +74,9 @@ EM_JS(void, IFrameSetBackgroundColor, (int32_t id, const char* color),
   iframe.backgroundColor = colorStr;
 });
 
-EM_JS(void, IFrameSetUrl, (int32_t id, const char* url),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetUrl, (int32_t id, const char* url), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
@@ -89,13 +84,13 @@ EM_JS(void, IFrameSetUrl, (int32_t id, const char* url),
   iframe.src = urlStr;
 });
 
-EM_JS(const char*, IFrameGetUrl, (int32_t id),
-{
-  if (!document) return null;
+EM_JS(const char*, IFrameGetUrl, (int32_t id), {
+  if (!document)
+    return null;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
-  
+
   try
   {
     if (iframe.contentWindow.location && iframe.contentWindow.location.href)
@@ -105,59 +100,59 @@ EM_JS(const char*, IFrameGetUrl, (int32_t id),
   {
     console.error(err);
   }
-  
+
   if (iframe.src)
     return mallocStringUTF8(iframe.src);
 });
 
-EM_JS(const char*, IFrameGetTitle, (int32_t id),
-{
-  if (!document) return null;
+EM_JS(const char*, IFrameGetTitle, (int32_t id), {
+  if (!document)
+    return null;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   return mallocStringUTF8(iframe.contentDocument.title);
 });
 
-EM_JS(const char*, IFrameGetStatus, (int32_t id),
-{
-  if (!document) return "";
+EM_JS(const char*, IFrameGetStatus, (int32_t id), {
+  if (!document)
+    return "";
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   return mallocStringUTF8('Status: ' + iframe.contentDocument.readyState);
 });
 
-EM_JS(int32_t, IFrameIsLoading, (int32_t id),
-{
-  if (!document) return 0;
+EM_JS(int32_t, IFrameIsLoading, (int32_t id), {
+  if (!document)
+    return 0;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   return iframe.contentDocument.readyState == 'loading';
 });
 
-EM_JS(void, IFrameForward, (int32_t id),
-{
-  if (!document) return;
+EM_JS(void, IFrameForward, (int32_t id), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   iframe.contentWindow.history.forward();
 });
 
-EM_JS(void, IFrameBack, (int32_t id),
-{
-  if (!document) return;
+EM_JS(void, IFrameBack, (int32_t id), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   iframe.contentWindow.history.back();
 });
 
-EM_JS(void, IFrameReload, (int32_t id),
-{
-  if (!document) return;
+EM_JS(void, IFrameReload, (int32_t id), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
@@ -166,9 +161,9 @@ EM_JS(void, IFrameReload, (int32_t id),
   iframe.src += "";
 });
 
-EM_JS(void, IFrameSetVisible, (int32_t id, int32_t visible),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetVisible, (int32_t id, int32_t visible), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
@@ -178,9 +173,9 @@ EM_JS(void, IFrameSetVisible, (int32_t id, int32_t visible),
     iframe.style.visibility = 'hidden';
 });
 
-EM_JS(void, IFrameSetFocus, (int32_t id, int32_t focus),
-{
-  if (!document) return;
+EM_JS(void, IFrameSetFocus, (int32_t id, int32_t focus), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
@@ -190,27 +185,25 @@ EM_JS(void, IFrameSetFocus, (int32_t id, int32_t focus),
     iframe.blur();
 });
 
-EM_JS(int32_t, IFrameGetFocus, (int32_t id),
-{
-  if (!document) return;
+EM_JS(int32_t, IFrameGetFocus, (int32_t id), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   return (iframe == document.activeElement) ? 1 : 0;
 });
 
-EM_JS(void, IFrameExecute, (int32_t id, const char* script),
-{
-  if (!document) return;
+EM_JS(void, IFrameExecute, (int32_t id, const char* script), {
+  if (!document)
+    return;
   var iframe = document.getElementById(id.toString());
   if (!iframe)
     return console.error('No iframe found with id ' + id);
   var scriptStr = UTF8ToString(script);
-  
-  (function(document, location)
-  {
-    eval(scriptStr);
-  })(iframe.contentWindow, iframe.contentDocument);
+
+  (function(document, location) { eval(scriptStr); })(iframe.contentWindow,
+                                                      iframe.contentDocument);
 });
 
 String ToCssRgba(Vec4Param color)
@@ -225,15 +218,15 @@ String ToCssRgba(Vec4Param color)
 }
 
 Browser::Browser(const BrowserSetup& setup) :
-  mUserData(nullptr),
-  mLastSetUrl(setup.mUrl),
-  mScrollSpeed(setup.mScrollSpeed),
-  mBackgroundColor(setup.mBackgroundColor),
-  mTransparent(setup.mTransparent),
-  mSize(setup.mSize),
-  mClientPosition(setup.mClientPosition),
-  mZIndex(0),
-  mVisible(true)
+    mUserData(nullptr),
+    mLastSetUrl(setup.mUrl),
+    mScrollSpeed(setup.mScrollSpeed),
+    mBackgroundColor(setup.mBackgroundColor),
+    mTransparent(setup.mTransparent),
+    mSize(setup.mSize),
+    mClientPosition(setup.mClientPosition),
+    mZIndex(0),
+    mVisible(true)
 {
   static int32_t mCounter = 0;
   mHandle = (OsHandle)(size_t)mCounter;
@@ -241,9 +234,11 @@ Browser::Browser(const BrowserSetup& setup) :
 
   IFrameCreate((int32_t)mHandle);
   IFrameSetSize((int32_t)mHandle, mSize.x, mSize.y);
-  IFrameSetClientPosition((int32_t)mHandle, mClientPosition.x, mClientPosition.y);
+  IFrameSetClientPosition(
+      (int32_t)mHandle, mClientPosition.x, mClientPosition.y);
   IFrameSetUrl((int32_t)mHandle, mLastSetUrl.c_str());
-  IFrameSetBackgroundColor((int32_t)mHandle, ToCssRgba(mBackgroundColor).c_str());
+  IFrameSetBackgroundColor((int32_t)mHandle,
+                           ToCssRgba(mBackgroundColor).c_str());
   IFrameSetTransparent((int32_t)mHandle, (int32_t)mTransparent);
 }
 
@@ -302,8 +297,9 @@ void Browser::SetZIndex(int zindex)
   IFrameSetZIndex((int32_t)mHandle, zindex);
 }
 
-// There is no valid way to detect if we can go forward or backwards in the browser, however
-// it has no effect if we use GoForward/GoBack and there is no history, so always return true.
+// There is no valid way to detect if we can go forward or backwards in the
+// browser, however it has no effect if we use GoForward/GoBack and there is no
+// history, so always return true.
 bool Browser::GetCanGoForward()
 {
   return true;
@@ -368,7 +364,7 @@ void Browser::SetBackgroundColor(Math::Vec4Param color)
 {
   if (color == mBackgroundColor)
     return;
-  
+
   mBackgroundColor = color;
   String colorString = ToCssRgba(color);
   IFrameSetBackgroundColor((int32_t)mHandle, colorString.c_str());
@@ -426,11 +422,13 @@ String Browser::GetUrl()
   free((void*)url);
   if (!currentUrl.Empty())
     return currentUrl;
-  
+
   return mLastSetUrl;
 }
 
-void Browser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
+void Browser::ExecuteScriptFromLocation(StringParam script,
+                                        StringParam url,
+                                        int line)
 {
   IFrameExecute((int32_t)mHandle, script.c_str());
 }
@@ -443,24 +441,32 @@ void Browser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseMove(Math::IntVec2Param localPosition,
+                                BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseClick(Math::IntVec2Param localPosition,
+                                 MouseButtons::Enum button,
+                                 bool down,
+                                 BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition,
+                                       MouseButtons::Enum button,
+                                       BrowserModifiers::Enum modifiers)
 {
 }
 
-void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Param delta, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition,
+                                  Math::Vec2Param delta,
+                                  BrowserModifiers::Enum modifiers)
 {
 }
 
 // This must be called before any browsers are created
-void Browser::PlatformCreate() 
+void Browser::PlatformCreate()
 {
 }
 
@@ -472,10 +478,10 @@ void Browser::PlatformUpdate()
 {
 }
 
-//------------------------------------------------------------------------------ BrowserSubProcess
+//BrowserSubProcess
 int BrowserSubProcess::Execute()
 {
   return 0;
 }
 
-}// namespace Zero
+} // namespace Zero

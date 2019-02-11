@@ -1,14 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
-DeclareBitField12(BrowserModifiers, CapsLock, Shift, Control, Alt, LeftMouse, MiddleMouse, RightMouse, Command, NumLock, IsKeyPad, IsLeft, IsRight);
+DeclareBitField12(BrowserModifiers,
+                  CapsLock,
+                  Shift,
+                  Control,
+                  Alt,
+                  LeftMouse,
+                  MiddleMouse,
+                  RightMouse,
+                  Command,
+                  NumLock,
+                  IsKeyPad,
+                  IsLeft,
+                  IsRight);
 
 DeclareEnum2(BrowserColorFormat, RGBA8, BGRA8);
 
@@ -48,12 +55,14 @@ public:
   Browser(const BrowserSetup& setup);
   ~Browser();
 
-  /// Returns true if this browser is implemented as a browser that floats on top of everything.
-  /// If the browser is floating, it may not invoke mOnPaint as it may be painted by the operating system.
+  /// Returns true if this browser is implemented as a browser that floats on
+  /// top of everything. If the browser is floating, it may not invoke mOnPaint
+  /// as it may be painted by the operating system.
   static bool IsFloatingOnTop();
 
-  /// Returns if this browser is considered secure which means that it follows browsing standards
-  /// for security, such as not allowing cross-origin requests unless explicitly allowed by the server.
+  /// Returns if this browser is considered secure which means that it follows
+  /// browsing standards for security, such as not allowing cross-origin
+  /// requests unless explicitly allowed by the server.
   static bool IsSecurityRestricted();
 
   Math::IntVec2 GetSize();
@@ -64,8 +73,8 @@ public:
   void SetClientPosition(Math::IntVec2Param clientPosition);
 
   /// Sets the clipping rectangles (only used if 'IsFloatingOnTop').
-  /// These rectangles will be clipped out of the view, as if holes are being cut.
-  /// Note that this might not be supported by all platforms.
+  /// These rectangles will be clipped out of the view, as if holes are being
+  /// cut. Note that this might not be supported by all platforms.
   void SetClippingRectangles(const Array<IntRect>& rectangles);
 
   /// This is only used when the browser 'IsFloatingOnTop'.
@@ -106,30 +115,53 @@ public:
 
   void SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers);
   void SimulateTextTyped(int character, BrowserModifiers::Enum modifiers);
-  void SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers);
-  void SimulateMouseClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers);
-  void SimulateMouseDoubleClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers);
-  void SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Param delta, BrowserModifiers::Enum modifiers);
+  void SimulateMouseMove(Math::IntVec2Param localPosition,
+                         BrowserModifiers::Enum modifiers);
+  void SimulateMouseClick(Math::IntVec2Param localPosition,
+                          MouseButtons::Enum button,
+                          bool down,
+                          BrowserModifiers::Enum modifiers);
+  void SimulateMouseDoubleClick(Math::IntVec2Param localPosition,
+                                MouseButtons::Enum button,
+                                BrowserModifiers::Enum modifiers);
+  void SimulateMouseScroll(Math::IntVec2Param localPosition,
+                           Math::Vec2Param delta,
+                           BrowserModifiers::Enum modifiers);
 
   // This must be called before any browsers are created
   static void PlatformCreate();
   static void PlatformDestroy();
   static void PlatformUpdate();
 
-  // Warning, the size may not match the last size that was sent since the data could be latent.
-  // Caution to be taken to clamp the dirty rectangles within your buffer size.
-  // This method may never be called if this browser 'IsFloatingOnTop'.
-  void(*mOnPaint)(BrowserColorFormat::Enum format, const byte* data, Math::IntVec2Param bufferSize, const Array<IntRect>& dirtyRectangles, Browser* browser);
+  // Warning, the size may not match the last size that was sent since the data
+  // could be latent. Caution to be taken to clamp the dirty rectangles within
+  // your buffer size. This method may never be called if this browser
+  // 'IsFloatingOnTop'.
+  void (*mOnPaint)(BrowserColorFormat::Enum format,
+                   const byte* data,
+                   Math::IntVec2Param bufferSize,
+                   const Array<IntRect>& dirtyRectangles,
+                   Browser* browser);
 
-  void(*mOnPopup)(StringParam name, StringParam url, Browser* browser);
-  void(*mOnPointQuery)(Math::IntVec2Param browserPixelPosition, Math::IntVec2* monitorPixelPositionOut, Browser* browser);
-  void(*mOnConsoleMessage)(StringParam message, StringParam source, int line, bool* handledOut, Browser* browser);
-  void(*mOnStatusChanged)(StringParam text, Browser* browser);
-  void(*mOnTitleChanged)(StringParam text, Browser* browser);
-  void(*mOnUrlChanged)(StringParam url, bool* handledOut, Browser* browser);
-  void(*mOnCursorChanged)(Cursor::Enum cursor, Browser* browser);
-  void(*mOnDownloadStarted)(BrowserDownload& download, bool* cancelOut, Browser* browser);
-  void(*mOnDownloadUpdated)(const BrowserDownload& download, bool* cancelOut, Browser* browser);
+  void (*mOnPopup)(StringParam name, StringParam url, Browser* browser);
+  void (*mOnPointQuery)(Math::IntVec2Param browserPixelPosition,
+                        Math::IntVec2* monitorPixelPositionOut,
+                        Browser* browser);
+  void (*mOnConsoleMessage)(StringParam message,
+                            StringParam source,
+                            int line,
+                            bool* handledOut,
+                            Browser* browser);
+  void (*mOnStatusChanged)(StringParam text, Browser* browser);
+  void (*mOnTitleChanged)(StringParam text, Browser* browser);
+  void (*mOnUrlChanged)(StringParam url, bool* handledOut, Browser* browser);
+  void (*mOnCursorChanged)(Cursor::Enum cursor, Browser* browser);
+  void (*mOnDownloadStarted)(BrowserDownload& download,
+                             bool* cancelOut,
+                             Browser* browser);
+  void (*mOnDownloadUpdated)(const BrowserDownload& download,
+                             bool* cancelOut,
+                             Browser* browser);
 
   void* mUserData;
 
@@ -147,7 +179,8 @@ public:
   OsHandle mHandle;
 };
 
-// The implementation of this may remain empty for platforms that do not require a sub-process.
+// The implementation of this may remain empty for platforms that do not require
+// a sub-process.
 class BrowserSubProcess
 {
 public:

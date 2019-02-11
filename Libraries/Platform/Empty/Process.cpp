@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Process.cpp
-/// Declaration of the Process class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -28,8 +20,12 @@ void Process::Start(Status& status, ProcessStartInfo& info)
 {
 }
 
-void Process::Start(Status& status, StringRange commandLine, bool redirectOut,
-                      bool redirectError, bool redirectIn, bool showWindow)
+void Process::Start(Status& status,
+                    StringRange commandLine,
+                    bool redirectOut,
+                    bool redirectError,
+                    bool redirectIn,
+                    bool showWindow)
 {
 }
 
@@ -95,4 +91,4 @@ void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags)
 {
 }
 
-}
+} // namespace Zero

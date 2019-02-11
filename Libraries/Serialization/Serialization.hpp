@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Serialization.hpp
-/// Declaration of the Serializer interface.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------------- Data Attributes
+//Attributes
 namespace SerializationAttributes
 {
 DeclareStringConstant(Id);
@@ -20,11 +12,13 @@ DeclareStringConstant(InheritId);
 DeclareStringConstant(ChildOrderOverride);
 DeclareStringConstant(LocallyAdded);
 DeclareStringConstant(LocallyRemoved);
-}
+} // namespace SerializationAttributes
 
 struct DataAttribute
 {
-  DataAttribute() {}
+  DataAttribute()
+  {
+  }
   DataAttribute(StringParam name, StringParam value);
 
   String mName;
@@ -33,43 +27,40 @@ struct DataAttribute
 
 typedef Array<DataAttribute> DataAttributes;
 
-//---------------------------------------------------------------- Data Version
 DeclareEnum2(DataVersion,
-  // DataVersion 0 is when there was no data versions
-  Legacy,
-  // Data versioning was added at this release
-  Current
-);
+             // DataVersion 0 is when there was no data versions
+             Legacy,
+             // Data versioning was added at this release
+             Current);
 
-//-------------------------------------------------------------------- Constants
-const cstr cPolymorphicSerializationError = "Polymorphic serialization not "
-  "supported on this serializer. When using polymorphic serialization "
-  "you must separate saving and loading. When saving use Start Polymorphic / "
-  "End Polymorphic. When reading you must use Get Polymorphic, Create the object "
-  "with the type specified in the polymorphic node, serialize the object and then "
-  "call End Polymorphic.";
+const cstr cPolymorphicSerializationError =
+    "Polymorphic serialization not "
+    "supported on this serializer. When using polymorphic serialization "
+    "you must separate saving and loading. When saving use Start Polymorphic / "
+    "End Polymorphic. When reading you must use Get Polymorphic, Create the "
+    "object "
+    "with the type specified in the polymorphic node, serialize the object and "
+    "then "
+    "call End Polymorphic.";
 
-//------------------------------------------------------------- Polymorphic Node
 DeclareBitField4(PolymorphicFlags,
-        // This node was inherited from another data file 
-        // (such as an Archetype)
-        Inherited,
-        // This means the node had a '-' in front of it, whatever that
-        // means in the context of what is being serialized. This was added
-        // as an optimization for loading Archetypes with local
-        // modifications in lieu of full data tree patching.
-        Subtractive,
-        ChildOrderOverride,
-        // Was this node patched in any way
-        Patched);
+                 // This node was inherited from another data file
+                 // (such as an Archetype)
+                 Inherited,
+                 // This means the node had a '-' in front of it, whatever that
+                 // means in the context of what is being serialized. This was
+                 // added as an optimization for loading Archetypes with local
+                 // modifications in lieu of full data tree patching.
+                 Subtractive,
+                 ChildOrderOverride,
+                 // Was this node patched in any way
+                 Patched);
 
-//------------------------------------------------------------- Polymorphic Node
 struct PolymorphicNode
 {
-  PolymorphicNode()
-    : UniqueNodeId(cInvalidUniqueNodeId)
-    , mAttributes(nullptr)
-    {}
+  PolymorphicNode() : UniqueNodeId(cInvalidUniqueNodeId), mAttributes(nullptr)
+  {
+  }
 
   StringRange TypeName;
   StringRange Name;
@@ -92,62 +83,61 @@ struct PolymorphicNode
 
 // Structure Type for text serializers
 DeclareEnum4(StructureType,
-  // Basic Value Type like integers or strings
-  Value,
-  // Object Type that contain name value fields
-  Object,
-  // Array Type that Contains simple values
-  Array,
-  BasicArray
-  );
+             // Basic Value Type like integers or strings
+             Value,
+             // Object Type that contain name value fields
+             Object,
+             // Array Type that Contains simple values
+             Array,
+             BasicArray);
 
 // Structure Type for text serializers
-DeclareEnum2(BasicArrayType,
-  Float,
-  Integer
-  );
+DeclareEnum2(BasicArrayType, Float, Integer);
 
 // SerializerMode Saving or Loading
 DeclareEnum2(SerializerMode,
-  //Data is being saved to this stream
-  Saving,
-  //Data is being loaded from this stream
-  Loading
-  );
+             // Data is being saved to this stream
+             Saving,
+             // Data is being loaded from this stream
+             Loading);
 
 // SerializerType for what features are supported
 DeclareEnum3(SerializerType,
-  //Binary serializes support raw write/reads
-  //and use integer type Ids.
-  Binary,
-  //Text serializers support string typeIds
-  //and test for value presence.
-  Text,
-  //Generic does not support type ids.
-  //Only Start, End, and  Fundamental.
-  Generic
-  );
+             // Binary serializes support raw write/reads
+             // and use integer type Ids.
+             Binary,
+             // Text serializers support string typeIds
+             // and test for value presence.
+             Text,
+             // Generic does not support type ids.
+             // Only Start, End, and  Fundamental.
+             Generic);
 
-// Since the serializer doesn't have access to Meta, we can't do an 'IsA' 
+// Since the serializer doesn't have access to Meta, we can't do an 'IsA'
 // check/dynamic cast, so use this instead
-DeclareEnum7(SerializerClass, BinaryLoader, BinarySaver, TextLoader, 
-             TextSaver, DataTreeLoader, DefaultSerializer, SerializerBuilder);
+DeclareEnum7(SerializerClass,
+             BinaryLoader,
+             BinarySaver,
+             TextLoader,
+             TextSaver,
+             DataTreeLoader,
+             DefaultSerializer,
+             SerializerBuilder);
 
 // Flags used to change how the polymorphic node is saved out
-DeclareBitField2(PolymorphicSaveFlags,
-  // A polymorphic node can be set to LocallyAdded when saving out a data tree patch.
-  // The polymorphic node will be added to the inherited data tree.
-  LocallyAdded,
-  // If set, the child order of this node will be used to override the order
-  // of the tree that's being patched.
-  ChildOrderOverride
-  );
+DeclareBitField2(
+    PolymorphicSaveFlags,
+    // A polymorphic node can be set to LocallyAdded when saving out a data tree
+    // patch. The polymorphic node will be added to the inherited data tree.
+    LocallyAdded,
+    // If set, the child order of this node will be used to override the order
+    // of the tree that's being patched.
+    ChildOrderOverride);
 
 // Used for data tree patching
-typedef void(*PatchCallback)(cstr fieldName, void* clientData);
+typedef void (*PatchCallback)(cstr fieldName, void* clientData);
 
-//------------------------------------------------------------- Polymorphic Info
-/// Information used to open a polymorphic 
+/// Information used to open a polymorphic
 struct PolymorphicInfo
 {
   PolymorphicInfo();
@@ -170,7 +160,6 @@ struct PolymorphicInfo
   Handle mObject;
 };
 
-//------------------------------------------------------------------- Serializer
 /// Base Serializer. Concrete serializers (Text, Binary, Data)
 /// implement this interface. This separates the serialization process
 /// (what data needs to be read) from the serialization format (Text, Binary)
@@ -185,8 +174,7 @@ public:
   Serializer();
   virtual ~Serializer();
 
-  virtual void Close() {};
-
+  virtual void Close(){};
 
   void* GetSerializationContext();
   void SetSerializationContext(void* context);
@@ -204,35 +192,50 @@ public:
   virtual void End(cstr typeName, StructType structType) = 0;
   void End(BoundType* type, StructType structType);
 
-
   /// Polymorphic Serialization Interface.
   void StartPolymorphic(cstr typeName);
   void StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flags);
   void StartPolymorphic(BoundType* objectType);
   void StartPolymorphic(HandleParam object);
   void StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId);
-  void StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId,
+  void StartPolymorphicInheritence(cstr typeName,
+                                   cstr dataInheritanceId,
                                    PolymorphicSaveFlags::Enum flags);
   virtual void StartPolymorphicInternal(const PolymorphicInfo& info);
   virtual void EndPolymorphic() = 0;
   virtual bool GetPolymorphic(PolymorphicNode& node) = 0;
 
   /// Tells data tree patching to remove the node of the given type name.
-  virtual void AddSubtractivePolymorphicNode(cstr typeName,
-                          Guid nodeId = PolymorphicNode::cInvalidUniqueNodeId) {}
-  void AddSubtractivePolymorphicNode(BoundType* boundType,
-                                     Guid nodeId = PolymorphicNode::cInvalidUniqueNodeId);
+  virtual void AddSubtractivePolymorphicNode(
+      cstr typeName, Guid nodeId = PolymorphicNode::cInvalidUniqueNodeId)
+  {
+  }
+  void AddSubtractivePolymorphicNode(
+      BoundType* boundType,
+      Guid nodeId = PolymorphicNode::cInvalidUniqueNodeId);
   virtual void ArraySize(uint& arraySize) = 0;
 
-#define FUNDAMENTAL(type) virtual bool FundamentalField(cstr fieldName, type& value) = 0;
+#define FUNDAMENTAL(type)                                                      \
+  virtual bool FundamentalField(cstr fieldName, type& value) = 0;
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL
 
-  virtual bool SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange);
-  virtual bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) = 0;
-  virtual bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) = 0;
-  virtual bool ArrayField(cstr typeName, cstr fieldName, byte* data,
-    ArrayType arrayType, uint numberOfElements, uint sizeOftype) = 0;
+  virtual bool SimpleField(cstr typeName,
+                           cstr fieldName,
+                           StringRange& stringRange);
+  virtual bool EnumField(cstr enumTypeName,
+                         cstr fieldName,
+                         uint& enumValue,
+                         BoundType* type) = 0;
+  virtual bool StringField(cstr typeName,
+                           cstr fieldName,
+                           StringRange& stringRange) = 0;
+  virtual bool ArrayField(cstr typeName,
+                          cstr fieldName,
+                          byte* data,
+                          ArrayType arrayType,
+                          uint numberOfElements,
+                          uint sizeOftype) = 0;
 
   virtual DataBlock ExtractAsDataBlock();
 
@@ -241,22 +244,25 @@ public:
   virtual String DebugLocation();
 
   // Serialization Helpers
-  template<typename type>
+  template <typename type>
   void SerializeValue(type& instance);
 
-  template<typename type>
+  template <typename type>
   void SerializeField(cstr fieldName, type& instance);
 
-  template<typename type>
-  void SerializeFieldDefault(cstr fieldName, type& instance, const type& defaultValue, cstr oldFieldName = nullptr);
+  template <typename type>
+  void SerializeFieldDefault(cstr fieldName,
+                             type& instance,
+                             const type& defaultValue,
+                             cstr oldFieldName = nullptr);
 
-  template<typename type>
+  template <typename type>
   void SerializeFieldRename(cstr oldFieldName, type& instance);
 
-  template<typename type>
+  template <typename type>
   void SerializePolymorphic(type& instance);
 
-  template<typename type>
+  template <typename type>
   void SerializePolymorphic(const PolymorphicInfo& info, type& instance);
 
   /// If we're in patching mode while loading, we only want to serialize
@@ -276,30 +282,29 @@ protected:
   SerializerType::Enum mSerializerType;
 };
 
-#define SerializeName(variable) \
-  stream.SerializeField(#variable, variable)
+#define SerializeName(variable) stream.SerializeField(#variable, variable)
 
-#define SerializeNameDefault(variable, defaultValue) \
+#define SerializeNameDefault(variable, defaultValue)                           \
   stream.SerializeFieldDefault(#variable, variable, defaultValue)
 
-#define SerializeRename(variable, oldFieldName) \
+#define SerializeRename(variable, oldFieldName)                                \
   stream.SerializeFieldRename(oldFieldName, variable)
 
-#define SerializeByteBufferBlock(name, byteBufferBlock) \
-  if(stream.GetMode() == SerializerMode::Loading)      \
-  {                                                     \
-    String temp;                                        \
-    stream.SerializeFieldDefault(name, temp, String()); \
-    Zero::DecodeBinary(byteBufferBlock, temp);          \
-  }                                                     \
-  else                                                  \
-  {                                                     \
-    String temp;                                        \
-    Zero::EncodeBinary(byteBufferBlock, temp);          \
-    stream.SerializeFieldDefault(name, temp, String()); \
+#define SerializeByteBufferBlock(name, byteBufferBlock)                        \
+  if (stream.GetMode() == SerializerMode::Loading)                             \
+  {                                                                            \
+    String temp;                                                               \
+    stream.SerializeFieldDefault(name, temp, String());                        \
+    Zero::DecodeBinary(byteBufferBlock, temp);                                 \
+  }                                                                            \
+  else                                                                         \
+  {                                                                            \
+    String temp;                                                               \
+    Zero::EncodeBinary(byteBufferBlock, temp);                                 \
+    stream.SerializeFieldDefault(name, temp, String());                        \
   }
 
-}
+} // namespace Zero
 
 #include "SerializationTraits.hpp"
 #include "EnumSerialization.hpp"
@@ -307,45 +312,56 @@ protected:
 namespace Zero
 {
 
-template<typename type>
+template <typename type>
 void Serializer::SerializeValue(type& instance)
 {
-  bool success =  Serialization::Policy<type>::Serialize(*this, NULL, instance);
-  ErrorIf(!success, "Failed to serialize value at %s.", this->DebugLocation().c_str());
+  bool success = Serialization::Policy<type>::Serialize(*this, NULL, instance);
+  ErrorIf(!success,
+          "Failed to serialize value at %s.",
+          this->DebugLocation().c_str());
 }
 
-template<typename type>
+template <typename type>
 void Serializer::SerializeField(cstr fieldName, type& instance)
 {
-  bool success = Serialization::Policy<type>::Serialize(*this, fieldName, instance);
-  ErrorIf(!success, "Failed to serialize value. %s at %s", fieldName, this->DebugLocation().c_str());
+  bool success =
+      Serialization::Policy<type>::Serialize(*this, fieldName, instance);
+  ErrorIf(!success,
+          "Failed to serialize value. %s at %s",
+          fieldName,
+          this->DebugLocation().c_str());
 }
 
-template<typename type>
-void Serializer::SerializeFieldDefault(cstr fieldName, type& instance,
-                                       const type& defaultValue, cstr oldFieldName)
+template <typename type>
+void Serializer::SerializeFieldDefault(cstr fieldName,
+                                       type& instance,
+                                       const type& defaultValue,
+                                       cstr oldFieldName)
 {
-  bool success = Serialization::Policy<type>::Serialize(*this, fieldName, instance);
+  bool success =
+      Serialization::Policy<type>::Serialize(*this, fieldName, instance);
 
   // Try the old name if the first didn't succeed
-  if(!success && oldFieldName)
-    success = Serialization::Policy<type>::Serialize(*this, oldFieldName, instance);
+  if (!success && oldFieldName)
+    success =
+        Serialization::Policy<type>::Serialize(*this, oldFieldName, instance);
 
-  if(mPatching)
+  if (mPatching)
   {
     // Signal that there was a successful patch
-    if(success && mPatchCallback)
+    if (success && mPatchCallback)
       mPatchCallback(fieldName, mPatchClientData);
   }
   // We don't want to set the default value if we're patching
-  else if(!success)
+  else if (!success)
     instance = defaultValue;
 }
 
-template<typename type>
+template <typename type>
 void Serializer::SerializeFieldRename(cstr oldFieldName, type& instance)
 {
-  if (mSerializerType == SerializerType::Text && mMode == SerializerMode::Loading)
+  if (mSerializerType == SerializerType::Text &&
+      mMode == SerializerMode::Loading)
   {
     type fieldValue;
     if (FundamentalField(oldFieldName, fieldValue))
@@ -353,7 +369,7 @@ void Serializer::SerializeFieldRename(cstr oldFieldName, type& instance)
   }
 }
 
-template<typename type>
+template <typename type>
 void Serializer::SerializePolymorphic(type& instance)
 {
   BoundType* boundType = ZilchVirtualTypeId(&instance);
@@ -362,8 +378,9 @@ void Serializer::SerializePolymorphic(type& instance)
   EndPolymorphic();
 }
 
-template<typename type>
-void Serializer::SerializePolymorphic(const PolymorphicInfo& info, type& instance)
+template <typename type>
+void Serializer::SerializePolymorphic(const PolymorphicInfo& info,
+                                      type& instance)
 {
   StartPolymorphicInternal(info);
   instance.Serialize(*this);
@@ -373,4 +390,4 @@ void Serializer::SerializePolymorphic(const PolymorphicInfo& info, type& instanc
 void EncodeBinary(ByteBufferBlock& buffer, String& encodedOut);
 bool DecodeBinary(ByteBufferBlock& buffer, const String& encoded);
 
-}//namespace Zero
+} // namespace Zero

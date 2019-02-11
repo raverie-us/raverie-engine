@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,37 +7,46 @@ namespace Zero
 /// Forward Declarations
 class BitStream;
 
-template<typename T>
+template <typename T>
 inline Bits Measure(T& value)
 {
   static_assert(False<T>::Value, "Requires a user-defined Measure function");
   return 0;
 }
 
-template<typename R>
-inline Bits MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
+template <typename R>
+inline Bits MeasureQuantized(const R& minValue_,
+                             const R& maxValue_,
+                             const R& quantum_)
 {
-  static_assert(False<R>::Value, "Requires a user-defined MeasureQuantized function");
+  static_assert(False<R>::Value,
+                "Requires a user-defined MeasureQuantized function");
   return 0;
 }
 
-template<typename T>
-inline Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, T& value)
+template <typename T>
+inline Bits Serialize(SerializeDirection::Enum direction,
+                      BitStream& bitStream,
+                      T& value)
 {
   static_assert(False<T>::Value, "Requires a user-defined Serialize function");
   return 0;
 }
 
-template<typename T, typename R>
-inline Bits SerializeQuantized(SerializeDirection::Enum direction, BitStream& bitStream, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
+template <typename T, typename R>
+inline Bits SerializeQuantized(SerializeDirection::Enum direction,
+                               BitStream& bitStream,
+                               T& value_,
+                               const R& minValue_,
+                               const R& maxValue_,
+                               const R& quantum_)
 {
-  static_assert(False<T>::Value, "Requires a user-defined SerializeQuantized function");
+  static_assert(False<T>::Value,
+                "Requires a user-defined SerializeQuantized function");
   return 0;
 }
 
-//---------------------------------------------------------------------------------//
-//                                  BitStream                                      //
-//---------------------------------------------------------------------------------//
+//                                  BitStream //
 
 //
 // Member Functions
@@ -111,11 +115,13 @@ inline Bytes BitStream::GetBytesUnread() const
   return BITS_TO_BYTES(GetBitsUnread());
 }
 
-inline Bits BitStream::GetBitsSerialized(SerializeDirection::Enum direction) const
+inline Bits
+BitStream::GetBitsSerialized(SerializeDirection::Enum direction) const
 {
   return (direction == SerializeDirection::Write) ? mBitsWritten : mBitsRead;
 }
-inline Bytes BitStream::GetBytesSerialized(SerializeDirection::Enum direction) const
+inline Bytes
+BitStream::GetBytesSerialized(SerializeDirection::Enum direction) const
 {
   return BITS_TO_BYTES(GetBitsSerialized(direction));
 }
@@ -138,7 +144,7 @@ inline Bits BitStream::Measure(const String& value)
   return BYTES_TO_BITS(value.SizeInBytes() + 1);
 }
 
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_enum<T>::value, Bits) BitStream::Measure(T value)
 {
   // Typedefs
@@ -147,36 +153,37 @@ inline R_ENABLE_IF(is_enum<T>::value, Bits) BitStream::Measure(T value)
   // Measure enum as integer
   return Measure((intType)value);
 }
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_integral<T>::value, Bits) BitStream::Measure(T value)
 {
   // Measure value
   return BYTES_TO_BITS(sizeof(value));
 }
-template<typename T>
-inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Measure(T value)
+template <typename T>
+inline R_ENABLE_IF(is_floating_point<T>::value,
+                   Bits) BitStream::Measure(T value)
 {
   // Measure value
   return BYTES_TO_BITS(sizeof(value));
 }
-template<typename T, size_t Size>
-inline Bits BitStream::Measure(const T (& array)[Size])
+template <typename T, size_t Size>
+inline Bits BitStream::Measure(const T (&array)[Size])
 {
   Bits bitsWritten = 0;
 
   // Measure every element
-  for(size_t i = 0; i < Size; ++i)
+  for (size_t i = 0; i < Size; ++i)
     bitsWritten += Measure(array[i]);
 
   return bitsWritten;
 }
-template<typename T>
+template <typename T>
 inline Bits BitStream::Measure(const T* array, size_t size)
 {
   Bits bitsWritten = 0;
 
   // Measure every element
-  for(size_t i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
     bitsWritten += Measure(array[i]);
 
   return bitsWritten;
@@ -186,24 +193,32 @@ inline Bits BitStream::Measure(UintN<N, WrapAware> value)
 {
   return MeasureQuantized(value.min, value.max);
 }
-template<typename T>
-inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Measure(const T& value)
+template <typename T>
+inline R_ENABLE_IF(!is_scalar<T>::value,
+                   Bits) BitStream::Measure(const T& value)
 {
   // Invoke user-defined function
   return Zero::Measure(const_cast<T&>(value));
 }
 
-template<typename R>
-inline R_ENABLE_IF(is_enum<R>::value && is_enum_or_integral<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+template <typename R>
+inline R_ENABLE_IF(is_enum<R>::value&& is_enum_or_integral<R>::value,
+                   Bits) BitStream::MeasureQuantized(R minValue_,
+                                                     R maxValue_,
+                                                     R quantum_)
 {
   // Typedefs
   typedef EXACT_INT(BYTES_TO_BITS(sizeof(R))) intType;
 
   // Measure enum as integer
-  return MeasureQuantized((intType)minValue_, (intType)maxValue_, (intType)quantum_);
+  return MeasureQuantized(
+      (intType)minValue_, (intType)maxValue_, (intType)quantum_);
 }
-template<typename R>
-inline R_ENABLE_IF(is_integral<R>::value && is_integral<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+template <typename R>
+inline R_ENABLE_IF(is_integral<R>::value&& is_integral<R>::value,
+                   Bits) BitStream::MeasureQuantized(R minValue_,
+                                                     R maxValue_,
+                                                     R quantum_)
 {
   //
   // Setup
@@ -211,8 +226,8 @@ inline R_ENABLE_IF(is_integral<R>::value && is_integral<R>::value, Bits) BitStre
 
   // Typedefs
   typedef typename conditional<is_signed<R>::value, R, R>::type V;
-  typedef typename make_unsigned<V>::type                       UV;
-  typedef double                                                F;
+  typedef typename make_unsigned<V>::type UV;
+  typedef double F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
@@ -221,9 +236,9 @@ inline R_ENABLE_IF(is_integral<R>::value && is_integral<R>::value, Bits) BitStre
   Assert(quantum_ > 0);
 
   // Cast all parameters to the appropriate types
-  V  minValue = V(minValue_);
-  V  maxValue = V(maxValue_);
-  UV quantum  = UV(quantum_);
+  V minValue = V(minValue_);
+  V maxValue = V(maxValue_);
+  UV quantum = UV(quantum_);
 
   // Normalize range
   UV normalizedRange = UV(maxValue - minValue);
@@ -235,8 +250,11 @@ inline R_ENABLE_IF(is_integral<R>::value && is_integral<R>::value, Bits) BitStre
   Bits bitSize = BitsNeededToRepresent(quantizedRange);
   return bitSize;
 }
-template<typename R>
-inline R_ENABLE_IF(is_floating_point<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+template <typename R>
+inline R_ENABLE_IF(is_floating_point<R>::value,
+                   Bits) BitStream::MeasureQuantized(R minValue_,
+                                                     R maxValue_,
+                                                     R quantum_)
 {
   //
   // Setup
@@ -244,8 +262,8 @@ inline R_ENABLE_IF(is_floating_point<R>::value, Bits) BitStream::MeasureQuantize
 
   // Typedefs
   typedef EXACT_UINT(BYTES_TO_BITS(sizeof(R))) V;
-  typedef typename make_unsigned<V>::type      UV;
-  typedef R                                    F;
+  typedef typename make_unsigned<V>::type UV;
+  typedef R F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
@@ -256,7 +274,7 @@ inline R_ENABLE_IF(is_floating_point<R>::value, Bits) BitStream::MeasureQuantize
   // Cast all parameters to the appropriate types
   F minValue = F(minValue_);
   F maxValue = F(maxValue_);
-  F quantum  = F(quantum_);
+  F quantum = F(quantum_);
 
   // Normalize range
   F normalizedRange = (maxValue - minValue);
@@ -270,16 +288,23 @@ inline R_ENABLE_IF(is_floating_point<R>::value, Bits) BitStream::MeasureQuantize
   return bitSize;
 }
 template <Bits N, bool WrapAware, typename R>
-inline R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_enum_or_integral<R>::value,
+                   Bits) BitStream::MeasureQuantized(R minValue_,
+                                                     R maxValue_,
+                                                     R quantum_)
 {
   // Typedefs
   typedef typename UintN<N, WrapAware>::value_type value_type;
 
   // Measure UintN as integer
-  return MeasureQuantized((value_type)minValue_, (value_type)maxValue_, (value_type)quantum_);
+  return MeasureQuantized(
+      (value_type)minValue_, (value_type)maxValue_, (value_type)quantum_);
 }
-template<typename R>
-inline R_ENABLE_IF(!is_scalar<R>::value, Bits) BitStream::MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
+template <typename R>
+inline R_ENABLE_IF(!is_scalar<R>::value,
+                   Bits) BitStream::MeasureQuantized(const R& minValue_,
+                                                     const R& maxValue_,
+                                                     const R& quantum_)
 {
   // Invoke user-defined function
   return Zero::MeasureQuantized(minValue_, maxValue_, quantum_);
@@ -289,108 +314,142 @@ inline R_ENABLE_IF(!is_scalar<R>::value, Bits) BitStream::MeasureQuantized(const
 // Serialize Operations
 //
 
-inline Bits BitStream::SerializeBit(SerializeDirection::Enum direction, bool& value)
+inline Bits BitStream::SerializeBit(SerializeDirection::Enum direction,
+                                    bool& value)
 {
   return (direction == SerializeDirection::Write) ? WriteBit(value)
                                                   : ReadBit(value);
 }
-inline Bits BitStream::SerializeBits(SerializeDirection::Enum direction, byte* data, Bits dataBits)
+inline Bits BitStream::SerializeBits(SerializeDirection::Enum direction,
+                                     byte* data,
+                                     Bits dataBits)
 {
   return (direction == SerializeDirection::Write) ? WriteBits(data, dataBits)
                                                   : ReadBits(data, dataBits);
 }
 
-inline Bits BitStream::SerializeByte(SerializeDirection::Enum direction, uint8& value)
+inline Bits BitStream::SerializeByte(SerializeDirection::Enum direction,
+                                     uint8& value)
 {
   return (direction == SerializeDirection::Write) ? WriteByte(value)
                                                   : ReadByte(value);
 }
-inline Bits BitStream::SerializeBytes(SerializeDirection::Enum direction, byte* data, Bytes dataBytes)
+inline Bits BitStream::SerializeBytes(SerializeDirection::Enum direction,
+                                      byte* data,
+                                      Bytes dataBytes)
 {
   return (direction == SerializeDirection::Write) ? WriteBytes(data, dataBytes)
                                                   : ReadBytes(data, dataBytes);
 }
 
-inline Bits BitStream::Serialize(SerializeDirection::Enum direction, bool& value)
+inline Bits BitStream::Serialize(SerializeDirection::Enum direction,
+                                 bool& value)
 {
-  return (direction == SerializeDirection::Write) ? Write(value)
-                                                  : Read(value);
+  return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
-inline Bits BitStream::Serialize(SerializeDirection::Enum direction, String& value)
+inline Bits BitStream::Serialize(SerializeDirection::Enum direction,
+                                 String& value)
 {
-  return (direction == SerializeDirection::Write) ? Write(value)
-                                                  : Read(value);
+  return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
-template<typename T>
-inline R_ENABLE_IF(is_enum_or_integral<T>::value, Bits) BitStream::Serialize(SerializeDirection::Enum direction, T& value)
+template <typename T>
+inline R_ENABLE_IF(is_enum_or_integral<T>::value, Bits) BitStream::Serialize(
+    SerializeDirection::Enum direction, T& value)
 {
-  return (direction == SerializeDirection::Write) ? Write(value)
-                                                  : Read(value);
+  return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
-template<typename T>
-inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Serialize(SerializeDirection::Enum direction, T& value)
+template <typename T>
+inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Serialize(
+    SerializeDirection::Enum direction, T& value)
 {
-  return (direction == SerializeDirection::Write) ? Write(value)
-                                                  : Read(value);
+  return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
-template<typename T, size_t Size>
-inline Bits BitStream::Serialize(SerializeDirection::Enum direction, const T (& array)[Size])
+template <typename T, size_t Size>
+inline Bits BitStream::Serialize(SerializeDirection::Enum direction,
+                                 const T (&array)[Size])
 {
   Bits bitsSerialized = 0;
 
   // Serialize every element
-  for(size_t i = 0; i < Size; ++i)
+  for (size_t i = 0; i < Size; ++i)
     bitsSerialized += Serialize(direction, array[i]);
 
   return bitsSerialized;
 }
-template<typename T>
-inline Bits BitStream::Serialize(SerializeDirection::Enum direction, const T* array, size_t size)
+template <typename T>
+inline Bits BitStream::Serialize(SerializeDirection::Enum direction,
+                                 const T* array,
+                                 size_t size)
 {
   Bits bitsSerialized = 0;
 
   // Serialize every element
-  for(size_t i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
     bitsSerialized += Serialize(direction, array[i]);
 
   return bitsSerialized;
 }
 template <Bits N, bool WrapAware>
-inline Bits BitStream::Serialize(SerializeDirection::Enum direction, UintN<N, WrapAware>& value)
+inline Bits BitStream::Serialize(SerializeDirection::Enum direction,
+                                 UintN<N, WrapAware>& value)
 {
-  return (direction == SerializeDirection::Write) ? Write(value)
-                                                  : Read(value);
+  return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
-template<typename T>
-inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Serialize(SerializeDirection::Enum direction, T& value)
+template <typename T>
+inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Serialize(
+    SerializeDirection::Enum direction, T& value)
 {
   // Invoke user-defined function
   return Zero::Serialize(direction, *this, value);
 }
 
-template<typename T, typename R>
-R_ENABLE_IF(is_enum_or_integral<T>::value && is_enum_or_integral<R>::value, Bits) BitStream::SerializeQuantized(SerializeDirection::Enum direction, T& value_, R minValue_, R maxValue_, R quantum_)
+template <typename T, typename R>
+R_ENABLE_IF(is_enum_or_integral<T>::value&& is_enum_or_integral<R>::value, Bits)
+BitStream::SerializeQuantized(SerializeDirection::Enum direction,
+                              T& value_,
+                              R minValue_,
+                              R maxValue_,
+                              R quantum_)
 {
-  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
-                                                  : ReadQuantized(value_, minValue_, maxValue_, quantum_);
+  return (direction == SerializeDirection::Write)
+             ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
+             : ReadQuantized(value_, minValue_, maxValue_, quantum_);
 }
-template<typename T, typename R>
-R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::SerializeQuantized(SerializeDirection::Enum direction, T& value_, R minValue_, R maxValue_, R quantum_)
+template <typename T, typename R>
+R_ENABLE_IF(is_floating_point<T>::value, Bits)
+BitStream::SerializeQuantized(SerializeDirection::Enum direction,
+                              T& value_,
+                              R minValue_,
+                              R maxValue_,
+                              R quantum_)
 {
-  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
-                                                  : ReadQuantized(value_, minValue_, maxValue_, quantum_);
+  return (direction == SerializeDirection::Write)
+             ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
+             : ReadQuantized(value_, minValue_, maxValue_, quantum_);
 }
 template <Bits N, bool WrapAware, typename R>
-R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) BitStream::SerializeQuantized(SerializeDirection::Enum direction, UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_)
+R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
+BitStream::SerializeQuantized(SerializeDirection::Enum direction,
+                              UintN<N, WrapAware>& value_,
+                              R minValue_,
+                              R maxValue_,
+                              R quantum_)
 {
-  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
-                                                  : ReadQuantized(value_, minValue_, maxValue_, quantum_);
+  return (direction == SerializeDirection::Write)
+             ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
+             : ReadQuantized(value_, minValue_, maxValue_, quantum_);
 }
-template<typename T, typename R>
-R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::SerializeQuantized(SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
+template <typename T, typename R>
+R_ENABLE_IF(!is_scalar<T>::value, Bits)
+BitStream::SerializeQuantized(SerializeDirection::Enum direction,
+                              T& value_,
+                              const R& minValue_,
+                              const R& maxValue_,
+                              const R& quantum_)
 {
   // Invoke user-defined function
-  return Zero::SerializeQuantized(direction, *this, value_, minValue_, maxValue_, quantum_);
+  return Zero::SerializeQuantized(
+      direction, *this, value_, minValue_, maxValue_, quantum_);
 }
 
 //
@@ -402,7 +461,7 @@ inline Bits BitStream::Write(bool value)
   return WriteBit(value);
 }
 
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_enum<T>::value, Bits) BitStream::Write(T value)
 {
   // Typedefs
@@ -411,7 +470,7 @@ inline R_ENABLE_IF(is_enum<T>::value, Bits) BitStream::Write(T value)
   // Write enum as integer
   return Write((intType)value);
 }
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_integral<T>::value, Bits) BitStream::Write(T value)
 {
   // Flip to big endian
@@ -420,27 +479,29 @@ inline R_ENABLE_IF(is_integral<T>::value, Bits) BitStream::Write(T value)
   // Write value
   return WriteBits((const byte*)&value, BYTES_TO_BITS(sizeof(value)));
 }
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Write(T value)
 {
   // Finite value (not NaN or infinity) check
-  Assert(-std::numeric_limits<T>::max() <= value && value <= std::numeric_limits<T>::max());
+  Assert(-std::numeric_limits<T>::max() <= value &&
+         value <= std::numeric_limits<T>::max());
 
 #if BITSTREAM_USE_PORTABLE_FLOATING_POINT
 
-  const Bits totalBits = BYTES_TO_BITS(sizeof(T));       // Total bits (sign + exp + mant)
-  Bits       mantBits  = std::numeric_limits<T>::digits; // Mantissa bits
-  Bits       expBits   = totalBits - mantBits;           // Exponent bits
-  --mantBits;                                            // Sign bit
+  const Bits totalBits =
+      BYTES_TO_BITS(sizeof(T)); // Total bits (sign + exp + mant)
+  Bits mantBits = std::numeric_limits<T>::digits; // Mantissa bits
+  Bits expBits = totalBits - mantBits;            // Exponent bits
+  --mantBits;                                     // Sign bit
   Assert(totalBits == (1 + expBits + mantBits));
 
   // Typedefs
   typedef EXACT_UINT(BYTES_TO_BITS(sizeof(T))) uintType;
-  typedef EXACT_INT(BYTES_TO_BITS(sizeof(T)))  intType;
+  typedef EXACT_INT(BYTES_TO_BITS(sizeof(T))) intType;
 
   // Convert to IEEE-754
   uintType result;
-  if(value == T(0))
+  if (value == T(0))
     result = 0;
   else
   {
@@ -448,7 +509,7 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Write(T value)
 
     // Get sign bit, begin normalization
     uintType sign = 0;
-    if(value < T(0))
+    if (value < T(0))
     {
       sign = 1;
       normValue *= T(-1);
@@ -456,12 +517,12 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Write(T value)
 
     // Get exponent shift, finish normalization
     intType shift = 0;
-    while(normValue >= T(2))
+    while (normValue >= T(2))
     {
       normValue /= T(2);
       ++shift;
     }
-    while(normValue < T(1))
+    while (normValue < T(1))
     {
       normValue *= T(2);
       --shift;
@@ -469,11 +530,13 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Write(T value)
     --normValue;
 
     // Get mantissa and exponent, stored as unsigned integers
-    uintType mantissa = uintType(normValue * (T(uintType(1) << mantBits) + T(0.5)));
+    uintType mantissa =
+        uintType(normValue * (T(uintType(1) << mantBits) + T(0.5)));
     uintType exponent = shift + (uintType(1) << (expBits - 1)) - 1;
 
     // Concatenate result (Sign | Exponent | Mantissa)
-    result = (sign << (totalBits - 1)) | (exponent << (totalBits - expBits - 1)) | mantissa;
+    result = (sign << (totalBits - 1)) |
+             (exponent << (totalBits - expBits - 1)) | mantissa;
   }
 
   // Flip to big endian
@@ -492,24 +555,24 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Write(T value)
 
 #endif
 }
-template<typename T, size_t Size>
-inline Bits BitStream::Write(const T (& array)[Size])
+template <typename T, size_t Size>
+inline Bits BitStream::Write(const T (&array)[Size])
 {
   Bits bitsWritten = 0;
 
   // Write every element
-  for(size_t i = 0; i < Size; ++i)
+  for (size_t i = 0; i < Size; ++i)
     bitsWritten += Write(array[i]);
 
   return bitsWritten;
 }
-template<typename T>
+template <typename T>
 inline Bits BitStream::Write(const T* array, size_t size)
 {
   Bits bitsWritten = 0;
 
   // Write every element
-  for(size_t i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
     bitsWritten += Write(array[i]);
 
   return bitsWritten;
@@ -519,24 +582,30 @@ inline Bits BitStream::Write(UintN<N, WrapAware> value)
 {
   return WriteQuantized(value.value(), value.min, value.max);
 }
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Write(const T& value)
 {
   // Invoke user-defined function
-  return Zero::Serialize(SerializeDirection::Write, *this, const_cast<T&>(value));
+  return Zero::Serialize(
+      SerializeDirection::Write, *this, const_cast<T&>(value));
 }
 
-template<typename T, typename R>
-inline R_ENABLE_IF(is_enum<T>::value && is_enum_or_integral<R>::value, Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
+template <typename T, typename R>
+inline R_ENABLE_IF(is_enum<T>::value&& is_enum_or_integral<R>::value, Bits)
+    BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
 {
   // Typedefs
   typedef EXACT_INT(BYTES_TO_BITS(sizeof(T))) intType;
 
   // Write enum as integer
-  return WriteQuantized((intType)value_, (intType)minValue_, (intType)maxValue_, (intType)quantum_);
+  return WriteQuantized((intType)value_,
+                        (intType)minValue_,
+                        (intType)maxValue_,
+                        (intType)quantum_);
 }
-template<typename T, typename R>
-inline R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
+template <typename T, typename R>
+inline R_ENABLE_IF(is_integral<T>::value&& is_integral<R>::value, Bits)
+    BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
 {
   //
   // Setup
@@ -544,8 +613,8 @@ inline R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStre
 
   // Typedefs
   typedef typename conditional<is_signed<R>::value, R, T>::type V;
-  typedef typename make_unsigned<V>::type                       UV;
-  typedef double                                                F;
+  typedef typename make_unsigned<V>::type UV;
+  typedef double F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
@@ -554,10 +623,10 @@ inline R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStre
   Assert(quantum_ > 0);
 
   // Cast all parameters to the appropriate types
-  V  value    = V(value_);
-  V  minValue = V(minValue_);
-  V  maxValue = V(maxValue_);
-  UV quantum  = UV(quantum_);
+  V value = V(value_);
+  V minValue = V(minValue_);
+  V maxValue = V(maxValue_);
+  UV quantum = UV(quantum_);
 
   // Normalize range
   UV normalizedRange = UV(maxValue - minValue);
@@ -582,16 +651,19 @@ inline R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStre
   UV quantizedValue = (UV)Round((F)normalizedValue / (F)quantum);
 
   // Left-shift quantized value
-  UV leftShiftedQuantizedValue = (quantizedValue << (BYTES_TO_BITS(sizeof(UV)) - bitSize));
+  UV leftShiftedQuantizedValue =
+      (quantizedValue << (BYTES_TO_BITS(sizeof(UV)) - bitSize));
 
-  // Convert to network byte order (big endian), which is naturally right-aligned, as necessary
+  // Convert to network byte order (big endian), which is naturally
+  // right-aligned, as necessary
   UV rightAlignedQuantizedValue = NetworkFlip(leftShiftedQuantizedValue);
 
   // Write the right-aligned quantized value
   return WriteBits((const byte*)&rightAlignedQuantizedValue, bitSize);
 }
-template<typename T, typename R>
-inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
+template <typename T, typename R>
+inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::WriteQuantized(
+    T value_, R minValue_, R maxValue_, R quantum_)
 {
   //
   // Setup
@@ -599,8 +671,8 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::WriteQuantized(
 
   // Typedefs
   typedef EXACT_UINT(BYTES_TO_BITS(sizeof(T))) V;
-  typedef typename make_unsigned<V>::type      UV;
-  typedef T                                    F;
+  typedef typename make_unsigned<V>::type UV;
+  typedef T F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
@@ -609,10 +681,10 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::WriteQuantized(
   Assert(quantum_ > 0);
 
   // Cast all parameters to the appropriate types
-  F value    = F(value_);
+  F value = F(value_);
   F minValue = F(minValue_);
   F maxValue = F(maxValue_);
-  F quantum  = F(quantum_);
+  F quantum = F(quantum_);
 
   // Normalize range
   F normalizedRange = (maxValue - minValue);
@@ -639,28 +711,43 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::WriteQuantized(
   UV quantizedValue = (UV)Round(normalizedValue / quantum);
 
   // Left-shift quantized value
-  UV leftShiftedQuantizedValue = (quantizedValue << (BYTES_TO_BITS(sizeof(UV)) - bitSize));
+  UV leftShiftedQuantizedValue =
+      (quantizedValue << (BYTES_TO_BITS(sizeof(UV)) - bitSize));
 
-  // Convert to network byte order (big endian), which is naturally right-aligned, as necessary
+  // Convert to network byte order (big endian), which is naturally
+  // right-aligned, as necessary
   UV rightAlignedQuantizedValue = NetworkFlip(leftShiftedQuantizedValue);
 
   // Write the right-aligned quantized value
   return WriteBits((const byte*)&rightAlignedQuantizedValue, bitSize);
 }
 template <Bits N, bool WrapAware, typename R>
-inline R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) BitStream::WriteQuantized(UintN<N, WrapAware> value_, R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_enum_or_integral<R>::value,
+                   Bits) BitStream::WriteQuantized(UintN<N, WrapAware> value_,
+                                                   R minValue_,
+                                                   R maxValue_,
+                                                   R quantum_)
 {
   // Typedefs
   typedef typename UintN<N, WrapAware>::value_type value_type;
 
   // Write UintN as integer
-  return WriteQuantized(value_.value(), (value_type)minValue_, (value_type)maxValue_, (value_type)quantum_);
+  return WriteQuantized(value_.value(),
+                        (value_type)minValue_,
+                        (value_type)maxValue_,
+                        (value_type)quantum_);
 }
-template<typename T, typename R>
-inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::WriteQuantized(const T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
+template <typename T, typename R>
+inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::WriteQuantized(
+    const T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   // Invoke user-defined function
-  return Zero::SerializeQuantized(SerializeDirection::Write, *this, const_cast<T&>(value_), minValue_, maxValue_, quantum_);
+  return Zero::SerializeQuantized(SerializeDirection::Write,
+                                  *this,
+                                  const_cast<T&>(value_),
+                                  minValue_,
+                                  maxValue_,
+                                  quantum_);
 }
 
 inline Bits BitStream::Append(const BitStream& bitStream)
@@ -689,7 +776,8 @@ inline Bits BitStream::TrimFront()
 
 // inline void BitStream::Unwrite(Bits bitsToUnwrite)
 // {
-//   mBitsWritten = (mBitsWritten > bitsToUnwrite) ? (mBitsWritten - bitsToUnwrite) : 0;
+//   mBitsWritten = (mBitsWritten > bitsToUnwrite) ? (mBitsWritten -
+//   bitsToUnwrite) : 0;
 // }
 
 inline void BitStream::SetBitsWritten(Bits bitsWritten)
@@ -714,7 +802,7 @@ inline Bits BitStream::Read(bool& value) const
   return ReadBit(value);
 }
 
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_enum<T>::value, Bits) BitStream::Read(T& value) const
 {
   // Typedefs
@@ -723,12 +811,12 @@ inline R_ENABLE_IF(is_enum<T>::value, Bits) BitStream::Read(T& value) const
   // Read enum as integer
   return Read((intType&)value);
 }
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(is_integral<T>::value, Bits) BitStream::Read(T& value) const
 {
   // Read the value
   Bits bitsRead = ReadBits((byte*)&value, BYTES_TO_BITS(sizeof(value)));
-  if(!bitsRead) // Unable?
+  if (!bitsRead) // Unable?
     return 0;
 
   // Flip from big endian
@@ -737,55 +825,59 @@ inline R_ENABLE_IF(is_integral<T>::value, Bits) BitStream::Read(T& value) const
   // Result
   return bitsRead;
 }
-template<typename T>
-inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Read(T& value) const
+template <typename T>
+inline R_ENABLE_IF(is_floating_point<T>::value,
+                   Bits) BitStream::Read(T& value) const
 {
 #if BITSTREAM_USE_PORTABLE_FLOATING_POINT
 
-  const Bits totalBits = BYTES_TO_BITS(sizeof(T));       // Total bits (sign + exp + mant)
-  Bits mantBits        = std::numeric_limits<T>::digits; // Mantissa bits
-  Bits expBits         = totalBits - mantBits;           // Exponent bits
-  --mantBits;                                            // Sign bit
+  const Bits totalBits =
+      BYTES_TO_BITS(sizeof(T)); // Total bits (sign + exp + mant)
+  Bits mantBits = std::numeric_limits<T>::digits; // Mantissa bits
+  Bits expBits = totalBits - mantBits;            // Exponent bits
+  --mantBits;                                     // Sign bit
   Assert(totalBits == (1 + expBits + mantBits));
 
   // Typedefs
   typedef EXACT_UINT(BYTES_TO_BITS(sizeof(T))) uintType;
-  typedef EXACT_INT(BYTES_TO_BITS(sizeof(T)))  intType;
+  typedef EXACT_INT(BYTES_TO_BITS(sizeof(T))) intType;
 
   // Read the result
   uintType result = 0;
   Bits bitsRead = ReadBits((byte*)&result, totalBits);
-  if(!bitsRead) // Unable?
+  if (!bitsRead) // Unable?
     return 0;
 
   // Flip from big endian
   result = NetworkFlip(result);
 
   // Convert from IEEE-754
-  if(result == 0)
+  if (result == 0)
     value = T(0);
   else
   {
     T normValue = T(1); // Implicit 1.0
 
     // Read the mantissa
-    normValue += T(result & ((uintType(1) << mantBits) - 1)) / T(uintType(1) << mantBits);
+    normValue += T(result & ((uintType(1) << mantBits) - 1)) /
+                 T(uintType(1) << mantBits);
 
     // Read the exponent
-    intType shift = ((result >> mantBits) & ((uintType(1) << expBits) - 1)) - ((uintType(1) << (expBits - 1)) - 1);
-    while(shift > T(0))
+    intType shift = ((result >> mantBits) & ((uintType(1) << expBits) - 1)) -
+                    ((uintType(1) << (expBits - 1)) - 1);
+    while (shift > T(0))
     {
       normValue *= T(2);
       --shift;
     }
-    while(shift < T(0))
+    while (shift < T(0))
     {
       normValue /= T(2);
       ++shift;
     }
 
     // Read the sign
-    if((result >> (totalBits - 1)) & 1)
+    if ((result >> (totalBits - 1)) & 1)
       normValue *= T(-1);
 
     value = normValue;
@@ -798,7 +890,7 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Read(T& value) 
 
   // Read the value
   Bits bitsRead = ReadBits((byte*)&value, BYTES_TO_BITS(sizeof(value)));
-  if(!bitsRead) // Unable?
+  if (!bitsRead) // Unable?
     return 0;
 
   // Flip from big endian
@@ -809,24 +901,24 @@ inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::Read(T& value) 
 
 #endif
 }
-template<typename T, size_t Size>
-inline Bits BitStream::Read(T (& array)[Size])
+template <typename T, size_t Size>
+inline Bits BitStream::Read(T (&array)[Size])
 {
   Bits bitsRead = 0;
 
   // Read every element
-  for(size_t i = 0; i < Size; ++i)
+  for (size_t i = 0; i < Size; ++i)
     bitsRead += Read(array[i]);
 
   return bitsRead;
 }
-template<typename T>
+template <typename T>
 inline Bits BitStream::Read(T* array, size_t size)
 {
   Bits bitsRead = 0;
 
   // Read every element
-  for(size_t i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
     bitsRead += Read(array[i]);
 
   return bitsRead;
@@ -836,24 +928,30 @@ inline Bits BitStream::Read(UintN<N, WrapAware>& value) const
 {
   return ReadQuantized(value.value(), value.min, value.max);
 }
-template<typename T>
+template <typename T>
 inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Read(T& value) const
 {
   // Invoke user-defined function
-  return Zero::Serialize(SerializeDirection::Read, *const_cast<BitStream*>(this), value);
+  return Zero::Serialize(
+      SerializeDirection::Read, *const_cast<BitStream*>(this), value);
 }
 
-template<typename T, typename R>
-R_ENABLE_IF(is_enum<T>::value && is_enum_or_integral<R>::value, Bits) BitStream::ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_) const
+template <typename T, typename R>
+R_ENABLE_IF(is_enum<T>::value&& is_enum_or_integral<R>::value, Bits)
+BitStream::ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_) const
 {
   // Typedefs
   typedef EXACT_INT(BYTES_TO_BITS(sizeof(T))) intType;
 
   // Read enum as integer
-  return ReadQuantized((intType&)value_, (intType)minValue_, (intType)maxValue_, (intType)quantum_);
+  return ReadQuantized((intType&)value_,
+                       (intType)minValue_,
+                       (intType)maxValue_,
+                       (intType)quantum_);
 }
-template<typename T, typename R>
-R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_) const
+template <typename T, typename R>
+R_ENABLE_IF(is_integral<T>::value&& is_integral<R>::value, Bits)
+BitStream::ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_) const
 {
   //
   // Setup
@@ -861,8 +959,8 @@ R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::Rea
 
   // Typedefs
   typedef typename conditional<is_signed<R>::value, R, T>::type V;
-  typedef typename make_unsigned<V>::type                       UV;
-  //typedef double                                                F;
+  typedef typename make_unsigned<V>::type UV;
+  // typedef double                                                F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
@@ -871,10 +969,10 @@ R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::Rea
   Assert(quantum_ > 0);
 
   // Cast all parameters to the appropriate types
-  T& value    = value_;
-  V  minValue = V(minValue_);
-  V  maxValue = V(maxValue_);
-  UV quantum  = UV(quantum_);
+  T& value = value_;
+  V minValue = V(minValue_);
+  V maxValue = V(maxValue_);
+  UV quantum = UV(quantum_);
 
   // Normalize range
   UV normalizedRange = UV(maxValue - minValue);
@@ -892,14 +990,16 @@ R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::Rea
   // Read the right-aligned quantized value
   UV rightAlignedQuantizedValue;
   Bits bitsRead = ReadBits((byte*)&rightAlignedQuantizedValue, bitSize);
-  if(!bitsRead) // Unable?
+  if (!bitsRead) // Unable?
     return 0;
 
-  // Convert from network byte order (big endian), which is naturally right-aligned, as necessary
+  // Convert from network byte order (big endian), which is naturally
+  // right-aligned, as necessary
   UV leftShiftedQuantizedValue = NetworkFlip(rightAlignedQuantizedValue);
 
   // Right-shift left-shifted quantized value
-  UV quantizedValue = (leftShiftedQuantizedValue >> (BYTES_TO_BITS(sizeof(UV)) - bitSize));
+  UV quantizedValue =
+      (leftShiftedQuantizedValue >> (BYTES_TO_BITS(sizeof(UV)) - bitSize));
 
   // Dequantize value
   UV normalizedValue = (quantizedValue * quantum);
@@ -911,8 +1011,9 @@ R_ENABLE_IF(is_integral<T>::value && is_integral<R>::value, Bits) BitStream::Rea
   value = (T)clampedValue;
   return bitsRead;
 }
-template<typename T, typename R>
-R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_) const
+template <typename T, typename R>
+R_ENABLE_IF(is_floating_point<T>::value, Bits)
+BitStream::ReadQuantized(T& value_, R minValue_, R maxValue_, R quantum_) const
 {
   //
   // Setup
@@ -920,8 +1021,8 @@ R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::ReadQuantized(T& value
 
   // Typedefs
   typedef EXACT_UINT(BYTES_TO_BITS(sizeof(T))) V;
-  typedef typename make_unsigned<V>::type      UV;
-  typedef T                                    F;
+  typedef typename make_unsigned<V>::type UV;
+  typedef T F;
 
   // (Range should be valid)
   Assert(minValue_ <= maxValue_);
@@ -930,10 +1031,10 @@ R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::ReadQuantized(T& value
   Assert(quantum_ > 0);
 
   // Cast all parameters to the appropriate types
-  T& value   = value_;
+  T& value = value_;
   F minValue = F(minValue_);
   F maxValue = F(maxValue_);
-  F quantum  = F(quantum_);
+  F quantum = F(quantum_);
 
   // Normalize range
   F normalizedRange = (maxValue - minValue);
@@ -952,14 +1053,16 @@ R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::ReadQuantized(T& value
   // Read the right-aligned quantized value
   UV rightAlignedQuantizedValue;
   Bits bitsRead = ReadBits((byte*)&rightAlignedQuantizedValue, bitSize);
-  if(!bitsRead) // Unable?
+  if (!bitsRead) // Unable?
     return 0;
 
-  // Convert from network byte order (big endian), which is naturally right-aligned, as necessary
+  // Convert from network byte order (big endian), which is naturally
+  // right-aligned, as necessary
   UV leftShiftedQuantizedValue = NetworkFlip(rightAlignedQuantizedValue);
 
   // Right-shift left-shifted quantized value
-  UV quantizedValue = (leftShiftedQuantizedValue >> (BYTES_TO_BITS(sizeof(UV)) - bitSize));
+  UV quantizedValue =
+      (leftShiftedQuantizedValue >> (BYTES_TO_BITS(sizeof(UV)) - bitSize));
 
   // Dequantize value
   F normalizedValue = ((F)quantizedValue * quantum);
@@ -973,19 +1076,35 @@ R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::ReadQuantized(T& value
   return bitsRead;
 }
 template <Bits N, bool WrapAware, typename R>
-R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) BitStream::ReadQuantized(UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_) const
+R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
+BitStream::ReadQuantized(UintN<N, WrapAware>& value_,
+                         R minValue_,
+                         R maxValue_,
+                         R quantum_) const
 {
   // Typedefs
   typedef typename UintN<N, WrapAware>::value_type value_type;
 
   // Read UintN as integer
-  return ReadQuantized(value_.value(), (value_type)minValue_, (value_type)maxValue_, (value_type)quantum_);
+  return ReadQuantized(value_.value(),
+                       (value_type)minValue_,
+                       (value_type)maxValue_,
+                       (value_type)quantum_);
 }
-template<typename T, typename R>
-R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::ReadQuantized(T& value_, const R& minValue_, const R& maxValue_, const R& quantum_) const
+template <typename T, typename R>
+R_ENABLE_IF(!is_scalar<T>::value, Bits)
+BitStream::ReadQuantized(T& value_,
+                         const R& minValue_,
+                         const R& maxValue_,
+                         const R& quantum_) const
 {
   // Invoke user-defined function
-  return Zero::SerializeQuantized(SerializeDirection::Read, *const_cast<BitStream*>(this), value_, minValue_, maxValue_, quantum_);
+  return Zero::SerializeQuantized(SerializeDirection::Read,
+                                  *const_cast<BitStream*>(this),
+                                  value_,
+                                  minValue_,
+                                  maxValue_,
+                                  quantum_);
 }
 
 inline void BitStream::Unread(Bits bitsToUnread) const

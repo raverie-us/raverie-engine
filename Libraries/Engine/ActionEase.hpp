@@ -1,28 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//Interpolation Policies
+// Interpolation Policies
 namespace Interpolation
 {
 
-template<typename type>
+template <typename type>
 struct Lerp
 {
   static inline type Interpolate(type& t0, type& t1, float t)
   {
-    return type((1 - t) * t0  + t *  t1);
+    return type((1 - t) * t0 + t * t1);
   }
 };
 
-template<>
+template <>
 struct Lerp<Quat>
 {
   static inline Quat Interpolate(Quat& t0, Quat& t1, float t)
@@ -31,7 +26,7 @@ struct Lerp<Quat>
   }
 };
 
-template<>
+template <>
 struct Lerp<bool>
 {
   static inline bool Interpolate(bool& t0, bool& t1, float t)
@@ -40,7 +35,7 @@ struct Lerp<bool>
   }
 };
 
-template<>
+template <>
 struct Lerp<String>
 {
   static inline String Interpolate(String& t0, String& t1, float t)
@@ -49,7 +44,8 @@ struct Lerp<String>
       return t0;
     if (t >= 1.0f)
       return t1;
-    // compute rune count is not the most efficient, might need optimization later - Dane
+    // compute rune count is not the most efficient, might need optimization
+    // later - Dane
     int t0Size = (int)t0.ComputeRuneCount();
     int t1Size = (int)t1.ComputeRuneCount();
 
@@ -77,14 +73,15 @@ struct Lerp<String>
 
     int runeIndex = (int)runeFloatIndex;
     float leftoverT = runeFloatIndex - runeIndex;
-    
+
     StringBuilder buffer;
-    
+
     if (smallToLarge)
     {
       startRune = ' ';
       if (runeIndex < t0Size)
-        // moving forward from the begin iterator is also not very fast, just updating logic for UTF8
+        // moving forward from the begin iterator is also not very fast, just
+        // updating logic for UTF8
         startRune = *(t0.Begin() + runeIndex);
       endRune = *(t1.Begin() + runeIndex);
     }
@@ -102,8 +99,9 @@ struct Lerp<String>
       buffer.Append(*it);
     }
 
-    int lerpValue = (int)Math::Lerp((float)startRune.value, (float)endRune.value, leftoverT);
-    buffer.Append( Rune(lerpValue) );
+    int lerpValue = (int)Math::Lerp(
+        (float)startRune.value, (float)endRune.value, leftoverT);
+    buffer.Append(Rune(lerpValue));
 
     it = smallStr->Begin() + (runeIndex + 1);
     StringIterator smallEnd = smallStr->End();
@@ -116,9 +114,9 @@ struct Lerp<String>
   }
 };
 
-}
+} // namespace Interpolation
 
-//Ease Functions
+// Ease Functions
 namespace Ease
 {
 struct Linear
@@ -148,12 +146,12 @@ struct Quad
 
   static inline float Out(float t)
   {
-    return -(t * (t-2));
+    return -(t * (t - 2));
   }
 
   static inline float InOut(float t)
   {
-    if(t < 0.5f)
+    if (t < 0.5f)
       return 2 * t * t;
     else
       return (-2 * t * t) + (4 * t) - 1;
@@ -193,10 +191,12 @@ struct Elastic
 
     float exponent = 10.0f;
     float period = 0.3f;
-    
-    float valueAtX = Math::Pow(2.0f, exponent * (t - 1.0f)) * Math::Cos(Math::cTwoPi * (t - 1.0f) / period);
-    float verticalShift = -0.00048828125f;       // for default exponent and period
-    float verticalScale = 1.0f - verticalShift;  // 1.00048828125 for default exponent and period
+
+    float valueAtX = Math::Pow(2.0f, exponent * (t - 1.0f)) *
+                     Math::Cos(Math::cTwoPi * (t - 1.0f) / period);
+    float verticalShift = -0.00048828125f; // for default exponent and period
+    float verticalScale =
+        1.0f - verticalShift; // 1.00048828125 for default exponent and period
     return (valueAtX - verticalShift) / verticalScale;
   }
 
@@ -210,7 +210,9 @@ struct Elastic
     float exponent = 10.0f;
     float period = 0.3f;
     float verticalScale = 1.00048828125f; // for default exponent and period
-    return (1.0f - Math::Pow(2.0f, -exponent * t) * Math::Cos(Math::cTwoPi * t / period)) / verticalScale;
+    return (1.0f - Math::Pow(2.0f, -exponent * t) *
+                       Math::Cos(Math::cTwoPi * t / period)) /
+           verticalScale;
   }
 
   static inline float InOut(float t)
@@ -300,7 +302,7 @@ struct Back
     if (t >= 1.0f)
       return 1.0f;
 
-    float scale = 1.70158;  // original value defined by Penner
+    float scale = 1.70158; // original value defined by Penner
     return t * t * ((scale + 1.0f) * t - scale);
   }
 
@@ -311,7 +313,7 @@ struct Back
     if (t >= 1.0f)
       return 1.0f;
 
-    float scale = 1.70158;  // original value defined by Penner
+    float scale = 1.70158; // original value defined by Penner
     t -= 1.0f;
     return t * t * ((scale + 1.0f) * t + scale) + 1.0f;
   }
@@ -382,6 +384,6 @@ struct Warp
   static const float MinDifferenceFromAsymptote;
 };
 
-}
+} // namespace Ease
 
-}
+} // namespace Zero

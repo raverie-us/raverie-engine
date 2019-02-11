@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,7 +7,8 @@ namespace Zero
 namespace Physics
 {
 
-Memory::Pool* Island::sPool = new Memory::Pool("Islands", Memory::GetNamedHeap("Physics"), sizeof(Island), 4096 );
+Memory::Pool* Island::sPool = new Memory::Pool(
+    "Islands", Memory::GetNamedHeap("Physics"), sizeof(Island), 4096);
 
 void* Island::operator new(size_t size)
 {
@@ -36,7 +32,7 @@ Island::Island()
 Island::~Island()
 {
   Clear();
-  if(mOwnsSolver)
+  if (mOwnsSolver)
     delete mSolver;
 }
 
@@ -52,11 +48,10 @@ void Island::MergeIsland(Island& island)
   ContactCount += island.ContactCount;
   JointCount += island.JointCount;
 
-  
   mColliders.Splice(mColliders.End(), island.mColliders);
-  if(!island.mJoints.Empty())
+  if (!island.mJoints.Empty())
     mJoints.Splice(mJoints.End(), island.mJoints.All());
-  if(!island.mContacts.Empty())
+  if (!island.mContacts.Empty())
     mContacts.Splice(mContacts.End(), island.mContacts.All());
 }
 
@@ -73,39 +68,41 @@ void Island::Add(Contact* contact)
   Collider* collider2 = contact->GetCollider(1);
   contact->SetOnIsland(true);
   contact->SetValid(false);
-  
-  //if any object is a ghost then don't resolve
-  if(collider1->NotCollideable() ||
-    collider2->NotCollideable())
+
+  // if any object is a ghost then don't resolve
+  if (collider1->NotCollideable() || collider2->NotCollideable())
   {
     contact->SetGhost(true);
     // we still want to check to see if resolution should be skipped for not
     // applying region effects
-    if(collider1->mCollisionGroupInstance->SkipResolution((*collider2->mCollisionGroupInstance)))
+    if (collider1->mCollisionGroupInstance->SkipResolution(
+            (*collider2->mCollisionGroupInstance)))
       contact->SetSkipResolution(true);
     return;
   }
 
-  //if the collision group says to skip this,
-  //then mark the contact as ghost so we don't resolve it
-  if(collider1->mCollisionGroupInstance->SkipResolution((*collider2->mCollisionGroupInstance)))
+  // if the collision group says to skip this,
+  // then mark the contact as ghost so we don't resolve it
+  if (collider1->mCollisionGroupInstance->SkipResolution(
+          (*collider2->mCollisionGroupInstance)))
   {
     contact->SetGhost(true);
     contact->SetSkipResolution(true);
     return;
   }
 
-  //if the contact is marked as not active for any reason, don't add it. This
-  //is different from valid because the contact needs to keep existing for as
-  //long as the objects are in contact, but they should not be resolved.
-  //Currently used to resolve 2d contacts that are almost completely in the z axis.
-  if(!contact->GetActive())
+  // if the contact is marked as not active for any reason, don't add it. This
+  // is different from valid because the contact needs to keep existing for as
+  // long as the objects are in contact, but they should not be resolved.
+  // Currently used to resolve 2d contacts that are almost completely in the z
+  // axis.
+  if (!contact->GetActive())
     return;
 
-  //If the contact was a ghost last frame but if the object's it connects to
-  //are not ghosts, that means the state of the objects changed. We need to
-  //mark the contact as being a normal contact again.
-  if(contact->GetGhost())
+  // If the contact was a ghost last frame but if the object's it connects to
+  // are not ghosts, that means the state of the objects changed. We need to
+  // mark the contact as being a normal contact again.
+  if (contact->GetGhost())
   {
     contact->SetGhost(false);
     contact->SetSkipResolution(false);
@@ -120,24 +117,26 @@ void Island::Add(Joint* joint)
   ++JointCount;
   joint->SetOnIsland(true);
 
-
-  // Deal with trying to solve joints that can't be solved (parent connected to child, object connected to itself, etc...)
+  // Deal with trying to solve joints that can't be solved (parent connected to
+  // child, object connected to itself, etc...)
   Collider* collider0 = joint->GetCollider(0);
   Collider* collider1 = joint->GetCollider(1);
-  if(collider0 != nullptr && collider1 != nullptr)
+  if (collider0 != nullptr && collider1 != nullptr)
   {
     RigidBody* body0 = collider0->GetActiveBody();
     RigidBody* body1 = collider1->GetActiveBody();
 
-    // Get whatever the top-level body is (skip kinematics since we want to find if a kinematic is attached to its parent)
-    while(body0 != nullptr && body0->GetKinematic())
+    // Get whatever the top-level body is (skip kinematics since we want to find
+    // if a kinematic is attached to its parent)
+    while (body0 != nullptr && body0->GetKinematic())
       body0 = body0->mParentBody;
-    while(body1 != nullptr && body1->GetKinematic())
+    while (body1 != nullptr && body1->GetKinematic())
       body1 = body1->mParentBody;
 
-    // If the two bodies are the same then we effectively have a static connection which likely can't be
-    // solved, "skip" solving the joint (by just adding it to another list of joints we don't solve)
-    if(body0 == body1)
+    // If the two bodies are the same then we effectively have a static
+    // connection which likely can't be solved, "skip" solving the joint (by
+    // just adding it to another list of joints we don't solve)
+    if (body0 == body1)
     {
       mUnSolvableJoints.PushBack(joint);
       return;
@@ -149,19 +148,17 @@ void Island::Add(Joint* joint)
 
 void Island::IntegrateVelocity(real dt)
 {
-  
 }
 
 void Island::IntegratePosition(real dt)
 {
-
 }
 
 void Island::CommitConstraints()
 {
-  if(!mJoints.Empty())
+  if (!mJoints.Empty())
     mSolver->AddJoints(mJoints);
-  if(!mContacts.Empty())
+  if (!mContacts.Empty())
     mSolver->AddContacts(mContacts);
 }
 
@@ -179,29 +176,29 @@ void Island::SolvePositions(real dt)
 
 void Island::UpdateSleep(real dt, bool allowSleeping, uint debugFlags)
 {
-  if(!allowSleeping)
+  if (!allowSleeping)
     return;
 
   real minSleepTime = Math::PositiveMax();
 
-  //Update the sleep timers of all objects
+  // Update the sleep timers of all objects
   Colliders::range range = mColliders.All();
 
-  while(!range.Empty())
+  while (!range.Empty())
   {
     RigidBody* body = range.Front().GetActiveBody();
     range.PopFront();
 
-    if(!body || body->GetStatic())
+    if (!body || body->GetStatic())
       continue;
 
-    if(body->UpdateSleepTimer(dt))
+    if (body->UpdateSleepTimer(dt))
     {
       minSleepTime = Math::Min(minSleepTime, body->mSleepTimer);
     }
     else
     {
-      if(debugFlags & PhysicsSpaceDebugDrawFlags::DrawSleepPreventors)
+      if (debugFlags & PhysicsSpaceDebugDrawFlags::DrawSleepPreventors)
       {
         Aabb aabb = range.Front().mAabb;
         gDebugDraw->Add(Debug::Obb(aabb).Color(Color::Aquamarine));
@@ -211,17 +208,17 @@ void Island::UpdateSleep(real dt, bool allowSleeping, uint debugFlags)
     }
   }
 
-  if(minSleepTime < cTimeToSleep)
+  if (minSleepTime < cTimeToSleep)
     return;
 
   range = mColliders.All();
 
-  while(!range.Empty())
+  while (!range.Empty())
   {
     RigidBody* body = range.Front().GetActiveBody();
     range.PopFront();
 
-    if(!body || body->IsAsleep())
+    if (!body || body->IsAsleep())
       continue;
     body->PutToSleep();
   }
@@ -230,25 +227,26 @@ void Island::UpdateSleep(real dt, bool allowSleeping, uint debugFlags)
 void Island::ClearIslandFlags(Collider& collider)
 {
   collider.mState.ClearFlag(ColliderFlags::OnIsland);
-  
+
   Collider::JointEdgeList::range jointRange = collider.mJointEdges.All();
-  for(; !jointRange.Empty(); jointRange.PopFront())
+  for (; !jointRange.Empty(); jointRange.PopFront())
     jointRange.Front().mJoint->SetOnIsland(false);
 
-  Collider::ContactEdgeList::range contactNewRange = collider.mContactEdges.All();
-  for(; !contactNewRange.Empty(); contactNewRange.PopFront())
+  Collider::ContactEdgeList::range contactNewRange =
+      collider.mContactEdges.All();
+  for (; !contactNewRange.Empty(); contactNewRange.PopFront())
     contactNewRange.Front().mContact->SetOnIsland(false);
 
-  //also clear out the dirty bit for sleep having been accumulated.
+  // also clear out the dirty bit for sleep having been accumulated.
   RigidBody* body = collider.GetActiveBody();
-  if(body)
+  if (body)
     body->mState.ClearFlag(RigidBodyStates::SleepAccumulated);
 }
 
 void Island::Clear()
 {
   Colliders::range range = mColliders.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     ClearIslandFlags(range.Front());
 
   mJoints.Clear();
@@ -266,15 +264,15 @@ void Island::Clear()
 bool Island::ContainsCollider(const Collider* collider)
 {
   Colliders::range range = mColliders.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     Collider* c = &range.Front();
-    if(c == collider)
+    if (c == collider)
       return true;
   }
   return false;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

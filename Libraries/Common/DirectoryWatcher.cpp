@@ -1,22 +1,28 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance)
+DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch,
+                                   CallbackFunction callback,
+                                   void* callbackInstance)
 {
-  ZeroCStringCopy(mDirectoryToWatch, File::MaxPath, directoryToWatch, strlen(directoryToWatch));
+  ZeroCStringCopy(mDirectoryToWatch,
+                  File::MaxPath,
+                  directoryToWatch,
+                  strlen(directoryToWatch));
 
   mCallbackInstance = callbackInstance;
   mCallback = callback;
 
   if (ThreadingEnabled)
   {
-    mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>, this, "DirectoryWatcherWorker");
+    mWorkThread.Initialize(
+        Thread::ObjectEntryCreator<DirectoryWatcher,
+                                   &DirectoryWatcher::RunThreadEntryPoint>,
+        this,
+        "DirectoryWatcherWorker");
     mCancelEvent.Initialize(true, false);
   }
 }
@@ -35,4 +41,4 @@ void DirectoryWatcher::Shutdown()
   }
 }
 
-}// namespace Zero
+} // namespace Zero

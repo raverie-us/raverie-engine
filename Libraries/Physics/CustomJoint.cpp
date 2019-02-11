@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,12 +7,11 @@ namespace Zero
 namespace Events
 {
 DefineEvent(ComputeCustomJointInfo);
-}//namespace Events
+} // namespace Events
 
 namespace Physics
 {
 
-//-------------------------------------------------------------------CustomConstraintInfo
 ZilchDefineType(CustomJointEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -25,7 +19,6 @@ ZilchDefineType(CustomJointEvent, builder, type)
   ZilchBindFieldProperty(mDt);
 }
 
-//-------------------------------------------------------------------CustomConstraintInfo
 ZilchDefineType(CustomConstraintInfo, builder, type)
 {
   ZeroBindDocumented();
@@ -72,7 +65,10 @@ CustomConstraintInfo::CustomConstraintInfo()
   mSolvePosition = false;
 }
 
-void CustomConstraintInfo::SetJacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1)
+void CustomConstraintInfo::SetJacobian(Vec3Param linear0,
+                                       Vec3Param angular0,
+                                       Vec3Param linear1,
+                                       Vec3Param angular1)
 {
   mLinear0 = linear0;
   mAngular0 = angular0;
@@ -81,13 +77,13 @@ void CustomConstraintInfo::SetJacobian(Vec3Param linear0, Vec3Param angular0, Ve
 
   // Try to get the owning joint
   CustomJoint* joint = GetOwner();
-  if(joint == nullptr)
+  if (joint == nullptr)
     return;
 
   // Get the masses of the colliders
   JointMass masses;
   JointHelpers::GetMasses(joint->GetCollider(0), joint->GetCollider(1), masses);
-  
+
   // Compute the effective mass if the constraint (J^T * M * J)
   Jacobian jacobian;
   jacobian.Set(mLinear0, mAngular0, mLinear1, mAngular1);
@@ -107,13 +103,21 @@ void CustomConstraintInfo::ComputeSpring(float frequencyHz, float dampRatio)
   float dt = cFixedDt;
   CustomJoint* joint = mOwner;
   // Get dt from the space if we have it
-  if(joint != nullptr && joint->mSpace != nullptr)
+  if (joint != nullptr && joint->mSpace != nullptr)
     dt = joint->mSpace->mIterationDt;
 
   // Update the mass, bias, and gamma
-  SoftConstraintFragment(mInvEffectiveMass, mError, mBias, mGamma, frequencyHz, dampRatio, mBaumgarte, dt);
-  // Re-compute the effective mass afterwards (in case someone wants to read and mutate it)
-  if(mInvEffectiveMass < Math::PositiveMin())
+  SoftConstraintFragment(mInvEffectiveMass,
+                         mError,
+                         mBias,
+                         mGamma,
+                         frequencyHz,
+                         dampRatio,
+                         mBaumgarte,
+                         dt);
+  // Re-compute the effective mass afterwards (in case someone wants to read and
+  // mutate it)
+  if (mInvEffectiveMass < Math::PositiveMin())
     mEffectiveMass = 0;
   else
     mEffectiveMass = 1 / mInvEffectiveMass;
@@ -121,7 +125,9 @@ void CustomConstraintInfo::ComputeSpring(float frequencyHz, float dampRatio)
   // We can't solve position anymore
   mSolvePosition = false;
 }
-void CustomConstraintInfo::ComputeMotor(float targetSpeed, float minImpulse, float maxImpulse)
+void CustomConstraintInfo::ComputeMotor(float targetSpeed,
+                                        float minImpulse,
+                                        float maxImpulse)
 {
   mMinImpulse = minImpulse;
   mMaxImpulse = maxImpulse;
@@ -140,7 +146,7 @@ real CustomConstraintInfo::GetEffectiveMass()
 void CustomConstraintInfo::SetEffectiveMass(real effectiveMass)
 {
   mEffectiveMass = effectiveMass;
-  if(effectiveMass < Math::PositiveMin())
+  if (effectiveMass < Math::PositiveMin())
     mInvEffectiveMass = 0;
   else
     mInvEffectiveMass = 1.0f / mEffectiveMass;
@@ -158,7 +164,7 @@ void CustomConstraintInfo::DetachFromOwner()
 {
   // If we have a joint then remove ourself from it
   CustomJoint* joint = mOwner;
-  if(joint == nullptr)
+  if (joint == nullptr)
     return;
 
   joint->RemoveConstraint(this);
@@ -176,7 +182,6 @@ CustomJoint* CustomConstraintInfo::GetOwner()
   return mOwner;
 }
 
-//-------------------------------------------------------------------CustomJoint
 ImplementJointType(CustomJoint);
 ZilchDefineType(CustomJoint, builder, type)
 {
@@ -185,7 +190,7 @@ ZilchDefineType(CustomJoint, builder, type)
   ZeroBindInterface(Joint);
   ZeroBindDocumented();
   ZeroBindEvent(Events::ComputeCustomJointInfo, CustomJointEvent);
-  
+
   ZilchBindMethod(CreateConstraint);
   ZilchBindMethod(AddConstraint);
   ZilchBindMethod(RemoveConstraint);
@@ -201,20 +206,21 @@ CustomJoint::CustomJoint()
 
 void CustomJoint::UpdateAtoms()
 {
-  // Unfortunately, during position correction the constraint info has to be updated each iteration.
-  // Physics doesn't normally update the transform until the end of the frame
-  // (it updates the internal cached transforms). In this case the old position values will exist
-  // and a script won't be able to correctly compute the constraint info. Because of this we must
-  // forcefully update each object's transform beforehand. Maybe clean up the interface later to
-  // not do this when solving velocity instead of position?
+  // Unfortunately, during position correction the constraint info has to be
+  // updated each iteration. Physics doesn't normally update the transform until
+  // the end of the frame (it updates the internal cached transforms). In this
+  // case the old position values will exist and a script won't be able to
+  // correctly compute the constraint info. Because of this we must forcefully
+  // update each object's transform beforehand. Maybe clean up the interface
+  // later to not do this when solving velocity instead of position?
   UpdateTransform(0);
   UpdateTransform(1);
 
   // Reset all the data on the constraint for the new frame
-  for(size_t i = 0; i < mConstraints.Size(); ++i)
+  for (size_t i = 0; i < mConstraints.Size(); ++i)
   {
     CustomConstraintInfo* constraint = mConstraints[i];
-    if(constraint != nullptr)
+    if (constraint != nullptr)
       constraint->Reset();
   }
 
@@ -228,14 +234,14 @@ void CustomJoint::UpdateAtoms()
 uint CustomJoint::MoleculeCount() const
 {
   size_t activeCount = 0;
-  if(!GetActive())
+  if (!GetActive())
     return activeCount;
 
   // Count each active constraint
-  for(size_t i = 0; i < mConstraints.Size(); ++i)
+  for (size_t i = 0; i < mConstraints.Size(); ++i)
   {
     CustomConstraintInfo* constraint = mConstraints[i];
-    if(constraint->mActive)
+    if (constraint->mActive)
       ++activeCount;
   }
   return activeCount;
@@ -243,14 +249,14 @@ uint CustomJoint::MoleculeCount() const
 
 void CustomJoint::ComputeMolecules(MoleculeWalker& molecules)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // Copy over each active constraint
-  for(size_t i = 0; i < mConstraints.Size(); ++i)
+  for (size_t i = 0; i < mConstraints.Size(); ++i)
   {
     CustomConstraintInfo* constraint = mConstraints[i];
-    if(!constraint->mActive)
+    if (!constraint->mActive)
       continue;
 
     ConstraintMolecule& mol = *molecules;
@@ -262,7 +268,7 @@ void CustomJoint::ComputeMolecules(MoleculeWalker& molecules)
 
 void CustomJoint::WarmStart(MoleculeWalker& molecules)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   WarmStartFragment(this, molecules, MoleculeCount());
@@ -270,7 +276,7 @@ void CustomJoint::WarmStart(MoleculeWalker& molecules)
 
 void CustomJoint::Solve(MoleculeWalker& molecules)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   SolveFragment(this, molecules, MoleculeCount());
@@ -278,14 +284,15 @@ void CustomJoint::Solve(MoleculeWalker& molecules)
 
 void CustomJoint::Commit(MoleculeWalker& molecules)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
-  // For warm-starting we need to copy back out the total accumulated impulse for each constraint
-  for(size_t i = 0; i < mConstraints.Size(); ++i)
+  // For warm-starting we need to copy back out the total accumulated impulse
+  // for each constraint
+  for (size_t i = 0; i < mConstraints.Size(); ++i)
   {
     CustomConstraintInfo* constraint = mConstraints[i];
-    if(!constraint->mActive)
+    if (!constraint->mActive)
       continue;
 
     ConstraintMolecule& mol = *molecules;
@@ -298,14 +305,14 @@ uint CustomJoint::PositionMoleculeCount() const
 {
   size_t activeCount = 0;
   // If this joint isn't active then there's nothing to solve
-  if(!GetActive())
+  if (!GetActive())
     return activeCount;
 
   // Find how many constraints are active that also solve position
-  for(size_t i = 0; i < mConstraints.Size(); ++i)
+  for (size_t i = 0; i < mConstraints.Size(); ++i)
   {
     CustomConstraintInfo* constraint = mConstraints[i];
-    if(constraint->mActive && constraint->mSolvePosition)
+    if (constraint->mActive && constraint->mSolvePosition)
       ++activeCount;
   }
   return activeCount;
@@ -314,14 +321,14 @@ uint CustomJoint::PositionMoleculeCount() const
 void CustomJoint::ComputePositionMolecules(MoleculeWalker& molecules)
 {
   // Don't solve if not active
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // Copy all active constraints that are set to solve position
-  for(size_t i = 0; i < mConstraints.Size(); ++i)
+  for (size_t i = 0; i < mConstraints.Size(); ++i)
   {
     CustomConstraintInfo* constraint = mConstraints[i];
-    if(!constraint->mActive || !constraint->mSolvePosition)
+    if (!constraint->mActive || !constraint->mSolvePosition)
       continue;
 
     ConstraintMolecule& mol = *molecules;
@@ -331,7 +338,8 @@ void CustomJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   }
 }
 
-uint CustomJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint CustomJoint::GetAtomIndexFilter(uint atomIndex,
+                                     real& desiredConstraintValue) const
 {
   // Not used
   return 0;
@@ -339,7 +347,8 @@ uint CustomJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValu
 
 void CustomJoint::BatchEvents()
 {
-  // Implement later! (have to check for impulse limits, snapping, and max impulse)
+  // Implement later! (have to check for impulse limits, snapping, and max
+  // impulse)
 }
 
 CustomConstraintInfo* CustomJoint::CreateConstraint()
@@ -353,22 +362,25 @@ CustomConstraintInfo* CustomJoint::CreateConstraint()
 
 void CustomJoint::AddConstraint(CustomConstraintInfo* constraint)
 {
-  if(constraint == nullptr)
+  if (constraint == nullptr)
   {
-    DoNotifyException("Invalid constraint info", "Constraint info was null. A constraint "
-                      "must be allocated through CustomJoint.CreateConstraint() first.");
+    DoNotifyException(
+        "Invalid constraint info",
+        "Constraint info was null. A constraint "
+        "must be allocated through CustomJoint.CreateConstraint() first.");
     return;
   }
 
   // If this constraint already has an owner then assert
-  if(constraint->IsOwned())
+  if (constraint->IsOwned())
   {
     String msg;
     CustomJoint* owner = constraint->mOwner;
     Cog* cogOwner = owner->GetOwner();
-    
+
     String cogDescription = cogOwner->GetDescription();
-    msg = String::Format("Constraint already is owned by cog '%s'", cogDescription.c_str());
+    msg = String::Format("Constraint already is owned by cog '%s'",
+                         cogDescription.c_str());
     DoNotifyException("Invalid Constraint Add", msg);
     return;
   }
@@ -382,12 +394,13 @@ void CustomJoint::RemoveConstraint(CustomConstraintInfo* constraint)
 {
   // Find the constraint's index
   HandleOf<CustomConstraintInfo> constraintHandle = constraint;
-  Array<ConstraintInfoReference>::size_type index = mConstraints.FindIndex(constraintHandle);
-  if(index == Array<ConstraintInfoReference>::InvalidIndex)
+  Array<ConstraintInfoReference>::size_type index =
+      mConstraints.FindIndex(constraintHandle);
+  if (index == Array<ConstraintInfoReference>::InvalidIndex)
     return;
 
   // Efficient swap remove
-  if(index != mConstraints.Size() - 1)
+  if (index != mConstraints.Size() - 1)
     mConstraints[index] = mConstraints.Back();
   mConstraints.PopBack();
 }
@@ -405,17 +418,22 @@ size_t CustomJoint::GetConstraintCount()
 CustomConstraintInfo* CustomJoint::GetConstraint(size_t index)
 {
   // Verify the index
-  if(index >= mConstraints.Size())
+  if (index >= mConstraints.Size())
   {
-    DoNotifyException("Invalid Index",
-                      String::Format("Index '%d' is invalid. There are only '%d' constraints available.", index, mConstraints.Size()));
+    DoNotifyException(
+        "Invalid Index",
+        String::Format(
+            "Index '%d' is invalid. There are only '%d' constraints available.",
+            index,
+            mConstraints.Size()));
     return nullptr;
   }
 
   return mConstraints[index];
 }
 
-void CustomJoint::ConstraintInfoToMolecule(CustomConstraintInfo* constraint, ConstraintMolecule& molecule)
+void CustomJoint::ConstraintInfoToMolecule(CustomConstraintInfo* constraint,
+                                           ConstraintMolecule& molecule)
 {
   molecule.mJacobian.Linear[0] = constraint->mLinear0;
   molecule.mJacobian.Linear[1] = constraint->mLinear1;
@@ -432,26 +450,26 @@ void CustomJoint::ConstraintInfoToMolecule(CustomConstraintInfo* constraint, Con
 
   // If we solve position then we don't want to also apply error correction via
   // baumgarte so clear this (motors and springs clear solve position)
-  if(constraint->mSolvePosition)
+  if (constraint->mSolvePosition)
     molecule.mBias = 0.0f;
 }
 
 void CustomJoint::UpdateTransform(int colliderIndex)
 {
   Collider* collider = GetCollider(colliderIndex);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return;
 
   RigidBody* body = collider->GetActiveBody();
-  if(body == nullptr)
+  if (body == nullptr)
     return;
 
-  if(!body->IsDynamic())
+  if (!body->IsDynamic())
     return;
 
   body->PublishTransform();
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

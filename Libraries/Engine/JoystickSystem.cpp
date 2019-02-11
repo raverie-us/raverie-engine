@@ -1,35 +1,26 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file JoystickSystem.cpp
-/// Implementation of the JoystickSystem classes.
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 namespace Z
 {
-  Joysticks* gJoysticks = nullptr;
+Joysticks* gJoysticks = nullptr;
 }
 
 const String cUnknownString("Unknown");
 
 namespace Events
 {
-  DefineEvent(JoystickUpdated);
-  DefineEvent(JoystickButtonDown);
-  DefineEvent(JoystickButtonUp);
+DefineEvent(JoystickUpdated);
+DefineEvent(JoystickButtonDown);
+DefineEvent(JoystickButtonUp);
 
-  DefineEvent(JoystickFound);
-  DefineEvent(JoystickLost);
-  DefineEvent(JoysticksChanged);
-}
+DefineEvent(JoystickFound);
+DefineEvent(JoystickLost);
+DefineEvent(JoysticksChanged);
+} // namespace Events
 
-//------------------------------------------------------------
 ZilchDefineType(RawControlMapping, builder, type)
 {
 }
@@ -132,8 +123,7 @@ bool RawControlMapping::IsSame(RawControlMapping* map)
   return true;
 }
 
-
-//----------------------------------------------------------------- JoystickEvent
+//JoystickEvent
 ZilchDefineType(JoystickEvent, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -149,7 +139,6 @@ JoystickEvent::JoystickEvent(Joystick* joystick, int button)
   mButton = button;
 }
 
-//--------------------------------------------------------------------- Joystick
 ZilchDefineType(Joystick, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -206,7 +195,7 @@ void Joystick::InactiveClear()
   mButtons = 0;
 
   // Clear out all the axes
-  for(size_t i = 0; i < mAxes.Size(); ++i)
+  for (size_t i = 0; i < mAxes.Size(); ++i)
   {
     if (mRawMapping && mRawMapping->mAxes[i].CanBeDisabled)
       mAxes[i] = GetDisabledValue();
@@ -222,8 +211,9 @@ String Joystick::GetName()
 
 float Joystick::GetAxisValue(int index)
 {
-  ReturnIf(index >= int(mRawMapping->mAxes.Size()), 0.0f,
-    "Joystick axis index was out of bounds");
+  ReturnIf(index >= int(mRawMapping->mAxes.Size()),
+           0.0f,
+           "Joystick axis index was out of bounds");
 
   return mAxes[index];
 }
@@ -235,8 +225,9 @@ float Joystick::GetDisabledValue()
 
 String Joystick::GetAxisName(int index)
 {
-  ReturnIf(index >= int(mRawMapping->mAxes.Size()), "Invalid",
-    "Joystick axis index was out of bounds");
+  ReturnIf(index >= int(mRawMapping->mAxes.Size()),
+           "Invalid",
+           "Joystick axis index was out of bounds");
 
   return mRawMapping->mAxes[index].Name;
 }
@@ -251,8 +242,9 @@ int Joystick::GetAxisIndex(StringParam name)
     }
   }
 
-  //DoNotifyError("Joystick Error",
-  //  String::Format("The axis with the name '%s' was not found", name.c_str()));
+  // DoNotifyError("Joystick Error",
+  //  String::Format("The axis with the name '%s' was not found",
+  //  name.c_str()));
   return -1;
 }
 
@@ -285,7 +277,7 @@ bool Joystick::GetIsActive()
 void Joystick::LoadInputMapping(StringParam name)
 {
   TextBlock* block = TextBlockManager::FindOrNull(name);
-  if(block)
+  if (block)
   {
     RawControlMapping* mapping = new RawControlMapping();
 
@@ -299,12 +291,14 @@ void Joystick::LoadInputMapping(StringParam name)
 void Joystick::SaveInputMapping(StringParam name)
 {
   TextBlock* block = TextBlockManager::FindOrNull(name);
-  if(block && mRawMapping)
+  if (block && mRawMapping)
   {
     DataBlock dataBlock = SaveToDataBlock(*mRawMapping, DataFileFormat::Text);
-    if(dataBlock)
+    if (dataBlock)
     {
-      block->Text = StringRange((cstr)dataBlock.Data, (cstr)dataBlock.Data, (cstr)dataBlock.Data + dataBlock.Size);
+      block->Text = StringRange((cstr)dataBlock.Data,
+                                (cstr)dataBlock.Data,
+                                (cstr)dataBlock.Data + dataBlock.Size);
       block->mContentItem->SaveContent();
       FreeBlock(dataBlock);
     }
@@ -365,13 +359,14 @@ bool Joystick::Calibrating(void)
 
 void Joystick::RawSetAxis(uint index, uint rawValue)
 {
-  ReturnIf(mIsActive == false,,
-    "We should not be updating a joystick that is not active");
+  ReturnIf(mIsActive == false,
+           ,
+           "We should not be updating a joystick that is not active");
 
   float value = 0.0f;
   RawAxis& axis = mRawMapping->mAxes[index];
 
-  if(this->mAutoCalibrate && axis.CanCalibrate)
+  if (this->mAutoCalibrate && axis.CanCalibrate)
   {
     axis.Max = Math::Max(axis.Max, rawValue);
     axis.Min = Math::Min(axis.Min, rawValue);
@@ -381,9 +376,9 @@ void Joystick::RawSetAxis(uint index, uint rawValue)
   // If this axis has a mid range value
   if (axis.UseMid)
   {
-    if(rawValue >= axis.Mid)
+    if (rawValue >= axis.Mid)
     {
-      if(axis.Max != axis.Mid)
+      if (axis.Max != axis.Mid)
       {
         // Upper range [0, 1]
         value = (float(rawValue) - axis.Mid) / (float(axis.Max) - axis.Mid);
@@ -392,7 +387,7 @@ void Joystick::RawSetAxis(uint index, uint rawValue)
     }
     else
     {
-      if(axis.Min != axis.Mid)
+      if (axis.Min != axis.Mid)
       {
         // Lower range [-1, 0]
         value = (float(rawValue) - axis.Mid) / (float(axis.Min) - axis.Mid);
@@ -413,7 +408,7 @@ void Joystick::RawSetAxis(uint index, uint rawValue)
     value = 0.0f;
   }
 
-  if(axis.Reversed)
+  if (axis.Reversed)
     value = -value;
 
   this->mAxes[index] = value;
@@ -426,17 +421,18 @@ void Joystick::RawSetAxisDisabled(uint index)
 
 void Joystick::RawSetButtons(uint newState)
 {
-  ReturnIf(mIsActive == false,,
-    "We should not be updating a joystick that is not active");
+  ReturnIf(mIsActive == false,
+           ,
+           "We should not be updating a joystick that is not active");
 
-  for(uint i = 0; i < GetButtonCount(); ++i)
+  for (uint i = 0; i < GetButtonCount(); ++i)
   {
-    //check the button of index i
+    // check the button of index i
     uint oldFlag = mButtons & (1 << i);
     uint newFlag = newState & (1 << i);
 
     // If there is no state change on this button, there is no event to send
-    if(oldFlag == newFlag)
+    if (oldFlag == newFlag)
       continue;
 
     if (oldFlag == 0)
@@ -463,11 +459,13 @@ void Joystick::SignalUpdated()
 
 void Joystick::RawProcess(DataBlock dataBlock)
 {
-  ReturnIf(mIsActive == false,,
-    "We should not be updating a joystick that is not active");
+  ReturnIf(mIsActive == false,
+           ,
+           "We should not be updating a joystick that is not active");
 
   ErrorIf(this->mRawMapping == nullptr,
-    "We should not be calling raw process with a raw data block when we have no mapping set");
+          "We should not be calling raw process with a raw data block when we "
+          "have no mapping set");
 
   RawControlMapping* mapping = this->mRawMapping;
 
@@ -475,7 +473,7 @@ void Joystick::RawProcess(DataBlock dataBlock)
   uint buttons = 0;
 
   // Scan all buttons
-  for(uint i=0;i<mapping->mButtons.Size();++i)
+  for (uint i = 0; i < mapping->mButtons.Size(); ++i)
   {
     RawButton& button = mapping->mButtons[i];
 
@@ -484,7 +482,7 @@ void Joystick::RawProcess(DataBlock dataBlock)
 
     // Check the bit
     uint mask = 1 << button.Bit;
-    if((data & mask) != 0)
+    if ((data & mask) != 0)
     {
       buttons |= (1 << i);
     }
@@ -494,7 +492,7 @@ void Joystick::RawProcess(DataBlock dataBlock)
   this->RawSetButtons(buttons);
 
   // Scan all mAxes
-  for(uint i=0;i<mapping->mAxes.Size();++i)
+  for (uint i = 0; i < mapping->mAxes.Size(); ++i)
   {
     RawAxis& axis = mapping->mAxes[i];
     uint rawValue = dataBlock.Data[axis.Offset];
@@ -502,10 +500,8 @@ void Joystick::RawProcess(DataBlock dataBlock)
     // Initialize the axis value
     this->RawSetAxis(i, rawValue);
   }
-
 }
 
-//------------------------------------------------------------ Joysticks
 ZilchDefineType(Joysticks, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -526,16 +522,17 @@ Joysticks::Joysticks()
 
 void Joysticks::DeactivateAll()
 {
-  forRange(Joystick* joyStick, mDeviceToJoystick.Values())
+  forRange(Joystick * joyStick, mDeviceToJoystick.Values())
   {
     if (!joyStick->mIsActive)
       continue;
-    
+
     // Set the joystick as not active and clear its state
     joyStick->mIsActive = false;
     joyStick->InactiveClear();
 
-    // Dispatch a joystick lost message to both the joystick system and the joystick itself
+    // Dispatch a joystick lost message to both the joystick system and the
+    // joystick itself
     JoystickEvent event(joyStick, 0);
     joyStick->DispatchEvent(Events::JoystickLost, &event);
     this->DispatchEvent(Events::JoystickLost, &event);
@@ -545,7 +542,7 @@ void Joysticks::DeactivateAll()
 Joysticks::~Joysticks()
 {
   // Loop through all the joysticks we have available
-  forRange(Joystick* joystick, mDeviceToJoystick.Values())
+  forRange(Joystick * joystick, mDeviceToJoystick.Values())
   {
     // Delete the allocated joystick object
     delete joystick;
@@ -571,27 +568,31 @@ JoystickDeviceRange Joysticks::GetJoysticks()
 void Joysticks::AddJoystickDevice(const PlatformInputDevice& device)
 {
   // Look for the joystick by device
-  Joystick* joyStick = mDeviceToJoystick.FindValue(device.mDeviceHandle, nullptr);
+  Joystick* joyStick =
+      mDeviceToJoystick.FindValue(device.mDeviceHandle, nullptr);
 
-  // This will either be 'stolen' below or will be deleted in the internal set functions
+  // This will either be 'stolen' below or will be deleted in the internal set
+  // functions
   RawControlMapping* map = new RawControlMapping(device);
 
   // If we didn't find the joystick by device...
-  if(joyStick == nullptr)
+  if (joyStick == nullptr)
   {
     // Attempt to look for the joystick by guid
     joyStick = mGuidToJoystick.FindValue(device.mGuid, nullptr);
 
-    // We found the joystick by guid, which means it's probably one that was already plugged in!
-    // This actually may not be the case if it turns out two joysticks had the same guid...
-    // which we try to guarantee they don't but can't be certain
-    // We need to make sure this joystick isn't already active (if it is, we need to make a new one)
-    if(joyStick != nullptr && joyStick->mIsActive == false)
+    // We found the joystick by guid, which means it's probably one that was
+    // already plugged in! This actually may not be the case if it turns out two
+    // joysticks had the same guid... which we try to guarantee they don't but
+    // can't be certain We need to make sure this joystick isn't already active
+    // (if it is, we need to make a new one)
+    if (joyStick != nullptr && joyStick->mIsActive == false)
     {
       // Reactivate the joystick
       joyStick->mIsActive = true;
 
-      // Generally the mappings should be the same if our guid matched, but we should do this anyways
+      // Generally the mappings should be the same if our guid matched, but we
+      // should do this anyways
       joyStick->InternalSetInputMappingIfDifferent(map);
 
       // We need to update the device of the joystick
@@ -618,7 +619,8 @@ void Joysticks::AddJoystickDevice(const PlatformInputDevice& device)
   {
     // Make sure the joystick hasn't already been activated
     ErrorIf(joyStick->mIsActive,
-      "Someone else activated the joystick, but two devices can't have the same device id!");
+            "Someone else activated the joystick, but two devices can't have "
+            "the same device id!");
 
     // Reactivate the joystick
     joyStick->mIsActive = true;
@@ -629,7 +631,7 @@ void Joysticks::AddJoystickDevice(const PlatformInputDevice& device)
   }
 
   // Dispatch a joystick found message to both the joystick system
-  //and the joystick itself (useful when it is deactivated then reactivated)
+  // and the joystick itself (useful when it is deactivated then reactivated)
   JoystickEvent event(joyStick, 0);
   joyStick->DispatchEvent(Events::JoystickFound, &event);
   this->DispatchEvent(Events::JoystickFound, &event);
@@ -641,4 +643,4 @@ void Joysticks::JoysticksChanged()
   this->DispatchEvent(Events::JoysticksChanged, &event);
 }
 
-}
+} // namespace Zero

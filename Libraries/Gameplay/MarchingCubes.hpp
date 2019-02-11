@@ -1,25 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MarchingCubes.hpp
-/// Declaration of the MarchingCubes class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2011-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------------- Edge Indices
 struct EdgeIndicies
 {
   s32 P1;
   s32 P2;
 };
 
-//------------------------------------------------------------------------- Cell
 struct Cell
 {
   s32 x;
@@ -27,23 +17,23 @@ struct Cell
   s32 z;
 };
 
-//-------------------------------------------------------------------- Cell Info
 struct CellInfo : public Cell
 {
   Vec3 p[8];
 };
 
-//---------------------------------------------------------------- Triangle Info
 struct TriangleInfo
 {
-  TriangleInfo() { numTrianglesWritten = 0; }
+  TriangleInfo()
+  {
+    numTrianglesWritten = 0;
+  }
 
   u8 numTrianglesWritten;
   u32 firstIndices[5];
 };
 
-//----------------------------------------------------------- Hash Policy (Vec3)
-template<>
+template <>
 struct HashPolicy<Vec3>
 {
   inline size_t operator()(Vec3Param value) const
@@ -58,14 +48,12 @@ struct HashPolicy<Vec3>
   }
 };
 
-//----------------------------------------------------------- Hash Policy (Cell)
-template<>
+template <>
 struct HashPolicy<Cell>
 {
   inline size_t operator()(const Cell& cell) const
   {
-    return HashUint((unsigned)cell.x) +
-           HashUint((unsigned)cell.y) +
+    return HashUint((unsigned)cell.x) + HashUint((unsigned)cell.y) +
            HashUint((unsigned)cell.z);
   }
   inline bool Equal(const Cell& left, const Cell& right) const
@@ -74,14 +62,18 @@ struct HashPolicy<Cell>
   }
 };
 
-//--------------------------------------------------------------- Marching Cubes
 class MarchingCubes
 {
 public:
   typedef float (*DensitySamplerFn)(Vec3Param position, void* userData);
-  typedef void (*VertexWriterFn)(Vec3 positions[], Vec3 normals[],
-                                 u32 firstIndicesOut[], u32 numTriangles, void* userData);
-  typedef void (*InvalidatorFn)(u32 firstIndices[], u32 numTriangles, void* userData);
+  typedef void (*VertexWriterFn)(Vec3 positions[],
+                                 Vec3 normals[],
+                                 u32 firstIndicesOut[],
+                                 u32 numTriangles,
+                                 void* userData);
+  typedef void (*InvalidatorFn)(u32 firstIndices[],
+                                u32 numTriangles,
+                                void* userData);
 
   float SurfaceLevel;
   Vec3 SampleDistances;
@@ -103,22 +95,21 @@ public:
   void ClearHistory();
 
 private:
-
-  HashSet<CellInfo, HashPolicy<Cell> > InvalidatedCells;
+  HashSet<CellInfo, HashPolicy<Cell>> InvalidatedCells;
 
   HashMap<Vec3, float> Values;
 
-  HashMap<Cell, TriangleInfo, HashPolicy<Cell> > TriangleInfos;
+  HashMap<Cell, TriangleInfo, HashPolicy<Cell>> TriangleInfos;
 
   Vec3 InterpolatedVertices[12];
   u32 EdgeFlags;
 
   HashMap<Vec3, Vec3> CachedNormals;
 
-
-  // This table is indexed by a special bit-masked index known as the 'cube-index'
-  // It's purpose is to define which edges are being split by the iso-surface
-  // Each bit in this array of 12-bit numbers represents which edges get split (1 for split, 0 for not)
+  // This table is indexed by a special bit-masked index known as the
+  // 'cube-index' It's purpose is to define which edges are being split by the
+  // iso-surface Each bit in this array of 12-bit numbers represents which edges
+  // get split (1 for split, 0 for not)
   static u32 EdgeTable[256];
 
   static s32 TriangleTable[256][16];
@@ -133,7 +124,8 @@ private:
 
   void ComputeInterpolatedVertexForEdge(s32 edgeIndex, CellInfo& cell);
 
-  static Vec3 Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2);
+  static Vec3
+  Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2);
 };
 
 } // namespace Zero

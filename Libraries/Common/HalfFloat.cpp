@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson, Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 // Includes
 #include "Precompiled.hpp"
@@ -17,7 +12,8 @@ u16 HalfFloatConverter::ToHalfFloat(float float32)
   HalfFloatConverter& converter = HalfFloatConverter::GetInstance();
 
   u32 f = *(u32*)(void*)&float32;
-  return converter.mBaseTable[(f >> 23) & 0x1FF] + ((f & 0x007FFFFF) >> converter.mShiftTable[(f >> 23) & 0x1FF]);
+  return converter.mBaseTable[(f >> 23) & 0x1FF] +
+         ((f & 0x007FFFFF) >> converter.mShiftTable[(f >> 23) & 0x1FF]);
 }
 
 float HalfFloatConverter::ToFloat(u16 float16)
@@ -25,7 +21,9 @@ float HalfFloatConverter::ToFloat(u16 float16)
   HalfFloatConverter& converter = HalfFloatConverter::GetInstance();
 
   u16 h = float16;
-  u32 f = converter.mMantissaTable[converter.mOffsetTable[(h >> 10)] + (h & 0x3FF)] + converter.mExponentTable[(h >> 10)];
+  u32 f = converter
+              .mMantissaTable[converter.mOffsetTable[(h >> 10)] + (h & 0x3FF)] +
+          converter.mExponentTable[(h >> 10)];
   return *(float*)(void*)&f;
 }
 
@@ -133,7 +131,7 @@ u32 HalfFloatConverter::ConvertMantissa(u32 i)
   u32 e = 0;
 
   // While not normalized
-  while(!(m & 0x00800000))
+  while (!(m & 0x00800000))
   {
     // Decrement exponent (1 << 23)
     e -= 0x00800000;

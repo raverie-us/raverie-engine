@@ -1,34 +1,28 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-WidgetTest::WidgetTest(Composite* parent, StringParam name)
-  :ColorBlock(parent)
+WidgetTest::WidgetTest(Composite* parent, StringParam name) : ColorBlock(parent)
 {
   Name = name;
   ConnectThisTo(this, Events::LeftMouseUp, OnMouseEvent);
   ConnectThisTo(this, Events::LeftMouseDown, OnMouseEvent);
-  ConnectThisTo(this, Events::RightMouseUp,  OnMouseEvent);
+  ConnectThisTo(this, Events::RightMouseUp, OnMouseEvent);
   ConnectThisTo(this, Events::RightMouseDown, OnMouseEvent);
-  ConnectThisTo(this, Events::MiddleMouseDown,  OnMouseEvent);
+  ConnectThisTo(this, Events::MiddleMouseDown, OnMouseEvent);
   ConnectThisTo(this, Events::MiddleMouseUp, OnMouseEvent);
 
-  ConnectThisTo(this, Events::LeftMouseDrag,  OnMouseEvent);
-  ConnectThisTo(this, Events::RightMouseDrag,  OnMouseEvent);
-  
-  ConnectThisTo(this, Events::LeftClick,  OnMouseEvent);
-  ConnectThisTo(this, Events::RightClick,  OnMouseEvent);
-  ConnectThisTo(this, Events::MiddleClick,  OnMouseEvent);
+  ConnectThisTo(this, Events::LeftMouseDrag, OnMouseEvent);
+  ConnectThisTo(this, Events::RightMouseDrag, OnMouseEvent);
+
+  ConnectThisTo(this, Events::LeftClick, OnMouseEvent);
+  ConnectThisTo(this, Events::RightClick, OnMouseEvent);
+  ConnectThisTo(this, Events::MiddleClick, OnMouseEvent);
 
   ConnectThisTo(this, Events::DoubleClick, OnMouseEvent);
-  
+
   ConnectThisTo(this, Events::MouseExit, OnMouseEvent);
   ConnectThisTo(this, Events::MouseEnter, OnMouseEvent);
 
@@ -50,14 +44,15 @@ WidgetTest::WidgetTest(Composite* parent, StringParam name)
 
 void WidgetTest::OnMouseEvent(MouseEvent* event)
 {
-  ZPrint("%s Mouse %s\n",  Name.c_str(), event->EventId.c_str());
-  //ZPrint("%s Mouse Position %g, %g\n",  Name.c_str(), event->Position.x, event->Position.y);
+  ZPrint("%s Mouse %s\n", Name.c_str(), event->EventId.c_str());
+  // ZPrint("%s Mouse Position %g, %g\n",  Name.c_str(), event->Position.x,
+  // event->Position.y);
 }
 
 void WidgetTest::OnKeyboardEvent(KeyboardEvent* event)
 {
-  ZPrint("%s KeyboardEvent %s\n",  Name.c_str(), event->EventId.c_str());
-  //ZPrint("%s Key %s\n", KeyToName(event->Key));
+  ZPrint("%s KeyboardEvent %s\n", Name.c_str(), event->EventId.c_str());
+  // ZPrint("%s Key %s\n", KeyToName(event->Key));
 }
 
 void WidgetTest::OnFocusEvent(FocusEvent* event)
@@ -65,8 +60,8 @@ void WidgetTest::OnFocusEvent(FocusEvent* event)
   ZPrint("%s Focus Event %s\n", Name.c_str(), event->EventId.c_str());
 }
 
-ParentWidgetTest::ParentWidgetTest(Composite* parent, StringParam name)
-  :Composite(parent)
+ParentWidgetTest::ParentWidgetTest(Composite* parent, StringParam name) :
+    Composite(parent)
 {
   Name = name;
   ConnectThisTo(this, Events::FocusLost, OnFocusEvent);
@@ -79,26 +74,29 @@ ParentWidgetTest::ParentWidgetTest(Composite* parent, StringParam name)
 
   ConnectThisTo(this, Events::MouseEnterHierarchy, OnMouseEvent);
   ConnectThisTo(this, Events::MouseExitHierarchy, OnMouseEvent);
-
 }
 
 void ParentWidgetTest::OnFocusEvent(FocusEvent* event)
 {
-  ZPrint("%s Focus Event %s\n",  Name.c_str(),  event->EventId.c_str());
+  ZPrint("%s Focus Event %s\n", Name.c_str(), event->EventId.c_str());
 }
 
 void ParentWidgetTest::OnMouseEvent(MouseEvent* event)
 {
-  ZPrint("%s Mouse %s\n",  Name.c_str(), event->EventId.c_str());
-  ZPrint("%s Mouse Position %g, %g\n",  Name.c_str(), event->Position.x, event->Position.y);
+  ZPrint("%s Mouse %s\n", Name.c_str(), event->EventId.c_str());
+  ZPrint("%s Mouse Position %g, %g\n",
+         Name.c_str(),
+         event->Position.x,
+         event->Position.y);
 }
 
 void FlexMinSizeLayoutTest(Composite* testWindow)
 {
-  testWindow->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+  testWindow->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
   // This widget has a large min size so it
-  // will take most of the size in spite of 
+  // will take most of the size in spite of
   // of all the boxes having equal flex
   // Check to make sure the last button is visible
   TextButton* b0 = new TextButton(testWindow);
@@ -120,10 +118,12 @@ void FlexMinSizeLayoutTest(Composite* testWindow)
 
 void FlexTests(Composite* testWindow)
 {
-  testWindow->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+  testWindow->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
   Composite* flexRow = new Composite(testWindow);
-  flexRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 4), Thickness(0, 0, 0, 0)));
+  flexRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(4, 4), Thickness(0, 0, 0, 0)));
 
   TextButton* frb1 = new TextButton(flexRow);
   frb1->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
@@ -134,7 +134,8 @@ void FlexTests(Composite* testWindow)
   frb2->SetText("Flex Row Button 1");
 
   Composite* someRow = new Composite(testWindow);
-  someRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 4), Thickness(0, 0, 0, 0)));
+  someRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(4, 4), Thickness(0, 0, 0, 0)));
 
   Spacer* s0 = new Spacer(someRow);
   s0->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
@@ -152,7 +153,8 @@ void FlexTests(Composite* testWindow)
   s2->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
 
   Composite* bottom = new Composite(testWindow);
-  bottom->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(4, 4), Thickness(4, 4, 4, 4)));
+  bottom->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(4, 4), Thickness(4, 4, 4, 4)));
 
   TextButton* t8 = new TextButton(bottom);
   t8->SetText("Vertical Button 1");
@@ -174,7 +176,8 @@ void FlexTests(Composite* testWindow)
 
 void StandardControlsLayoutTest(Composite* testWindow)
 {
-  testWindow->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+  testWindow->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
   StringSource* source = new StringSource();
   source->Strings.PushBack("One");
@@ -206,7 +209,7 @@ void StandardControlsLayoutTest(Composite* testWindow)
   minButton->SetText("Min size button");
 }
 
-template<typename attach>
+template <typename attach>
 void TestLayout(Composite* owner, StringParam name, attach doAttach)
 {
   Window* window = new Window(owner);
@@ -218,7 +221,6 @@ void TestLayout(Composite* owner, StringParam name, attach doAttach)
   CenterToWindow(owner, window, true);
 }
 
-
 void OpenTestWidgets(Composite* owner)
 {
   TestLayout(owner, "FlexMinSizeLayoutTest", FlexMinSizeLayoutTest);
@@ -228,18 +230,20 @@ void OpenTestWidgets(Composite* owner)
   OpenSeperateWindow(NULL);
 }
 
-
 void OpenSeperateWindow(OsWindow* mainWindow)
 {
   OsShell* shell = Z::gEngine->has(OsShell);
-  IntVec2 windowPos = IntVec2(0,0);
+  IntVec2 windowPos = IntVec2(0, 0);
   IntVec2 windowSize = IntVec2(800, 800);
-  WindowStyleFlags::Enum flags = (WindowStyleFlags::Enum)(WindowStyleFlags::Close | WindowStyleFlags::Resizable | WindowStyleFlags::TitleBar);
-  OsWindow* newWindow = shell->CreateOsWindow("Testing", windowSize, windowPos, mainWindow, flags);
+  WindowStyleFlags::Enum flags = (WindowStyleFlags::Enum)(
+      WindowStyleFlags::Close | WindowStyleFlags::Resizable |
+      WindowStyleFlags::TitleBar);
+  OsWindow* newWindow = shell->CreateOsWindow(
+      "Testing", windowSize, windowPos, mainWindow, flags);
   RootWidget* rootWidget = new RootWidget(newWindow);
   Window* testWindow = new Window(rootWidget);
   testWindow->SetSize(Pixels(400, 400));
   StandardControlsLayoutTest(testWindow);
 }
 
-}
+} // namespace Zero

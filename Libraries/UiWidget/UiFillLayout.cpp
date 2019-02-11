@@ -1,16 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Fill Layout
-//******************************************************************************
 ZilchDefineType(UiFillLayout, builder, type)
 {
   ZeroBindDocumented();
@@ -21,19 +14,16 @@ ZilchDefineType(UiFillLayout, builder, type)
   ZilchBindMethod(FillToRectangle);
 }
 
-//******************************************************************************
 void UiFillLayout::Initialize(CogInitializer& initializer)
 {
   UiLayout::Initialize(initializer);
 }
 
-//******************************************************************************
 Vec2 UiFillLayout::Measure(Rectangle& rect)
 {
   return MaxMeasure(rect);
 }
 
-//******************************************************************************
 void UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
 {
   // Debug break if set
@@ -51,18 +41,17 @@ void UiFillLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   rect.RemoveThickness(mPadding);
 
   // Layout each child
-  forRange(UiWidget* child, AllWidgetsInLayout())
+  forRange(UiWidget * child, AllWidgetsInLayout())
   {
     // Do nothing if it's not in the layout
-    if(!child->GetInLayout())
+    if (!child->GetInLayout())
       continue;
-    
+
     FillToRectangle(rect, child);
     child->Update(e);
   }
 }
 
-//******************************************************************************
 void UiFillLayout::FillToParent(UiWidget* child)
 {
   if (UiWidget* parent = child->mParent)
@@ -72,7 +61,6 @@ void UiFillLayout::FillToParent(UiWidget* child)
   }
 }
 
-//******************************************************************************
 void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
 {
   // Measure the child object
@@ -99,7 +87,12 @@ void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
     if (widget->GetSizePolicyX() == UiSizePolicy::Fixed)
       childSize.x = widget->GetSize().x + childMargins.Width();
 
-    CalculateAlignment(Axis::X, widget->GetHorizontalAlignment(), size, pos, childSize, childPos);
+    CalculateAlignment(Axis::X,
+                       widget->GetHorizontalAlignment(),
+                       size,
+                       pos,
+                       childSize,
+                       childPos);
   }
 
   if (widget->GetSizePolicyY() == UiSizePolicy::Flex)
@@ -112,7 +105,12 @@ void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
     if (widget->GetSizePolicyY() == UiSizePolicy::Fixed)
       childSize.y = widget->GetSize().y + childMargins.Height();
 
-    CalculateAlignment(Axis::Y, widget->GetVerticalAlignment(), size, pos, childSize, childPos);
+    CalculateAlignment(Axis::Y,
+                       widget->GetVerticalAlignment(),
+                       size,
+                       pos,
+                       childSize,
+                       childPos);
   }
 
   Rectangle childRect = Rectangle::PointAndSize(childPos, childSize);
@@ -123,4 +121,4 @@ void UiFillLayout::FillToRectangle(RectangleParam rect, UiWidget* widget)
   widget->SetLocalBottomLeft(childRect.GetBottomLeft());
 }
 
-}//namespace Zero
+} // namespace Zero

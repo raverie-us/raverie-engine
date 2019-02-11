@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file WindowsError.cpp
-/// Implementation of Windows error handling.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "WindowsError.hpp"
 
 Zero::String ToErrorString(uint errorCode)
 {
-  //If no error code was provided default to the last error
-  //that occurred.
+  // If no error code was provided default to the last error
+  // that occurred.
   DWORD error = errorCode != 0 ? errorCode : GetLastError();
 
   // This is an optimization to avoid allocations for successful operations
@@ -25,41 +17,45 @@ Zero::String ToErrorString(uint errorCode)
 
   // Look up windows error string.
   DWORD numberOfChars = FormatMessageA(
-    FORMAT_MESSAGE_ALLOCATE_BUFFER  |
-    FORMAT_MESSAGE_FROM_SYSTEM      |
-    FORMAT_MESSAGE_IGNORE_INSERTS,
-    NULL,
-    error,
-    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-    (LPSTR)&messageBuffer,
-    0,
-    NULL);
+      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+          FORMAT_MESSAGE_IGNORE_INSERTS,
+      NULL,
+      error,
+      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+      (LPSTR)&messageBuffer,
+      0,
+      NULL);
 
   Zero::String string((const char*)messageBuffer);
   LocalFree(messageBuffer);
 
   // When formatting a message, some of them include context (inserts)
-  // We don't always have the context, and we don't want the '%1' inserts showing up in the message
-  // For the most part, removing them works and the message is still decently valid
-  // This also replaces the leading and trailing space for the '%1' Insert
+  // We don't always have the context, and we don't want the '%1' inserts
+  // showing up in the message For the most part, removing them works and the
+  // message is still decently valid This also replaces the leading and trailing
+  // space for the '%1' Insert
   static Zero::Regex regex(" \\%[0-9]+|\\%[0-9]+ ");
   static Zero::String cEmpty;
   string = regex.Replace(string, cEmpty);
-  
+
   // Add extra error message data
   if (errorCode == ERROR_MOD_NOT_FOUND)
   {
-    string = BuildString(string, "This may be because a dependent dll or exe could not be loaded. "
-      "Make sure that all executables and dlls have NOT been renamed");
+    string = BuildString(
+        string,
+        "This may be because a dependent dll or exe could not be loaded. "
+        "Make sure that all executables and dlls have NOT been renamed");
   }
 
   if (numberOfChars == 0)
-    string = Zero::String::Format("Error occurred with code: %d (hex %x)", errorCode, errorCode);
+    string = Zero::String::Format(
+        "Error occurred with code: %d (hex %x)", errorCode, errorCode);
 
   return string;
 }
 
-void FillWindowsErrorStatus(Zero::Status& status, const char* windowsFunctionName)
+void FillWindowsErrorStatus(Zero::Status& status,
+                            const char* windowsFunctionName)
 {
   // If we already failed, don't bother adding more
   if (status.Failed())
@@ -69,7 +65,10 @@ void FillWindowsErrorStatus(Zero::Status& status, const char* windowsFunctionNam
   if (errorCode != 0)
   {
     if (windowsFunctionName)
-      status.SetFailed(BuildString(ToErrorString(errorCode), " (at ", windowsFunctionName, ")"), errorCode);
+      status.SetFailed(
+          BuildString(
+              ToErrorString(errorCode), " (at ", windowsFunctionName, ")"),
+          errorCode);
     else
       status.SetFailed(ToErrorString(errorCode), errorCode);
   }
@@ -77,21 +76,21 @@ void FillWindowsErrorStatus(Zero::Status& status, const char* windowsFunctionNam
 
 uint CheckWindowsErrorCode(uint success, cstr format, ...)
 {
-  if(!success)
+  if (!success)
   {
     Zero::String errorString = ToErrorString();
     char emptyBuffer[1] = {0};
     char* messageBuffer = emptyBuffer;
 
-    if(format)
+    if (format)
     {
-      //Use va args to print text
+      // Use va args to print text
       va_list args;
       va_start(args, format);
-      //Get the number of characters needed
+      // Get the number of characters needed
       int characters;
       ZeroVSPrintfCount(format, args, 1, characters);
-      if(characters > 0)
+      if (characters > 0)
       {
         messageBuffer = (char*)alloca(characters + 1);
         messageBuffer[characters] = '\0';
@@ -108,11 +107,11 @@ uint CheckWindowsErrorCode(uint success, cstr format, ...)
   return success;
 }
 
-
 cstr GetWindowsExceptionCode(int exceptionCode)
 {
-  //take from Bruce Dawson's article http://www.altdevblogaday.com/2012/04/20/exceptional-floating-point/
-  switch((DWORD)exceptionCode)
+  // take from Bruce Dawson's article
+  // http://www.altdevblogaday.com/2012/04/20/exceptional-floating-point/
+  switch ((DWORD)exceptionCode)
   {
   case STATUS_FLOAT_INVALID_OPERATION:
     return "Float Invalid Operation";

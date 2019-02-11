@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,7 +7,6 @@ namespace Zero
 // Forward declarations
 class ResourceEvent;
 
-//------------------------------------------------------------------ Cog Command
 class CogCommand : public Command
 {
 public:
@@ -26,7 +20,10 @@ public:
   /// Command Interface.
   void Execute() override;
 
-  String GetName() { return Name; }
+  String GetName()
+  {
+    return Name;
+  }
 
   /// The live command object.
   HandleOf<Cog> mCog;
@@ -38,7 +35,6 @@ public:
   BoundTypeHandle mScriptComponentType;
 };
 
-//---------------------------------------------------------- Cog Command Manager
 /// This class will manage the creation and destruction of CogCommands.
 /// There are two ways a CogCommand can be created:
 /// 1. A Component with the [Command] attribute with the attribute parameter
@@ -64,7 +60,6 @@ public:
 
   Space* GetSpace();
 
-
 public:
   /// All command objects will be created in this space.
   HandleOf<Space> mCommandSpace;
@@ -72,4 +67,4 @@ public:
   CommandManager* mCommands;
 };
 
-}//namespace Zero
+} // namespace Zero

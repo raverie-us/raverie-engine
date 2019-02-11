@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BasicEditors.hpp
-/// 
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//Forward Declarations
+// Forward Declarations
 class Cog;
 class Mouse;
 
@@ -21,12 +13,12 @@ void RegisterEngineEditors();
 
 namespace Events
 {
-  DeclareEvent(ObjectPoll);
+DeclareEvent(ObjectPoll);
 }
 
 namespace PropertyViewUi
 {
-  DeclareTweakable(Vec4, ColorWidgetHighlight);
+DeclareTweakable(Vec4, ColorWidgetHighlight);
 }
 
 class ValueEvent : public Event
@@ -41,10 +33,9 @@ class ObjectPollEvent : public Event
 {
 public:
   ZilchDeclareType(ObjectPollEvent, TypeCopyMode::ReferenceType);
-  ObjectPollEvent() 
-  : OwnedWidget(nullptr) 
-  , FoundObject(nullptr)
-  {}
+  ObjectPollEvent() : OwnedWidget(nullptr), FoundObject(nullptr)
+  {
+  }
 
   Widget* OwnedWidget;
   Cog* FoundObject;
@@ -71,11 +62,13 @@ public:
   void PreviewValue(AnyParam value);
   void PreviewValue(PropertyState& state);
 
-  /// Set the value and queue and undo 
+  /// Set the value and queue and undo
   void CommitValue(AnyParam value);
   void CommitValue(PropertyState& state);
 
-  void BuildPath(ObjectPropertyNode* node, Handle& rootInstance, PropertyPath& path);
+  void BuildPath(ObjectPropertyNode* node,
+                 Handle& rootInstance,
+                 PropertyPath& path);
   bool IsModified();
 
   /// Interface PropertyWidget
@@ -98,7 +91,7 @@ public:
 
 namespace PropertyViewUi
 {
-  DeclareTweakable(Vec4, ModifiedTextColor);
+DeclareTweakable(Vec4, ModifiedTextColor);
 }
 
-}//namespace Zero
+} // namespace Zero

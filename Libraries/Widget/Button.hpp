@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Button.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,12 +6,11 @@ namespace Zero
 
 namespace Events
 {
-  //The button has been pressed.
-  DeclareEvent(ButtonPressed);
-}
+// The button has been pressed.
+DeclareEvent(ButtonPressed);
+} // namespace Events
 class Command;
 
-//------------------------------------------------------------------ Button Base
 class ButtonBase : public Composite
 {
 public:
@@ -29,7 +20,7 @@ public:
 
   void SetToolTip(StringParam text);
 
-  //ButtonBase Interface
+  // ButtonBase Interface
   virtual void AddCommand(Command* command);
   virtual void OnCommandStateChange(ObjectEvent* event);
   void UpdateTransform() override;
@@ -46,7 +37,7 @@ public:
   ByteColor mBackgroundColor, mBackgroundHoverColor, mBackgroundClickedColor;
 
   void Activate();
-  //Events
+  // Events
   virtual void OnMouseEnter(MouseEvent* event);
   virtual void OnMouseExit(MouseEvent* event);
   void OnMouseDown(MouseEvent* event);
@@ -72,7 +63,6 @@ public:
   HandleOf<Widget> mToolTip;
 };
 
-//------------------------------------------------------------------ Text Button
 DeclareEnum2(TextButtonStyle, Classic, Modern);
 /// Text button is a basic button with text.
 class TextButton : public ButtonBase
@@ -106,7 +96,6 @@ public:
   Text* mButtonText;
 };
 
-//------------------------------------------------------------------ Icon Button
 /// Icon button is a button with a icon for tool bars.
 class IconButton : public ButtonBase
 {
@@ -123,13 +112,13 @@ public:
   void UpdateTransform() override;
   Vec2 GetMinSize() override;
 
-  //ButtonBase Interface
+  // ButtonBase Interface
   void AddCommand(Command* command) override;
 
   virtual void UpdateIconColor();
 
   Thickness mPadding;
-  
+
   ByteColor mIconColor, mIconHoverColor, mIconClickedColor;
 
 protected:
@@ -140,7 +129,6 @@ protected:
   Element* mIcon;
 };
 
-//----------------------------------------------------------- Toggle Icon Button
 /// Used for switching between two icons when clicked
 class ToggleIconButton : public IconButton
 {
@@ -177,4 +165,4 @@ namespace IconButtonUi
 DeclareTweakable(Vec4, DefaultColor);
 }
 
-}//namespace Zero
+} // namespace Zero

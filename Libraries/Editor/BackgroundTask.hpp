@@ -1,40 +1,32 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BackgroundTask.hpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  /// All events are sent on both the BackgroundTask object and gBackgroundTasks
-  DeclareEvent(BackgroundTaskStarted);
-  DeclareEvent(BackgroundTaskUpdated);
-  DeclareEvent(BackgroundTaskCompleted);
-  DeclareEvent(BackgroundTaskFailed);
-  DeclareEvent(BackgroundTaskCanceled);
-}//namespace Events
+/// All events are sent on both the BackgroundTask object and gBackgroundTasks
+DeclareEvent(BackgroundTaskStarted);
+DeclareEvent(BackgroundTaskUpdated);
+DeclareEvent(BackgroundTaskCompleted);
+DeclareEvent(BackgroundTaskFailed);
+DeclareEvent(BackgroundTaskCanceled);
+} // namespace Events
 
 /// Forward declarations.
 class BackgroundTask;
 
-DeclareEnum5(BackgroundTaskState, NotStarted, Running, Completed,
-                                  Failed, Canceled);
+DeclareEnum5(
+    BackgroundTaskState, NotStarted, Running, Completed, Failed, Canceled);
 
-//-------------------------------------------------------- Background Task Event
 class BackgroundTaskEvent : public Event
 {
 public:
   ZilchDeclareType(BackgroundTaskEvent, TypeCopyMode::ReferenceType);
-  BackgroundTaskEvent(BackgroundTask* task) : mTask(task){}
+  BackgroundTaskEvent(BackgroundTask* task) : mTask(task)
+  {
+  }
   BackgroundTask* mTask;
 
   /// The reason these are here even though the job stores a pointer to the
@@ -46,7 +38,6 @@ public:
   BackgroundTaskState::Type State;
 };
 
-//---------------------------------------------------------- Background Task Job
 /// When implementing a background task, you should derive from this class.
 /// When passing off to the gBackgroundTasks object, a main thread
 /// BackgroundTask will be created and returned to connect to events.
@@ -57,7 +48,8 @@ public:
 
   /// Called from the job thread to update the main thread on the
   /// progress of this task.
-  void UpdateProgress(StringParam taskName, float percentComplete,
+  void UpdateProgress(StringParam taskName,
+                      float percentComplete,
                       StringParam progressText = String());
 
   /// Returns the name from the task (if the task exists)
@@ -84,7 +76,6 @@ private:
   BackgroundTask* mTask;
 };
 
-//-------------------------------------------------------------- Background Task
 /// Called when the task is clicked on in the UI
 typedef void (*BackgroundTaskActivatedCallback)(BackgroundTask*, Job*);
 
@@ -125,7 +116,7 @@ public:
   /// Set to true if mPercentComplete cannot be updated.
   bool mIndeterminate;
 
-  /// When calculating the average percentage of all active tasks, the average 
+  /// When calculating the average percentage of all active tasks, the average
   /// will jump backwards once a single task has finished. To avoid this jump,
   /// a task will always be used to calculate the average percentage complete
   /// until all tasks are completed, then this will be set to false.
@@ -159,7 +150,6 @@ private:
   HandleOf<BackgroundTaskJob> mJob;
 };
 
-//------------------------------------------------------------- Background Tasks
 class BackgroundTasks : public ExplicitSingleton<BackgroundTasks, EventObject>
 {
 public:
@@ -181,13 +171,13 @@ public:
   Array<BackgroundTask*> mActiveTasks;
 
 private:
-  /// Event sent from the 
+  /// Event sent from the
   void OnTaskUpdated(BackgroundTaskEvent* e);
 };
 
 namespace Z
 {
-  extern BackgroundTasks* gBackgroundTasks;
-}//namespace Z
+extern BackgroundTasks* gBackgroundTasks;
+} // namespace Z
 
-}//namespace Zero
+} // namespace Zero

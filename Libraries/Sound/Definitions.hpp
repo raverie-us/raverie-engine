@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -16,7 +11,11 @@ typedef Array<float>::range BufferRange;
 namespace AudioThreads
 {
 
-enum Enum { MainThread = 0, MixThread };
+enum Enum
+{
+  MainThread = 0,
+  MixThread
+};
 
 } // namespace AudioThreads
 
@@ -30,7 +29,7 @@ const unsigned cSystemSampleRate = 48000;
 // The time increment per audio frame corresponding to the sample rate
 const double cSystemTimeIncrement = 1.0 / 48000.0;
 // The number of frames used to interpolate instant property changes
-const unsigned  cPropertyChangeFrames = (unsigned)(48000 * 0.01f);
+const unsigned cPropertyChangeFrames = (unsigned)(48000 * 0.01f);
 // Maximum number of channels in audio output
 const unsigned cMaxChannels = 8;
 // Volume modifier applied to all generated waves
@@ -49,8 +48,10 @@ const int cFalse = 0;
 
 bool IsWithinLimit(float valueToCheck, float centralValue, float limit);
 
-void AppendToBuffer(BufferType* destinationBuffer, const BufferType& sourceBuffer,
-  unsigned sourceStartIndex, unsigned numberOfSamples);
+void AppendToBuffer(BufferType* destinationBuffer,
+                    const BufferType& sourceBuffer,
+                    unsigned sourceStartIndex,
+                    unsigned numberOfSamples);
 
 float PitchToSemitones(float pitch);
 
@@ -62,47 +63,72 @@ float DecibelsToVolume(float decibels);
 
 } // namespace AudioConstants
 
-//**************************************************************************************************
 template <typename T>
 class Threaded
 {
 public:
-  Threaded() {}
-  Threaded(T value) { mValues[0] = value; mValues[1] = value; }
+  Threaded()
+  {
+  }
+  Threaded(T value)
+  {
+    mValues[0] = value;
+    mValues[1] = value;
+  }
 
-  T Get(AudioThreads::Enum whichThread) { return mValues[whichThread]; }
+  T Get(AudioThreads::Enum whichThread)
+  {
+    return mValues[whichThread];
+  }
 
   void Set(T value, AudioThreads::Enum threadCalledOn)
   {
     mValues[threadCalledOn] = value;
 
     if (threadCalledOn == AudioThreads::MainThread)
-      Z::gSound->Mixer.AddTask(CreateFunctor(&mValues[AudioThreads::MixThread], value), nullptr);
+      Z::gSound->Mixer.AddTask(
+          CreateFunctor(&mValues[AudioThreads::MixThread], value), nullptr);
     else
-      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&mValues[AudioThreads::MainThread], value), nullptr);
+      Z::gSound->Mixer.AddTaskThreaded(
+          CreateFunctor(&mValues[AudioThreads::MainThread], value), nullptr);
   }
 
-  void SetDirectly(T value) { mValues[0] = value; mValues[1] = value; }
+  void SetDirectly(T value)
+  {
+    mValues[0] = value;
+    mValues[1] = value;
+  }
 
 private:
   T mValues[2];
 
-  T& operator=(const T& lhs) {}
+  T& operator=(const T& lhs)
+  {
+  }
 };
 
-//**************************************************************************************************
 class ThreadedInt
 {
 public:
-  ThreadedInt() {}
-  ThreadedInt(const int& value) : mValue(value) {}
+  ThreadedInt()
+  {
+  }
+  ThreadedInt(const int& value) : mValue(value)
+  {
+  }
 
-  int Get() { return mValue; }
+  int Get()
+  {
+    return mValue;
+  }
 
-  void Set(int value) { AtomicExchange(&mValue, value); }
+  void Set(int value)
+  {
+    AtomicExchange(&mValue, value);
+  }
 
 private:
   volatile int mValue;
 };
 
-}
+} // namespace Zero

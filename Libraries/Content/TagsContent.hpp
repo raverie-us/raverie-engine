@@ -1,32 +1,27 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TagsContent.hpp
-/// Declaration of the TagsContent content component.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------- Tags
 class ContentTags : public ContentComponent
 {
 public:
   ZilchDeclareType(ContentTags, TypeCopyMode::ReferenceType);
 
   /// Constructor
-  ContentTags(){}
+  ContentTags()
+  {
+  }
 
   /// ContentComponent interface.
   void Serialize(Serializer& stream) override;
-  void Generate(ContentInitializer& initializer){}
-  
+  void Generate(ContentInitializer& initializer)
+  {
+  }
+
   /// All unique tags
   HashSet<String> mTags;
 };
 
-}// namespace Zero
+} // namespace Zero

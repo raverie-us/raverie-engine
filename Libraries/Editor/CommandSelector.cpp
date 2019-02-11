@@ -1,25 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CommandSelector.cpp
-/// Implementation of the CommandSelector class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ GeneralSearchView
 ZilchDefineType(GeneralSearchView, builder, type)
 {
-
 }
 
-GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus)
-  : Composite(parent)
+GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus) :
+    Composite(parent)
 {
   mReturnFocus = returnFocus;
   this->SetLayout(CreateStackLayout());
@@ -27,7 +17,7 @@ GeneralSearchView::GeneralSearchView(Composite* parent, Widget* returnFocus)
   CommandCaptureContextEvent commandCaptureEvent;
   commandCaptureEvent.ActiveSet = CommandManager::GetInstance();
 
-  if(returnFocus)
+  if (returnFocus)
     returnFocus->DispatchBubble(Events::CommandCaptureContext,
                                 &commandCaptureEvent);
 
@@ -63,13 +53,13 @@ void GeneralSearchView::AutoClose()
   // if this window still has it. This lets
   // a command that creates a widget take focus
   // and not lose it.
-  if(this->HasFocus())
+  if (this->HasFocus())
   {
     // Get rid of focus on this object first
     this->LoseFocus();
 
     // Restore old focus
-    if(Widget* reternFocus = mReturnFocus)
+    if (Widget* reternFocus = mReturnFocus)
       reternFocus->TryTakeFocus();
   }
 
@@ -87,20 +77,21 @@ void GeneralSearchView::OnCancel(SearchViewEvent* event)
   AutoClose();
 }
 
-//------------------------------------------------------------ FloatingSearchView
+//FloatingSearchView
 
-FloatingSearchView::FloatingSearchView(Widget* popUp)
-  : PopUp(popUp, PopUpCloseMode::MouseDistance)
+FloatingSearchView::FloatingSearchView(Widget* popUp) :
+    PopUp(popUp, PopUpCloseMode::MouseDistance)
 {
   mView = new SearchView(this);
 }
 
 void FloatingSearchView::UpdateTransform()
 {
-  LayoutResult r = RemoveThickness(Thickness(Pixels(1,1,1,1)), this->GetSize());
+  LayoutResult r =
+      RemoveThickness(Thickness(Pixels(1, 1, 1, 1)), this->GetSize());
   mView->SetTranslation(r.Translation);
   mView->SetSize(r.Size);
   PopUp::UpdateTransform();
 }
 
-}//namespace Zero
+} // namespace Zero

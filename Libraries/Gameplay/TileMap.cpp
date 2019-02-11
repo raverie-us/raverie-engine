@@ -1,11 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// \file TileMap.cpp
-///
-/// Authors: Nathan Carlson
-/// Copyright 2013, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,27 +7,29 @@ namespace Zero
 namespace
 {
 
-IntVec2 TileOffset[] =
-{
-  IntVec2(-1, 0),
-  IntVec2(0, 1),
-  IntVec2(1, 0),
-  IntVec2(0, -1),
+IntVec2 TileOffset[] = {
+    IntVec2(-1, 0),
+    IntVec2(0, 1),
+    IntVec2(1, 0),
+    IntVec2(0, -1),
 };
 
 struct TileEdge
 {
-  TileEdge() {}
-  TileEdge(Vec2 a, Vec2 b) : p0(a), p1(b) {}
+  TileEdge()
+  {
+  }
+  TileEdge(Vec2 a, Vec2 b) : p0(a), p1(b)
+  {
+  }
   Vec2 p0, p1;
 };
 
-TileEdge TileEdges[] =
-{
-  TileEdge(Vec2(-0.5, -0.5), Vec2(-0.5, 0.5)),
-  TileEdge(Vec2(-0.5, 0.5), Vec2(0.5, 0.5)),
-  TileEdge(Vec2(0.5, 0.5), Vec2(0.5, -0.5)),
-  TileEdge(Vec2(0.5, -0.5), Vec2(-0.5, -0.5)),
+TileEdge TileEdges[] = {
+    TileEdge(Vec2(-0.5, -0.5), Vec2(-0.5, 0.5)),
+    TileEdge(Vec2(-0.5, 0.5), Vec2(0.5, 0.5)),
+    TileEdge(Vec2(0.5, 0.5), Vec2(0.5, -0.5)),
+    TileEdge(Vec2(0.5, -0.5), Vec2(-0.5, -0.5)),
 };
 
 bool FindEdge(const EdgeGraph& contours, Vec2 e0, Vec2 e1, TileEdge& edge)
@@ -63,7 +58,7 @@ bool FindEdge(const EdgeGraph& contours, Vec2 e0, Vec2 e1, TileEdge& edge)
       }
     }
 
-    //break;
+    // break;
   }
 
   return false;
@@ -103,11 +98,15 @@ bool OverlapEdges(EdgeGraph& contours, EdgeGraph& adjacent, Vec2 pos)
       overlapAxis = 0;
     }
 
-    Vec2 minA = edgeA.p0[overlapAxis] < edgeA.p1[overlapAxis] ? edgeA.p0 : edgeA.p1;
-    Vec2 maxA = edgeA.p0[overlapAxis] > edgeA.p1[overlapAxis] ? edgeA.p0 : edgeA.p1;
+    Vec2 minA =
+        edgeA.p0[overlapAxis] < edgeA.p1[overlapAxis] ? edgeA.p0 : edgeA.p1;
+    Vec2 maxA =
+        edgeA.p0[overlapAxis] > edgeA.p1[overlapAxis] ? edgeA.p0 : edgeA.p1;
 
-    Vec2 minB = edgeB.p0[overlapAxis] < edgeB.p1[overlapAxis] ? edgeB.p0 : edgeB.p1;
-    Vec2 maxB = edgeB.p0[overlapAxis] > edgeB.p1[overlapAxis] ? edgeB.p0 : edgeB.p1;
+    Vec2 minB =
+        edgeB.p0[overlapAxis] < edgeB.p1[overlapAxis] ? edgeB.p0 : edgeB.p1;
+    Vec2 maxB =
+        edgeB.p0[overlapAxis] > edgeB.p1[overlapAxis] ? edgeB.p0 : edgeB.p1;
 
     if (minB[overlapAxis] >= maxA[overlapAxis])
       continue;
@@ -141,7 +140,8 @@ bool OverlapEdges(EdgeGraph& contours, EdgeGraph& adjacent, Vec2 pos)
     {
       for (uint n = 0; n < endPointsA.size; ++n)
       {
-        if (endPointsA.points[n].x == edgeA.p1.x && endPointsA.points[n].y == edgeA.p1.y)
+        if (endPointsA.points[n].x == edgeA.p1.x &&
+            endPointsA.points[n].y == edgeA.p1.y)
         {
           endPointsA.RemovePoint(n);
           break;
@@ -158,7 +158,8 @@ bool OverlapEdges(EdgeGraph& contours, EdgeGraph& adjacent, Vec2 pos)
     {
       for (uint n = 0; n < endPointsB.size; ++n)
       {
-        if (endPointsB.points[n].x == edgeB.p1.x && endPointsB.points[n].y == edgeB.p1.y)
+        if (endPointsB.points[n].x == edgeB.p1.x &&
+            endPointsB.points[n].y == edgeB.p1.y)
         {
           endPointsB.RemovePoint(n);
           break;
@@ -173,7 +174,8 @@ bool OverlapEdges(EdgeGraph& contours, EdgeGraph& adjacent, Vec2 pos)
   for (uint i = 0; i < newEdges.Size(); ++i)
     contours[newEdges[i].p0].AddPoint(newEdges[i].p1);
 
-  for (EdgeGraph::range range = adjacent.All(); range.Empty() == false; range.PopFront())
+  for (EdgeGraph::range range = adjacent.All(); range.Empty() == false;
+       range.PopFront())
   {
     Vec2 key = range.Front().first;
     EndPoints& endPoints = range.Front().second;
@@ -225,7 +227,8 @@ void CombineCollinearEdges(Array<Vec2>& points)
 
 void FindFirstEdge(EdgeGraph& edges, Array<Vec2>& contour)
 {
-  for (EdgeGraph::range range = edges.All(); range.Empty() == false; range.PopFront())
+  for (EdgeGraph::range range = edges.All(); range.Empty() == false;
+       range.PopFront())
   {
     if (range.Front().second.size == 1)
     {
@@ -237,7 +240,9 @@ void FindFirstEdge(EdgeGraph& edges, Array<Vec2>& contour)
   }
 }
 
-void ComputeContours(EdgeGraph& edges, Array<Vec2>& points, Array<uint>& contours)
+void ComputeContours(EdgeGraph& edges,
+                     Array<Vec2>& points,
+                     Array<uint>& contours)
 {
   Array<Vec2> contour;
   FindFirstEdge(edges, contour);
@@ -265,7 +270,8 @@ void ComputeContours(EdgeGraph& edges, Array<Vec2>& points, Array<uint>& contour
       for (uint i = 0; i < endPoints.size; ++i)
       {
         Vec2 adjEdge = endPoints.points[i] - key;
-        float angle = std::atan2(edge.x * adjEdge.y - edge.y * adjEdge.x, edge.x * adjEdge.x + edge.y * adjEdge.y);
+        float angle = std::atan2(edge.x * adjEdge.y - edge.y * adjEdge.x,
+                                 edge.x * adjEdge.x + edge.y * adjEdge.y);
         if (angle > best)
         {
           best = angle;
@@ -293,7 +299,10 @@ void ComputeContours(EdgeGraph& edges, Array<Vec2>& points, Array<uint>& contour
 }
 
 // Extrudes face back and connects all triangles
-void CompletePhysicsMesh(Array<Vec3>& vertices, Array<uint>& indices, const Array<uint>& contours, real thickness)
+void CompletePhysicsMesh(Array<Vec3>& vertices,
+                         Array<uint>& indices,
+                         const Array<uint>& contours,
+                         real thickness)
 {
   uint size = vertices.Size();
   for (uint i = 0; i < size; ++i)
@@ -331,7 +340,7 @@ void CompletePhysicsMesh(Array<Vec3>& vertices, Array<uint>& indices, const Arra
   }
 }
 
-} // namespace (anonymous)
+} // namespace
 
 ZilchDefineType(TileMap, builder, type)
 {
@@ -344,26 +353,28 @@ ZilchDefineType(TileMap, builder, type)
   ZilchBindFieldProperty(mMeshThickness);
 }
 
-TileMap::TileMap()
-  : mModified(false)
-  , mDirtySprites(false)
-  , mDirtyContours(false)
-  , mBadTile(false)
-  , mMergeCounter(0)
-  , mTestSpace(nullptr)
+TileMap::TileMap() :
+    mModified(false),
+    mDirtySprites(false),
+    mDirtyContours(false),
+    mBadTile(false),
+    mMergeCounter(0),
+    mTestSpace(nullptr)
 {
 }
 
-//--------------------------------------------------------------------- Tile ---
 
-TileMap::Tile::Tile( )
+TileMap::Tile::Tile()
 {
   ArchetypeResource = 0;
   SpriteResource = 0;
   CollisionResource = 0;
 }
 
-TileMap::Tile::Tile(ResourceId archetype, ResourceId sprite, ResourceId collision, bool mergable)
+TileMap::Tile::Tile(ResourceId archetype,
+                    ResourceId sprite,
+                    ResourceId collision,
+                    bool mergable)
 {
   ArchetypeResource = archetype;
   SpriteResource = sprite;
@@ -373,12 +384,12 @@ TileMap::Tile::Tile(ResourceId archetype, ResourceId sprite, ResourceId collisio
 
 bool TileMap::Tile::operator==(const Tile& tile) const
 {
-  return (ArchetypeResource == tile.ArchetypeResource
-    && SpriteResource == tile.SpriteResource
-    && CollisionResource == tile.CollisionResource);
+  return (ArchetypeResource == tile.ArchetypeResource &&
+          SpriteResource == tile.SpriteResource &&
+          CollisionResource == tile.CollisionResource);
 }
 
-size_t TileMap::Tile::Hash( ) const
+size_t TileMap::Tile::Hash() const
 {
   size_t hash = 0;
   hash ^= (u64)ArchetypeResource;
@@ -387,26 +398,26 @@ size_t TileMap::Tile::Hash( ) const
   return hash;
 }
 
-Archetype* TileMap::Tile::GetArchetypeResource( ) const
+Archetype* TileMap::Tile::GetArchetypeResource() const
 {
-  return (Archetype*)Z::gResources->GetResourceManager(ZilchTypeId(Archetype))->
-    GetResource(ArchetypeResource, ResourceNotFound::ReturnNull);
+  return (Archetype*)Z::gResources->GetResourceManager(ZilchTypeId(Archetype))
+      ->GetResource(ArchetypeResource, ResourceNotFound::ReturnNull);
 }
 
-SpriteSource* TileMap::Tile::GetSpriteResource( ) const
+SpriteSource* TileMap::Tile::GetSpriteResource() const
 {
-  return (SpriteSource*)Z::gResources->GetResourceManager(ZilchTypeId(SpriteSource))->
-    GetResource(SpriteResource, ResourceNotFound::ReturnNull);
+  return (SpriteSource*)Z::gResources
+      ->GetResourceManager(ZilchTypeId(SpriteSource))
+      ->GetResource(SpriteResource, ResourceNotFound::ReturnNull);
 }
 
-PhysicsMesh* TileMap::Tile::GetCollisionResource( ) const
+PhysicsMesh* TileMap::Tile::GetCollisionResource() const
 {
-  return (PhysicsMesh*)Z::gResources->GetResourceManager(ZilchTypeId(PhysicsMesh))->
-    GetResource(CollisionResource, ResourceNotFound::ReturnNull);
+  return (PhysicsMesh*)Z::gResources
+      ->GetResourceManager(ZilchTypeId(PhysicsMesh))
+      ->GetResource(CollisionResource, ResourceNotFound::ReturnNull);
 }
 
-
-//------------------------------------------------------------------ TileMap ---
 
 TileMap::~TileMap()
 {
@@ -417,17 +428,20 @@ TileMap::~TileMap()
 
 void TileMap::Initialize(CogInitializer& initializer)
 {
-  Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
+  Archetype* spaceArchetype =
+      ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
 
   mTestSpace = GetGameSession()->CreateEditorSpace(spaceArchetype);
   mTestSpace->has(TimeSpace)->SetPaused(true);
   mTestSpace->has(GraphicsSpace)->mActive = false;
 
-  if(GetSpace()->IsEditorMode() == true)
+  if (GetSpace()->IsEditorMode() == true)
   {
     BuildContours();
 
-    for (TileMap::TileHashMap::range range = mTileMap.All(); range.Empty() == false; range.PopFront())
+    for (TileMap::TileHashMap::range range = mTileMap.All();
+         range.Empty() == false;
+         range.PopFront())
     {
       TileMap::TileHashMap::value_type pair = range.Front();
       IntVec2 pos = pair.first;
@@ -442,9 +456,9 @@ void TileMap::Initialize(CogInitializer& initializer)
   }
   else
   {
-    ConnectThisTo(&initializer, Events::AllObjectsInitialized, OnAllObjectsInitialized);
+    ConnectThisTo(
+        &initializer, Events::AllObjectsInitialized, OnAllObjectsInitialized);
   }
-
 }
 
 void TileMap::Serialize(Serializer& stream)
@@ -467,7 +481,7 @@ void TileMap::DebugDraw()
 void TileMap::TransformUpdate(TransformUpdateInfo& info)
 {
   // infinite recursion
-  //if (info.TransformFlags & TransformUpdateFlags::Scale)
+  // if (info.TransformFlags & TransformUpdateFlags::Scale)
   //  GetOwner()->has(Transform)->SetWorldScale(Vec3(1, 1, 1));
 }
 
@@ -484,14 +498,17 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
 {
   BuildContours();
 
-  // After building the contours in a running game mTestSpace is no longer needed so we
-  // should destroy it as it appears as a space when pressing F9 to edit running game
+  // After building the contours in a running game mTestSpace is no longer
+  // needed so we should destroy it as it appears as a space when pressing F9 to
+  // edit running game
   mTestSpace->Destroy();
   mTestSpace = nullptr;
 
   Transform* mapTransform = GetOwner()->has(Transform);
 
-  for (MergeObjectMap::range range = mMergeObjects.All(); range.Empty() == false; range.PopFront())
+  for (MergeObjectMap::range range = mMergeObjects.All();
+       range.Empty() == false;
+       range.PopFront())
   {
     MergeObject& mergeObj = range.Front().second;
 
@@ -520,7 +537,8 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
       {
         Array<Vec3> vertices;
         for (uint i = 0; i < vertices2D.Size(); ++i)
-          vertices.PushBack(Math::ToVector3(vertices2D[i], mMeshThickness * 0.5f));
+          vertices.PushBack(
+              Math::ToVector3(vertices2D[i], mMeshThickness * 0.5f));
 
         CompletePhysicsMesh(vertices, indices, contours, mMeshThickness);
 
@@ -556,12 +574,14 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
 
     Transform* transform = cog->has(Transform);
 
-    // If using tilemap physics or graphics, object construction assumes relative to local origin.
+    // If using tilemap physics or graphics, object construction assumes
+    // relative to local origin.
     if (processCollision || processSprites)
       transform->SetLocalTranslation(Vec3::cZero);
     // Otherwise set the position to the center of the tile.
     else
-      transform->SetLocalTranslation(mergeObj.position + Vec3(0.5f, 0.5f, 0.0f));
+      transform->SetLocalTranslation(mergeObj.position +
+                                     Vec3(0.5f, 0.5f, 0.0f));
 
     cog->AttachToPreserveLocal(GetOwner());
   }
@@ -572,12 +592,20 @@ void TileMap::OnAllObjectsInitialized(CogInitializerEvent* event)
 
 void TileMap::SaveToTileMapSource(Serializer& stream)
 {
-  CogSavingContext* context = (CogSavingContext*)stream.GetSerializationContext();
+  CogSavingContext* context =
+      (CogSavingContext*)stream.GetSerializationContext();
   Archetype* archetype = context ? (Archetype*)context->SavingArchetype : 0;
 
   // Will return a new resource if it needs to be copied for any reason
-  if(Z::gRuntimeEditor)
-    mSource = (TileMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(TileMapSourceManager::GetInstance(), ZilchTypeId(TileMap), "Source", GetSpace(), mSource, archetype, mModified);
+  if (Z::gRuntimeEditor)
+    mSource = (TileMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(
+        TileMapSourceManager::GetInstance(),
+        ZilchTypeId(TileMap),
+        "Source",
+        GetSpace(),
+        mSource,
+        archetype,
+        mModified);
 
   if (mSource)
   {
@@ -598,7 +626,8 @@ void TileMap::LoadFromTileMapSource(Serializer& stream)
   mTileMap = mSource->mData;
 
   // Get space object is being created in
-  CogCreationContext* context = (CogCreationContext*)stream.GetSerializationContext();
+  CogCreationContext* context =
+      (CogCreationContext*)stream.GetSerializationContext();
   if (!context)
     return;
 
@@ -612,7 +641,8 @@ void TileMap::LoadFromTileMapSource(Serializer& stream)
   // Get the level that owns this resource
   String resourceIdName = mSource->GetBuilder()->GetResourceOwner();
   LevelManager* levelManager = LevelManager::GetInstance();
-  Resource* levelOwner = levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
+  Resource* levelOwner =
+      levelManager->GetResource(resourceIdName, ResourceNotFound::ReturnNull);
 
   // If being loaded into a different level, mark space as modified after load
   if (levelOwner && levelOwner != space->GetCurrentLevel())
@@ -660,7 +690,7 @@ void TileMap::SetTile(IntVec2 gridPos, Tile tile)
       return;
     }
 
-    SpriteSource* sprite = tile.GetSpriteResource( );
+    SpriteSource* sprite = tile.GetSpriteResource();
 
     if (mSpriteMap.Find(gridPos).Empty() == false)
     {
@@ -680,9 +710,11 @@ void TileMap::SetTile(IntVec2 gridPos, Tile tile)
     if (range.Empty() == false)
     {
       Tile& curTile = range.Front().second;
-      if (curTile.GetCollisionResource() != tile.GetCollisionResource() || curTile.Merge != tile.Merge)
+      if (curTile.GetCollisionResource() != tile.GetCollisionResource() ||
+          curTile.Merge != tile.Merge)
         mDirtyContours = true;
-      else if (curTile.GetCollisionResource() && curTile.GetArchetypeResource() != tile.GetArchetypeResource())
+      else if (curTile.GetCollisionResource() &&
+               curTile.GetArchetypeResource() != tile.GetArchetypeResource())
         mDirtyContours = true;
     }
     else if (tile.GetCollisionResource())
@@ -730,10 +762,10 @@ void TileMap::DrawContours(ByteColor color)
 
   Transform* mapTransform = GetOwner()->has(Transform);
 
-  forRange (MergeObjectMap::value_type mergePair, mMergeObjects.All())
+  forRange(MergeObjectMap::value_type mergePair, mMergeObjects.All())
   {
     MergeObject& mergeObj = mergePair.second;
-    forRange (EdgeGraph::value_type pair, mergeObj.contours.All())
+    forRange(EdgeGraph::value_type pair, mergeObj.contours.All())
     {
       Vec2 start = pair.first;
       Vec3 p0 = mapTransform->TransformPoint(Math::ToVector3(start, 0));
@@ -765,26 +797,32 @@ TileStatus::Enum TileMap::ValidTile(Tile tile)
   if (tile.Merge && !tilemapCollision && !tilemapSprites)
     return TileStatus::InvalidMerge;
 
-  return ValidArchetype(tile.GetArchetypeResource(), tilemapCollision, tilemapSprites);
+  return ValidArchetype(
+      tile.GetArchetypeResource(), tilemapCollision, tilemapSprites);
 }
 
-TileStatus::Enum TileMap::ValidArchetype(Archetype* archetype, bool tilemapCollision, bool tilemapSprites)
+TileStatus::Enum TileMap::ValidArchetype(Archetype* archetype,
+                                         bool tilemapCollision,
+                                         bool tilemapSprites)
 {
   CogCreationContext context;
   Cog* cog = mTestSpace->Create(archetype);
   if (!cog)
     return TileStatus::MissingArchetype;
 
-  TileStatus::Enum status = ValidConfiguration(cog, tilemapCollision, tilemapSprites);
+  TileStatus::Enum status =
+      ValidConfiguration(cog, tilemapCollision, tilemapSprites);
 
   cog->Destroy();
 
   return status;
 }
 
-TileStatus::Enum TileMap::ValidConfiguration(Cog* cog, bool tilemapCollision, bool tilemapSprites)
+TileStatus::Enum TileMap::ValidConfiguration(Cog* cog,
+                                             bool tilemapCollision,
+                                             bool tilemapSprites)
 {
-  forRange (Component* component, cog->GetComponents())
+  forRange(Component * component, cog->GetComponents())
   {
     BoundType* componentType = ZilchVirtualTypeId(component);
 
@@ -823,14 +861,15 @@ void TileMap::RefreshMultiSprite()
 
   sprites->Clear();
 
-  for (SpriteHashMap::range range = mSpriteMap.All(); !range.Empty(); range.PopFront())
+  for (SpriteHashMap::range range = mSpriteMap.All(); !range.Empty();
+       range.PopFront())
   {
     SpriteHashMap::value_type pair = range.Front();
     if (pair.second)
       sprites->Set(pair.first, pair.second);
   }
 
-  //sprites->UpdateAabb();
+  // sprites->UpdateAabb();
   sprites->UpdateBroadPhaseAabb();
 }
 
@@ -840,12 +879,13 @@ void TileMap::BuildContours()
   mProcessed.Clear();
   mMergeId.Clear();
   mMergeObjects.Clear();
-  forRange (TileHashMap::value_type pair, mTileMap.All())
-    MergeTile(pair.first, pair.second);
+  forRange(TileHashMap::value_type pair, mTileMap.All())
+      MergeTile(pair.first, pair.second);
 
   if (mBadTile)
   {
-    String error = String::Format("One or more tiles in '%s' are invalid.", GetOwner()->GetName().c_str());
+    String error = String::Format("One or more tiles in '%s' are invalid.",
+                                  GetOwner()->GetName().c_str());
     DoNotifyWarning("TileMap Error", error);
     mBadTile = false;
   }
@@ -888,7 +928,7 @@ void TileMap::MergeTile(IntVec2 pos, Tile tile)
       contour[points[i]].AddPoint(points[(i + 1) % size]);
   }
 
-  SpriteSource* sprite = tile.GetSpriteResource( );
+  SpriteSource* sprite = tile.GetSpriteResource();
 
   // Check all tile adjacencies
   for (uint i = 0; i < 4; ++i)
@@ -934,10 +974,10 @@ void TileMap::MergeTile(IntVec2 pos, Tile tile)
       {
         if (OverlapEdges(adjObj.contours, contour, worldPos))
         {
-            if (sprite)
-              adjObj.sprites.PushBack(SpriteOffset(sprite, pos));
+          if (sprite)
+            adjObj.sprites.PushBack(SpriteOffset(sprite, pos));
 
-            mProcessed[pos] = foundId;
+          mProcessed[pos] = foundId;
         }
       }
       else if (!adjObj.contours.Size() && !contour.Size())
@@ -997,7 +1037,8 @@ void TileMap::MergeTile(IntVec2 pos, Tile tile)
 
     if (sprite)
     {
-      IntVec2 offset = IntVec2((int)Math::Floor(newMerge.position.x), (int)Math::Floor(newMerge.position.y));
+      IntVec2 offset = IntVec2((int)Math::Floor(newMerge.position.x),
+                               (int)Math::Floor(newMerge.position.y));
       newMerge.sprites.PushBack(SpriteOffset(sprite, offset));
     }
 
@@ -1012,32 +1053,41 @@ String TileMap::FormatTileError(TileStatus::Enum status, IntVec2 pos, Tile tile)
   String error;
   switch (status)
   {
-    case TileStatus::Valid: return String();
+  case TileStatus::Valid:
+    return String();
 
-    case TileStatus::MissingArchetype:
-      error = String::Format("Could not resolve Archetype at position (%s)", ToString(pos).c_str());
+  case TileStatus::MissingArchetype:
+    error = String::Format("Could not resolve Archetype at position (%s)",
+                           ToString(pos).c_str());
     break;
-    case TileStatus::MissingPhysicsMesh:
-      error = String::Format("Could not resolve PhysicsMesh at position (%s)", ToString(pos).c_str());
+  case TileStatus::MissingPhysicsMesh:
+    error = String::Format("Could not resolve PhysicsMesh at position (%s)",
+                           ToString(pos).c_str());
     break;
-    case TileStatus::MissingSpriteSource:
-      error = String::Format("Could not resolve SpriteSource at position (%s)", ToString(pos).c_str());
+  case TileStatus::MissingSpriteSource:
+    error = String::Format("Could not resolve SpriteSource at position (%s)",
+                           ToString(pos).c_str());
     break;
-    case TileStatus::ConflictMeshCollider:
-      error = "Archetype has a collider component that is not of type 'MeshCollider'";
+  case TileStatus::ConflictMeshCollider:
+    error =
+        "Archetype has a collider component that is not of type 'MeshCollider'";
     break;
-    case TileStatus::ConflictMultiSprite:
-      error = "Archetype has a graphical component that is not of type 'MultiSprite'";
+  case TileStatus::ConflictMultiSprite:
+    error =
+        "Archetype has a graphical component that is not of type 'MultiSprite'";
     break;
-    case TileStatus::ConflictColliderGraphical:
-      error = "Cannot mix physics/graphics between Archetype and tile properties.";
+  case TileStatus::ConflictColliderGraphical:
+    error =
+        "Cannot mix physics/graphics between Archetype and tile properties.";
     break;
-    case TileStatus::InvalidMerge:
-      error = "Invalid to merge tiles that do not use the collider or sprite property that's used by the TileMap.";
+  case TileStatus::InvalidMerge:
+    error = "Invalid to merge tiles that do not use the collider or sprite "
+            "property that's used by the TileMap.";
     break;
   }
 
-  return String::Format("Invalid tile at position (%d, %d) - %s", pos.x, pos.y, error.c_str());
+  return String::Format(
+      "Invalid tile at position (%d, %d) - %s", pos.x, pos.y, error.c_str());
 }
 
 } // namespace Zero

@@ -1,18 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------------------- Layout Proxy
-//******************************************************************************
 LayoutProxy::LayoutProxy(Widget* widgetToProxy) :
-  Composite(widgetToProxy->GetParent())
+    Composite(widgetToProxy->GetParent())
 {
   // We're going to attach to the widgets parent
   Composite* parent = widgetToProxy->GetParent();
@@ -41,15 +34,14 @@ LayoutProxy::LayoutProxy(Widget* widgetToProxy) :
   mMaintainChildSize = true;
 }
 
-//******************************************************************************
 void LayoutProxy::UpdateTransform()
 {
   Widget* proxy = mProxy;
 
   // Manually update the size of the child if specified.
-  if(proxy)
+  if (proxy)
   {
-    if(mMaintainChildSize)
+    if (mMaintainChildSize)
       proxy->SetSize(mSize);
   }
   else
@@ -61,30 +53,30 @@ void LayoutProxy::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 Vec2 LayoutProxy::GetMinSize()
 {
-  if(Widget* proxy = mProxy)
+  if (Widget* proxy = mProxy)
     return proxy->GetMinSize();
   return mSize;
 }
 
-//******************************************************************************
 LayoutProxy* CreateLayoutProxy(Widget* widget)
 {
   return new LayoutProxy(widget);
 }
 
-//******************************************************************************
-LayoutProxy* ProxyAndAnimateIn(Widget* widget, Vec3Param startPos, float translateTime,
-                       float fadeInTime, float delay)
+LayoutProxy* ProxyAndAnimateIn(Widget* widget,
+                               Vec3Param startPos,
+                               float translateTime,
+                               float fadeInTime,
+                               float delay)
 {
   // Make a proxy so we can translate the widget manually
   LayoutProxy* proxy = CreateLayoutProxy(widget);
 
   // Animate it in
   widget->SetTranslation(startPos);
-  widget->SetColor(Vec4(1,1,1,0));
+  widget->SetColor(Vec4(1, 1, 1, 0));
 
   ActionSequence* seq = new ActionSequence(widget);
   seq->Add(new ActionDelay(delay));
@@ -98,4 +90,4 @@ LayoutProxy* ProxyAndAnimateIn(Widget* widget, Vec3Param startPos, float transla
   return proxy;
 }
 
-} //namespace Zero
+} // namespace Zero

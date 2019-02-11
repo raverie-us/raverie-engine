@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DynamicAabbTreeBroadPhase.cpp
-/// Implementation of the DynamicAabbTreeBroadPhase class.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -17,12 +9,10 @@ ZilchDefineType(DynamicAabbTreeBroadPhase, builder, type)
 
 DynamicAabbTreeBroadPhase::DynamicAabbTreeBroadPhase()
 {
-
 }
 
 DynamicAabbTreeBroadPhase::~DynamicAabbTreeBroadPhase()
 {
-
 }
 
-}//namespace Zero
+} // namespace Zero

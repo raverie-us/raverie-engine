@@ -1,18 +1,16 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-SkeletonProcessor::SkeletonProcessor(HierarchyDataMap& hierarchyData, MeshDataMap& meshData, String& rootNodeName)
-  : mHierarchyDataMap(hierarchyData), 
+SkeletonProcessor::SkeletonProcessor(HierarchyDataMap& hierarchyData,
+                                     MeshDataMap& meshData,
+                                     String& rootNodeName) :
+    mHierarchyDataMap(hierarchyData),
     mMeshDataMap(meshData),
     mRootNodeName(rootNodeName)
 {
-
 }
 
 void SkeletonProcessor::ProcessSkeletonHierarchy(const aiScene* scene)
@@ -37,14 +35,15 @@ void SkeletonProcessor::ProcessSkeletonHierarchy(const aiScene* scene)
     if (numBones > 0)
     {
       aiBone* bone = bones[0];
-      
+
       // using the first bone, find the hierarchy node and proceed up
       // until we find what we define as the skeleton root node
       String boneName = CleanAssetName(bone->mName.C_Str());
       // on the mesh node set the path to the skeleton root node we just found
       String skeletonRootNode = FindSkeletonRootFromBone(boneName);
       HierarchyData& hierarchyData = mHierarchyDataMap[meshData.mMeshName];
-      hierarchyData.mSkeletonRootNodePath = CreateCogPathToSkeletonRoot(meshData.mMeshName, skeletonRootNode);
+      hierarchyData.mSkeletonRootNodePath =
+          CreateCogPathToSkeletonRoot(meshData.mMeshName, skeletonRootNode);
     }
   }
 }
@@ -58,15 +57,18 @@ String SkeletonProcessor::FindSkeletonRootFromBone(String boneName)
   if (data.mParentNodeName != mRootNodeName && boneName != mRootNodeName)
     return FindSkeletonRootFromBone(data.mParentNodeName);
 
-  // the parent is the root node or we are the root node, so mark our current node as the skeletons root
+  // the parent is the root node or we are the root node, so mark our current
+  // node as the skeletons root
   data.mIsSkeletonRoot = true;
   return data.mNodeName;
 }
 
-String SkeletonProcessor::CreateCogPathToSkeletonRoot(String meshNode, String skeletonRootNode)
+String SkeletonProcessor::CreateCogPathToSkeletonRoot(String meshNode,
+                                                      String skeletonRootNode)
 {
   // the skeleton will always be one level down from the root node
-  // so we just need to count up the number of levels to the root that the mesh is from
+  // so we just need to count up the number of levels to the root that the mesh
+  // is from
   HierarchyData meshNodeData = *mHierarchyDataMap.FindPointer(meshNode);
 
   // if the root is the skeleton set the proper cog path for self
@@ -89,7 +91,8 @@ String SkeletonProcessor::CreateCogPathToSkeletonRoot(String meshNode, String sk
 
 void SkeletonProcessor::GenerateObjectRoot()
 {
-  // Create our new object root that will be empty and contains the original root only
+  // Create our new object root that will be empty and contains the original
+  // root only
   HierarchyData newRoot;
   newRoot.mNodeName = String("ObjectRoot");
   newRoot.mLocalTransform = Mat4::cIdentity;
@@ -98,7 +101,7 @@ void SkeletonProcessor::GenerateObjectRoot()
 
   // set the new root as the parent of the original root
   mHierarchyDataMap[mRootNodeName].mParentNodeName = newRoot.mNodeName;
-  
+
   // update the root node name to our newest root
   mRootNodeName = newRoot.mNodeName;
 
@@ -114,10 +117,13 @@ void SkeletonProcessor::UpdateCogPaths(String nodeName)
     UpdateCogPaths(node.mChildren[i]);
   }
 
-  if(nodeName == mRootNodeName)
+  if (nodeName == mRootNodeName)
     mHierarchyDataMap[nodeName].mNodePath = nodeName;
   else
-    mHierarchyDataMap[nodeName].mNodePath = BuildString(mRootNodeName, cAnimationPathDelimiterStr, mHierarchyDataMap[nodeName].mNodePath);
+    mHierarchyDataMap[nodeName].mNodePath =
+        BuildString(mRootNodeName,
+                    cAnimationPathDelimiterStr,
+                    mHierarchyDataMap[nodeName].mNodePath);
 }
 
-}// namespace Zero
+} // namespace Zero

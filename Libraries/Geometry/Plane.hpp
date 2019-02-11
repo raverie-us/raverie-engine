@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Plane.hpp
-/// Declaration of the Plane class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-///Infinite plane defined by a normal and a distance to the origin.
+/// Infinite plane defined by a normal and a distance to the origin.
 struct Plane
 {
   Plane();
@@ -21,7 +13,7 @@ struct Plane
   Plane(Vec4Param data);
   ~Plane();
 
-  ///Flips the planes normal (keeps it's "position").
+  /// Flips the planes normal (keeps it's "position").
   void Flip();
 
   /// Sets the data (normal and d) in the form of a Vec4.
@@ -29,8 +21,9 @@ struct Plane
   void Set(Vec4Param data);
   /// Sets the normal and distance to the origin of the plane.
   void Set(Vec3Param normal, real distance);
-  /// Sets the normal and distance to the plane (read the explanation of 
-  /// the SetPosition function for an explanation of how the position is treated.
+  /// Sets the normal and distance to the plane (read the explanation of
+  /// the SetPosition function for an explanation of how the position is
+  /// treated.
   void Set(Vec3Param normal, Vec3Param position);
 
   /// Returns the normal of the plane.
@@ -49,9 +42,9 @@ struct Plane
   const Vec4& GetData() const;
 
 public:
-  //Holds the normal of the plane in the first 3 elements (xyz) and the distance
-  //to the origin in the 4th element (w).
+  // Holds the normal of the plane in the first 3 elements (xyz) and the
+  // distance to the origin in the 4th element (w).
   Vec4 mData;
 };
 
-}//namespace Zero
+} // namespace Zero

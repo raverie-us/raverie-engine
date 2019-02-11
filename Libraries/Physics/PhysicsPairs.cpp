@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -22,22 +17,23 @@ ColliderPair::ColliderPair(Collider* a, Collider* b)
   Top = a;
   Bot = b;
 
-  if(Top->mId < Bot->mId)
-    Math::Swap(Top,Bot);
+  if (Top->mId < Bot->mId)
+    Math::Swap(Top, Bot);
 }
 
 Vec3 ColliderPair::GetPointSeperatingVelocity(Vec3Param point) const
 {
-  return Top->ComputePointVelocityInternal(point) - Bot->ComputePointVelocityInternal(point);
+  return Top->ComputePointVelocityInternal(point) -
+         Bot->ComputePointVelocityInternal(point);
 }
 
 real ColliderPair::GetMixedRestitution() const
 {
   PhysicsMaterial* topMaterial = Top->GetMaterial();
   PhysicsMaterial* botMaterial = Bot->GetMaterial();
-  if(topMaterial->mRestitutionImportance > botMaterial->mRestitutionImportance)
+  if (topMaterial->mRestitutionImportance > botMaterial->mRestitutionImportance)
     return topMaterial->mRestitution;
-  if(botMaterial->mRestitutionImportance > topMaterial->mRestitutionImportance)
+  if (botMaterial->mRestitutionImportance > topMaterial->mRestitutionImportance)
     return botMaterial->mRestitution;
   return Math::Max(topMaterial->mRestitution, botMaterial->mRestitution);
 }
@@ -46,11 +42,12 @@ real ColliderPair::GetMixedFriction() const
 {
   PhysicsMaterial* topMaterial = Top->GetMaterial();
   PhysicsMaterial* botMaterial = Bot->GetMaterial();
-  if(topMaterial->mFrictionImportance > botMaterial->mFrictionImportance)
+  if (topMaterial->mFrictionImportance > botMaterial->mFrictionImportance)
     return topMaterial->mDynamicFriction;
-  if(botMaterial->mFrictionImportance > topMaterial->mFrictionImportance)
+  if (botMaterial->mFrictionImportance > topMaterial->mFrictionImportance)
     return botMaterial->mDynamicFriction;
-  return Math::Sqrt(topMaterial->mDynamicFriction * botMaterial->mDynamicFriction);
+  return Math::Sqrt(topMaterial->mDynamicFriction *
+                    botMaterial->mDynamicFriction);
 }
 
 u64 ColliderPair::GetId() const
@@ -73,6 +70,6 @@ bool ColliderPair::operator>(const ColliderPair& rhs) const
   return GetId() > rhs.GetId();
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

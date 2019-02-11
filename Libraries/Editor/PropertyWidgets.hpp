@@ -1,24 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyWidgets.hpp
-/// Declaration of PropertyWidget.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Property Edit Action
 class PropertyEditAction : public PropertyWidget
 {
 public:
   typedef PropertyEditAction ZilchSelf;
 
-  PropertyEditAction(PropertyWidgetInitializer& init, Zilch::Function* method, HandleParam instance);
+  PropertyEditAction(PropertyWidgetInitializer& init,
+                     Zilch::Function* method,
+                     HandleParam instance);
 
   void OnButtonPress(Event* event);
 
@@ -28,14 +21,13 @@ public:
   TextButton* mButton;
 };
 
-//------------------------------------------------------------ Add Object Widget
 class AddObjectWidget : public PropertyWidget
 {
 public:
   ZilchDeclareType(AddObjectWidget, TypeCopyMode::ReferenceType);
-  AddObjectWidget(PropertyWidgetInitializer& init, 
-                  PropertyWidgetObject* parentNode, 
-                  PropertyView* grid, 
+  AddObjectWidget(PropertyWidgetInitializer& init,
+                  PropertyWidgetObject* parentNode,
+                  PropertyView* grid,
                   HandleParam instance);
 
   void UpdateTransform() override;
@@ -63,4 +55,4 @@ public:
   HandleOf<MetaArray> mMetaArray;
 };
 
-}//namespace Zero
+} // namespace Zero

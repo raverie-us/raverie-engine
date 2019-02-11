@@ -1,33 +1,29 @@
-// Authors: Nathan Carlson
-// Copyright 2018, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 RenderGroupSource::RenderGroupSource()
 {
   mOperationQueue = Z::gEditor->GetOperationQueue();
 }
 
-//**************************************************************************************************
 DataEntry* RenderGroupSource::GetRoot()
 {
   return this;
 }
 
-//**************************************************************************************************
 DataEntry* RenderGroupSource::ToEntry(DataIndex index)
 {
   if (index.Id == 0)
     return this;
   else
-    return RenderGroupManager::Instance->GetResource(index.Id, ResourceNotFound::ReturnNull);
+    return RenderGroupManager::Instance->GetResource(
+        index.Id, ResourceNotFound::ReturnNull);
 }
 
-//**************************************************************************************************
 DataIndex RenderGroupSource::ToIndex(DataEntry* dataEntry)
 {
   if (dataEntry == this)
@@ -41,13 +37,13 @@ DataIndex RenderGroupSource::ToIndex(DataEntry* dataEntry)
   }
 }
 
-//**************************************************************************************************
 DataEntry* RenderGroupSource::Parent(DataEntry* dataEntry)
 {
   if (dataEntry == this)
     return nullptr;
 
-  // This class acts as the parent for all root RenderGroups for the tree interface.
+  // This class acts as the parent for all root RenderGroups for the tree
+  // interface.
   RenderGroup* renderGroup = (RenderGroup*)dataEntry;
   if (renderGroup->mParentInternal != nullptr)
     return renderGroup->mParentInternal;
@@ -55,7 +51,6 @@ DataEntry* RenderGroupSource::Parent(DataEntry* dataEntry)
     return this;
 }
 
-//**************************************************************************************************
 uint RenderGroupSource::ChildCount(DataEntry* dataEntry)
 {
   if (dataEntry == this)
@@ -63,7 +58,7 @@ uint RenderGroupSource::ChildCount(DataEntry* dataEntry)
     mRootGroups.Clear();
     Array<Resource*> resources;
     RenderGroupManager::Instance->EnumerateResources(resources);
-    forRange (Resource* resource, resources.All())
+    forRange(Resource * resource, resources.All())
     {
       // Get all child groups of this object (root RenderGroups with no parent).
       RenderGroup* renderGroup = (RenderGroup*)resource;
@@ -77,8 +72,9 @@ uint RenderGroupSource::ChildCount(DataEntry* dataEntry)
   return renderGroup->mChildrenInternal.Size();
 }
 
-//**************************************************************************************************
-DataEntry* RenderGroupSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
+DataEntry* RenderGroupSource::GetChild(DataEntry* dataEntry,
+                                       uint index,
+                                       DataEntry* prev)
 {
   if (dataEntry == this)
   {
@@ -95,7 +91,6 @@ DataEntry* RenderGroupSource::GetChild(DataEntry* dataEntry, uint index, DataEnt
     return nullptr;
 }
 
-//**************************************************************************************************
 bool RenderGroupSource::IsExpandable(DataEntry* dataEntry)
 {
   if (dataEntry == this)
@@ -105,8 +100,9 @@ bool RenderGroupSource::IsExpandable(DataEntry* dataEntry)
   return !renderGroup->mChildrenInternal.Empty();
 }
 
-//**************************************************************************************************
-void RenderGroupSource::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
+void RenderGroupSource::GetData(DataEntry* dataEntry,
+                                Any& variant,
+                                StringParam column)
 {
   if (dataEntry == this)
     return;
@@ -118,14 +114,17 @@ void RenderGroupSource::GetData(DataEntry* dataEntry, Any& variant, StringParam 
   }
 }
 
-//**************************************************************************************************
-bool RenderGroupSource::SetData(DataEntry* dataEntry, const Any& variant, StringParam column)
+bool RenderGroupSource::SetData(DataEntry* dataEntry,
+                                const Any& variant,
+                                StringParam column)
 {
   return false;
 }
 
-//**************************************************************************************************
-void RenderGroupSource::CanMove(Status& status, DataEntry* source, DataEntry* destination, InsertMode::Type insertMode)
+void RenderGroupSource::CanMove(Status& status,
+                                DataEntry* source,
+                                DataEntry* destination,
+                                InsertMode::Type insertMode)
 {
   // Do nothing if a data entry is null.
   if (destination == nullptr || source == nullptr)
@@ -143,8 +142,8 @@ void RenderGroupSource::CanMove(Status& status, DataEntry* source, DataEntry* de
 
   RenderGroup* moving = (RenderGroup*)source;
 
-  // If destination is this data source object then the operation is removing the assigned parent.
-  // Do nothing if no parent to remove.
+  // If destination is this data source object then the operation is removing
+  // the assigned parent. Do nothing if no parent to remove.
   if (destination == this && moving->mParentInternal == nullptr)
   {
     status.Context = InsertError::NotSupported;
@@ -204,18 +203,20 @@ void RenderGroupSource::CanMove(Status& status, DataEntry* source, DataEntry* de
       return;
     }
 
-    status.Message = String::Format("Assign '%s' as parent of '%s'.", dest->Name.c_str(), moving->Name.c_str());
+    status.Message = String::Format("Assign '%s' as parent of '%s'.",
+                                    dest->Name.c_str(),
+                                    moving->Name.c_str());
   }
 }
 
-//**************************************************************************************************
 void RenderGroupSource::BeginBatchMove()
 {
   mOperationQueue->BeginBatch("RenderGroup_BatchMove");
 }
 
-//**************************************************************************************************
-bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode)
+bool RenderGroupSource::Move(DataEntry* destinationEntry,
+                             DataEntry* movingEntry,
+                             InsertMode::Type insertMode)
 {
   RenderGroup* moving = (RenderGroup*)movingEntry;
 
@@ -225,7 +226,10 @@ bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry
     mOperationQueue->BeginBatch("RenderGroup_Move");
 
     RemoveFromParent(moving);
-    ChangeAndQueueProperty(mOperationQueue, moving, PropertyPath("ParentRenderGroup"), Any(ZilchTypeId(RenderGroup)));
+    ChangeAndQueueProperty(mOperationQueue,
+                           moving,
+                           PropertyPath("ParentRenderGroup"),
+                           Any(ZilchTypeId(RenderGroup)));
 
     mOperationQueue->EndBatch();
   }
@@ -233,13 +237,15 @@ bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry
   {
     RenderGroup* dest = (RenderGroup*)destinationEntry;
 
-    // If the moving RenderGroup is writable then use the parent property to assign relationship.
+    // If the moving RenderGroup is writable then use the parent property to
+    // assign relationship.
     if (moving->IsWritable())
     {
       mOperationQueue->BeginBatch("RenderGroup_Move");
 
       RemoveFromParent(moving);
-      ChangeAndQueueProperty(mOperationQueue, moving, PropertyPath("ParentRenderGroup"), dest);
+      ChangeAndQueueProperty(
+          mOperationQueue, moving, PropertyPath("ParentRenderGroup"), dest);
 
       mOperationQueue->EndBatch();
     }
@@ -249,7 +255,8 @@ bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry
       mOperationQueue->BeginBatch("RenderGroup_Move");
 
       RemoveFromParent(moving);
-      Operation* operation = new ResourceListOperation<RenderGroupList>(dest->mChildRenderGroups, moving->ResourceIdName);
+      Operation* operation = new ResourceListOperation<RenderGroupList>(
+          dest->mChildRenderGroups, moving->ResourceIdName);
       mOperationQueue->Queue(operation);
       operation->Redo();
 
@@ -260,40 +267,40 @@ bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry
   return true;
 }
 
-//**************************************************************************************************
 void RenderGroupSource::EndBatchMove()
 {
   mOperationQueue->EndBatch();
 }
 
-//**************************************************************************************************
 bool RenderGroupSource::InParentsChildList(RenderGroup* renderGroup)
 {
   if (renderGroup->mParentInternal != nullptr)
-    return renderGroup->mParentInternal->mChildRenderGroups.mResourceIdNames.Contains(renderGroup->ResourceIdName);
+    return renderGroup->mParentInternal->mChildRenderGroups.mResourceIdNames
+        .Contains(renderGroup->ResourceIdName);
 
   return false;
 }
 
-//**************************************************************************************************
 void RenderGroupSource::RemoveFromParent(RenderGroup* renderGroup)
 {
   if (InParentsChildList(renderGroup))
   {
-    Operation* operation = new ResourceListOperation<RenderGroupList>(renderGroup->mParentInternal->mChildRenderGroups, renderGroup->ResourceIdName, -1, false);
+    Operation* operation = new ResourceListOperation<RenderGroupList>(
+        renderGroup->mParentInternal->mChildRenderGroups,
+        renderGroup->ResourceIdName,
+        -1,
+        false);
     mOperationQueue->Queue(operation);
     operation->Redo();
   }
 }
 
-//**************************************************************************************************
 ZilchDefineType(RenderGroupHierarchies, builder, type)
 {
 }
 
-//**************************************************************************************************
-RenderGroupHierarchies::RenderGroupHierarchies(Composite* parent)
-  : Composite(parent)
+RenderGroupHierarchies::RenderGroupHierarchies(Composite* parent) :
+    Composite(parent)
 {
   SetLayout(CreateStackLayout());
 
@@ -310,18 +317,22 @@ RenderGroupHierarchies::RenderGroupHierarchies(Composite* parent)
   mSource = new RenderGroupSource();
   mTree->SetDataSource(mSource);
 
-  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceAdded, OnResourceModified);
-  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceModified, OnResourceModified);
-  ConnectThisTo(RenderGroupManager::GetInstance(), Events::ResourceRemoved, OnResourceModified);
+  ConnectThisTo(RenderGroupManager::GetInstance(),
+                Events::ResourceAdded,
+                OnResourceModified);
+  ConnectThisTo(RenderGroupManager::GetInstance(),
+                Events::ResourceModified,
+                OnResourceModified);
+  ConnectThisTo(RenderGroupManager::GetInstance(),
+                Events::ResourceRemoved,
+                OnResourceModified);
 }
 
-//**************************************************************************************************
 RenderGroupHierarchies::~RenderGroupHierarchies()
 {
   SafeDelete(mSource);
 }
 
-//**************************************************************************************************
 void RenderGroupHierarchies::OnResourceModified(ResourceEvent* event)
 {
   mTree->SetDataSource(mSource);

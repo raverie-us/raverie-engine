@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2013, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Tool.hpp"
 
@@ -40,7 +35,10 @@ DeclareEnum2(TileEditor2DSubToolType, DrawTool, SelectionTool);
 class TileEditor2DOperation : public Operation
 {
 public:
-  TileEditor2DOperation( ) { mName = "TileEditor2D Operation"; }
+  TileEditor2DOperation()
+  {
+    mName = "TileEditor2D Operation";
+  }
 
   void Undo() override;
   void Redo() override;
@@ -55,22 +53,22 @@ public:
   ZilchDeclareType(TileEditor2DSubTool, TypeCopyMode::ReferenceType);
 
   TileEditor2DSubTool(TileEditor2D* owner);
-  virtual ~TileEditor2DSubTool() {};
+  virtual ~TileEditor2DSubTool(){};
 
   void StartPrimaryAction(TileMap* map);
   void StartSecondaryAction(TileMap* map);
   void ContinueAction(TileMap* map);
   void EndAction(TileMap* map);
 
-  virtual void Draw(TileMap* map) {};
+  virtual void Draw(TileMap* map){};
 
-  virtual void PrimaryStart(TileMap* map) {};
-  virtual void PrimaryContinue(TileMap* map) {};
-  virtual void PrimaryEnd(TileMap* map) {};
+  virtual void PrimaryStart(TileMap* map){};
+  virtual void PrimaryContinue(TileMap* map){};
+  virtual void PrimaryEnd(TileMap* map){};
 
-  virtual void SecondaryStart(TileMap* map) {};
-  virtual void SecondaryContinue(TileMap* map) {};
-  virtual void SecondaryEnd(TileMap* map) {};
+  virtual void SecondaryStart(TileMap* map){};
+  virtual void SecondaryContinue(TileMap* map){};
+  virtual void SecondaryEnd(TileMap* map){};
 
   bool HasChange(TileMapChange& change);
   void CommitOperation(TileMap* map);
@@ -154,15 +152,16 @@ private:
 ///     <shortcut> RightMouse + Drag </shortcut>
 ///     <description>
 ///       DrawTool:\Erase tiles using the current brush size.\ \
-///       SelectionTool:\Commit the current tile-selection to be used as the new brush.
+///       SelectionTool:\Commit the current tile-selection to be used as the new
+///       brush.
 ///     </description>
 ///   </command>
 ///   <command name = "SelectTilePaletteBrush">
 ///     <shortcut> Esc </shortcut>
 ///     <description>
-///       Return the brush's tile-selection to the current TilePalette selection,
-///       or if there isn't one - return the brush to the default, single-tile
-///       TilePalette setup.
+///       Return the brush's tile-selection to the current TilePalette
+///       selection, or if there isn't one - return the brush to the default,
+///       single-tile TilePalette setup.
 ///     </description>
 ///   </command>
 ///   <command name = "TilePaletteSelection">
@@ -185,7 +184,8 @@ private:
 ///       Paste a copy of the current tile-selection at the click-point
 ///       in the TilePalette view.\ \
 ///       Note:\  - Current tile-selection may be in either the TilePalette view
-///       or in any other view containing tiles recognized by the TileEditor2D tool.
+///       or in any other view containing tiles recognized by the TileEditor2D
+///       tool.
 ///     </description>
 ///   </command>
 ///   <command name = "TilePaletteZoom">
@@ -210,7 +210,8 @@ public:
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
 
-  void GeneratePhysicsMeshResource(const Array<Vec3>& originalPoints, StringParam name);
+  void GeneratePhysicsMeshResource(const Array<Vec3>& originalPoints,
+                                   StringParam name);
   void OnSelectionFinal(SelectionChangedEvent* event);
   void SetTileMapPalette(TilePaletteSource* tilePalette);
 
@@ -285,4 +286,4 @@ private:
   HashMap<String, UvRect> mCollisionTextureUv;
 };
 
-}//namespace Zero
+} // namespace Zero

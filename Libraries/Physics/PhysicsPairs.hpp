@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,20 +11,32 @@ template <typename T>
 struct PhysicsPair
 {
   PhysicsPair(void);
-  PhysicsPair(T a, T b){A = a; B = b;}
-
-  T operator[](uint index) const {return mObjects[index];}
-
-  union
+  PhysicsPair(T a, T b)
   {
-    struct{ T A, B; };
-    struct{ T Top, Bot; };
+    A = a;
+    B = b;
+  }
+
+  T operator[](uint index) const
+  {
+    return mObjects[index];
+  }
+
+  union {
+    struct
+    {
+      T A, B;
+    };
+    struct
+    {
+      T Top, Bot;
+    };
     T mObjects[2];
   };
 };
 
-///Stores two Colliders. Prevents having to pass around both and also
-///provides helper functions that are commonly used on two Colliders.
+/// Stores two Colliders. Prevents having to pass around both and also
+/// provides helper functions that are commonly used on two Colliders.
 struct ColliderPair
 {
   ColliderPair();
@@ -47,16 +54,21 @@ struct ColliderPair
 
   bool operator>(const ColliderPair& rhs) const;
 
-  union
-  {
-    struct{ Collider* A,* B; };
-    struct{ Collider* Top,* Bot; };
+  union {
+    struct
+    {
+      Collider *A, *B;
+    };
+    struct
+    {
+      Collider *Top, *Bot;
+    };
     Collider* mObjects[2];
   };
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::ColliderPair ColliderPair;
 
-}//namespace Zero
+} // namespace Zero

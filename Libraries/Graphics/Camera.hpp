@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -8,9 +7,9 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(CameraUpdate);
-  DeclareEvent(CameraDestroyed);
-}
+DeclareEvent(CameraUpdate);
+DeclareEvent(CameraDestroyed);
+} // namespace Events
 
 /// Represents a viewpoint for rendering.
 class Camera : public Component
@@ -42,7 +41,8 @@ public:
   void SetPerspectiveMode(PerspectiveMode::Enum perspectiveMode);
   PerspectiveMode::Enum mPerspectiveMode;
 
-  /// The vertical field of view of the Camera, in degrees. Horizontal fov derived from aspect ratio (Hor+).
+  /// The vertical field of view of the Camera, in degrees. Horizontal fov
+  /// derived from aspect ratio (Hor+).
   float GetFieldOfView();
   void SetFieldOfView(float fieldOfView);
   float mFieldOfView;
@@ -61,7 +61,8 @@ public:
   /// Direction the Camera is facing, in world space.
   Vec3 GetWorldDirection();
 
-  /// The upright direction of the Camera (perpendicular to facing direction), in world space.
+  /// The upright direction of the Camera (perpendicular to facing direction),
+  /// in world space.
   Vec3 GetWorldUp();
 
   // Internal
@@ -77,7 +78,8 @@ public:
   Mat4 GetApiPerspectiveTransform();
   // Fills ViewBlock with Camera specific data for rendering.
   void GetViewData(ViewBlock& block);
-  /// Creates a frustum using the Camera's settings along with the given aspect ratio.
+  /// Creates a frustum using the Camera's settings along with the given aspect
+  /// ratio.
   Frustum GetFrustum(float aspect) const;
 
   Link<Camera> SpaceLink;
@@ -103,7 +105,8 @@ public:
   Array<uint> mRenderTaskRangeIndices;
   bool mRenderQueuesDataNeeded;
 
-  // Id's of all requested RenderGroups during this Camera's RenderTasksEvent. Reset every frame before the event.
+  // Id's of all requested RenderGroups during this Camera's RenderTasksEvent.
+  // Reset every frame before the event.
   HashSet<int> mUsedRenderGroupIds;
 };
 

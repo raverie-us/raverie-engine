@@ -1,27 +1,20 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DeclareEvent(AnimationBlendEnded);
-  DeclareEvent(AnimationEnded);
-  DeclareEvent(AnimationLooped);
-  DeclareEvent(AnimationPostUpdate);
-}
+DeclareEvent(AnimationBlendEnded);
+DeclareEvent(AnimationEnded);
+DeclareEvent(AnimationLooped);
+DeclareEvent(AnimationPostUpdate);
+} // namespace Events
 
 class Animation;
 class AnimationNode;
 
-//-------------------------------------------------------- Animation Graph Event
 class AnimationGraphEvent : public Event
 {
 public:
@@ -33,6 +26,6 @@ public:
   HandleOf<AnimationNode> mNode;
 };
 
-}// namespace Zero
+} // namespace Zero
 
 #include "AnimationNode.inl"

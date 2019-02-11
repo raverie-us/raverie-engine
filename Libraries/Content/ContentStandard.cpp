@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -34,7 +29,6 @@ ZilchDefineEnum(AudioFileLoadType);
 
 ZeroDefineArrayType(Array<AnimationClip>);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(ContentMetaLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -125,15 +119,15 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeType(BinaryBuilder);
   ZilchInitializeType(GeneratedArchetype);
 
-  // @trevor.sundberg: The content and engine libraries are co-dependent, and since
-  // content references the Archetype type, we get an error that it hasn't yet been
-  // initialized since Content is initialized first. This prevents the assert:
+  // @trevor.sundberg: The content and engine libraries are co-dependent, and
+  // since content references the Archetype type, we get an error that it hasn't
+  // yet been initialized since Content is initialized first. This prevents the
+  // assert:
   ZilchTypeId(Archetype)->AssertOnInvalidBinding = &IgnoreOnInvalidBinding;
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void ContentMetaLibrary::Initialize()
 {
   ContentSystem::Initialize();
@@ -143,12 +137,10 @@ void ContentMetaLibrary::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 }
 
-//**************************************************************************************************
 void ContentMetaLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
   ContentSystem::Destroy();
 }
 
-}//namespace Zero
-
+} // namespace Zero

@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,7 +8,6 @@ template <typename BaseType, uint MaxDerivedSize>
 class VirtualAny
 {
 public:
-
   VirtualAny()
   {
     mBasePointer = nullptr;
@@ -42,7 +36,7 @@ public:
   template <typename DerivedType>
   VirtualAny(const DerivedType& other)
   {
-    mBasePointer = (BaseType*)(new(mObjectData) DerivedType(other));
+    mBasePointer = (BaseType*)(new (mObjectData) DerivedType(other));
     mCopyConstructor = &CopyConstructor<DerivedType>;
   }
 
@@ -57,7 +51,6 @@ public:
   }
 
 protected:
-
   void VirtualDestructor()
   {
     if (mBasePointer != nullptr)
@@ -80,27 +73,28 @@ protected:
   template <typename T>
   static BaseType* CopyConstructor(byte* dest, const BaseType* source)
   {
-    return (BaseType*)(new(dest) T(*(const T*)source));
+    return (BaseType*)(new (dest) T(*(const T*)source));
   }
 
   BaseType* mBasePointer;
   CopyConstructorFn mCopyConstructor;
 
-  union
-  {
+  union {
     byte mObjectData[MaxDerivedSize];
     MaxAlignmentType mObjectDataAligned[ZeroAlignCount(MaxDerivedSize)];
   };
 
-  friend struct MoveWithoutDestructionOperator< VirtualAny<BaseType, MaxDerivedSize> >;
+  friend struct MoveWithoutDestructionOperator<
+      VirtualAny<BaseType, MaxDerivedSize>>;
 };
 
 template <typename BaseType, uint MaxDerivedSize>
-struct MoveWithoutDestructionOperator< VirtualAny<BaseType, MaxDerivedSize> >
+struct MoveWithoutDestructionOperator<VirtualAny<BaseType, MaxDerivedSize>>
 {
   typedef VirtualAny<BaseType, MaxDerivedSize> VirtualAnyType;
 
-  static inline void MoveWithoutDestruction(VirtualAnyType* dest, VirtualAnyType* source)
+  static inline void MoveWithoutDestruction(VirtualAnyType* dest,
+                                            VirtualAnyType* source)
   {
     memcpy(dest->mObjectData, source->mObjectData, sizeof(source->mObjectData));
     dest->mBasePointer = (BaseType*)dest->mObjectData;

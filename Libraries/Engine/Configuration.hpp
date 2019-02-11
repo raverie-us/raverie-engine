@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Configuration.hpp
-/// Declaration of the engine configuration classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,9 +7,8 @@ namespace Zero
 namespace Events
 {
 DeclareEvent(RecentProjectsUpdated);
-}//namespace Events
+} // namespace Events
 
-//------------------------------------------------------------------------------
 /// Main configuration component
 class MainConfig : public Component
 {
@@ -36,7 +27,8 @@ public:
   String SourceDirectory;
   /// Directory for built in data files
   String DataDirectory;
-  /// The location the app is running from. Stored here so the launcher can override it to the dll location.
+  /// The location the app is running from. Stored here so the launcher can
+  /// override it to the dll location.
   String ApplicationDirectory;
   /// Did the config file or using default.
   bool mConfigDidNotExist;
@@ -45,12 +37,12 @@ public:
   /// Command line Parameters
   StringMap Parameters;
 
-  /// A global flag for whether we save the config or not. This is used in unit test mode where
-  /// we want to clear the config but not have it overwrite the user's config.
+  /// A global flag for whether we save the config or not. This is used in unit
+  /// test mode where we want to clear the config but not have it overwrite the
+  /// user's config.
   static bool sConfigCanSave;
 };
 
-//-------------------------------------------------------------------------
 /// Configuration for the editor.
 class EditorConfig : public Component
 {
@@ -69,7 +61,6 @@ public:
   String ZeroHubUsername;
 };
 
-//-----------------------------------------------------------------------------
 /// Configuration component that Contains user info.
 class UserConfig : public Component
 {
@@ -96,7 +87,7 @@ public:
   /// for download.  Used to show version dialog
   uint LastVersionKnown;
 
-  /// Last version the user has used locally. Used to 
+  /// Last version the user has used locally. Used to
   /// show release notes.
   uint LastVersionUsed;
 
@@ -105,9 +96,8 @@ public:
   u64 LastAcceptedEulaHash;
 };
 
-//------------------------------------------------------------------------------
-/// Configuration component for content system. Used to find content paths and what 
-/// default libraries to load.
+/// Configuration component for content system. Used to find content paths and
+/// what default libraries to load.
 class ContentConfig : public Component
 {
 public:
@@ -127,8 +117,7 @@ public:
   bool HistoryEnabled;
 };
 
-//------------------------------------------------------------------------------
-/// Configuration component that Contains developer settings. Used to indicate a 
+/// Configuration component that Contains developer settings. Used to indicate a
 /// user is a developer.
 class DeveloperConfig : public Component
 {
@@ -154,7 +143,6 @@ public:
   HashSet<String> mGenericFlags;
 };
 
-//-------------------------------------------------------------------ZilchPluginConfig
 // We attach this component to Zero's editor configuration file
 class ZilchPluginConfig : public Component
 {
@@ -169,7 +157,6 @@ public:
   bool mAttemptedIdeToolsInstall;
 };
 
-//------------------------------------------------------------------------------
 DeclareEnum2(TabWidth, TwoSpaces, FourSpaces);
 
 class TextEditorConfig : public Component
@@ -187,9 +174,10 @@ public:
   /// If we show whitespace as special symbols in the text editor
   bool ShowWhiteSpace;
 
-  /// When the auto-complete is confident in its results (green), this controls whether or not
-  /// we will finish completion on any symbol rather than just Tab
-  /// Non-confident results (red) always require the user to press Tab (or Enter if AutoCompleteOnEnter is set)
+  /// When the auto-complete is confident in its results (green), this controls
+  /// whether or not we will finish completion on any symbol rather than just
+  /// Tab Non-confident results (red) always require the user to press Tab (or
+  /// Enter if AutoCompleteOnEnter is set)
   bool ConfidentAutoCompleteOnSymbols;
 
   /// Whether we include local words from the current document / language
@@ -198,8 +186,9 @@ public:
   /// Whether we include keywords and types from the languages
   bool KeywordAndTypeCompletion;
 
-  /// Whether or not the auto-complete allows enter (similar to Tab) to be used as an auto-completer
-  /// If the user manually scrolls through the list of suggestions, Enter will always complete regardless of this option
+  /// Whether or not the auto-complete allows enter (similar to Tab) to be used
+  /// as an auto-completer If the user manually scrolls through the list of
+  /// suggestions, Enter will always complete regardless of this option
   bool AutoCompleteOnEnter;
 
   /// Is code folding enabled?
@@ -208,7 +197,8 @@ public:
   /// Show Line numbers
   bool LineNumbers;
 
-  /// Turn on/off highlighting all instances of text matching current text selection.
+  /// Turn on/off highlighting all instances of text matching current text
+  /// selection.
   bool TextMatchHighlighting;
 
   /// Highlight mode is either partial text match, or whole text match.
@@ -218,7 +208,6 @@ public:
   String ColorScheme;
 };
 
-//----------------------------------------------------------------------------
 class RecentProjects : public Component
 {
 public:
@@ -244,7 +233,8 @@ public:
   /// The launcher uses this to special case what screen is displayed on launch.
   size_t GetRecentProjectsCount() const;
 
-  /// Updates the max number of recent projects we store (and prunes any old items from the list)
+  /// Updates the max number of recent projects we store (and prunes any old
+  /// items from the list)
   void UpdateMaxNumberOfProjects(uint maxRecentProjects, bool sendsEvent);
   uint mMaxRecentProjects;
 
@@ -260,14 +250,16 @@ private:
   HashSet<String> mRecentProjects;
 };
 
-//Load the config file for under a application name.
-Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSettings& settings);
-//Save the configuration file.
+// Load the config file for under a application name.
+Cog* LoadConfig(StringParam applicationName,
+                bool useDefault,
+                ZeroStartupSettings& settings);
+// Save the configuration file.
 void SaveConfig(Cog* config);
-//Remove config file
+// Remove config file
 void RemoveConfig(Cog* config);
-//Find the source directory by walking up from the application path looking for '.welder'.
-//If it is not found, it returns the application directory.
+// Find the source directory by walking up from the application path looking for
+// '.welder'. If it is not found, it returns the application directory.
 String FindSourceDirectory();
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Regex.hpp
-/// Declaration of the Regex.
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Includes
@@ -16,103 +8,116 @@
 
 namespace Zero
 {
-  // Forward declaration
-  struct RegexPrivateData;
-  struct MatchesPrivateData;
-  class StringBuilder;
+// Forward declaration
+struct RegexPrivateData;
+struct MatchesPrivateData;
+class StringBuilder;
 
-  // The flavor of regular expressions
-  DeclareEnum6(RegexFlavor, EcmaScript, PosixBasic, PosixExtended, Awk, Grep, Egrep);
+// The flavor of regular expressions
+DeclareEnum6(
+    RegexFlavor, EcmaScript, PosixBasic, PosixExtended, Awk, Grep, Egrep);
 
-  // Any flags we want to give to the regex (generally used for searching)
-  DeclareBitField1(RegexFlags, MatchNotNull);
+// Any flags we want to give to the regex (generally used for searching)
+DeclareBitField1(RegexFlags, MatchNotNull);
 
-  // How we escape a string (normal means escape everything, extended
-  // means escape everything except extended characters such as '\r'...)
-  DeclareEnum2(EscapeMode, Normal, Extended);
+// How we escape a string (normal means escape everything, extended
+// means escape everything except extended characters such as '\r'...)
+DeclareEnum2(EscapeMode, Normal, Extended);
 
-  class Matches
-  {
-  public:
-    friend class Regex;
+class Matches
+{
+public:
+  friend class Regex;
 
-    Matches();
-    Matches(const Matches& source);
-    ~Matches();
-    
-    // Clears the array of matches
-    void Clear();
+  Matches();
+  Matches(const Matches& source);
+  ~Matches();
 
-    // How many matches we captured
-    size_t Size() const;
+  // Clears the array of matches
+  void Clear();
 
-    // If there are no matches
-    bool Empty() const;
+  // How many matches we captured
+  size_t Size() const;
 
-    // Grabs the match by index (0 is always the entire match, 1 and on are sub-strings / captures groups)
-    StringRange operator[](size_t index) const;
+  // If there are no matches
+  bool Empty() const;
 
-    // Helpers to get the first and last element
-    StringRange Front() const;
-    StringRange Back() const;
+  // Grabs the match by index (0 is always the entire match, 1 and on are
+  // sub-strings / captures groups)
+  StringRange operator[](size_t index) const;
 
-    // All the text before this entire match
-    StringRange Prefix() const;
+  // Helpers to get the first and last element
+  StringRange Front() const;
+  StringRange Back() const;
 
-    // All the text after this entire match
-    StringRange Suffix() const;
+  // All the text before this entire match
+  StringRange Prefix() const;
 
-    // Formats a match with a special $ format string
-    String Format(StringRange format) const;
+  // All the text after this entire match
+  StringRange Suffix() const;
 
-    // Formats a match with a special $ format string and outputs directly into a string builder
-    void Format(StringRange format, StringBuilder& builder) const;
+  // Formats a match with a special $ format string
+  String Format(StringRange format) const;
 
-  private:
-    String mString;
+  // Formats a match with a special $ format string and outputs directly into a
+  // string builder
+  void Format(StringRange format, StringBuilder& builder) const;
 
-    // Store the private data
-    MatchesPrivateData* mPrivate;
-  };
+private:
+  String mString;
 
-  class Regex
-  {
-  public:
-    friend class Matches;
+  // Store the private data
+  MatchesPrivateData* mPrivate;
+};
 
-    // Default Constructor
-    Regex();
+class Regex
+{
+public:
+  friend class Matches;
 
-    // Constructor
-    Regex(StringRange regex, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript, bool caseSensitive = true, bool optimizeForMatching = true);
-    
-    // Copy constructor
-    Regex(const Regex& source);
+  // Default Constructor
+  Regex();
 
-    // Destructor
-    ~Regex();
+  // Constructor
+  Regex(StringRange regex,
+        RegexFlavor::Enum flavor = RegexFlavor::EcmaScript,
+        bool caseSensitive = true,
+        bool optimizeForMatching = true);
 
-    // Assignment operator
-    Regex& operator=(const Regex& source);
+  // Copy constructor
+  Regex(const Regex& source);
 
-    // Search a given string and return matches (clears matches that are passed in)
-    void Search(StringRange text, Matches& matches, RegexFlags::Type flags = RegexFlags::None) const;
+  // Destructor
+  ~Regex();
 
-    // Replace all matches in a given string
-    String Replace(StringRange source, StringRange replaceWith) const;
+  // Assignment operator
+  Regex& operator=(const Regex& source);
 
-    // Escape a string so that it can be used directly in a regex, typically for finding exactly that string
-    static String Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript);
+  // Search a given string and return matches (clears matches that are passed
+  // in)
+  void Search(StringRange text,
+              Matches& matches,
+              RegexFlags::Type flags = RegexFlags::None) const;
 
-    // Validate the regular expression
-    static bool Validate(StringRange regex, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript, bool caseSensitive = true);
+  // Replace all matches in a given string
+  String Replace(StringRange source, StringRange replaceWith) const;
 
-    // The original regular expression string that created this regex
-    String mRegexString;
+  // Escape a string so that it can be used directly in a regex, typically for
+  // finding exactly that string
+  static String Escape(StringRange input,
+                       EscapeMode::Enum mode,
+                       RegexFlavor::Enum flavor = RegexFlavor::EcmaScript);
 
-  private:
+  // Validate the regular expression
+  static bool Validate(StringRange regex,
+                       RegexFlavor::Enum flavor = RegexFlavor::EcmaScript,
+                       bool caseSensitive = true);
 
-    // Store the private data
-    RegexPrivateData* mPrivate;
-  };
-}
+  // The original regular expression string that created this regex
+  String mRegexString;
+
+private:
+  // Store the private data
+  RegexPrivateData* mPrivate;
+};
+} // namespace Zero

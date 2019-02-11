@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,7 +7,7 @@ namespace Zero
 // Global Access
 namespace Z
 {
-  Launcher* gLauncher = nullptr;
+Launcher* gLauncher = nullptr;
 }
 
 void OnLauncherTweakablesModified()
@@ -23,11 +18,9 @@ void OnLauncherTweakablesModified()
 IntVec2 Launcher::mEulaWindowSize = IntVec2(700, 520);
 IntVec2 Launcher::mLauncherWindowSize = IntVec2(1024, 595);
 
-//--------------------------------------------------------------------- Launcher
-//******************************************************************************
-Launcher::Launcher(Cog* configCog, StringMap& arguments) : 
-  mConfigCog(configCog),
-  mArguments(arguments)
+Launcher::Launcher(Cog* configCog, StringMap& arguments) :
+    mConfigCog(configCog),
+    mArguments(arguments)
 {
   mOsWindow = nullptr;
   mMainWindow = nullptr;
@@ -35,7 +28,6 @@ Launcher::Launcher(Cog* configCog, StringMap& arguments) :
   mLauncherWindow = nullptr;
 }
 
-//******************************************************************************
 void Launcher::Startup()
 {
   mMainWindow = new MainWindow(mOsWindow);
@@ -44,20 +36,20 @@ void Launcher::Startup()
   // Don't pre-open the launcher unless the user has accepted the eula.
   // Technically the launcher runs logic on initialize even if it is inactive
   // that shouldn't happen unless the user has first accepted the eula.
-  
+
   // If the newest Eula has been accepted, show the Eula window.
-  // Otherwise, set the launcher window to visible as it has already been created
+  // Otherwise, set the launcher window to visible as it has already been
+  // created
   bool showEula = ShouldOpenEula();
-  if(showEula)
+  if (showEula)
     OpenEulaWindow();
   else
     OpenLauncherWindow();
 
-  if(Os::IsDebuggerAttached())
+  if (Os::IsDebuggerAttached())
     OpenTweakablesWindow();
 }
 
-//******************************************************************************
 void Launcher::EulaAccepted()
 {
   // There's some delay/resizing issues now, so first open the launcher and then
@@ -84,12 +76,11 @@ void Launcher::EulaAccepted()
   mOsWindow->SetMonitorClientPosition(monitorClientPosition);
 }
 
-//******************************************************************************
 void Launcher::OpenEulaWindow()
 {
   mOsWindow->SetMinClientSize(mEulaWindowSize);
   mOsWindow->SetClientSize(mEulaWindowSize);
-  
+
   EulaWindow* window = new EulaWindow(mConfigCog, mMainWindow);
   window->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
   mEulaWindow = window;
@@ -100,9 +91,10 @@ void Launcher::Initialize()
   // Hack for BraveCobra
   Cog* configCog = mConfigCog;
   IntVec2 minClientSize = mLauncherWindowSize;
-  // Ideally we should change the window size here, but the loading progress bar looks wrong with
-  // the window of this size. Fix later when we can override the loading.
-  //if(ShouldOpenEula())
+  // Ideally we should change the window size here, but the loading progress bar
+  // looks wrong with the window of this size. Fix later when we can override
+  // the loading.
+  // if(ShouldOpenEula())
   //  minWindowSize = mEulaWindowSize;
 
   String windowName = "Zero Launcher";
@@ -116,61 +108,60 @@ void Launcher::Initialize()
   IntVec2 monitorClientPos = monitorRect.Center(clientSize);
 
   BitField<WindowStyleFlags::Enum> mainStyle;
-  mainStyle.U32Field =
-    WindowStyleFlags::OnTaskBar |
-    WindowStyleFlags::TitleBar |
-    WindowStyleFlags::Close |
-    WindowStyleFlags::ClientOnly |
-    WindowStyleFlags::Resizable;
+  mainStyle.U32Field = WindowStyleFlags::OnTaskBar |
+                       WindowStyleFlags::TitleBar | WindowStyleFlags::Close |
+                       WindowStyleFlags::ClientOnly |
+                       WindowStyleFlags::Resizable;
 
-  if(mainWindow)
+  if (mainWindow)
     mainStyle.SetFlag(WindowStyleFlags::MainWindow);
 
-  if(!visible)
+  if (!visible)
     mainStyle.SetFlag(WindowStyleFlags::NotVisible);
 
-  OsWindow* window = osShell->CreateOsWindow(windowName, clientSize, monitorClientPos, nullptr, mainStyle.Field);
+  OsWindow* window = osShell->CreateOsWindow(
+      windowName, clientSize, monitorClientPos, nullptr, mainStyle.Field);
   window->SetMinClientSize(minClientSize);
   window->SetState(WindowState::Windowed);
   mOsWindow = window;
 
   Z::gEngine->has(GraphicsEngine)->CreateRenderer(window);
-  
+
   // Fix any issue for Intel Drivers
   window->PlatformSpecificFixup();
 }
 
-//******************************************************************************
 void Launcher::OpenLauncherWindow()
 {
   mOsWindow->SetTitle("Zero Launcher");
 
   LauncherConfig* versionConfig = mConfigCog->has(LauncherConfig);
-  
+
   LauncherWindow* launcher = new LauncherWindow(mMainWindow, mConfigCog);
   launcher->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
-  
-  // If there were any command-line arguments then create an event to send to the launcher's ui
-  if(mArguments.Empty() == false)
+
+  // If there were any command-line arguments then create an event to send to
+  // the launcher's ui
+  if (mArguments.Empty() == false)
   {
     LauncherCommunicationEvent toSend;
     toSend.LoadFromCommandArguments(mArguments);
-    if(toSend.EventId.Empty() == false)
+    if (toSend.EventId.Empty() == false)
       launcher->DispatchEvent(toSend.EventId, &toSend);
   }
-  
+
   // If the user has no recent projects then display the new project's page
   RecentProjects* recentProjects = mConfigCog->has(RecentProjects);
-  if(recentProjects == nullptr || recentProjects->GetRecentProjectsCount() == 0)
+  if (recentProjects == nullptr ||
+      recentProjects->GetRecentProjectsCount() == 0)
   {
     LauncherCommunicationEvent toSend;
     launcher->DispatchEvent(Events::LauncherNewProject, &toSend);
   }
-  
+
   mLauncherWindow = launcher;
 }
 
-//******************************************************************************
 void Launcher::OpenTweakablesWindow()
 {
   return;
@@ -178,7 +169,8 @@ void Launcher::OpenTweakablesWindow()
   IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
   IntVec2 size = IntVec2(230, monitorRect.SizeY);
 
-  // Create a window to hold the tweakables (so they can be moved, closed, etc...)
+  // Create a window to hold the tweakables (so they can be moved, closed,
+  // etc...)
   Window* tweakablesWindow = new Window(mMainWindow);
   tweakablesWindow->SetSize(Pixels(300, 500));
   PropertyView* propertyGrid = new PropertyView(tweakablesWindow);
@@ -189,7 +181,6 @@ void Launcher::OpenTweakablesWindow()
   Tweakables::sModifiedCallback = &OnLauncherTweakablesModified;
 }
 
-//******************************************************************************
 size_t Launcher::GetEulaHash()
 {
   String eulaFile = GetEulaFilePath(mConfigCog);
@@ -197,11 +188,10 @@ size_t Launcher::GetEulaHash()
   return eulaText.Hash();
 }
 
-//******************************************************************************
 bool Launcher::ShouldOpenEula()
 {
   UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
   return userConfig->LastAcceptedEulaHash != GetEulaHash();
 }
 
-}//namespace Zero
+} // namespace Zero

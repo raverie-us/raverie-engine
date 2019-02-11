@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,8 +6,8 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(LauncherConfigChanged);
-}//namespace Events
+DeclareEvent(LauncherConfigChanged);
+} // namespace Events
 
 /// The various configuration settings for the launcher.
 class SettingsMenu : public Composite
@@ -78,4 +73,4 @@ public:
   Modal* mParentModal;
 };
 
-}//namespace Zero
+} // namespace Zero

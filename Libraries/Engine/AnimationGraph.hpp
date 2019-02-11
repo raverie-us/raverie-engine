@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationGraph.hpp
-/// Declaration of the AnimationGraph component class.
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2011-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------- Animation Graph
 /// The AnimationGraph component controls animation for an individual game
 /// object. It stores all needed per instance (vs what is shared in the
 /// animation resource) manages the current time and enumerates the animation
@@ -41,7 +32,10 @@ public:
   float GetTimeScale();
 
   /// Is the animGraph animating?
-  bool GetActive(){ return mActive; }
+  bool GetActive()
+  {
+    return mActive;
+  }
   void SetActive(bool value);
 
   void SetActiveNode(AnimationNode* node);
@@ -49,7 +43,7 @@ public:
 
   bool IsPlayingInGraph(Animation* animation);
   void PrintGraph();
-  
+
   /// Node creation functions.
   BasicAnimation* CreateBasicNode(Animation* animation,
                                   AnimationPlayMode::Enum mode);
@@ -102,14 +96,15 @@ private:
   HandleOf<Animation> mAnimation;
 };
 
-//------------------------------------------------------------- Simple Animation
 /// Plays a single animation on Initialize.
 class SimpleAnimation : public Component
 {
 public:
   ZilchDeclareType(SimpleAnimation, TypeCopyMode::ReferenceType);
 
-  SimpleAnimation(){}
+  SimpleAnimation()
+  {
+  }
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -124,11 +119,19 @@ public:
   void SetPlayMode(AnimationPlayMode::Enum mode);
 
   /// Play animations directly.
-  AnimationNode* PlaySingle(Animation* animation, AnimationPlayMode::Enum playMode);
-  AnimationNode* DirectBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode);
-  AnimationNode* CrossBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode);
-  AnimationNode* PlayIsolatedAnimation(Animation* animation, Cog* rootBone, AnimationPlayMode::Enum playMode);
-  AnimationNode* ChainAnimation(Animation* animation, AnimationPlayMode::Enum playMode);
+  AnimationNode* PlaySingle(Animation* animation,
+                            AnimationPlayMode::Enum playMode);
+  AnimationNode* DirectBlend(Animation* animation,
+                             float transitionTime,
+                             AnimationPlayMode::Enum playMode);
+  AnimationNode* CrossBlend(Animation* animation,
+                            float transitionTime,
+                            AnimationPlayMode::Enum playMode);
+  AnimationNode* PlayIsolatedAnimation(Animation* animation,
+                                       Cog* rootBone,
+                                       AnimationPlayMode::Enum playMode);
+  AnimationNode* ChainAnimation(Animation* animation,
+                                AnimationPlayMode::Enum playMode);
 
 private:
   AnimationGraph* mAnimGraph;
@@ -136,4 +139,4 @@ private:
   HandleOf<Animation> mAnimation;
 };
 
-}//namespace Zero
+} // namespace Zero

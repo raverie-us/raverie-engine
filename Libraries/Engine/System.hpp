@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Trevor Sundberg
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,24 +12,30 @@ struct SystemInitializer
   Cog* Config;
 };
 
-//-------------------------------------------------------------------System
-/// System is a pure virtual base class that is the base class for all systems used by the game. 
+/// System is a pure virtual base class that is the base class for all systems
+/// used by the game.
 class System : public EngineObject
 {
 public:
   ZilchDeclareType(System, TypeCopyMode::ReferenceType);
 
   /// All systems need a virtual destructor to have their destructor called.
-  virtual ~System() {}
+  virtual ~System()
+  {
+  }
 
   /// The name of this system. Mostly for debugging.
   virtual cstr GetName() = 0;
 
   /// Initialize the system.
-  virtual void Initialize(SystemInitializer& initializer) {}
+  virtual void Initialize(SystemInitializer& initializer)
+  {
+  }
 
   /// All systems are updated every game frame.
-  virtual void Update(bool debugger) {}
+  virtual void Update(bool debugger)
+  {
+  }
 };
 
-}//namespace Zero
+} // namespace Zero

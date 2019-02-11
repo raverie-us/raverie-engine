@@ -1,23 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Notification.hpp
-/// Declaration of the NotificationPopup class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------- Notification Popup
 class NotificationPopup : public Composite
 {
   struct NotifyData
   {
-    NotifyData() {}
+    NotifyData()
+    {
+    }
     NotifyData(NotifyEvent* event);
 
     NotifyType::Enum Type;
@@ -71,4 +64,4 @@ private:
 
 void DoNotifyPopup(Composite* root, NotifyEvent* event);
 
-}//namespace Zero
+} // namespace Zero

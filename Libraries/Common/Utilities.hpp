@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Utilities.hpp
-/// Declaration of the Utilities class.
-/// 
-/// Authors: Trevor Sundberg, Chris Peters
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -46,7 +38,7 @@ ZeroShared void DebuggerOutput(const char* message);
 // Debug break (only if a debugger is attached)
 ZeroShared bool DebugBreak();
 
-// Attempts to enable memory leak checking (break on 
+// Attempts to enable memory leak checking (break on
 ZeroShared void EnableMemoryLeakChecking(int breakOnAllocation = -1);
 
 // When a diagnostic error occurs, this is the default response
@@ -57,13 +49,27 @@ DeclareEnum4(Verb, Default, Open, Edit, Run);
 
 // Open the file using the appropriate Os application or
 // launch an external application.
-ZeroShared void SystemOpenFile(cstr file, uint verb=Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
-ZeroShared bool SystemOpenFile(Status& status, cstr file, uint verb=Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
+ZeroShared void SystemOpenFile(cstr file,
+                               uint verb = Verb::Default,
+                               cstr parameters = nullptr,
+                               cstr workingDirectory = nullptr);
+ZeroShared bool SystemOpenFile(Status& status,
+                               cstr file,
+                               uint verb = Verb::Default,
+                               cstr parameters = nullptr,
+                               cstr workingDirectory = nullptr);
 
 // Open the network file (including urls) using the appropriate
 // Os application or launch an external application
-ZeroShared void SystemOpenNetworkFile(cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
-ZeroShared bool SystemOpenNetworkFile(Status& status, cstr file, uint verb = Verb::Default, cstr parameters = nullptr, cstr workingDirectory = nullptr);
+ZeroShared void SystemOpenNetworkFile(cstr file,
+                                      uint verb = Verb::Default,
+                                      cstr parameters = nullptr,
+                                      cstr workingDirectory = nullptr);
+ZeroShared bool SystemOpenNetworkFile(Status& status,
+                                      cstr file,
+                                      uint verb = Verb::Default,
+                                      cstr parameters = nullptr,
+                                      cstr workingDirectory = nullptr);
 
 // Get the memory status of the Os.
 ZeroShared void GetMemoryStatus(MemoryInfo& memoryInfo);
@@ -74,14 +80,21 @@ ZeroShared String GetEnvironmentalVariable(StringParam variable);
 // Get a string describing the current operating system version.
 ZeroShared String GetVersionString();
 
-}
+} // namespace Os
 
 // Generate a 64 bit unique Id. Uses system timer and mac
 // address to generate the id.
 ZeroShared u64 GenerateUniqueId64();
 
-// Waits for expression to evaluate to true, checking approximately every pollPeriod (in milliseconds)
-#define WaitUntil(expression, pollPeriod) \
-do { while(!(expression)) { Os::Sleep(pollPeriod); } } while(gConditionalFalseConstant)
+// Waits for expression to evaluate to true, checking approximately every
+// pollPeriod (in milliseconds)
+#define WaitUntil(expression, pollPeriod)                                      \
+  do                                                                           \
+  {                                                                            \
+    while (!(expression))                                                      \
+    {                                                                          \
+      Os::Sleep(pollPeriod);                                                   \
+    }                                                                          \
+  } while (gConditionalFalseConstant)
 
-}//namespace Zero
+} // namespace Zero

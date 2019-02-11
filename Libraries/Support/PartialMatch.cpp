@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PartialMatch.cpp
-/// Implementation of the PartialMatch.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -25,7 +17,8 @@ bool MatchesAcronym(StringRangeParam text, StringRangeParam acronym)
 
   StringIterator acronymCur = acronym.Begin();
 
-  // We're going to walk over all the text we're matching looking for uppercase letters
+  // We're going to walk over all the text we're matching looking for uppercase
+  // letters
   StringIterator end = text.End();
   for (StringIterator textCur = text.Begin(); textCur < end; ++textCur)
   {
@@ -62,23 +55,25 @@ bool MatchesPartial(StringParam text, StringParam partial, RuneComparer compare)
   // We can't possibly match if the partial text is longer than our own
   if (partial.SizeInBytes() > text.SizeInBytes())
     return false;
-  
+
   StringIterator textEnd = text.End();
   StringIterator partialEnd = partial.End();
 
   for (StringIterator textCur = text.Begin(); textCur < textEnd; ++textCur)
   {
     StringIterator textTemp = textCur;
-    for (StringIterator partialCur = partial.Begin(); partialCur <= partialEnd; ++partialCur, ++textTemp)
+    for (StringIterator partialCur = partial.Begin(); partialCur <= partialEnd;
+         ++partialCur, ++textTemp)
     {
       // If we reached the end of the partial string, then we match!
       if (partialCur == partialEnd)
         return true;
-      
-      // If the partial match is going to start matching outside the original text string, then we stop
+
+      // If the partial match is going to start matching outside the original
+      // text string, then we stop
       if (textTemp >= textEnd)
         return false;
-      
+
       if (!compare(textTemp.ReadCurrentRune(), partialCur.ReadCurrentRune()))
       {
         break;
@@ -89,5 +84,4 @@ bool MatchesPartial(StringParam text, StringParam partial, RuneComparer compare)
   return false;
 }
 
-
-}//namespace Zero
+} // namespace Zero

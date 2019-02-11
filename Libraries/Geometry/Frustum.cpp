@@ -1,17 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Frustum.cpp
-/// Implementation of the Frustum class.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//---------------------------------------------------------------------- Frustum
 Frustum::Frustum()
 {
   //
@@ -24,21 +15,21 @@ Frustum::Frustum(Plane* planes)
 
 Frustum::~Frustum()
 {
-
 }
 
-///Sets all the planes.
+/// Sets all the planes.
 void Frustum::Set(Plane* planes)
 {
-  for(uint i = 0; i < 6; ++i)
+  for (uint i = 0; i < 6; ++i)
     Planes[i] = planes[i];
 }
 
 Plane& Frustum::Get(uint index)
 {
-  if(index >= 6)
+  if (index >= 6)
   {
-    String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
+    String msg = String::Format(
+        "Index %d is invalid. Frustums only have 6 planes.", index);
     Error("Invalid Index", msg.c_str());
     return Planes[0];
   }
@@ -48,16 +39,17 @@ Plane& Frustum::Get(uint index)
 
 void Frustum::Set(uint index, const Plane& plane)
 {
-  if(index >= 6)
+  if (index >= 6)
   {
-    String msg = String::Format("Index %d is invalid. Frustums only have 6 planes.", index);
+    String msg = String::Format(
+        "Index %d is invalid. Frustums only have 6 planes.", index);
     Error("Invalid Index", msg.c_str());
     return;
   }
   Planes[index] = plane;
 }
 
-///Generates a Frustum from the give points.  Point order is described above.
+/// Generates a Frustum from the give points.  Point order is described above.
 void Frustum::Generate(Vec3 points[8])
 {
   Vec3 v0 = points[0];
@@ -84,7 +76,9 @@ void Frustum::Generate(Vec3 points[8])
   Planes[5].Set(normalF, v0);
 }
 
-void Frustum::Generate(Vec3Param frontCenter, Vec3Param direction, Vec3Param up,
+void Frustum::Generate(Vec3Param frontCenter,
+                       Vec3Param direction,
+                       Vec3Param up,
                        Vec3Param dimensions)
 {
   Vec3 right = Cross(direction, up);
@@ -103,10 +97,15 @@ void Frustum::Generate(Vec3Param frontCenter, Vec3Param direction, Vec3Param up,
   points[7] = far + (-up * dimensions.y) + (-right * dimensions.x);
 
   Generate(points);
-  //Draw(points, 10.0f);
+  // Draw(points, 10.0f);
 }
 
-void Frustum::Generate(Vec3Param position, Mat3Param basis, float near, float far, float aspect, float fov)
+void Frustum::Generate(Vec3Param position,
+                       Mat3Param basis,
+                       float near,
+                       float far,
+                       float aspect,
+                       float fov)
 {
   Vec3 basisX = basis.BasisX();
   Vec3 basisY = basis.BasisY();
@@ -119,23 +118,22 @@ void Frustum::Generate(Vec3Param position, Mat3Param basis, float near, float fa
   Vec3 nearZ = basisZ * near;
   Vec3 farZ = basisZ * far;
 
-  Vec3 points[8] =
-  {
-    position + (-basisX + basisY) * nearScale + nearZ,
-    position + ( basisX + basisY) * nearScale + nearZ,
-    position + ( basisX - basisY) * nearScale + nearZ,
-    position + (-basisX - basisY) * nearScale + nearZ,
+  Vec3 points[8] = {
+      position + (-basisX + basisY) * nearScale + nearZ,
+      position + (basisX + basisY) * nearScale + nearZ,
+      position + (basisX - basisY) * nearScale + nearZ,
+      position + (-basisX - basisY) * nearScale + nearZ,
 
-    position + (-basisX + basisY) * farScale + farZ,
-    position + ( basisX + basisY) * farScale + farZ,
-    position + ( basisX - basisY) * farScale + farZ,
-    position + (-basisX - basisY) * farScale + farZ,
+      position + (-basisX + basisY) * farScale + farZ,
+      position + (basisX + basisY) * farScale + farZ,
+      position + (basisX - basisY) * farScale + farZ,
+      position + (-basisX - basisY) * farScale + farZ,
   };
 
   Generate(points);
 }
 
-///Calculates the 8 points of the Aabb.
+/// Calculates the 8 points of the Aabb.
 void Frustum::GetPoints(Vec3 points[8]) const
 {
   const Plane& A = Planes[0];
@@ -145,7 +143,7 @@ void Frustum::GetPoints(Vec3 points[8]) const
   const Plane& E = Planes[4];
   const Plane& F = Planes[5];
 
-  //Intersect the front plane
+  // Intersect the front plane
   Intersection::Manifold mADF;
   PlanePlanePlane(A.GetData(), D.GetData(), F.GetData(), &mADF);
 
@@ -158,7 +156,7 @@ void Frustum::GetPoints(Vec3 points[8]) const
   Intersection::Manifold mACE;
   PlanePlanePlane(A.GetData(), C.GetData(), E.GetData(), &mACE);
 
-  //Back plane
+  // Back plane
   Intersection::Manifold mBDF;
   PlanePlanePlane(B.GetData(), D.GetData(), F.GetData(), &mBDF);
 
@@ -191,26 +189,26 @@ Aabb Frustum::GetAabb() const
   return aabb;
 }
 
-///Tests if the given point is inside the frustum.
+/// Tests if the given point is inside the frustum.
 bool Frustum::Overlaps(Vec3Param point)
 {
-  for(uint i = 0; i < PlaneDim; ++i)
+  for (uint i = 0; i < PlaneDim; ++i)
   {
     Plane& plane = Planes[i];
-    if( plane.SignedDistanceToPlane(point) < 0)
+    if (plane.SignedDistanceToPlane(point) < 0)
       return false;
   }
 
   return true;
 }
 
-///Tests if the given Aabb is inside the frustum.
+/// Tests if the given Aabb is inside the frustum.
 bool Frustum::Overlaps(const Aabb& aabb)
 {
   return false;
 }
 
-///Tests if the given Sphere is inside the frustum.
+/// Tests if the given Sphere is inside the frustum.
 bool Frustum::Overlaps(const Sphere& sphere)
 {
   return false;
@@ -239,7 +237,7 @@ void Frustum::GetCenter(Vec3Ref center) const
   GetPoints(points);
 
   center = Vec3::cZero;
-  for(uint i = 0; i < 8; ++i)
+  for (uint i = 0; i < 8; ++i)
     center += points[i];
   center /= real(8.0);
 }
@@ -250,15 +248,15 @@ void Frustum::Support(Vec3Param direction, Vec3Ptr support) const
   GetPoints(points);
 
   Vec3 center = Vec3::cZero;
-  for(uint i = 0; i < 8; ++i)
+  for (uint i = 0; i < 8; ++i)
     center += points[i];
   center /= real(8.0);
 
   real maxDot = -Math::PositiveMax();
-  for(uint i = 0; i < 8; ++i)
+  for (uint i = 0; i < 8; ++i)
   {
     real proj = Math::Dot(direction, points[i] - center);
-    if(proj > maxDot)
+    if (proj > maxDot)
     {
       maxDot = proj;
       *support = points[i];
@@ -268,24 +266,26 @@ void Frustum::Support(Vec3Param direction, Vec3Ptr support) const
 
 Frustum Frustum::Transform(Mat4Param transformation) const
 {
-  //interestingly enough, it seems calling get points the generate
-  //from those points does not return the same frustum.
+  // interestingly enough, it seems calling get points the generate
+  // from those points does not return the same frustum.
 
-  //To deal with that issue (and this might be better anyways), instead of
-  //trying to transform the points, we can transform the planes of the frustum.
-  //This involves transforming the normal (simple) and generating a point on
-  //the plane to transform (since I have no clue if you can transform 'd' somehow).
+  // To deal with that issue (and this might be better anyways), instead of
+  // trying to transform the points, we can transform the planes of the frustum.
+  // This involves transforming the normal (simple) and generating a point on
+  // the plane to transform (since I have no clue if you can transform 'd'
+  // somehow).
 
-  //to properly transform a normal you have to use the inverse transpose
+  // to properly transform a normal you have to use the inverse transpose
   Mat4 invTransposedTransform = transformation.Inverted().Transposed();
 
   Frustum ret;
-  for(uint i = 0; i < Frustum::PlaneDim; ++i)
+  for (uint i = 0; i < Frustum::PlaneDim; ++i)
   {
     Vec3 normal = Planes[i].GetNormal();
     Vec3 point = Planes[i].GetDistance() * normal;
 
-    Vec3 newNormal = Math::TransformNormal(invTransposedTransform, normal).Normalized();
+    Vec3 newNormal =
+        Math::TransformNormal(invTransposedTransform, normal).Normalized();
     Vec3 newPoint = Math::TransformPoint(transformation, point);
 
     ret.Planes[i].Set(newNormal, newPoint);
@@ -301,17 +301,18 @@ Frustum Frustum::UniformTransform(Mat4Param transformation) const
 Frustum Frustum::TransformInverse(Mat4Param transformation) const
 {
   Mat4 invTransform = transformation.Inverted();
-  //to properly transform a normal you have to use the inverse
-  //transpose, which is just the transpose (since we were inverting)
+  // to properly transform a normal you have to use the inverse
+  // transpose, which is just the transpose (since we were inverting)
   Mat4 transposedTransform = transformation.Transposed();
 
   Frustum ret;
-  for(uint i = 0; i < Frustum::PlaneDim; ++i)
+  for (uint i = 0; i < Frustum::PlaneDim; ++i)
   {
     Vec3 normal = Planes[i].GetNormal();
     Vec3 point = Planes[i].GetDistance() * normal;
 
-    Vec3 newNormal = Math::TransformNormal(transposedTransform, normal).Normalized();
+    Vec3 newNormal =
+        Math::TransformNormal(transposedTransform, normal).Normalized();
     Vec3 newPoint = Math::TransformPoint(invTransform, point);
 
     ret.Planes[i].Set(newNormal, newPoint);
@@ -342,7 +343,8 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
 
   // Intersect plane at depth with edge ray
   Intersection::IntersectionPoint point;
-  Intersection::RayPlane(edgeStart, edgeDir, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::RayPlane(
+      edgeStart, edgeDir, plane.GetNormal(), plane.GetDistance(), &point);
 
   // All edges have the same normalized t
   float t = point.T;
@@ -354,4 +356,4 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
   boxPoints[3] = Math::Lerp(points[3], points[7], t);
 }
 
-}//namespace Zero
+} // namespace Zero

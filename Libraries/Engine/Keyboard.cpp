@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,18 +6,14 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(KeyUp);
-  DefineEvent(KeyDown);
-  DefineEvent(KeyRepeated);
-  DefineEvent(TextTyped);
-}
+DefineEvent(KeyUp);
+DefineEvent(KeyDown);
+DefineEvent(KeyRepeated);
+DefineEvent(TextTyped);
+} // namespace Events
 
-const String cKeyboardEventsFromState[] = 
-{
-  Events::KeyUp,
-  Events::KeyDown, 
-  Events::KeyRepeated 
-};
+const String cKeyboardEventsFromState[] = {
+    Events::KeyUp, Events::KeyDown, Events::KeyRepeated};
 
 HashMap<String, Keys::Enum> KeyNameToEnum;
 HashMap<String, String> KeyNameToSymbol;
@@ -58,7 +49,7 @@ void SetUpKeyNames()
   KeyNameToSymbol["Equal"] = "=";
   KeyNameToSymbol["Minus"] = "-";
   KeyNameToSymbol["Apostrophe"] = "'";
-  
+
   KeyNameToEnum["Up"] = Keys::Up;
   KeyNameToEnum["Down"] = Keys::Down;
   KeyNameToEnum["Left"] = Keys::Left;
@@ -189,11 +180,8 @@ void SetUpKeyNames()
   KeyNameToEnum["Nine"] = Keys::Num9;
 
   KeyNameToEnum["None"] = Keys::None;
-  
 }
 
-
-//-------------------------------------------------------------------Keyboard
 Keyboard* Keyboard::Instance = nullptr;
 
 ZilchDefineType(Keyboard, builder, type)
@@ -214,8 +202,10 @@ ZilchDefineType(Keyboard, builder, type)
   ZilchBindOverloadedMethod(Valid, ZilchInstanceOverload(bool, StringParam));
 
   ZilchBindMethod(ToKey);
-  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, Keys::Enum));
-  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, StringParam));
+  ZilchBindOverloadedMethod(ToSymbol,
+                            ZilchInstanceOverload(String, Keys::Enum));
+  ZilchBindOverloadedMethod(ToSymbol,
+                            ZilchInstanceOverload(String, StringParam));
 
   ZeroBindEvent(Events::KeyUp, KeyboardEvent);
   ZeroBindEvent(Events::KeyDown, KeyboardEvent);
@@ -265,7 +255,7 @@ bool Keyboard::KeyIsReleased(Keys::Enum key)
 
 String Keyboard::GetKeyName(Keys::Enum key)
 {
-  if(key < Keys::KeyMax && KeyNames[key])
+  if (key < Keys::KeyMax && KeyNames[key])
     return KeyNames[key];
   else
     return String();
@@ -273,26 +263,21 @@ String Keyboard::GetKeyName(Keys::Enum key)
 
 bool Keyboard::Valid(Keys::Enum key)
 {
-  bool isValid = (key == Keys::Space)
-    || (key == Keys::LeftBracket)
-    || (key == Keys::RightBracket)
-    || (key == Keys::Comma)
-    || (key == Keys::Period)
-    || (key == Keys::Semicolon)
-    || (key == Keys::Minus)
-    || (key == Keys::Apostrophe)
-    || (key == Keys::Slash)
-    || (key == Keys::Backslash)
-    || (key >= Keys::A && key <= Keys::Z)
-    || (key >= Keys::Num0 && key <= Keys::Num9)
-    || (key >= Keys::Up && key < Keys::None);
+  bool isValid = (key == Keys::Space) || (key == Keys::LeftBracket) ||
+                 (key == Keys::RightBracket) || (key == Keys::Comma) ||
+                 (key == Keys::Period) || (key == Keys::Semicolon) ||
+                 (key == Keys::Minus) || (key == Keys::Apostrophe) ||
+                 (key == Keys::Slash) || (key == Keys::Backslash) ||
+                 (key >= Keys::A && key <= Keys::Z) ||
+                 (key >= Keys::Num0 && key <= Keys::Num9) ||
+                 (key >= Keys::Up && key < Keys::None);
 
   return isValid;
 }
 
 bool Keyboard::Valid(StringParam key)
 {
-  if(key == "Unknown" || key == "None" || key == "KeyMax" || key == "Size")
+  if (key == "Unknown" || key == "None" || key == "KeyMax" || key == "Size")
     return false;
   else
     return ToKey(key) != Keys::Unknown;
@@ -300,10 +285,10 @@ bool Keyboard::Valid(StringParam key)
 
 String Keyboard::ToSymbol(Keys::Enum key)
 {
-  if(!Valid(key))
+  if (!Valid(key))
     return "Unknown";
 
-  if(key <= Keys::Backslash)
+  if (key <= Keys::Backslash)
   {
     StringBuilder buffer;
     buffer.Append(Rune(key));
@@ -312,7 +297,7 @@ String Keyboard::ToSymbol(Keys::Enum key)
   }
 
   String symbol = KeyNameToSymbol.FindValue(KeyNames[key], String());
-  if(!symbol.Empty())
+  if (!symbol.Empty())
     return symbol;
 
   return GetKeyName(key);
@@ -330,16 +315,16 @@ Keys::Enum Keyboard::ToKey(StringParam key)
 
 void Keyboard::Update()
 {
-  for(uint i = 0; i < Keys::KeyMax; ++i)
+  for (uint i = 0; i < Keys::KeyMax; ++i)
   {
     byte& state = States[i];
-    if(state == KeyPressed)
+    if (state == KeyPressed)
       state = KeyHeld;
-    else if(state == KeyReleased)
+    else if (state == KeyReleased)
     {
       state = KeyNotHeld;
 
-      if(i != Keys::Unknown)
+      if (i != Keys::Unknown)
         --mStateDownCount;
     }
   }
@@ -347,7 +332,7 @@ void Keyboard::Update()
 
 void Keyboard::Clear()
 {
-  for(uint i = 0; i < Keys::KeyMax; ++i)
+  for (uint i = 0; i < Keys::KeyMax; ++i)
   {
     byte& state = States[i];
     state = KeyNotHeld;
@@ -359,39 +344,41 @@ void Keyboard::Clear()
 void Keyboard::UpdateKeys(KeyboardEvent& event)
 {
   // Key is repeated do nothing
-  if(event.State == KeyState::Repeated)
+  if (event.State == KeyState::Repeated)
     return;
 
   // Update the internal key state
   byte& state = States[event.Key];
-  if(event.State == KeyState::Down)
+  if (event.State == KeyState::Down)
   {
-    switch(state)
+    switch (state)
     {
     case KeyReleased:
     case KeyNotHeld:
       state = KeyPressed;
-      if(event.Key != Keys::Unknown)
+      if (event.Key != Keys::Unknown)
         ++mStateDownCount;
       break;
-    case KeyPressed: state = KeyHeld; break;
-    case KeyHeld: break;
+    case KeyPressed:
+      state = KeyHeld;
+      break;
+    case KeyHeld:
+      break;
     }
   }
   else
   {
-    if(state == KeyReleased)
+    if (state == KeyReleased)
     {
       state = KeyNotHeld;
     }
-    else if(state != KeyNotHeld)
+    else if (state != KeyNotHeld)
     {
       state = KeyReleased;
     }
   }
 }
 
-//--------------------------------------------------------------- KeyboardEvent
 ZilchDefineType(KeyboardEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -437,15 +424,14 @@ bool KeyboardEvent::GetModifierPressed()
   return CtrlPressed || ShiftPressed || AltPressed;
 }
 
-//--------------------------------------------------------------- KeyboardTextEvent
+//KeyboardTextEvent
 ZilchDefineType(KeyboardTextEvent, builder, type)
 {
   ZeroBindDocumented();
   ZilchBindFieldProperty(mRune);
 }
 
-KeyboardTextEvent::KeyboardTextEvent()
-  : mRune(Rune::Invalid), mHandled(false)
+KeyboardTextEvent::KeyboardTextEvent() : mRune(Rune::Invalid), mHandled(false)
 {
 }
 
@@ -455,4 +441,4 @@ void KeyboardTextEvent::Serialize(Serializer& stream)
   stream.SerializeFieldDefault("Rune", mRune.value, 0u);
 }
 
-}//namespace Zero
+} // namespace Zero

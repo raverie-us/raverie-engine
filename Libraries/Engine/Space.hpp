@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Space.hpp
-/// Declaration the Space component class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,33 +8,33 @@ typedef InList<Cog, &Cog::NameLink> NameCogList;
 
 namespace Events
 {
-  DeclareEvent(SpaceLevelLoaded);
-  DeclareEvent(SpaceModified);
-  DeclareEvent(SpaceObjectsChanged);
-  DeclareEvent(SpaceDestroyed);
-}//namespace Events
+DeclareEvent(SpaceLevelLoaded);
+DeclareEvent(SpaceModified);
+DeclareEvent(SpaceObjectsChanged);
+DeclareEvent(SpaceDestroyed);
+} // namespace Events
 
 // Type define for a range
 typedef NameCogList::range CogNameRange;
 
 DeclareBitField4(CreationFlags,
-  Editing,
-  DynamicallyAdded,
-  Preview,
-  /// Are proxy components expected when creating this object? Doesn't warn on proxies being created.
-  ProxyComponentsExpected);
+                 Editing,
+                 DynamicallyAdded,
+                 Preview,
+                 /// Are proxy components expected when creating this object?
+                 /// Doesn't warn on proxies being created.
+                 ProxyComponentsExpected);
 
 namespace CreationFlags
 {
-  const CreationFlags::Enum Default = (CreationFlags::Enum)0;
-}//namespace CreationFlags
+const CreationFlags::Enum Default = (CreationFlags::Enum)0;
+} // namespace CreationFlags
 
 DeclareBitField1(DestroyFlags, DynamicallyDestroyed);
 
-//------------------------------------------------------------------------ Space
 typedef ConditionalRange<CogNameRange, RootCondition> CogRootNameRange;
 
-/// A space is a near boundless, three-dimensional extent in which objects 
+/// A space is a near boundless, three-dimensional extent in which objects
 /// and events occur and have relative position, direction, and time.
 /// Essentially a world of objects that exist together.
 /// Used to divide objects between UI, World, Editor, and others. The two most
@@ -86,13 +78,15 @@ public:
   Cog* CreateAt(StringParam source, Vec3Param position);
   Cog* CreateAt(StringParam source, Vec3Param position, QuatParam rotation);
   Cog* CreateAt(StringParam source, Vec3Param position, Vec3Param scale);
-  Cog* CreateAt(StringParam source, Vec3Param position, QuatParam rotation, 
+  Cog* CreateAt(StringParam source,
+                Vec3Param position,
+                QuatParam rotation,
                 Vec3Param scale);
 
-  //Create an object link between two objects
+  // Create an object link between two objects
   Cog* CreateLink(Archetype* archetype, Cog* objectA, Cog* objectB);
   Cog* CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* objectB);
-  
+
   //------------------------------------------------------------------ Loading
   /// Load new level replace the current level.
   void LoadLevel(Level* level);
@@ -114,7 +108,8 @@ public:
 
   //----------------------------------------------------------- Adding Objects
 
-  /// Do no destroy current objects, add objects from level and change loaded level.
+  /// Do no destroy current objects, add objects from level and change loaded
+  /// level.
   void LoadLevelAdditive(Level* levelName);
 
   /// Add all objects from a level.
@@ -151,31 +146,41 @@ public:
   Cog* FindLastRootObjectByName(StringParam name);
 
   /// All objects in the space.
-  range AllObjects() { return mCogList.All(); }
+  range AllObjects()
+  {
+    return mCogList.All();
+  }
 
   /// Number of objects in the space.
-  uint GetObjectCount() { return mCogsInSpace; }
+  uint GetObjectCount()
+  {
+    return mCogsInSpace;
+  }
 
   //------------------------------------------------------------ Modification
 
-  //Any change that needs to be saved marks the space as modified.
+  // Any change that needs to be saved marks the space as modified.
   void MarkModified();
   bool GetModified();
   void MarkNotModified();
 
   /// Any change to the count / structure of the objects.
   void CheckForChangedObjects();
-  /// This should be called whenever we want the object view to be refreshed / updated.
+  /// This should be called whenever we want the object view to be refreshed /
+  /// updated.
   void ChangedObjects();
 
   //-------------------------------------------------------------------- Flags
-  //Get create flags used for create new objects in this space.
-  //Used by Factory.
+  // Get create flags used for create new objects in this space.
+  // Used by Factory.
   uint GetCreationFlags();
 
-  HierarchyList::range AllRootObjects(){return mRoots.All();}
+  HierarchyList::range AllRootObjects()
+  {
+    return mRoots.All();
+  }
 
-//Internals
+  // Internals
   void AddObject(Cog* cog);
   void RemoveObject(Cog* cog);
   typedef HashMap<String, NameCogList*> CogNameMap;
@@ -207,7 +212,7 @@ public:
   // Hierarchy
   HierarchyList mRoots;
   uint mRootCount;
-  
+
   // If valid a load is pending for next update
   HandleOf<Level> mPendingLevel;
   // Allows CameraViewports to attach viewport to a space specific GameWidget
@@ -223,8 +228,9 @@ public:
   // Is the space currently in the process of loading a level right now.
   bool mIsLoadingLevel;
 
-  void SerializeObjectsToSpace(CogInitializer& initializer, 
-                               CogCreationContext& context, Serializer& loader);
+  void SerializeObjectsToSpace(CogInitializer& initializer,
+                               CogCreationContext& context,
+                               Serializer& loader);
 
   friend class Cog;
   friend class CogInitializer;
@@ -234,4 +240,4 @@ public:
   friend class ArchetypeRebuilder;
 };
 
-}//namespace Zero
+} // namespace Zero

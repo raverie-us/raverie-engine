@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Engine.cpp
-/// Implementation of the SystemObjectManager.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,7 +6,7 @@ namespace Zero
 
 namespace Z
 {
-  SystemObjectManager* gSystemObjects;
+SystemObjectManager* gSystemObjects;
 }
 
 SystemObjectManager::SystemObjectManager()
@@ -23,16 +15,18 @@ SystemObjectManager::SystemObjectManager()
 
 SystemObjectManager::~SystemObjectManager()
 {
-  forRange(ObjectInstance& objectInstance, Objects.Values())
+  forRange(ObjectInstance & objectInstance, Objects.Values())
   {
-    if(objectInstance.Cleanup == ObjectCleanup::AutoDelete)
+    if (objectInstance.Cleanup == ObjectCleanup::AutoDelete)
     {
       delete objectInstance.Instance;
     }
   }
 }
 
-void SystemObjectManager::Add(Object* object, BoundType* metaType, ObjectCleanup::Enum cleanup)
+void SystemObjectManager::Add(Object* object,
+                              BoundType* metaType,
+                              ObjectCleanup::Enum cleanup)
 {
   ObjectInstance none = {object, metaType, cleanup};
   Objects.InsertOrError(metaType->Name, none);
@@ -53,4 +47,4 @@ void CleanUpSystemObjects()
   delete Z::gSystemObjects;
 }
 
-}
+} // namespace Zero

@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -34,10 +33,13 @@ public:
   // Internal
 
   Aabb GetViewPlaneAabb(Aabb localAabb);
-  void ComputeLocalToViewMatrix(Mat4& localToView, Mat4& localToWorld, Mat4& worldToView);
+  void ComputeLocalToViewMatrix(Mat4& localToView,
+                                Mat4& localToWorld,
+                                Mat4& worldToView);
 };
 
-/// A generated quad that addresses atlased image data for efficient frame-based animations and batched rendering.
+/// A generated quad that addresses atlased image data for efficient frame-based
+/// animations and batched rendering.
 class Sprite : public BaseSprite
 {
 public:
@@ -53,11 +55,14 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
 
   // Properties
 
-  /// The resource defining one or more image sequences used for frame-based animation.
+  /// The resource defining one or more image sequences used for frame-based
+  /// animation.
   SpriteSource* GetSpriteSource();
   void SetSpriteSource(SpriteSource* spriteSource);
   HandleOf<SpriteSource> mSpriteSource;
@@ -68,13 +73,15 @@ public:
   /// Flips the Y axis of the Sprite's image (top/bottom).
   bool mFlipY;
 
-  /// If the Sprite animation should be playing on logic update, paused if false.
+  /// If the Sprite animation should be playing on logic update, paused if
+  /// false.
   bool mAnimationActive;
 
   /// Scalar to the amount of time passed used to advance frames of animation.
   float mAnimationSpeed;
 
-  /// Index of the frame to start the animation on when the object is initialized, 0-based.
+  /// Index of the frame to start the animation on when the object is
+  /// initialized, 0-based.
   uint GetStartFrame();
   void SetStartFrame(uint frameIndex);
   uint mStartFrame;
@@ -110,7 +117,9 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
 
   // Properties
 
@@ -142,7 +151,8 @@ public:
   /// Get the effective size in world space of the current text.
   Vec2 MeasureText();
 
-  /// Get the effective size in world space that the SpriteText would be if this was its text.
+  /// Get the effective size in world space that the SpriteText would be if this
+  /// was its text.
   Vec2 MeasureGivenText(StringParam text);
 
   /// Get the position in world space of a character by index.
@@ -174,11 +184,22 @@ public:
   typedef MultiSpriteEntry value_type;
   typedef MultiSpriteEntry& FrontResult;
 
-  MultiSpriteEntryRange() : mIndex(0) {}
+  MultiSpriteEntryRange() : mIndex(0)
+  {
+  }
 
-  FrontResult Front() {return mEntries[mIndex];}
-  void PopFront() {++mIndex;}
-  bool Empty() {return mIndex >= mEntries.Size();}
+  FrontResult Front()
+  {
+    return mEntries[mIndex];
+  }
+  void PopFront()
+  {
+    ++mIndex;
+  }
+  bool Empty()
+  {
+    return mIndex >= mEntries.Size();
+  }
 
   uint mIndex;
   Array<MultiSpriteEntry> mEntries;
@@ -213,13 +234,18 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
-  void MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
+  void MidPhaseQuery(Array<GraphicalEntry>& entries,
+                     Camera& camera,
+                     Frustum* frustum) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
 
   // Properties
 
-  /// If the Sprite animation should be playing on logic update, paused if false.
+  /// If the Sprite animation should be playing on logic update, paused if
+  /// false.
   bool mAnimationActive;
 
   /// Scalar to the amount of time passed used to advance frames of animation.
@@ -228,7 +254,8 @@ public:
   /// Gets an entry containing which SpriteSource is stored at the given index.
   MultiSpriteEntry Get(IntVec2 index);
 
-  /// Set the SpriteSource to be used at the given index, passing null removes entry.
+  /// Set the SpriteSource to be used at the given index, passing null removes
+  /// entry.
   void Set(IntVec2 index, SpriteSource* spriteSource);
 
   /// Removes all SpriteSource entries.

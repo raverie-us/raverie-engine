@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -25,16 +20,17 @@ bool TypeExtensionEntry::IsValidExtensionWithDot(StringParam extension) const
   // Strip the dot from the given extension
   StringRange dotLocation = extension.FindFirstOf(Rune('.'));
   ErrorIf(dotLocation.Empty(), "Given extension must contain a '.'");
-  StringRange extensionNoDot = extension.SubString(dotLocation.End(), extension.End());
+  StringRange extensionNoDot =
+      extension.SubString(dotLocation.End(), extension.End());
   // Now check the "no dot" version as that's what we store.
   return IsValidExtensionNoDot(extensionNoDot);
 }
 
 bool TypeExtensionEntry::IsValidExtensionNoDot(StringParam extension) const
 {
-  for(size_t i = 0; i < mExtensions.Size(); ++i)
+  for (size_t i = 0; i < mExtensions.Size(); ++i)
   {
-    if(mExtensions[i] == extension)
+    if (mExtensions[i] == extension)
       return true;
   }
   return false;
@@ -42,7 +38,8 @@ bool TypeExtensionEntry::IsValidExtensionNoDot(StringParam extension) const
 
 FileExtensionManager::FileExtensionManager()
 {
-  // Create default type entries. The first one in the list is assumed to be the default extension
+  // Create default type entries. The first one in the list is assumed to be the
+  // default extension
   TypeExtensionEntry& zilchEntry = mTypeExtensionEntries["ZilchScript"];
   zilchEntry.mExtensions.PushBack("zilchscript");
   zilchEntry.mExtensions.PushBack("z");
@@ -64,4 +61,4 @@ TypeExtensionEntry* FileExtensionManager::GetZilchFragmentTypeEntry()
   return instance->mTypeExtensionEntries.FindPointer("ZilchFragment");
 }
 
-}//namespace Zero
+} // namespace Zero

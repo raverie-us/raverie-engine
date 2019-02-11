@@ -1,74 +1,62 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------- Tweakables
 namespace LauncherUi
 {
-  const cstr cLocation = "LauncherUi/";
-  Tweakable(Vec4, CenterBackground, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, MenuText, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, MenuTextHighlight, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, MenuTextClicked, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, MenuTextSelected, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, MenuTextSelectedHighlight, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, SettingsColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, SettingsHoverColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, SettingsClickedColor, Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "LauncherUi/";
+Tweakable(Vec4, CenterBackground, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MenuText, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MenuTextHighlight, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MenuTextClicked, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MenuTextSelected, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MenuTextSelectedHighlight, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SettingsColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SettingsHoverColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SettingsClickedColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace LauncherUi
 
 namespace LaunchButtonUi
 {
-  const cstr cLocation = "LauncherUi/LaunchButton";
-  Tweakable(Vec4, DisabledBackground, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, TitleText,          Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildText,          Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildTextDisabled,  Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "LauncherUi/LaunchButton";
+Tweakable(Vec4, DisabledBackground, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TitleText, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildText, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildTextDisabled, Vec4(1, 1, 1, 1), cLocation);
+} // namespace LaunchButtonUi
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DefineEvent(MenuDisplayed);
-  DefineEvent(MenuHidden);
-  DefineEvent(VersionListLoaded);
-  DefineEvent(TemplateListLoaded);
-  DefineEvent(CheckForUpdates);
-}
+DefineEvent(MenuDisplayed);
+DefineEvent(MenuHidden);
+DefineEvent(VersionListLoaded);
+DefineEvent(TemplateListLoaded);
+DefineEvent(CheckForUpdates);
+} // namespace Events
 
-//------------------------------------------------------------------ Menu Button
-//******************************************************************************
 MenuButton::MenuButton(Composite* parent) : Composite(parent)
 {
   mIcon = CreateAttached<Element>("OptionsIcon");
-  mIcon->SetTranslation(Pixels(0,8,0));
+  mIcon->SetTranslation(Pixels(0, 8, 0));
 }
 
-//******************************************************************************
 Vec2 MenuButton::GetMinSize()
 {
   return mIcon->GetSize();
 }
 
-//------------------------------------------------------------- Menu Text Button
-//******************************************************************************
-MenuTextButton::MenuTextButton(Composite* parent, StringParam style,
+MenuTextButton::MenuTextButton(Composite* parent,
+                               StringParam style,
                                LauncherMenu::Type menu) :
-  TextButton(parent, style),
-  mMenu(menu)
+    TextButton(parent, style),
+    mMenu(menu)
 {
   SetStyle(TextButtonStyle::Modern);
   DeSelect();
 }
 
-//******************************************************************************
 void MenuTextButton::Select()
 {
   mTextColor = LauncherUi::MenuTextSelected;
@@ -78,7 +66,6 @@ void MenuTextButton::Select()
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MenuTextButton::DeSelect()
 {
   mTextColor = LauncherUi::MenuText;
@@ -88,10 +75,7 @@ void MenuTextButton::DeSelect()
   MarkAsNeedsUpdate();
 }
 
-//------------------------------------------------------------------ Main Button
-//******************************************************************************
-MainButton::MainButton(Composite* parent) : 
-  Composite(parent)
+MainButton::MainButton(Composite* parent) : Composite(parent)
 {
   SetSizing(SizePolicy::Fixed, Pixels(156, 49));
 
@@ -99,8 +83,8 @@ MainButton::MainButton(Composite* parent) :
   mBackgroundDisabled->SetColor(LaunchButtonUi::DisabledBackground);
 
   mBackground = CreateAttached<Element>("LauncherButtonBackground");
-  mBackground->SetColor(Vec4(0.9f, 0.9f, 0.9f,1));
-  
+  mBackground->SetColor(Vec4(0.9f, 0.9f, 0.9f, 1));
+
   mTitle = new Text(this, "LaunchButtonTitle");
   mTitle->SetText("LAUNCH");
   mTitle->SizeToContents();
@@ -121,19 +105,18 @@ MainButton::MainButton(Composite* parent) :
   mEnabled = true;
 }
 
-//******************************************************************************
 void MainButton::UpdateTransform()
 {
   mBackgroundDisabled->SetSize(mSize);
   mBackground->SetSize(mSize);
 
   float x = mSize.x * 0.5f - mTitle->mSize.x * 0.5f;
-  mTitle->SetTranslation(Vec3(x,0,0));
+  mTitle->SetTranslation(Vec3(x, 0, 0));
   mSubText->SetTranslation(Vec3(x + Pixels(2), Pixels(31), 0));
 
-  if(mMouseDown)
+  if (mMouseDown)
     mBackground->SetColor(Vec4(0.8f, 0.8f, 0.8f, 1));
-  else if(IsMouseOver())
+  else if (IsMouseOver())
     mBackground->SetColor(Vec4(1));
   else
     mBackground->SetColor(Vec4(0.9f, 0.9f, 0.9f, 1));
@@ -141,11 +124,10 @@ void MainButton::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void MainButton::SetVersionAndProject(ZeroBuild* version, Project* project)
 {
   // If there is no build then disable the button
-  if(version == nullptr)
+  if (version == nullptr)
   {
     SetEnabled(false);
     return;
@@ -154,11 +136,11 @@ void MainButton::SetVersionAndProject(ZeroBuild* version, Project* project)
   // Set the build number on the button
   SetBuildId(version->GetBuildId());
 
-  if(project == nullptr)
+  if (project == nullptr)
   {
     SetText("INSTALL");
     // Only enable the button if the build is not currently installed
-    if(version->mInstallState == InstallState::NotInstalled)
+    if (version->mInstallState == InstallState::NotInstalled)
       SetEnabled(true);
     else
       SetEnabled(false);
@@ -167,15 +149,15 @@ void MainButton::SetVersionAndProject(ZeroBuild* version, Project* project)
   {
     // We're always going to try to launch the current project
     SetText("LAUNCH");
-    // Choose whether or not the button is enabled based upon if the build is installed
-    if(version->mInstallState == InstallState::Installed)
+    // Choose whether or not the button is enabled based upon if the build is
+    // installed
+    if (version->mInstallState == InstallState::Installed)
       SetEnabled(true);
     else
       SetEnabled(false);
   }
 }
 
-//******************************************************************************
 void MainButton::SetText(StringParam text)
 {
   mTitle->SetText(text);
@@ -183,7 +165,6 @@ void MainButton::SetText(StringParam text)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainButton::SetSubText(StringParam text)
 {
   mSubText->SetText(text);
@@ -191,7 +172,6 @@ void MainButton::SetSubText(StringParam text)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainButton::SetBuildId(const BuildId& buildId)
 {
   mSubText->SetText(buildId.ToDisplayString());
@@ -199,63 +179,55 @@ void MainButton::SetBuildId(const BuildId& buildId)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainButton::SetEnabled(bool state)
 {
   mEnabled = state;
   mBackground->SetVisible(state);
 
-  if(state)
+  if (state)
     mSubText->SetColor(LaunchButtonUi::BuildText);
   else
     mSubText->SetColor(LaunchButtonUi::BuildTextDisabled);
 }
 
-//******************************************************************************
 void MainButton::OnLeftClick(MouseEvent* e)
 {
-  if(mEnabled)
+  if (mEnabled)
     GetDispatcher()->Dispatch(Events::ButtonPressed, e);
 }
 
-//******************************************************************************
 void MainButton::OnMouseEnter(MouseEvent* e)
 {
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainButton::OnMouseDown(MouseEvent* e)
 {
   mMouseDown = true;
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainButton::OnMouseUp(MouseEvent* e)
 {
   mMouseDown = false;
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void MainButton::OnMouseExit(MouseEvent* e)
 {
   mMouseDown = false;
   MarkAsNeedsUpdate();
 }
 
-//-------------------------------------------------------------- Launcher Window
-//******************************************************************************
-LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
-  : Composite(parent)
+LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog) :
+    Composite(parent)
 {
   ZPrint("Displaying Launcher Window\n");
   mUpdateModalName = "UpdateModal";
   mIsLauncherUpdateCheckQueued = false;
 
   mSelectedMenu = nullptr;
-  for(uint i = 0; i < LauncherMenu::MenuCount; ++i)
+  for (uint i = 0; i < LauncherMenu::MenuCount; ++i)
     mMenus[i] = nullptr;
 
   mConfigCog = launcherConfigCog;
@@ -267,12 +239,13 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   // Finds which version are currently installed
   mVersionSelector->FindInstalledVersions();
   mVersionSelector->FindDownloadedTemplates();
-  
+
   // Download what builds and templates are available
   CheckForUpdates();
   ConnectThisTo(this, Events::CheckForUpdates, OnCheckForUpdates);
 
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
   mTopBar = new Composite(this);
   mTopBar->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(115));
@@ -286,7 +259,10 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
     leftSide->SetLayout(CreateStackLayout());
     {
       mButtonArea = new Composite(leftSide);
-      mButtonArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(24, 0), Thickness(Pixels(30, 30, 0, 0))));
+      mButtonArea->SetLayout(
+          CreateStackLayout(LayoutDirection::LeftToRight,
+                            Pixels(24, 0),
+                            Thickness(Pixels(30, 30, 0, 0))));
       mButtonArea->SetName("Main Tabs");
       mButtonArea->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
       mButtonArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(69));
@@ -296,8 +272,10 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
         mSettingsButton->mBackground->SetVisible(false);
         mSettingsButton->mBorder->SetVisible(false);
         mSettingsButton->mIconColor = ToByteColor(LauncherUi::SettingsColor);
-        mSettingsButton->mIconHoverColor = ToByteColor(LauncherUi::SettingsHoverColor);
-        mSettingsButton->mIconClickedColor = ToByteColor(LauncherUi::SettingsClickedColor);
+        mSettingsButton->mIconHoverColor =
+            ToByteColor(LauncherUi::SettingsHoverColor);
+        mSettingsButton->mIconClickedColor =
+            ToByteColor(LauncherUi::SettingsClickedColor);
         ConnectThisTo(mSettingsButton, Events::LeftClick, OnSettingsPressed);
 
         // Main menu buttons will be registered here
@@ -312,7 +290,8 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
     new Spacer(mTopBar, SizePolicy::Flex, Vec2(1));
 
     Composite* rightSide = new Composite(mTopBar);
-    rightSide->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(0, 70, 35, 0)));
+    rightSide->SetLayout(CreateStackLayout(
+        LayoutDirection::TopToBottom, Vec2::cZero, Thickness(0, 70, 35, 0)));
     {
       mSearch = new TagChainTextBox(rightSide);
       mSearch->SetSizing(SizePolicy::Fixed, Pixels(318, 16));
@@ -328,10 +307,12 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   mCenterPanel = new Composite(this);
   mCenterPanel->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   mCenterPanel->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1.0f);
-  
+
   mBottomBar = new Composite(this);
   mBottomBar->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(78));
-  mBottomBar->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(Pixels(35, 14, 35, 0))));
+  mBottomBar->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
+                                          Vec2::cZero,
+                                          Thickness(Pixels(35, 14, 35, 0))));
   mBottomBar->SetName("BottomBar");
   {
     Text* zeroText = new Text(mBottomBar, "MainTabText");
@@ -356,7 +337,8 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   RegisterMenu(LauncherMenu::Discover, discoverMenu);
   RegisterMenu(LauncherMenu::Projects, nullptr);
   RegisterMenu(LauncherMenu::NewProject, newProject, LauncherMenu::Projects);
-  RegisterMenu(LauncherMenu::RecentProjects, recentProjects, LauncherMenu::Projects);
+  RegisterMenu(
+      LauncherMenu::RecentProjects, recentProjects, LauncherMenu::Projects);
   RegisterMenu(LauncherMenu::Builds, buildsMenu);
 
   AddMenuButton(LauncherMenu::Discover, "DISCOVER", "MainTabText");
@@ -395,7 +377,8 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   // Start listening for inter-process communication
   StartListening();
 
-  ConnectThisTo(mVersionSelector, Events::NewBuildAvailable, OnNewBuildAvailable);
+  ConnectThisTo(
+      mVersionSelector, Events::NewBuildAvailable, OnNewBuildAvailable);
   ConnectThisTo(parent, Events::Closing, OnClosing);
 
   ConnectThisTo(this, Events::MouseDown, OnMouseDown);
@@ -407,10 +390,9 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog)
   AutoCheckForLauncherUpdates();
 }
 
-//******************************************************************************
 LauncherWindow::~LauncherWindow()
 {
-  for(size_t i = 0; i < mDummyCommunicators.Size(); ++i)
+  for (size_t i = 0; i < mDummyCommunicators.Size(); ++i)
     delete mDummyCommunicators[i];
   mDummyCommunicators.Clear();
 
@@ -418,7 +400,6 @@ LauncherWindow::~LauncherWindow()
   delete mProjectCache;
 }
 
-//******************************************************************************
 void LauncherWindow::CheckForUpdates()
 {
   ZPrint("Checking for updates\n");
@@ -428,9 +409,10 @@ void LauncherWindow::CheckForUpdates()
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPackageListing);
   ConnectThisTo(task, Events::BackgroundTaskFailed, OnPackageListing);
 
-  //start the task to get the version listing
+  // start the task to get the version listing
   BackgroundTask* templateTask = mVersionSelector->GetTemplateListing();
-  ConnectThisTo(templateTask, Events::BackgroundTaskCompleted, OnTemplateListing);
+  ConnectThisTo(
+      templateTask, Events::BackgroundTaskCompleted, OnTemplateListing);
   ConnectThisTo(templateTask, Events::BackgroundTaskFailed, OnTemplateListing);
 
   // Queue up actions to auto-recheck for new builds, etc...
@@ -440,13 +422,11 @@ void LauncherWindow::CheckForUpdates()
   sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::CheckForUpdates>(this));
 }
 
-//******************************************************************************
 void LauncherWindow::OnCheckForUpdates(Event* e)
 {
   CheckForUpdates();
 }
 
-//******************************************************************************
 void LauncherWindow::AutoCheckForLauncherUpdates()
 {
   // Mark that we finished the last queue up of the actions
@@ -455,7 +435,7 @@ void LauncherWindow::AutoCheckForLauncherUpdates()
   // Queue up actions to auto-recheck for new builds, etc...
   // Only do this if the launcher auto-checks for updates though
   LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
-  if(!launcherConfig->mAutoCheckForLauncherUpdates)
+  if (!launcherConfig->mAutoCheckForLauncherUpdates)
     return;
 
   CheckForLauncherUpdates();
@@ -465,10 +445,10 @@ void LauncherWindow::AutoCheckForLauncherUpdates()
   float secondsForRecheck = GetConfig()->mNewestLauncherUpdateCheckFrequency;
   ActionSequence* sequence = new ActionSequence(this);
   sequence->Add(new ActionDelay(secondsForRecheck));
-  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::AutoCheckForLauncherUpdates>(this));
+  sequence->Add(
+      new CallAction<ZilchSelf, &ZilchSelf::AutoCheckForLauncherUpdates>(this));
 }
 
-//******************************************************************************
 void LauncherWindow::CheckForLauncherUpdates()
 {
   // Check for updates if we don't already have the
@@ -481,12 +461,11 @@ void LauncherWindow::CheckForLauncherUpdates()
   }
 }
 
-//******************************************************************************
 void LauncherWindow::OnInstallMajorVersion(ModalConfirmEvent* e)
 {
   // If the user said no then just close the dialog (kinda bad that
   // they can continue through, but whatever for now...)
-  if(!e->mConfirmed)
+  if (!e->mConfirmed)
   {
     ZPrint("User cancelled major version install.\n");
     return;
@@ -494,19 +473,20 @@ void LauncherWindow::OnInstallMajorVersion(ModalConfirmEvent* e)
 
   String url = e->mStringUserData;
   BackgroundTask* task = mVersionSelector->DownloadMajorLauncherUpdate(url);
-  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnMajorLauncherUpdateDownloaded);
+  ConnectThisTo(
+      task, Events::BackgroundTaskCompleted, OnMajorLauncherUpdateDownloaded);
 
-  ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
+  ModalBackgroundTaskProgessBar* modal =
+      new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
   modal->mCloseOnBackgroundClicked = false;
   modal->mCloseOnEscape = false;
   mActiveModal = modal;
 }
 
-//******************************************************************************
 void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 {
   // If the task failed then something bad happened, just return
-  if(!e->mTask->IsCompleted())
+  if (!e->mTask->IsCompleted())
   {
     ZPrint("Downloading major update failed.\n");
     return;
@@ -514,31 +494,35 @@ void LauncherWindow::OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 
   // Check the job to see if there's a new major version, if not then
   // queue up a job to check for a new patch version.
-  DownloadLauncherMajorInstallerJob* job = (DownloadLauncherMajorInstallerJob*)e->mTask->GetFinishedJob();
-  if(!job->mIsNewInstallerAvailable)
+  DownloadLauncherMajorInstallerJob* job =
+      (DownloadLauncherMajorInstallerJob*)e->mTask->GetFinishedJob();
+  if (!job->mIsNewInstallerAvailable)
   {
     // This case only happens if the download fails.
     ZPrint("No major update available.\n");
     return;
   }
 
-  // Invoke the installer in such a way that it'll run silently (not very silent, this still
-  // shows progress but has no prompts) and close and re-open the launcher.
+  // Invoke the installer in such a way that it'll run silently (not very
+  // silent, this still shows progress but has no prompts) and close and re-open
+  // the launcher.
   Status status;
 #if defined(PLATFORM_WINDOWS)
-  Os::SystemOpenFile(status, job->mInstallerPath.c_str(), Os::Verb::Default, "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS");
+  Os::SystemOpenFile(status,
+                     job->mInstallerPath.c_str(),
+                     Os::Verb::Default,
+                     "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS");
 #else
   Os::SystemOpenFile(status, job->mInstallerPath.c_str(), Os::Verb::Default);
 #endif
   Z::gEngine->Terminate();
 }
 
-//******************************************************************************
 void LauncherWindow::OnInstallPatchVersion(ModalConfirmEvent* e)
 {
   // If the user said no then just close the dialog (kinda bad that
   // they can continue through, but whatever for now...)
-  if(!e->mConfirmed)
+  if (!e->mConfirmed)
   {
     ZPrint("User cancelled patch update.\n");
     return;
@@ -546,29 +530,31 @@ void LauncherWindow::OnInstallPatchVersion(ModalConfirmEvent* e)
 
   String url = e->mStringUserData;
   BackgroundTask* task = mVersionSelector->DownloadPatchLauncherUpdate(url);
-  ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPatchLauncherUpdateDownloaded);
+  ConnectThisTo(
+      task, Events::BackgroundTaskCompleted, OnPatchLauncherUpdateDownloaded);
 
-  ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
+  ModalBackgroundTaskProgessBar* modal =
+      new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
   modal->mCloseOnBackgroundClicked = false;
   modal->mCloseOnEscape = false;
   mActiveModal = modal;
 }
 
-//******************************************************************************
 void LauncherWindow::OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 {
   // If the task failed then something bad happened, just return
-  if(!e->mTask->IsCompleted())
+  if (!e->mTask->IsCompleted())
   {
     ZPrint("Patch update failed.\n");
     return;
   }
 
   // Check the job to see if there's a new major version, if not then
-  // queue up a job to check for a new minor version (ignored for now, needs further
-  // testing and minor versions are auto-downloaded on launcher).
-  DownloadLauncherPatchInstallerJob* job = (DownloadLauncherPatchInstallerJob*)e->mTask->GetFinishedJob();
-  if(!job->mIsNewPatchAvailable)
+  // queue up a job to check for a new minor version (ignored for now, needs
+  // further testing and minor versions are auto-downloaded on launcher).
+  DownloadLauncherPatchInstallerJob* job =
+      (DownloadLauncherPatchInstallerJob*)e->mTask->GetFinishedJob();
+  if (!job->mIsNewPatchAvailable)
   {
     // This case only happens if the download fails.
     ZPrint("No patch downloaded.\n");
@@ -577,23 +563,23 @@ void LauncherWindow::OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 
   ZPrint("Patch installed. Restarting launcher.\n");
   LauncherConfig* launcherConfig = GetConfig();
-  if(launcherConfig != nullptr)
+  if (launcherConfig != nullptr)
     launcherConfig->mRestartOnClose = true;
   Z::gEngine->Terminate();
 }
 
-//******************************************************************************
 void LauncherWindow::ForceUpdateBuilds()
 {
   bool versionIsRunning = false;
-  for(size_t i = 0; i < mVersionSelector->mVersions.Size(); ++i)
+  for (size_t i = 0; i < mVersionSelector->mVersions.Size(); ++i)
   {
     ZeroBuild* build = mVersionSelector->mVersions[i];
-    if(build->mInstallState != InstallState::NotInstalled && mVersionSelector->CheckForRunningBuild(build))
+    if (build->mInstallState != InstallState::NotInstalled &&
+        mVersionSelector->CheckForRunningBuild(build))
       versionIsRunning = true;
   }
 
-  if(!versionIsRunning)
+  if (!versionIsRunning)
   {
     ForceUpdateBuildsAndUpdateConfig();
     return;
@@ -606,34 +592,34 @@ void LauncherWindow::ForceUpdateBuilds()
   buttons.PushBack("RETRY");
   buttons.PushBack("FORCE CLOSE");
   // Create the modal and connect to whenever a button is pressed
-  ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), buttons, extraMsg);
+  ModalButtonsAction* modal =
+      new ModalButtonsAction(this, msg.ToUpper(), buttons, extraMsg);
   modal->SetStripHeight(ModalSizeMode::Percentage, 0.145f);
   ConnectThisTo(modal, Events::ModalButtonPressed, OnForcedBuildsModal);
   modal->mCloseOnBackgroundClicked = false;
   modal->TakeFocus();
-  // Make sure to set what the active modal is on the launcher window (so escape can cancel)
+  // Make sure to set what the active modal is on the launcher window (so escape
+  // can cancel)
   mActiveModal = modal;
 }
 
-//******************************************************************************
 void LauncherWindow::ForceUpdateBuildsAndUpdateConfig()
 {
   LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
   mVersionSelector->ForceUpdateAllBuilds();
-  launcherConfig->mForcedUpdateVersion = LauncherConfig::mCurrentForcedUpdateVersionNumber;
+  launcherConfig->mForcedUpdateVersion =
+      LauncherConfig::mCurrentForcedUpdateVersionNumber;
   SaveLauncherConfig(mConfigCog);
 }
 
-//******************************************************************************
 void LauncherWindow::OnForcedBuildsModal(ModalButtonEvent* e)
 {
-  if(e->mButtonName == "RETRY")
+  if (e->mButtonName == "RETRY")
     ForceUpdateBuilds();
   else
     ForceUpdateBuildsAndUpdateConfig();
 }
 
-//******************************************************************************
 void LauncherWindow::UpdateTransform()
 {
   // Center the background
@@ -643,7 +629,7 @@ void LauncherWindow::UpdateTransform()
   mWindowGripper->SetSize(mTopBar->GetSize());
 
   // Update the size of the current menu
-  if(mSelectedMenu && mSelectedMenu->mClientArea)
+  if (mSelectedMenu && mSelectedMenu->mClientArea)
     mSelectedMenu->mClientArea->SetSize(centerRect.GetSize());
 
   float rightEdge = centerRect.SizeX;
@@ -651,18 +637,18 @@ void LauncherWindow::UpdateTransform()
   float buttonLeftEdge = rightEdge - 36 - buttonSize;
   mFileBugTextButton->SetTranslation(Pixels(buttonLeftEdge, 33, 0));
 
-  if(mActiveModal != nullptr)
+  if (mActiveModal != nullptr)
     mActiveModal->UpdateTransform();
 
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 MenuData* LauncherWindow::RegisterMenu(LauncherMenu::Type menu,
-                      Composite* clientComposite, LauncherMenu::Type parentMenu)
+                                       Composite* clientComposite,
+                                       LauncherMenu::Type parentMenu)
 {
   // The menu is disabled by default
-  if(clientComposite)
+  if (clientComposite)
     clientComposite->SetActive(false);
 
   // Create the menu
@@ -673,7 +659,10 @@ MenuData* LauncherWindow::RegisterMenu(LauncherMenu::Type menu,
 
   // Create custom Ui for this menu
   menuData->mCustomUi = new Composite(mCustomMenuArea);
-  menuData->mCustomUi->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(16, 0), Thickness(Pixels(32, -15, 0, 0))));
+  menuData->mCustomUi->SetLayout(
+      CreateStackLayout(LayoutDirection::LeftToRight,
+                        Pixels(16, 0),
+                        Thickness(Pixels(32, -15, 0, 0))));
   new Spacer(menuData->mCustomUi, SizePolicy::Fixed, Pixels(35, 1));
   menuData->mClientArea = clientComposite;
 
@@ -686,7 +675,7 @@ MenuData* LauncherWindow::RegisterMenu(LauncherMenu::Type menu,
   mMenus[menu] = menuData;
 
   // If we have a parent menu, add buttons
-  if(parentMenu != LauncherMenu::None)
+  if (parentMenu != LauncherMenu::None)
   {
     MenuData* parent = mMenus[parentMenu];
     ErrorIf(parent == nullptr, "Parent menu not registered.");
@@ -697,24 +686,23 @@ MenuData* LauncherWindow::RegisterMenu(LauncherMenu::Type menu,
   return menuData;
 }
 
-//******************************************************************************
 void LauncherWindow::SetDefaultSubMenu(LauncherMenu::Type parentMenu,
                                        LauncherMenu::Type defaultSubMenu)
 {
   mMenus[parentMenu]->mSelectedSubMenu = defaultSubMenu;
 }
 
-//******************************************************************************
-void LauncherWindow::AddMenuButton(LauncherMenu::Type menu, StringParam name,
+void LauncherWindow::AddMenuButton(LauncherMenu::Type menu,
+                                   StringParam name,
                                    StringParam style)
 {
   MenuData* menuData = mMenus[menu];
-  
+
   Composite* parentComposite = mButtonArea;
 
   // If we have a parent menu, we want to attach the button to the parents
   // custom ui area (underneath the main buttons).
-  if(menuData->mParentMenu != LauncherMenu::None)
+  if (menuData->mParentMenu != LauncherMenu::None)
   {
     MenuData* parentMenu = mMenus[menuData->mParentMenu];
     parentComposite = parentMenu->mCustomUi;
@@ -728,11 +716,10 @@ void LauncherWindow::AddMenuButton(LauncherMenu::Type menu, StringParam name,
   menuData->mMenuButton = button;
 }
 
-//******************************************************************************
 void LauncherWindow::DisplayInClientArea(Composite* composite)
 {
   // Fade the old menu if it exists
-  if(mSelectedMenu && mSelectedMenu->mClientArea)
+  if (mSelectedMenu && mSelectedMenu->mClientArea)
   {
     Composite* menu = mSelectedMenu->mClientArea;
 
@@ -741,12 +728,13 @@ void LauncherWindow::DisplayInClientArea(Composite* composite)
     menu->DispatchEvent(Events::MenuHidden, &eventToSend);
 
     ActionSequence* seq = new ActionSequence(menu);
-    seq->Add(Fade(menu, Vec4(1,1,1,0), 0.1f));
-    seq->Add(new CallParamAction<Widget, bool, &Widget::SetActive>(menu, false));
+    seq->Add(Fade(menu, Vec4(1, 1, 1, 0), 0.1f));
+    seq->Add(
+        new CallParamAction<Widget, bool, &Widget::SetActive>(menu, false));
   }
 
   // Do nothing if we weren't given anything
-  if(composite == nullptr)
+  if (composite == nullptr)
     return;
 
   // Enable the menu
@@ -755,54 +743,51 @@ void LauncherWindow::DisplayInClientArea(Composite* composite)
 
   // Activate the new menu and fade it in
   composite->SetActive(true);
-  composite->SetColor(Vec4(1,1,1,0));
+  composite->SetColor(Vec4(1, 1, 1, 0));
 
   ActionSequence* seq = new ActionSequence(composite);
-  seq->Add(Fade(composite, Vec4(1,1,1,1), 0.2f));
+  seq->Add(Fade(composite, Vec4(1, 1, 1, 1), 0.2f));
 
   // Make sure it's sized properly (we may have changed size)
   composite->SetSize(mCenterPanel->GetSize());
 }
 
-//******************************************************************************
 void LauncherWindow::CloseActiveModals()
 {
-  if(Modal* modal = mActiveProjectModal)
+  if (Modal* modal = mActiveProjectModal)
   {
     modal->Close();
     mActiveProjectModal = nullptr;
   }
 
-  if(Modal* modal = mSettingsModal)
+  if (Modal* modal = mSettingsModal)
   {
     modal->Close();
     mSettingsModal = nullptr;
   }
 
-  if(Modal* modal = mActiveModal)
+  if (Modal* modal = mActiveModal)
   {
     modal->Close();
     mActiveModal = nullptr;
   }
 }
 
-//******************************************************************************
 void LauncherWindow::SelectMenu(LauncherMenu::Type menu)
 {
   MenuData* menuData = mMenus[menu];
   SelectMenu(menuData);
 }
 
-//******************************************************************************
 void LauncherWindow::SelectMenu(MenuData* menu)
 {
-  if(Modal* modal = mActiveProjectModal)
+  if (Modal* modal = mActiveProjectModal)
   {
     modal->Close();
     mActiveProjectModal = nullptr;
   }
 
-  if(Modal* modal = mSettingsModal)
+  if (Modal* modal = mSettingsModal)
   {
     modal->Close();
     mSettingsModal = nullptr;
@@ -810,7 +795,7 @@ void LauncherWindow::SelectMenu(MenuData* menu)
 
   // Don't select a menu if it's already selected (in theory we need to check
   // for sub-menus, but this hasn't been an issues so far)
-  if(mSelectedMenu == menu)
+  if (mSelectedMenu == menu)
     return;
 
   DeSelectAllButton();
@@ -818,20 +803,20 @@ void LauncherWindow::SelectMenu(MenuData* menu)
   MenuData* selected = menu;
 
   // Highlight the selected menu button
-  if(selected->mMenuButton)
+  if (selected->mMenuButton)
     selected->mMenuButton->Select();
 
   // Highlight the parent menu if it exists
-  if(selected->mParentMenu != LauncherMenu::None)
+  if (selected->mParentMenu != LauncherMenu::None)
     mMenus[selected->mParentMenu]->mMenuButton->Select();
 
   // Highlight the default child menu if it exists
-  if(selected->mSelectedSubMenu != LauncherMenu::None)
+  if (selected->mSelectedSubMenu != LauncherMenu::None)
   {
     MenuData* childMenu = mMenus[selected->mSelectedSubMenu];
-    if(childMenu->mMenuButton)
+    if (childMenu->mMenuButton)
       childMenu->mMenuButton->Select();
-    
+
     // We want to select the child menu
     selected = childMenu;
   }
@@ -840,34 +825,34 @@ void LauncherWindow::SelectMenu(MenuData* menu)
   DisplayInClientArea(selected->mClientArea);
 
   // Disable old custom ui
-  if(mSelectedMenu)
+  if (mSelectedMenu)
   {
     // Mark the old menu's custom ui as inactive
-    if(mSelectedMenu->mCustomUi)
+    if (mSelectedMenu->mCustomUi)
       mSelectedMenu->mCustomUi->SetActive(false);
 
     // If the old menu had a parent, make the parents custom ui inactive as well
-    if(mSelectedMenu->mParentMenu != LauncherMenu::None)
+    if (mSelectedMenu->mParentMenu != LauncherMenu::None)
     {
       MenuData* parentMenuData = mMenus[mSelectedMenu->mParentMenu];
-      if(parentMenuData->mCustomUi)
+      if (parentMenuData->mCustomUi)
         parentMenuData->mCustomUi->SetActive(false);
     }
   }
 
   // If we have a parent, we want to display our parents custom ui
-  if(selected->mParentMenu != LauncherMenu::None)
+  if (selected->mParentMenu != LauncherMenu::None)
   {
     MenuData* parentMenuData = mMenus[selected->mParentMenu];
     parentMenuData->mSelectedSubMenu = selected->mMenu;
     parentMenuData->mCustomUi->SetActive(true);
   }
   // Otherwise, just display the selected menu's custom ui
-  if(selected->mCustomUi)
+  if (selected->mCustomUi)
     selected->mCustomUi->SetActive(true);
 
   // If there is a default sub page, go to that
-  if(selected->mSelectedSubMenu != LauncherMenu::None)
+  if (selected->mSelectedSubMenu != LauncherMenu::None)
     DisplayInClientArea(mMenus[selected->mSelectedSubMenu]->mClientArea);
 
   // Store it as the selected menu
@@ -875,7 +860,6 @@ void LauncherWindow::SelectMenu(MenuData* menu)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void LauncherWindow::AddToRecentProjects(CachedProject* project)
 {
   // Add the project to the recent projects listing
@@ -884,7 +868,6 @@ void LauncherWindow::AddToRecentProjects(CachedProject* project)
   SaveLauncherConfig(mConfigCog);
 }
 
-//******************************************************************************
 void LauncherWindow::RemoveFromRecentProjects(CachedProject* project)
 {
   // Add the project to the recent projects listing
@@ -893,16 +876,16 @@ void LauncherWindow::RemoveFromRecentProjects(CachedProject* project)
   SaveLauncherConfig(mConfigCog);
 }
 
-//******************************************************************************
-void LauncherWindow::SelectActiveProject(CachedProject* project, bool overrideUserTags)
+void LauncherWindow::SelectActiveProject(CachedProject* project,
+                                         bool overrideUserTags)
 {
   SelectMenu(LauncherMenu::RecentProjects);
 
-  mActiveProjectModal = ActiveProjectMenu::OpenProject(mCenterPanel, project, this);
+  mActiveProjectModal =
+      ActiveProjectMenu::OpenProject(mCenterPanel, project, this);
   mActiveModal = mActiveProjectModal;
 }
 
-//******************************************************************************
 void LauncherWindow::OnMenuButtonPressed(ObjectEvent* e)
 {
   MenuTextButton* button = (MenuTextButton*)e->Source;
@@ -911,7 +894,6 @@ void LauncherWindow::OnMenuButtonPressed(ObjectEvent* e)
   SelectMenu(selectedMenu);
 }
 
-//******************************************************************************
 void LauncherWindow::OnSettingsPressed(Event*)
 {
   Modal* modal = new Modal(GetRootWidget());
@@ -923,49 +905,51 @@ void LauncherWindow::OnSettingsPressed(Event*)
   mSettingsModal = modal;
 }
 
-//******************************************************************************
 void LauncherWindow::OnPackageListing(BackgroundTaskEvent* taskEvent)
 {
   bool installingLatest = false;
-  if(taskEvent->mTask->IsCompleted())
+  if (taskEvent->mTask->IsCompleted())
   {
     // Load the available builds into the version selector
-    GetVersionListingTaskJob* job = (GetVersionListingTaskJob*)taskEvent->mTask->GetFinishedJob();
+    GetVersionListingTaskJob* job =
+        (GetVersionListingTaskJob*)taskEvent->mTask->GetFinishedJob();
     mVersionSelector->UpdatePackageListing(job);
 
     // Notify that the version list has been loaded
     Event e;
     mVersionSelector->GetDispatcher()->Dispatch(Events::VersionListLoaded, &e);
 
-    // If the user doesn't have any builds installed and has no recent projects then install the latest "Stable" version
+    // If the user doesn't have any builds installed and has no recent projects
+    // then install the latest "Stable" version
     RecentProjects* recentProjects = mConfigCog->has(RecentProjects);
-    if(mVersionSelector->GetInstalledBuildsCount() == 0 &&
-      (recentProjects == nullptr || recentProjects->GetRecentProjectsCount() == 0))
+    if (mVersionSelector->GetInstalledBuildsCount() == 0 &&
+        (recentProjects == nullptr ||
+         recentProjects->GetRecentProjectsCount() == 0))
     {
       HashSet<String> requiredTags;
       HashSet<String> rejectionTags;
       requiredTags.Insert("Stable");
       rejectionTags.Insert("Develop");
-      ZeroBuild* latest = mVersionSelector->GetLatestBuild(requiredTags, rejectionTags);
+      ZeroBuild* latest =
+          mVersionSelector->GetLatestBuild(requiredTags, rejectionTags);
 
       // Install the latest
-      if(latest != nullptr)
+      if (latest != nullptr)
       {
         mVersionSelector->InstallVersion(latest);
         installingLatest = true;
       }
     }
   }
-  
-  if(!installingLatest)
+
+  if (!installingLatest)
     CheckForForcedBuildUpdate();
 }
 
-
-//******************************************************************************
 void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
 {
-  GetVersionListingTaskJob* job = (GetVersionListingTaskJob*)taskEvent->mTask->GetFinishedJob();
+  GetVersionListingTaskJob* job =
+      (GetVersionListingTaskJob*)taskEvent->mTask->GetFinishedJob();
 
   if (!taskEvent->mTask->IsCompleted())
     return;
@@ -973,7 +957,8 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
   job->PopulatePackageList();
 
   MainConfig* mainConfig = mConfigCog->has(MainConfig);
-  String minorIdFile = FilePath::Combine(mainConfig->ApplicationDirectory, "ZeroLauncherVersionId.txt");
+  String minorIdFile = FilePath::Combine(mainConfig->ApplicationDirectory,
+                                         "ZeroLauncherVersionId.txt");
   int minorId = GetVersionId(minorIdFile);
   int majorId = (int)GetLauncherMajorVersion();
 
@@ -985,7 +970,7 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
   static const String cPatchExtension("zip");
 
   // Get the newest launcher build from the listing.
-  forRange(Cog* cog, job->mPackages)
+  forRange(Cog * cog, job->mPackages)
   {
     ZeroBuildContent* content = cog->has(ZeroBuildContent);
     if (!content)
@@ -996,20 +981,24 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
     if (buildId.mPlatform != platformString)
       continue;
 
-    // If this is a patch we need to check the minor version (and make sure it's the same major as ours).
+    // If this is a patch we need to check the minor version (and make sure it's
+    // the same major as ours).
     if (content->mPackageExtension == cPatchExtension)
     {
-      if (newestPatch == nullptr || (buildId.mMajorVersion == newestPatch->mBuildId.mMajorVersion && buildId.mMinorVersion > newestPatch->mBuildId.mMinorVersion))
+      if (newestPatch == nullptr ||
+          (buildId.mMajorVersion == newestPatch->mBuildId.mMajorVersion &&
+           buildId.mMinorVersion > newestPatch->mBuildId.mMinorVersion))
         newestPatch = content;
     }
     // Otherwise, it's an installer so we only check the major version.
     else
     {
-      if (newestInstaller == nullptr || buildId.mMajorVersion > newestInstaller->mBuildId.mMajorVersion)
+      if (newestInstaller == nullptr ||
+          buildId.mMajorVersion > newestInstaller->mBuildId.mMajorVersion)
         newestInstaller = content;
     }
   }
-    
+
   // Is there a major update?
   if (newestInstaller && newestInstaller->mBuildId.mMajorVersion > majorId)
   {
@@ -1027,7 +1016,8 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
   }
 
   // Is there a minor update?
-  if (newestPatch && newestPatch->mBuildId.mMajorVersion == majorId && newestPatch->mBuildId.mMinorVersion > minorId)
+  if (newestPatch && newestPatch->mBuildId.mMajorVersion == majorId &&
+      newestPatch->mBuildId.mMinorVersion > minorId)
   {
     ZPrint("New launcher patch version available. Asking user to upgrade.\n");
     // There is a new patch version. Notify the user and ask them to install.
@@ -1043,13 +1033,13 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
   }
 }
 
-//******************************************************************************
 void LauncherWindow::OnTemplateListing(BackgroundTaskEvent* taskEvent)
 {
-  if(taskEvent->mTask->IsCompleted())
+  if (taskEvent->mTask->IsCompleted())
   {
     // Load the available builds into the version selector
-    GetTemplateListingTaskJob* job = (GetTemplateListingTaskJob*)taskEvent->mTask->GetFinishedJob();
+    GetTemplateListingTaskJob* job =
+        (GetTemplateListingTaskJob*)taskEvent->mTask->GetFinishedJob();
     mVersionSelector->UpdateTemplateListing(job);
 
     // Notify that the version list has been loaded
@@ -1058,71 +1048,67 @@ void LauncherWindow::OnTemplateListing(BackgroundTaskEvent* taskEvent)
   }
 }
 
-//******************************************************************************
 void LauncherWindow::CheckForForcedBuildUpdate()
 {
   LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
-  if(launcherConfig->mForcedUpdateVersion != LauncherConfig::mCurrentForcedUpdateVersionNumber)
+  if (launcherConfig->mForcedUpdateVersion !=
+      LauncherConfig::mCurrentForcedUpdateVersionNumber)
     ForceUpdateBuilds();
 }
 
-//******************************************************************************
 void LauncherWindow::OnNewBuildAvailable(Event* e)
 {
-  // Display some special notification letting them know something new is available?
+  // Display some special notification letting them know something new is
+  // available?
   ZPrint("New Build Available\n");
 }
 
-//******************************************************************************
 void LauncherWindow::OnClosing(Event* e)
 {
   Z::gEngine->Terminate();
 }
 
-//******************************************************************************
 void LauncherWindow::DeSelectAllButton()
 {
   // De-select all other buttons and select the one that was pressed
-  for(uint i = 0; i < LauncherMenu::MenuCount; ++i)
+  for (uint i = 0; i < LauncherMenu::MenuCount; ++i)
   {
-    if(mMenus[i] == nullptr)
+    if (mMenus[i] == nullptr)
       continue;
 
-    if(MenuTextButton* button = mMenus[i]->mMenuButton)
+    if (MenuTextButton* button = mMenus[i]->mMenuButton)
       button->DeSelect();
   }
 }
 
-//******************************************************************************
 LauncherConfig* LauncherWindow::GetConfig()
 {
   return mVersionSelector->mConfig;
 }
 
-//******************************************************************************
 void LauncherWindow::OnMouseDown(MouseEvent* e)
 {
   // The user pressed back, close the last active modal page if possible. Don't
   // close all modals as currently the active project page can open a modal
   // (for changing project version numbers) and only 1 modal should close.
-  if(e->Button == MouseButtons::XOneBack)
+  if (e->Button == MouseButtons::XOneBack)
   {
     Modal* modal = mActiveModal;
-    if(modal)
+    if (modal)
     {
       modal->Close();
       return;
     }
 
     modal = mActiveProjectModal;
-    if(modal)
+    if (modal)
     {
       modal->Close();
       return;
     }
 
     modal = mSettingsModal;
-    if(modal)
+    if (modal)
     {
       modal->Close();
       return;
@@ -1130,37 +1116,36 @@ void LauncherWindow::OnMouseDown(MouseEvent* e)
   }
 }
 
-//******************************************************************************
 void LauncherWindow::OnOsMouseDrop(OsMouseDropEvent* e)
 {
-  for(size_t i = 0; i < e->Files.Size(); ++i)
+  for (size_t i = 0; i < e->Files.Size(); ++i)
   {
     String filePath = e->Files[i];
     ZPrint("File '%s' was dropped on the launcher\n", filePath.c_str());
 
     String ext = FilePath::GetExtension(filePath).ToLower();
     // If the file is a zeroproj then display it
-    if(ext == "zeroproj")
+    if (ext == "zeroproj")
     {
       LauncherCommunicationEvent toSend;
       toSend.mProjectFile = filePath;
       DispatchEvent(Events::LauncherOpenProject, &toSend);
     }
     // If it is a .zerobuild then install the build file
-    else if(ext == ZeroBuild::mExtension)
+    else if (ext == ZeroBuild::mExtension)
     {
       LauncherCommunicationEvent toSend;
       toSend.mProjectFile = filePath;
       DispatchEvent(Events::LauncherOpenBuild, &toSend);
     }
     // If this is a .zerotemplate then install the template package
-    else if(ext == TemplateProject::mExtensionWithoutDot)
+    else if (ext == TemplateProject::mExtensionWithoutDot)
     {
       LauncherCommunicationEvent toSend;
       toSend.mProjectFile = filePath;
       DispatchEvent(Events::LauncherOpenTemplate, &toSend);
     }
-    else if(ext == "zeroprojpack")
+    else if (ext == "zeroprojpack")
     {
       LauncherCommunicationEvent toSend;
       toSend.mProjectFile = filePath;
@@ -1169,10 +1154,9 @@ void LauncherWindow::OnOsMouseDrop(OsMouseDropEvent* e)
   }
 }
 
-//******************************************************************************
 void LauncherWindow::OnInstallLocalBuild(ModalConfirmEvent* e)
 {
-  if(e->mConfirmed)
+  if (e->mConfirmed)
   {
     // Select the builds page
     SelectMenu(LauncherMenu::Builds);
@@ -1181,34 +1165,38 @@ void LauncherWindow::OnInstallLocalBuild(ModalConfirmEvent* e)
   }
 }
 
-//******************************************************************************
 void LauncherWindow::OnInstallTemplateProject(ModalConfirmEvent* e)
 {
-  if(!e->mConfirmed)
+  if (!e->mConfirmed)
     return;
-  
+
   // Select the new project page and install the template project
   SelectMenu(LauncherMenu::NewProject);
-  bool success = mVersionSelector->InstallLocalTemplateProject(e->mStringUserData);
-  if(!success)
+  bool success =
+      mVersionSelector->InstallLocalTemplateProject(e->mStringUserData);
+  if (!success)
   {
     String msg = "Invalid template project file";
-    String extraMsg = "Template must contain a meta file or be of the format Name[BuildId]";
-    ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), "OK", extraMsg);
+    String extraMsg =
+        "Template must contain a meta file or be of the format Name[BuildId]";
+    ModalButtonsAction* modal =
+        new ModalButtonsAction(this, msg.ToUpper(), "OK", extraMsg);
     mActiveModal = modal;
   }
 }
 
-//******************************************************************************
 void LauncherWindow::OnInstallProjectPack(ModalConfirmEvent* e)
 {
-  if(!e->mConfirmed)
+  if (!e->mConfirmed)
     return;
 
-  // Unzip the project to the current default project save location using the zip file's name
+  // Unzip the project to the current default project save location using the
+  // zip file's name
   LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
   String projectLocation = launcherConfig->mDefaultProjectSaveLocation;
-  String exportDirectory = FilePath::Combine(projectLocation, FilePath::GetFileNameWithoutExtension(e->mStringUserData));
+  String exportDirectory = FilePath::Combine(
+      projectLocation,
+      FilePath::GetFileNameWithoutExtension(e->mStringUserData));
 
   File file;
   file.Open(e->mStringUserData, FileMode::Read, FileAccessPattern::Random);
@@ -1222,18 +1210,20 @@ void LauncherWindow::OnInstallProjectPack(ModalConfirmEvent* e)
   ExtensionFilterFile filter("zeroproj");
   FindFilesRecursively(exportDirectory, files, &filter);
 
-  // If there's no zeroproj then return (prob should front-load this during drag-drop)
-  if(files.Empty())
+  // If there's no zeroproj then return (prob should front-load this during
+  // drag-drop)
+  if (files.Empty())
     return;
 
   String zeroProjPath = files[0];
 
   // Load the project and display it
   CachedProject* project = mProjectCache->LoadProjectFile(zeroProjPath);
-  if(project == nullptr)
+  if (project == nullptr)
   {
     String msg = "Invalid Project File";
-    ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), "CLOSE");
+    ModalButtonsAction* modal =
+        new ModalButtonsAction(this, msg.ToUpper(), "CLOSE");
     modal->mStringUserData = zeroProjPath;
     mActiveModal = modal;
     return;
@@ -1243,17 +1233,16 @@ void LauncherWindow::OnInstallProjectPack(ModalConfirmEvent* e)
   SelectActiveProject(project, true);
 }
 
-//******************************************************************************
 void LauncherWindow::OnBrowsePressed(Event* e)
 {
-  //Set up the callback for when project file is selected
-  const String cCallBackEvent = "OpenProjectCallback"; 
-  if(!GetDispatcher()->IsConnected(cCallBackEvent, this))
+  // Set up the callback for when project file is selected
+  const String cCallBackEvent = "OpenProjectCallback";
+  if (!GetDispatcher()->IsConnected(cCallBackEvent, this))
     ConnectThisTo(this, cCallBackEvent, OnOpenProjectFile);
 
   LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
-  
-  //Open the open file dialog
+
+  // Open the open file dialog
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = cCallBackEvent;
   config->CallbackObject = this;
@@ -1263,18 +1252,18 @@ void LauncherWindow::OnBrowsePressed(Event* e)
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
-//******************************************************************************
 void LauncherWindow::OnOpenProjectFile(OsFileSelection* e)
 {
-  if(!e->Success)
+  if (!e->Success)
     return;
 
   String filePath = e->Files[0];
   CachedProject* project = mProjectCache->LoadProjectFile(filePath);
-  if(project == nullptr)
+  if (project == nullptr)
   {
     String msg = "Invalid Project File";
-    ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), "CLOSE");
+    ModalButtonsAction* modal =
+        new ModalButtonsAction(this, msg.ToUpper(), "CLOSE");
     modal->mStringUserData = filePath;
     mActiveModal = modal;
     return;
@@ -1284,59 +1273,65 @@ void LauncherWindow::OnOpenProjectFile(OsFileSelection* e)
   SelectActiveProject(project, true);
 }
 
-//******************************************************************************
 void LauncherWindow::OnFileBugPressed(Event* e)
 {
   Os::SystemOpenNetworkFile(Urls::cUserReportIssue);
 }
 
-//******************************************************************************
 void LauncherWindow::OsWindowTakeFocus()
 {
   OsWindow* window = GetRootWidget()->GetOsWindow();
   window->TakeFocus();
 }
 
-//******************************************************************************
 void LauncherWindow::StartListening()
 {
-  mListener = new TcpSocket(Protocol::Events | Protocol::Chunks, "IPC-Listener");
+  mListener =
+      new TcpSocket(Protocol::Events | Protocol::Chunks, "IPC-Listener");
 
   // Listen for interprocess communication from zero or another launcher
   ConnectThisTo(mListener, Events::LauncherUpdateTags, OnLauncherUpdateTags);
   ConnectThisTo(mListener, Events::LauncherNewProject, OnLauncherNewProject);
   ConnectThisTo(mListener, Events::LauncherOpenProject, OnLauncherOpenProject);
   ConnectThisTo(mListener, Events::LauncherRunProject, OnLauncherRunProject);
-  ConnectThisTo(mListener, Events::LauncherOpenRecentProjects, OnLauncherOpenRecentProjects);
+  ConnectThisTo(mListener,
+                Events::LauncherOpenRecentProjects,
+                OnLauncherOpenRecentProjects);
   ConnectThisTo(mListener, Events::LauncherRunCommand, OnLauncherRunCommand);
   ConnectThisTo(mListener, Events::LauncherOpenBuild, OnLauncherOpenBuild);
-  ConnectThisTo(mListener, Events::LauncherOpenTemplate, OnLauncherOpenTemplate);
-  ConnectThisTo(mListener, Events::LauncherInstallProject, OnLauncherInstallProject);
-  // Also listen for the same events on ourself (to make parsing command-line arguments easier)
+  ConnectThisTo(
+      mListener, Events::LauncherOpenTemplate, OnLauncherOpenTemplate);
+  ConnectThisTo(
+      mListener, Events::LauncherInstallProject, OnLauncherInstallProject);
+  // Also listen for the same events on ourself (to make parsing command-line
+  // arguments easier)
   ConnectThisTo(this, Events::LauncherUpdateTags, OnLauncherUpdateTags);
   ConnectThisTo(this, Events::LauncherNewProject, OnLauncherNewProject);
   ConnectThisTo(this, Events::LauncherOpenProject, OnLauncherOpenProject);
   ConnectThisTo(this, Events::LauncherRunProject, OnLauncherRunProject);
-  ConnectThisTo(this, Events::LauncherOpenRecentProjects, OnLauncherOpenRecentProjects);
+  ConnectThisTo(
+      this, Events::LauncherOpenRecentProjects, OnLauncherOpenRecentProjects);
   ConnectThisTo(this, Events::LauncherRunCommand, OnLauncherRunCommand);
   ConnectThisTo(this, Events::LauncherOpenBuild, OnLauncherOpenBuild);
   ConnectThisTo(this, Events::LauncherOpenTemplate, OnLauncherOpenTemplate);
   ConnectThisTo(this, Events::LauncherInstallProject, OnLauncherInstallProject);
-  mListener->Listen(LauncherCommunicationEvent::DesiredPort, TcpSocket::MaxPossibleConnections, TcpSocketBind::Loopback);
+  mListener->Listen(LauncherCommunicationEvent::DesiredPort,
+                    TcpSocket::MaxPossibleConnections,
+                    TcpSocketBind::Loopback);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherUpdateTags(LauncherCommunicationEvent* e)
 {
   // If the event provided any new tags then load them (should only be at the
-  // moment from another launcher opening with a different mode, such as the ProjectFun shortcut)
+  // moment from another launcher opening with a different mode, such as the
+  // ProjectFun shortcut)
   LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
 
-  if(e->mExtraData == LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode])
+  if (e->mExtraData ==
+      LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode])
     launcherConfig->mRunDebuggerMode = true;
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherNewProject(LauncherCommunicationEvent* e)
 {
   ZPrint("New Project invoked by another process\n");
@@ -1349,7 +1344,6 @@ void LauncherWindow::OnLauncherNewProject(LauncherCommunicationEvent* e)
   SelectMenu(LauncherMenu::NewProject);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherOpenProject(LauncherCommunicationEvent* e)
 {
   ZPrint("Open Project invoked by another process\n");
@@ -1362,19 +1356,18 @@ void LauncherWindow::OnLauncherOpenProject(LauncherCommunicationEvent* e)
   // run the project (and show it in the active project page)
   LauncherConfig* config = mConfigCog->has(LauncherConfig);
 
-  if(config->mAutoRunMode == LauncherAutoRunMode::IfInstalled)
+  if (config->mAutoRunMode == LauncherAutoRunMode::IfInstalled)
     OnLauncherRunProject(e);
 
   CachedProject* project = mProjectCache->LoadProjectFile(e->mProjectFile);
   // We were told to open a project but it didn't exist so don't do anything
-  if(project == nullptr)
+  if (project == nullptr)
     return;
 
   AddToRecentProjects(project);
   SelectActiveProject(project, true);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherRunProject(LauncherCommunicationEvent* e)
 {
   ZPrint("Run Project invoked by another process\n");
@@ -1385,16 +1378,16 @@ void LauncherWindow::OnLauncherRunProject(LauncherCommunicationEvent* e)
 
   CachedProject* project = mProjectCache->LoadProjectFile(e->mProjectFile);
   // We were told to run a project but it didn't exist so don't do anything
-  if(project == nullptr)
+  if (project == nullptr)
     return;
 
   AddToRecentProjects(project);
 
   String projectFilePath = e->mProjectFile;
   ZeroBuild* standalone = mVersionSelector->FindExactVersion(project);
-  if(standalone != nullptr)
+  if (standalone != nullptr)
   {
-    if(standalone->mInstallState == InstallState::Installed)
+    if (standalone->mInstallState == InstallState::Installed)
       mVersionSelector->RunProject(standalone, project);
   }
   SaveLauncherConfig(mConfigCog);
@@ -1402,7 +1395,6 @@ void LauncherWindow::OnLauncherRunProject(LauncherCommunicationEvent* e)
   SelectActiveProject(project, true);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherOpenRecentProjects(LauncherCommunicationEvent* e)
 {
   ZPrint("Recent Projects invoked by another process\n");
@@ -1414,7 +1406,6 @@ void LauncherWindow::OnLauncherOpenRecentProjects(LauncherCommunicationEvent* e)
   SelectMenu(LauncherMenu::RecentProjects);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherRunCommand(LauncherCommunicationEvent* e)
 {
   ZPrint("Run Command invoked by another process\n");
@@ -1423,11 +1414,10 @@ void LauncherWindow::OnLauncherRunCommand(LauncherCommunicationEvent* e)
 
   CommandManager* commands = CommandManager::GetInstance();
   Command* command = commands->GetCommand(e->mExtraData);
-  if(command != nullptr)
+  if (command != nullptr)
     command->ExecuteCommand();
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherOpenBuild(LauncherCommunicationEvent* e)
 {
   OsWindowTakeFocus();
@@ -1440,7 +1430,6 @@ void LauncherWindow::OnLauncherOpenBuild(LauncherCommunicationEvent* e)
   ConnectThisTo(modal, Events::ModalConfirmResult, OnInstallLocalBuild);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherOpenTemplate(LauncherCommunicationEvent* e)
 {
   OsWindowTakeFocus();
@@ -1453,7 +1442,6 @@ void LauncherWindow::OnLauncherOpenTemplate(LauncherCommunicationEvent* e)
   ConnectThisTo(modal, Events::ModalConfirmResult, OnInstallTemplateProject);
 }
 
-//******************************************************************************
 void LauncherWindow::OnLauncherInstallProject(LauncherCommunicationEvent* e)
 {
   OsWindowTakeFocus();
@@ -1466,4 +1454,4 @@ void LauncherWindow::OnLauncherInstallProject(LauncherCommunicationEvent* e)
   ConnectThisTo(modal, Events::ModalConfirmResult, OnInstallProjectPack);
 }
 
-}//namespace Zero
+} // namespace Zero

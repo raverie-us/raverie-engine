@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,23 +9,18 @@ const float cSecondsModified = 0.5f;
 const float cCleanTime = 20.0f;
 const TimeType cFileIsOpen = 1;
 
-//-------------------------------------------------------------- File Save State
 
-
-//******************************************************************************
 FileModifiedState::FileModifiedState()
 {
   mLastCleanup = Time::Clock();
-
 }
-//******************************************************************************
 bool FileModifiedState::HasModifiedRecently(StringParam filePath)
 {
   return HasModifiedSinceTime(filePath, Time::Clock());
 }
 
-//******************************************************************************
-bool FileModifiedState::HasModifiedSinceTime(StringParam filePath, TimeType time)
+bool FileModifiedState::HasModifiedSinceTime(StringParam filePath,
+                                             TimeType time)
 {
   FileModifiedState* instance = GetInstance();
   instance->mThreadLock.Lock();
@@ -40,7 +30,8 @@ bool FileModifiedState::HasModifiedSinceTime(StringParam filePath, TimeType time
   String fileId = UniqueFileId(filePath);
 
   // Prefer the fileId over the file path
-  TimeType modifiedTime = instance->mFileLastModified.FindValue(fileId, instance->mFileLastModified.FindValue(canonicalPath, 0));
+  TimeType modifiedTime = instance->mFileLastModified.FindValue(
+      fileId, instance->mFileLastModified.FindValue(canonicalPath, 0));
 
   instance->mThreadLock.Unlock();
 
@@ -48,7 +39,6 @@ bool FileModifiedState::HasModifiedSinceTime(StringParam filePath, TimeType time
   return (modifiedTime == cFileIsOpen) || (seconds < cSecondsModified);
 }
 
-//******************************************************************************
 void FileModifiedState::BeginFileModified(StringParam filePath)
 {
   FileModifiedState* instance = GetInstance();
@@ -64,14 +54,13 @@ void FileModifiedState::BeginFileModified(StringParam filePath)
   instance->mThreadLock.Unlock();
 }
 
-//******************************************************************************
 void FileModifiedState::EndFileModified(StringParam filePath)
 {
   FileModifiedState* instance = GetInstance();
   instance->mThreadLock.Lock();
 
   TimeType currentTime = Time::Clock();
-  
+
   String normalizedPath = FilePath::Normalize(filePath);
   String canonicalPath = CanonicalizePath(normalizedPath);
   String fileId = UniqueFileId(filePath);
@@ -84,36 +73,34 @@ void FileModifiedState::EndFileModified(StringParam filePath)
   instance->mThreadLock.Unlock();
 
   // On some platforms modified files won't have the correct time (Emscripten).
-  // Since we call this in all places where files are modified, this keeps them up to date.
+  // Since we call this in all places where files are modified, this keeps them
+  // up to date.
   SetFileToCurrentTime(filePath);
 }
 
-//******************************************************************************
 FileModifiedState* FileModifiedState::GetInstance()
 {
   static FileModifiedState mInstance;
   return &mInstance;
 }
 
-//******************************************************************************
 float FileModifiedState::GetSecondsBetween(TimeType begin, TimeType end)
 {
   return (end - begin) / float(Time::ClocksPerSecond());
 }
 
-//******************************************************************************
 void FileModifiedState::Cleanup(TimeType currentTime)
 {
   // Just an optimization so we aren't checking every file every time we save
   float secondsSinceLastCleanup = GetSecondsBetween(mLastCleanup, currentTime);
-  if(secondsSinceLastCleanup < cCleanTime)
+  if (secondsSinceLastCleanup < cCleanTime)
     return;
 
   mLastCleanup = currentTime;
 
   // Attempt to clean up every file
   ModifiedMap::range r = mFileLastModified.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     ModifiedMap::value_type current = r.Front();
     String path = current.first;
@@ -123,9 +110,9 @@ void FileModifiedState::Cleanup(TimeType currentTime)
     // We still need to check the time of each file because the file could
     // have been saved right before the cleanup time was up
     float seconds = GetSecondsBetween(modifiedTime, currentTime);
-    if(seconds > cCleanTime)
+    if (seconds > cCleanTime)
       mFileLastModified.Erase(path);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

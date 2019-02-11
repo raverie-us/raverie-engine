@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Standard Library Dependencies
@@ -29,7 +24,7 @@ public:
   static void Initialize();
   static void Shutdown();
 };
-}
+} // namespace Zero
 
 // Core Library Dependencies
 #include "Engine/EngineStandard.hpp"

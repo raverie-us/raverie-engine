@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "MatrixStorage.hpp"
@@ -14,11 +9,11 @@
 namespace Math
 {
 
-///Forward declaration
+/// Forward declaration
 struct Quaternion;
 typedef const Quaternion& QuatParam;
 
-///Forward declaration
+/// Forward declaration
 struct Matrix4;
 typedef const Matrix4& Mat4Param;
 
@@ -28,24 +23,29 @@ typedef const Matrix3& Mat3Param;
 typedef Matrix3& Mat3Ref;
 typedef Matrix3* Mat3Ptr;
 
-//--------------------------------------------------------------------- Matrix 3
-///3 dimensional square matrix. Supports operations with other 3 dimensional
-///square matrices, 2 dimensional vectors, and 3 dimensional vectors.
+/// 3 dimensional square matrix. Supports operations with other 3 dimensional
+/// square matrices, 2 dimensional vectors, and 3 dimensional vectors.
 struct ZeroShared Matrix3
 {
 #if ColumnBasis == 1
-typedef Vector3   BasisVector;
-typedef Vec3Param CrossVector;
+  typedef Vector3 BasisVector;
+  typedef Vec3Param CrossVector;
 #else
-typedef Vec3Param BasisVector;
-typedef Vector3   CrossVector;
+  typedef Vec3Param BasisVector;
+  typedef Vector3 CrossVector;
 #endif
 
 public:
-  Matrix3(void) {};
-  explicit Matrix3(real p00, real p01, real p02, 
-                   real p10, real p11, real p12,
-                   real p20, real p21, real p22);
+  Matrix3(void){};
+  explicit Matrix3(real p00,
+                   real p01,
+                   real p02,
+                   real p10,
+                   real p11,
+                   real p12,
+                   real p20,
+                   real p21,
+                   real p22);
   explicit Matrix3(ConstRealPointer data_);
 
   Vector3& operator[](uint index);
@@ -80,7 +80,8 @@ public:
   BasisVector GetBasis(uint index) const;
   /// Set a basis vector.
   void SetBasis(uint index, Vec3Param basis);
-  /// Get a cross vector which is defined as the elements perpendicular to the basis vector.
+  /// Get a cross vector which is defined as the elements perpendicular to the
+  /// basis vector.
   CrossVector GetCross(uint index) const;
   void SetCross(uint index, Vec3Param cross);
   /// Check if all values are valid.
@@ -105,13 +106,16 @@ public:
   /// Returns if the matrix was invertible.
   static bool SafeInvert(Mat3Ref mat);
 
-  /// Multiply the two matrices together. Matrix multiplication order is right-to-left.
+  /// Multiply the two matrices together. Matrix multiplication order is
+  /// right-to-left.
   static Matrix3 Multiply(Mat3Param lhs, Mat3Param rhs);
   /// Multiply the given vector by a matrix.
   static Vector3 Multiply(Mat3Param lhs, Vec3Param rhs);
-  /// Multiply the given vector by a matrix. The vector is promoted to the point Vec3(x, y, 1). No homogeneous division is applied.
+  /// Multiply the given vector by a matrix. The vector is promoted to the point
+  /// Vec3(x, y, 1). No homogeneous division is applied.
   static Vector2 MultiplyPoint(Mat3Param lhs, Vec2Param rhs);
-  /// Multiply the given vector by a matrix. The vector is promoted to the vector Vec3(x, y, 0).
+  /// Multiply the given vector by a matrix. The vector is promoted to the
+  /// vector Vec3(x, y, 0).
   static Vector2 MultiplyNormal(Mat3Param lhs, Vec2Param rhs);
 
   /// Generates a two dimensional scale matrix.
@@ -125,15 +129,22 @@ public:
   /// Generates a two dimensional translation matrix.
   static Matrix3 GenerateTranslation(Vec2Param translation);
   /// Generates a two-dimensions transform.
-  static Matrix3 GenerateTransform(Vec2Param translation, real rotationRadians, Vec2Param scale);
+  static Matrix3 GenerateTransform(Vec2Param translation,
+                                   real rotationRadians,
+                                   Vec2Param scale);
   /// Generates a three-dimensions transform.
   static Matrix3 GenerateTransform(QuatParam rotation, Vec3Param scale);
   /// Generates a three-dimensions transform.
   static Matrix3 GenerateTransform(Mat3Param rotation, Vec3Param scale);
   /// Decompose the given two-dimensional transform.
-  static void Decompose(Mat3Param transform, Vec2Ref translation, real& rotationRadians, Vec2Ref scale);
+  static void Decompose(Mat3Param transform,
+                        Vec2Ref translation,
+                        real& rotationRadians,
+                        Vec2Ref scale);
   /// Decompose the given three-dimensional transform.
-  static void Decompose(Mat3Param transform, Mat3Ref rotationRadians, Vec3Ref scale);
+  static void Decompose(Mat3Param transform,
+                        Mat3Ref rotationRadians,
+                        Vec3Ref scale);
 
   //-------------------------------------------------------------------Legacy
   /// Returns a copy of this matrix with its elements transposed.
@@ -148,7 +159,8 @@ public:
   /// Inverts this matrix in place.
   Mat3Ref Invert();
 
-  /// Inverts in place, but clamps the determinant to the smallest positive float number.
+  /// Inverts in place, but clamps the determinant to the smallest positive
+  /// float number.
   bool SafeInvert();
 
   /// Inverts, but clamps the determinant to the smallest positive float number.
@@ -160,10 +172,12 @@ public:
   /// Converts this matrix into a pure scaling matrix.
   void Scale(Vec3Param rhs);
 
-  /// Converts this matrix into a pure rotation matrix, given an axis-angle pair.
+  /// Converts this matrix into a pure rotation matrix, given an axis-angle
+  /// pair.
   void Rotate(real x, real y, real z, real radian);
 
-  /// Converts this matrix into a pure rotation matrix, given an axis-angle pair.
+  /// Converts this matrix into a pure rotation matrix, given an axis-angle
+  /// pair.
   void Rotate(Vec3Param rhs, real radian);
 
   /// Converts this matrix into a pure translation matrix for 2-D vectors.
@@ -182,34 +196,29 @@ public:
   /// Forces the current matrix to be orthonormal.
   Mat3Ref Orthonormalize();
 
-  /// Accesses the elements in the "x-axis" of the matrix, with the "x-axis" 
+  /// Accesses the elements in the "x-axis" of the matrix, with the "x-axis"
   /// defined as the x-axis of a pure rotation matrix.
   BasisVector BasisX() const;
 
-  /// Accesses the elements in the "y-axis" of the matrix, with the "y-axis" 
+  /// Accesses the elements in the "y-axis" of the matrix, with the "y-axis"
   /// defined as the y-axis of a pure rotation matrix.
   BasisVector BasisY() const;
 
-  /// Accesses the elements in the "z-axis" of the matrix, with the "z-axis" 
+  /// Accesses the elements in the "z-axis" of the matrix, with the "z-axis"
   /// defined as the z-axis of a pure rotation matrix.
   BasisVector BasisZ() const;
 
   void SetBasis(uint index, real x, real y, real z);
   void SetCross(uint index, real x, real y, real z);
 
-  union 
-  {
+  union {
     struct
     {
 #if ColumnBasis == 1
-      real m00, m01, m02,
-           m10, m11, m12,
-           m20, m21, m22;
+      real m00, m01, m02, m10, m11, m12, m20, m21, m22;
 #else
-      real m00, m10, m20,
-           m01, m11, m21,
-           m02, m12, m22;
-#endif 
+      real m00, m10, m20, m01, m11, m21, m02, m12, m22;
+#endif
     };
     real array[9];
   };
@@ -219,20 +228,24 @@ public:
 
 ZeroShared Matrix3 operator*(real lhs, Mat3Param rhs);
 
-/// Multiply the two matrices together. Matrix multiplication order is right-to-left.
+/// Multiply the two matrices together. Matrix multiplication order is
+/// right-to-left.
 ZeroShared Matrix3 Multiply(Mat3Param lhs, Mat3Param rhs);
 /// Multiply the given vector by a matrix.
 ZeroShared Vector3 Multiply(Mat3Param lhs, Vec3Param rhs);
-/// Multiply the given vector by a matrix. The vector is promoted to the point Vec3(x, y, 1). No homogeneous division is applied.
+/// Multiply the given vector by a matrix. The vector is promoted to the point
+/// Vec3(x, y, 1). No homogeneous division is applied.
 ZeroShared Vector2 MultiplyPoint(Mat3Param lhs, Vec2Param rhs);
-/// Multiply the given vector by a matrix. The vector is promoted to the vector Vec3(x, y, 0).
+/// Multiply the given vector by a matrix. The vector is promoted to the vector
+/// Vec3(x, y, 0).
 ZeroShared Vector2 MultiplyNormal(Mat3Param lhs, Vec2Param rhs);
 
-//-------------------------------------------------------------------Legacy
-///This builds a matrix that should be used on 2D points/vectors
-ZeroShared Matrix3 BuildTransform(Vec2Param translate, real radians, Vec2Param scale);
+/// This builds a matrix that should be used on 2D points/vectors
+ZeroShared Matrix3 BuildTransform(Vec2Param translate,
+                                  real radians,
+                                  Vec2Param scale);
 
-///This builds a matrix that should be used on 3D points/vectors
+/// This builds a matrix that should be used on 3D points/vectors
 ZeroShared Matrix3 BuildTransform(QuatParam rotate, Vec3Param scale);
 
 ZeroShared Vector3 Transform(Mat3Param mat, Vec3Param vector);
@@ -244,21 +257,21 @@ ZeroShared Vector2 TransformPoint(Mat3Param matrix, Vec2Param vector);
 /// Applies transformation without the translation (n.x, n.y, 0)
 ZeroShared Vector2 TransformNormal(Mat3Param matrix, Vec2Param normal);
 
-///Transforms the given vector by the matrix as if the matrix was transposed.
+/// Transforms the given vector by the matrix as if the matrix was transposed.
 ZeroShared Vector3 TransposedTransform(Mat3Param mat, Vec3Param vector);
 
-///Transforms the given vector by the matrix as if the matrix was transposed.
+/// Transforms the given vector by the matrix as if the matrix was transposed.
 ZeroShared void TransposedTransform(Mat3Param matrix, Vec3Ptr vector);
 
 ZeroShared real Trace(Mat3Param matrix);
 
 ZeroShared real Cofactor(Mat3Param matrix, uint row, uint column);
 
-///Takes a symmetric matrix and diagonalizes it.
+/// Takes a symmetric matrix and diagonalizes it.
 ZeroShared void Diagonalize(Mat3Ptr matrix);
 ZeroShared Matrix3 Diagonalized(Mat3Param matrix);
 
 ZeroShared void Invert(Mat3Ptr matrix);
 ZeroShared Matrix3 Inverted(Mat3Param matrix);
 
-}// namespace Math
+} // namespace Math

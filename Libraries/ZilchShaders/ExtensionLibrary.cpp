@@ -1,22 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------SpirVExtensionInstruction
 SpirVExtensionInstruction::SpirVExtensionInstruction()
 {
   mResolverFn = nullptr;
 }
 
-//-------------------------------------------------------------------SpirVExtensionLibrary
-SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Zilch::Function* zilchFn, SpirVExtensionInstructionResolverFn resolverFn)
+SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(
+    Zilch::Function* zilchFn, SpirVExtensionInstructionResolverFn resolverFn)
 {
   ErrorIf(zilchFn == nullptr, "Invalid zilch function");
   ErrorIf(mExtensions.ContainsKey(zilchFn), "Extension already exists");
@@ -30,4 +24,4 @@ SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Zilch::Function*
   return instruction;
 }
 
-}//namespace Zero
+} // namespace Zero

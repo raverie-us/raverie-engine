@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------PhysicsMesh
 DefinePhysicsRuntimeClone(PhysicsMesh);
 
 ZilchDefineType(PhysicsMesh, builder, type)
@@ -66,12 +60,15 @@ void PhysicsMesh::GenerateInternalEdgeData()
   GenerateInternalEdgeInfo(this, &mInfoMap);
 }
 
-bool PhysicsMesh::CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter)
+bool PhysicsMesh::CastRay(const Ray& localRay,
+                          ProxyResult& result,
+                          BaseCastFilter& filter)
 {
   bool triangleHit = false;
   result.mTime = Math::PositiveMax();
 
-  // Query the aabb tree for possible triangles. Test all triangles whose aabbs we hit.
+  // Query the aabb tree for possible triangles. Test all triangles whose aabbs
+  // we hit.
   forRangeBroadphaseTree(StaticAabbTree<uint>, mTree, Ray, localRay)
   {
     uint triIndex = range.Front();
@@ -82,7 +79,9 @@ bool PhysicsMesh::CastRay(const Ray& localRay, ProxyResult& result, BaseCastFilt
   return triangleHit;
 }
 
-void PhysicsMesh::GetOverlappingTriangles(Aabb& aabb, TriangleArray& triangles, Array<uint>& triangleIds)
+void PhysicsMesh::GetOverlappingTriangles(Aabb& aabb,
+                                          TriangleArray& triangles,
+                                          Array<uint>& triangleIds)
 {
   forRangeBroadphaseTree(StaticAabbTree<uint>, mTree, Aabb, aabb)
   {
@@ -116,10 +115,10 @@ void PhysicsMesh::GenerateTree()
   BroadPhaseProxy proxy;
 
   size_t triangleCount = GetTriangleCount();
-  for(size_t triIndex = 0; triIndex < triangleCount; ++triIndex)
+  for (size_t triIndex = 0; triIndex < triangleCount; ++triIndex)
   {
     Triangle tri = GetTriangle(triIndex);
-    
+
     // Create the broad phase data.
     BaseBroadPhaseData<uint> data;
     data.mClientData = triIndex;
@@ -133,11 +132,10 @@ void PhysicsMesh::GenerateTree()
   mTree.Construct();
 }
 
-//-------------------------------------------------------------------PhysicsMeshManager
 ImplementResourceManager(PhysicsMeshManager, PhysicsMesh);
 
-PhysicsMeshManager::PhysicsMeshManager(BoundType* resourceType) 
-  : ResourceManager(resourceType)
+PhysicsMeshManager::PhysicsMeshManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("PhysicsMesh", new BinaryDataFileLoader<PhysicsMeshManager>());
   mCategory = "Physics";
@@ -152,13 +150,13 @@ PhysicsMeshManager::PhysicsMeshManager(BoundType* resourceType)
 
 void PhysicsMeshManager::UpdateAndNotifyModifiedResources()
 {
-  for(size_t i = 0; i < mModifiedMeshes.Size(); ++i)
+  for (size_t i = 0; i < mModifiedMeshes.Size(); ++i)
   {
     PhysicsMesh* mesh = mModifiedMeshes[i];
-    if(mesh != nullptr)
+    if (mesh != nullptr)
       mesh->UpdateAndNotifyIfModified();
   }
   mModifiedMeshes.Clear();
 }
 
-}//namespace Zero
+} // namespace Zero

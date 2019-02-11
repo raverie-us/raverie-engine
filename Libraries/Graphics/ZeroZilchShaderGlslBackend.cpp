@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "spirv_glsl.hpp"
@@ -11,7 +6,6 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------ZilchShaderGlslBackend
 ZeroZilchShaderGlslBackend::ZeroZilchShaderGlslBackend()
 {
   mTargetVersion = 150;
@@ -23,7 +17,9 @@ String ZeroZilchShaderGlslBackend::GetExtension()
   return "glsl";
 }
 
-bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+bool ZeroZilchShaderGlslBackend::RunTranslationPass(
+    ShaderTranslationPassResult& inputData,
+    ShaderTranslationPassResult& outputData)
 {
   ShaderByteStream& inputByteStream = inputData.mByteStream;
   uint32_t* data = (uint32_t*)inputByteStream.Data();
@@ -39,8 +35,9 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
 
   spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-  // Forcing buffer typenames to match between different stages so that the uniform instance names can be the same.
-  for(auto &ubo : resources.uniform_buffers)
+  // Forcing buffer typenames to match between different stages so that the
+  // uniform instance names can be the same.
+  for (auto& ubo : resources.uniform_buffers)
   {
     int id = compiler.get_decoration(ubo.id, spv::DecorationBinding);
     String name = BuildString("Buffer", ToString(id));
@@ -49,21 +46,23 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   }
 
 #ifdef PLATFORM_EMSCRIPTEN
-  // gles output is going to flatten input/output blocks and prepend the block name to each member.
-  // Forcing block typenames to match.
-  for(auto stageInput : resources.stage_inputs)
+  // gles output is going to flatten input/output blocks and prepend the block
+  // name to each member. Forcing block typenames to match.
+  for (auto stageInput : resources.stage_inputs)
   {
-    int isBlock = compiler.get_decoration(stageInput.base_type_id, spv::DecorationBlock);
-    if(isBlock == 1)
+    int isBlock =
+        compiler.get_decoration(stageInput.base_type_id, spv::DecorationBlock);
+    if (isBlock == 1)
     {
       std::string name = "block";
       compiler.set_name(stageInput.id, name);
     }
   }
-  for(auto stageOutput : resources.stage_outputs)
+  for (auto stageOutput : resources.stage_outputs)
   {
-    int isBlock = compiler.get_decoration(stageOutput.base_type_id, spv::DecorationBlock);
-    if(isBlock == 1)
+    int isBlock =
+        compiler.get_decoration(stageOutput.base_type_id, spv::DecorationBlock);
+    if (isBlock == 1)
     {
       std::string name = "block";
       compiler.set_name(stageOutput.id, name);
@@ -71,16 +70,18 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   }
 
   // When target outputs get flattened the layout decorations do not get copied.
-  // gles requires the layout decorations when there are multiple output targets.
+  // gles requires the layout decorations when there are multiple output
+  // targets.
   auto entryPoints = compiler.get_entry_points_and_stages();
   auto entryPoint = entryPoints[0];
-  if(entryPoint.execution_model == spv::ExecutionModel::ExecutionModelFragment)
+  if (entryPoint.execution_model == spv::ExecutionModel::ExecutionModelFragment)
   {
-    for(auto stageOutput : resources.stage_outputs)
+    for (auto stageOutput : resources.stage_outputs)
     {
       auto resourceType = compiler.get_type(stageOutput.base_type_id);
-      for(size_t i = 0; i < resourceType.member_types.size(); ++i)
-        compiler.set_member_decoration(stageOutput.base_type_id, i, spv::DecorationLocation, i);
+      for (size_t i = 0; i < resourceType.member_types.size(); ++i)
+        compiler.set_member_decoration(
+            stageOutput.base_type_id, i, spv::DecorationLocation, i);
     }
   }
 #endif
@@ -108,7 +109,8 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
   internalData.mResources = &resources;
   // Extract reflection data now that we've done all modifications
   ExtractResourceReflectionData(internalData);
-  outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
+  outputData.mReflectionData.mShaderTypeName =
+      inputData.mReflectionData.mShaderTypeName;
 
   bool success = true;
   try
@@ -116,7 +118,7 @@ bool ZeroZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult&
     std::string source = compiler.compile();
     outputData.mByteStream.Load(source.c_str(), source.size());
   }
-  catch(const std::exception& e)
+  catch (const std::exception& e)
   {
     success = false;
     mErrorLog = e.what();
@@ -130,4 +132,4 @@ String ZeroZilchShaderGlslBackend::GetErrorLog()
   return mErrorLog;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,14 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
-// For platforms where we haven't ported the executables over, but they have an emulator,
-// we can fill this string out (must have a trailing space, e.g. "wine ");
+// For platforms where we haven't ported the executables over, but they have an
+// emulator, we can fill this string out (must have a trailing space, e.g. "wine
+// ");
 const char* gProcessEmulator = "";
 
 namespace Zero
@@ -36,14 +32,17 @@ OsInt ProcessThread(void* commandLinePtr)
   return system(commandLine);
 }
 
-void Process::Start(Status &status, ProcessStartInfo &info)
+void Process::Start(Status& status, ProcessStartInfo& info)
 {
   ZeroGetPrivateData(ProcessPrivateData);
 
   String commandLine = info.mArguments;
 
   if (!info.mApplicationName.Empty())
-    commandLine = String::Format("%s\"%s\" %s", gProcessEmulator, info.mApplicationName.c_str(), info.mArguments.c_str());
+    commandLine = String::Format("%s\"%s\" %s",
+                                 gProcessEmulator,
+                                 info.mApplicationName.c_str(),
+                                 info.mArguments.c_str());
 
   // For some strange reason, 'system' doesn't work if the executable
   // is quoted, even though that properly works in the shell.
@@ -64,7 +63,8 @@ void Process::Start(Status &status, ProcessStartInfo &info)
   }
 
   self->mCommandLine = commandLine;
-  self->mThread.Initialize(&ProcessThread, (void*)commandLine.c_str(), "Process");
+  self->mThread.Initialize(
+      &ProcessThread, (void*)commandLine.c_str(), "Process");
 }
 
 void Process::Close()
@@ -147,4 +147,4 @@ void RegisterApplicationRestartCommand(StringParam commandLineArgs, uint flags)
   // Unsupported.
 }
 
-}
+} // namespace Zero

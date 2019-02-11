@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file RootWidget.hpp
-/// Declaration of the RootWidget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 class UpdateEvent;
-//class RootWidgetRenderTask;
+// class RootWidgetRenderTask;
 
 // The root widget of the graphical user interface attached to
 // an OS window.
@@ -114,4 +106,4 @@ Widget* PreviousSibling(Widget* object, bool ignoreInactive);
 // Get the next sibling in the tree
 Widget* NextSibling(Widget* object, bool ignoreInactive);
 
-}//namespace Zero
+} // namespace Zero

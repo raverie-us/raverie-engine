@@ -1,17 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------- Zero Meta Array
-template<typename ArrayType>
+//Zero Meta Array
+template <typename ArrayType>
 class ZeroMetaArray : public MetaArray
 {
 public:
@@ -46,9 +40,10 @@ public:
 
   bool EraseValue(HandleParam instance, AnyParam value) override
   {
-    //ArrayType& container = *instance.Get<ArrayType*>(GetOptions::AssertOnNull);
-    //ContainedType* element = value.Get<ContainedType*>(GetOptions::AssertOnNull);
-    //return container.EraseValue(*element);
+    // ArrayType& container =
+    // *instance.Get<ArrayType*>(GetOptions::AssertOnNull); ContainedType*
+    // element = value.Get<ContainedType*>(GetOptions::AssertOnNull); return
+    // container.EraseValue(*element);
     return false;
   }
 
@@ -59,4 +54,4 @@ public:
   }
 };
 
-}//namespace Zero
+} // namespace Zero

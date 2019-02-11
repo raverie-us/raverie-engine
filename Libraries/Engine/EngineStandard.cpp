@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -59,16 +54,21 @@ void LocationBind(LibraryBuilder& builder, BoundType* type)
 
   ZilchBindMethod(IsCardinal);
   ZilchBindMethod(GetCardinalAxis);
-  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum));
-  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
+  ZilchBindOverloadedMethod(GetDirection,
+                            ZilchStaticOverload(Vec2, Location::Enum));
+  ZilchBindOverloadedMethod(
+      GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
   ZilchBindMethod(GetOpposite);
 }
 
-ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
+ZilchDefineExternalBaseType(Location::Enum,
+                            TypeCopyMode::ValueType,
+                            builder,
+                            type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
   ZilchBindEnumValues(Location);
-  
+
   LocationBind(builder, type);
 }
 
@@ -81,18 +81,17 @@ ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
   SetUpKeyNames();
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
 
-  // For now, just iterate over all keys in the name map and if there was no saved name then
-  // assume that the key doesn't exist (linear but whatever)
-  for(size_t i = 0; i < Keys::Size; ++i)
+  // For now, just iterate over all keys in the name map and if there was no
+  // saved name then assume that the key doesn't exist (linear but whatever)
+  for (size_t i = 0; i < Keys::Size; ++i)
   {
-    if(KeyNames[i] == nullptr)
+    if (KeyNames[i] == nullptr)
       continue;
 
     ZilchFullBindEnumValue(builder, type, i, KeyNames[i]);
   }
 }
 
-//**************************************************************************************************
 Cog* ZeroStartupSettings::LoadConfig()
 {
   // Arguments
@@ -102,8 +101,8 @@ Cog* ZeroStartupSettings::LoadConfig()
   String applicationName = "ZeroEditor";
   bool playGame = GetStringValue<bool>(arguments, "play", false);
 
-  //Exported games use a different settings file
-  if(mEmbeddedPackage || playGame)
+  // Exported games use a different settings file
+  if (mEmbeddedPackage || playGame)
     applicationName = "Zero";
 
   // If we're in safe mode, just use the default config
@@ -112,7 +111,6 @@ Cog* ZeroStartupSettings::LoadConfig()
   return Zero::LoadConfig(applicationName, defaultConfig, *this);
 }
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(EngineLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -124,13 +122,15 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeRange(CogNameRange);
   ZilchInitializeRange(CogRootNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
-  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
+  ZilchInitializeRangeAs(HierarchyList::reverse_range,
+                         "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
   ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
   ZilchInitializeRange(ObjectLinkRange);
   ZilchInitializeRangeAs(JoystickDeviceRange, "JoystickRange");
   ZilchInitializeRange(CogHashSetRange);
-  ZilchInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");
+  ZilchInitializeRangeAs(ResourceTableEntryList::range,
+                         "ResourceTableEntryRange");
   ZilchInitializeRange(OperationListRange);
   ZilchInitializeRangeAs(Engine::GameSessionArray::range, "GameSessionRange");
 
@@ -163,7 +163,8 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(WindowStyleFlags);
 
   // Arrays
-  ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
+  ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>,
+                            "ContentLibraryReferenceArray");
 
   ZilchInitializeType(System);
 
@@ -390,7 +391,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Shortcuts);
   ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
 
-  if(!Engine::sInLauncher)
+  if (!Engine::sInLauncher)
     ZilchInitializeTypeAs(LauncherProjectInfoProxy, "LauncherProjectInfo");
 
   ZilchInitializeType(ZilchLibraryResource);
@@ -401,7 +402,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
 {
   // Build meta
@@ -409,13 +409,21 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)
+      ->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)
+      ->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)
+      ->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cComponentInterface,
+                             MetaInterface)
+      ->TypeMustBe(Component);
 
-  RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)->TypeMustBe(Component);
-  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, MetaEditorResource)->TypeMustBe(Resource);
+  RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)
+      ->TypeMustBe(Component);
+  RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty,
+                                MetaEditorResource)
+      ->TypeMustBe(Resource);
 
   ZPrintFilter(Filter::DefaultFilter, "Engine Initialize...\n");
 
@@ -434,7 +442,7 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   // this one in order to get the log file)
   String logFile = environment->GetParsedArgument("log");
   FileListener extraListener;
-  if(!logFile.Empty())
+  if (!logFile.Empty())
   {
     extraListener.OverrideLogFile(logFile);
     Zero::Console::Add(&extraListener);
@@ -443,7 +451,7 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   // Uncomment out this line to disable the fpu exceptions
   // FpuControlSystem::Active = false;
 
-  // Start the profiling system used to performance counters and timers. 
+  // Start the profiling system used to performance counters and timers.
   Profile::ProfileSystem::Initialize();
 
   // Load the debug drawer.
@@ -463,10 +471,11 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(TextBlockManager);
   InitializeResourceManager(HeightMapSourceManager);
 
-  //Create the engine.
+  // Create the engine.
   Engine* engine = new Engine();
 
-  // This must be called right after the engine is created because it connects to the engine.
+  // This must be called right after the engine is created because it connects
+  // to the engine.
   StartThreadSystem();
 
   Keyboard::Initialize();
@@ -485,29 +494,31 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   init.AllCreated();
 
   engine->mEngineSpace = engineSpace;
-  
-  //Create the factory and Tracker for object creation.
+
+  // Create the factory and Tracker for object creation.
   Tracker* tracker = Tracker::StaticInitialize();
   engine->AddSystemInterface(ZilchTypeId(Tracker), tracker);
 
   Factory* factory = Factory::StaticInitialize(engine, tracker);
   engine->AddSystemInterface(ZilchTypeId(Factory), factory);
 
-  MetaDatabase::GetInstance()->AddAlternateName("Project", ZilchTypeId(ProjectSettings));
+  MetaDatabase::GetInstance()->AddAlternateName("Project",
+                                                ZilchTypeId(ProjectSettings));
 
   Cog* config = settings.LoadConfig();
-  if(config == nullptr)
+  if (config == nullptr)
     return false;
 
   engine->mConfigCog = config;
 
   Tweakables::Load(settings.mTweakableFileName);
-  Shortcuts::GetInstance( )->Load(FilePath::Combine(Z::gEngine->GetConfigCog( )->has(MainConfig)->DataDirectory, "Shortcuts.data"));
+  Shortcuts::GetInstance()->Load(FilePath::Combine(
+      Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
+      "Shortcuts.data"));
 
   return true;
 }
 
-//**************************************************************************************************
 void EngineLibrary::Shutdown()
 {
   ZPrintFilter(Filter::DefaultFilter, "Shutdown Engine...\n");
@@ -555,4 +566,4 @@ void EngineLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

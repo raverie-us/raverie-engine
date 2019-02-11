@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SampleCurve.hpp
-/// Declaration of the SampleCurve resource.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -42,7 +34,9 @@ public:
 
   /// Adds a control point.
   uint AddControlPoint(Vec2Param pos, Vec2Param tanIn, uint editorFlags = 0);
-  uint AddControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut,
+  uint AddControlPoint(Vec2Param pos,
+                       Vec2Param tanIn,
+                       Vec2Param tanOut,
                        uint editorFlags = 0);
 
   /// Clears all control points in the curve
@@ -76,8 +70,13 @@ public:
   /// Internal control point
   struct ControlPoint
   {
-    ControlPoint(){EditorFlags = 0;}
-    ControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut,
+    ControlPoint()
+    {
+      EditorFlags = 0;
+    }
+    ControlPoint(Vec2Param pos,
+                 Vec2Param tanIn,
+                 Vec2Param tanOut,
                  uint editorFlags = 0);
 
     /// Used for detecting piecewise curves.
@@ -121,7 +120,7 @@ private:
     {
       // We never want two control points to have the same Time,
       // so every time they're sorted, check and move one slightly
-      if(left.Time == right.Time)
+      if (left.Time == right.Time)
         right.Time += 0.0001f;
       return left.Time < right.Time;
     }
@@ -140,7 +139,7 @@ private:
   Math::PiecewiseFunction mPiecewiseFunction;
 };
 
-///Manages all of the SampleCurve's.
+/// Manages all of the SampleCurve's.
 class CurveManager : public ResourceManager
 {
 public:
@@ -150,4 +149,4 @@ public:
   SampleCurve* CreateNewResourceInternal(StringParam name) override;
 };
 
-}//namespace Zero
+} // namespace Zero

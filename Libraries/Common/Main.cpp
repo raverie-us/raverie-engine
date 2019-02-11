@@ -1,29 +1,30 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 Array<String> gCommandLineArguments;
 
-void CommandLineToStringArray(Array<String>& strings, cstr* argv, int numberOfParameters)
+void CommandLineToStringArray(Array<String>& strings,
+                              cstr* argv,
+                              int numberOfParameters)
 {
   for (int i = 0; i < numberOfParameters; ++i)
     strings.PushBack(argv[i]);
 }
 
-void CommandLineToStringArray(Array<String>& strings, char** argv, int numberOfParameters)
+void CommandLineToStringArray(Array<String>& strings,
+                              char** argv,
+                              int numberOfParameters)
 {
-  return CommandLineToStringArray(strings, const_cast<cstr*>(argv), numberOfParameters);
+  return CommandLineToStringArray(
+      strings, const_cast<cstr*>(argv), numberOfParameters);
 }
 
-bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)
+bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments,
+                                 Array<String>& commandLineArguments)
 {
-  //First parameter is exe path
+  // First parameter is exe path
   if (commandLineArguments.Size() == 1)
     return false;
 
@@ -33,16 +34,17 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<St
   {
     StringRange optionName = commandLineArguments[index];
 
-    //Check for '-' at beginning of an option
+    // Check for '-' at beginning of an option
     if (optionName == '-')
     {
-      //eat the '-'
+      // eat the '-'
       optionName.PopFront();
 
       size_t paramIndex = index + 1;
 
-      //Is there a parameter?
-      if (paramIndex < commandLineArguments.Size() && commandLineArguments[paramIndex].Front() != '-')
+      // Is there a parameter?
+      if (paramIndex < commandLineArguments.Size() &&
+          commandLineArguments[paramIndex].Front() != '-')
       {
         StringRange parameter = commandLineArguments[paramIndex];
         parsedCommandLineArguments[optionName] = parameter;
@@ -50,7 +52,7 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<St
       }
       else
       {
-        //Add simple bool parameter 
+        // Add simple bool parameter
         parsedCommandLineArguments[optionName] = "true";
         ++index;
       }
@@ -64,7 +66,7 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<St
       }
       else
       {
-        //bad command line
+        // bad command line
         return false;
       }
     }
@@ -72,4 +74,4 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<St
   return true;
 }
 
-}// namespace Zero
+} // namespace Zero

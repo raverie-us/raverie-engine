@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2013-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,7 +6,6 @@ namespace Zero
 
 DeclareBitField1(BasicForceFlags, LocalSpaceDirection);
 
-//-------------------------------------------------------------------BasicDirectionEffect
 /// Common interface for all directional force effects. Used to group
 /// together all common logic/variables for the force/gravity variants.
 class BasicDirectionEffect : public PhysicsEffect
@@ -49,18 +43,18 @@ public:
 protected:
   /// Currently only used to store the local/world direction state.
   BitField<BasicForceFlags::Enum> mForceStates;
-  
+
   real mStrength;
   Vec3 mDirection;
   Vec3 mWorldForce;
 };
 
-//-------------------------------------------------------------------ForceEffect
 /// A force effect that is applied in a given direction (local or world space).
-/// This is used to create force regions that will push objects in a given direction.
-/// This can also be used on a rigid body to push an object in it's forward direction
-/// (e.g a missile) if applied locally. Note: this is always applied at
-/// the center of mass of the object. If a more rocket like effect is desired see ThrustEffect.
+/// This is used to create force regions that will push objects in a given
+/// direction. This can also be used on a rigid body to push an object in it's
+/// forward direction (e.g a missile) if applied locally. Note: this is always
+/// applied at the center of mass of the object. If a more rocket like effect is
+/// desired see ThrustEffect.
 class ForceEffect : public BasicDirectionEffect
 {
 public:
@@ -72,10 +66,10 @@ public:
   void ApplyEffect(RigidBody* obj, real dt) override;
 };
 
-//-------------------------------------------------------------------GravityEffect
-/// A constant acceleration that is applied in the given direction (mass is ignored).
-/// This is useful for creating gravity (either on the entire world or in a region)
-/// that will push/pull objects in a given direction at a constant acceleration.
+/// A constant acceleration that is applied in the given direction (mass is
+/// ignored). This is useful for creating gravity (either on the entire world or
+/// in a region) that will push/pull objects in a given direction at a constant
+/// acceleration.
 class GravityEffect : public BasicDirectionEffect
 {
 public:
@@ -88,4 +82,4 @@ public:
   void ApplyEffect(SpringSystem* obj, real dt) override;
 };
 
-}//namespace Zero
+} // namespace Zero

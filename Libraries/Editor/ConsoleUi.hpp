@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ConsoleUi.hpp
-///  Declaration of Editor ConsoleUi
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,10 +6,9 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(ConsolePrint);
-}//namespace Events
+DeclareEvent(ConsolePrint);
+} // namespace Events
 
-//----------------------------------------------------------- Console Text Event
 /// Console Event sent when text is printed.
 class ConsoleTextEvent : public Event
 {
@@ -26,7 +17,6 @@ public:
   String Text;
 };
 
-//------------------------------------------------------------------- Console UI
 /// Editor Console Window
 class ConsoleUi : public TextEditor
 {
@@ -38,12 +28,15 @@ public:
 
   bool TakeFocusOverride() override;
 
-//Internals
+  // Internals
   class UiConsoleListener : public ConsoleListener
   {
   public:
     ConsoleUi* Owner;
-    UiConsoleListener(ConsoleUi* console):Owner(console){Console::Add(this);}
+    UiConsoleListener(ConsoleUi* console) : Owner(console)
+    {
+      Console::Add(this);
+    }
     void Print(FilterType filterType, cstr message);
   };
 
@@ -63,4 +56,4 @@ public:
   void AddBlock(StringParam text);
 };
 
-}//namespace Zero
+} // namespace Zero

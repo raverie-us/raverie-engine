@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,9 +6,9 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ShowDevelopChanged);
-  DefineEvent(ShowExperimentalBranchesChanged);
-}//namespace Events
+DefineEvent(ShowDevelopChanged);
+DefineEvent(ShowExperimentalBranchesChanged);
+} // namespace Events
 
 int LauncherConfig::mCurrentForcedUpdateVersionNumber = 1;
 float LauncherConfig::mDefaultReloadFrequency = 60.0f * 60.0f;
@@ -40,10 +35,15 @@ LauncherConfig::LauncherConfig()
 void LauncherConfig::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mLauncherLocation, String());
-  SerializeEnumNameDefault(LauncherAutoRunMode, mAutoRunMode, LauncherAutoRunMode::None);
+  SerializeEnumNameDefault(
+      LauncherAutoRunMode, mAutoRunMode, LauncherAutoRunMode::None);
 
-  SerializeNameDefault(mDefaultProjectSaveLocation, FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects"));
-  SerializeNameDefault(mDownloadPath, FilePath::Combine(GetUserDocumentsDirectory(), "ZeroLauncher"));
+  SerializeNameDefault(
+      mDefaultProjectSaveLocation,
+      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects"));
+  SerializeNameDefault(
+      mDownloadPath,
+      FilePath::Combine(GetUserDocumentsDirectory(), "ZeroLauncher"));
   SerializeNameDefault(mDisplayBuildOnProjects, false);
   SerializeNameDefault(mShowDevelopmentBuilds, false);
   SerializeRename(mShowDevelopmentBuilds, "ShowNightlies");
@@ -57,19 +57,23 @@ void LauncherConfig::Serialize(Serializer& stream)
 
 void LauncherConfig::ApplyCommandLineArguments(const StringMap& arguments)
 {
-  String upgradeCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Upgrade];
+  String upgradeCommand =
+      LauncherStartupArguments::Names[LauncherStartupArguments::Upgrade];
   bool upgrade = GetStringValue<bool>(arguments, upgradeCommand, false);
-  if(upgrade == true)
+  if (upgrade == true)
     mAutoRunMode = LauncherAutoRunMode::None;
 
-  //if we get the command argument to run then try to install and run
-  String runCommand = LauncherStartupArguments::Names[LauncherStartupArguments::Run];
+  // if we get the command argument to run then try to install and run
+  String runCommand =
+      LauncherStartupArguments::Names[LauncherStartupArguments::Run];
   bool run = GetStringValue<bool>(arguments, runCommand, false);
-  if(run == true)
+  if (run == true)
     mAutoRunMode = LauncherAutoRunMode::InstallAndRun;
 
-  String debuggerModeCommand = LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
-  mRunDebuggerMode = GetStringValue<bool>(arguments, debuggerModeCommand, false);
+  String debuggerModeCommand =
+      LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
+  mRunDebuggerMode =
+      GetStringValue<bool>(arguments, debuggerModeCommand, false);
 }
 
 void LauncherConfig::SaveToCache()
@@ -102,7 +106,6 @@ String LauncherConfig::GetBuildsInstallPath()
   return FilePath::Combine(mDownloadPath, "Builds");
 }
 
-//-------------------------------------------------------------------LauncherLegacySettings
 ZilchDefineType(LauncherLegacySettings, builder, type)
 {
   ZeroBindComponent();
@@ -128,8 +131,9 @@ void SaveLauncherConfig(Cog* launcherConfigCog)
   LauncherConfig* launcherConfig = launcherConfigCog->has(LauncherConfig);
   String configFilePath = launcherConfig->mSavePath;
 
-  // If the config file doesn't exist for some reason then create it (and any parent directories needed)
-  if(!FileExists(configFilePath))
+  // If the config file doesn't exist for some reason then create it (and any
+  // parent directories needed)
+  if (!FileExists(configFilePath))
   {
     String configFileDirectoryPath = FilePath::GetDirectoryPath(configFilePath);
     CreateDirectoryAndParents(configFileDirectoryPath);
@@ -146,32 +150,39 @@ void SaveLauncherConfig(Cog* launcherConfigCog)
 
 void CopyOldConfigSettings(Cog* newConfigCog, uint configId)
 {
-  if(newConfigCog == nullptr)
+  if (newConfigCog == nullptr)
     return;
 
   String documentsDirectory = GetUserDocumentsDirectory();
   String editorFolder = FilePath::Combine(documentsDirectory, "ZeroEditor");
-  String previousConfigName = String::Format("ZeroLauncherConfigurationV%d", configId - 1);
-  String previousConfigPath = FilePath::CombineWithExtension(editorFolder, previousConfigName, ".data");
-  if(!FileExists(previousConfigPath))
+  String previousConfigName =
+      String::Format("ZeroLauncherConfigurationV%d", configId - 1);
+  String previousConfigPath =
+      FilePath::CombineWithExtension(editorFolder, previousConfigName, ".data");
+  if (!FileExists(previousConfigPath))
     return;
-  
-  Cog* previousConfigCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), previousConfigPath, 0, nullptr);
-  if(previousConfigCog == nullptr)
+
+  Cog* previousConfigCog = Z::gFactory->Create(
+      Z::gEngine->GetEngineSpace(), previousConfigPath, 0, nullptr);
+  if (previousConfigCog == nullptr)
     return;
-  
+
   // Copy all of their recent projects over
-  RecentProjects* previousRecentProjects = previousConfigCog->has(RecentProjects);
-  if(previousRecentProjects != nullptr)
+  RecentProjects* previousRecentProjects =
+      previousConfigCog->has(RecentProjects);
+  if (previousRecentProjects != nullptr)
     *HasOrAdd<RecentProjects>(newConfigCog) = *previousRecentProjects;
-  
+
   // Copy their launcher settings over (where to save, auto-run mode, etc...)
-  LauncherConfig* previousLauncherConfig = previousConfigCog->has(LauncherConfig);
-  if(previousLauncherConfig != nullptr)
+  LauncherConfig* previousLauncherConfig =
+      previousConfigCog->has(LauncherConfig);
+  if (previousLauncherConfig != nullptr)
     *HasOrAdd<LauncherConfig>(newConfigCog) = *previousLauncherConfig;
 }
 
-Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool overrideApplicationPath)
+Cog* LoadLauncherConfig(Cog* zeroConfigCog,
+                        const StringMap& arguments,
+                        bool overrideApplicationPath)
 {
   bool usedDefault = false;
   uint configId = 1;
@@ -180,39 +191,49 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
   String applicationDirectory = GetApplicationDirectory();
   String applicationPath = GetApplication();
   String editorFolder = FilePath::Combine(documentsDirectory, "ZeroEditor");
-  String configPath = FilePath::CombineWithExtension(editorFolder, configName, ".data");
+  String configPath =
+      FilePath::CombineWithExtension(editorFolder, configName, ".data");
   String sourceDirectory = FindSourceDirectory();
   String dataDirectory = FilePath::Combine(sourceDirectory, "Data");
 
   Cog* configCog = nullptr;
-  //try to create the config from the documents directory
-  if(FileExists(configPath))
-    configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), configPath, 0, nullptr);
+  // try to create the config from the documents directory
+  if (FileExists(configPath))
+    configCog = Z::gFactory->Create(
+        Z::gEngine->GetEngineSpace(), configPath, 0, nullptr);
 
-  //if we failed to create the config then try to load the old configuration file name
-  if(configCog == nullptr)
+  // if we failed to create the config then try to load the old configuration
+  // file name
+  if (configCog == nullptr)
   {
     usedDefault = true;
 
-    String oldConfigName = String::Format("VersionSelectorConfigurationV%d", configId);
-    String oldConfigPath = FilePath::CombineWithExtension(editorFolder, oldConfigName, ".data");
-    if(FileExists(oldConfigPath))
-      configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), oldConfigPath, 0, nullptr);
+    String oldConfigName =
+        String::Format("VersionSelectorConfigurationV%d", configId);
+    String oldConfigPath =
+        FilePath::CombineWithExtension(editorFolder, oldConfigName, ".data");
+    if (FileExists(oldConfigPath))
+      configCog = Z::gFactory->Create(
+          Z::gEngine->GetEngineSpace(), oldConfigPath, 0, nullptr);
 
-    //if we failed to create the config then create an empty archetype that we'll auto-populate
-    if(configCog == nullptr)
+    // if we failed to create the config then create an empty archetype that
+    // we'll auto-populate
+    if (configCog == nullptr)
     {
-      String defaultConfig = FilePath::Combine(dataDirectory, "DefaultLauncherConfiguration.data");
-      if(FileExists(defaultConfig))
-        configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), defaultConfig, 0, nullptr);
+      String defaultConfig =
+          FilePath::Combine(dataDirectory, "DefaultLauncherConfiguration.data");
+      if (FileExists(defaultConfig))
+        configCog = Z::gFactory->Create(
+            Z::gEngine->GetEngineSpace(), defaultConfig, 0, nullptr);
     }
 
-    // Since we failed to find the current version config cog we had to create a new one.
-    // In that case we'll lose old user settings during the transition so copy the relevant ones over.
+    // Since we failed to find the current version config cog we had to create a
+    // new one. In that case we'll lose old user settings during the transition
+    // so copy the relevant ones over.
     CopyOldConfigSettings(configCog, configId);
   }
 
-  if(configCog == nullptr)
+  if (configCog == nullptr)
     return nullptr;
 
   // Force certain config components to exist. There's a few upgrade cases
@@ -225,18 +246,21 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
   mainConfig->mConfigDidNotExist = false;
   mainConfig->DataDirectory = dataDirectory;
   mainConfig->SourceDirectory = sourceDirectory;
-  if(zeroConfigCog != nullptr)
+  if (zeroConfigCog != nullptr)
   {
-    // Copy the application directory from the zero config (should never be null, but just in case)
+    // Copy the application directory from the zero config (should never be
+    // null, but just in case)
     MainConfig* zeroMainConfig = zeroConfigCog->has(MainConfig);
-    if(zeroMainConfig != nullptr)
+    if (zeroMainConfig != nullptr)
     {
       mainConfig->ApplicationDirectory = zeroMainConfig->ApplicationDirectory;
       mainConfig->DataDirectory = zeroMainConfig->DataDirectory;
     }
 
-    // For now steal a few configs from zero (these should eventually be added on their own)
-    *HasOrAdd<TextEditorConfig>(configCog) = *zeroConfigCog->has(TextEditorConfig);
+    // For now steal a few configs from zero (these should eventually be added
+    // on their own)
+    *HasOrAdd<TextEditorConfig>(configCog) =
+        *zeroConfigCog->has(TextEditorConfig);
     *HasOrAdd<ContentConfig>(configCog) = *zeroConfigCog->has(ContentConfig);
   }
 
@@ -244,31 +268,33 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
 
   LauncherConfig* versionConfig = HasOrAdd<LauncherConfig>(configCog);
   versionConfig->mSavePath = configPath;
-  if(overrideApplicationPath)
+  if (overrideApplicationPath)
     versionConfig->mLauncherLocation = applicationPath;
 
-  //save the cache before any command line arguments get set
+  // save the cache before any command line arguments get set
   versionConfig->SaveToCache();
-  //apply any command line arguments (mostly auto-run settings)
+  // apply any command line arguments (mostly auto-run settings)
   versionConfig->ApplyCommandLineArguments(arguments);
 
   RecentProjects* recentProjects = configCog->has(RecentProjects);
-  //if we didn't already have a recent projects then try to copy it over from the zero engine config
-  if(recentProjects == nullptr)
+  // if we didn't already have a recent projects then try to copy it over from
+  // the zero engine config
+  if (recentProjects == nullptr)
   {
     recentProjects = HasOrAdd<RecentProjects>(configCog);
-    //if we didn't get a valid config object then don't do anything
-    if(zeroConfigCog != nullptr)
+    // if we didn't get a valid config object then don't do anything
+    if (zeroConfigCog != nullptr)
     {
       RecentProjects* zeroRecentProjects = zeroConfigCog->has(RecentProjects);
-      if(zeroRecentProjects != nullptr)
+      if (zeroRecentProjects != nullptr)
         recentProjects->CopyProjects(zeroRecentProjects);
-      //hardcode to 20 projects initially (since we just created the recent projects)
+      // hardcode to 20 projects initially (since we just created the recent
+      // projects)
       recentProjects->mMaxRecentProjects = 20;
     }
   }
 
-  if(usedDefault)
+  if (usedDefault)
     SaveLauncherConfig(configCog);
 
   return configCog;
@@ -290,4 +316,4 @@ void ReloadLauncherConfig(LauncherConfig* config, String& cachedData)
   config->Serialize(loader);
 }
 
-}//namespace Zero
+} // namespace Zero

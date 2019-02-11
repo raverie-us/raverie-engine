@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GraphWidget.hpp
-/// Declaration of the GraphWidget.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,9 +7,8 @@ namespace Zero
 class TextBox;
 class RenderFont;
 
-DeclareBitField2(GraphAxes,AxisX,AxisY);
+DeclareBitField2(GraphAxes, AxisX, AxisY);
 
-//----------------------------------------------------------------- Graph Widget
 class GraphWidget : public Widget
 {
 public:
@@ -25,7 +16,11 @@ public:
 
   GraphWidget(Composite* parent);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
   /// Point transformations
   Vec2 ToGraphPositionScaled(Vec2Param pixelPos);
@@ -49,7 +44,8 @@ public:
   void SetHeightMax(float max);
   void SetHeightRange(float min, float max);
 
-  /// Determines if the x axis (horizontal) hash lines and labels should be drawn.
+  /// Determines if the x axis (horizontal) hash lines and labels should be
+  /// drawn.
   bool GetDrawAxisX();
   void SetDrawAxisX(bool state);
   /// Determines if the y axis (vertical) hash lines and labels should be drawn.
@@ -72,12 +68,15 @@ public:
   float GetHeightSpacing();
   String GetLabelFormat(float spacing);
 
-  /// 
+  ///
   float GetIntervalSize(float range, float space);
 
 private:
-
-  enum {MIN, MAX};
+  enum
+  {
+    MIN,
+    MAX
+  };
 
   /// Width / Height
   float mWidthRange[2];
@@ -86,4 +85,4 @@ private:
   BitField<GraphAxes::Enum> mFlags;
 };
 
-}//namespace Zero
+} // namespace Zero

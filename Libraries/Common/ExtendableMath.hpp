@@ -1,17 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ExtendableMath.hpp
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2014, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Math
 {
 
-//-------------------------------------------------------------------ExtendableVector
 struct ZeroShared ExtendableVector
 {
   void Resize(uint size);
@@ -25,7 +17,6 @@ struct ZeroShared ExtendableVector
   Zero::Array<real> mData;
 };
 
-//-------------------------------------------------------------------ExtendableMatrix
 struct ZeroShared ExtendableMatrix
 {
   void Resize(uint sizeX, uint sizeY);
@@ -38,7 +29,6 @@ struct ZeroShared ExtendableMatrix
   Zero::Array<real> mData;
 };
 
-//-------------------------------------------------------------------FixedVector
 // A vector who's max size is compile-time but who's
 // working size can be changed up to the fixed size.
 // Currently used in position correction.
@@ -47,7 +37,7 @@ struct ZeroSharedTemplate FixedVector
 {
   void Resize(size_t size)
   {
-    if(size > FixedSize)
+    if (size > FixedSize)
     {
       Error("Cannot set size greater than the fixed size.");
       size = FixedSize;
@@ -76,7 +66,6 @@ struct ZeroSharedTemplate FixedVector
   DataType mData[FixedSize];
 };
 
-//-------------------------------------------------------------------FixedMatrix
 template <size_t SizeX, size_t SizeY>
 struct ZeroSharedTemplate FixedMatrix
 {
@@ -94,4 +83,4 @@ struct ZeroSharedTemplate FixedMatrix
   real mData[SizeX * SizeY];
 };
 
-}//namespace Math
+} // namespace Math

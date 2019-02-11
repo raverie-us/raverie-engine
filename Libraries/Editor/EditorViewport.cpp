@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorViewport.cpp
-/// Implementation of the EditorViewport class.
-///
-/// Authors: Chris Peters, Joshua Claeys, Nathan Carlson
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,26 +6,24 @@ namespace Zero
 
 namespace ViewportMenuUi
 {
-  const cstr cLocation = "EditorUi/Viewport/ViewportMenu";
-  Tweakable(float, Height, Pixels(30), cLocation);
-}
+const cstr cLocation = "EditorUi/Viewport/ViewportMenu";
+Tweakable(float, Height, Pixels(30), cLocation);
+} // namespace ViewportMenuUi
 
 namespace EditorUiSettings
 {
-  const cstr cLocation = "EditorUi/Viewport";
-  Tweakable(bool, EditorViewportAutoTakeFocus, true, cLocation);
-  Tweakable(float, DragSelectDistance, 5, cLocation);
-}
+const cstr cLocation = "EditorUi/Viewport";
+Tweakable(bool, EditorViewportAutoTakeFocus, true, cLocation);
+Tweakable(float, DragSelectDistance, 5, cLocation);
+} // namespace EditorUiSettings
 
-//-------------------------------------------------------------- Editor Viewport
 ZilchDefineType(EditorViewport, builder, type)
 {
-  
 }
 
-EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
-  : Composite(parent)
-  , mIgnoreSpaceModifications(false)
+EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership) :
+    Composite(parent),
+    mIgnoreSpaceModifications(false)
 {
   mTools = Z::gEditor->Tools;
   mOwnerShip = ownership;
@@ -109,8 +99,9 @@ void EditorViewport::CleanUp()
   // No more events
   editSpace->GetDispatcher()->Disconnect(this);
 
-  EditorCameraController* cameraController = mEditorCamera.has(EditorCameraController);
-  if(cameraController)
+  EditorCameraController* cameraController =
+      mEditorCamera.has(EditorCameraController);
+  if (cameraController)
   {
     cameraController->Deactivate();
     CameraViewport* cameraViewport = mEditorCamera.has(CameraViewport);
@@ -130,7 +121,7 @@ void EditorViewport::SetAsActive()
   if (Space* space = mEditSpace)
   {
     Level* editLevel = space->mLevelLoaded;
-    if(editLevel && mEditArchetype.IsNull())
+    if (editLevel && mEditArchetype.IsNull())
       Z::gEditor->mEditLevel = editLevel;
 
     Z::gEditor->SetEditSpace(space);
@@ -145,18 +136,20 @@ void EditorViewport::SetUpEditorCamera()
   if (editorCamera == NULL)
   {
     // No editor camera create one
-    editorCamera = Z::gFactory->Create(space, CoreArchetypes::EditorCamera, 0, nullptr);
+    editorCamera =
+        Z::gFactory->Create(space, CoreArchetypes::EditorCamera, 0, nullptr);
     // Clear the archetype so the full object is always saved
     editorCamera->ClearArchetype();
     // Name it so we can find again
     editorCamera->SetName(SpecialCogNames::EditorCamera);
   }
 
-  //Protect the camera
+  // Protect the camera
   editorCamera->mFlags.SetFlag(CogFlags::Protected);
 
   // Enabled the camera controller
-  EditorCameraController* controller = HasOrAdd<EditorCameraController>(editorCamera);
+  EditorCameraController* controller =
+      HasOrAdd<EditorCameraController>(editorCamera);
   controller->SetEnabled(true);
 
   // temporary until archetypes are updated
@@ -172,13 +165,15 @@ void EditorViewport::SetUpEditorCamera()
 
 ReactiveViewport* EditorViewport::GetReactiveViewport()
 {
-  // When in read-only mode, pretend as if there is no reactive viewport so we stop all events
+  // When in read-only mode, pretend as if there is no reactive viewport so we
+  // stop all events
   if (Z::gEngine->IsReadOnly())
     return nullptr;
 
   CameraViewport* cameraViewport = mEditorCamera.has(CameraViewport);
   if (cameraViewport != nullptr)
-    return Type::DynamicCast<ReactiveViewport*>((Viewport*)cameraViewport->mViewport);
+    return Type::DynamicCast<ReactiveViewport*>(
+        (Viewport*)cameraViewport->mViewport);
   else
     return nullptr;
 }
@@ -190,7 +185,7 @@ void EditorViewport::SetTargetSpace(Space* space)
   mEditSpace = space;
   space->mGameWidgetOverride = mGameWidget;
 
-  //When a level is loaded check for editor objects
+  // When a level is loaded check for editor objects
   ConnectThisTo(space, Events::SpaceLevelLoaded, OnSpaceLevelLoaded);
   ConnectThisTo(space, Events::SpaceModified, OnSpaceModified);
   ConnectThisTo(space, Events::SpaceDestroyed, OnSpaceDestroyed);
@@ -267,7 +262,7 @@ void EditorViewport::ConfigureViewCube(bool active, real viewportSize)
 
 void EditorViewport::OnMouseEnterMenuToggle(Event* event)
 {
-  mMenuToggleButton->SetColor(Vec4(1,1,1,1));
+  mMenuToggleButton->SetColor(Vec4(1, 1, 1, 1));
 }
 
 void EditorViewport::OnMouseExitMenuToggle(Event* event)
@@ -280,18 +275,22 @@ void EditorViewport::OnMenuToggleClicked(Event* event)
   const Vec3 cOnScreenPos = Vec3::cZero;
   const Vec3 cOffScreenPos = Vec3(0, -mMenu->mSize.y, 0);
   const float cAnimTime = 0.2f;
-  
-  if(mMenuHidden)
+
+  if (mMenuHidden)
   {
-    ActionSequence* seq = new ActionSequence(this, ActionExecuteMode::FrameUpdate);
+    ActionSequence* seq =
+        new ActionSequence(this, ActionExecuteMode::FrameUpdate);
     seq->Add(MoveWidgetAction(mMenu, cOnScreenPos, cAnimTime));
-    mMenuToggleButton->ChangeDefinition( mDefSet->GetDefinition("ViewportMenuRetract") );
+    mMenuToggleButton->ChangeDefinition(
+        mDefSet->GetDefinition("ViewportMenuRetract"));
   }
   else
   {
-    ActionSequence* seq = new ActionSequence(this, ActionExecuteMode::FrameUpdate);
+    ActionSequence* seq =
+        new ActionSequence(this, ActionExecuteMode::FrameUpdate);
     seq->Add(MoveWidgetAction(mMenu, cOffScreenPos, cAnimTime));
-    mMenuToggleButton->ChangeDefinition( mDefSet->GetDefinition("ViewportMenuExpand") );
+    mMenuToggleButton->ChangeDefinition(
+        mDefSet->GetDefinition("ViewportMenuExpand"));
   }
 
   mMenuHidden = !mMenuHidden;
@@ -303,7 +302,7 @@ void EditorViewport::OnSpaceDestroyed(Event* event)
   mEditSpace = nullptr;
 
   // Auto close tab when space destroyed
-  if(!this->mDestroyed)
+  if (!this->mDestroyed)
     CloseTabContaining(this);
 }
 
@@ -313,7 +312,7 @@ void EditorViewport::OnSpaceModified(Event* event)
     return;
 
   // Set the modified icon
-  if(Space* editSpace = mEditSpace)
+  if (Space* editSpace = mEditSpace)
   {
     TabModifiedEvent toSend(editSpace->GetModified());
     GetDispatcher()->Dispatch(Events::TabModified, &toSend);
@@ -330,11 +329,17 @@ void EditorViewport::OnSpaceLevelLoaded(Event* event)
   // A level has been loaded need to find editor camera
   SetUpEditorCamera();
 
-  Cog* levelSettings = editSpace->FindObjectByName(SpecialCogNames::LevelSettings);
+  Cog* levelSettings =
+      editSpace->FindObjectByName(SpecialCogNames::LevelSettings);
 
   if (levelSettings == NULL)
   {
-    levelSettings = Z::gFactory->CreateCheckedType(ZilchTypeId(Cog), editSpace, CoreArchetypes::LevelSettings, 0, editSpace->GetGameSession());
+    levelSettings =
+        Z::gFactory->CreateCheckedType(ZilchTypeId(Cog),
+                                       editSpace,
+                                       CoreArchetypes::LevelSettings,
+                                       0,
+                                       editSpace->GetGameSession());
     levelSettings->ClearArchetype();
   }
 
@@ -346,29 +351,30 @@ void EditorViewport::OnSpaceLevelLoaded(Event* event)
   // Now that there is a new level set it as active
   SetAsActive();
   mMenu->InitializeFromSpace(mEditSpace);
-  
-  EditorSettings* editorSettings = Z::gEngine->GetConfigCog()->has(EditorSettings);
+
+  EditorSettings* editorSettings =
+      Z::gEngine->GetConfigCog()->has(EditorSettings);
   ConfigureViewCube(editorSettings->mViewCube, editorSettings->mViewCubeSize);
 }
 
 void EditorViewport::OnTabFind(WindowTabEvent* event)
 {
   Space* space = mEditSpace;
-  if(space == NULL)
+  if (space == NULL)
     return;
 
   // Is this the viewport that Contains the object?
-  if(event->SearchObject.IsNotNull())
+  if (event->SearchObject.IsNotNull())
   {
-    if(event->SearchObject == space)
+    if (event->SearchObject == space)
       event->TabWidgetFound = this;
-    if(event->SearchObject == (Level*)space->mLevelLoaded)
+    if (event->SearchObject == (Level*)space->mLevelLoaded)
       event->TabWidgetFound = this;
-    if(event->SearchObject == (Archetype*)mEditArchetype)
+    if (event->SearchObject == (Archetype*)mEditArchetype)
       event->TabWidgetFound = this;
-    if(Cog* cog = event->SearchObject.Get<Cog*>())
+    if (Cog* cog = event->SearchObject.Get<Cog*>())
     {
-      if(cog->GetSpace() == space)
+      if (cog->GetSpace() == space)
         event->TabWidgetFound = this;
     }
   }
@@ -377,43 +383,42 @@ void EditorViewport::OnTabFind(WindowTabEvent* event)
 void EditorViewport::OnSave(SavingEvent* event)
 {
   // If this is shared space let the owner save it
-  if(mOwnerShip == OwnerShip::Sharing)
+  if (mOwnerShip == OwnerShip::Sharing)
     return;
 
   // Do we have a space?
   Space* editSpace = mEditSpace;
-  if(editSpace == NULL)
+  if (editSpace == NULL)
     return;
 
   // Auto upload the Space Archetype
-  if(editSpace->IsModifiedFromArchetype())
+  if (editSpace->IsModifiedFromArchetype())
     editSpace->UploadToArchetype();
 
   // Has anything in the level changed?
-  if(!editSpace->GetModified())
+  if (!editSpace->GetModified())
     return;
 
   // Editing a level
   Level* editLevel = editSpace->mLevelLoaded;
 
   // Is there a  level loaded?
-  if(editLevel == NULL)
+  if (editLevel == NULL)
     return;
 
   // Can this level be saved?
-  if(editLevel->IsWritable())
+  if (editLevel->IsWritable())
     editLevel->SaveSpace(editSpace);
-
 }
 
 void EditorViewport::OnSaveCheck(SavingEvent* event)
 {
-  if(mOwnerShip == OwnerShip::Sharing)
+  if (mOwnerShip == OwnerShip::Sharing)
     return;
 
-  if(Space* space = mEditSpace)
+  if (Space* space = mEditSpace)
   {
-    if(space->GetModified())
+    if (space->GetModified())
       event->NeedSaving = true;
   }
 }
@@ -422,7 +427,7 @@ void EditorViewport::OnResourcesRemoved(ResourceEvent* event)
 {
   // Handle when a resource is removed or unloaded
   Space* editSpace = mEditSpace;
-  if(editSpace == NULL)
+  if (editSpace == NULL)
     return;
 
   Level* editLevel = editSpace->mLevelLoaded;
@@ -441,15 +446,16 @@ void EditorViewport::OnResourcesRemoved(ResourceEvent* event)
 void EditorViewport::OnResourceModified(ResourceEvent* event)
 {
   Space* editSpace = mEditSpace;
-  if(editSpace == NULL)
+  if (editSpace == NULL)
     return;
 
   Level* editLevel = editSpace->mLevelLoaded;
-  
+
   // Is the level this viewport is editing the modified resource?
-  if(editLevel == (Level*)event->EventResource)
+  if (editLevel == (Level*)event->EventResource)
   {
-    TabRenamedEvent eventToSend(BuildString("Level: ", event->EventResource->Name));
+    TabRenamedEvent eventToSend(
+        BuildString("Level: ", event->EventResource->Name));
     this->DispatchEvent(Events::TabRenamed, &eventToSend);
   }
 }
@@ -480,76 +486,79 @@ void EditorViewport::OnMouseEnter(MouseEvent* event)
 
 void EditorViewport::OnMiddleMouseDown(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to have the first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  EditorCameraController* controller = mEditorCamera.has(EditorCameraController);
-  if(controller)
+  EditorCameraController* controller =
+      mEditorCamera.has(EditorCameraController);
+  if (controller)
   {
-    controller->ProcessMiddleMouseDown( );
-    new EditorCameraMouseDrag(e->GetMouse( ), this, controller);
+    controller->ProcessMiddleMouseDown();
+    new EditorCameraMouseDrag(e->GetMouse(), this, controller);
     return;
   }
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 }
 
 void EditorViewport::OnRightMouseDown(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  EditorCameraController* controller = mEditorCamera.has(EditorCameraController);
-  if(controller)
+  EditorCameraController* controller =
+      mEditorCamera.has(EditorCameraController);
+  if (controller)
   {
-    if(controller->mControlMode == ControlMode::ZPlane)
+    if (controller->mControlMode == ControlMode::ZPlane)
       controller->MouseDrag(CameraDragMode::Pan);
     else
       controller->MouseDrag(CameraDragMode::Rotation);
 
-    new EditorCameraMouseDrag(e->GetMouse( ), this, controller);
+    new EditorCameraMouseDrag(e->GetMouse(), this, controller);
     return;
   }
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 }
 
 void EditorViewport::OnLeftMouseDown(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   mMouseDownScreenPosition = e->Position;
 
   // Unlike the other mouse events left mouse specifically has an override to
-  // allow the camera a first-chance response before the active tool has a chance.
-  EditorCameraController* controller = mEditorCamera.has(EditorCameraController);
-  if(controller)
+  // allow the camera a first-chance response before the active tool has a
+  // chance.
+  EditorCameraController* controller =
+      mEditorCamera.has(EditorCameraController);
+  if (controller)
   {
     // Camera control button (ctrl) is down
-    if(controller->IsActive( ))
+    if (controller->IsActive())
     {
-      new EditorCameraMouseDrag(e->GetMouse( ), this, controller);
+      new EditorCameraMouseDrag(e->GetMouse(), this, controller);
       return;
     }
-
   }
 
   // Allow active tool to respond before gizmos.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
   // If no one handled the event, we can assume they're trying to
@@ -559,24 +568,23 @@ void EditorViewport::OnLeftMouseDown(MouseEvent* e)
 
 void EditorViewport::OnMouseDoubleClick(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   mMouseDownScreenPosition = e->Position;
 
   // Allow active tool to first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
   {
     mMouseOperation = MouseMode::Default;
     return;
   }
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
   {
     mMouseOperation = MouseMode::Default;
     return;
-  } 
-
+  }
 }
 
 void EditorViewport::OnLeftMouseDrag(MouseEvent* e)
@@ -584,21 +592,23 @@ void EditorViewport::OnLeftMouseDrag(MouseEvent* e)
   mMouseOperation = MouseMode::Default;
 
   // Unlike the other mouse events left mouse specifically has an override to
-  // allow the camera a first-chance response before the active tool has a chance.
-  EditorCameraController* controller = mEditorCamera.has(EditorCameraController);
-  if(controller)
+  // allow the camera a first-chance response before the active tool has a
+  // chance.
+  EditorCameraController* controller =
+      mEditorCamera.has(EditorCameraController);
+  if (controller)
   {
     // Early out if the camera is performing a left-click enabled operation
     //  - [ie, do not use any tool]
-    if(controller->IsActive( ))
+    if (controller->IsActive())
       return;
   }
 
   // Allow active tool to respond before gizmos.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
   BeginSelectDrag(this, e, mTools->mSelectTool);
@@ -606,56 +616,57 @@ void EditorViewport::OnLeftMouseDrag(MouseEvent* e)
 
 void EditorViewport::OnMouseUpdate(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to have the first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
-  // If the tool didn't handle the event, forward it so that reactive objects get updated
-  if(ReactiveViewport* viewport = GetReactiveViewport())
+  // If the tool didn't handle the event, forward it so that reactive objects
+  // get updated
+  if (ReactiveViewport* viewport = GetReactiveViewport())
     viewport->OnMouseUpdate(e);
 }
 
 void EditorViewport::OnMouseMove(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
-  if(mMouseOperation != MouseMode::Select)
+  if (mMouseOperation != MouseMode::Select)
   {
     e->GetMouse()->SetCursor(Cursor::Arrow);
 
     // Allow active tool to have the first chance response.
-    if(ForwardMouseEventToTool(e))
+    if (ForwardMouseEventToTool(e))
       return;
 
-    if(ForwardEventToGizmos(e))
+    if (ForwardEventToGizmos(e))
       return;
   }
 }
 
 void EditorViewport::OnMouseUp(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to have the first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
   // Other tools fall through to select tool
 
   // Only forward to select tool if the mouse was pressed down in the viewport
-  if(!mTools->IsSelectToolActive( ) && mMouseOperation == MouseMode::Select)
-    ForwardMouseEventToTool(e, mTools->mSelectTool->GetOwner( ));
+  if (!mTools->IsSelectToolActive() && mMouseOperation == MouseMode::Select)
+    ForwardMouseEventToTool(e, mTools->mSelectTool->GetOwner());
 
   mMouseOperation = MouseMode::Default;
 }
@@ -667,18 +678,18 @@ void EditorViewport::OnMouseDown(MouseEvent* event)
 
 void EditorViewport::OnRightMouseUp(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to have the first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
-    return;  
+  if (ForwardEventToGizmos(e))
+    return;
 
   // Other tools fall through to select tool
-  if(!mTools->IsSelectToolActive() && mMouseOperation == MouseMode::Select)
+  if (!mTools->IsSelectToolActive() && mMouseOperation == MouseMode::Select)
     ForwardMouseEventToTool(e, mTools->mSelectTool->GetOwner());
 
   mMouseOperation = MouseMode::Default;
@@ -686,17 +697,18 @@ void EditorViewport::OnRightMouseUp(MouseEvent* e)
 
 void EditorViewport::OnMouseScroll(MouseEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to have the first chance response.
-  if(ForwardMouseEventToTool(e))
+  if (ForwardMouseEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
-  if(EditorCameraController* controller = mEditorCamera.has(EditorCameraController))
+  if (EditorCameraController* controller =
+          mEditorCamera.has(EditorCameraController))
     controller->MouseScroll(e->Scroll);
 }
 
@@ -706,7 +718,7 @@ void EditorViewport::OnMetaDrop(MetaDropEvent* e)
   if (viewport == nullptr)
     return;
 
-  if(Space* space = mEditSpace)
+  if (Space* space = mEditSpace)
   {
     // Se the draw space for any debug draw done in the meta drop event
     Debug::ActiveDrawSpace drawSpace(space->GetId().Id);
@@ -727,7 +739,7 @@ void EditorViewport::OnMetaDrop(MetaDropEvent* e)
     // This is temporary until we combine MouseEvent and ViewportMouseEvent.
     e->mViewportMouseEvent = nullptr;
 
-    if(e->Handled)
+    if (e->Handled)
       return;
 
     EditorDrop(e, viewport, space, result.Object);
@@ -736,7 +748,7 @@ void EditorViewport::OnMetaDrop(MetaDropEvent* e)
 
 void EditorViewport::OnKeyDown(KeyboardEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   ReactiveViewport* viewport = GetReactiveViewport();
@@ -744,67 +756,69 @@ void EditorViewport::OnKeyDown(KeyboardEvent* e)
     return;
 
   Space* targetSpace = mEditSpace;
-  if(targetSpace == NULL)
+  if (targetSpace == NULL)
     return;
 
   // Allow active tool to have the first chance response.
   //   - Note: Tools can block commands
-  if(ForwardEventToTool(e))
+  if (ForwardEventToTool(e))
     return;
 
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
-  //Core short cuts
-  if(ExecuteShortCuts(mEditSpace, viewport, e))
+  // Core short cuts
+  if (ExecuteShortCuts(mEditSpace, viewport, e))
     return;
 
   CommandManager* commands = CommandManager::GetInstance();
-  if(commands->TestCommandKeyboardShortcuts(e))
+  if (commands->TestCommandKeyboardShortcuts(e))
     return;
 
-  //Ctrl for standard commands
-  if(e->CtrlPressed)
+  // Ctrl for standard commands
+  if (e->CtrlPressed)
   {
-    //if(event->Key == Keys::L)
+    // if(event->Key == Keys::L)
     //{
     //  ToggleLighting();
     //}
   }
   else
   {
-    //if(e->Key == Keys::F12)
+    // if(e->Key == Keys::F12)
     //{
-    //  String fileName = BuildString("ZeroScreenShot-", GetTimeAndDateStamp(), ".png");
-    //  String filePath = FilePath::Combine(GetUserDocumentsDirectory(), fileName);
+    //  String fileName = BuildString("ZeroScreenShot-", GetTimeAndDateStamp(),
+    //  ".png"); String filePath =
+    //  FilePath::Combine(GetUserDocumentsDirectory(), fileName);
     //  this->ScreenCapture(filePath);
 
     //  //Print to console only
     //  ZPrint("Screen Shot Taken %s\n", filePath.c_str());
     //}
 
-    if(e->Key == Keys::Tab)
+    if (e->Key == Keys::Tab)
     {
-      if(Space* space = mEditSpace)
+      if (Space* space = mEditSpace)
       {
         // Only unpause / pause the game if it is
         // not the space that is being edited
         // used for edit in game
-        if(!space->IsEditorMode())
+        if (!space->IsEditorMode())
         {
-          if(TimeSpace* ts = mEditSpace.has(TimeSpace))
+          if (TimeSpace* ts = mEditSpace.has(TimeSpace))
             ts->TogglePause();
         }
       }
     }
 
-    if(e->Key == Keys::Space)
+    if (e->Key == Keys::Space)
     {
       Z::gEditor->OpenSearchWindow(this);
     }
   }
 
-  if(EditorCameraController* controller = mEditorCamera.has(EditorCameraController))
+  if (EditorCameraController* controller =
+          mEditorCamera.has(EditorCameraController))
   {
     controller->ProcessKeyboardEvent(e);
   }
@@ -812,22 +826,23 @@ void EditorViewport::OnKeyDown(KeyboardEvent* e)
 
 void EditorViewport::OnKeyUp(KeyboardEvent* e)
 {
-  if(e->Handled)
+  if (e->Handled)
     return;
 
   // Allow active tool to have the first chance response.
-  if(ForwardEventToTool(e))
+  if (ForwardEventToTool(e))
 
     return;
-  if(ForwardEventToGizmos(e))
+  if (ForwardEventToGizmos(e))
     return;
 
   // If shift pressed disable camera
-  if(e->Key == Keys::Shift)
+  if (e->Key == Keys::Shift)
   {
-    if(EditorCameraController* controller = mEditorCamera.has(EditorCameraController))
+    if (EditorCameraController* controller =
+            mEditorCamera.has(EditorCameraController))
     {
-      if(controller)
+      if (controller)
         controller->ProcessKeyboardEvent(e);
     }
   }
@@ -835,10 +850,11 @@ void EditorViewport::OnKeyUp(KeyboardEvent* e)
 
 void EditorViewport::OnFocusLost(FocusEvent* focusEvent)
 {
-  if(EditorCameraController* controller = mEditorCamera.has(EditorCameraController))
+  if (EditorCameraController* controller =
+          mEditorCamera.has(EditorCameraController))
     controller->Deactivate();
 
-  if(Cog* activeTool = mTools->GetActiveCog())
+  if (Cog* activeTool = mTools->GetActiveCog())
     activeTool->DispatchEvent(focusEvent->EventId, focusEvent);
 }
 
@@ -862,10 +878,10 @@ bool EditorViewport::ForwardMouseEventToTool(MouseEvent* e, Cog* tool)
 
 bool EditorViewport::ForwardEventToTool(MouseEvent* e, Cog* tool)
 {
-  if(tool == nullptr)
+  if (tool == nullptr)
     tool = mTools->GetActiveCog();
 
-  if(tool)
+  if (tool)
   {
     tool->DispatchEvent(e->EventId, e);
 
@@ -877,10 +893,10 @@ bool EditorViewport::ForwardEventToTool(MouseEvent* e, Cog* tool)
 
 bool EditorViewport::ForwardEventToTool(KeyboardEvent* e, Cog* tool)
 {
-  if(tool == nullptr)
+  if (tool == nullptr)
     tool = mTools->GetActiveCog();
 
-  if(tool)
+  if (tool)
   {
     tool->DispatchEvent(e->EventId, e);
 
@@ -902,11 +918,11 @@ bool EditorViewport::ForwardEventToGizmos(MouseEvent* e)
 
   GizmoSpace* gizmoSpace = HasOrAdd<GizmoSpace>(mEditSpace);
 
-  if(e->EventId == Events::MouseUpdate)
+  if (e->EventId == Events::MouseUpdate)
     gizmoSpace->OnMouseUpdate(&eventToSend);
 
   gizmoSpace->ForwardEvent(&eventToSend);
-  
+
   e->Handled = eventToSend.Handled;
   e->HandledEventScript = eventToSend.HandledEventScript;
 
@@ -931,7 +947,8 @@ void EditorViewport::OnCameraUpdate(ObjectEvent* event)
   ConfigureViewCube(settings->mViewCube, settings->mViewCubeSize);
 
   if (mOrientationGizmo && mEditorCamera)
-    mOrientationGizmo->SetGizmoRotation(mEditorCamera.has(Transform)->GetRotation().Inverted());
+    mOrientationGizmo->SetGizmoRotation(
+        mEditorCamera.has(Transform)->GetRotation().Inverted());
 }
 
 void EditorViewport::OnSettingsChanged(Event* event)
@@ -939,6 +956,5 @@ void EditorViewport::OnSettingsChanged(Event* event)
   EditorSettings* settings = Z::gEngine->GetConfigCog()->has(EditorSettings);
   ConfigureViewCube(settings->mViewCube, settings->mViewCubeSize);
 }
-
 
 } // namespace Zero

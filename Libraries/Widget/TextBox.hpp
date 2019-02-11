@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextBox.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +7,6 @@ namespace Zero
 class Text;
 class EditText;
 
-//--------------------------------------------------------------------- Text Box
 DeclareEnum2(TextBoxStyle, Classic, Modern);
 
 /// Text box is a simple edit text box with a background.
@@ -30,15 +21,15 @@ public:
   void SetReadOnly(bool state);
   void SetInvalid();
 
-  //Is the text box editable?
+  // Is the text box editable?
   void SetEditable(bool editable);
   bool GetEditable();
 
-  //Will the text box lose focus on hitting enter when editing the text box
+  // Will the text box lose focus on hitting enter when editing the text box
   void SetEnterLoseFocus(bool losesFocus);
   bool GetEnterLoseFocus();
 
-  //What text is being displayed in the text box
+  // What text is being displayed in the text box
   void SetText(StringParam text);
   String GetText();
 
@@ -50,7 +41,7 @@ public:
   void SetTextClipping(bool value);
   void SetPassword(bool passwordMode);
 
-  //Widget interfaces
+  // Widget interfaces
   void UpdateTransform() override;
   void SizeToContents() override;
   bool TakeFocusOverride() override;
@@ -70,7 +61,7 @@ public:
   bool mMeasureForMinSize;
 
 private:
-  //Events
+  // Events
   void OnSubmit(ObjectEvent* event);
   void MouseEnter(MouseEvent* event);
   void MouseExit(MouseEvent* event);
@@ -81,13 +72,12 @@ private:
   void OnLeftMouseDown(MouseEvent* event);
 
   bool mAllowEdit;
-  
+
   Text* mHint;
   Element* mBackground;
   Element* mBorder;
 };
 
-//---------------------------------------------------------------- TextBoxButton
 class TextBoxButton : public TextBox
 {
 public:
@@ -100,7 +90,6 @@ public:
   IconButton* mButton;
 };
 
-//---------------------------------------------------------------- MultiLineText
 class MultiLineText : public Composite
 {
 public:
@@ -112,7 +101,7 @@ public:
   void UpdateTransform() override;
   Vec2 GetMinSize() override;
 
-  //Text on the label.
+  // Text on the label.
   void SetText(StringParam text);
   String GetText();
 
@@ -121,8 +110,8 @@ public:
 
   /// If the text wraps, then the width of this composite will never be more or
   /// less than the best fit width.
-  /// If the text doesn't wrap, then the width of this composite can be less-than
-  /// or equal to the best fit width.
+  /// If the text doesn't wrap, then the width of this composite can be
+  /// less-than or equal to the best fit width.
   bool mBestFitText;
   float mMaxBestFitTextWidth;
 
@@ -138,8 +127,8 @@ private:
 
 namespace ModernTextBoxUi
 {
-  DeclareTweakable(Vec4, BackgroundColor);
-  DeclareTweakable(Vec4, FocusBorderColor);
-}
+DeclareTweakable(Vec4, BackgroundColor);
+DeclareTweakable(Vec4, FocusBorderColor);
+} // namespace ModernTextBoxUi
 
-}//namespace Zero
+} // namespace Zero

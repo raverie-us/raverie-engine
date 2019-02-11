@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -17,7 +12,7 @@ Linear Constraint:
 
   Angular Constraint:
   Let i correspond the 3 basis vectors formed from the motor axis and two
-  orthonormal vectors (t1,t2) to the motor axis where 
+  orthonormal vectors (t1,t2) to the motor axis where
   i = 0 -> t1, i = 1 -> t2, i = 2 -> motor axis
   Let i correspond to the x,y,z axes
   Ci   : theta2_i - theta1_i = 0
@@ -40,7 +35,10 @@ typedef DefaultAngularLimitPolicy2d<RevoluteJoint2d> FragmentPolicy;
 struct Revolute2dPolicy : public DefaultFragmentPolicy2d<RevoluteJoint2d>
 {
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data, int atomIndex, RevoluteJoint2d* joint, ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data,
+                    int atomIndex,
+                    RevoluteJoint2d* joint,
+                    ConstraintMolecule& mol)
   {
     real baumgarte;
     uint axisIndex = atomIndex % 2;
@@ -48,18 +46,21 @@ struct Revolute2dPolicy : public DefaultFragmentPolicy2d<RevoluteJoint2d>
     uint filter = joint->GetAtomIndexFilter(atomIndex, desiredConstraintValue);
 
     // Compute the linear or angular fragment Jacobian
-    if(filter & RevoluteJoint2d::LinearAxis)
+    if (filter & RevoluteJoint2d::LinearAxis)
     {
       LinearAxisFragment2d(data.mAnchors, data.LinearAxes[axisIndex], mol);
-      baumgarte = joint->GetLinearBaumgarte(); 
+      baumgarte = joint->GetLinearBaumgarte();
     }
-    else if(filter & RevoluteJoint2d::AngularAxis)
+    else if (filter & RevoluteJoint2d::AngularAxis)
     {
       AngularAxisFragment2d(data.mRefAngle, mol);
       baumgarte = joint->GetAngularBaumgarte();
     }
     else
-      ErrorIf(true, "Joint %s of index %d returned an invalid index filter.", joint->GetJointName(), atomIndex);
+      ErrorIf(true,
+              "Joint %s of index %d returned an invalid index filter.",
+              joint->GetJointName(),
+              atomIndex);
 
     return baumgarte;
   }
@@ -105,8 +106,8 @@ void RevoluteJoint2d::ComputeInitialConfiguration()
 
 void RevoluteJoint2d::ComponentAdded(BoundType* typeId, Component* component)
 {
-  Joint::ComponentAdded(typeId,component);
-  if(typeId == ZilchTypeId(JointLimit))
+  Joint::ComponentAdded(typeId, component);
+  if (typeId == ZilchTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -140,7 +141,8 @@ void RevoluteJoint2d::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
+  ComputeMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
 }
 
 void RevoluteJoint2d::WarmStart(MoleculeWalker& molecules)
@@ -168,30 +170,34 @@ void RevoluteJoint2d::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
 }
 
 void RevoluteJoint2d::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
 
   Collider* collider0 = GetCollider(0);
   Collider* collider1 = GetCollider(1);
-  if(collider0 == nullptr || collider1 == nullptr)
+  if (collider0 == nullptr || collider1 == nullptr)
     return;
 
-  Mat3 basis0 = collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
-  Mat3 basis1 = collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
+  Mat3 basis0 =
+      collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
+  Mat3 basis1 =
+      collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
   DrawHinge(this, mAnchors, basis0, basis1, 0);
 }
 
-uint RevoluteJoint2d::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint RevoluteJoint2d::GetAtomIndexFilter(uint atomIndex,
+                                         real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 2)
+  if (atomIndex < 2)
     return LinearAxis;
-  else if(atomIndex < 3)
+  else if (atomIndex < 3)
     return AngularAxis;
   return 0;
 }
@@ -219,10 +225,11 @@ uint RevoluteJoint2d::GetDefaultSpringIds() const
 real RevoluteJoint2d::GetJointAngle() const
 {
   return 0.0f;
-  //return mAtoms[5].mError;
+  // return mAtoms[5].mError;
   /*Quat referenceRotation = mReferenceAngle.GetReferenceAngle();
   return JointHelpers::GetRelativeAngle(referenceRotation,
-    GetCollider(0)->GetWorldRotation(), GetCollider(1)->GetWorldRotation(),mAxes[0]);*/
+    GetCollider(0)->GetWorldRotation(),
+  GetCollider(1)->GetWorldRotation(),mAxes[0]);*/
 }
 
 Vec3 RevoluteJoint2d::GetWorldAxis() const
@@ -230,6 +237,6 @@ Vec3 RevoluteJoint2d::GetWorldAxis() const
   return Vec3::cZAxis;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

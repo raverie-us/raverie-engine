@@ -1,35 +1,26 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationSettings.cpp
-/// Implementation of settings for the animator.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ Animation Options
 AnimationSettings::EditFpsPresetArray AnimationSettings::mEditFpsPresets;
 
-//******************************************************************************
-void GetEditFpsPresets(HandleParam instance, Property* property, 
+void GetEditFpsPresets(HandleParam instance,
+                       Property* property,
                        Array<String>& strings)
 {
   strings.Resize(AnimationSettings::mEditFpsPresets.Size());
 
-  for(uint i = 0; i < AnimationSettings::mEditFpsPresets.Size(); ++i)
+  for (uint i = 0; i < AnimationSettings::mEditFpsPresets.Size(); ++i)
     strings[i] = AnimationSettings::mEditFpsPresets[i].first;
 }
 
-//******************************************************************************
 ZilchDefineType(AnimationSettings, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindGetterSetterProperty(EditFps)->Add(new EditorIndexedStringArray(GetEditFpsPresets));
+  ZilchBindGetterSetterProperty(EditFps)->Add(
+      new EditorIndexedStringArray(GetEditFpsPresets));
   ZilchBindFieldProperty(mTimeDisplay);
   ZilchBindFieldProperty(mSnappingX);
   ZilchBindFieldProperty(mSnappingY);
@@ -46,7 +37,6 @@ ZilchDefineType(AnimationSettings, builder, type)
   mEditFpsPresets[3] = EditFpsPreset("60fps", 60.0f);
 }
 
-//******************************************************************************
 AnimationSettings::AnimationSettings()
 {
   mEditFps = 30.0f;
@@ -62,7 +52,6 @@ AnimationSettings::AnimationSettings()
   mPreviewMode = AnimationPlayMode::Loop;
 }
 
-//******************************************************************************
 void AnimationSettings::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mEditFps, 30.0f);
@@ -76,28 +65,26 @@ void AnimationSettings::Serialize(Serializer& stream)
   SerializeEnumName(AnimationPlayMode, mPreviewMode);
 }
 
-//******************************************************************************
 void AnimationSettings::SetEditFps(uint index)
 {
   mEditFps = mEditFpsPresets[index].second;
 }
 
-//******************************************************************************
 uint AnimationSettings::GetEditFps()
 {
-  for(uint i = 0; i < mEditFpsPresets.Size(); ++i)
+  for (uint i = 0; i < mEditFpsPresets.Size(); ++i)
   {
-    if(mEditFps == mEditFpsPresets[i].second)
+    if (mEditFps == mEditFpsPresets[i].second)
       return i;
   }
 
   return 0;
 }
 
-//------------------------------------------------------ Animation Settings View
-//******************************************************************************
-AnimationSettingsView::AnimationSettingsView(Composite* parent, AnimationEditor* editor)
- : Composite(parent), mEditor(editor)
+AnimationSettingsView::AnimationSettingsView(Composite* parent,
+                                             AnimationEditor* editor) :
+    Composite(parent),
+    mEditor(editor)
 {
   SetClipping(true);
 
@@ -113,39 +100,37 @@ AnimationSettingsView::AnimationSettingsView(Composite* parent, AnimationEditor*
 
   mSettingsProperties = new PropertyView(mGroup);
   mSettingsProperties->mNamePercent = 0.55f;
-
 }
 
-//******************************************************************************
-void AnimationSettingsView::SetAnimationEditorData(AnimationEditorData* editorData)
+void AnimationSettingsView::SetAnimationEditorData(
+    AnimationEditorData* editorData)
 {
   mRichAnimProperties->SetObject(editorData->mRichAnimation);
   mRichAnimProperties->Invalidate();
-  
+
   mSettingsProperties->SetObject(mEditor->GetSettings());
   mSettingsProperties->Invalidate();
 }
 
-//******************************************************************************
 void AnimationSettingsView::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   mBackground->SetVisible(true);
-  
+
   Thickness borderThickness = Thickness::All(5);
   LayoutResult lr = RemoveThickness(borderThickness, mSize);
   mGroup->SetTranslation(lr.Translation);
   mGroup->SetSize(lr.Size);
 
-//   mRichAnimProperties->SetTranslation(Pixels(5,5,0));
-//   mRichAnimProperties->SetSize(Pixels(10,10));
-//   mRichAnimProperties->Refresh();
-// 
-//   mSettingsProperties->SetTranslation(Pixels(5,5,0));
-//   mSettingsProperties->SetSize(mSize - Pixels(10,10));
-//   mSettingsProperties->Refresh();
+  //   mRichAnimProperties->SetTranslation(Pixels(5,5,0));
+  //   mRichAnimProperties->SetSize(Pixels(10,10));
+  //   mRichAnimProperties->Refresh();
+  //
+  //   mSettingsProperties->SetTranslation(Pixels(5,5,0));
+  //   mSettingsProperties->SetSize(mSize - Pixels(10,10));
+  //   mSettingsProperties->Refresh();
 
   Composite::UpdateTransform();
 }
 
-}//namespace Zero
+} // namespace Zero

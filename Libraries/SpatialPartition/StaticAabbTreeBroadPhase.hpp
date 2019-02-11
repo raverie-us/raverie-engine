@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StaticAabbTreeBroadPhase.hpp
-/// Declaration of the StaticAabbTreeBroadPhase class.
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -42,12 +34,12 @@ public:
   virtual void CastSphere(CastDataParam data, ProxyCastResults& results);
   virtual void CastFrustum(CastDataParam data, ProxyCastResults& results);
 
-  virtual void RegisterCollisions() {};
-  virtual void Cleanup() {};
+  virtual void RegisterCollisions(){};
+  virtual void Cleanup(){};
 
 private:
   typedef StaticAabbTreeDefault TreeType;
   StaticAabbTreeDefault mTree;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GroupImport.hpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +9,7 @@ void GroupImport();
 void OpenGroupImport(Array<String>& files);
 void LoadDroppedFiles(Array<HandleOfString>& files);
 
-//------------------------------------------------------------------------ GroupImportWindow
+//GroupImportWindow
 class GroupImportWindow : public Composite
 {
 public:
@@ -40,7 +32,7 @@ public:
   void OnCancel(Event* event);
 };
 
-//------------------------------------------------------------------------ ImportCallback
+//ImportCallback
 class ImportCallback : public SafeId32EventObject
 {
 public:
@@ -50,4 +42,4 @@ public:
   void OnFilesSelected(OsFileSelection* fileSelection);
 };
 
-}//namespace Zero
+} // namespace Zero

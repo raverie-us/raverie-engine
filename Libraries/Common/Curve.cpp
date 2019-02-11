@@ -1,28 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Curve.cpp
-/// Implementation of the Curve class.
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
 
-static const Mat4 CatmullBasis = Mat4(Vec4(0,-1, 2,-1) / real(2.0),
-                                      Vec4(2, 0,-5, 3) / real(2.0),
-                                      Vec4(0, 1, 4,-3) / real(2.0),
-                                      Vec4(0, 0,-1, 1) / real(2.0));
+static const Mat4 CatmullBasis = Mat4(Vec4(0, -1, 2, -1) / real(2.0),
+                                      Vec4(2, 0, -5, 3) / real(2.0),
+                                      Vec4(0, 1, 4, -3) / real(2.0),
+                                      Vec4(0, 0, -1, 1) / real(2.0));
 
-static const Mat4 BSplineBasis = Mat4(Vec4(-1, 3,-3, 1) / real(6.0),
-                                      Vec4( 3,-6, 0, 4) / real(6.0),
+static const Mat4 BSplineBasis = Mat4(Vec4(-1, 3, -3, 1) / real(6.0),
+                                      Vec4(3, -6, 0, 4) / real(6.0),
                                       Vec4(-3, 3, 3, 1) / real(6.0),
-                                      Vec4( 1, 0, 0, 0) / real(6.0));
+                                      Vec4(1, 0, 0, 0) / real(6.0));
 
-//------------------------------------------------------------------------ Curve
 SplineCurve::SplineCurve()
 {
   mCurveType = CurveType::CatmullRom;
@@ -36,7 +27,7 @@ void SplineCurve::AddControlPoint(Vec3Param controlPoint)
 
 void SplineCurve::RemovePointAtIndex(uint index)
 {
-  if(index >= ControlPoints.Size())
+  if (index >= ControlPoints.Size())
     return;
 
   ControlPoints.EraseAt(index);
@@ -44,7 +35,8 @@ void SplineCurve::RemovePointAtIndex(uint index)
 
 void SplineCurve::AddControlPoints(const Vec3Array& controlPoints)
 {
-  ControlPoints.Insert(ControlPoints.End(), controlPoints.Begin(), controlPoints.End());
+  ControlPoints.Insert(
+      ControlPoints.End(), controlPoints.Begin(), controlPoints.End());
 }
 
 void SplineCurve::SetControlPoints(const Vec3Array& controlPoints)
@@ -54,45 +46,45 @@ void SplineCurve::SetControlPoints(const Vec3Array& controlPoints)
 
 void SplineCurve::GetPoints(Vec3Array& results, uint resolution) const
 {
-  if(resolution == 0)
+  if (resolution == 0)
     return;
 
   Vec3Array points;
   GetSmoothPoints(points);
-  if(points.Size() < 4)
+  if (points.Size() < 4)
   {
     results = points;
     return;
   }
 
-  //generate the points for the given curve type
+  // generate the points for the given curve type
   uint curveType = mCurveType;
-  if(curveType == CurveType::Linear)
+  if (curveType == CurveType::Linear)
     results = points;
-  else if(curveType == CurveType::BSpline)
-    GetPoints<BSplinePolicy>(points,results,resolution);
-  else if(curveType == CurveType::CatmullRom)
-    GetPoints<CatmullRomPolicy>(points,results,resolution);
+  else if (curveType == CurveType::BSpline)
+    GetPoints<BSplinePolicy>(points, results, resolution);
+  else if (curveType == CurveType::CatmullRom)
+    GetPoints<CatmullRomPolicy>(points, results, resolution);
 }
 
 void SplineCurve::BakeAdaptive(Vec3Array& results, real error) const
 {
   Vec3Array points;
   GetSmoothPoints(points);
-  if(points.Size() < 4)
+  if (points.Size() < 4)
   {
     results = points;
     return;
   }
 
-  //generate the points for the given curve type
+  // generate the points for the given curve type
   uint curveType = mCurveType;
-  if(curveType == CurveType::Linear)
+  if (curveType == CurveType::Linear)
     results = points;
-  if(curveType == CurveType::BSpline)
-    GetPoints<BSplinePolicy>(points,results,error);
-  else if(curveType == CurveType::CatmullRom)
-    GetPoints<CatmullRomPolicy>(points,results,error);
+  if (curveType == CurveType::BSpline)
+    GetPoints<BSplinePolicy>(points, results, error);
+  else if (curveType == CurveType::CatmullRom)
+    GetPoints<CatmullRomPolicy>(points, results, error);
 }
 
 Vec3Array& SplineCurve::GetControlPoints()
@@ -165,33 +157,33 @@ bool SplineCurve::DistanceSq(Vec3 point, uint resolution, real& distSq) const
 void SplineCurve::GetSmoothPoints(Vec3Array& pts) const
 {
   pts = ControlPoints;
-  //if we have no points, just do nothing...
-  if(pts.Size() == 0)
+  // if we have no points, just do nothing...
+  if (pts.Size() == 0)
     return;
 
-  //if we have less than 4 points, we can't make a curve,
-  //so just switch to linear mode
+  // if we have less than 4 points, we can't make a curve,
+  // so just switch to linear mode
   uint curveType = mCurveType;
-  if(pts.Size() < 3)
+  if (pts.Size() < 3)
     curveType = CurveType::Linear;
 
-  //if we are in linear mode, just push back the control points
+  // if we are in linear mode, just push back the control points
   //(and take into account the curve being closed)
-  if(curveType == CurveType::Linear)
+  if (curveType == CurveType::Linear)
   {
-    if(mClosed)
+    if (mClosed)
       pts.PushBack(ControlPoints[0]);
     return;
   }
 
-  //Fix the curve to be either closed or continuous
-  if(mClosed)
+  // Fix the curve to be either closed or continuous
+  if (mClosed)
     MakeClosed(pts);
   else
   {
-    //deal with only having 3 control points by pushing the last point on again
-    //don't need to do this when the curve is closed though.
-    if(pts.Size() == 3)
+    // deal with only having 3 control points by pushing the last point on again
+    // don't need to do this when the curve is closed though.
+    if (pts.Size() == 3)
     {
       Vec3 point = pts.Back();
       pts.PushBack(point);
@@ -202,11 +194,11 @@ void SplineCurve::GetSmoothPoints(Vec3Array& pts) const
 
 void SplineCurve::MakeContinuous(Vec3Array& points) const
 {
-  //to make a curve continuous, we need an extra control point that keeps
-  //the same direction. Therefore, compute a new point at both the
-  //beginning and end that keeps the correct direction.
+  // to make a curve continuous, we need an extra control point that keeps
+  // the same direction. Therefore, compute a new point at both the
+  // beginning and end that keeps the correct direction.
   Vec3 ab = points[0] - points[1];
-  points.Insert(points.Begin(),points[0] + ab);
+  points.Insert(points.Begin(), points[0] + ab);
 
   uint size = points.Size();
   Vec3 cd = points[size - 1] - points[size - 2];
@@ -215,19 +207,21 @@ void SplineCurve::MakeContinuous(Vec3Array& points) const
 
 void SplineCurve::MakeClosed(Vec3Array& points) const
 {
-  //to make a curve closed, we have to duplicate 2 points at the other end
-  //of the curve
+  // to make a curve closed, we have to duplicate 2 points at the other end
+  // of the curve
   Vec3 end = points[points.Size() - 1];
   Vec3 secondEnd = points[points.Size() - 2];
-  points.Insert(points.Begin(),end);
-  points.Insert(points.Begin(),secondEnd);
+  points.Insert(points.Begin(), end);
+  points.Insert(points.Begin(), secondEnd);
 
   points.PushBack(points[2]);
   points.PushBack(points[3]);
 }
 
 template <typename Policy>
-void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, uint resolution) const
+void SplineCurve::GetPoints(const Vec3Array& points,
+                            Vec3Array& results,
+                            uint resolution) const
 {
   real t = real(0.0);
   uint start = 0;
@@ -236,12 +230,12 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, uint re
 
   real step = real(1.0) / static_cast<real>(resolution);
 
-  for(uint i = mClosed ? 1 : 0; i < countControlPoints; ++i)
+  for (uint i = mClosed ? 1 : 0; i < countControlPoints; ++i)
   {
     t = real(0.0);
     end = resolution;
 
-    if(i == countControlPoints - 1)
+    if (i == countControlPoints - 1)
       ++end;
 
     Vec3Param cp0 = points[i];
@@ -249,9 +243,9 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, uint re
     Vec3Param cp2 = points[i + 2];
     Vec3Param cp3 = points[i + 3];
 
-    for(uint j = start; j < end; ++j)
+    for (uint j = start; j < end; ++j)
     {
-      PointData data = ComputePointData<Policy>(t,cp0,cp1,cp2,cp3);
+      PointData data = ComputePointData<Policy>(t, cp0, cp1, cp2, cp3);
       Vec3 point = data.Point;
       results.PushBack(point);
       t += step;
@@ -260,49 +254,57 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, uint re
 }
 
 template <typename Policy>
-void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, real error) const
+void SplineCurve::GetPoints(const Vec3Array& points,
+                            Vec3Array& results,
+                            real error) const
 {
   uint countControlPoints = uint(points.Size() - 3);
 
   Vec3 veryLastPoint;
-  for(uint i = mClosed ? 1 : 0; i < countControlPoints; ++i)
+  for (uint i = mClosed ? 1 : 0; i < countControlPoints; ++i)
   {
     Vec3Param cp0 = points[i];
     Vec3Param cp1 = points[i + 1];
     Vec3Param cp2 = points[i + 2];
     Vec3Param cp3 = points[i + 3];
 
-    //add the start, mid and last point to the stack (need the middle point
-    //since the spline is cubic, this "approximates" each sub-section as a quadratic)
+    // add the start, mid and last point to the stack (need the middle point
+    // since the spline is cubic, this "approximates" each sub-section as a
+    // quadratic)
     Zero::Array<PointData> stack;
-    PointData firstPoint = ComputePointData<Policy>(real(0.0), cp0, cp1, cp2, cp3);
-    PointData centerPoint = ComputePointData<Policy>(real(0.5), cp0, cp1, cp2, cp3);
-    PointData lastPoint = ComputePointData<Policy>(real(1.0), cp0, cp1, cp2, cp3);
+    PointData firstPoint =
+        ComputePointData<Policy>(real(0.0), cp0, cp1, cp2, cp3);
+    PointData centerPoint =
+        ComputePointData<Policy>(real(0.5), cp0, cp1, cp2, cp3);
+    PointData lastPoint =
+        ComputePointData<Policy>(real(1.0), cp0, cp1, cp2, cp3);
     stack.PushBack(lastPoint);
     stack.PushBack(centerPoint);
     stack.PushBack(firstPoint);
     veryLastPoint = lastPoint.Point;
-    
-    while(stack.Size() != 1)
+
+    while (stack.Size() != 1)
     {
       uint size = stack.Size();
 
       PointData data0 = stack[size - 1];
       PointData data1 = stack[size - 2];
 
-      //calculate the point half-way in-between the two points on the stack
+      // calculate the point half-way in-between the two points on the stack
       real midT = (data0.T + data1.T) * real(0.5);
       PointData midData = ComputePointData<Policy>(midT, cp0, cp1, cp2, cp3);
       Vec3 midPoint = midData.Point;
 
-      //calculate the distance of this point from the line
+      // calculate the distance of this point from the line
       //(aka, calculate the height of the triangle)
-      real doubleArea = (Math::Cross(midPoint - data0.Point, midPoint - data1.Point)).Length();
+      real doubleArea =
+          (Math::Cross(midPoint - data0.Point, midPoint - data1.Point))
+              .Length();
       real area = doubleArea / 2;
 
-      //if the area of the triangle is too large then we need to
-      //subdivide more to get a better approximation of the curve
-      if(area > error)
+      // if the area of the triangle is too large then we need to
+      // subdivide more to get a better approximation of the curve
+      if (area > error)
       {
         stack[size - 1] = midData;
         stack.PushBack(data0);
@@ -319,25 +321,27 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, real er
 }
 
 template <typename Policy>
-Vec3 SplineCurve::ComputePoint(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
+Vec3 SplineCurve::ComputePoint(
+    real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
 {
   Vec4 param = Policy::GetParam(t);
   const Mat4& basis = Policy::GetBasis();
 
-  Vec4 x(a.x,b.x,c.x,d.x);
-  x = Math::Transform(basis,x);
+  Vec4 x(a.x, b.x, c.x, d.x);
+  x = Math::Transform(basis, x);
 
-  Vec4 y(a.y,b.y,c.y,d.y);
-  y = Math::Transform(basis,y);
+  Vec4 y(a.y, b.y, c.y, d.y);
+  y = Math::Transform(basis, y);
 
-  Vec4 z(a.z,b.z,c.z,d.z);
-  z = Math::Transform(basis,z);
+  Vec4 z(a.z, b.z, c.z, d.z);
+  z = Math::Transform(basis, z);
 
-  return Vec3(Math::Dot(param,x),Math::Dot(param,y),Math::Dot(param,z));
+  return Vec3(Math::Dot(param, x), Math::Dot(param, y), Math::Dot(param, z));
 }
 
 template <typename Policy>
-SplineCurve::PointData SplineCurve::ComputePointData(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
+SplineCurve::PointData SplineCurve::ComputePointData(
+    real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const
 {
   PointData data;
 
@@ -346,7 +350,6 @@ SplineCurve::PointData SplineCurve::ComputePointData(real t, Vec3Param a, Vec3Pa
   return data;
 }
 
-//-------------------------------------------------------------- B-Spline Policy
 const Mat4& SplineCurve::BSplinePolicy::GetBasis()
 {
   return BSplineBasis;
@@ -354,10 +357,9 @@ const Mat4& SplineCurve::BSplinePolicy::GetBasis()
 
 Vec4 SplineCurve::BSplinePolicy::GetParam(real t)
 {
-  return Vec4(t*t*t,t*t,t,1);
+  return Vec4(t * t * t, t * t, t, 1);
 }
 
-//----------------------------------------------------------- Catmul-Rom Policy
 const Mat4& SplineCurve::CatmullRomPolicy::GetBasis()
 {
   return CatmullBasis;
@@ -365,14 +367,13 @@ const Mat4& SplineCurve::CatmullRomPolicy::GetBasis()
 
 Vec4 SplineCurve::CatmullRomPolicy::GetParam(real t)
 {
-  return Vec4(1,t,t*t,t*t*t);
+  return Vec4(1, t, t * t, t * t * t);
 }
 
-//-------------------------------------------------------------------BakedCurve
 void BakedCurve::Bake(const SplineCurve& curve, real error)
 {
-  //get all of the baked points from the curve (right now allocate a
-  //temp array for this, maybe figure something better out later)
+  // get all of the baked points from the curve (right now allocate a
+  // temp array for this, maybe figure something better out later)
   Vec3Array pts;
   curve.BakeAdaptive(pts, error);
   if (pts.Size() == 0)
@@ -383,25 +384,25 @@ void BakedCurve::Bake(const SplineCurve& curve, real error)
   }
 
   float totalLength = 0.0f;
-  
+
   mArcLengthTable.Resize(pts.Size());
-  //the 1st point is at length 0, 
+  // the 1st point is at length 0,
   mArcLengthTable[0].ArcLength = 0.0f;
   mArcLengthTable[0].Position = pts[0];
 
-  //now compute the rest of the points
-  for(uint i = 1; i < pts.Size(); ++i)
+  // now compute the rest of the points
+  for (uint i = 1; i < pts.Size(); ++i)
   {
     Vec3 oldPos = pts[i - 1];
     Vec3 curPos = pts[i];
 
-    //get the vector from the previous point to the current point
+    // get the vector from the previous point to the current point
     Vec3 dir = curPos - oldPos;
-    //now increase the total arc length by this distance vector
+    // now increase the total arc length by this distance vector
     float length = dir.Length();
     totalLength += length;
 
-    //make sure to set the position and arc length of this point
+    // make sure to set the position and arc length of this point
     mArcLengthTable[i].ArcLength = totalLength;
     mArcLengthTable[i].Position = pts[i];
   }
@@ -415,7 +416,7 @@ uint BakedCurve::Size() const
 real BakedCurve::GetTotalArcLength() const
 {
   uint tableSize = Size();
-  if(tableSize == 0)
+  if (tableSize == 0)
     return real(0.0);
 
   return mArcLengthTable[tableSize - 1].ArcLength;
@@ -423,7 +424,7 @@ real BakedCurve::GetTotalArcLength() const
 
 BakedCurve::BakedData BakedCurve::GetPoint(uint index)
 {
-  if(index >= mArcLengthTable.Size())
+  if (index >= mArcLengthTable.Size())
     return BakedData();
 
   return mArcLengthTable[index];
@@ -431,33 +432,33 @@ BakedCurve::BakedData BakedCurve::GetPoint(uint index)
 
 void BakedCurve::SetPoint(uint index, Vec3Param pos)
 {
-  if(index < mArcLengthTable.Size())
+  if (index < mArcLengthTable.Size())
     mArcLengthTable[index].Position = pos;
 }
 
 Vec3 BakedCurve::SampleTable(float distance, Vec3* tangent) const
 {
   // Handle the two special cases where we can't interpolate between two points
-  if(mArcLengthTable.Size() == 0)
+  if (mArcLengthTable.Size() == 0)
     return Vec3::cZero;
-  if(mArcLengthTable.Size() == 1)
+  if (mArcLengthTable.Size() == 1)
     return mArcLengthTable[0].Position;
   // There is no curve (the only points are on top of each other)
-  if(GetTotalArcLength() == real(0.0))
+  if (GetTotalArcLength() == real(0.0))
     return mArcLengthTable[0].Position;
 
   real oldDistance = distance;
   distance = Math::FMod(distance, GetTotalArcLength());
-  //If the user passes in the total arc-length, fmod will return the start point
-  //not the end point. To fix this if fmod returns 0 but our original value
-  //wasn't zero then instead use the total arc-length.
-  if(distance == real(0.0) && oldDistance != real(0.0))
+  // If the user passes in the total arc-length, fmod will return the start
+  // point not the end point. To fix this if fmod returns 0 but our original
+  // value wasn't zero then instead use the total arc-length.
+  if (distance == real(0.0) && oldDistance != real(0.0))
     distance = GetTotalArcLength();
-  //fmod can still return negative numbers so convert to positive
-  if(distance < real(0.0))
+  // fmod can still return negative numbers so convert to positive
+  if (distance < real(0.0))
     distance += GetTotalArcLength();
 
-  //get the indices of the two baked point we're between
+  // get the indices of the two baked point we're between
   uint lowerBound = SampleLowerBound(distance);
   uint upperBound = lowerBound + 1;
 
@@ -466,16 +467,16 @@ Vec3 BakedCurve::SampleTable(float distance, Vec3* tangent) const
 
   float d0 = lowerBoundData.ArcLength;
   float d1 = upperBoundData.ArcLength;
-  //compute how far in-between these two points we are
+  // compute how far in-between these two points we are
   float t = (distance - d0) / (d1 - d0);
 
   Vec3 p0 = lowerBoundData.Position;
   Vec3 p1 = upperBoundData.Position;
   Vec3 samplePoint = Math::Lerp(p0, p1, t);
 
-  //if the user wants a tangent, compute it simply as the vector from the first to
-  //second point, where we are on this linear segment doesn't matter
-  if(tangent != nullptr)
+  // if the user wants a tangent, compute it simply as the vector from the first
+  // to second point, where we are on this linear segment doesn't matter
+  if (tangent != nullptr)
   {
     Vec3 tangentDir = p1 - p0;
     *tangent = tangentDir.AttemptNormalized();
@@ -487,34 +488,35 @@ Vec3 BakedCurve::SampleTable(float distance, Vec3* tangent) const
 Vec3 BakedCurve::SampleFunction(float x, bool clamp) const
 {
   // Handle the two special cases where we can't interpolate between two points
-  if(mArcLengthTable.Size() == 0)
+  if (mArcLengthTable.Size() == 0)
     return Vec3::cZero;
-  if(mArcLengthTable.Size() == 1)
+  if (mArcLengthTable.Size() == 1)
     return mArcLengthTable[0].Position;
   // There is no curve (the only points are on top of each other)
-  if(GetTotalArcLength() == real(0.0))
+  if (GetTotalArcLength() == real(0.0))
     return mArcLengthTable[0].Position;
 
   // Find nearest two points straddling the desired x value
   const BakedData* pMin = (mArcLengthTable.Data() + 0);
-  const BakedData* pMax = (mArcLengthTable.Data() + (mArcLengthTable.Size() - 1));
-  for(size_t i = 0; i < mArcLengthTable.Size(); ++i)
+  const BakedData* pMax =
+      (mArcLengthTable.Data() + (mArcLengthTable.Size() - 1));
+  for (size_t i = 0; i < mArcLengthTable.Size(); ++i)
   {
     // Get point
     const BakedData* point = (mArcLengthTable.Data() + i);
 
     // Point is less than x?
-    if(point->Position.x < x)
+    if (point->Position.x < x)
     {
       // Is a closer minimum point?
-      if(point->Position.x > pMin->Position.x)
+      if (point->Position.x > pMin->Position.x)
         pMin = point;
     }
     // Point is greater than x?
-    else if(point->Position.x > x)
+    else if (point->Position.x > x)
     {
       // Is a closer maximum point?
-      if(point->Position.x < pMax->Position.x)
+      if (point->Position.x < pMax->Position.x)
         pMax = point;
     }
     // Point is equal to x?
@@ -529,7 +531,7 @@ Vec3 BakedCurve::SampleFunction(float x, bool clamp) const
   float t = InverseLerp(x, pMin->Position.x, pMax->Position.x);
 
   // Clamp interpolant to remain within the curve?
-  if(clamp)
+  if (clamp)
     t = Clamp(t);
 
   // Interpolate along the two nearest points
@@ -544,25 +546,24 @@ Vec3 BakedCurve::SampleFunction(float x, bool clamp) const
 
 uint BakedCurve::SampleLowerBound(real distance) const
 {
-  //binary search for the lower bound
+  // binary search for the lower bound
   uint begin = 0;
   uint end = mArcLengthTable.Size() - 1;
 
-  while(begin < end)
+  while (begin < end)
   {
     uint mid = (begin + end) / 2;
-    if(mArcLengthTable[mid].ArcLength <= distance)
+    if (mArcLengthTable[mid].ArcLength <= distance)
       begin = mid + 1;
     else
       end = mid;
   }
 
-  //this binary search actually produced the upper bound,
-  //the lower bound is the previous index
+  // this binary search actually produced the upper bound,
+  // the lower bound is the previous index
   return begin - 1;
 }
 
-//----------------------------------------------------------- Piecewise Function
 /// Used to sort the control points by the x-position.
 struct SortByX
 {
@@ -571,20 +572,18 @@ struct SortByX
   {
     // We never want two control points to have the same Time,
     // so every time they're sorted, check and move one slightly
-    if(left.Position.x == right.Position.x)
+    if (left.Position.x == right.Position.x)
       right.Position.x += 0.0001f;
     return left.Position.x < right.Position.x;
   }
 };
 
-//******************************************************************************
 PiecewiseFunction::PiecewiseFunction()
 {
   mCurveType = CurveType::BSpline;
   mError = real(0.05);
 }
 
-//******************************************************************************
 void PiecewiseFunction::Clear()
 {
   // Clear all the control points
@@ -594,8 +593,8 @@ void PiecewiseFunction::Clear()
   mBakedCurve.Clear();
 }
 
-//******************************************************************************
-void PiecewiseFunction::AddControlPoint(Vec2Param pos, Vec2Param tanIn, 
+void PiecewiseFunction::AddControlPoint(Vec2Param pos,
+                                        Vec2Param tanIn,
                                         Vec2Param tanOut)
 {
   ControlPoint cp;
@@ -611,8 +610,8 @@ void PiecewiseFunction::AddControlPoint(Vec2Param pos, Vec2Param tanIn,
   mBakedCurve.Clear();
 }
 
-//******************************************************************************
-void PiecewiseFunction::SetControlPoints(Zero::Array<ControlPoint>& controlPoints)
+void PiecewiseFunction::SetControlPoints(
+    Zero::Array<ControlPoint>& controlPoints)
 {
   mControlPoints.Assign(controlPoints.All());
 
@@ -623,32 +622,31 @@ void PiecewiseFunction::SetControlPoints(Zero::Array<ControlPoint>& controlPoint
   mBakedCurve.Clear();
 }
 
-//******************************************************************************
 float PiecewiseFunction::Sample(real x)
 {
   // Default case
-  if(mControlPoints.Empty())
+  if (mControlPoints.Empty())
     return 0.0f;
 
   // If it's to the left of the left most control point, return its y
-  if(x <= mControlPoints.Front().Position.x)
+  if (x <= mControlPoints.Front().Position.x)
     return mControlPoints.Front().Position.y;
   // If it's to the right of the right most control point, return its y
-  else if(x >= mControlPoints.Back().Position.x)
+  else if (x >= mControlPoints.Back().Position.x)
     return mControlPoints.Back().Position.y;
 
   // Make sure the curve is baked
-  if(!IsBaked())
+  if (!IsBaked())
     Bake();
 
   // Binary search to find the location of the sample
   int begin = 0;
   int end = (int)mBakedCurve.Size();
 
-  while(begin < end)
+  while (begin < end)
   {
     int mid = (begin + end) / 2;
-    if(mBakedCurve[mid].x < x)
+    if (mBakedCurve[mid].x < x)
       begin = mid + 1;
     else
       end = mid;
@@ -661,17 +659,16 @@ float PiecewiseFunction::Sample(real x)
   return Math::Lerp(p0.y, p1.y, localT);
 }
 
-//******************************************************************************
 void PiecewiseFunction::Bake()
 {
   mBakedCurve.Clear();
 
   // Can't do anything with 0 control points
-  if(mControlPoints.Empty())
+  if (mControlPoints.Empty())
     return;
 
   // With just one point, any sample value will result in the single point
-  if(mControlPoints.Size() == 1)
+  if (mControlPoints.Size() == 1)
   {
     mBakedCurve.PushBack(ToVector3(mControlPoints.Front().Position));
     return;
@@ -683,7 +680,7 @@ void PiecewiseFunction::Bake()
   sCurve.mCurveType = mCurveType;
 
   // Walk through each set of control points
-  for(uint i = 0; i < mControlPoints.Size() - 1; ++i)
+  for (uint i = 0; i < mControlPoints.Size() - 1; ++i)
   {
     // Get the two control points
     ControlPoint& cp0 = mControlPoints[i];
@@ -692,11 +689,11 @@ void PiecewiseFunction::Bake()
     // Clear the old curve
     sCurve.ControlPoints.Clear();
 
-    // If it is discontinuous, 
-    if(cp0.TangentOut.x == 0.0f || cp1.TangentIn.x == 0.0f)
+    // If it is discontinuous,
+    if (cp0.TangentOut.x == 0.0f || cp1.TangentIn.x == 0.0f)
     {
       // Only on the first iteration is the left control point not added
-      if(i == 0)
+      if (i == 0)
         mBakedCurve.PushBack(Vec3(cp0.Position));
       mBakedCurve.PushBack(Vec3(Vec2(cp1.Position.x, cp0.Position.y)));
       mBakedCurve.PushBack(Vec3(cp1.Position));
@@ -734,22 +731,19 @@ void PiecewiseFunction::Bake()
   }
 }
 
-//******************************************************************************
 bool PiecewiseFunction::IsBaked()
 {
   return !mBakedCurve.Empty();
 }
 
-//******************************************************************************
 Vec3Array::range PiecewiseFunction::GetBakedCurve()
 {
   return mBakedCurve.All();
 }
 
-//******************************************************************************
 bool PiecewiseFunction::Empty()
 {
   return mBakedCurve.Empty();
 }
 
-}//namespace Math
+} // namespace Math

@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------GetVersionListingTask
-GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -20,10 +15,10 @@ void GetVersionListingTaskJob::Execute()
   ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
   DownloadTaskJob::Execute();
 }
-  
+
 void GetVersionListingTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->mResponseCode == WebResponseCode::OK)
+  if (event->mResponseCode == WebResponseCode::OK)
   {
     mState = BackgroundTaskState::Completed;
   }
@@ -41,28 +36,33 @@ void GetVersionListingTaskJob::PopulatePackageList()
   static const String cOrigin = "GetVersionListingTaskJob";
   String jsonData = GetData();
   CompilationErrors errors;
-  JsonValue* jsonReleases = JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
-  ReturnIf(jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
+  JsonValue* jsonReleases =
+      JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
+  ReturnIf(
+      jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
 
   Space* space = Z::gEngine->GetEngineSpace();
-  
-  Archetype* emptyArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
-  ReturnIf(emptyArchetype == nullptr,, "Unable to find empty Cog Archetype");
+
+  Archetype* emptyArchetype =
+      ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
+  ReturnIf(emptyArchetype == nullptr, , "Unable to find empty Cog Archetype");
 
   static const String cJsonAssets("assets");
   static const String cJsonName("name");
   static const String cJsonDownloadUrl("browser_download_url");
   static const String cJsonUpdatedAt("updated_at");
   static const String cJsonBody("body");
-  
+
   static const String cZeroEngineSetup("ZeroEngineSetup");
   static const String cDevelop("Develop");
 
   // Tags.Major.Minor.Patch.Revision.ShortChangeset-Platform.Extension
   // Example: ZeroEngineSetup.1.5.0.1501.fb02756c46a4-Win32.zerobuild
-  static const Regex cNameRegex("([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9a-fA-F]+)\\-([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
+  static const Regex cNameRegex(
+      "([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9a-"
+      "fA-F]+)\\-([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
 
-  forRange(JsonValue* jsonRelease, jsonReleases->ArrayElements)
+  forRange(JsonValue * jsonRelease, jsonReleases->ArrayElements)
   {
     JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
 
@@ -70,14 +70,15 @@ void GetVersionListingTaskJob::PopulatePackageList()
       continue;
 
     // There should only be one, but this is safest to do.
-    forRange(JsonValue* jsonAsset, jsonAssets->ArrayElements)
+    forRange(JsonValue * jsonAsset, jsonAssets->ArrayElements)
     {
       String name = jsonAsset->MemberAsString(cJsonName);
 
       Matches matches;
       cNameRegex.Search(name, matches);
 
-      // Make sure the regular expression matched (if not, it may be some other release that's not a zerobuild).
+      // Make sure the regular expression matched (if not, it may be some other
+      // release that's not a zerobuild).
       if (matches.Empty())
         continue;
 
@@ -100,31 +101,37 @@ void GetVersionListingTaskJob::PopulatePackageList()
       zeroBuildContent->mBuildId.mPlatform = matches[7].All();
       zeroBuildContent->mPackageExtension = matches[8].All();
 
-      zeroBuildContent->mChangeSetDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
+      zeroBuildContent->mChangeSetDate =
+          jsonAsset->MemberAsString(cJsonUpdatedAt);
 
-      // Remove the time portion (otherwise, the date is in the exact format we expect: YYYY-MM-DD).
+      // Remove the time portion (otherwise, the date is in the exact format we
+      // expect: YYYY-MM-DD).
       StringIterator begin = zeroBuildContent->mChangeSetDate.Begin();
-      StringIterator end = zeroBuildContent->mChangeSetDate.FindFirstOf(Rune('T')).Begin();
+      StringIterator end =
+          zeroBuildContent->mChangeSetDate.FindFirstOf(Rune('T')).Begin();
       if (!end.Empty())
         zeroBuildContent->mChangeSetDate = StringRange(begin, end);
 
-      zeroBuildContent->mDownloadUrl = jsonAsset->MemberAsString(cJsonDownloadUrl);
+      zeroBuildContent->mDownloadUrl =
+          jsonAsset->MemberAsString(cJsonDownloadUrl);
 
-      // Parse tags or anything else that we just populated (normally happens during Initialize).
+      // Parse tags or anything else that we just populated (normally happens
+      // during Initialize).
       zeroBuildContent->Parse();
 
       String releaseNotes = jsonRelease->MemberAsString(cJsonBody);
       if (!releaseNotes.Empty())
       {
-        ZeroBuildReleaseNotes* zeroBuildReleaseNotes = HasOrAdd<ZeroBuildReleaseNotes>(cog);
+        ZeroBuildReleaseNotes* zeroBuildReleaseNotes =
+            HasOrAdd<ZeroBuildReleaseNotes>(cog);
         zeroBuildReleaseNotes->mNotes = jsonRelease->MemberAsString(cJsonBody);
       }
     }
   }
 }
 
-//-------------------------------------------------------------------GetDataTask
-DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
   mImageWasInvalid = false;
 }
@@ -138,13 +145,16 @@ void DownloadImageTaskJob::Execute()
 
 void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->mResponseCode == WebResponseCode::OK)
+  if (event->mResponseCode == WebResponseCode::OK)
   {
-    //just save the data
+    // just save the data
     Status status;
-    LoadImage(status, (byte*)event->mData.Data(), event->mData.SizeInBytes(), &mImage);
+    LoadImage(status,
+              (byte*)event->mData.Data(),
+              event->mData.SizeInBytes(),
+              &mImage);
 
-    if(status.Failed())
+    if (status.Failed())
     {
       Failed();
       mImageWasInvalid = true;
@@ -161,16 +171,15 @@ void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
   UpdateDownloadProgress();
 }
 
-//-------------------------------------------------------------------LoadImageFromDiskTask
-LoadImageFromDiskTaskJob::LoadImageFromDiskTaskJob(StringParam path)
-  : DownloadImageTaskJob(path)
+LoadImageFromDiskTaskJob::LoadImageFromDiskTaskJob(StringParam path) :
+    DownloadImageTaskJob(path)
 {
   mPath = path;
 }
 
 void LoadImageFromDiskTaskJob::Execute()
 {
-  if(FileExists(mPath) == false)
+  if (FileExists(mPath) == false)
   {
     mState = BackgroundTaskState::Failed;
     return;
@@ -179,7 +188,7 @@ void LoadImageFromDiskTaskJob::Execute()
   Status status;
   LoadImage(status, mPath, &mImage);
 
-  if(status.Failed())
+  if (status.Failed())
   {
     mState = BackgroundTaskState::Failed;
     return;
@@ -189,10 +198,9 @@ void LoadImageFromDiskTaskJob::Execute()
   UpdateProgress(GetName(), 1.0f);
 }
 
-//-------------------------------------------------------------------GetDataTask
-GetDataTaskJob::GetDataTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+GetDataTaskJob::GetDataTaskJob(StringParam url) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
-
 }
 
 void GetDataTaskJob::Execute()
@@ -204,9 +212,9 @@ void GetDataTaskJob::Execute()
 
 void GetDataTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->mResponseCode == WebResponseCode::OK)
+  if (event->mResponseCode == WebResponseCode::OK)
   {
-    //just save the data
+    // just save the data
     mData = event->mData;
   }
   else
@@ -219,8 +227,8 @@ void GetDataTaskJob::OnReponse(WebResponseEvent* event)
   UpdateDownloadProgress();
 }
 
-//-------------------------------------------------------------------DownloadStandaloneTask
-DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -233,7 +241,7 @@ void DownloadStandaloneTaskJob::Execute()
 
 void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->mResponseCode == WebResponseCode::OK)
+  if (event->mResponseCode == WebResponseCode::OK)
   {
     String data = event->mData;
 
@@ -241,22 +249,25 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     CreateDirectoryAndParents(mInstallLocation);
 
     // Validate that we got any data (otherwise archive fails)
-    if(data.SizeInBytes() == 0)
+    if (data.SizeInBytes() == 0)
     {
-      String msg = String::Format("Download of build from url '%s' failed", mRequest->mUrl.c_str());
+      String msg = String::Format("Download of build from url '%s' failed",
+                                  mRequest->mUrl.c_str());
       DoNotifyWarning("Download failed", msg);
       return;
     }
 
-    // Save the meta file out for this build (cached as a string to avoid threading issues)
+    // Save the meta file out for this build (cached as a string to avoid
+    // threading issues)
     String metaFilePath = ZeroBuild::GetMetaFilePath(mInstallLocation);
     WriteStringRangeToFile(metaFilePath, mMetaContents);
 
     // Decompress the archive to our install location
     Archive archive(ArchiveMode::Decompressing);
     ByteBufferBlock buffer((byte*)data.Data(), data.SizeInBytes(), false);
-    // Unfortunately, archive doesn't return any failed state so we could get back an invalid zip.
-    // Currently this should only happen if the server code is wrong.
+    // Unfortunately, archive doesn't return any failed state so we could get
+    // back an invalid zip. Currently this should only happen if the server code
+    // is wrong.
     archive.ReadBuffer(ArchiveReadFlags::All, buffer);
     archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
 
@@ -271,10 +282,8 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
   mRequest->ClearAll();
 }
 
-//-------------------------------------------------------------------InstallBuildTask
 InstallBuildTaskJob::InstallBuildTaskJob()
 {
-
 }
 
 InstallBuildTaskJob::InstallBuildTaskJob(StringParam data)
@@ -284,7 +293,7 @@ InstallBuildTaskJob::InstallBuildTaskJob(StringParam data)
 
 void InstallBuildTaskJob::LoadFromFile(StringParam filePath)
 {
-  //build the task to start the install
+  // build the task to start the install
   size_t fileSize;
   byte* data = ReadFileIntoMemory(filePath.c_str(), fileSize, 1);
   data[fileSize] = 0;
@@ -301,18 +310,20 @@ void InstallBuildTaskJob::Execute()
 
 void InstallBuildTaskJob::InstallBuild()
 {
-  //if the build folder already exists for some reason then replace it (maybe prompt later)
-  if(FileExists(mInstallLocation))
+  // if the build folder already exists for some reason then replace it (maybe
+  // prompt later)
+  if (FileExists(mInstallLocation))
     DeleteDirectory(mInstallLocation);
 
-  //make sure the directory where we're extract to exists
+  // make sure the directory where we're extract to exists
   CreateDirectoryAndParents(mInstallLocation);
 
-  // Save the meta file out for this build (cached as a string to avoid threading issues)
+  // Save the meta file out for this build (cached as a string to avoid
+  // threading issues)
   String metaFilePath = ZeroBuild::GetMetaFilePath(mInstallLocation);
   WriteStringRangeToFile(metaFilePath, mMetaContents);
 
-  //decompress the archive to our install location
+  // decompress the archive to our install location
   Archive archive(ArchiveMode::Decompressing);
   ByteBufferBlock buffer((byte*)mData.Data(), mData.SizeInBytes(), false);
   archive.ReadBuffer(ArchiveReadFlags::All, buffer);
@@ -321,8 +332,9 @@ void InstallBuildTaskJob::InstallBuild()
   mState = BackgroundTaskState::Completed;
 }
 
-//-------------------------------------------------------------------DeleteDirectoryJob
-DeleteDirectoryJob::DeleteDirectoryJob(StringParam directory, StringParam rootDirectory, bool recursivelyDeleteEmpty)
+DeleteDirectoryJob::DeleteDirectoryJob(StringParam directory,
+                                       StringParam rootDirectory,
+                                       bool recursivelyDeleteEmpty)
 {
   mDirectory = directory;
   mRootDirectory = rootDirectory;
@@ -331,23 +343,25 @@ DeleteDirectoryJob::DeleteDirectoryJob(StringParam directory, StringParam rootDi
 
 void DeleteDirectoryJob::Execute()
 {
-  if(DirectoryExists(mDirectory) == false)
+  if (DirectoryExists(mDirectory) == false)
     return;
 
   // Try to preserve the user's marked bad data if it existed
-  String markedBadPath = FilePath::CombineWithExtension(mDirectory, "VersionMarkedBad", ".txt");
+  String markedBadPath =
+      FilePath::CombineWithExtension(mDirectory, "VersionMarkedBad", ".txt");
   String markedBadData;
-  if(FileExists(markedBadPath))
+  if (FileExists(markedBadPath))
     markedBadData = ReadFileIntoString(markedBadPath);
 
   // Remove the directory recursively
   DeleteDirectory(mDirectory);
 
   // Recursively delete empty parent folders until we reach the root directory
-  if(mRecursivelyDeleteEmpty)
+  if (mRecursivelyDeleteEmpty)
   {
     String parentDir = FilePath::GetDirectoryPath(mDirectory);
-    while(!parentDir.Empty() && mRootDirectory != parentDir && FileRange(parentDir).Empty())
+    while (!parentDir.Empty() && mRootDirectory != parentDir &&
+           FileRange(parentDir).Empty())
     {
       DeleteDirectory(parentDir);
       parentDir = FilePath::GetDirectoryPath(parentDir);
@@ -355,7 +369,7 @@ void DeleteDirectoryJob::Execute()
   }
 
   // If it did exist then write the file back out
-  if(!markedBadData.Empty())
+  if (!markedBadData.Empty())
   {
     CreateDirectoryAndParents(mDirectory);
     WriteStringRangeToFile(markedBadPath, markedBadData);
@@ -365,10 +379,9 @@ void DeleteDirectoryJob::Execute()
   UpdateProgress("DeleteDirectory", 1.0f);
 }
 
-//-------------------------------------------------------------------GetTemplateListingTask
-GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
-
 }
 
 void GetTemplateListingTaskJob::Execute()
@@ -380,7 +393,7 @@ void GetTemplateListingTaskJob::Execute()
 
 void GetTemplateListingTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->mResponseCode == WebResponseCode::OK)
+  if (event->mResponseCode == WebResponseCode::OK)
   {
     mState = BackgroundTaskState::Completed;
   }
@@ -398,12 +411,15 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
   static const String cOrigin = "GetTemplateListingTaskJob";
   String jsonData = GetData();
   CompilationErrors errors;
-  JsonValue* jsonReleases = JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
-  ReturnIf(jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
+  JsonValue* jsonReleases =
+      JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
+  ReturnIf(
+      jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
 
   Space* space = Z::gEngine->GetEngineSpace();
 
-  Archetype* emptyArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
+  Archetype* emptyArchetype =
+      ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
   ReturnIf(emptyArchetype == nullptr, , "Unable to find empty Cog Archetype");
 
   static const String cJsonAssets("assets");
@@ -412,12 +428,14 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
   static const String cJsonUpdatedAt("updated_at");
   static const String cJsonBody("body");
 
-  // Find a string that is _VersionNumber, this can include '.' ',' and '-' in order to specify ranges
-  // The expected file name is SKU_UserId_BuildId where _UserId is optional.
-  static const Regex cNameRegex("(\\w+)(_[\\w\\d\\.\\,\\-]+)?_([\\w\\d\\.\\,\\-]+)\\.zerotemplate");
+  // Find a string that is _VersionNumber, this can include '.' ',' and '-' in
+  // order to specify ranges The expected file name is SKU_UserId_BuildId where
+  // _UserId is optional.
+  static const Regex cNameRegex(
+      "(\\w+)(_[\\w\\d\\.\\,\\-]+)?_([\\w\\d\\.\\,\\-]+)\\.zerotemplate");
   static const size_t cNameRegexMatches = 4;
 
-  forRange(JsonValue* jsonRelease, jsonReleases->ArrayElements)
+  forRange(JsonValue * jsonRelease, jsonReleases->ArrayElements)
   {
     JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
 
@@ -425,15 +443,16 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
       continue;
 
     // There should only be one, but this is safest to do.
-    forRange(JsonValue* jsonAsset, jsonAssets->ArrayElements)
+    forRange(JsonValue * jsonAsset, jsonAssets->ArrayElements)
     {
       String name = jsonAsset->MemberAsString(cJsonName);
 
       Matches matches;
       cNameRegex.Search(name, matches);
 
-      // Make sure the regular expression matched (if not, it may be some other release that's not a zerotemplate).
-      // Specificially, if this is a png for the release then it will not match.
+      // Make sure the regular expression matched (if not, it may be some other
+      // release that's not a zerotemplate). Specificially, if this is a png for
+      // the release then it will not match.
       if (matches.Size() != cNameRegexMatches)
         continue;
 
@@ -447,7 +466,8 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
 
       zeroTemplate->mDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
 
-      // Remove the time portion (otherwise, the date is in the exact format we expect: YYYY-MM-DD).
+      // Remove the time portion (otherwise, the date is in the exact format we
+      // expect: YYYY-MM-DD).
       StringIterator begin = zeroTemplate->mDate.Begin();
       StringIterator end = zeroTemplate->mDate.FindFirstOf(Rune('T')).Begin();
       if (!end.Empty())
@@ -455,21 +475,24 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
 
       zeroTemplate->mDownloadUrl = jsonAsset->MemberAsString(cJsonDownloadUrl);
 
-      // The icon url is always the same as the template url, but with a png extension instead.
-      zeroTemplate->mIconUrl = zeroTemplate->mDownloadUrl.Replace(".zerotemplate", ".png");
+      // The icon url is always the same as the template url, but with a png
+      // extension instead.
+      zeroTemplate->mIconUrl =
+          zeroTemplate->mDownloadUrl.Replace(".zerotemplate", ".png");
 
       zeroTemplate->mDisplayName = jsonRelease->MemberAsString(cJsonName);
       zeroTemplate->mDescription = jsonRelease->MemberAsString(cJsonBody);
 
-      // Parse tags/build-ids and anything else that we just populated (normally happens during Initialize).
+      // Parse tags/build-ids and anything else that we just populated (normally
+      // happens during Initialize).
       zeroTemplate->Parse();
     }
   }
 }
 
-//-------------------------------------------------------------------DownloadTemplateTask
-DownloadTemplateTaskJob::DownloadTemplateTaskJob(StringParam templateUrl, TemplateProject* project)
-  : DownloadTaskJob(templateUrl, cCacheSeconds)
+DownloadTemplateTaskJob::DownloadTemplateTaskJob(StringParam templateUrl,
+                                                 TemplateProject* project) :
+    DownloadTaskJob(templateUrl, cCacheSeconds)
 {
   mTemplate = project;
 }
@@ -483,7 +506,7 @@ void DownloadTemplateTaskJob::Execute()
 
 void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->mResponseCode != WebResponseCode::OK)
+  if (event->mResponseCode != WebResponseCode::OK)
   {
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
@@ -498,35 +521,44 @@ void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
 
   // Save the template meta file
   FilePath::GetFileNameWithoutExtension(mTemplateNameWithoutExtension);
-  String metaFilePath = FilePath::CombineWithExtension(mTemplateInstallLocation, mTemplateNameWithoutExtension, ".meta");
-  WriteToFile(metaFilePath.c_str(), (byte*)mMetaContents.c_str(), mMetaContents.SizeInBytes());
+  String metaFilePath = FilePath::CombineWithExtension(
+      mTemplateInstallLocation, mTemplateNameWithoutExtension, ".meta");
+  WriteToFile(metaFilePath.c_str(),
+              (byte*)mMetaContents.c_str(),
+              mMetaContents.SizeInBytes());
 
   // Save the template zip
-  String templateFilePath = FilePath::CombineWithExtension(mTemplateInstallLocation, mTemplateNameWithoutExtension, TemplateProject::mExtensionWithDot);
-  WriteToFile(templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
+  String templateFilePath =
+      FilePath::CombineWithExtension(mTemplateInstallLocation,
+                                     mTemplateNameWithoutExtension,
+                                     TemplateProject::mExtensionWithDot);
+  WriteToFile(
+      templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
 
   // Save the icon image
-  String iconFilePath = FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
+  String iconFilePath =
+      FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
   Status status;
   SaveImage(status, iconFilePath, &mTemplate->mIconImage, ImageSaveFormat::Png);
-  
+
   mState = BackgroundTaskState::Completed;
 }
 
-//-------------------------------------------------------------------DownloadAndCreateTemplateTask
-DownloadAndCreateTemplateTaskJob::DownloadAndCreateTemplateTaskJob(StringParam templateUrl, TemplateProject* project)
-  : DownloadTemplateTaskJob(templateUrl, project)
+DownloadAndCreateTemplateTaskJob::DownloadAndCreateTemplateTaskJob(
+    StringParam templateUrl, TemplateProject* project) :
+    DownloadTemplateTaskJob(templateUrl, project)
 {
-  
 }
 
 void DownloadAndCreateTemplateTaskJob::Execute()
 {
   mCachedProject = nullptr;
-  // If the template is downloaded and not available on the server then just create from the local path
-  if(mTemplate->mIsDownloaded && !mTemplate->mIsOnServer)
+  // If the template is downloaded and not available on the server then just
+  // create from the local path
+  if (mTemplate->mIsDownloaded && !mTemplate->mIsOnServer)
   {
-    // @JoshD: This is currently broken because the even will be sent before the listener.
+    // @JoshD: This is currently broken because the even will be sent before the
+    // listener.
     UpdateProgress("CreatedTemplate", 1.0f);
     mState = BackgroundTaskState::Completed;
     return;
@@ -542,13 +574,14 @@ void DownloadAndCreateTemplateTaskJob::OnReponse(WebResponseEvent* event)
   // Nothing to do here (we can only run serialization on the main thread)
 }
 
-CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(ProjectCache* projectCache)
+CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(
+    ProjectCache* projectCache)
 {
   // The cached project was already created, just return it
-  if(mCachedProject != nullptr)
+  if (mCachedProject != nullptr)
     return mCachedProject;
 
-  if(mRequest->mResponseCode != WebResponseCode::OK)
+  if (mRequest->mResponseCode != WebResponseCode::OK)
   {
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
@@ -557,13 +590,18 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(Projec
 
   mState = BackgroundTaskState::Completed;
 
-  // Save the template file to a temporary location, if it already exists then delete the old file.
+  // Save the template file to a temporary location, if it already exists then
+  // delete the old file.
   String templatePath = GetTemporaryDirectory();
-  String templateFilePath = FilePath::CombineWithExtension(templatePath, mTemplateNameWithoutExtension, TemplateProject::mExtensionWithDot);
-  if(FileExists(templateFilePath))
+  String templateFilePath =
+      FilePath::CombineWithExtension(templatePath,
+                                     mTemplateNameWithoutExtension,
+                                     TemplateProject::mExtensionWithDot);
+  if (FileExists(templateFilePath))
     DeleteFile(templateFilePath);
   String data = GetData();
-  WriteToFile(templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
+  WriteToFile(
+      templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
 
   // From the downloaded file, create the project
   CreateFromTemplateFile(templateFilePath, projectCache);
@@ -571,21 +609,24 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(Projec
   return mCachedProject;
 }
 
-void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(StringParam templateFilePath, ProjectCache* projectCache)
+void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(
+    StringParam templateFilePath, ProjectCache* projectCache)
 {
   // Create the project from the template
-  String projectFolder = FilePath::Combine(mProjectInstallLocation, mProjectName);
-  mCachedProject = projectCache->CreateProjectFromTemplate(mProjectName, projectFolder, templateFilePath, mBuildId, mProjectTags);
-  
-  if(mCachedProject == nullptr)
+  String projectFolder =
+      FilePath::Combine(mProjectInstallLocation, mProjectName);
+  mCachedProject = projectCache->CreateProjectFromTemplate(
+      mProjectName, projectFolder, templateFilePath, mBuildId, mProjectTags);
+
+  if (mCachedProject == nullptr)
     mState = BackgroundTaskState::Failed;
   else
     mState = BackgroundTaskState::Completed;
 }
 
-//-------------------------------------------------------------------DownloadLauncherPatchInstallerJob
-DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation)
-  : DownloadTaskJob(url, cCacheSeconds)
+DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(
+    StringParam url, StringParam rootDownloadLocation) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
   mRootDownloadLocation = rootDownloadLocation;
   mIsNewPatchAvailable = false;
@@ -600,9 +641,10 @@ void DownloadLauncherPatchInstallerJob::Execute()
 
 void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
 {
-  // Check if there's no new installer available, either from a failed request or getting no data back
+  // Check if there's no new installer available, either from a failed request
+  // or getting no data back
   String data = event->mData;
-  if(event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
+  if (event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewPatchAvailable = false;
     return;
@@ -611,7 +653,7 @@ void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
   // Otherwise, we have a new installer
   mIsNewPatchAvailable = true;
 
-  //extract the archive to the download directory
+  // extract the archive to the download directory
   Archive archive(ArchiveMode::Decompressing);
   ByteBufferBlock buffer((byte*)data.Data(), data.SizeInBytes(), false);
   archive.ReadBuffer(ArchiveReadFlags::All, buffer);
@@ -619,7 +661,7 @@ void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
   // Find the patch id from the archive. If we failed to find one
   // then something is wrong so report a failure.
   String patchId = FindPatchId(archive);
-  if(patchId.Empty())
+  if (patchId.Empty())
   {
     mState = BackgroundTaskState::Failed;
     mIsNewPatchAvailable = false;
@@ -636,10 +678,11 @@ void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
 String DownloadLauncherPatchInstallerJob::FindPatchId(Archive& archive)
 {
   // Find the version id file and return it's contents
-  for(Archive::range range = archive.GetEntries(); !range.Empty(); range.PopFront())
+  for (Archive::range range = archive.GetEntries(); !range.Empty();
+       range.PopFront())
   {
     ArchiveEntry& entry = range.Front();
-    if(entry.Name != "ZeroLauncherVersionId.txt")
+    if (entry.Name != "ZeroLauncherVersionId.txt")
       continue;
 
     String patchId((cstr)entry.Full.Data, entry.Full.Size);
@@ -649,8 +692,9 @@ String DownloadLauncherPatchInstallerJob::FindPatchId(Archive& archive)
   return String();
 }
 
-//-------------------------------------------------------------------DownloadLauncherMajorInstallerJob
-DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
+DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(
+    StringParam url) :
+    DownloadTaskJob(url, cCacheSeconds)
 {
   mIsNewInstallerAvailable = false;
 }
@@ -664,9 +708,10 @@ void DownloadLauncherMajorInstallerJob::Execute()
 
 void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 {
-  // Check if there's no new installer available, either from a failed request or getting no data back
+  // Check if there's no new installer available, either from a failed request
+  // or getting no data back
   String data = event->mData;
-  if(event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
+  if (event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewInstallerAvailable = false;
     return;
@@ -676,16 +721,17 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
   mIsNewInstallerAvailable = true;
   // Write the installer to a temp location
   String temporaryDirectory = GetTemporaryDirectory();
-  mInstallerPath = FilePath::Combine(temporaryDirectory, "ZeroLauncherInstaller.exe");
-  if(FileExists(mInstallerPath))
+  mInstallerPath =
+      FilePath::Combine(temporaryDirectory, "ZeroLauncherInstaller.exe");
+  if (FileExists(mInstallerPath))
     DeleteFile(mInstallerPath);
 
   WriteToFile(mInstallerPath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
   mState = BackgroundTaskState::Completed;
 }
 
-//-------------------------------------------------------------------BackupProjectJob
-BackupProjectJob::BackupProjectJob(StringParam projectPath, StringParam destFilePath)
+BackupProjectJob::BackupProjectJob(StringParam projectPath,
+                                   StringParam destFilePath)
 {
   mOpenDirectoryOnCompletion = true;
   mProjectPath = projectPath;
@@ -703,12 +749,12 @@ void BackupProjectJob::Execute()
 
   // Add each file to the archive, sending out progress events every so often
   Archive projectArchive(ArchiveMode::Compressing);
-  for(size_t i = 0; i < files.Size(); ++i)
+  for (size_t i = 0; i < files.Size(); ++i)
   {
     ArchiveData& data = files[i];
     projectArchive.AddFile(data.mFullFilePath, data.mRelativePath);
 
-    if(i % 5)
+    if (i % 5)
       UpdateProgress("ArchivingProject", i / (float)files.Size());
   }
 
@@ -720,21 +766,23 @@ void BackupProjectJob::Execute()
   UpdateProgress("ArchivingProject", 1.0f);
 
   // If requested, open the target directory on completion.
-  if(mOpenDirectoryOnCompletion)
+  if (mOpenDirectoryOnCompletion)
     Os::SystemOpenFile(targetDirector.c_str());
 }
 
-void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)
+void BackupProjectJob::GetFileList(StringParam path,
+                                   StringParam parentPath,
+                                   Array<ArchiveData>& fileList)
 {
   FileRange fileRange(path);
-  for(; !fileRange.Empty(); fileRange.PopFront())
+  for (; !fileRange.Empty(); fileRange.PopFront())
   {
     String localPath = fileRange.Front();
     String fullPath = FilePath::Combine(path, fileRange.Front());
     String relativePath = FilePath::Combine(parentPath, localPath);
 
     // Recurse down directories
-    if(DirectoryExists(fullPath))
+    if (DirectoryExists(fullPath))
     {
       String subPath = FilePath::Combine(path, localPath);
       GetFileList(subPath, relativePath, fileList);
@@ -749,4 +797,4 @@ void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Arr
   }
 }
 
-}//namespace Zero
+} // namespace Zero

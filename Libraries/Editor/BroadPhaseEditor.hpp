@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BroadPhaseEditor.hpp
-/// 
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,7 +12,6 @@ class IconButton;
 class Editor;
 class BroadPhaseTracker;
 
-//----------------------------------------------------------- Broad Phase Editor
 class BroadPhaseEditor : public Composite
 {
 public:
@@ -32,15 +23,17 @@ public:
 private:
   void RunTest(ObjectEvent* event);
   BroadPhaseTracker* CreateTracker();
-  void AddBroadPhasesToTracker(BroadPhase::Type type, 
+  void AddBroadPhasesToTracker(BroadPhase::Type type,
                                BroadPhaseTracker* tracker);
   void CreateGraphs(BroadPhase::Type type, BroadPhaseTracker* tracker);
-  Widget* CreateRecordGraphWidget(BroadPhase::Type type, 
-                          BroadPhaseTracker* tracker, BPStats::Type recordType);
-  Widget* CreateStatsGraphWidget(BroadPhase::Type type, 
+  Widget* CreateRecordGraphWidget(BroadPhase::Type type,
+                                  BroadPhaseTracker* tracker,
+                                  BPStats::Type recordType);
+  Widget* CreateStatsGraphWidget(BroadPhase::Type type,
                                  BroadPhaseTracker* tracker);
 
-  Composite* BuildPropertyGrid(StringParam label, BroadPhase::Type type, 
+  Composite* BuildPropertyGrid(StringParam label,
+                               BroadPhase::Type type,
                                Composite* parent);
 
   /// Adds the selected broad phase to the active list
@@ -66,7 +59,7 @@ private:
   IconButton* mRemoveButtons[BroadPhase::Size];
   StringSource mBroadPhaseNames[BroadPhase::Size];
   StringSource mActiveBroadPhases[BroadPhase::Size];
-  Array< HandleOf<Widget> > mActiveWindows;
+  Array<HandleOf<Widget>> mActiveWindows;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,11 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// \file CogSerialization.hpp
-/// 
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,7 +12,7 @@ class MetaEventConnection;
 class ObjectSaver;
 class CachedModifications;
 
-//-------------------------------------------------------------------------------- Cog Serialization
+//Cog Serialization
 class CogSerialization
 {
 public:
@@ -31,24 +24,27 @@ public:
   static void SaveHierarchy(Serializer& serializer, Hierarchy* hierarchy);
   static void SaveSelection(Serializer& serializer, MetaSelection* selection);
 
-  static void LoadHierarchy(Serializer& serializer, CogCreationContext* context, Hierarchy* hierarchy);
+  static void LoadHierarchy(Serializer& serializer,
+                            CogCreationContext* context,
+                            Hierarchy* hierarchy);
 
   static String SaveToStringForCopy(Cog* cog);
 
-  /// Copy + pasting an object is done by saving out the object to text, then loading from that text.
-  /// If we're copy + pasting an Archetype that's a child of another Archetype, there are some
-  /// extra steps we have to do to guarantee the object that is pasted has the same exact properties
-  /// as the one copied. Call these two functions (one before, one after) saving the object to
-  /// text.
-  /// PreProcess returns whether or not a post process is required after the object is saved.
+  /// Copy + pasting an object is done by saving out the object to text, then
+  /// loading from that text. If we're copy + pasting an Archetype that's a
+  /// child of another Archetype, there are some extra steps we have to do to
+  /// guarantee the object that is pasted has the same exact properties as the
+  /// one copied. Call these two functions (one before, one after) saving the
+  /// object to text. PreProcess returns whether or not a post process is
+  /// required after the object is saved.
   static bool PreProcessForCopy(Cog* cog, CachedModifications& restoreState);
   static void PostProcessAfterCopy(Cog* cog, CachedModifications& restoreState);
 };
 
-//------------------------------------------------------------------------------------------- LinkId
-///Component used to resolve links between saved objects in data files.
-///component only on compositions serialized to data file. At runtime this info
-///is stored on the compositions CogId member.
+//LinkId
+/// Component used to resolve links between saved objects in data files.
+/// component only on compositions serialized to data file. At runtime this info
+/// is stored on the compositions CogId member.
 class LinkId : public Component
 {
 public:
@@ -61,10 +57,10 @@ public:
   uint Id;
 };
 
-//-------------------------------------------------------------------------------------------- Named
-///Component used to store an game object's name.
-///Component only on compositions serialized to data file. At runtime this info
-///is stored on the compositions Name member.
+//Named
+/// Component used to store an game object's name.
+/// Component only on compositions serialized to data file. At runtime this info
+/// is stored on the compositions Name member.
 class Named : public Component
 {
 public:
@@ -76,7 +72,7 @@ public:
   String Name;
 };
 
-//--------------------------------------------------------------------------------------- Archetyped
+//Archetyped
 class Archetyped : public Component
 {
 public:
@@ -88,23 +84,27 @@ public:
   String Name;
 };
 
-//------------------------------------------------------------------------------------- Editor Flags
+//Editor Flags
 class EditorFlags : public Component
 {
 public:
   ZilchDeclareType(EditorFlags, TypeCopyMode::ReferenceType);
 
-  EditorFlags() {}
-  ~EditorFlags() {}
+  EditorFlags()
+  {
+  }
+  ~EditorFlags()
+  {
+  }
 
-  //Component Interface
+  // Component Interface
   void Serialize(Serializer& stream) override;
 
   bool mLocked;
   bool mHidden;
 };
 
-//------------------------------------------------------------------------------------ Space Objects
+//Space Objects
 class SpaceObjects : public Component
 {
 public:
@@ -116,8 +116,9 @@ public:
   Space* mSpace;
 };
 
-//------------------------------------------------------------------------------- Archetype Instance
-/// Used as an alternate to data tree patching. This is strictly an optimization.
+//Archetype Instance
+/// Used as an alternate to data tree patching. This is strictly an
+/// optimization.
 class ArchetypeInstance
 {
 public:
@@ -128,24 +129,25 @@ public:
 
 // A function pointer that we use for checking a component should be serialized
 DeclareEnum2(SerializeCheck, Serialized, NotSerialized);
-typedef SerializeCheck::Enum(*ComponentCheckFn)(Cog* composition, Component* component);
+typedef SerializeCheck::Enum (*ComponentCheckFn)(Cog* composition,
+                                                 Component* component);
 
 DeclareEnum2(ContextMode, Creating, Saving);
 
-//------------------------------------------------------------------------ Cog Serialization Context
+//Serialization Context
 class CogSerializationContext
 {
 public:
-  //Shared Flags
+  // Shared Flags
   uint Flags;
 
-  //Context Mode
+  // Context Mode
   ContextMode::Enum CurrentContextMode;
 };
 
 const u32 cContextIdMask = 0xFFFF0000;
 
-//------------------------------------------------------------------------------- Cog Saving Context
+//Cog Saving Context
 class CogSavingContext : public CogSerializationContext
 {
 public:
@@ -158,7 +160,8 @@ public:
   // Map of scene ids to  ContextIds.
   HashMap<uint, uint> ContextIdMap;
 
-  // Doesn't need to be a handle because Resources will never be deleted while saving Cogs.
+  // Doesn't need to be a handle because Resources will never be deleted while
+  // saving Cogs.
   Archetype* SavingArchetype;
 
   // A callback that can be provided to ignore certain components
@@ -166,7 +169,7 @@ public:
   ComponentCheckFn ShouldSerializeComponentCallback;
 };
 
-//----------------------------------------------------------------------------- Cog Creation Context
+//Cog Creation Context
 class CogCreationContext : public CogSerializationContext
 {
 public:
@@ -178,9 +181,10 @@ public:
   // Object created in this context
   struct CreationEntry
   {
-    CreationEntry() : NewId(0), Object(nullptr) {};
-    CreationEntry(uint newId, Cog* obj)
-      : NewId(newId), Object(obj) {}
+    CreationEntry() : NewId(0), Object(nullptr){};
+    CreationEntry(uint newId, Cog* obj) : NewId(newId), Object(obj)
+    {
+    }
     uint NewId;
     Cog* Object;
   };
@@ -213,7 +217,7 @@ public:
 
   /// Used to generate unique values for mCurrentSubContextId. This value
   /// increments every time we start loading an Archetype.
-  /// 
+  ///
   /// Example when going into a new Archetype:
   /// ++mSubIdCounter;
   /// mCurrentSubContextId = (mSubIdCounter << 16);
@@ -225,14 +229,14 @@ public:
 
   EventConnections EventToMaps;
 
-  //Where is this data being loaded from.
+  // Where is this data being loaded from.
   String Source;
 
-  //Space the objects are being created in.
+  // Space the objects are being created in.
   Space* mSpace;
 
-  //GameSession the objects/spaces are being created in.
+  // GameSession the objects/spaces are being created in.
   GameSession* mGameSession;
 };
 
-}//namespace Zero
+} // namespace Zero

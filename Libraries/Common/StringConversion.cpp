@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StringConversion.cpp
-/// Used to convert strings into values.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,7 +6,8 @@ namespace Zero
 
 bool StringStartsWith0x(const StringRange& hexString)
 {
-  return (hexString.SizeInBytes() > 1 && hexString.Data()[0] == '0' && hexString.Data()[1] == 'x');
+  return (hexString.SizeInBytes() > 1 && hexString.Data()[0] == '0' &&
+          hexString.Data()[1] == 'x');
 }
 
 #define TextTrue "true"
@@ -22,9 +15,10 @@ bool StringStartsWith0x(const StringRange& hexString)
 
 StringRange StripHex0x(const StringRange& hexString)
 {
-  if(StringStartsWith0x(hexString))
+  if (StringStartsWith0x(hexString))
   {
-    return StringRange(hexString.mOriginalString, hexString.mBegin + 2, hexString.mEnd);
+    return StringRange(
+        hexString.mOriginalString, hexString.mBegin + 2, hexString.mEnd);
   }
 
   return hexString;
@@ -38,49 +32,55 @@ Guid ReadHexString(const StringRange& originalRange)
   cstr begin = range.mBegin;
   cstr end = range.mEnd;
   u64 result = 0;
-  for(int i = 0; begin != end; --end, ++i)
+  for (int i = 0; begin != end; --end, ++i)
   {
     // Process the string in reverse
     char r = end[-1];
     u64 val = 0;
-    if(r >= '0' && r <= '9')
+    if (r >= '0' && r <= '9')
       val = r - '0';
-    else if(r >= 'a' && r <= 'f')
+    else if (r >= 'a' && r <= 'f')
       val = r - 'a' + 10;
-    else if(r >= 'A' && r <= 'F')
+    else if (r >= 'A' && r <= 'F')
       val = r - 'A' + 10;
     result += val << i * 4;
   }
   return (Guid)result;
 }
 
-uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue, bool exclude0x)
+uint WriteToHexSize(char* buffer,
+                    uint bufferSize,
+                    uint places,
+                    u64 integerValue,
+                    bool exclude0x)
 {
   // + 2 for '0x' at the start of the hex string if we're including the '0x'
   uint offset0x = exclude0x ? 0 : 2;
-  if(bufferSize < places + 1 + offset0x)
+  if (bufferSize < places + 1 + offset0x)
     return 0;
 
-  // All hex values should have an '0x' at the start to signify that they're in hex
-  if(!exclude0x)
+  // All hex values should have an '0x' at the start to signify that they're in
+  // hex
+  if (!exclude0x)
   {
     buffer[0] = '0';
     buffer[1] = 'x';
   }
 
-  for(uint i = 0; i < places; ++i)
+  for (uint i = 0; i < places; ++i)
   {
     // Get the value of the right most hex value
     uint indexVal = uint(integerValue & 0x0000000F);
 
     // Convert the hex value to the correct character
     uint charVal = 0;
-    if(indexVal <= 9)
+    if (indexVal <= 9)
       charVal = indexVal + '0';
-    else if(10 <= indexVal && indexVal <= 16)
-      charVal = indexVal + ('a'-10);
+    else if (10 <= indexVal && indexVal <= 16)
+      charVal = indexVal + ('a' - 10);
 
-    // Store the character in the buffer (we're processing back to front, so start at the back)
+    // Store the character in the buffer (we're processing back to front, so
+    // start at the back)
     buffer[places - 1 - i + offset0x] = (char)charVal;
 
     // Process the next hex value (the next 4 bits)
@@ -94,7 +94,8 @@ uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue
 
 uint WriteToHex(char* buffer, uint bufferSize, u64 integerValue, bool exclude0x)
 {
-  return WriteToHexSize(buffer, bufferSize, cHex64Size, integerValue, exclude0x);
+  return WriteToHexSize(
+      buffer, bufferSize, cHex64Size, integerValue, exclude0x);
 }
 
 uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x)
@@ -102,13 +103,13 @@ uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x)
   return WriteToHexSize(buffer, bufferSize, 8, (u64)integerValue, exclude0x);
 }
 
-//Max 4294967295
+// Max 4294967295
 const uint cMaxIntSize = 12;
 
 void ReverseString(char* start, char* end)
 {
   --end;
-  while(start<end)
+  while (start < end)
   {
     Swap(*start, *end);
     ++start;
@@ -137,41 +138,41 @@ String ReverseString(StringParam string)
 
 uint ToString(char* buffer, uint bufferSize, s64 value)
 {
-  if(bufferSize < cMaxIntSize)
+  if (bufferSize < cMaxIntSize)
     return 0;
 
   bool valueIsNegative = false;
-  if(value < 0)
+  if (value < 0)
   {
     value = -value;
     valueIsNegative = true;
   }
 
   uint index = 0;
-  do 
+  do
   {
     char c = value % 10 + '0';
     buffer[index] = c;
     ++index;
     value /= 10;
-  } while (value!=0);
+  } while (value != 0);
 
-  if(valueIsNegative)
+  if (valueIsNegative)
   {
     buffer[index] = '-';
     ++index;
   }
 
   buffer[index] = '\0';
-  ReverseString(buffer, buffer+index);
+  ReverseString(buffer, buffer + index);
   return index;
 }
 
 bool IsCharacter(char c, cstr search)
 {
-  while(*search!=0)
+  while (*search != 0)
   {
-    if(c == *search)
+    if (c == *search)
       return true;
     ++search;
   }
@@ -199,7 +200,7 @@ void ToValue(StringRangeParam range, bool& value)
 
 void ToValue(StringRangeParam range, char& value)
 {
-  if(range.Empty())
+  if (range.Empty())
     value = char(0);
   else
     value = range.mBegin[0];
@@ -266,14 +267,17 @@ uint ToBuffer(char* buffer, uint bufferSize, String value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%s", value.c_str());
 }
-uint ToBuffer(char* buffer, uint bufferSize, StringRange value, bool shortFormat)
+uint ToBuffer(char* buffer,
+              uint bufferSize,
+              StringRange value,
+              bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%s", value.mBegin);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, bool value, bool shortFormat)
 {
-  if(value)
+  if (value)
   {
     ZeroStrCpy(buffer, bufferSize, TextTrue);
     return sizeof(TextTrue) - 1;
@@ -331,14 +335,14 @@ uint ToBuffer(char* buffer, uint bufferSize, ulong value, bool shortFormat)
 
 uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat)
 {
-  if(shortFormat)
+  if (shortFormat)
     return ZeroSPrintf(buffer, bufferSize, "%g", value);
   else
     return ZeroSPrintf(buffer, bufferSize, "%.9g", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat)
 {
-  if(shortFormat)
+  if (shortFormat)
     return ZeroSPrintf(buffer, bufferSize, "%f", value);
   else
     return ZeroSPrintf(buffer, bufferSize, "%.9f", value);
@@ -349,28 +353,31 @@ uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat)
   // 16 characters for Hex, 2 for the '0x' at the start
   const uint cMinSize = cHex64Size + 2;
   ErrorIf(bufferSize < cMinSize, "Buffer is not large enough for hex value.");
-  if(bufferSize > cMinSize)
+  if (bufferSize > cMinSize)
     return WriteToHex(buffer, bufferSize, value.mValue, shortFormat);
   else
     return 0;
 }
 
-//Basic conversion function (input must be UTF-16/2) DestAscii must be unicodeLength +1
-void ConvertUnicodeToAscii(char* destAscii, uint bufferSize, 
-                           const wchar_t* unicodeData, size_t unicodeLength)
+// Basic conversion function (input must be UTF-16/2) DestAscii must be
+// unicodeLength +1
+void ConvertUnicodeToAscii(char* destAscii,
+                           uint bufferSize,
+                           const wchar_t* unicodeData,
+                           size_t unicodeLength)
 {
-  if(bufferSize < unicodeLength +1)
+  if (bufferSize < unicodeLength + 1)
   {
     ErrorIf(true, "Ascii Buffer is not large enough.");
     destAscii[0] = '\0';
   }
   else
   {
-    for(uint i=0;i<unicodeLength;++i)
+    for (uint i = 0; i < unicodeLength; ++i)
     {
-      if(unicodeData[i] > 128)
+      if (unicodeData[i] > 128)
       {
-        //Can not be display in ascii
+        // Can not be display in ascii
         destAscii[i] = '?';
       }
       else

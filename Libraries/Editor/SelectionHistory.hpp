@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SelectionHistory.hpp
-/// 
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 class MainPropertyView;
 
-//------------------------------------------------------------ Selection History
 class SelectionHistory : public EventObject
 {
 public:
@@ -39,4 +30,4 @@ public:
   void MovedToObject(MetaSelection* selection);
 };
 
-}//namespace Zero
+} // namespace Zero

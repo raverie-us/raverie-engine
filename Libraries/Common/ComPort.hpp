@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ComPort.hpp
-/// Simple Com Port Communication
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 namespace Zero
 {
 
@@ -25,4 +17,4 @@ public:
   OsHandle mComHandle;
 };
 
-}
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Window.cpp
-/// Implementation of the Window widget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 // METAREFACTOR - remove cyclic dependency
@@ -17,42 +9,42 @@ namespace Zero
 
 namespace WindowUi
 {
-Tweakable(Vec4,  TextColor, Vec4(1,1,1,1), "EditorUi");
+Tweakable(Vec4, TextColor, Vec4(1, 1, 1, 1), "EditorUi");
 
 const cstr cLocation = "EditorUi/Window";
-Tweakable(Vec4,  TitleBarColor,       Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  TabbedTitleBarColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  TitleBarXColor,      Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  TitleBarXHighlight,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  SelectedTabColor,    Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  FocusedTabColor,    Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  MouseOverTabColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  DeSelectedTabColor,  Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  TabXColor,           Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  TabXHighlight,       Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  BackgroundColor,     Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4,  BorderColor,         Vec4(1,1,1,1), cLocation);
-Tweakable(float, TitleBarHeight,      Pixels(20),    cLocation);
-Tweakable(float, CloseSize,           Pixels(16),    cLocation);
-Tweakable(Vec2,  BorderSize,          Pixels(2, 2),  cLocation);
-Tweakable(Vec4,  ModifiedColor,       Vec4(1),       cLocation);
-}
+Tweakable(Vec4, TitleBarColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TabbedTitleBarColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TitleBarXColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TitleBarXHighlight, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SelectedTabColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, FocusedTabColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, MouseOverTabColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, DeSelectedTabColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TabXColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TabXHighlight, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(float, TitleBarHeight, Pixels(20), cLocation);
+Tweakable(float, CloseSize, Pixels(16), cLocation);
+Tweakable(Vec2, BorderSize, Pixels(2, 2), cLocation);
+Tweakable(Vec4, ModifiedColor, Vec4(1), cLocation);
+} // namespace WindowUi
 
 namespace Events
 {
-  DefineEvent(TabDropTest);
-  DefineEvent(TabDrop);
-  DefineEvent(TabFind);
-  DefineEvent(TabShow);
-  DefineEvent(CloseWindow);
-  DefineEvent(CloseCheck);
-  DefineEvent(TabModified);
-  DefineEvent(TabRenamed);
-  DefineEvent(QueryModifiedSave);
-  DefineEvent(ConfirmModifiedSave);
-  DefineEvent(NamedChanged);
-  DefineEvent(HighlightBorder);
-}
+DefineEvent(TabDropTest);
+DefineEvent(TabDrop);
+DefineEvent(TabFind);
+DefineEvent(TabShow);
+DefineEvent(CloseWindow);
+DefineEvent(CloseCheck);
+DefineEvent(TabModified);
+DefineEvent(TabRenamed);
+DefineEvent(QueryModifiedSave);
+DefineEvent(ConfirmModifiedSave);
+DefineEvent(NamedChanged);
+DefineEvent(HighlightBorder);
+} // namespace Events
 
 ZilchDefineType(WindowTabEvent, builder, type)
 {
@@ -76,14 +68,16 @@ ZilchDefineType(QueryModifiedSaveEvent, builder, type)
 
 Thickness GetBorderThickness()
 {
-  return Thickness(1,1,1,1);
+  return Thickness(1, 1, 1, 1);
 }
 
 Thickness GetClientPadding()
 {
   // Remove custom padding for the client area
-  return Thickness(WindowUi::BorderSize.mValue.x, WindowUi::BorderSize.mValue.y, 
-                   WindowUi::BorderSize.mValue.x, WindowUi::BorderSize.mValue.y);
+  return Thickness(WindowUi::BorderSize.mValue.x,
+                   WindowUi::BorderSize.mValue.y,
+                   WindowUi::BorderSize.mValue.x,
+                   WindowUi::BorderSize.mValue.y);
 }
 
 Thickness TitleBarPadding()
@@ -96,19 +90,19 @@ Thickness GetTotalWindowPadding()
   return GetClientPadding() + TitleBarPadding() + GetBorderThickness();
 }
 
-//Erase a value from an array and return its index before removal
-template<typename type>
+// Erase a value from an array and return its index before removal
+template <typename type>
 uint EraseValueIndex(Array<type>& values, type& value)
 {
   uint size = values.Size();
   uint current = 0;
-  for(;current<size;++current)
+  for (; current < size; ++current)
   {
-    if(values[current]==value)
+    if (values[current] == value)
     {
       values.EraseAt(current);
-      //Return the new valid index if the value is last
-      //use previous unless empty
+      // Return the new valid index if the value is last
+      // use previous unless empty
       return current;
     }
   }
@@ -121,15 +115,13 @@ const String WindowElementsName = "WindowElements";
 const String CloseIcon = "Close";
 const String ModifiedIcon = "Modified";
 
-//------------------------------------------------------------ TabWidget
 
-TabWidget::TabWidget(Composite* parent)
-  : Composite(parent)
+TabWidget::TabWidget(Composite* parent) : Composite(parent)
 {
   static const String className = "Tab";
   mDefSet = mDefSet->GetDefinitionSet(className);
   mBackground = CreateAttached<Element>(cWhiteSquare);
-  mClose =  CreateAttached<Element>(CloseIcon);
+  mClose = CreateAttached<Element>(CloseIcon);
   mTitle = new Text(this, cText);
   mTitle->SetInteractive(false);
   mOwned = nullptr;
@@ -160,15 +152,15 @@ bool TabWidget::UnLocked()
 void TabWidget::UpdateTransform()
 {
   Widget* owned = mOwned;
-  if(owned == nullptr)
+  if (owned == nullptr)
     return;
 
-  mTitle->SetText( owned->GetName() );
+  mTitle->SetText(owned->GetName());
   mBackground->SetSize(mSize);
   float disToClose = mSize.x - Pixels(13);
 
   mClose->SetTranslation(Vec3(disToClose, Pixels(6), 0));
-  if(mClose->IsMouseOver())
+  if (mClose->IsMouseOver())
     mClose->SetColor(WindowUi::TabXHighlight);
   else
     mClose->SetColor(WindowUi::TabXColor);
@@ -176,14 +168,14 @@ void TabWidget::UpdateTransform()
   mTitle->SetTranslation(Pixels(6, 2, 0));
   mTitle->SetSize(Vec2(disToClose - Pixels(6), mSize.y));
 
-  if(mSelected)
+  if (mSelected)
   {
-    if(owned->HasFocus())
+    if (owned->HasFocus())
       mBackground->SetColor(WindowUi::FocusedTabColor);
     else
       mBackground->SetColor(WindowUi::SelectedTabColor);
   }
-  else if(this->IsMouseOver())
+  else if (this->IsMouseOver())
     mBackground->SetColor(WindowUi::MouseOverTabColor);
   else
     mBackground->SetColor(WindowUi::DeSelectedTabColor);
@@ -216,17 +208,17 @@ void TabWidget::OnMouseExit(MouseEvent* event)
 
 void TabWidget::OnMouseDrag(MouseEvent* event)
 {
-  if(!UnLocked())
+  if (!UnLocked())
     return;
 
-  //tab is already dead, we'll be cleaned up at the end of the frame
+  // tab is already dead, we'll be cleaned up at the end of the frame
   Widget* owned = this->mOwned;
-  if(owned == nullptr)
+  if (owned == nullptr)
     return;
 
-  //If this is the only tab on the tab control forward
-  //the mouse down to the windows title bar
-  if(mTabArea->mTabs.Size() == 1)
+  // If this is the only tab on the tab control forward
+  // the mouse down to the windows title bar
+  if (mTabArea->mTabs.Size() == 1)
   {
     mTabArea->mParentWindow->ForwardMouseDown(event);
   }
@@ -254,8 +246,10 @@ void TabWidget::OnMouseHover(MouseEvent* event)
 
     ToolTipPlacement placement;
     placement.SetScreenRect(GetScreenRect());
-    placement.SetPriority(IndicatorSide::Top, IndicatorSide::Left,
-      IndicatorSide::Right, IndicatorSide::Bottom);
+    placement.SetPriority(IndicatorSide::Top,
+                          IndicatorSide::Left,
+                          IndicatorSide::Right,
+                          IndicatorSide::Bottom);
     toolTip->SetArrowTipTranslation(placement);
     toolTip->UpdateTransform();
     mToolTip = toolTip;
@@ -264,7 +258,7 @@ void TabWidget::OnMouseHover(MouseEvent* event)
 
 void TabWidget::OnNewWindow(Event* event)
 {
-  if(mTabArea->mParentWindow->mManager)
+  if (mTabArea->mParentWindow->mManager)
     mTabArea->mParentWindow->mManager->Transfer(this, this->GetOwnedWidget());
 }
 
@@ -272,7 +266,7 @@ void TabWidget::OnRightClick(Event* event)
 {
   ContextMenu* menu = new ContextMenu(this);
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0) );
+  menu->SetBelowMouse(mouse, Pixels(0, 0));
   ConnectMenu(menu, "Close", OnClickClose, true);
   ConnectMenu(menu, "Close All But This", OnCloseAllOtherTabs, true);
   // Disabled until reimplemented
@@ -294,10 +288,10 @@ void TabWidget::SetOwnedWidget(Widget* widget)
   Widget* previousOwned = this->mOwned;
 
   // Disconnect from the previous widget if it exists
-  if(previousOwned)
+  if (previousOwned)
     previousOwned->GetDispatcher()->Disconnect(this);
 
-  if(widget)
+  if (widget)
   {
     ConnectThisTo(widget, Events::TabRenamed, OnOwnedWidgetResourceModified);
     ConnectThisTo(widget, Events::TabModified, OnOwnedWidgetModified);
@@ -308,7 +302,6 @@ void TabWidget::SetOwnedWidget(Widget* widget)
   mOwned = widget;
 }
 
-
 void TabWidget::OnOwnedChangedFocus(FocusEvent* event)
 {
   this->MarkAsNeedsUpdate();
@@ -318,7 +311,7 @@ void TabWidget::OnOwnedWidgetResourceModified(TabRenamedEvent* e)
 {
   String title = e->Name;
 
-  if(mOwned != nullptr)
+  if (mOwned != nullptr)
     mOwned->mName = title;
 
   mTitle->SetText(title);
@@ -326,7 +319,7 @@ void TabWidget::OnOwnedWidgetResourceModified(TabRenamedEvent* e)
 
 void TabWidget::OnOwnedWidgetModified(TabModifiedEvent* e)
 {
-  if(e->Modified)
+  if (e->Modified)
   {
     mTitle->SetColor(WindowUi::ModifiedColor);
   }
@@ -335,13 +328,12 @@ void TabWidget::OnOwnedWidgetModified(TabModifiedEvent* e)
   MarkAsNeedsUpdate();
 }
 
-//------------------------------------------------------------ Tab Area
 ZilchDefineType(TabArea, builder, type)
 {
 }
 
-TabArea::TabArea(Composite* parent, Window* window)
-  : Composite(parent, AttachType::Direct),
+TabArea::TabArea(Composite* parent, Window* window) :
+    Composite(parent, AttachType::Direct),
     mCodaTab(nullptr)
 {
   static const String className = "Tab";
@@ -363,24 +355,25 @@ TabArea::TabArea(Composite* parent, Window* window)
   ConnectThisTo(mBackground, Events::RightMouseDown, OnRightMouseDown);
 }
 
-
 void TabArea::OnMouseDown(MouseEvent* event)
 {
-   mParentWindow->ForwardMouseDown(event);
+  mParentWindow->ForwardMouseDown(event);
 }
 
 void TabArea::RequestCloseTab(TabWidget* tab)
 {
-  if(tab->UnLocked())
+  if (tab->UnLocked())
   {
     Widget* ownedWidget = tab->GetOwnedWidget();
-    // if the tabs owned widget has been modified prompt the user to save the changes
+    // if the tabs owned widget has been modified prompt the user to save the
+    // changes
     QueryModifiedSaveEvent queryEvent;
     ownedWidget->DispatchEvent(Events::QueryModifiedSave, &queryEvent);
-    //ownedWidget->DispatchDown(Events::QueryModifiedSave, &queryEvent);
+    // ownedWidget->DispatchDown(Events::QueryModifiedSave, &queryEvent);
     if (queryEvent.Modified)
     {
-      ConfirmationOfDestructiveAction(tab, queryEvent.Title, queryEvent.Message);
+      ConfirmationOfDestructiveAction(
+          tab, queryEvent.Title, queryEvent.Message);
     }
     else
     {
@@ -393,11 +386,11 @@ void TabArea::CloseTab(TabWidget* tab)
 {
   if (tab->UnLocked())
   {
-    // Remove the owned widget 
+    // Remove the owned widget
     Widget* ownedWidget = tab->GetOwnedWidget();
     if (ownedWidget)
     {
-      // If the widget has a manager return it 
+      // If the widget has a manager return it
       // to the manager for hiding etc,
       // otherwise just destroy it
       if (ownedWidget->mManager)
@@ -417,13 +410,13 @@ void TabArea::CloseAllOtherTabs(TabWidget* safeTab)
 {
   Array<TabWidget*> closingTabs;
 
-  forRange(TabWidget* tab, mTabs.All())
+  forRange(TabWidget * tab, mTabs.All())
   {
-    if(tab->UnLocked() && tab != safeTab)
+    if (tab->UnLocked() && tab != safeTab)
       closingTabs.PushBack(tab);
   }
 
-  forRange(TabWidget* tab, closingTabs.All())
+  forRange(TabWidget * tab, closingTabs.All())
   {
     CloseTab(tab);
   }
@@ -433,15 +426,15 @@ void TabArea::CloseAllOtherTabs(TabWidget* safeTab)
 
 void TabArea::OnRightMouseDown(MouseEvent* event)
 {
-  if(mParentWindow->CanClose())
+  if (mParentWindow->CanClose())
     mParentWindow->ToggleMinimized();
 }
 
 TabWidget* TabArea::TabFromWidget(Widget* widget)
 {
-  forRange(TabWidget* tab, mTabs.All())
+  forRange(TabWidget * tab, mTabs.All())
   {
-    if(tab->GetOwnedWidget() == widget)
+    if (tab->GetOwnedWidget() == widget)
       return tab;
   }
   return nullptr;
@@ -449,13 +442,15 @@ TabWidget* TabArea::TabFromWidget(Widget* widget)
 
 Widget* TabArea::GetActiveTabWidget()
 {
-  if(mTabs.Size())
+  if (mTabs.Size())
     return mTabs[mSelectedTabIndex]->mOwned;
   else
     return nullptr;
 }
 
-void TabArea::ConfirmationOfDestructiveAction(TabWidget* tab, StringParam title, StringParam message)
+void TabArea::ConfirmationOfDestructiveAction(TabWidget* tab,
+                                              StringParam title,
+                                              StringParam message)
 {
   Array<String> buttons;
   buttons.Append(String("Save and Close"));
@@ -494,7 +489,7 @@ bool TabArea::IsTabSelected(TabWidget* tab)
 
 void TabArea::SelectTabWith(Widget* widget)
 {
-  if(TabWidget* tab = TabFromWidget(widget))
+  if (TabWidget* tab = TabFromWidget(widget))
   {
     ChangeSelectedTab(tab);
   }
@@ -502,7 +497,7 @@ void TabArea::SelectTabWith(Widget* widget)
 
 void TabArea::CloseTabWith(Widget* widget)
 {
-  if(TabWidget* tab = TabFromWidget(widget))
+  if (TabWidget* tab = TabFromWidget(widget))
   {
     CloseTab(tab);
   }
@@ -510,12 +505,12 @@ void TabArea::CloseTabWith(Widget* widget)
 
 void TabArea::CloseTabs()
 {
-  forRange(TabWidget* tab, mTabs.All())
+  forRange(TabWidget * tab, mTabs.All())
   {
-    if(tab->GetOwnedWidget())
+    if (tab->GetOwnedWidget())
     {
       Widget* ownedWidget = tab->GetOwnedWidget();
-      if(ownedWidget->mManager)
+      if (ownedWidget->mManager)
         ownedWidget->mManager->Closed(ownedWidget);
     }
     tab->SetOwnedWidget(nullptr);
@@ -526,7 +521,7 @@ void TabArea::CloseTabs()
 
 void TabArea::LockTabs()
 {
-  forRange(TabWidget* tab, mTabs.All())
+  forRange(TabWidget * tab, mTabs.All())
   {
     tab->LockTab();
   }
@@ -534,12 +529,12 @@ void TabArea::LockTabs()
 
 void TabArea::TabSwitch(bool forwards)
 {
-  if(mTabs.Empty())
+  if (mTabs.Empty())
     return;
 
   int destTabIndex = mSelectedTabIndex + (forwards ? 1 : mTabs.Size() - 1);
 
-  destTabIndex = destTabIndex  % mTabs.Size();
+  destTabIndex = destTabIndex % mTabs.Size();
 
   TabWidget* tab = mTabs[destTabIndex];
   ChangeSelectedTab(tab);
@@ -563,23 +558,23 @@ Vec2 TabArea::GetTabSize()
 
   uint numberOfTabs = mTabs.Size();
 
-  if(mPreviewTab != -1)
+  if (mPreviewTab != -1)
     ++numberOfTabs;
 
-  if(minTabSize * mTabs.Size() > sizeForTabs)
+  if (minTabSize * mTabs.Size() > sizeForTabs)
   {
-    //Too many tabs
+    // Too many tabs
     tabSizeX = minTabSize;
   }
   else
   {
     tabSizeX = (float)numberOfTabs;
-    if(tabSizeX != 0.0f)
+    if (tabSizeX != 0.0f)
       tabSizeX = sizeForTabs / tabSizeX;
-    tabSizeX  = SnapToPixels(tabSizeX);
+    tabSizeX = SnapToPixels(tabSizeX);
   }
 
-  if(tabSizeX > maxTabSize)
+  if (tabSizeX > maxTabSize)
     tabSizeX = maxTabSize;
 
   return Vec2(tabSizeX, tabSizeY);
@@ -587,7 +582,7 @@ Vec2 TabArea::GetTabSize()
 
 void TabArea::UpdateTransform()
 {
-  if(GetTransformUpdateState() != TransformUpdateState::LocalUpdate)
+  if (GetTransformUpdateState() != TransformUpdateState::LocalUpdate)
   {
     Composite::UpdateTransform();
     return;
@@ -599,18 +594,18 @@ void TabArea::UpdateTransform()
 
   Window* containingWindow = GetWindowContaining(this);
   bool floating = false;
-  if(containingWindow)
+  if (containingWindow)
     floating = (containingWindow->GetDockMode() == DockMode::DockNone);
 
   uint tabIndex = 0;
-  for(int i=0;i<int(mTabs.Size());++i)
+  for (int i = 0; i < int(mTabs.Size()); ++i)
   {
-    //Skip preview tab
-    if(i == mPreviewTab)
+    // Skip preview tab
+    if (i == mPreviewTab)
       ++tabIndex;
 
     TabWidget* tab = mTabs[i];
-    
+
     LayoutResult& result = layouts.PushBack();
     result.Translation = GetTabLocation(tabIndex, tabSize);
     result.Size = tabSize;
@@ -618,7 +613,7 @@ void TabArea::UpdateTransform()
     tab->mTitle->SetText(tab->GetOwnedWidget()->GetName());
 
     // Add a 1 pixel border at the top if the window is floating
-    if(floating)
+    if (floating)
     {
       result.Translation.y += Pixels(1);
       result.Size.y -= Pixels(1);
@@ -658,7 +653,7 @@ void TabArea::TransferTab(TabWidget* tabToMove, int newIndex, bool select)
   tabToMove->mTabArea = this;
 
   // Update the tab position
-  if(newIndex == -1)
+  if (newIndex == -1)
     newIndex = mTabs.Size();
 
   Vec2 tabSize = GetTabSize();
@@ -668,10 +663,10 @@ void TabArea::TransferTab(TabWidget* tabToMove, int newIndex, bool select)
   mTabs.Insert(mTabs.Begin() + newIndex, tabToMove);
 
   // Lower down so it animates on
-  tabToMove->SetTranslation(position + Pixels(0,20,0));
+  tabToMove->SetTranslation(position + Pixels(0, 20, 0));
   tabToMove->SetSize(tabSize);
 
-  if(select)
+  if (select)
     ChangeSelectedTab(tabToMove);
 
   mPreviewTab = -1;
@@ -683,23 +678,23 @@ void TabArea::InternalRemoveTab(TabWidget* tab)
   uint oldTabIndex = EraseValueIndex(mTabs, tab);
 
   // Tab was above move down
-  if(mLastTabIndex > int(oldTabIndex))
+  if (mLastTabIndex > int(oldTabIndex))
     --mLastTabIndex;
 
-  if(mTabs.Empty())
+  if (mTabs.Empty())
   {
     // No more tabs destroy the window
     mParentWindow->Destroy();
   }
   else
   {
-    if(tab->mSelected)
+    if (tab->mSelected)
     {
-      if( uint(mLastTabIndex) < mTabs.Size())
+      if (uint(mLastTabIndex) < mTabs.Size())
         ChangeSelectedTab(mTabs[mLastTabIndex]);
       // if it was the last tab
-      else if(oldTabIndex == mTabs.Size())
-        ChangeSelectedTab(mTabs[oldTabIndex-1]);
+      else if (oldTabIndex == mTabs.Size())
+        ChangeSelectedTab(mTabs[oldTabIndex - 1]);
     }
   }
 }
@@ -727,7 +722,7 @@ void TabArea::AddNewTab(Widget* widget, bool selectTab)
   Vec2 tabSize = GetTabSize();
   Vec3 position = GetTabLocation(mTabs.Size(), tabSize);
 
-  tab->SetTranslation(position + Pixels(0,20,0));
+  tab->SetTranslation(position + Pixels(0, 20, 0));
   tab->SetSize(tabSize);
 
   this->MarkAsNeedsUpdate();
@@ -736,7 +731,7 @@ void TabArea::AddNewTab(Widget* widget, bool selectTab)
   mTabs.PushBack(tab);
   mParentWindow->mClientWidget->AttachChildWidget(widget);
 
-  if(selectTab)
+  if (selectTab)
   {
     ChangeSelectedTab(tab);
   }
@@ -749,7 +744,7 @@ void TabArea::AddNewTab(Widget* widget, bool selectTab)
 
 void TabArea::OnTabShow(WindowTabEvent* event)
 {
-  if(TabWidget* tab = TabFromWidget(event->Target))
+  if (TabWidget* tab = TabFromWidget(event->Target))
   {
     ChangeSelectedTab(tab);
   }
@@ -757,19 +752,20 @@ void TabArea::OnTabShow(WindowTabEvent* event)
 
 void TabArea::OnTabFind(WindowTabEvent* event)
 {
-  if(event->TabWidgetFound != nullptr)
+  if (event->TabWidgetFound != nullptr)
     return;
 
-  forRange(TabWidget* tab, mTabs.All())
+  forRange(TabWidget * tab, mTabs.All())
   {
     Widget* ownedWidget = tab->GetOwnedWidget();
-    if(ownedWidget == nullptr)
+    if (ownedWidget == nullptr)
       continue;
 
     ownedWidget->DispatchEvent(Events::TabFind, event);
 
-    bool nameMatch = !event->Name.Empty() && ownedWidget->GetName() == event->Name;
-    if(nameMatch)
+    bool nameMatch =
+        !event->Name.Empty() && ownedWidget->GetName() == event->Name;
+    if (nameMatch)
     {
       event->TabWidgetFound = ownedWidget;
       return;
@@ -777,25 +773,23 @@ void TabArea::OnTabFind(WindowTabEvent* event)
   }
 }
 
-
-
 void TabArea::ChangeSelectedTab(TabWidget* toSelect)
 {
-  //tab is already dead, we'll be cleaned up at the end of the frame
-  if(toSelect->GetOwnedWidget() == nullptr)
+  // tab is already dead, we'll be cleaned up at the end of the frame
+  if (toSelect->GetOwnedWidget() == nullptr)
     return;
 
-  //Update last tab
+  // Update last tab
   mLastTabIndex = mSelectedTabIndex;
 
   mParentWindow->SetHighlightBorder(false);
 
-  //Deactivate old tabs and find new tab
+  // Deactivate old tabs and find new tab
   int newTabIndex = -1;
-  for(uint tabIndex = 0; tabIndex < mTabs.Size(); ++tabIndex)
+  for (uint tabIndex = 0; tabIndex < mTabs.Size(); ++tabIndex)
   {
     TabWidget* tab = mTabs[tabIndex];
-    if(tab == toSelect)
+    if (tab == toSelect)
     {
       // new tab
       newTabIndex = tabIndex;
@@ -803,7 +797,7 @@ void TabArea::ChangeSelectedTab(TabWidget* toSelect)
     else
     {
       // old tab
-      if(Widget* old = tab->GetOwnedWidget())
+      if (Widget* old = tab->GetOwnedWidget())
         old->SetActive(false);
 
       tab->mSelected = false;
@@ -818,18 +812,17 @@ void TabArea::ChangeSelectedTab(TabWidget* toSelect)
   toSelect->MarkAsNeedsUpdate();
 
   // Set the highlight of the window for this tab
-  mParentWindow->SetHighlightBorder(toSelect->mHighlight, toSelect->mHighlightColor);
+  mParentWindow->SetHighlightBorder(toSelect->mHighlight,
+                                    toSelect->mHighlightColor);
 }
 
-//------------------------------------------------------------ Window
 const float cMinSizeSize = Pixels(24);
 
 ZilchDefineType(Window, builder, type)
 {
 }
 
-Window::Window(Composite* parent)
-  : Composite(parent)
+Window::Window(Composite* parent) : Composite(parent)
 {
   static const String className = "Window";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -875,9 +868,9 @@ Window::Window(Composite* parent)
 
   ConnectThisTo(mTitleMover, Events::LeftMouseDrag, ForwardMouseDown);
   ConnectThisTo(mTitleText, Events::LeftMouseDrag, ForwardMouseDown);
-  
+
   ConnectThisTo(mTitleMover, Events::RightMouseDown, RightMouseDownOnTitle);
-  ConnectThisTo(mTitleMover, Events::DoubleClick,  DoubleClickOnTitle);
+  ConnectThisTo(mTitleMover, Events::DoubleClick, DoubleClickOnTitle);
   ConnectThisTo(mCloseButton, Events::LeftClick, MouseClickClose);
 
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
@@ -893,11 +886,12 @@ Window::Window(Composite* parent)
   ConnectThisTo(this, Events::HighlightBorder, OnHighlightBorder);
 
   ConnectThisTo(this, Events::FocusGainedHierarchy, OnFocusGained);
- }
+}
 
 Window::~Window()
 {
-  if(mDocker) mDocker->WidgetDestroyed(this);
+  if (mDocker)
+    mDocker->WidgetDestroyed(this);
 }
 
 void Window::OnDestroy()
@@ -911,19 +905,19 @@ bool Window::TakeFocusOverride()
 {
   // If the window has tab pass focus to the selected
   // tab widget
-  if(Widget* activeTabWidget = mTabArea->GetActiveTabWidget())
+  if (Widget* activeTabWidget = mTabArea->GetActiveTabWidget())
     return activeTabWidget->TryTakeFocus();
 
   // Try to pass the focus to the first client area widget
-  if(!mClientWidget->mChildren.Empty())
-      return mClientWidget->mChildren.Front().TryTakeFocus();
+  if (!mClientWidget->mChildren.Empty())
+    return mClientWidget->mChildren.Front().TryTakeFocus();
 
   return false;
 }
 
 Vec2 Window::Measure(LayoutArea& data)
 {
-  if(mLayoutSize.x == 0)
+  if (mLayoutSize.x == 0)
     return mSize;
   else
     return mLayoutSize;
@@ -931,16 +925,16 @@ Vec2 Window::Measure(LayoutArea& data)
 
 void Window::SetDockMode(DockMode::Enum newDockMode)
 {
-  if(mCurDockMode == DockMode::DockNone && !mMinimized)
+  if (mCurDockMode == DockMode::DockNone && !mMinimized)
   {
     mFloatingSize = this->GetSize();
     mLayoutSize = this->GetSize();
   }
 
-  if(newDockMode == DockMode::DockNone && mMinimized)
+  if (newDockMode == DockMode::DockNone && mMinimized)
     SetMinimized(false);
 
-  if(newDockMode == DockMode::DockNone)
+  if (newDockMode == DockMode::DockNone)
   {
     AnimateToSize(this, mFloatingSize);
   }
@@ -951,7 +945,9 @@ void Window::SetDockMode(DockMode::Enum newDockMode)
 Vec2 Window::GetMinSize()
 {
   Thickness totalPadding = GetTotalWindowPadding();
-  return Math::Max(mMinSize, ExpandSizeByThickness(totalPadding, mClientWidget->GetMinSize()));
+  return Math::Max(
+      mMinSize,
+      ExpandSizeByThickness(totalPadding, mClientWidget->GetMinSize()));
 }
 
 void Window::SizeToContents()
@@ -962,15 +958,15 @@ void Window::SizeToContents()
 void Window::SetMinimized(bool value)
 {
   mMinimized = value;
-  if(mMinimized)
+  if (mMinimized)
   {
-    //Turn off the client area
+    // Turn off the client area
     mClientWidget->SetActive(false);
-    //Do not expand on y
+    // Do not expand on y
     mSizePolicy = SizePolicies(SizePolicy::Auto, SizePolicy::Fixed);
     mLayoutSize = Vec2(mSize.x, cMinSizeSize);
 
-    if(mCurDockMode == DockMode::DockNone)
+    if (mCurDockMode == DockMode::DockNone)
       mFloatingSize = this->GetSize();
 
     AnimateToSize(this, mLayoutSize);
@@ -981,7 +977,7 @@ void Window::SetMinimized(bool value)
   {
     mClientWidget->SetActive(true);
 
-    //Do expand on y
+    // Do expand on y
     mLayoutSize = mFloatingSize;
 
     AnimateToSize(this, mFloatingSize);
@@ -990,12 +986,11 @@ void Window::SetMinimized(bool value)
 
   this->MarkAsNeedsUpdate();
   this->GetParent()->MarkAsNeedsUpdate();
-
 }
 
 void Window::SetLayout(Layout* layout)
 {
-  mClientWidget->SetLayout(layout); 
+  mClientWidget->SetLayout(layout);
 }
 
 void Window::SetHighlightBorder(bool state, Vec4Param color)
@@ -1004,22 +999,21 @@ void Window::SetHighlightBorder(bool state, Vec4Param color)
   mHighlightBorder->SetColor(color);
 }
 
-
 void Window::OnHighlightBorder(HighlightBorderEvent* e)
 {
-  if(mMinimized)
+  if (mMinimized)
     return;
 
   // Find the tab of the given widget
   TabWidget* tab = mTabArea->TabFromWidget(e->mWidget);
-  if(tab)
+  if (tab)
   {
     // Set the highlight states on the tab
     tab->mHighlight = e->mState;
     tab->mHighlightColor = e->mColor;
 
     // If the tab is already selected, set the border state
-    if(mTabArea->IsTabSelected(tab))
+    if (mTabArea->IsTabSelected(tab))
       SetHighlightBorder(e->mState, e->mColor);
   }
 }
@@ -1037,40 +1031,40 @@ void Window::OnTabDropTest(WindowTabEvent* event)
 
 void Window::OnTabShow(WindowTabEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  if(mTabArea)
+  if (mTabArea)
     mTabArea->OnTabShow(event);
 
-  if(mDocker)
+  if (mDocker)
     mDocker->Show(this);
 }
 
 void Window::OnTabFind(WindowTabEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  if(mTabArea)
+  if (mTabArea)
     mTabArea->OnTabFind(event);
 
-  if(!event->Name.Empty() && event->Name == this->GetName())
+  if (!event->Name.Empty() && event->Name == this->GetName())
     event->WindowFound = this;
 }
 
 void Window::OnCloseWindow(WindowTabEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  if(mTabArea)
+  if (mTabArea)
   {
     event->Handled = true;
     mTabArea->CloseTabWith(event->Target);
 
-    //If no tabs left destroy this window
-    if(mTabArea->mTabs.Size()==0)
+    // If no tabs left destroy this window
+    if (mTabArea->mTabs.Size() == 0)
       this->Destroy();
   }
 }
@@ -1079,22 +1073,22 @@ void Window::UpdateTransform()
 {
   bool tabbedWindow = mTabArea->mTabs.Size() > 0;
 
-  if(tabbedWindow)
+  if (tabbedWindow)
   {
-    if(mCloseButton->IsMouseOver())
+    if (mCloseButton->IsMouseOver())
       mCloseButton->SetColor(WindowUi::TitleBarXHighlight);
     else
       mCloseButton->SetColor(WindowUi::TitleBarXColor);
   }
   else
   {
-    if(mCloseButton->IsMouseOver())
+    if (mCloseButton->IsMouseOver())
       mCloseButton->SetColor(WindowUi::TabXHighlight);
     else
       mCloseButton->SetColor(WindowUi::TabXColor);
   }
 
-  if(GetTransformUpdateState() != TransformUpdateState::LocalUpdate)
+  if (GetTransformUpdateState() != TransformUpdateState::LocalUpdate)
   {
     Composite::UpdateTransform();
     return;
@@ -1109,10 +1103,10 @@ void Window::UpdateTransform()
   mGripZones->SetSize(mSize);
 
   // Remove the border
-  WidgetRect currentRect = WidgetRect::PointAndSize(Vec2(0,0), mSize);
+  WidgetRect currentRect = WidgetRect::PointAndSize(Vec2(0, 0), mSize);
   currentRect.RemoveThickness(borderThickness);
 
-  if(mWindowStyle == WindowStyle::Normal)
+  if (mWindowStyle == WindowStyle::Normal)
   {
     mWindowWidget->SetActive(true);
     mWindowWidget->SetSize(mSize);
@@ -1125,26 +1119,29 @@ void Window::UpdateTransform()
     mTabArea->SetTranslation(Vec3(currentRect.TopLeft()));
     mTabArea->SetSize(tabAreaSize);
 
-    mTitleBackground->SetTranslation(Vec3(currentRect.TopLeft()) + Pixels(1,0,0));
+    mTitleBackground->SetTranslation(Vec3(currentRect.TopLeft()) +
+                                     Pixels(1, 0, 0));
     mTitleBackground->SetSize(titleBarSize - Vec2(2, 0));
 
-    if(tabbedWindow)
+    if (tabbedWindow)
       mTitleBackground->SetColor(WindowUi::TabbedTitleBarColor);
     else
       mTitleBackground->SetColor(WindowUi::TitleBarColor);
 
     Vec2 titleTextOffset = Vec2(3, 3);
 
-    mTitleText->SetTranslation(Vec3(borderThickness.TopLeft() + titleTextOffset));
+    mTitleText->SetTranslation(
+        Vec3(borderThickness.TopLeft() + titleTextOffset));
     mTitleText->SetSize(tabAreaSize - titleTextOffset);
     mTitleMover->SetSize(Vec2(mSize.x, borderThickness.Top));
 
     Vec2 closeButtonSize = mCloseButton->GetSize();
-    Vec3 closeButtonPos = Vec3(mSize.x - closeButtonSize.x - Pixels(7), Pixels(7), 0);
-    mCloseButton->SetTranslation( SnapToPixels(closeButtonPos) );
+    Vec3 closeButtonPos =
+        Vec3(mSize.x - closeButtonSize.x - Pixels(7), Pixels(7), 0);
+    mCloseButton->SetTranslation(SnapToPixels(closeButtonPos));
 
-    //Set up drop shadow
-    if(mCurDockMode == DockMode::DockNone)
+    // Set up drop shadow
+    if (mCurDockMode == DockMode::DockNone)
     {
       mDropShadow->SetActive(true);
       mDropShadow->SetSize(mSize);
@@ -1155,7 +1152,7 @@ void Window::UpdateTransform()
       mDropShadow->SetActive(false);
     }
 
-    if(mMinimized)
+    if (mMinimized)
     {
       mDropShadow->SetActive(false);
     }
@@ -1172,10 +1169,10 @@ void Window::UpdateTransform()
     mClientRect.SizeX = Math::Max(mClientRect.SizeX, minWindowSize);
     mClientRect.SizeY = Math::Max(mClientRect.SizeY, minWindowSize);
 
-    if(!mMinimized)
+    if (!mMinimized)
     {
       PlaceWithRect(mClientRect, mClientWidget);
-      mClientRect.RemoveThickness(Thickness(-Pixels(3,3,3,3)));
+      mClientRect.RemoveThickness(Thickness(-Pixels(3, 3, 3, 3)));
       PlaceWithRect(mClientRect, mHighlightBorder);
     }
   }
@@ -1197,7 +1194,7 @@ void Window::SetTitle(StringParam str)
 
 void Window::AttachChildWidget(Widget* widget, AttachType::Enum attachType)
 {
-  if(attachType == AttachType::Direct)
+  if (attachType == AttachType::Direct)
     Composite::AttachChildWidget(widget);
   else
     mClientWidget->AttachChildWidget(widget);
@@ -1242,28 +1239,28 @@ void Window::RightMouseDownOnTitle(MouseEvent* event)
 
 void Window::OnKeyDown(KeyboardEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
   // Ctrl-Tab and Ctrl-Shift-Tab for tab switch
-  if(event->CtrlPressed && event->Key == Keys::Tab)
+  if (event->CtrlPressed && event->Key == Keys::Tab)
   {
     event->Handled = true;
     mTabArea->TabSwitch(!event->ShiftPressed);
   }
 
   // F11 for zooming
-  if(event->Key == Keys::F11)
+  if (event->Key == Keys::F11)
   {
-    if(event->ShiftPressed)
+    if (event->ShiftPressed)
     {
-      if(mWindowStyle == WindowStyle::Normal)
+      if (mWindowStyle == WindowStyle::Normal)
         mWindowStyle = WindowStyle::NoFrame;
       else
         mWindowStyle = WindowStyle::Normal;
     }
 
-    if(mDocker)
+    if (mDocker)
       mDocker->Zoom(this);
   }
 }
@@ -1271,13 +1268,13 @@ void Window::OnKeyDown(KeyboardEvent* event)
 void Window::OnFocusGained(FocusEvent* event)
 {
   // Only move forward if the window is floating
-  if(mCurDockMode == DockMode::DockNone)
+  if (mCurDockMode == DockMode::DockNone)
     this->MoveToFront();
 }
 
 void Window::MouseClickClose(MouseEvent* event)
 {
-  if(mHideOnClose)
+  if (mHideOnClose)
   {
     this->SetActive(false);
   }
@@ -1289,7 +1286,7 @@ void Window::MouseClickClose(MouseEvent* event)
 
 void CloseTabContaining(Widget* widget)
 {
-  if(widget == nullptr)
+  if (widget == nullptr)
     return;
 
   WindowTabEvent tabEvent;
@@ -1302,9 +1299,9 @@ Window* GetWindowContaining(Widget* widget)
   // Walk up the tree until a widget of type window is found
   BoundType* windowType = ZilchTypeId(Window);
 
-  while(widget != nullptr)
+  while (widget != nullptr)
   {
-    if(ZilchVirtualTypeId(widget) == windowType)
+    if (ZilchVirtualTypeId(widget) == windowType)
       return (Window*)widget;
     widget = widget->GetParent();
   }
@@ -1319,4 +1316,4 @@ void ShowWidget(Widget* widget)
   widget->DispatchBubble(Events::TabShow, &tabEvent);
 }
 
-}//namespace Zero
+} // namespace Zero

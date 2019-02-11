@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyWidgetObject.hpp
-/// Declaration of PropertyEditorObject.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,23 +8,22 @@ extern const String cPropArrowDown;
 
 class Mouse;
 
-//------------------------------------------------------------------------------
 namespace NodeState
 {
-  enum Enum
-  {
-    Open,
-    Closed
-  };
-}//namespace NodeState
+enum Enum
+{
+  Open,
+  Closed
+};
+} // namespace NodeState
 
-//------------------------------------------------------- Property Editor Object
 class PropertyWidgetObject : public PropertyWidget
 {
 public:
   ZilchDeclareType(PropertyWidgetObject, TypeCopyMode::ReferenceType);
 
-  PropertyWidgetObject(PropertyWidgetInitializer& initializer, PropertyWidgetObject* parentNode,
+  PropertyWidgetObject(PropertyWidgetInitializer& initializer,
+                       PropertyWidgetObject* parentNode,
                        StringParam removedTypeName = "");
 
   ~PropertyWidgetObject();
@@ -42,7 +33,10 @@ public:
 
   void LayoutChildren(bool animate = false);
 
-  bool IsObjectWidget() override {return true;}
+  bool IsObjectWidget() override
+  {
+    return true;
+  }
 
   bool ArePropertiesModified();
 
@@ -87,7 +81,10 @@ public:
 
   /// Called at the end of actions to let the parent know that
   /// it can start laying out this widget.
-  void AnimationFinished(){mAnimating = false;}
+  void AnimationFinished()
+  {
+    mAnimating = false;
+  }
 
   Handle GetParentObject();
 
@@ -137,7 +134,8 @@ public:
   InList<PropertyWidget> ChildWidgets;
 
   Link<PropertyWidgetObject> mComponentLink;
-  typedef InList<PropertyWidgetObject, &PropertyWidgetObject::mComponentLink> ComponentList;
+  typedef InList<PropertyWidgetObject, &PropertyWidgetObject::mComponentLink>
+      ComponentList;
   ComponentList mComponents;
 
   /// Custom ui attached to the bottom of this object.
@@ -160,6 +158,6 @@ DeclareTweakable(Vec4, TitleColor);
 DeclareTweakable(Vec4, TitleHighlight);
 DeclareTweakable(Vec4, TitleRemove);
 DeclareTweakable(Vec4, BackgroundColor);
-}
+} // namespace ComponentUi
 
-}//namespace Zero
+} // namespace Zero

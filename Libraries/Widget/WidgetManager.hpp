@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -32,7 +27,7 @@ public:
 
 namespace Z
 {
-  extern WidgetManager* gWidgetManager;
+extern WidgetManager* gWidgetManager;
 }
 
-}
+} // namespace Zero

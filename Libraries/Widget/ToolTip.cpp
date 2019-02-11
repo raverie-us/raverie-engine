@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ToolTip.hpp
-///  Declaration of the ToolTip Widget.
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,8 +10,7 @@ const cstr cLocation = "EditorUi/Controls/ToolTip";
 Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(float, ToolTipWrapWidth, 280.0f, cLocation);
-}
-
+} // namespace ToolTipUi
 
 // Fill out necessary tooltip information for a Composite, if available.
 bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText)
@@ -30,7 +21,7 @@ bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText)
   String valueDescription = source->GetDescriptionAt(index);
 
   // No need for a tool tip if there is no description.
-  if(valueDescription.Empty( ))
+  if (valueDescription.Empty())
     return false;
 
   *toolTipText << source->GetStringValueAt(index);
@@ -40,27 +31,26 @@ bool GetToolTipText(int index, ListSource* source, StringBuilder* toolTipText)
   return true;
 }
 
-
-//----------------------------------------------------------- Tool Tip Placement
-//******************************************************************************
 ToolTipPlacement::ToolTipPlacement()
 {
   mScreenRect = WidgetRect::PointAndSize(Vec2::cZero, Vec2::cZero);
 
-  SetPriority(IndicatorSide::Left, IndicatorSide::Right,
-    IndicatorSide::Top, IndicatorSide::Bottom);
+  SetPriority(IndicatorSide::Left,
+              IndicatorSide::Right,
+              IndicatorSide::Top,
+              IndicatorSide::Bottom);
 }
 
-//******************************************************************************
 void ToolTipPlacement::SetScreenRect(const WidgetRect& rect)
 {
   mScreenRect = rect;
   mHotSpot = rect.Center();
 }
 
-//******************************************************************************
-void ToolTipPlacement::SetPriority(IndicatorSide::Type pri0, IndicatorSide::Type pri1,
-  IndicatorSide::Type pri2, IndicatorSide::Type pri3)
+void ToolTipPlacement::SetPriority(IndicatorSide::Type pri0,
+                                   IndicatorSide::Type pri1,
+                                   IndicatorSide::Type pri2,
+                                   IndicatorSide::Type pri3)
 {
   mPriority[0] = pri0;
   mPriority[1] = pri1;
@@ -68,21 +58,18 @@ void ToolTipPlacement::SetPriority(IndicatorSide::Type pri0, IndicatorSide::Type
   mPriority[3] = pri3;
 }
 
-//--------------------------------------------------------------------- Tool Tip
 ZilchDefineType(ToolTip, builder, type)
 {
 }
 
-//******************************************************************************
-ToolTip::ToolTip(Widget* source)
-  : Composite(source->GetRootWidget()->GetPopUp())
+ToolTip::ToolTip(Widget* source) :
+    Composite(source->GetRootWidget()->GetPopUp())
 {
   Initialize(source);
 }
 
-//******************************************************************************
-ToolTip::ToolTip(Widget* source, StringParam text)
-  : Composite(source->GetRootWidget()->GetPopUp())
+ToolTip::ToolTip(Widget* source, StringParam text) :
+    Composite(source->GetRootWidget()->GetPopUp())
 {
   Initialize(source);
   SetText(text);
@@ -93,7 +80,6 @@ ToolTip::ToolTip(Widget* source, StringParam text)
   SetArrowTipTranslation(placement);
 }
 
-//******************************************************************************
 void ToolTip::Initialize(Widget* source)
 {
   SetInteractive(false);
@@ -128,13 +114,12 @@ void ToolTip::Initialize(Widget* source)
   ConnectThisTo(source->GetRootWidget(), Events::MouseUpdate, OnMouseUpdate);
 }
 
-//******************************************************************************
 void ToolTip::UpdateTransform()
 {
   // Set the color of the border objects
   mBorder->SetColor(mBorderColor);
   mArrowBorder->SetColor(mBorderColor);
-  
+
   mArrow->SetColor(mBackgroundColor);
   mBackground->SetColor(mBackgroundColor);
 
@@ -214,7 +199,6 @@ void ToolTip::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void ToolTip::SizeToContents()
 {
   // Calculate the size from the arrows location
@@ -237,29 +221,29 @@ void ToolTip::SizeToContents()
   float arrowWidth = mArrow->GetSize().y;
   mSize = Math::Max(mSize, Vec2(arrowWidth, arrowWidth));
 
-  // Make sure the height has an even amount of pixels so that the 
+  // Make sure the height has an even amount of pixels so that the
   // arrow can be perfectly centered
   if (((int)mSize.y % 2) != 0)
     mSize.y += Pixels(1);
 }
 
-//******************************************************************************
 void ToolTip::ForceBestFitText(Composite* composite, Vec2 padding)
 {
-  if(composite == nullptr)
+  if (composite == nullptr)
     return;
 
-  if(Layout* layout = composite->GetLayout())
+  if (Layout* layout = composite->GetLayout())
   {
     FilterLayoutChildren children(composite);
-    forRange(Widget& child, children)
+    forRange(Widget & child, children)
     {
-      ForceBestFitText(child.GetSelfAsComposite(), padding + layout->Padding.SizeX());
+      ForceBestFitText(child.GetSelfAsComposite(),
+                       padding + layout->Padding.SizeX());
     }
   }
 
   MultiLineText* text = Type::DynamicCast<MultiLineText*>(composite);
-  if(text == nullptr)
+  if (text == nullptr)
     return;
 
   float textWidthNoPadding = mMaxBestFitTextWidth;
@@ -270,7 +254,6 @@ void ToolTip::ForceBestFitText(Composite* composite, Vec2 padding)
   text->mMaxBestFitTextWidth = textWidthNoPadding;
 }
 
-//******************************************************************************
 void ToolTip::SetContent(Widget* content)
 {
   // Destroy the old contexts if they exist.
@@ -284,7 +267,7 @@ void ToolTip::SetContent(Widget* content)
 
   // Make all multi line text objects in the ToolTip's content-hierarchy conform
   // to the ToolTip's max best fit width, if applicable.
-  if(mBestFitText)
+  if (mBestFitText)
     ForceBestFitText(mContent->GetSelfAsComposite(), mContentPadding.SizeX());
 
   // Update the size based on the new content
@@ -294,39 +277,39 @@ void ToolTip::SetContent(Widget* content)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 Text* ToolTip::SetText(StringParam text)
 {
-  if(mTextStack != nullptr)
-    mTextStack->DestroyChildren( );
-  
+  if (mTextStack != nullptr)
+    mTextStack->DestroyChildren();
+
   return AddText(text, Vec4(1));
 }
 
-//******************************************************************************
 Text* ToolTip::AddText(StringParam text, Vec4Param color)
 {
-    // If the content wasn't text already then destroy it.
-  if(mContent != mTextStack)
+  // If the content wasn't text already then destroy it.
+  if (mContent != mTextStack)
     SafeDestroy(mContent);
 
-  if(mTextStack == nullptr)
+  if (mTextStack == nullptr)
   {
     // Prep text stacking;
     mTextStack = new Composite(this);
-    mTextStack->SetLayout(CreateStackLayout( ));
+    mTextStack->SetLayout(CreateStackLayout());
 
     // The text stack will always be the content when adding text.
     mContent = mTextStack;
   }
 
-  MultiLineText* textObject = (MultiLineText*)CreateTextPreview(mTextStack, text);
-  if(textObject != nullptr)
+  MultiLineText* textObject =
+      (MultiLineText*)CreateTextPreview(mTextStack, text);
+  if (textObject != nullptr)
   {
-    if(mBestFitText)
+    if (mBestFitText)
       ForceBestFitText(textObject, mContentPadding.SizeX());
     else
-      textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
+      textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth,
+                                         Pixels(1000));
 
     // Defer border-display to this tooltip's border.
     textObject->mBorder->SetVisible(false);
@@ -340,10 +323,9 @@ Text* ToolTip::AddText(StringParam text, Vec4Param color)
   return textObject->mTextField;
 }
 
-//******************************************************************************
 void ToolTip::ClearText()
 {
-  if(mTextStack != nullptr)
+  if (mTextStack != nullptr)
     mTextStack->DestroyChildren();
 
   SizeToContents();
@@ -351,7 +333,6 @@ void ToolTip::ClearText()
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
 {
   SetText(text);
@@ -360,13 +341,14 @@ void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
   ToolTipPlacement placement;
   placement.SetScreenRect(placementRect);
 
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-    IndicatorSide::Bottom, IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        IndicatorSide::Bottom,
+                        IndicatorSide::Top);
 
   SetArrowTipTranslation(placement);
 }
 
-//******************************************************************************
 bool ToolTip::SetArrowTipTranslation(Vec3Param screenPos)
 {
   // Make sure we're properly sized
@@ -384,7 +366,7 @@ bool ToolTip::SetArrowTipTranslation(Vec3Param screenPos)
   else if (mSide == IndicatorSide::Top)
     position.y -= GetSize().y;
 
-  // In case we are unable to fit the tooltip on the screen (comes next), 
+  // In case we are unable to fit the tooltip on the screen (comes next),
   // place it here as a default case
   SetTranslation(position);
 
@@ -451,13 +433,15 @@ bool ToolTip::SetArrowTipTranslation(Vec3Param screenPos)
   return true;
 }
 
-//******************************************************************************
-void ToolTip::SetArrowTipTranslation(ToolTipPlacement& placement)//const Rect& rect, Vec2Param hotSpot,
-                        //const Thickness& margins, IndicatorSide::Type priority[4])
+void ToolTip::SetArrowTipTranslation(
+    ToolTipPlacement&
+        placement) // const Rect& rect, Vec2Param hotSpot,
+                   // const Thickness& margins, IndicatorSide::Type priority[4])
 {
   WidgetRect& rect = placement.mScreenRect;
 
-  // Attempt to place the tool tip on each side of the rect based on the priority
+  // Attempt to place the tool tip on each side of the rect based on the
+  // priority
   for (uint i = 0; i < 4; ++i)
   {
     // The current side
@@ -491,16 +475,14 @@ void ToolTip::SetArrowTipTranslation(ToolTipPlacement& placement)//const Rect& r
   }
 }
 
-//******************************************************************************
 void ToolTip::SetDestroyOnMouseExit(bool state)
 {
   mDestroyOnMouseExitSource = state;
 }
 
-//******************************************************************************
 void ToolTip::SetColorScheme(ToolTipColorScheme::Enum color)
 {
-  if(color == ToolTipColorScheme::Default)
+  if (color == ToolTipColorScheme::Default)
   {
     mBackgroundColor = FloatColorRGBA(42, 90, 120, 255);
     mBorderColor = FloatColorRGBA(63, 135, 180, 255);
@@ -533,20 +515,20 @@ void ToolTip::SetColorScheme(ToolTipColorScheme::Enum color)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 bool ToolTip::TranslateArrowOffset(Vec2Param translation)
 {
   mArrowOffset += translation;
-  
+
   // Either edge of the arrow must be inside the bounds of the ToolTip's size.
-  Vec2 offsetBounds = Math::Ceil(0.5f * mSize) - Math::Ceil(0.5f * mArrow->mSize);
+  Vec2 offsetBounds =
+      Math::Ceil(0.5f * mSize) - Math::Ceil(0.5f * mArrow->mSize);
   // Either edge of the arrow must also be within a minimum of two pixels
   // from the ToolTip rect's edges.
   offsetBounds -= Vec2(2.0f, 2.0f);
 
-  if(mSide == IndicatorSide::Left || mSide == IndicatorSide::Right)
+  if (mSide == IndicatorSide::Left || mSide == IndicatorSide::Right)
   {
-    if(mArrowOffset.y < -offsetBounds.y || mArrowOffset.y > offsetBounds.y)
+    if (mArrowOffset.y < -offsetBounds.y || mArrowOffset.y > offsetBounds.y)
     {
       mArrow->SetVisible(false);
       mArrowBorder->SetVisible(false);
@@ -557,9 +539,9 @@ bool ToolTip::TranslateArrowOffset(Vec2Param translation)
       mArrowBorder->SetVisible(true);
     }
   }
-  else if(mSide == IndicatorSide::Top || mSide == IndicatorSide::Bottom)
+  else if (mSide == IndicatorSide::Top || mSide == IndicatorSide::Bottom)
   {
-    if(mArrowOffset.x < -offsetBounds.x || mArrowOffset.x > offsetBounds.x)
+    if (mArrowOffset.x < -offsetBounds.x || mArrowOffset.x > offsetBounds.x)
     {
       mArrow->SetVisible(false);
       mArrowBorder->SetVisible(false);
@@ -574,53 +556,48 @@ bool ToolTip::TranslateArrowOffset(Vec2Param translation)
   return mArrow->GetVisible();
 }
 
-//******************************************************************************
 Vec2 ToolTip::GetArrowOffset()
 {
   return mArrowOffset;
 }
 
-//******************************************************************************
 Vec2 ToolTip::GetContentSize()
 {
-  if(mContent)
+  if (mContent)
     return mContent->GetMinSize();
 
   return Vec2::cZero;
 }
 
-//******************************************************************************
 Vec2 ToolTip::GetPaddedContentSize()
 {
   return ExpandSizeByThickness(mContentPadding, GetContentSize());
 }
 
-//******************************************************************************
 void ToolTip::BestFitTextToMaxWidth(bool enabled, float maxBestFitTextWidth)
 {
   mBestFitText = enabled;
   mMaxBestFitTextWidth = maxBestFitTextWidth;
 }
 
-//******************************************************************************
 void ToolTip::OnMouseUpdate(MouseEvent* event)
 {
   // The source widget has been destroyed, destroy ourself
   Widget* source = mSource;
-  if(source == nullptr)
+  if (source == nullptr)
   {
     this->Destroy();
     return;
   }
 
-  if(mDestroyOnMouseExitSource)
+  if (mDestroyOnMouseExitSource)
   {
     // If our mouse moves onto an object that's not a child of the
     // source, then destroy ourself
     bool notChildOf = !source->IsAncestorOf(event->Source);
-    if(notChildOf)
+    if (notChildOf)
       this->Destroy();
   }
 }
 
-}//namespace Zero
+} // namespace Zero

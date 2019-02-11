@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file IrcClient.hpp
-/// Declaration of the IrcClient class.
-///
-/// Authors: Trevor Sundberg.
-/// Copyright 2010-2011, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,29 +6,42 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(ChatMessageOfTheDay);
-  DeclareEvent(ChatReady);
-  DeclareEvent(ChatChannelEvent);
-  DeclareEvent(ChatUserEvent);
-  DeclareEvent(ChatMessage);
-  DeclareEvent(ChatNotice);
-  DeclareEvent(ChatNews);
-  DeclareEvent(ChatNameChange);
-  DeclareEvent(ChatChannelNames);
-}
+DeclareEvent(ChatMessageOfTheDay);
+DeclareEvent(ChatReady);
+DeclareEvent(ChatChannelEvent);
+DeclareEvent(ChatUserEvent);
+DeclareEvent(ChatMessage);
+DeclareEvent(ChatNotice);
+DeclareEvent(ChatNews);
+DeclareEvent(ChatNameChange);
+DeclareEvent(ChatChannelNames);
+} // namespace Events
 
 DeclareEnum2(ChannelInfo, Joined, Parted);
 
 struct ChannelEvent : public Event
 {
-  ChannelEvent(ChannelInfo::Enum info, StringParam channel) : Info(info), Channel(channel) {}
+  ChannelEvent(ChannelInfo::Enum info, StringParam channel) :
+      Info(info),
+      Channel(channel)
+  {
+  }
   ChannelInfo::Enum Info;
   String Channel;
 };
 
 struct UserEvent : public Event
 {
-  UserEvent(ChannelInfo::Enum info, StringParam channel, StringParam name, bool showMessage) : Info(info), Channel(channel), Name(name), ShowMessage(showMessage) {}
+  UserEvent(ChannelInfo::Enum info,
+            StringParam channel,
+            StringParam name,
+            bool showMessage) :
+      Info(info),
+      Channel(channel),
+      Name(name),
+      ShowMessage(showMessage)
+  {
+  }
   ChannelInfo::Enum Info;
   String Channel;
   String Name;
@@ -45,14 +50,21 @@ struct UserEvent : public Event
 
 struct NameChangeEvent : public Event
 {
-  NameChangeEvent(StringParam from, StringParam to) : From(from), To(to) {}
+  NameChangeEvent(StringParam from, StringParam to) : From(from), To(to)
+  {
+  }
   String From;
   String To;
 };
 
 struct ChatEvent : public Event
 {
-  ChatEvent(StringParam from, StringParam to, StringParam text) : From(from), To(to), Text(text) {}
+  ChatEvent(StringParam from, StringParam to, StringParam text) :
+      From(from),
+      To(to),
+      Text(text)
+  {
+  }
   String From;
   String To;
   String Text;
@@ -64,7 +76,6 @@ struct ChannelNamesEvent : public Event
   Array<String> Names;
 };
 
-
 // Forward declarations
 class ReceivedDataEvent;
 class ConnectionEvent;
@@ -75,9 +86,9 @@ typedef void (*IRCDataCallback)(StringParam data, void* userData);
 
 namespace Irc
 {
-  // Constants
-  const String AllChannels = "~<ALL>~";
-}
+// Constants
+const String AllChannels = "~<ALL>~";
+} // namespace Irc
 
 /// Manages all the client/server/peer connections .
 class IrcClient : public EventObject
@@ -110,7 +121,6 @@ public:
   String GetName();
 
 private:
-
   // Occurs when we receive data from the socket
   void ReceivedData(ReceivedDataEvent* event);
 
@@ -120,7 +130,6 @@ private:
   void SocketError(TextErrorEvent* event);
 
 private:
-
   struct CommandData
   {
     Array<String> Arguments;
@@ -143,7 +152,6 @@ private:
   void HandleCommand(const CommandInfo& command);
 
 private:
-
   // Store the socket that we use
   TcpSocket mSocket;
 

@@ -1,116 +1,108 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Archive.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "zlib.h"
 
-//------------------------------------------------------------
 namespace Zero
 {
 
-  class Deflater
+class Deflater
+{
+public:
+  z_stream stream;
+  int written;
+  Deflater(int level)
   {
-  public:
-    z_stream stream;
-    int written;
-    Deflater(int level)
-    {
-      //allocate inflate state
-      stream.zalloc = Z_NULL;
-      stream.zfree = Z_NULL;
-      stream.opaque = Z_NULL;
-      stream.avail_in = 0;
-      stream.next_in = Z_NULL;
-      deflateInit2(&stream, level, Z_DEFLATED, -MAX_WBITS, 8, Z_DEFAULT_STRATEGY);
-    }
-
-    ~Deflater()
-    {
-      deflateEnd(&stream);
-    }
-
-    void Deflate(byte* input, byte* output, int availableIn, int availableOut, int finished)
-    {
-      int flushStatus = finished ? Z_FINISH : Z_NO_FLUSH;
-      stream.avail_in = availableIn;
-      stream.next_in = input;
-      stream.avail_out = availableOut;
-      stream.next_out = output;
-      deflate(&stream, flushStatus);
-      written = availableOut - stream.avail_out;
-    }
-  };
-
-  class Inflater
-  {
-  public:
-    z_stream stream;
-    int written;
-    bool done;
-
-    Inflater()
-    {
-      //allocate inflate state
-      stream.zalloc = Z_NULL;
-      stream.zfree = Z_NULL;
-      stream.opaque = Z_NULL;
-      stream.avail_in = 0;
-      stream.next_in = Z_NULL;
-      inflateInit2(&stream, -MAX_WBITS);
-    }
-
-    ~Inflater()
-    {
-      inflateEnd(&stream);
-    }
-
-    void Inflate(byte* input, byte* output, int availableIn, int availableOut)
-    {
-      stream.avail_in = availableIn;
-      stream.next_in = input;
-      stream.avail_out = availableOut;
-      stream.next_out = output;
-      int zstatus = inflate(&stream, Z_SYNC_FLUSH);
-      written = availableOut - stream.avail_out;
-
-      if(zstatus==Z_STREAM_END)
-        done = true;
-    }
-  };
-
-  int RawDeflate(byte* outputData, uint outsize, byte* inputData, uint inSize, int level)
-  {
-    Deflater deflater(level);
-    deflater.Deflate(inputData, outputData, inSize, outsize, true);
-    return deflater.written;
+    // allocate inflate state
+    stream.zalloc = Z_NULL;
+    stream.zfree = Z_NULL;
+    stream.opaque = Z_NULL;
+    stream.avail_in = 0;
+    stream.next_in = Z_NULL;
+    deflateInit2(&stream, level, Z_DEFLATED, -MAX_WBITS, 8, Z_DEFAULT_STRATEGY);
   }
 
-  int RawInflate(byte* outputData, uint outSize, byte* inputData, uint inSize)
+  ~Deflater()
   {
-    Inflater inflater;
-    inflater.Inflate(inputData, outputData, inSize, outSize);
-    return inflater.written;
+    deflateEnd(&stream);
   }
-  
 
+  void Deflate(byte* input,
+               byte* output,
+               int availableIn,
+               int availableOut,
+               int finished)
+  {
+    int flushStatus = finished ? Z_FINISH : Z_NO_FLUSH;
+    stream.avail_in = availableIn;
+    stream.next_in = input;
+    stream.avail_out = availableOut;
+    stream.next_out = output;
+    deflate(&stream, flushStatus);
+    written = availableOut - stream.avail_out;
+  }
+};
+
+class Inflater
+{
+public:
+  z_stream stream;
+  int written;
+  bool done;
+
+  Inflater()
+  {
+    // allocate inflate state
+    stream.zalloc = Z_NULL;
+    stream.zfree = Z_NULL;
+    stream.opaque = Z_NULL;
+    stream.avail_in = 0;
+    stream.next_in = Z_NULL;
+    inflateInit2(&stream, -MAX_WBITS);
+  }
+
+  ~Inflater()
+  {
+    inflateEnd(&stream);
+  }
+
+  void Inflate(byte* input, byte* output, int availableIn, int availableOut)
+  {
+    stream.avail_in = availableIn;
+    stream.next_in = input;
+    stream.avail_out = availableOut;
+    stream.next_out = output;
+    int zstatus = inflate(&stream, Z_SYNC_FLUSH);
+    written = availableOut - stream.avail_out;
+
+    if (zstatus == Z_STREAM_END)
+      done = true;
+  }
+};
+
+int RawDeflate(
+    byte* outputData, uint outsize, byte* inputData, uint inSize, int level)
+{
+  Deflater deflater(level);
+  deflater.Deflate(inputData, outputData, inSize, outsize, true);
+  return deflater.written;
+}
+
+int RawInflate(byte* outputData, uint outSize, byte* inputData, uint inSize)
+{
+  Inflater inflater;
+  inflater.Inflate(inputData, outputData, inSize, outSize);
+  return inflater.written;
+}
 
 //  ------------------ Archive
 
-Archive::Archive(ArchiveMode::Enum mode, uint compressionLevel)
-  : mCompressionLevel(compressionLevel),
+Archive::Archive(ArchiveMode::Enum mode, uint compressionLevel) :
+    mCompressionLevel(compressionLevel),
     mMode(mode),
     mFileOriginBegin(0)
 {
-
 }
-
 
 Archive::~Archive()
 {
@@ -119,36 +111,39 @@ Archive::~Archive()
 
 void Archive::Clear()
 {
-  forRange(ArchiveEntry& entry, Entries.All())
+  forRange(ArchiveEntry & entry, Entries.All())
   {
     FreeBlock(entry.Full);
     FreeBlock(entry.Compressed);
-
-
   }
 
   Entries.Clear();
 }
 
-void Archive::ArchiveDirectory(Status& status, StringParam path, StringParam parentPath, FileFilter* filter)
+void Archive::ArchiveDirectory(Status& status,
+                               StringParam path,
+                               StringParam parentPath,
+                               FileFilter* filter)
 {
   FileRange files(path);
-  for(;!files.Empty();files.PopFront())
+  for (; !files.Empty(); files.PopFront())
   {
-    //If the path is a directory enumerate it
+    // If the path is a directory enumerate it
     String localPath = files.Front();
     String fullPath = FilePath::Combine(path, files.Front());
     String relativePath = FilePath::Combine(parentPath, localPath);
 
     FilterResult::Enum filterResult = FilterResult::Include;
-    if(filter) filterResult = filter->Filter(fullPath);
-    
-    if(filterResult == FilterResult::Ignore)
+    if (filter)
+      filterResult = filter->Filter(fullPath);
+
+    if (filterResult == FilterResult::Ignore)
       continue;
 
-    if(DirectoryExists(fullPath))
+    if (DirectoryExists(fullPath))
     {
-      ArchiveDirectory(status, FilePath::Combine(path, localPath), relativePath, filter);
+      ArchiveDirectory(
+          status, FilePath::Combine(path, localPath), relativePath, filter);
     }
     else
     {
@@ -167,32 +162,37 @@ void Archive::AddFileBlock(StringParam relativeName, DataBlock sourceBlock)
   byte* destBuffer = 0;
   uLong compressedSize = 0;
 
-  //Compute Crc
+  // Compute Crc
   uLong crcTemp = crc32(0L, Z_NULL, 0);
   uLong crc = crc32(crcTemp, sourceBlock.Data, sourceBlock.Size);
 
-  if(mCompressionLevel==0)
+  if (mCompressionLevel == 0)
   {
-    //No compression, just copy data into buffer
+    // No compression, just copy data into buffer
     compressedSize = sourceBlock.Size;
     destBuffer = (byte*)zAllocate(sourceBlock.Size);
     memcpy(destBuffer, sourceBlock.Data, sourceBlock.Size);
   }
   else
   {
-    //Get the upper bound for the compressed data
+    // Get the upper bound for the compressed data
     uint maxCompressedSize = compressBound(sourceBlock.Size);
 
-    //Allocate the output buffer
+    // Allocate the output buffer
     destBuffer = (byte*)zAllocate(maxCompressedSize);
 
-    //Deflate the buffer to the compressed size
-    compressedSize = RawDeflate(destBuffer, maxCompressedSize,  sourceBlock.Data, sourceBlock.Size, mCompressionLevel);
+    // Deflate the buffer to the compressed size
+    compressedSize = RawDeflate(destBuffer,
+                                maxCompressedSize,
+                                sourceBlock.Data,
+                                sourceBlock.Size,
+                                mCompressionLevel);
 
-    //Optionally shrink the buffer to the compresses size
-    //this costs another memory copy bug the compresses size can be significantly smaller
+    // Optionally shrink the buffer to the compresses size
+    // this costs another memory copy bug the compresses size can be
+    // significantly smaller
     const bool shrinkToActualCompressedSize = true;
-    if(shrinkToActualCompressedSize)
+    if (shrinkToActualCompressedSize)
     {
       byte* compressed = (byte*)zAllocate(compressedSize);
       memcpy(compressed, destBuffer, compressedSize);
@@ -213,15 +213,14 @@ void Archive::AddFileBlock(StringParam relativeName, DataBlock sourceBlock)
   // Use current time
   entry.ModifiedTime = Time::GetTime();
   Entries.PushBack(entry);
-
 }
 
 void Archive::AddFile(StringParam fullpath, StringParam relativeName)
 {
   DataBlock dataBlock = ReadFileIntoDataBlock(fullpath.c_str());
 
-  //Could not open file.
-  if(!dataBlock)
+  // Could not open file.
+  if (!dataBlock)
     return;
 
   AddFileBlock(relativeName, dataBlock);
@@ -229,29 +228,32 @@ void Archive::AddFile(StringParam fullpath, StringParam relativeName)
   FreeBlock(dataBlock);
 }
 
-void Archive::ExportToDirectory(ArchiveExportMode::Enum exportMode, StringParam path)
+void Archive::ExportToDirectory(ArchiveExportMode::Enum exportMode,
+                                StringParam path)
 {
 
   CreateDirectoryAndParents(path);
-  forRange(ArchiveEntry& entry, Entries.All())
+  forRange(ArchiveEntry & entry, Entries.All())
   {
-    //some zippers place empty entries for folders
-    if(entry.Full.Size == 0)
+    // some zippers place empty entries for folders
+    if (entry.Full.Size == 0)
       continue;
 
-    String outputFile = FilePath::Combine(path, FilePath::Normalize(entry.Name));
+    String outputFile =
+        FilePath::Combine(path, FilePath::Normalize(entry.Name));
     String newpath = FilePath::GetDirectoryPath(outputFile);
     CreateDirectoryAndParents(newpath);
 
-    if(exportMode == ArchiveExportMode::OverwriteIfNewer && FileExists(outputFile))
+    if (exportMode == ArchiveExportMode::OverwriteIfNewer &&
+        FileExists(outputFile))
     {
       TimeType fileTime = GetFileModifiedTime(outputFile);
-      if(fileTime >= entry.ModifiedTime)
+      if (fileTime >= entry.ModifiedTime)
         continue;
     }
 
-    //Decompress the entry if it has not been done.
-    if(entry.Full.Data == nullptr)
+    // Decompress the entry if it has not been done.
+    if (entry.Full.Data == nullptr)
       DecompressEntry(entry);
 
     WriteToFile(outputFile.c_str(), entry.Full.Data, entry.Full.Size);
@@ -259,13 +261,11 @@ void Archive::ExportToDirectory(ArchiveExportMode::Enum exportMode, StringParam 
   }
 }
 
-
-
 void Archive::DecompressEntry(ArchiveEntry& entry)
 {
-  if(entry.Full.Data == nullptr)
+  if (entry.Full.Data == nullptr)
   {
-    if(entry.CompressionLevel == CompressionLevel::NoCompression)
+    if (entry.CompressionLevel == CompressionLevel::NoCompression)
     {
       // Not compressed copy data
       entry.Full.Data = entry.Compressed.Data;
@@ -275,7 +275,10 @@ void Archive::DecompressEntry(ArchiveEntry& entry)
     {
       // Inflate Data
       entry.Full.Data = (byte*)zAllocate(entry.Full.Size);
-      RawInflate(entry.Full.Data, entry.Full.Size, entry.Compressed.Data, entry.Compressed.Size);
+      RawInflate(entry.Full.Data,
+                 entry.Full.Size,
+                 entry.Compressed.Data,
+                 entry.Compressed.Size);
 
       // Free compressed data
       zDeallocate(entry.Compressed.Data);
@@ -286,12 +289,11 @@ void Archive::DecompressEntry(ArchiveEntry& entry)
 
 void Archive::DecompressEntries()
 {
-  forRange(ArchiveEntry& entry, Entries.All())
+  forRange(ArchiveEntry & entry, Entries.All())
   {
     DecompressEntry(entry);
   }
 }
-
 
 //-------------------------Zip------------------------------------------------
 
@@ -302,66 +304,65 @@ const u32 EndCentralHeader = 0x06054b50;
 #pragma pack(2)
 struct FileInfo
 {
-  //Version needed to extract (minimum)
+  // Version needed to extract (minimum)
   u16 MinVersion;
-  //General purpose bit flag
+  // General purpose bit flag
   u16 GeneralFlags;
-  //Compression Method
+  // Compression Method
   u16 CompressionMethod;
-  //Last Modified Time
+  // Last Modified Time
   u16 LastModifiedTime;
-  //Last Modified Date
+  // Last Modified Date
   u16 LastModifiedDate;
-  //Cyclic redundancy check 32
+  // Cyclic redundancy check 32
   u32 Crc;
-  //Compressed size in bytes.
+  // Compressed size in bytes.
   u32 CompressedSize;
-  //Uncompressed size
+  // Uncompressed size
   u32 UncompressedSize;
-  //File name length
+  // File name length
   u16 FileNameLength;
-  //Extra field length
+  // Extra field length
   u16 ExtraFieldLength;
 };
 
-
 struct ZipLocalFileHeader
 {
-  //Signature
+  // Signature
   u32 Signature;
   FileInfo Info;
 };
 
 struct ZipCentralFileHeader
 {
-  //Signature
+  // Signature
   uint Signature;
-  //Version Made By
+  // Version Made By
   u16 VersionMadeBy;
   FileInfo Info;
-  //File Comment length
+  // File Comment length
   u16 FileCommentLength;
-  //Disk number
+  // Disk number
   u16 DiskNumber;
-  //Internal File Attributes
+  // Internal File Attributes
   u16 InternalAttributes;
-  //External File Attributes
+  // External File Attributes
   u32 ExternalAttributes;
-  //RelativeOffset
+  // RelativeOffset
   u32 Offset;
 };
 
 struct EndCentral
-{ 
-  //Signature
+{
+  // Signature
   uint Signature;
-  //Disk number
+  // Disk number
   u16 DiskNumber;
-  //Disk number Start
+  // Disk number Start
   u16 DiskNumberStart;
-  //Disk number
+  // Disk number
   u16 NumberOnDisk;
-  //Number of Records
+  // Number of Records
   u16 NmberOfRecords;
 
   u32 SizeOfCentralDirectory;
@@ -369,27 +370,27 @@ struct EndCentral
   u16 CommentLength;
 };
 
-//Convert time to Zip time format (MS-DOS zip format)
-//Thanks http://proger.i-forge.net/MS-DOS_date_and_time_format/OFz
+// Convert time to Zip time format (MS-DOS zip format)
+// Thanks http://proger.i-forge.net/MS-DOS_date_and_time_format/OFz
 void TimeToZipTime(TimeType time, u16* mdate, u16* mtime)
 {
-  //Format of MSDOSTIME
-  //date:   YYYYYYYM MMMDDDDD
-  //time:   HHHHHMMM MMMSSSSS
-  //Y - Year from 1980
-  //M - Month 1-12
-  //D - Day 1-31
-  //H - Hour 0 - 23
-  //M - Minute 0-59
-  //S = 0 -29 (every 2 seconds)
+  // Format of MSDOSTIME
+  // date:   YYYYYYYM MMMDDDDD
+  // time:   HHHHHMMM MMMSSSSS
+  // Y - Year from 1980
+  // M - Month 1-12
+  // D - Day 1-31
+  // H - Hour 0 - 23
+  // M - Minute 0-59
+  // S = 0 -29 (every 2 seconds)
   CalendarDateTime lt = Time::GetLocalTime(time);
-  //Rebase from 0 to 1980
-  u16 year =   lt.Year - 1980;
-  u16 month =  lt.Month + 1;
-  u16 day =    lt.Day;
-  u16 hour =   lt.Hour;
+  // Rebase from 0 to 1980
+  u16 year = lt.Year - 1980;
+  u16 month = lt.Month + 1;
+  u16 day = lt.Day;
+  u16 hour = lt.Hour;
   u16 minute = lt.Minutes;
-  //Every other second
+  // Every other second
   u16 second = lt.Seconds / 2;
   *mdate = (year << 9) | (month << 5) | (day);
   *mtime = (hour << 11) | (minute << 5) | (second);
@@ -398,12 +399,13 @@ void TimeToZipTime(TimeType time, u16* mdate, u16* mtime)
 TimeType ZipTimeToTime(u16 mdate, u16 mtime)
 {
   CalendarDateTime newTime;
-  newTime.Year = ((mdate & 0xFE00) >> 9) + 1980;;
-  newTime.Month =  ((mdate & 0x01E0) >> 5) - 1;
+  newTime.Year = ((mdate & 0xFE00) >> 9) + 1980;
+  ;
+  newTime.Month = ((mdate & 0x01E0) >> 5) - 1;
   newTime.Day = (mdate & 0x001F) >> 0;
   newTime.Hour = (mtime & 0xF800) >> 11;
-  newTime.Minutes =  (mtime & 0x07E0) >> 5;
-  newTime.Seconds =  ((mtime & 0x001F) >> 0) * 2;
+  newTime.Minutes = (mtime & 0x07E0) >> 5;
+  newTime.Seconds = ((mtime & 0x001F) >> 0) * 2;
   return Time::CalendarDateTimeToTimeType(newTime);
 }
 
@@ -428,9 +430,9 @@ uint Archive::ComputeZipSize()
 {
   uint sizeOfallNames = 0;
   uint sizeOfAllData = 0;
-  
-  //Sum the size of all file name strings
-  forRange(ArchiveEntry& entry, Entries.All())
+
+  // Sum the size of all file name strings
+  forRange(ArchiveEntry & entry, Entries.All())
   {
     sizeOfallNames += entry.Name.SizeInBytes();
     sizeOfAllData += entry.Compressed.Size;
@@ -439,13 +441,16 @@ uint Archive::ComputeZipSize()
   uint entryCount = Entries.Size();
   uint size = 0;
 
-  //For each entry there is a ZipLocalFileHeader followed by the name and the data
-  size += sizeof(ZipLocalFileHeader) * entryCount + sizeOfallNames + sizeOfAllData;
+  // For each entry there is a ZipLocalFileHeader followed by the name and the
+  // data
+  size +=
+      sizeof(ZipLocalFileHeader) * entryCount + sizeOfallNames + sizeOfAllData;
 
-  //At the end of the file is the central header with an entry for each archive entry
+  // At the end of the file is the central header with an entry for each archive
+  // entry
   size += sizeof(ZipCentralFileHeader) * entryCount + sizeOfallNames;
 
-  //Add in the End footer
+  // Add in the End footer
   size += sizeof(EndCentral);
 
   return size;
@@ -454,24 +459,25 @@ uint Archive::ComputeZipSize()
 const uint DeflateMethod = 8;
 const uint NoCompressionMethod = 0;
 
-template<typename Stream>
+template <typename Stream>
 void Archive::WriteZipInternal(Stream& file)
 {
-  uint compressionMethod = mCompressionLevel == 0 ? NoCompressionMethod : DeflateMethod;
+  uint compressionMethod =
+      mCompressionLevel == 0 ? NoCompressionMethod : DeflateMethod;
 
-  forRange(ArchiveEntry& entry, Entries.All())
+  forRange(ArchiveEntry & entry, Entries.All())
   {
     entry.Offset = (size_t)file.Tell();
     ZipLocalFileHeader header;
     header.Signature = LocalHeader;
     FillEntry(header.Info, entry, compressionMethod);
     Write(file, header);
-    file.Write((byte*)entry.Name.Data(), entry.Name.SizeInBytes()); 
+    file.Write((byte*)entry.Name.Data(), entry.Name.SizeInBytes());
     file.Write((byte*)entry.Compressed.Data, entry.Compressed.Size);
   }
 
   u32 centralOffset = (u32)file.Tell();
-  forRange(ArchiveEntry& entry, Entries.All())
+  forRange(ArchiveEntry & entry, Entries.All())
   {
     ZipCentralFileHeader header;
     header.Signature = CentralHeader;
@@ -499,33 +505,35 @@ void Archive::WriteZipInternal(Stream& file)
   Write(file, endCentral);
 }
 
-template<typename Stream>
-void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file)
+template <typename Stream>
+void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags,
+                                  Stream& file)
 {
   u32 signature = 0;
   Status status;
-  for(;;)
+  for (;;)
   {
-    //Look at what is next.
+    // Look at what is next.
     PeekType(file, signature);
-    if(signature == LocalHeader)
+    if (signature == LocalHeader)
     {
-      //Local file header.
+      // Local file header.
       ZipLocalFileHeader localFile;
-      Read(file,  localFile);
+      Read(file, localFile);
 
       ArchiveEntry& entry = Entries.PushBack();
 
-      entry.ModifiedTime =  ZipTimeToTime(localFile.Info.LastModifiedDate, localFile.Info.LastModifiedTime);
+      entry.ModifiedTime = ZipTimeToTime(localFile.Info.LastModifiedDate,
+                                         localFile.Info.LastModifiedTime);
       entry.Full.Size = localFile.Info.UncompressedSize;
       entry.Full.Data = nullptr;
       entry.Compressed.Size = localFile.Info.CompressedSize;
       entry.Compressed.Data = nullptr;
 
-      // Do not know the original compression level so 
+      // Do not know the original compression level so
       // mark with DefaultCompression so entry will be decompressed properly
       // in decompress entry
-      if(localFile.Info.CompressionMethod == DeflateMethod)
+      if (localFile.Info.CompressionMethod == DeflateMethod)
         entry.CompressionLevel = CompressionLevel::DefaultCompression;
       else
         entry.CompressionLevel = CompressionLevel::NoCompression;
@@ -535,36 +543,36 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
       ReadString(file, localFile.Info.FileNameLength, entry.Name);
       ReadString(file, localFile.Info.ExtraFieldLength, extra);
 
-      // We want archives to be consistent, so we always have them use '/' for file systems.
-      // We could choose to use the platform's file separator, however this works for all
-      // platforms and produces consistent behavior.
+      // We want archives to be consistent, so we always have them use '/' for
+      // file systems. We could choose to use the platform's file separator,
+      // however this works for all platforms and produces consistent behavior.
       entry.Name = entry.Name.Replace("\\", "/");
 
       entry.Offset = (uint)file.Tell();
       entry.Crc = localFile.Info.Crc;
 
-      if(readFlags & ArchiveReadFlags::Data)
+      if (readFlags & ArchiveReadFlags::Data)
       {
         // Read the compressed data into a heap allocated block
         byte* buffer = (byte*)zAllocate(localFile.Info.CompressedSize);
         file.Read(status, buffer, localFile.Info.CompressedSize);
         entry.Compressed.Data = buffer;
 
-        if(readFlags & ArchiveReadFlags::Decompress)
+        if (readFlags & ArchiveReadFlags::Decompress)
         {
           DecompressEntry(entry);
         }
       }
       else
       {
-        //Seek past the entry
+        // Seek past the entry
         file.Seek(localFile.Info.CompressedSize, SeekOrigin::Current);
       }
     }
-    else if(signature == CentralHeader)
+    else if (signature == CentralHeader)
     {
       ZipCentralFileHeader centralHeader;
-      Read(file,  centralHeader);
+      Read(file, centralHeader);
       String fileName;
       String extra;
       String comment;
@@ -586,8 +594,9 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
     }
     else
     {
-      // This is really bad, but we should replace all this logic with a proper zip library...
-      // Just read a byte and continue until we find another good header.
+      // This is really bad, but we should replace all this logic with a proper
+      // zip library... Just read a byte and continue until we find another good
+      // header.
       u8 temp = 0;
       Read(file, temp);
     }
@@ -596,9 +605,9 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
 
 void Archive::Extract(File& file, StringParam name, StringParam destfile)
 {
-  forRange(ArchiveEntry& entry, Entries.All())
+  forRange(ArchiveEntry & entry, Entries.All())
   {
-    if(entry.Name == name)
+    if (entry.Name == name)
     {
       Status status;
       byte* buffer = (byte*)zAllocate(entry.Compressed.Size);
@@ -643,12 +652,13 @@ void Archive::ReadZipFile(ArchiveReadFlags::Enum readFlags, StringParam name)
   ReadZip(readFlags, file);
 }
 
-void Archive::ReadBuffer(ArchiveReadFlags::Enum readFlags, ByteBufferBlock& buffer)
+void Archive::ReadBuffer(ArchiveReadFlags::Enum readFlags,
+                         ByteBufferBlock& buffer)
 {
   ReadZipFileInternal(readFlags, buffer);
 }
 
-template<typename Stream>
+template <typename Stream>
 void Archive::DecompressEntryInternal(ArchiveEntry& entry, Stream& file)
 {
   // Seek to the start of the entry
@@ -677,4 +687,4 @@ void Archive::WriteBuffer(ByteBufferBlock& buffer)
   WriteZipInternal(buffer);
 }
 
-}
+} // namespace Zero

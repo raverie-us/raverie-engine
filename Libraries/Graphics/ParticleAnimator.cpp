@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleLogic.cpp
-/// Implementation of the Particle system component classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,8 +10,7 @@ ZilchDefineType(ParticleAnimator, builder, type)
   ZeroBindTag(Tags::Particle);
 }
 
-ParticleAnimator::ParticleAnimator()
-  : mGraphicsSpace(nullptr)
+ParticleAnimator::ParticleAnimator() : mGraphicsSpace(nullptr)
 {
 }
 

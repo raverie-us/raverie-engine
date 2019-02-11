@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Window.hpp
-/// Declaration of the Window widget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,40 +6,40 @@ namespace Zero
 
 namespace Events
 {
-  /// Test dropping a tap
-  DeclareEvent(TabDropTest);
-  /// Drop a tab
-  DeclareEvent(TabDrop);
-  /// Find a window or Tab
-  DeclareEvent(TabFind);
-  // Show a tab or window
-  DeclareEvent(TabShow);
-  /// Close the window that Contains the object
-  DeclareEvent(CloseWindow);
-  /// Can this window or tab be closed?
-  DeclareEvent(CloseCheck);
-  /// Sent on the owned widget of a tab when the contents of the widget
-  /// have been modified (or saved)
-  DeclareEvent(TabModified);
-  /// Sent on the owned widget of a tab when the resource displayed in that
-  /// tab is modified
-  DeclareEvent(TabRenamed);
-  /// Name Change
-  DeclareEvent(NamedChanged);
-  /// When sent on the window composite, it will create a highlight around the
-  /// edges of the window, only if the tab owning the specified widget in the 
-  /// HighlightBorderEvent is selected.
-  /// For example: If you send this event on the property grid, it will bubble up
-  /// to the window and only highlight the window if the tab owning
-  /// the property grid is selected.
-  DeclareEvent(HighlightBorder);
-  /// An event for tab widgets to query their owned widgets if they are modified and need to be saved
-  /// It returns whether or not they need to display a CODA along with the appropriate message for
-  /// the resource type being queried
-  DeclareEvent(QueryModifiedSave);
-  /// Confirmation event that tells the owned widget to save its changes
-  DeclareEvent(ConfirmModifiedSave);
-}
+/// Test dropping a tap
+DeclareEvent(TabDropTest);
+/// Drop a tab
+DeclareEvent(TabDrop);
+/// Find a window or Tab
+DeclareEvent(TabFind);
+// Show a tab or window
+DeclareEvent(TabShow);
+/// Close the window that Contains the object
+DeclareEvent(CloseWindow);
+/// Can this window or tab be closed?
+DeclareEvent(CloseCheck);
+/// Sent on the owned widget of a tab when the contents of the widget
+/// have been modified (or saved)
+DeclareEvent(TabModified);
+/// Sent on the owned widget of a tab when the resource displayed in that
+/// tab is modified
+DeclareEvent(TabRenamed);
+/// Name Change
+DeclareEvent(NamedChanged);
+/// When sent on the window composite, it will create a highlight around the
+/// edges of the window, only if the tab owning the specified widget in the
+/// HighlightBorderEvent is selected.
+/// For example: If you send this event on the property grid, it will bubble up
+/// to the window and only highlight the window if the tab owning
+/// the property grid is selected.
+DeclareEvent(HighlightBorder);
+/// An event for tab widgets to query their owned widgets if they are modified
+/// and need to be saved It returns whether or not they need to display a CODA
+/// along with the appropriate message for the resource type being queried
+DeclareEvent(QueryModifiedSave);
+/// Confirmation event that tells the owned widget to save its changes
+DeclareEvent(ConfirmModifiedSave);
+} // namespace Events
 
 /// Describes the border to be created around a window.
 class HighlightBorderEvent : public Event
@@ -72,7 +64,6 @@ class Window;
 class GripZones;
 class MessageBoxEvent;
 
-//------------------------------------------------------------- Window Tab Event
 class WindowTabEvent : public HandleableEvent
 {
 public:
@@ -98,7 +89,9 @@ class TabModifiedEvent : public Event
 {
 public:
   ZilchDeclareType(TabModifiedEvent, TypeCopyMode::ReferenceType);
-  TabModifiedEvent(bool modified) : Modified(modified) {}
+  TabModifiedEvent(bool modified) : Modified(modified)
+  {
+  }
   bool Modified;
 };
 
@@ -106,7 +99,9 @@ class TabRenamedEvent : public Event
 {
 public:
   ZilchDeclareType(TabRenamedEvent, TypeCopyMode::ReferenceType);
-  TabRenamedEvent(StringParam name) : Name(name) {}
+  TabRenamedEvent(StringParam name) : Name(name)
+  {
+  }
   String Name;
 };
 
@@ -114,13 +109,12 @@ class QueryModifiedSaveEvent : public Event
 {
 public:
   ZilchDeclareType(QueryModifiedSaveEvent, TypeCopyMode::ReferenceType);
-  QueryModifiedSaveEvent() : Modified(false) {};
+  QueryModifiedSaveEvent() : Modified(false){};
   bool Modified;
   String Title;
   String Message;
 };
 
-//------------------------------------------------------------------- Multi Dock
 class MultiDock;
 class Window;
 
@@ -177,7 +171,7 @@ public:
   TabArea(Composite* parent, Window* window);
 
   void AddNewTab(Widget* widget, bool selectTab = true);
-  void TransferTab(TabWidget* tab, int newIndex=-1, bool select=false);
+  void TransferTab(TabWidget* tab, int newIndex = -1, bool select = false);
   void CloseTabs();
   void CloseAllOtherTabs(TabWidget* tab);
   void RequestCloseTab(TabWidget* tab);
@@ -194,12 +188,14 @@ public:
   TabWidget* TabFromWidget(Widget* widget);
   bool IsTabSelected(TabWidget* tab);
   Widget* GetActiveTabWidget();
-  void ConfirmationOfDestructiveAction(TabWidget* tab, StringParam title, StringParam message);
+  void ConfirmationOfDestructiveAction(TabWidget* tab,
+                                       StringParam title,
+                                       StringParam message);
   void CodaResponse(MessageBoxEvent* event);
-  
+
   // Widget Interface
   void UpdateTransform() override;
-  
+
   // Events
   void OnFindWindow(WindowTabEvent* event);
   void OnTabDropTest(WindowTabEvent* drop);
@@ -208,7 +204,7 @@ public:
   void OnTabFind(WindowTabEvent* event);
   void OnTabShow(WindowTabEvent* event);
 
-  //Tabs
+  // Tabs
   Array<TabWidget*> mTabs;
   TabWidget* mCodaTab;
   // Currently Selected Tab
@@ -224,12 +220,11 @@ public:
   Widget* mBackground;
 };
 
-//----------------------------------------------------------------------- Window
 
 DeclareEnum3(WindowStyle, Normal, NoFrame, Small);
 Thickness GetTotalWindowPadding();
 
-///Window is composite widget with a title bar and sizers. 
+/// Window is composite widget with a title bar and sizers.
 class Window : public Composite
 {
 public:
@@ -238,24 +233,27 @@ public:
   Window(Composite* parent);
   ~Window();
 
-  //Set the title of the window.
+  // Set the title of the window.
   void SetTitle(StringParam newTitle);
   void ChangeStyle(uint style);
 
-  //Composite interface
+  // Composite interface
   void AttachChildWidget(Widget* widget, AttachType::Enum attachType) override;
   void AttachAsTab(Widget* widget, bool selectNewTab = true);
   void SetLayout(Layout* layout);
 
   /// Border highlighting.
-  void SetHighlightBorder(bool state, Vec4Param color = Vec4(1,0,0,1));
+  void SetHighlightBorder(bool state, Vec4Param color = Vec4(1, 0, 0, 1));
   void OnHighlightBorder(HighlightBorderEvent* event);
 
   /// How much room is there available for the client (windows borders removed).
-  Vec2 GetClientSize() { return mClientRect.GetSize(); }
+  Vec2 GetClientSize()
+  {
+    return mClientRect.GetSize();
+  }
 
-  //Set if the window closes or hide when the close
-  //button is clicked.
+  // Set if the window closes or hide when the close
+  // button is clicked.
   void SetMinimized(bool value);
   void HideClose();
   bool CanClose() const;
@@ -263,7 +261,7 @@ public:
   TabArea* mTabArea;
   void ToggleMinimized();
 
-  //Widget Interface
+  // Widget Interface
   void UpdateTransform() override;
   Vec2 Measure(LayoutArea& data) override;
   void SetDockMode(DockMode::Enum dock) override;
@@ -274,8 +272,8 @@ public:
 
   void ForwardMouseDown(MouseEvent* event);
 
-//protected:
-  //Events
+  // protected:
+  // Events
   void OnTabDropTest(WindowTabEvent* event);
   void OnCloseWindow(WindowTabEvent* event);
   void RightMouseDownOnTitle(MouseEvent* event);
@@ -291,13 +289,13 @@ public:
   Vec2 mFloatingSize;
   Vec2 mLayoutSize;
 
-  //Child widgets
+  // Child widgets
   Gripper* mTitleMover;
   GripZones* mGripZones;
   Composite* mClientWidget;
   Composite* mWindowWidget;
 
-  //Display Objects
+  // Display Objects
   Element* mCloseButton;
   Element* mDropShadow;
   Element* mTitleBackground;
@@ -314,7 +312,7 @@ void ShowWidget(Widget* widget);
 
 namespace WindowUi
 {
-DeclareTweakable(Vec4,  BackgroundColor);
+DeclareTweakable(Vec4, BackgroundColor);
 }
 
-}//namespace Zero
+} // namespace Zero

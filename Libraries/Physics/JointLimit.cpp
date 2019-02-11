@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -23,7 +18,7 @@ ZilchDefineType(JointLimit, builder, type)
   ZeroBindEvent(Events::JointLowerLimitReached, JointEvent);
   ZeroBindEvent(Events::JointUpperLimitReached, JointEvent);
 
-  if(Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
     ZilchBindGetterSetterProperty(AtomIds)->ZeroSerialize(255u);
   else
     ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
@@ -39,7 +34,7 @@ JointLimit::JointLimit()
 
 JointLimit::~JointLimit()
 {
-  if(mNode == nullptr)
+  if (mNode == nullptr)
     return;
 
   mNode->mLimit = nullptr;
@@ -55,7 +50,7 @@ void JointLimit::Serialize(Serializer& stream)
 void JointLimit::Initialize(CogInitializer& initializer)
 {
   Joint* joint = GetOwner()->has(Joint);
-  if(joint)
+  if (joint)
   {
     mNode = joint->mNode;
     mNode->mLimit = this;
@@ -80,7 +75,7 @@ bool JointLimit::GetActive() const
 void JointLimit::SetActive(bool active)
 {
   mState.SetState(JointLimitState::Active, active);
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -94,7 +89,7 @@ uint JointLimit::GetAtomIds() const
 void JointLimit::SetAtomIds(uint atomIds)
 {
   mAtomIds = atomIds;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -108,7 +103,7 @@ real JointLimit::GetLowerLimit() const
 void JointLimit::SetLowerLimit(real limit)
 {
   mMinErr = limit;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -122,7 +117,7 @@ real JointLimit::GetUpperLimit() const
 void JointLimit::SetUpperLimit(real limit)
 {
   mMaxErr = limit;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -168,4 +163,4 @@ void JointLimit::SetWasAtUpperLimit(bool state)
   return mState.SetState(JointLimitState::WasAtUpperLimit, state);
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,39 +1,29 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  Variant                                        //
-//---------------------------------------------------------------------------------//
+//                                  Variant //
 
-Variant::Variant()
-  : mNativeType(nullptr)
+Variant::Variant() : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
 }
 
-Variant::Variant(NativeType* nativeType, const void* valueAddress)
-  : mNativeType(nullptr)
+Variant::Variant(NativeType* nativeType, const void* valueAddress) :
+    mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
   Assign(nativeType, valueAddress);
 }
 
-Variant::Variant(const Variant& rhs)
-  : mNativeType(nullptr)
+Variant::Variant(const Variant& rhs) : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
   Assign(rhs);
 }
-Variant::Variant(MoveReference<Variant> rhs)
-  : mNativeType(nullptr)
+Variant::Variant(MoveReference<Variant> rhs) : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
   Assign(ZeroMove(rhs));
@@ -62,13 +52,14 @@ Variant& Variant::operator=(MoveReference<Variant> rhs)
 bool Variant::operator==(const Variant& rhs) const
 {
   // Variants are storing different types?
-  if(mNativeType != rhs.mNativeType)
+  if (mNativeType != rhs.mNativeType)
     return false;
   // Variants are storing the same types?
   else
   {
-    // Both variants are empty? (rhs empty check is made redundant by this + previous if check)
-    if(mNativeType == nullptr/* && rhs.mNativeType == nullptr*/)
+    // Both variants are empty? (rhs empty check is made redundant by this +
+    // previous if check)
+    if (mNativeType == nullptr /* && rhs.mNativeType == nullptr*/)
       return true;
     // Both variants are non-empty?
     else
@@ -93,7 +84,7 @@ bool Variant::Is(NativeType* nativeType) const
 void* Variant::GetData() const
 {
   // Variant is empty?
-  if(mNativeType == nullptr)
+  if (mNativeType == nullptr)
     return nullptr;
 
   return InternalGetData();
@@ -102,7 +93,7 @@ void* Variant::GetData() const
 size_t Variant::Hash() const
 {
   // Variant is empty?
-  if(mNativeType == nullptr)
+  if (mNativeType == nullptr)
     return 0;
 
   return InternalHashStoredValue();
@@ -111,7 +102,7 @@ size_t Variant::Hash() const
 String Variant::ToString(bool shortFormat) const
 {
   // Variant is empty?
-  if(mNativeType == nullptr)
+  if (mNativeType == nullptr)
     return String();
 
   return InternalStoredValueToString(shortFormat);
@@ -125,7 +116,7 @@ void Variant::ToValue(StringRange range, NativeType* nativeType)
 void Variant::ToValue(StringRange range)
 {
   // Variant is empty?
-  if(mNativeType == nullptr)
+  if (mNativeType == nullptr)
     return;
 
   return InternalStringToStoredValue(range);
@@ -174,7 +165,7 @@ NativeType* Variant::GetNativeType() const
 NativeTypeId Variant::GetNativeTypeId() const
 {
   // Variant is empty?
-  if(mNativeType == nullptr)
+  if (mNativeType == nullptr)
     return cInvalidNativeTypeId;
 
   return mNativeType->mTypeId;
@@ -192,7 +183,7 @@ void Variant::DefaultConstruct(NativeType* nativeType)
 void Variant::Assign(NativeType* nativeType, const void* valueAddress)
 {
   // New stored type is null?
-  if(nativeType == nullptr)
+  if (nativeType == nullptr)
   {
     // Clear this variant
     Clear();
@@ -200,12 +191,16 @@ void Variant::Assign(NativeType* nativeType, const void* valueAddress)
   }
 
   // Type is not both copy constructible and destructible?
-  // (Unfortunately we must do this check at runtime as we don't have the static C++ type here)
-  if(nativeType->mCopyConstructObjectFn == nullptr
-  || nativeType->mDestructObjectFn      == nullptr)
+  // (Unfortunately we must do this check at runtime as we don't have the static
+  // C++ type here)
+  if (nativeType->mCopyConstructObjectFn == nullptr ||
+      nativeType->mDestructObjectFn == nullptr)
   {
     Error(String::Format("Unable to assign type '%s' to variant. - "
-                         "Types assigned to variant must have both an accessible copy constructor and destructor.", nativeType->mDebugTypeName).c_str());
+                         "Types assigned to variant must have both an "
+                         "accessible copy constructor and destructor.",
+                         nativeType->mDebugTypeName)
+              .c_str());
 
     // Clear this variant
     Clear();
@@ -222,7 +217,7 @@ void Variant::Assign(NativeType* nativeType, const void* valueAddress)
   InternalReplaceStoredType(newStoredType);
 
   // No value provided to copy?
-  if(valueAddress == nullptr)
+  if (valueAddress == nullptr)
   {
     // Default construct the new stored value
     InternalDefaultConstructValue();
@@ -240,7 +235,7 @@ void Variant::Assign(NativeType* nativeType, const void* valueAddress)
 void Variant::Assign(const Variant& rhs)
 {
   // Their variant is empty?
-  if(rhs.IsEmpty())
+  if (rhs.IsEmpty())
   {
     // Clear this variant
     Clear();
@@ -266,7 +261,7 @@ void Variant::Assign(const Variant& rhs)
 void Variant::Assign(MoveReference<Variant> rhs)
 {
   // Their variant is empty?
-  if(rhs->IsEmpty())
+  if (rhs->IsEmpty())
   {
     // Clear both variants
     Clear();
@@ -275,18 +270,19 @@ void Variant::Assign(MoveReference<Variant> rhs)
   }
 
   // Their variant is storing a large type?
-  if(rhs->IsLargeType())
+  if (rhs->IsLargeType())
   {
     // Clear this variant
     Clear();
 
     // Steal their stored value instead of move constructing a new one
     mNativeType = rhs->mNativeType;
-    mDataAsPointer  = rhs->mDataAsPointer;
+    mDataAsPointer = rhs->mDataAsPointer;
 
-    // "Clear" their variant (we stole their data, they're no longer managing it)
+    // "Clear" their variant (we stole their data, they're no longer managing
+    // it)
     rhs->mNativeType = nullptr;
-    rhs->mDataAsPointer  = nullptr;
+    rhs->mDataAsPointer = nullptr;
   }
   // Their variant is storing a small type?
   else
@@ -322,7 +318,7 @@ void Variant::Clear()
   InternalDestructStoredValue();
 
   // Variant is storing a large type?
-  if(IsLargeType())
+  if (IsLargeType())
   {
     // Free the heap buffer we allocated to fit our large stored value
     InternalFreeHeapBuffer();
@@ -348,7 +344,7 @@ void* Variant::InternalGetData() const
   Assert(mNativeType != nullptr);
 
   // Small stored type?
-  if(IsSmallType(mNativeType))
+  if (IsSmallType(mNativeType))
   {
     // Value is stored in local buffer
     return const_cast<byte*>(mData);
@@ -394,7 +390,7 @@ void Variant::InternalAllocateHeapBuffer()
   Assert(mDataAsPointer == nullptr);
 
   // Allocate heap buffer large enough to fit the stored type
-  mDataAsPointer = new byte [mNativeType->mTypeSize];
+  mDataAsPointer = new byte[mNativeType->mTypeSize];
 }
 
 void Variant::InternalFreeHeapBuffer()
@@ -406,7 +402,7 @@ void Variant::InternalFreeHeapBuffer()
   Assert(mDataAsPointer != nullptr);
 
   // Free heap buffer
-  delete [] (byte*)mDataAsPointer;
+  delete[](byte*) mDataAsPointer;
   mDataAsPointer = nullptr;
 
   // (Local buffer should now be zeroed, albeit incidentally)
@@ -416,7 +412,7 @@ void Variant::InternalFreeHeapBuffer()
 void Variant::InternalDestructStoredValue()
 {
   // Variant is empty?
-  if(mNativeType == nullptr)
+  if (mNativeType == nullptr)
     return;
 
   // Destruct stored value
@@ -431,7 +427,7 @@ void Variant::InternalReplaceStoredType(NativeType* newStoredType)
   bool canReuseHeapBuffer = false;
 
   // Current stored type is empty or small? (Uses local buffer?)
-  if(mNativeType == nullptr || IsSmallType(mNativeType))
+  if (mNativeType == nullptr || IsSmallType(mNativeType))
   {
     // Zero local buffer
     InternalZeroLocalBuffer();
@@ -442,7 +438,7 @@ void Variant::InternalReplaceStoredType(NativeType* newStoredType)
     Assert(IsLargeType(mNativeType));
 
     // New stored type coincidentally has the exact same size?
-    if(mNativeType->mTypeSize == newStoredType->mTypeSize)
+    if (mNativeType->mTypeSize == newStoredType->mTypeSize)
     {
       Assert(IsLargeType(newStoredType));
 
@@ -450,10 +446,12 @@ void Variant::InternalReplaceStoredType(NativeType* newStoredType)
       InternalZeroHeapBuffer();
 
       // We can reuse our heap buffer for the new stored type
-      // (Since the types are the same size. This may be a coincidence or they may even be the same type.)
+      // (Since the types are the same size. This may be a coincidence or they
+      // may even be the same type.)
       canReuseHeapBuffer = true;
     }
-    // New stored type has a different size? (New stored type is either small or a different-sized large type)
+    // New stored type has a different size? (New stored type is either small or
+    // a different-sized large type)
     else
     {
       // Free heap buffer
@@ -465,7 +463,7 @@ void Variant::InternalReplaceStoredType(NativeType* newStoredType)
   mNativeType = newStoredType;
 
   // New stored type is large
-  if(IsLargeType(newStoredType) && !canReuseHeapBuffer)
+  if (IsLargeType(newStoredType) && !canReuseHeapBuffer)
   {
     // Allocate heap buffer
     InternalAllocateHeapBuffer();
@@ -478,17 +476,24 @@ void Variant::InternalReplaceStoredType(NativeType* newStoredType)
 void Variant::InternalDefaultConstructValue()
 {
   // Stored type is missing a default constructor?
-  if(mNativeType->mDefaultConstructObjectFn == nullptr)
+  if (mNativeType->mDefaultConstructObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_DEFAULT_CONSTRUCTOR
-    Error(String::Format("Unable to perform default construction for variant stored type '%s'. Will be zero-initialized instead. - "
-                          "An accessible default constructor was not defined and could not be generated for the given type. "
-                          "(Note: Zero-initialized is likely not a valid state for complex types! This can result in undefined behavior!)", mNativeType->mDebugTypeName).c_str());
+    Error(String::Format(
+              "Unable to perform default construction for variant stored type "
+              "'%s'. Will be zero-initialized instead. - "
+              "An accessible default constructor was not defined and could not "
+              "be generated for the given type. "
+              "(Note: Zero-initialized is likely not a valid state for complex "
+              "types! This can result in undefined behavior!)",
+              mNativeType->mDebugTypeName)
+              .c_str());
 #endif
 
     // Fallback behavior
-    // (The previous step, InternalReplaceStoredType, already zeroed the stored value's buffer
-    // so there's nothing to do here. The stored value is already zero-initialized)
+    // (The previous step, InternalReplaceStoredType, already zeroed the stored
+    // value's buffer so there's nothing to do here. The stored value is already
+    // zero-initialized)
     return;
   }
 
@@ -505,11 +510,16 @@ void Variant::InternalCopyConstructValue(const void* source)
 void Variant::InternalMoveConstructValue(void* source)
 {
   // Stored type is missing a move constructor?
-  if(mNativeType->mMoveConstructObjectFn == nullptr)
+  if (mNativeType->mMoveConstructObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_MOVE_CONSTRUCTOR
-    Error(String::Format("Unable to perform move construction for variant stored type '%s'. Will perform copy construction instead. - "
-                          "An accessible move constructor was not defined and could not be generated for the given type.", mNativeType->mDebugTypeName).c_str());
+    Error(
+        String::Format("Unable to perform move construction for variant stored "
+                       "type '%s'. Will perform copy construction instead. - "
+                       "An accessible move constructor was not defined and "
+                       "could not be generated for the given type.",
+                       mNativeType->mDebugTypeName)
+            .c_str());
 #endif
 
     // Fallback behavior
@@ -524,12 +534,18 @@ void Variant::InternalMoveConstructValue(void* source)
 bool Variant::InternalEqualToValue(const void* rhs) const
 {
   // Stored type is missing a valid compare policy?
-  if(mNativeType->mEqualToObjectFn == nullptr)
+  if (mNativeType->mEqualToObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_COMPARE_POLICY
-    Error(String::Format("Unable to perform equality comparison for variant stored type '%s'. Will return false instead. - "
-                          "A valid ComparePolicy was not defined and could not be generated for the given type "
-                          "(Adding an operator== function to the given type or defining a valid ComparePolicy for the given type should solve this problem).", mNativeType->mDebugTypeName).c_str());
+    Error(String::Format("Unable to perform equality comparison for variant "
+                         "stored type '%s'. Will return false instead. - "
+                         "A valid ComparePolicy was not defined and could not "
+                         "be generated for the given type "
+                         "(Adding an operator== function to the given type or "
+                         "defining a valid ComparePolicy for the given type "
+                         "should solve this problem).",
+                         mNativeType->mDebugTypeName)
+              .c_str());
 #endif
 
     // Fallback behavior
@@ -543,12 +559,18 @@ bool Variant::InternalEqualToValue(const void* rhs) const
 size_t Variant::InternalHashStoredValue() const
 {
   // Stored type is missing a valid hash policy?
-  if(mNativeType->mHashObjectFn == nullptr)
+  if (mNativeType->mHashObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_HASH_POLICY
-    Error(String::Format("Unable to perform hash operation for variant stored type '%s'. Will return 0 instead. - "
-                          "A valid HashPolicy was not defined and could not be generated for the given type "
-                          "(Adding a Hash function to the given type or defining a valid HashPolicy for the given type should solve this problem).", mNativeType->mDebugTypeName).c_str());
+    Error(String::Format(
+              "Unable to perform hash operation for variant stored type '%s'. "
+              "Will return 0 instead. - "
+              "A valid HashPolicy was not defined and could not be generated "
+              "for the given type "
+              "(Adding a Hash function to the given type or defining a valid "
+              "HashPolicy for the given type should solve this problem).",
+              mNativeType->mDebugTypeName)
+              .c_str());
 #endif
 
     // Fallback behavior
@@ -562,11 +584,16 @@ size_t Variant::InternalHashStoredValue() const
 String Variant::InternalStoredValueToString(bool shortFormat) const
 {
   // Stored type is missing a global to string function?
-  if(mNativeType->mObjectToStringFn == nullptr)
+  if (mNativeType->mObjectToStringFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_TO_STRING_FUNCTION
-    Error(String::Format("Unable to perform object to string conversion for variant stored type '%s'. Will return String() instead. - "
-                          "A global ToString function was not defined and could not be generated for the given type.", mNativeType->mDebugTypeName).c_str());
+    Error(String::Format(
+              "Unable to perform object to string conversion for variant "
+              "stored type '%s'. Will return String() instead. - "
+              "A global ToString function was not defined and could not be "
+              "generated for the given type.",
+              mNativeType->mDebugTypeName)
+              .c_str());
 #endif
 
     // Fallback behavior
@@ -580,11 +607,16 @@ String Variant::InternalStoredValueToString(bool shortFormat) const
 void Variant::InternalStringToStoredValue(StringRange range)
 {
   // Stored type is missing a global to value function?
-  if(mNativeType->mStringToObjectFn == nullptr)
+  if (mNativeType->mStringToObjectFn == nullptr)
   {
 #if VARIANT_ERROR_ON_MISSING_TO_VALUE_FUNCTION
-    Error(String::Format("Unable to perform string to object conversion for variant stored type '%s'. Will clear the variant instead. - "
-                          "A global ToValue function was not defined and could not be generated for the given type.", mNativeType->mDebugTypeName).c_str());
+    Error(String::Format(
+              "Unable to perform string to object conversion for variant "
+              "stored type '%s'. Will clear the variant instead. - "
+              "A global ToValue function was not defined and could not be "
+              "generated for the given type.",
+              mNativeType->mDebugTypeName)
+              .c_str());
 #endif
 
     // Fallback behavior

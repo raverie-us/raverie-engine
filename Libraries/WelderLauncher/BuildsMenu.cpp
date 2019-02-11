@@ -1,41 +1,34 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------- Tweakables
 namespace BuildsUi
 {
-  const cstr cLocation = "LauncherUi/BuildsWindow";
-  Tweakable(Vec4, BuildNotesColor,       Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReleaseNotes,          Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildVersion,          Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReleaseDate,           Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, Tags,                  Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildHover,            Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildSelected,         Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildSelectedHover,    Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildBadSelected,      Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildBadSelectedHover, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildBackground0,      Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BuildBackground1,      Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, DownloadForeground,    Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, DownloadBackground,    Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "LauncherUi/BuildsWindow";
+Tweakable(Vec4, BuildNotesColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReleaseNotes, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildVersion, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReleaseDate, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, Tags, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildHover, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildSelected, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildSelectedHover, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildBadSelected, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildBadSelectedHover, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildBackground0, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BuildBackground1, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, DownloadForeground, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, DownloadBackground, Vec4(1, 1, 1, 1), cLocation);
+} // namespace BuildsUi
 
-//------------------------------------------------------------------ Builds Item
-//******************************************************************************
-BuildItem::BuildItem(Composite* parent, ZeroBuild* version,
+BuildItem::BuildItem(Composite* parent,
+                     ZeroBuild* version,
                      BuildsMenu* buildsMenu) :
-  Composite(parent),
-  mVersion(version),
-  mBuildsMenu(buildsMenu)
+    Composite(parent),
+    mVersion(version),
+    mBuildsMenu(buildsMenu)
 {
   mVersionSelector = buildsMenu->mLauncher->mVersionSelector;
 
@@ -43,10 +36,11 @@ BuildItem::BuildItem(Composite* parent, ZeroBuild* version,
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(Vec4::cZero);
 
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero,
-                              Thickness(Pixels(0,9,10,0))));//3
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
+                              Vec2::cZero,
+                              Thickness(Pixels(0, 9, 10, 0)))); // 3
   SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
-  SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(46));//34
+  SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(46)); // 34
 
   Composite* leftPadding = new Composite(this);
   leftPadding->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(12));
@@ -84,9 +78,10 @@ BuildItem::BuildItem(Composite* parent, ZeroBuild* version,
 
     String year, month, day;
     version->GetReleaseDate(year, month, day);
-    
+
     mReleaseDate = new Text(rightHalf, mLauncherBoldFont, 10);
-    mReleaseDate->SetText(String::Format("%s-%s-%s", month.c_str(), day.c_str(), year.c_str()));
+    mReleaseDate->SetText(
+        String::Format("%s-%s-%s", month.c_str(), day.c_str(), year.c_str()));
     mReleaseDate->mAlign = TextAlign::Right;
     mReleaseDate->SetColor(BuildsUi::ReleaseDate);
   }
@@ -105,7 +100,6 @@ BuildItem::BuildItem(Composite* parent, ZeroBuild* version,
   ConnectThisTo(version, Events::BackgroundTaskFailed, OnDownloadFailed);
 }
 
-//******************************************************************************
 void BuildItem::OnDestroy()
 {
   DisconnectAll(this, this);
@@ -114,13 +108,12 @@ void BuildItem::OnDestroy()
   Composite::OnDestroy();
 }
 
-//******************************************************************************
 void BuildItem::UpdateTransform()
 {
   mBackground->SetSize(mSize);
 
   // Update the size of the progress bar
-  if(mDownloadProgress)
+  if (mDownloadProgress)
   {
     float textWidth = mBuildVersion->GetMinSize().x;
     // Center the progress bar to be 24 pixels smaller than the build item
@@ -130,7 +123,7 @@ void BuildItem::UpdateTransform()
 
   // When we're selected, we gotta change the color of some text to
   // make it stand out against the selected background color
-  if(mSelected)
+  if (mSelected)
   {
     mBuildVersion->SetColor(BuildsUi::ReleaseDate);
     mInstallState->SetColor(Vec4(0, 0, 0, 0.5f));
@@ -140,17 +133,17 @@ void BuildItem::UpdateTransform()
   else
   {
     UpdateInstallState();
-    
+
     mBuildVersion->SetColor(BuildsUi::BuildVersion);
     mTags->SetColor(BuildsUi::Tags);
     mReleaseDate->SetColor(BuildsUi::ReleaseDate);
   }
 
-  if(IsMouseOver())
+  if (IsMouseOver())
   {
-    if(mSelected)
+    if (mSelected)
     {
-      if(mVersion->IsBad())
+      if (mVersion->IsBad())
         mBackground->SetColor(BuildsUi::BuildBadSelectedHover);
       else
         mBackground->SetColor(BuildsUi::BuildSelectedHover);
@@ -162,9 +155,9 @@ void BuildItem::UpdateTransform()
   }
   else
   {
-    if(mSelected)
+    if (mSelected)
     {
-      if(mVersion->IsBad())
+      if (mVersion->IsBad())
         mBackground->SetColor(BuildsUi::BuildBadSelected);
       else
         mBackground->SetColor(BuildsUi::BuildSelected);
@@ -174,21 +167,19 @@ void BuildItem::UpdateTransform()
       mBackground->SetColor(mBackgroundColor);
     }
   }
-  
+
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void BuildItem::Install()
 {
-  if(mVersion->mInstallState != InstallState::NotInstalled)
+  if (mVersion->mInstallState != InstallState::NotInstalled)
     return;
 
   // Start the install
   BackgroundTask* task = mVersionSelector->InstallVersion(mVersion);
 }
 
-//******************************************************************************
 void BuildItem::OnInstallStarted(Event* e)
 {
   mBuildsMenu->UpdateInstallButton();
@@ -214,14 +205,13 @@ void BuildItem::OnInstallStarted(Event* e)
   mReleaseDate->SetVisible(false);
 }
 
-//******************************************************************************
 void BuildItem::Uninstall()
 {
-  if(mVersion->mInstallState == InstallState::NotInstalled)
+  if (mVersion->mInstallState == InstallState::NotInstalled)
     return;
 
   String msg = "UNINSTALL BUILD";
-  if(mVersion->mOnServer == false)
+  if (mVersion->mOnServer == false)
     msg = "UNINSTALL LOCAL BUILD";
 
   Modal* modal = new ModalConfirmAction(mBuildsMenu, msg);
@@ -231,7 +221,6 @@ void BuildItem::Uninstall()
   mBuildsMenu->mLauncher->mActiveModal = modal;
 }
 
-//******************************************************************************
 void BuildItem::UninstallBuildInternal()
 {
   mVersionSelector->DeleteVersion(mVersion);
@@ -239,14 +228,13 @@ void BuildItem::UninstallBuildInternal()
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void BuildItem::OnUninstallModalResult(ModalConfirmEvent* e)
 {
-  if(e->mConfirmed)
+  if (e->mConfirmed)
   {
-    // If there are copies of the build currently running then we can't close and 
-    // we have to prompt the user on what action they want to take
-    if(mVersionSelector->CheckForRunningBuild(mVersion) == true)
+    // If there are copies of the build currently running then we can't close
+    // and we have to prompt the user on what action they want to take
+    if (mVersionSelector->CheckForRunningBuild(mVersion) == true)
     {
       CreateBuildsRunningModal();
       return;
@@ -257,32 +245,34 @@ void BuildItem::OnUninstallModalResult(ModalConfirmEvent* e)
   }
 }
 
-//******************************************************************************
 void BuildItem::CreateBuildsRunningModal()
 {
   // Warn the user that the build is currently running
-  String msg = String::Format("Build %s is currently running", mVersion->GetDisplayString().c_str());
+  String msg = String::Format("Build %s is currently running",
+                              mVersion->GetDisplayString().c_str());
   // Create the buttons that we will display and listen for responses from
   Array<String> buttons;
   buttons.PushBack("RETRY");
   buttons.PushBack("FORCE CLOSE");
   buttons.PushBack("CANCEL");
   // Create the modal and connect to whenever a button is pressed
-  ModalButtonsAction* modal = new ModalButtonsAction(mBuildsMenu, msg.ToUpper(), buttons);
+  ModalButtonsAction* modal =
+      new ModalButtonsAction(mBuildsMenu, msg.ToUpper(), buttons);
   ConnectThisTo(modal, Events::ModalButtonPressed, OnBuildRunningModalResult);
   modal->TakeFocus();
-  // Make sure to set what the active modal is on the launcher window (so escape can cancel)
+  // Make sure to set what the active modal is on the launcher window (so escape
+  // can cancel)
   mBuildsMenu->mLauncher->mActiveModal = modal;
 }
 
-//******************************************************************************
 void BuildItem::OnBuildRunningModalResult(ModalButtonEvent* e)
 {
   // The user wants to retry (they are manually closing their copies of zero)
-  if(e->mButtonName == "RETRY")
+  if (e->mButtonName == "RETRY")
   {
-    // If there are any copies of the build still running then create the modal again
-    if(mVersionSelector->CheckForRunningBuild(mVersion) == true)
+    // If there are any copies of the build still running then create the modal
+    // again
+    if (mVersionSelector->CheckForRunningBuild(mVersion) == true)
     {
       CreateBuildsRunningModal();
       return;
@@ -292,31 +282,29 @@ void BuildItem::OnBuildRunningModalResult(ModalButtonEvent* e)
     UninstallBuildInternal();
   }
   // The user wants us to close all copies of zero that are open with that build
-  else if(e->mButtonName == "FORCE CLOSE")
+  else if (e->mButtonName == "FORCE CLOSE")
   {
     mVersionSelector->ForceCloseRunningBuilds(mVersion);
     UninstallBuildInternal();
   }
   // The user chanced their mind and doesn't want to uninstall
-  else if(e->mButtonName == "CANCEL")
+  else if (e->mButtonName == "CANCEL")
   {
     return;
   }
 }
 
-//******************************************************************************
 void BuildItem::OnDownloadUpdate(BackgroundTaskEvent* e)
 {
   // Update the download progress on the progress bar
-  if(mDownloadProgress)
+  if (mDownloadProgress)
     mDownloadProgress->SetPercentage(e->PercentComplete * 0.95f);
 }
 
-//******************************************************************************
 void BuildItem::OnDownloadCompleted(BackgroundTaskEvent* e)
 {
   // Destroy the progress bar
-  if(mDownloadProgress != nullptr)
+  if (mDownloadProgress != nullptr)
     mDownloadProgress->Destroy();
   mDownloadProgress = nullptr;
 
@@ -330,15 +318,13 @@ void BuildItem::OnDownloadCompleted(BackgroundTaskEvent* e)
   mBuildsMenu->UpdateInstallButton();
 }
 
-//******************************************************************************
 void BuildItem::OnUninstallCompleted(BackgroundTaskEvent* e)
 {
   OnDownloadCompleted(e);
-  if(mVersion->mOnServer == false)
+  if (mVersion->mOnServer == false)
     mBuildsMenu->CreateBuildItems();
 }
 
-//******************************************************************************
 void BuildItem::OnDownloadFailed(BackgroundTaskEvent* e)
 {
   ZPrint("Failed to download build %s\n", mVersion->GetDebugIdString().c_str());
@@ -355,13 +341,12 @@ void BuildItem::OnDownloadFailed(BackgroundTaskEvent* e)
   // ...
 }
 
-//******************************************************************************
 void BuildItem::OnMouseEnter(MouseEvent* e)
 {
   MarkAsNeedsUpdate();
 
   // Create a tooltip if the build was deprecated and we don't already have one
-  if(mToolTip == nullptr && mVersion->GetDeprecatedInfo(false) != nullptr)
+  if (mToolTip == nullptr && mVersion->GetDeprecatedInfo(false) != nullptr)
   {
     ToolTip* toolTip = new ToolTip(this);
 
@@ -370,14 +355,13 @@ void BuildItem::OnMouseEnter(MouseEvent* e)
     Vec2 size = GetSize();
     translation.x += size.x;
     translation.y += size.y / 2;
-    
+
     toolTip->SetArrowTipTranslation(translation);
     toolTip->SetText(mVersion->GetDeprecatedString());
     mToolTip = toolTip;
   }
 }
 
-//******************************************************************************
 void BuildItem::OnLeftClick(MouseEvent* e)
 {
   ObjectEvent eventToSend(this);
@@ -386,34 +370,29 @@ void BuildItem::OnLeftClick(MouseEvent* e)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void BuildItem::OnRightClick(MouseEvent* e)
 {
-
 }
 
-//******************************************************************************
 void BuildItem::OnMouseExit(MouseEvent* e)
 {
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void BuildItem::SetSelected(bool state)
 {
   mSelected = state;
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void BuildItem::UpdateInstallState()
 {
-  if(mVersion->mInstallState == InstallState::Installed)
+  if (mVersion->mInstallState == InstallState::Installed)
   {
     mInstallState->SetText("INSTALLED");
     mInstallState->SetColor(BuildColors::Installed);
   }
-  else if(mVersion->IsBad())
+  else if (mVersion->IsBad())
   {
     mInstallState->SetText("DEPRECATED");
     mInstallState->SetColor(BuildColors::Deprecated);
@@ -425,14 +404,15 @@ void BuildItem::UpdateInstallState()
   }
 }
 
-//---------------------------------------------------------------- Release Notes
-//******************************************************************************
 ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(5,5), Thickness::cZero));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(5, 5), Thickness::cZero));
 
   Composite* headerText = new Composite(this);
-  headerText->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(5,0), Thickness(Pixels(0, 0, 8, 0))));
+  headerText->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
+                                          Pixels(5, 0),
+                                          Thickness(Pixels(0, 0, 8, 0))));
   {
     Composite* topRow = new Composite(headerText);
     topRow->SetLayout(CreateRowLayout());
@@ -446,7 +426,8 @@ ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
       mDownloadButton->SizeToContents();
       mDownloadButton->mIconColor = ToByteColor(Vec4(0.9f, 0.9f, 0.9f, 1));
       mDownloadButton->mIconHoverColor = Color::White;
-      mDownloadButton->mIconClickedColor = ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
+      mDownloadButton->mIconClickedColor =
+          ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
       mDownloadButton->SetToolTip("Install Build");
 
       mUninstallButton = new IconButton(topRow);
@@ -456,7 +437,8 @@ ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
       mUninstallButton->SizeToContents();
       mUninstallButton->mIconColor = ToByteColor(Vec4(0.9f, 0.9f, 0.9f, 1));
       mUninstallButton->mIconHoverColor = Color::White;
-      mUninstallButton->mIconClickedColor = ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
+      mUninstallButton->mIconClickedColor =
+          ToByteColor(Vec4(0.7f, 0.7f, 0.7f, 1));
       mUninstallButton->SetToolTip("Uninstall Build");
 
       new Spacer(topRow, SizePolicy::Fixed, Pixels(10, 0));
@@ -491,24 +473,22 @@ ReleaseNotes::ReleaseNotes(Composite* parent) : Composite(parent)
 
   // We want the background of the text editor to be completely transparent
   ColorScheme localScheme;
-  localScheme.Default = FloatColorRGBA(100,100,100,255);
-  localScheme.Background = FloatColorRGBA(100,100,100,0);
-  localScheme.Gutter = FloatColorRGBA(100,100,100,0);
+  localScheme.Default = FloatColorRGBA(100, 100, 100, 255);
+  localScheme.Background = FloatColorRGBA(100, 100, 100, 0);
+  localScheme.Gutter = FloatColorRGBA(100, 100, 100, 0);
   mReleaseNotes->SetColorScheme(localScheme);
 
   mSelectedBuild = nullptr;
 }
 
-//******************************************************************************
 void ReleaseNotes::UpdateTransform()
 {
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void ReleaseNotes::DisplayReleaseNotes(ZeroBuild* build)
 {
-  if(mSelectedBuild)
+  if (mSelectedBuild)
     mSelectedBuild->GetDispatcher()->Disconnect(this);
 
   ConnectThisTo(build, Events::InstallStarted, OnSelectedBuildChanged);
@@ -529,45 +509,48 @@ void ReleaseNotes::DisplayReleaseNotes(ZeroBuild* build)
   mReleaseNotes->SetAllText(releaseNotes);
   TextEditorHotspot::MarkHotspots(mReleaseNotes);
   mReleaseNotes->SetReadOnly(true);
-  // At the moment, scroll bars only grow, never shrink. To prevent showing a scrollbar
-  // when there's no text (which looks odd) for now just toggle visibility on the release
-  // notes. Need to figure out what's wrong with scintilla later...
+  // At the moment, scroll bars only grow, never shrink. To prevent showing a
+  // scrollbar when there's no text (which looks odd) for now just toggle
+  // visibility on the release notes. Need to figure out what's wrong with
+  // scintilla later...
   mReleaseNotes->SetVisible(!releaseNotes.Empty());
 
   UpdateBuildButtons();
 }
 
-//******************************************************************************
 void ReleaseNotes::OnSelectedBuildChanged(Event*)
 {
   UpdateBuildButtons();
 }
 
-//******************************************************************************
 void ReleaseNotes::UpdateBuildButtons()
 {
   mUninstallButton->SetActive(false);
   mDownloadButton->SetActive(false);
 
-  if(mSelectedBuild->mInstallState == InstallState::NotInstalled)
+  if (mSelectedBuild->mInstallState == InstallState::NotInstalled)
     mDownloadButton->SetActive(true);
 
-  if(mSelectedBuild->mInstallState == InstallState::Installed)
+  if (mSelectedBuild->mInstallState == InstallState::Installed)
     mUninstallButton->SetActive(true);
 }
 
-//------------------------------------------------------------------ Builds Menu
-//******************************************************************************
-BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher)
-  : Composite(parent), mLauncher(launcher)
+BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher) :
+    Composite(parent),
+    mLauncher(launcher)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(10, 0), Thickness(Pixels(0,5,24,0))));
+  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
+                              Pixels(10, 0),
+                              Thickness(Pixels(0, 5, 24, 0))));
   SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
 
   mBuildList = new ScrollArea(this);
   mBuildList->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(400));
-  mBuildList->GetClientWidget()->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 0), Thickness(Pixels(32,0,0,0))));
+  mBuildList->GetClientWidget()->SetLayout(
+      CreateStackLayout(LayoutDirection::TopToBottom,
+                        Pixels(0, 0),
+                        Thickness(Pixels(32, 0, 0, 0))));
   mBuildList->mScrollSpeedScalar = 0.5f;
 
   Splitter* splitter = new Splitter(this);
@@ -576,43 +559,51 @@ BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher)
   mReleaseNotes = new ReleaseNotes(this);
   mReleaseNotes->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
 
-  ConnectThisTo(mReleaseNotes->mDownloadButton, Events::ButtonPressed, OnInstallPressed);
-  ConnectThisTo(mReleaseNotes->mUninstallButton, Events::ButtonPressed, OnUninstallPressed);
+  ConnectThisTo(
+      mReleaseNotes->mDownloadButton, Events::ButtonPressed, OnInstallPressed);
+  ConnectThisTo(mReleaseNotes->mUninstallButton,
+                Events::ButtonPressed,
+                OnUninstallPressed);
 
   VersionSelector* versionSelector = mLauncher->mVersionSelector;
-  ConnectThisTo(versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
+  ConnectThisTo(
+      versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
   ConnectThisTo(versionSelector, Events::BuildListUpdated, OnBuildListUpdated);
   ConnectThisTo(this, Events::MenuDisplayed, OnMenuDisplayed);
   ConnectThisTo(this, Events::MenuHidden, OnMenuHidden);
-  
-  // Listen for when the user tags change on the config (most likely from the settings menu)
-  ConnectThisTo(mLauncher->mConfigCog, Events::ShowDevelopChanged, OnShowDevelopChanged);
-  ConnectThisTo(mLauncher->mConfigCog, Events::ShowExperimentalBranchesChanged, OnShowDevelopChanged);
 
-  // Create the initial build list (at this point it should be the locally downloaded ones)
+  // Listen for when the user tags change on the config (most likely from the
+  // settings menu)
+  ConnectThisTo(
+      mLauncher->mConfigCog, Events::ShowDevelopChanged, OnShowDevelopChanged);
+  ConnectThisTo(mLauncher->mConfigCog,
+                Events::ShowExperimentalBranchesChanged,
+                OnShowDevelopChanged);
+
+  // Create the initial build list (at this point it should be the locally
+  // downloaded ones)
   CreateBuildItems();
 }
 
-//******************************************************************************
 void BuildsMenu::UpdateTransform()
 {
   // Update the client size of the scroll area
   Widget* clientWidget = mBuildList->GetClientWidget();
-  clientWidget->mSize.x = mBuildList->mSize.x - mBuildList->GetScrollBarSize() - Pixels(10);
+  clientWidget->mSize.x =
+      mBuildList->mSize.x - mBuildList->GetScrollBarSize() - Pixels(10);
 
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void BuildsMenu::CreateBuildItems()
 {
   // Try to preserve the user's old selected build
   BuildId oldSelectedBuild;
-  if(mSelectedBuild.IsNotNull())
+  if (mSelectedBuild.IsNotNull())
     oldSelectedBuild = mSelectedBuild->mVersion->GetBuildId();
 
   // Delete all old build items
-  for(size_t i = 0; i < mBuildItems.Size(); ++i)
+  for (size_t i = 0; i < mBuildItems.Size(); ++i)
     mBuildItems[i]->Destroy();
   mBuildItems.Clear();
 
@@ -622,12 +613,13 @@ void BuildsMenu::CreateBuildItems()
   VersionSelector* versionSelector = mLauncher->mVersionSelector;
   Array<ZeroBuild*> results;
   TagList tagResults, rejections;
-  if(launcherConfig->mShowDevelopmentBuilds == false)
+  if (launcherConfig->mShowDevelopmentBuilds == false)
     rejections.Insert("Develop");
 
   // Check to see if we display legacy builds
-  LauncherLegacySettings* legacySettings = launcherConfig->mOwner->has(LauncherLegacySettings);
-  if(legacySettings == nullptr || !legacySettings->mDisplayLegacyBuilds)
+  LauncherLegacySettings* legacySettings =
+      launcherConfig->mOwner->has(LauncherLegacySettings);
+  if (legacySettings == nullptr || !legacySettings->mDisplayLegacyBuilds)
     rejections.Insert("Legacy");
 
   // Get all builds with the current search filters
@@ -635,18 +627,25 @@ void BuildsMenu::CreateBuildItems()
 
   ZeroBuildTagPolicy policy(launcherConfig);
   HashSet<String> legacyTags;
-  FilterDataSetWithTags(legacyTags, rejections, searchText, versionSelector->mVersions, results, tagResults, policy);
+  FilterDataSetWithTags(legacyTags,
+                        rejections,
+                        searchText,
+                        versionSelector->mVersions,
+                        results,
+                        tagResults,
+                        policy);
 
   uint index = 0;
   String currentPlatform = BuildId::GetCurrentLauncherId().mPlatform;
-  bool displayOnlyPreferredPlatform = mLauncher->mVersionSelector->mConfig->mDisplayOnlyPreferredPlatform;
-  forRange(ZeroBuild* version, results.All())
+  bool displayOnlyPreferredPlatform =
+      mLauncher->mVersionSelector->mConfig->mDisplayOnlyPreferredPlatform;
+  forRange(ZeroBuild * version, results.All())
   {
     BuildItem* item = new BuildItem(mBuildList, version, this);
     ConnectThisTo(item, Events::ButtonPressed, OnBuildSelected);
     mBuildItems.PushBack(item);
 
-    if(index % 2)
+    if (index % 2)
       item->mBackgroundColor = BuildsUi::BuildBackground0;
     else
       item->mBackgroundColor = BuildsUi::BuildBackground1;
@@ -655,10 +654,10 @@ void BuildsMenu::CreateBuildItems()
 
   // Select a build if possible. Ideally select whatever the user
   // used to have selected, otherwise select the newest build.
-  if(!mBuildItems.Empty())
+  if (!mBuildItems.Empty())
   {
     BuildItem* buildToSelect = FindBuildItem(oldSelectedBuild);
-    if(buildToSelect == nullptr)
+    if (buildToSelect == nullptr)
       buildToSelect = mBuildItems.Front();
     SelectBuild(buildToSelect);
   }
@@ -668,40 +667,35 @@ void BuildsMenu::CreateBuildItems()
   mBuildList->SetClientSize(clientSize);
 }
 
-//******************************************************************************
 void BuildsMenu::OnVersionListLoaded(Event* e)
 {
   ZPrint("Loading builds list\n");
   CreateBuildItems();
 }
 
-//******************************************************************************
 void BuildsMenu::OnBuildListUpdated(Event* e)
 {
   CreateBuildItems();
 }
 
-//******************************************************************************
 void BuildsMenu::OnShowDevelopChanged(Event* e)
 {
   CreateBuildItems();
 }
 
-//******************************************************************************
 void BuildsMenu::OnBuildSelected(ObjectEvent* e)
 {
   BuildItem* toSelect = (BuildItem*)e->Source;
   SelectBuild(toSelect);
 }
 
-//******************************************************************************
 void BuildsMenu::SelectBuild(BuildItem* toSelect)
 {
   // Display the release notes for this build
   mReleaseNotes->DisplayReleaseNotes(toSelect->mVersion);
 
   // De-select the previously selected build
-  if(BuildItem* selected = mSelectedBuild)
+  if (BuildItem* selected = mSelectedBuild)
     selected->SetSelected(false);
 
   // Select the new build
@@ -713,7 +707,6 @@ void BuildsMenu::SelectBuild(BuildItem* toSelect)
   UpdateInstallButton();
 }
 
-//******************************************************************************
 void BuildsMenu::OnMenuDisplayed(Event* e)
 {
   ZPrint("Builds menu displayed\n");
@@ -736,7 +729,6 @@ void BuildsMenu::OnMenuDisplayed(Event* e)
   ConnectThisTo(mLauncher->mSearch, Events::TextChanged, OnSearchChanged);
 }
 
-//******************************************************************************
 void BuildsMenu::OnMenuHidden(Event* e)
 {
   // No longer want to listen to button presses on the main button
@@ -746,11 +738,10 @@ void BuildsMenu::OnMenuHidden(Event* e)
   mUninstallModal.SafeDestroy();
 }
 
-//******************************************************************************
 void BuildsMenu::OnInstallPressed(Event* e)
 {
   // Install the currently selected build
-  if(BuildItem* buildItem = mSelectedBuild)
+  if (BuildItem* buildItem = mSelectedBuild)
   {
     buildItem->Install();
 
@@ -760,11 +751,10 @@ void BuildsMenu::OnInstallPressed(Event* e)
   }
 }
 
-//******************************************************************************
 void BuildsMenu::OnUninstallPressed(Event* e)
 {
   // Install the currently selected build
-  if(BuildItem* buildItem = mSelectedBuild)
+  if (BuildItem* buildItem = mSelectedBuild)
   {
     buildItem->Uninstall();
 
@@ -774,23 +764,21 @@ void BuildsMenu::OnUninstallPressed(Event* e)
   }
 }
 
-//******************************************************************************
 void BuildsMenu::OnSearchChanged(Event* e)
 {
   CreateBuildItems();
 }
 
-//******************************************************************************
 void BuildsMenu::UpdateInstallButton()
 {
   // If this page isn't currently active then don't update the install button
-  if(mActive == false)
+  if (mActive == false)
     return;
 
   // If the build can be installed, enable the install button
   MainButton* button = mLauncher->mMainButton;
   BuildItem* selectedBuild = mSelectedBuild;
-  if(selectedBuild == nullptr)
+  if (selectedBuild == nullptr)
   {
     button->SetEnabled(false);
     return;
@@ -800,17 +788,17 @@ void BuildsMenu::UpdateInstallButton()
   button->SetVersionAndProject(version, nullptr);
 }
 
-//******************************************************************************
 BuildItem* BuildsMenu::FindBuildItem(BuildId& buildId)
 {
-  // Just do a linear search right now. This is currently never big enough to matter
-  for(size_t i = 0; i < mBuildItems.Size(); ++i)
+  // Just do a linear search right now. This is currently never big enough to
+  // matter
+  for (size_t i = 0; i < mBuildItems.Size(); ++i)
   {
     BuildItem* buildItem = mBuildItems[i];
-    if(buildItem->mVersion->GetBuildId() == buildId)
+    if (buildItem->mVersion->GetBuildId() == buildId)
       return buildItem;
   }
   return nullptr;
 }
 
-}//namespace Zero
+} // namespace Zero

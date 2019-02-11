@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,26 +6,29 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(AddWindowCancelled);
-  DefineEvent(ResourceTypeSelected);
-  DefineEvent(ResourceTemplateSelected);
-  DefineEvent(PostAddResource);
-}
+DefineEvent(AddWindowCancelled);
+DefineEvent(ResourceTypeSelected);
+DefineEvent(ResourceTemplateSelected);
+DefineEvent(PostAddResource);
+} // namespace Events
 
-//------------------------------------------------------------------------------ Post Add Resource Event
+//Post Add Resource Event
 ZilchDefineType(PostAddResourceEvent, builder, type)
 {
 }
 
-PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource)
-  : mPostAdd(postAdd), mResourceAdd(resource)
+PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd,
+                                           ResourceAdd* resource) :
+    mPostAdd(postAdd),
+    mResourceAdd(resource)
 {
 }
 
 const String cFilesSelected = "cFilesSelected";
 
-//**************************************************************************************************
-AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, StringParam resourceName)
+AddResourceWindow* OpenAddWindow(BoundType* resourceType,
+                                 Window** window,
+                                 StringParam resourceName)
 {
   Composite* parent = Z::gEditor;
   Window* addWindow = new Window(parent);
@@ -41,7 +39,7 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, Strin
   if (resourceType)
     addDialog->ShowResourceTypeSearch(false);
 
-  if(resourceType)
+  if (resourceType)
     addWindow->SetTitle(BuildString("Add ", resourceType->Name, " Resource"));
   else
     addWindow->SetTitle("Add a Resource");
@@ -62,25 +60,22 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, Strin
   // Animate window in from above
   CenterToWindow(parent, addWindow, false);
 
-  if(window)
+  if (window)
     *window = addWindow;
 
   addDialog->TakeFocus();
 
-  if(!resourceName.Empty())
+  if (!resourceName.Empty())
     addDialog->SetResourceNameField(resourceName);
 
   return addDialog;
 }
 
-//------------------------------------------------------------------------------ Add Resource Window
-//**************************************************************************************************
+//Add Resource Window
 ZilchDefineType(AddResourceWindow, builder, type)
 {
-
 }
 
-//**************************************************************************************************
 void CloseAddWindow(Composite* windowElement)
 {
   Event e;
@@ -90,23 +85,24 @@ void CloseAddWindow(Composite* windowElement)
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
 }
 
-//**************************************************************************************************
-AddResourceWindow::AddResourceWindow(Composite* parent) :
-  Composite(parent)
+AddResourceWindow::AddResourceWindow(Composite* parent) : Composite(parent)
 {
   mMinSize = Pixels(960, 200);
-  
+
   // Main area and a bar at the bottom
   SetLayout(CreateStackLayout());
 
   Composite* mainArea = new Composite(this);
   mainArea->SetSizing(SizePolicy::Flex, 1.0f);
-  mainArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+  mainArea->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
   {
     mResourceTypeSearch = new ResourceTypeSearch(mainArea);
     mResourceTypeSearch->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(240));
-    ConnectThisTo(mResourceTypeSearch, Events::ResourceTypeSelected, OnResourceTypeSelected);
-    
+    ConnectThisTo(mResourceTypeSearch,
+                  Events::ResourceTypeSelected,
+                  OnResourceTypeSelected);
+
     Widget* seperator = mainArea->CreateAttached<Element>(cWhiteSquare);
     seperator->SetColor(Vec4(0.09f, 0.09f, 0.09f, 1.0f));
     seperator->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(2));
@@ -115,8 +111,10 @@ AddResourceWindow::AddResourceWindow(Composite* parent) :
 
     mResourceTemplateSearch = new ResourceTemplateSearch(mainArea);
     mResourceTemplateSearch->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
-    ConnectThisTo(mResourceTemplateSearch, Events::ResourceTemplateSelected, OnResourceTemplateSelected);
-    
+    ConnectThisTo(mResourceTemplateSearch,
+                  Events::ResourceTemplateSelected,
+                  OnResourceTemplateSelected);
+
     seperator = mainArea->CreateAttached<Element>(cWhiteSquare);
     seperator->SetColor(Vec4(0.09f, 0.09f, 0.09f, 1.0f));
     seperator->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(2));
@@ -124,7 +122,8 @@ AddResourceWindow::AddResourceWindow(Composite* parent) :
     seperator->SetNotInLayout(false);
 
     mResourceTemplateDisplay = new ResourceTemplateDisplay(mainArea, mPostAdd);
-    mResourceTemplateDisplay->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(240));
+    mResourceTemplateDisplay->SetSizing(
+        SizeAxis::X, SizePolicy::Fixed, Pixels(240));
 
     mResourceTypeSearch->mNextFocus = mResourceTemplateSearch;
     mResourceTemplateSearch->mPreviousFocus = mResourceTypeSearch;
@@ -142,7 +141,6 @@ AddResourceWindow::AddResourceWindow(Composite* parent) :
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
 }
 
-//**************************************************************************************************
 void AddResourceWindow::OnKeyDown(KeyboardEvent* e)
 {
   // close the add window when escape is pressed
@@ -150,7 +148,6 @@ void AddResourceWindow::OnKeyDown(KeyboardEvent* e)
     CloseAddWindow(this);
 }
 
-//**************************************************************************************************
 void AddResourceWindow::SetResourceNameField(StringParam resourceName)
 {
   mResourceTemplateDisplay->mNameField->SetText(resourceName);
@@ -159,14 +156,12 @@ void AddResourceWindow::SetResourceNameField(StringParam resourceName)
   mResourceTemplateDisplay->mNameField->TakeFocus();
 }
 
-//**************************************************************************************************
 void AddResourceWindow::SelectResourceType(BoundType* resourceType)
 {
   mResourceTemplateDisplay->ShowResourceTemplate(nullptr);
   mResourceTypeSearch->SetSelectedResourceType(resourceType);
 }
 
-//**************************************************************************************************
 void AddResourceWindow::SetLibrary(ContentLibrary* library)
 {
   if (library)
@@ -178,39 +173,37 @@ void AddResourceWindow::SetLibrary(ContentLibrary* library)
   }
 }
 
-//**************************************************************************************************
 void AddResourceWindow::ShowResourceTypeSearch(bool state)
 {
   mResourceTypeSearch->SetActive(state);
-  if(state == false)
+  if (state == false)
     mResourceTemplateDisplay->HidePreview();
 
-  if(state)
+  if (state)
     mMinSize = Pixels(960, 200);
   else
     mMinSize = Pixels(720, 200);
 }
 
-//**************************************************************************************************
 void AddResourceWindow::AddTags(TagList& tags)
 {
   TextBox* tagsBox = mResourceTemplateDisplay->mTagsBox;
   StringBuilder allTags;
-  
+
   // Keep whatever current tags are already set
-  if(!tagsBox->GetText().Empty())
+  if (!tagsBox->GetText().Empty())
   {
     allTags.Append(tagsBox->GetText());
     allTags.Append(", ");
   }
 
   // Add all the tags for the resource being created
-  forRange(StringParam& tag, tags.All())
+  forRange(StringParam & tag, tags.All())
   {
     // Only add tags that are not resource types as they are automatically added
     // to resources upon their creation
     BoundType* type = MetaDatabase::GetInstance()->FindType(tag);
-    if(type && type->IsA(ZilchTypeId(Resource)))
+    if (type && type->IsA(ZilchTypeId(Resource)))
       continue;
 
     allTags.Append(tag);
@@ -220,14 +213,12 @@ void AddResourceWindow::AddTags(TagList& tags)
   tagsBox->SetText(allTags.ToString());
 }
 
-//**************************************************************************************************
 void AddResourceWindow::TemplateSearchTakeFocus()
 {
   mResourceTypeSearch->mSearchField->LoseFocus();
   mResourceTemplateSearch->TakeFocus();
 }
 
-//**************************************************************************************************
 bool AddResourceWindow::TakeFocusOverride()
 {
   if (mResourceTypeSearch->GetActive())
@@ -240,7 +231,6 @@ bool AddResourceWindow::TakeFocusOverride()
   return true;
 }
 
-//**************************************************************************************************
 void AddResourceWindow::OnResourceTypeSelected(Event*)
 {
   mResourceTemplateDisplay->ShowResourceTemplate(nullptr);
@@ -248,20 +238,26 @@ void AddResourceWindow::OnResourceTypeSelected(Event*)
   mResourceTemplateSearch->ShowTemplates(selectedType);
 }
 
-//**************************************************************************************************
 void AddResourceWindow::OnResourceTemplateSelected(Event*)
 {
-  Resource* resourceTemplate = mResourceTemplateSearch->GetSelectedResourceTemplate();
+  Resource* resourceTemplate =
+      mResourceTemplateSearch->GetSelectedResourceTemplate();
   mResourceTemplateDisplay->ShowResourceTemplate(resourceTemplate);
 }
 
-//---------------------------------------------------------------------- Resource Search Data Source
+//Resource Search Data Source
 struct ResourceManagerPolicy : public ObjectTree<String>
 {
   typedef String StoredType;
   typedef String MapType;
-  enum { Mappable = true };
-  enum { AllowFolders = false };
+  enum
+  {
+    Mappable = true
+  };
+  enum
+  {
+    AllowFolders = false
+  };
 
   //************************************************************************************************
   static StoredType InvalidValue()
@@ -282,39 +278,41 @@ struct ResourceManagerPolicy : public ObjectTree<String>
   }
 
   //************************************************************************************************
-  template<typename EntryType>
-  static void GetData(Any& value, EntryType* entry, StringParam name, StringParam column)
+  template <typename EntryType>
+  static void
+  GetData(Any& value, EntryType* entry, StringParam name, StringParam column)
   {
-    if(!column.Empty())
+    if (!column.Empty())
     {
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
         value = name;
     }
   }
 
   //************************************************************************************************
-  template<typename EntryType>
-  static void SetData(AnyParam newValue, EntryType* entry, StringParam object, StringParam column)
+  template <typename EntryType>
+  static void SetData(AnyParam newValue,
+                      EntryType* entry,
+                      StringParam object,
+                      StringParam column)
   {
   }
 };
 
-//**************************************************************************************************
-class ReourceManagersDataSource : public PolicyDataSource< ResourceManagerPolicy > { };
+class ReourceManagersDataSource : public PolicyDataSource<ResourceManagerPolicy>
+{
+};
 
-//----------------------------------------------------------------------------- Resource Type Search
-//**************************************************************************************************
+//Resource Type Search
 ZilchDefineType(ResourceTypeSearch, builder, type)
 {
-
 }
 
-//**************************************************************************************************
-ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
-  : ColoredComposite(parent, Vec4(0.17f, 0.17f, 0.17f, 1.0f))
+ResourceTypeSearch::ResourceTypeSearch(Composite* parent) :
+    ColoredComposite(parent, Vec4(0.17f, 0.17f, 0.17f, 1.0f))
 {
   SetLayout(CreateStackLayout());
-  
+
   Composite* searchFieldArea = new Composite(this);
   searchFieldArea->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   searchFieldArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(24.0f));
@@ -322,7 +320,7 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
   {
     mSearchField = new TagChainTextBox(searchFieldArea);
     mSearchField->SetSizing(SizePolicy::Flex, 1.0f);
-   
+
     ConnectThisTo(mSearchField, Events::TextChanged, OnTextEntered);
     ConnectThisTo(mSearchField, Events::TextEnter, OnEnter);
     ConnectThisTo(mSearchField, Events::KeyDown, OnKeyDownSearch);
@@ -330,7 +328,8 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
     ConnectThisTo(mSearchField, Events::KeyPreview, OnSearchKeyPreview);
   }
 
-  ColoredComposite* importArea = new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
+  ColoredComposite* importArea =
+      new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
   importArea->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   importArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(24.0f));
   {
@@ -339,9 +338,9 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
     import->SetSize(Pixels(61, 16));
     ConnectThisTo(import, Events::LeftClick, OnImportClicked);
   }
-  
 
-  ColoredComposite* resourceListArea = new ColoredComposite(this, Vec4(1, 1, 1, 0.1f));
+  ColoredComposite* resourceListArea =
+      new ColoredComposite(this, Vec4(1, 1, 1, 0.1f));
   resourceListArea->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   resourceListArea->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1.0f);
   resourceListArea->SetLayout(CreateFillLayout());
@@ -363,13 +362,13 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
   categorySortWeights.Insert("Other", 60);
 
   ResourceSystem* resourceSystem = Z::gResources;
-  forRange(ResourceManager* manager, resourceSystem->Managers.Values())
+  forRange(ResourceManager * manager, resourceSystem->Managers.Values())
   {
     if (manager->mCanAddFile || manager->mCanCreateNew)
     {
       String resourceTypeName = manager->GetResourceType()->Name;
       String category = manager->mCategory;
-      
+
       // Default if it's empty
       if (category.Empty())
         category = "Other";
@@ -377,7 +376,10 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
       uint categoryWeight = categorySortWeights.FindValue(category, 100);
       mResourceList->AddGroup(category, categoryWeight);
 
-      mResourceList->AddItem(resourceTypeName, resourceTypeName, category, manager->mAddSortWeight);
+      mResourceList->AddItem(resourceTypeName,
+                             resourceTypeName,
+                             category,
+                             manager->mAddSortWeight);
 
       mValidResourceTypes.PushBack(resourceTypeName);
     }
@@ -388,13 +390,11 @@ ResourceTypeSearch::ResourceTypeSearch(Composite* parent)
   ConnectThisTo(this, cFilesSelected, OnFilesSelected);
 }
 
-//**************************************************************************************************
 BoundType* ResourceTypeSearch::GetSelectedResourceType()
 {
   return mSelectedType;
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::SetSelectedResourceType(BoundType* resourceType)
 {
   mSelectedType = resourceType;
@@ -404,7 +404,6 @@ void ResourceTypeSearch::SetSelectedResourceType(BoundType* resourceType)
   DispatchEvent(Events::ResourceTypeSelected, &e);
 }
 
-//**************************************************************************************************
 bool ResourceTypeSearch::TakeFocusOverride()
 {
   if (GetActive())
@@ -412,7 +411,6 @@ bool ResourceTypeSearch::TakeFocusOverride()
   return true;
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnImportClicked(Event*)
 {
   FileDialogConfig* config = FileDialogConfig::Create();
@@ -424,7 +422,6 @@ void ResourceTypeSearch::OnImportClicked(Event*)
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnFilesSelected(OsFileSelection* e)
 {
   // Don't do anything if we select nothing
@@ -437,18 +434,17 @@ void ResourceTypeSearch::OnFilesSelected(OsFileSelection* e)
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnTextEntered(Event* e)
 {
-  if(!mSearchField->HasFocus())
+  if (!mSearchField->HasFocus())
     return;
-  
+
   String currentText = mSearchField->GetText();
   if (currentText.Empty())
     return;
-  
+
   auto filtered = FilterStrings(mValidResourceTypes.All(), currentText);
-  
+
   if (filtered.mPrimary)
   {
     String resourceTypeName = *filtered.mPrimary;
@@ -457,7 +453,6 @@ void ResourceTypeSearch::OnTextEntered(Event* e)
   }
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnKeyDownSearch(KeyboardEvent* e)
 {
   // Forward arrow events to the resource list
@@ -467,7 +462,6 @@ void ResourceTypeSearch::OnKeyDownSearch(KeyboardEvent* e)
     OnKeyDown(e);
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnKeyDown(KeyboardEvent* e)
 {
   if (e->Key == Keys::Tab || e->Key == Keys::Enter)
@@ -477,7 +471,6 @@ void ResourceTypeSearch::OnKeyDown(KeyboardEvent* e)
   }
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnSearchKeyPreview(KeyboardEvent* e)
 {
   if (e->Key == Keys::Escape)
@@ -487,13 +480,11 @@ void ResourceTypeSearch::OnSearchKeyPreview(KeyboardEvent* e)
   }
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnEnter(Event*)
 {
   mNextFocus->TakeFocus();
 }
 
-//**************************************************************************************************
 void ResourceTypeSearch::OnResourceTypeSelected(Event*)
 {
   String resourceTypeName = mResourceList->GetSelectedItem();
@@ -501,18 +492,15 @@ void ResourceTypeSearch::OnResourceTypeSelected(Event*)
     SetSelectedResourceType(resourceType);
 }
 
-//------------------------------------------------------------------------- Resource Template Search
-//**************************************************************************************************
+//Resource Template Search
 ZilchDefineType(ResourceTemplateSearch, builder, type)
 {
-
 }
 
-//**************************************************************************************************
-ResourceTemplateSearch::ResourceTemplateSearch(Composite* parent)
-  : ColoredComposite(parent, Vec4(0.22f, 0.22f, 0.22f, 1.0f))
-  , mTemplateCount(0)
-  , mManager(nullptr)
+ResourceTemplateSearch::ResourceTemplateSearch(Composite* parent) :
+    ColoredComposite(parent, Vec4(0.22f, 0.22f, 0.22f, 1.0f)),
+    mTemplateCount(0),
+    mManager(nullptr)
 {
   SetLayout(CreateStackLayout());
 
@@ -548,7 +536,6 @@ ResourceTemplateSearch::ResourceTemplateSearch(Composite* parent)
   ConnectThisTo(this, cFilesSelected, OnFilesSelected);
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
 {
   mTemplateCount = 0;
@@ -557,7 +544,7 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
   // Disconnect from all previous modified events
   if (mManager)
   {
-    forRange(Resource* resource, mManager->ResourceIdMap.Values())
+    forRange(Resource * resource, mManager->ResourceIdMap.Values())
     {
       if (ResourceTemplate* resourceTemplate = resource->GetResourceTemplate())
         DisconnectAll(resourceTemplate, this);
@@ -565,13 +552,14 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
         DisconnectAll(contentItem, this);
     }
   }
-  
+
   mManager = Z::gResources->GetResourceManager(resourceType);
 
-  if(mManager->mCanAddFile)
+  if (mManager->mCanAddFile)
   {
     mImportButton->SetActive(true);
-    mImportButton->mText->SetText(BuildString("IMPORT ", resourceType->Name.ToUpper()));
+    mImportButton->mText->SetText(
+        BuildString("IMPORT ", resourceType->Name.ToUpper()));
     mImportButton->SizeToContents();
   }
   else
@@ -580,11 +568,11 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
   }
 
   mTemplateList->Clear();
-  
+
   bool templatesFound = false;
 
-  // Connect to modified events so we can update 
-  forRange(Resource* resource, mManager->ResourceIdMap.Values())
+  // Connect to modified events so we can update
+  forRange(Resource * resource, mManager->ResourceIdMap.Values())
   {
     if (ResourceTemplate* resourceTemplate = resource->GetResourceTemplate())
     {
@@ -592,7 +580,7 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
       ++mTemplateCount;
 
       String displayName = resourceTemplate->mDisplayName;
-      
+
       if (displayName.Empty())
         displayName = resource->Name;
 
@@ -608,13 +596,16 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
       mTemplateList->AddGroup(category, categoryWeight);
 
       uint itemWeight = resourceTemplate->mSortWeight;
-      Item* item = mTemplateList->AddItem(resource->Name, displayName, category, itemWeight);
+      Item* item = mTemplateList->AddItem(
+          resource->Name, displayName, category, itemWeight);
 
-      PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(item, displayName, resource);
+      PreviewWidget* tileWidget =
+          ResourcePreview::CreatePreviewWidget(item, displayName, resource);
 
       if (resourceType->IsA(ZilchTypeId(ColorGradient)))
       {
-        item->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(10, 3)));
+        item->SetLayout(CreateStackLayout(
+            LayoutDirection::TopToBottom, Vec2::cZero, Thickness(10, 3)));
         tileWidget->SetSizing(SizePolicy::Flex, Vec2(1, 1));
       }
       else
@@ -626,15 +617,18 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
         item->mLabel->MoveToFront();
       }
 
-      ConnectThisTo(resourceTemplate, Events::PropertyModified, OnContentComponentsChanged);
+      ConnectThisTo(resourceTemplate,
+                    Events::PropertyModified,
+                    OnContentComponentsChanged);
     }
-  
+
     if (ContentItem* contentItem = resource->mContentItem)
-      ConnectThisTo(contentItem, Events::ComponentsModified, OnContentComponentsChanged);
+      ConnectThisTo(
+          contentItem, Events::ComponentsModified, OnContentComponentsChanged);
   }
 
   mNoTemplateBackground->SetVisible(false);
-  if(templatesFound == false)
+  if (templatesFound == false)
   {
     mNothingSelectedText->SetVisible(true);
     mNothingSelectedText->SetText("no templates available");
@@ -646,38 +640,35 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
   mTemplateList->SelectFirstItem();
 }
 
-//**************************************************************************************************
 Resource* ResourceTemplateSearch::GetSelectedResourceTemplate()
 {
   String resourceName = mTemplateList->GetSelectedItem();
   return mManager->GetResource(resourceName, ResourceNotFound::ErrorFallback);
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::UpdateTransform()
 {
   CenterToWindow(this, mNothingSelectedText, false);
-  mNoTemplateBackground->SetTranslation(Pixels(0,24,0));
+  mNoTemplateBackground->SetTranslation(Pixels(0, 24, 0));
   mNoTemplateBackground->SetSize(mSize - Pixels(0, 24));
   ColoredComposite::UpdateTransform();
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::OnImportClicked(Event*)
 {
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "cFilesSelected";
   config->CallbackObject = this;
-  config->Title = String::Format("Add a %s", mManager->GetResourceType()->Name.c_str());
+  config->Title =
+      String::Format("Add a %s", mManager->GetResourceType()->Name.c_str());
 
-  forRange(FileDialogFilter& filter, mManager->mOpenFileFilters)
-    config->mSearchFilters.PushBack(filter);
+  forRange(FileDialogFilter & filter, mManager->mOpenFileFilters)
+      config->mSearchFilters.PushBack(filter);
 
   config->Flags = FileDialogFlags::MultiSelect;
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::OnFilesSelected(OsFileSelection* e)
 {
   // Don't do anything if we select nothing
@@ -690,56 +681,51 @@ void ResourceTemplateSearch::OnFilesSelected(OsFileSelection* e)
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
 }
 
-//**************************************************************************************************
 bool ResourceTemplateSearch::TakeFocusOverride()
 {
   mTemplateList->TakeFocus();
   return true;
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::OnTemplateSelected(Event*)
 {
   Event e;
   DispatchEvent(Events::ResourceTemplateSelected, &e);
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::OnContentComponentsChanged(Event*)
 {
   ShowTemplates(mManager->GetResourceType());
 }
 
-//**************************************************************************************************
 void ResourceTemplateSearch::OnKeyDown(KeyboardEvent* e)
 {
   if (e->Key == Keys::Tab)
   {
-    if(e->ShiftPressed)
+    if (e->ShiftPressed)
       mPreviousFocus->TakeFocus();
     else
       mNextFocus->TakeFocus();
   }
-  else if(e->Key == Keys::Enter)
+  else if (e->Key == Keys::Enter)
   {
     mNextFocus->TakeFocus();
   }
 }
 
-//------------------------------------------------------------------------ Resource Template Display
-//**************************************************************************************************
+//Resource Template Display
 ZilchDefineType(ResourceTemplateDisplay, builder, type)
 {
-
 }
 
-//**************************************************************************************************
-ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& postAdd)
-  : ColoredComposite(parent, Vec4(0.27f, 0.27f, 0.27f, 1.0f))
-  , mPostAdd(postAdd)
-  , mPreviewWidget(nullptr)
+ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent,
+                                                 PostAddOp& postAdd) :
+    ColoredComposite(parent, Vec4(0.27f, 0.27f, 0.27f, 1.0f)),
+    mPostAdd(postAdd),
+    mPreviewWidget(nullptr)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
 
   Composite* topBar = new Composite(this);
   topBar->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
@@ -772,10 +758,11 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
   mDescription->mBackground->SetActive(false);
   mDescription->mBorder->SetActive(false);
 
-  ColoredComposite* name = new ColoredComposite(this, Vec4(1,1,1, 0.05f));
+  ColoredComposite* name = new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
   name->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   name->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(44.0f));
-  name->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(12, 0, 12, 5)));
+  name->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness(12, 0, 12, 5)));
   {
     Label* nameLabel = new Label(name);
     nameLabel->SetText("Name");
@@ -795,7 +782,8 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
   ColoredComposite* tags = new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
   tags->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   tags->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(44.0f));
-  tags->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(12, 0, 12, 5)));
+  tags->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness(12, 0, 12, 5)));
   {
     Label* tagsLabel = new Label(tags);
     tagsLabel->SetText("Tags");
@@ -807,7 +795,8 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
 
     ConnectThisTo(mTagsBox, Events::TextTyped, OnTextTypedTag);
     ConnectThisTo(mTagsBox, Events::KeyDown, OnKeyDownTagField);
-    ConnectThisTo(mTagsBox->mEditTextField, Events::FocusGained, OnTagsFocusGained);
+    ConnectThisTo(
+        mTagsBox->mEditTextField, Events::FocusGained, OnTagsFocusGained);
     ConnectThisTo(mTagsBox->mEditTextField, Events::FocusLost, OnTagsFocusLost);
   }
 
@@ -816,7 +805,8 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
   ColoredComposite* library = new ColoredComposite(this, Vec4(1, 1, 1, 0.05f));
   library->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
   library->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(44.0f));
-  library->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(12, 0, 12, 5)));
+  library->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness(12, 0, 12, 5)));
   {
     Label* libraryLabel = new Label(library);
     libraryLabel->SetText("Library");
@@ -829,7 +819,9 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
 
   Composite* buttonRow = new Composite(this);
   buttonRow->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(36));
-  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(6, 0), Thickness(Pixels(12, 5, 12, 0))));
+  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
+                                         Pixels(6, 0),
+                                         Thickness(Pixels(12, 5, 12, 0))));
   {
     // Push everything right
     new Spacer(buttonRow, SizePolicy::Flex, Vec2(1));
@@ -846,7 +838,7 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
   BuildContentLibraryList();
 
   // Hide the library group if there was only one library
-  if(!mLibrarySelect->GetActive())
+  if (!mLibrarySelect->GetActive())
     library->SetActive(false);
 
   mDisabledCover = CreateAttached<Element>(cWhiteSquare);
@@ -861,12 +853,11 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
   ConnectThisTo(mCancelButton, Events::ButtonPressed, OnCancel);
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::ShowResourceTemplate(Resource* resource)
 {
   mSelectedTemplate = resource;
 
-  if(resource)
+  if (resource)
   {
     mDisabledCover->SetActive(false);
     ResourceTemplate* resourceTemplate = resource->GetResourceTemplate();
@@ -879,20 +870,21 @@ void ResourceTemplateDisplay::ShowResourceTemplate(Resource* resource)
       mPreviewWidget->Destroy();
 
     mTemplateName->SetVisible(true);
-    if(!resourceTemplate->mDisplayName.Empty())
+    if (!resourceTemplate->mDisplayName.Empty())
       mTemplateName->SetText(resourceTemplate->mDisplayName);
     else
       mTemplateName->SetText(resource->Name);
     mTemplateName->SizeToContents();
     mTemplateName->SetSizing(SizePolicy::Fixed, mTemplateName->GetSize());
 
-    mPreviewWidget = ResourcePreview::CreatePreviewWidget(mPreviewParent, resource->Name, resource);
-    //mPreviewWidget->SetSizing(SizePolicy::Fixed, Pixels(48, 48));
+    mPreviewWidget = ResourcePreview::CreatePreviewWidget(
+        mPreviewParent, resource->Name, resource);
+    // mPreviewWidget->SetSizing(SizePolicy::Fixed, Pixels(48, 48));
 
     mPreviewWidget->SetSizing(SizePolicy::Flex, Vec2(1));
     if (ZilchVirtualTypeId(resource)->IsA(ZilchTypeId(ColorGradient)))
       mPreviewWidget->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(34));
-    
+
     mPreviewWidget->mVerticalAlignment = VerticalAlignment::Center;
     mPreviewText->SetVisible(false);
 
@@ -907,7 +899,7 @@ void ResourceTemplateDisplay::ShowResourceTemplate(Resource* resource)
     mNameField->SetReadOnly(true);
     mTagsBox->SetReadOnly(true);
     mDescription->SetVisible(false);
-    
+
     if (mPreviewWidget)
       mPreviewWidget->Destroy();
     mPreviewWidget = nullptr;
@@ -915,32 +907,30 @@ void ResourceTemplateDisplay::ShowResourceTemplate(Resource* resource)
   MarkAsNeedsUpdate();
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::HidePreview()
 {
   mPreviewParent->SetActive(false);
 }
 
-
-//**************************************************************************************************
 bool ResourceTemplateDisplay::TakeFocusOverride()
 {
   mNameField->TakeFocus();
   return true;
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::UpdateTransform()
 {
   CenterToWindow(mPreviewParent, mPreviewText, false);
 
   // Update tooltip position
-  if(ToolTip* toolTip = mNameToolTip)
+  if (ToolTip* toolTip = mNameToolTip)
   {
     ToolTipPlacement placement;
     placement.SetScreenRect(mNameField->GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-                          IndicatorSide::Bottom, IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right,
+                          IndicatorSide::Left,
+                          IndicatorSide::Bottom,
+                          IndicatorSide::Top);
     toolTip->SetArrowTipTranslation(placement);
   }
 
@@ -951,16 +941,18 @@ void ResourceTemplateDisplay::UpdateTransform()
   ColoredComposite::UpdateTransform();
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::BuildContentLibraryList()
 {
   bool devConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig);
-  forRange(ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
+  forRange(ResourceLibrary * resourceLibrary,
+           Z::gResources->LoadedResourceLibraries.Values())
   {
-    ContentLibrary* contentLibrary = Z::gContentSystem->Libraries.FindValue(resourceLibrary->Name, nullptr);
-    if (contentLibrary == nullptr || (contentLibrary->GetReadOnly() && !devConfig))
+    ContentLibrary* contentLibrary =
+        Z::gContentSystem->Libraries.FindValue(resourceLibrary->Name, nullptr);
+    if (contentLibrary == nullptr ||
+        (contentLibrary->GetReadOnly() && !devConfig))
       continue;
-    
+
     mLibrarySelect->AddItem(resourceLibrary->Name);
   }
 
@@ -974,7 +966,6 @@ void ResourceTemplateDisplay::BuildContentLibraryList()
   mLibrarySelect->SetSelectedItem(mLibrarySelect->GetCount() - 1, false);
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::CreateNameToolTip(StringParam message)
 {
   mNameToolTip.SafeDestroy();
@@ -986,8 +977,10 @@ void ResourceTemplateDisplay::CreateNameToolTip(StringParam message)
 
   ToolTipPlacement placement;
   placement.SetScreenRect(mNameField->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-                        IndicatorSide::Bottom, IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        IndicatorSide::Bottom,
+                        IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
 
   mNameToolTip = toolTip;
@@ -998,15 +991,14 @@ void ResourceTemplateDisplay::CreateNameToolTip(StringParam message)
   MarkAsNeedsUpdate();
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::RemoveNameToolTip()
 {
   mNameToolTip.SafeDestroy();
   mNameField->SetStyle(TextBoxStyle::Classic);
 }
 
-//**************************************************************************************************
-void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColorScheme::Enum tagColor)
+void ResourceTemplateDisplay::CreateTagToolTip(
+    StringParam message, ToolTipColorScheme::Enum tagColor)
 {
   mTagsToolTip.SafeDestroy();
 
@@ -1017,8 +1009,10 @@ void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor
 
   ToolTipPlacement placement;
   placement.SetScreenRect(mTagsBox->GetScreenRect());
-  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-                        +IndicatorSide::Bottom, IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Right,
+                        IndicatorSide::Left,
+                        +IndicatorSide::Bottom,
+                        IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
 
   // if this is a warning tooltip also color the tag text box red
@@ -1029,7 +1023,7 @@ void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor
     mTagsBox->mFocusBorderColor = ToByteColor(Vec4(0.625f, 0.256f, 0.256f, 1));
   }
   // otherwise set the tag box to its default selected state
-  else 
+  else
   {
     mTagsBox->SetStyle(TextBoxStyle::Classic);
   }
@@ -1037,20 +1031,17 @@ void ResourceTemplateDisplay::CreateTagToolTip(StringParam message, ToolTipColor
   mTagsToolTip = toolTip;
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::RemoveTagToolTip()
 {
   mTagsToolTip.SafeDestroy();
   mTagsBox->SetStyle(TextBoxStyle::Classic);
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnTextTypedTag(Event*)
 {
   ValidateTags();
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnKeyDownNameField(KeyboardEvent* e)
 {
   if (e->Key == Keys::Enter)
@@ -1062,21 +1053,18 @@ void ResourceTemplateDisplay::OnKeyDownNameField(KeyboardEvent* e)
   }
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnKeyUpNameField(KeyboardEvent* e)
 {
   if (e->Key != Keys::Enter)
     ValidateName(false);
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnKeyDownTagField(KeyboardEvent* e)
 {
   if (e->Key == Keys::Enter)
     OnCreate(nullptr);
 }
 
-//**************************************************************************************************
 bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
 {
   // Can't do anything if there is no selected template
@@ -1089,7 +1077,7 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
   String resourceName = mNameField->GetText();
   if (resourceName.Empty())
   {
-    if(finalValidation)
+    if (finalValidation)
       CreateNameToolTip("You must assign a name for the Resource");
     else
       RemoveNameToolTip();
@@ -1109,22 +1097,23 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
     return false;
   }
 
-  if(!finalValidation && resourceName.SizeInBytes() < 2)
+  if (!finalValidation && resourceName.SizeInBytes() < 2)
   {
     RemoveNameToolTip();
     return false;
   }
 
-  // Check to make sure it doesn't contain any invalid characters and meets our resource name
-  // requirements
+  // Check to make sure it doesn't contain any invalid characters and meets our
+  // resource name requirements
   if (!IsValidFilename(resourceName, status))
   {
     CreateNameToolTip(status.Message);
     return false;
   }
-  
+
   // Is there already a resource under the same name?
-  Resource* resource = manager->GetResource(resourceName, ResourceNotFound::ReturnNull);
+  Resource* resource =
+      manager->GetResource(resourceName, ResourceNotFound::ReturnNull);
   if (resource)
   {
     CreateNameToolTip("Name already in use");
@@ -1135,7 +1124,6 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
   return true;
 }
 
-//**************************************************************************************************
 bool ResourceTemplateDisplay::ValidateTags()
 {
   // Can't do anything if there is no selected template
@@ -1148,9 +1136,10 @@ bool ResourceTemplateDisplay::ValidateTags()
   tagString = tagString.Replace(",", "");
   tagString = tagString.Replace(" ", "");
 
-  // check to see if the tag string changed after being sanitized, if so it was invalid
+  // check to see if the tag string changed after being sanitized, if so it was
+  // invalid
   String santiziedTags = Cog::SanitizeName(tagString);
-  if(tagString != santiziedTags)
+  if (tagString != santiziedTags)
   {
     CreateTagToolTip("Tags contain invalid symbols", ToolTipColorScheme::Red);
     return false;
@@ -1161,7 +1150,6 @@ bool ResourceTemplateDisplay::ValidateTags()
   return true;
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnCancel(Event*)
 {
   Event event;
@@ -1171,12 +1159,11 @@ void ResourceTemplateDisplay::OnCancel(Event*)
   Z::gEditor->GetCenterWindow()->TryTakeFocus();
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnCreate(Event*)
 {
   if (ValidateName(true) == false || ValidateTags() == false)
     return;
-  
+
   Resource* resourceTemplate = mSelectedTemplate;
   if (resourceTemplate == nullptr)
     return;
@@ -1187,9 +1174,10 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   String newName = mNameField->GetText();
 
   String libraryName = mLibrarySelect->GetSelectedString();
-  ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
+  ContentLibrary* library =
+      Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
 
-  //Attempt to add the resource with given name
+  // Attempt to add the resource with given name
   ResourceAdd resourceAdd;
   resourceAdd.Library = library;
   resourceAdd.Name = newName;
@@ -1207,8 +1195,12 @@ void ResourceTemplateDisplay::OnCreate(Event*)
       {
         Property* property = mPostAdd.mProperty.GetPropertyFromRoot(instance);
 
-        if (property && ZilchVirtualTypeId(resourceAdd.SourceResource)->IsA(property->PropertyType))
-          ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
+        if (property && ZilchVirtualTypeId(resourceAdd.SourceResource)
+                            ->IsA(property->PropertyType))
+          ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(),
+                                 instance,
+                                 mPostAdd.mProperty,
+                                 resourceAdd.SourceResource);
       }
     }
 
@@ -1227,12 +1219,13 @@ void ResourceTemplateDisplay::OnCreate(Event*)
     // Set all the collected tags on the newly created resource
     resourceAdd.SourceResource->mContentItem->SetTags(tags);
 
-    // Dispatch an event that the resource has been modified on the resource itself
-    // and on the resource system
+    // Dispatch an event that the resource has been modified on the resource
+    // itself and on the resource system
     ResourceEvent e;
     e.Manager = resourceTemplate->GetManager();
     e.EventResource = resourceTemplate;
-    resourceTemplate->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
+    resourceTemplate->GetManager()->DispatchEvent(Events::ResourceTagsModified,
+                                                  &e);
     Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
 
     PostAddResourceEvent eventToSend(mPostAdd, &resourceAdd);
@@ -1245,32 +1238,30 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   CloseTabContaining(this);
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnTagsFocusGained(Event*)
 {
   // create the appropriate tooltip when the tags box gains focus
   ValidateTags();
 }
 
-//**************************************************************************************************
 void ResourceTemplateDisplay::OnTagsFocusLost(Event*)
 {
-  // if the tags are invalid do not remove the tooltip just because the user deselected it
+  // if the tags are invalid do not remove the tooltip just because the user
+  // deselected it
   if (ValidateTags() == true)
     RemoveTagToolTip();
 }
 
-//------------------------------------------------------------------------ Resource Template Display
-//**************************************************************************************************
+//Resource Template Display
 ZilchDefineType(ImportButton, builder, type)
 {
 }
 
-//**************************************************************************************************
-ImportButton::ImportButton(Composite* parent)
-  : ColoredComposite(parent, Vec4::cZero)
+ImportButton::ImportButton(Composite* parent) :
+    ColoredComposite(parent, Vec4::cZero)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 0), Thickness::cZero));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(4, 0), Thickness::cZero));
 
   mText = new Text(this, "NotoSans-Regular", 10);
   mText->SetText("IMPORT");
@@ -1290,28 +1281,24 @@ ImportButton::ImportButton(Composite* parent)
   ConnectThisTo(this, Events::MouseExitHierarchy, OnMouseExit);
 }
 
-//**************************************************************************************************
 void ImportButton::OnMouseEnter(Event*)
 {
   mText->SetColor(Vec4(1));
   mIcon->SetColor(Vec4(1));
 }
 
-//**************************************************************************************************
 void ImportButton::OnLeftMouseDown(Event*)
 {
   mText->SetColor(Vec4(1, 1, 1, 0.7f));
   mIcon->SetColor(Vec4(1, 1, 1, 0.7f));
 }
 
-//**************************************************************************************************
 void ImportButton::OnLeftMouseUp(Event*)
 {
   mText->SetColor(Vec4(1));
   mIcon->SetColor(Vec4(1));
 }
 
-//**************************************************************************************************
 void ImportButton::OnMouseExit(Event*)
 {
   mText->SetColor(Vec4(1, 1, 1, 0.85f));

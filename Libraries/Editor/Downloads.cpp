@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Downloads.cpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,29 +7,25 @@ namespace Zero
 namespace DownloadUi
 {
 const cstr cLocation = "EditorUi/BackgroundTasks/Downloads";
-Tweakable(Vec4, IconColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ProgressPrimaryColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, ProgressBackgroundColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, IconColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ProgressPrimaryColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ProgressBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace DownloadUi
 
-//******************************************************************************
 String GetFileNameFromUrl(StringParam url)
 {
   StringRange lastSlash = url.FindLastOf('/');
   return url.SubString(lastSlash.End(), url.End());
 }
 
-//---------------------------------------------------------------- Download Task
-//******************************************************************************
 BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url)
 {
   String fileName = GetFileNameFromUrl(url);
   return DownloadToBuffer(url, fileName);
 }
 
-//******************************************************************************
 BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url,
-                                               StringParam fileName)
+                                                  StringParam fileName)
 {
   const String cDownloadIcon = "TaskDownload";
 
@@ -52,11 +40,9 @@ BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url,
   task->mProgressBackgroundColor = DownloadUi::ProgressBackgroundColor;
   task->Execute();
 
-
   return task;
 }
 
-//******************************************************************************
 DownloadTaskJob::DownloadTaskJob(StringParam url, u64 forceCacheSeconds)
 {
   mRequest = AsyncWebRequest::Create();
@@ -68,17 +54,16 @@ DownloadTaskJob::DownloadTaskJob(StringParam url, u64 forceCacheSeconds)
   request->mSendEventsOnRequestThread = true;
 
   request->mUrl = url;
-  ConnectThisTo(request, Events::WebResponsePartialData, OnWebResponsePartialData);
+  ConnectThisTo(
+      request, Events::WebResponsePartialData, OnWebResponsePartialData);
   ConnectThisTo(request, Events::WebResponseComplete, OnWebResponseComplete);
 }
 
-//******************************************************************************
 void DownloadTaskJob::Execute()
 {
   mRequest->Run();
 }
 
-//******************************************************************************
 int DownloadTaskJob::Cancel()
 {
   BackgroundTaskJob::Cancel();
@@ -86,29 +71,25 @@ int DownloadTaskJob::Cancel()
   return 0;
 }
 
-//******************************************************************************
 float DownloadTaskJob::GetPercentageComplete()
 {
   return mRequest->mProgress;
 }
 
-//******************************************************************************
 String DownloadTaskJob::GetData()
 {
   return mRequest->GetData();
 }
 
-//******************************************************************************
 void DownloadTaskJob::OnWebResponsePartialData(WebResponseEvent* e)
 {
   UpdateDownloadProgress();
 }
 
-//******************************************************************************
 void DownloadTaskJob::OnWebResponseComplete(WebResponseEvent* e)
 {
   // The download failed if we didn't get the OK response
-  if(e->mResponseCode != WebResponseCode::OK)
+  if (e->mResponseCode != WebResponseCode::OK)
   {
     Failed();
     UpdateDownloadProgress();
@@ -122,15 +103,16 @@ void DownloadTaskJob::OnWebResponseComplete(WebResponseEvent* e)
   UpdateDownloadProgress();
 }
 
-//******************************************************************************
 void DownloadTaskJob::UpdateDownloadProgress()
 {
   float percentComplete = GetPercentageComplete();
   String downloaded = HumanReadableFileSize(mRequest->mTotalDownloaded);
   String total = HumanReadableFileSize(mRequest->mTotalExpected);
-  String progressText = String::Format("%0.0f%% (%s/%s)", percentComplete * 100.0f,
-                                       downloaded.c_str(), total.c_str());
+  String progressText = String::Format("%0.0f%% (%s/%s)",
+                                       percentComplete * 100.0f,
+                                       downloaded.c_str(),
+                                       total.c_str());
   UpdateProgress(mName, percentComplete, progressText);
 }
 
-}//namespace Zero
+} // namespace Zero

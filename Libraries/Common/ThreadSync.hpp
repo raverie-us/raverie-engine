@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ThreadSync.hpp
-/// Declaration of Thread synchronization classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -25,7 +17,7 @@ private:
   ZeroDeclarePrivateData(ThreadLock, 48);
 };
 
-//Wrapper around an unnamed event.
+// Wrapper around an unnamed event.
 class ZeroShared OsEvent
 {
 public:
@@ -37,13 +29,14 @@ public:
   void Reset();
   void Wait();
   OsHandle GetHandle();
+
 private:
   ZeroDeclarePrivateData(OsEvent, 8);
 };
 
 const int MaxSemaphoreCount = 0x0FFFFFFF;
 
-//Semaphore class. Multithreaded counter / gatekeeper.
+// Semaphore class. Multithreaded counter / gatekeeper.
 class ZeroShared Semaphore
 {
 public:
@@ -53,20 +46,24 @@ public:
   void Decrement();
   void Reset();
   void WaitAndDecrement();
+
 private:
   OsHandle mHandle;
 
   ZeroDeclarePrivateData(Semaphore, 8);
 };
 
-/// Not fully implemented as it's currently only needed for interprocess communication
+/// Not fully implemented as it's currently only needed for interprocess
+/// communication
 class ZeroShared InterprocessMutex
 {
 public:
   InterprocessMutex();
   ~InterprocessMutex();
 
-  void Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists = false);
+  void Initialize(Status& status,
+                  const char* mutexName,
+                  bool failIfAlreadyExists = false);
 
 private:
   ZeroDeclarePrivateData(InterprocessMutex, 8);
@@ -87,4 +84,4 @@ private:
   int mCount;
 };
 
-}//namespace Zero
+} // namespace Zero

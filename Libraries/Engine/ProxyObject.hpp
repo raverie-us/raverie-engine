@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,16 +8,17 @@ namespace Zero
 // have to know about Serialization (for DataNode) to use it.
 class DataNode;
 
-//---------------------------------------------------------------------------------- Proxy Component
+//Proxy Component
 template <typename ComponentType>
 class ProxyObject : public ComponentType
 {
 public:
   ZilchDeclareInheritableType(ProxyObject, TypeCopyMode::ReferenceType);
 
-  // Creates a type 
-  static BoundType* CreateProxyType(StringParam typeName, ProxyReason::Enum reason);
-   
+  // Creates a type
+  static BoundType* CreateProxyType(StringParam typeName,
+                                    ProxyReason::Enum reason);
+
   ProxyObject();
   ~ProxyObject();
   void Serialize(Serializer& stream) override;
@@ -30,20 +26,22 @@ public:
   DataNode* mProxiedData;
 };
 
-//**************************************************************************************************
 template <typename ComponentType>
-BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName, ProxyReason::Enum reason)
+BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName,
+                                                       ProxyReason::Enum reason)
 {
   // Build the new type
   LibraryBuilder builder(typeName);
-  BoundType* type = builder.AddBoundType(typeName, TypeCopyMode::ReferenceType, sizeof(ProxyObject<ComponentType>));
+  BoundType* type = builder.AddBoundType(typeName,
+                                         TypeCopyMode::ReferenceType,
+                                         sizeof(ProxyObject<ComponentType>));
 
   type->BaseType = ZilchTypeId(ComponentType);
 
   // Assign the same handle manager as the base type we're proxying
   type->HandleManager = type->BaseType->HandleManager;
   type->AddAttribute(ObjectAttributes::cProxy);
-  if(reason == ProxyReason::AllocationException)
+  if (reason == ProxyReason::AllocationException)
     type->AddAttribute(ObjectAttributes::cExceptionProxy);
   ZilchBindDefaultConstructor();
   ZilchBindDestructor();
@@ -54,12 +52,9 @@ BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName, Pro
   return type;
 }
 
-//**************************************************************************************************
 template <typename ComponentType>
-ProxyObject<ComponentType>::ProxyObject()
-  : mProxiedData(nullptr)
+ProxyObject<ComponentType>::ProxyObject() : mProxiedData(nullptr)
 {
-
 }
 
 template <typename ComponentType>
@@ -68,13 +63,13 @@ ProxyObject<ComponentType>::~ProxyObject()
   SafeDelete(mProxiedData);
 }
 
-//**************************************************************************************************
 template <typename ComponentType>
 void ProxyObject<ComponentType>::Serialize(Serializer& stream)
 {
-  ErrorIf(stream.GetType() != SerializerType::Text, "Proxies serialized to Binary is not supported.");
+  ErrorIf(stream.GetType() != SerializerType::Text,
+          "Proxies serialized to Binary is not supported.");
 
-  if(stream.GetMode() == SerializerMode::Loading)
+  if (stream.GetMode() == SerializerMode::Loading)
   {
     // Copy the data tree from the top of the stack
     DataTreeLoader& loader = *(DataTreeLoader*)(&stream);
@@ -85,11 +80,12 @@ void ProxyObject<ComponentType>::Serialize(Serializer& stream)
     if (mProxiedData == nullptr)
       return;
 
-    // mProxiedData stored the Component node, and it should have already been opened in the 
-    // serializer once this function has been called, so we just want to save out the child nodes
-    forRange(DataNode& child, mProxiedData->GetChildren())
-      child.SaveToStream(stream);
+    // mProxiedData stored the Component node, and it should have already been
+    // opened in the serializer once this function has been called, so we just
+    // want to save out the child nodes
+    forRange(DataNode & child, mProxiedData->GetChildren())
+        child.SaveToStream(stream);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

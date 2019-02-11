@@ -1,16 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 bool gIntelGraphics = false;
 
-//-------------------------------------------------------------------------------Keys
 cstr KeyNames[Keys::KeyMax + 1] = {0};
 
 #define SetKeyName(value) KeyNames[Keys::value] = #value;
@@ -123,28 +117,27 @@ void InitializeKeyboard()
   SetKeyName(None);
 }
 
-//-------------------------------------------------------------------FileDialogFilter
 FileDialogFilter::FileDialogFilter()
 {
 }
 
-FileDialogFilter::FileDialogFilter(StringParam filter) 
-  : mDescription(filter)
-  , mFilter(filter)
+FileDialogFilter::FileDialogFilter(StringParam filter) :
+    mDescription(filter),
+    mFilter(filter)
 {
 }
 
-FileDialogFilter::FileDialogFilter(StringParam description, StringParam filter)
-  : mDescription(description)
-  , mFilter(filter)
+FileDialogFilter::FileDialogFilter(StringParam description,
+                                   StringParam filter) :
+    mDescription(description),
+    mFilter(filter)
 {
 }
 
-//-------------------------------------------------------------------FileDialogConfig
 FileDialogInfo::FileDialogInfo() :
-  mCallback(nullptr),
-  mUserData(nullptr),
-  Flags(0)
+    mCallback(nullptr),
+    mUserData(nullptr),
+    Flags(0)
 {
 }
 
@@ -153,7 +146,6 @@ void FileDialogInfo::AddFilter(StringParam description, StringParam filter)
   mSearchFilters.PushBack(FileDialogFilter(description, filter));
 }
 
-//-------------------------------------------------------------------Shell
 IntVec2 ShellWindow::GetMonitorClientPosition()
 {
   return GetMonitorClientRectangle().TopLeft();
@@ -206,7 +198,6 @@ void ShellWindow::SetBorderedSize(Math::IntVec2Param borderedSize)
   SetMonitorBorderedRectangle(monitorBorderedRectangle);
 }
 
-//-------------------------------------------------------------------Input
 static HashMap<uint, String> InternalGenerateUsageNames()
 {
   HashMap<uint, String> names;
@@ -263,4 +254,4 @@ HashMap<uint, String>& GetUsageNames()
   return names;
 }
 
-}//namespace Zero
+} // namespace Zero

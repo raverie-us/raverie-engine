@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file VectorContent.hpp
-/// Declaration of Vector content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -22,7 +14,7 @@ public:
   FontContent();
 };
 
-//Normal font builder just copies the ttf for direct loading.
+// Normal font builder just copies the ttf for direct loading.
 class FontBuilder : public DirectBuilderComponent
 {
 public:
@@ -31,4 +23,4 @@ public:
   void Generate(ContentInitializer& initializer) override;
 };
 
-}
+} // namespace Zero

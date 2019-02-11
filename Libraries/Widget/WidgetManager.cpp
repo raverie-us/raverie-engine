@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -38,9 +33,9 @@ void WidgetManager::OnEngineUpdate(UpdateEvent* event)
 
 void WidgetManager::OnShutdown(Event* event)
 {
-  forRange(Widget* widget, Widgets.Values())
+  forRange(Widget * widget, Widgets.Values())
   {
-    if(widget->mParent == NULL)
+    if (widget->mParent == NULL)
       widget->Destroy();
   }
   CleanUp();
@@ -48,7 +43,7 @@ void WidgetManager::OnShutdown(Event* event)
 
 void WidgetManager::CleanUp()
 {
-  while(!DestroyList.Empty())
+  while (!DestroyList.Empty())
   {
     // Use temporary list so that widgets
     // that delete widget in their destructor
@@ -56,7 +51,7 @@ void WidgetManager::CleanUp()
     Array<Widget*> templist;
     templist.Swap(DestroyList);
 
-    forRange(Widget* widget, templist.All())
+    forRange(Widget * widget, templist.All())
     {
       delete widget;
     }
@@ -64,7 +59,7 @@ void WidgetManager::CleanUp()
     templist.Clear();
 
     // Put it back not
-    if(DestroyList.Empty())
+    if (DestroyList.Empty())
       templist.Swap(DestroyList);
   }
 }
@@ -74,4 +69,4 @@ namespace Z
 WidgetManager* gWidgetManager = nullptr;
 }
 
-}
+} // namespace Zero

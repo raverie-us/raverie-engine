@@ -1,22 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Export.cpp
-/// Exporter code.
-///
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------- Export Utility Functions
+//Utility Functions
 namespace ExportUtility
 {
 
-// Files or extensions that are NOT automatically copied (may be handled specially)
+// Files or extensions that are NOT automatically copied (may be handled
+// specially)
 HashSet<String>& GetExcludedFiles()
 {
   static HashSet<String> files;
@@ -32,11 +25,16 @@ HashSet<String>& GetExcludedFiles()
   return files;
 }
 
-void AddFilesHelper(StringParam directory, StringParam relativePathFromStart, HashSet<String>& additionalFileExcludes, FileCallback callback, void* userData)
+void AddFilesHelper(StringParam directory,
+                    StringParam relativePathFromStart,
+                    HashSet<String>& additionalFileExcludes,
+                    FileCallback callback,
+                    void* userData)
 {
   HashSet<String>& excludedFiles = GetExcludedFiles();
 
-  //Get the total number of files being added to calculate and show progress for the exporting screen
+  // Get the total number of files being added to calculate and show progress
+  // for the exporting screen
   float i = 0.0f;
   float totalFiles = 0.0f;
   for (FileRange fileRange(directory); !fileRange.Empty(); fileRange.PopFront())
@@ -46,8 +44,10 @@ void AddFilesHelper(StringParam directory, StringParam relativePathFromStart, Ha
   {
     String fileName = fileRange.Front();
 
-    if (excludedFiles.Contains(fileName)          || excludedFiles.Contains(FilePath::GetExtension(fileName)) ||
-        additionalFileExcludes.Contains(fileName) || additionalFileExcludes.Contains(FilePath::GetExtension(fileName)))
+    if (excludedFiles.Contains(fileName) ||
+        excludedFiles.Contains(FilePath::GetExtension(fileName)) ||
+        additionalFileExcludes.Contains(fileName) ||
+        additionalFileExcludes.Contains(FilePath::GetExtension(fileName)))
       continue;
 
     String newRelativePath = FilePath::Combine(relativePathFromStart, fileName);
@@ -55,7 +55,11 @@ void AddFilesHelper(StringParam directory, StringParam relativePathFromStart, Ha
     String fullPath = FilePath::Combine(directory, fileName);
     if (DirectoryExists(fullPath))
     {
-      AddFilesHelper(fullPath, newRelativePath, additionalFileExcludes, callback, userData);
+      AddFilesHelper(fullPath,
+                     newRelativePath,
+                     additionalFileExcludes,
+                     callback,
+                     userData);
     }
     else
     {
@@ -64,9 +68,13 @@ void AddFilesHelper(StringParam directory, StringParam relativePathFromStart, Ha
   }
 }
 
-void AddFiles(StringParam directory, HashSet<String>& additionalFileExcludes, FileCallback callback, void* userData)
+void AddFiles(StringParam directory,
+              HashSet<String>& additionalFileExcludes,
+              FileCallback callback,
+              void* userData)
 {
-  AddFilesHelper(directory, String(), additionalFileExcludes, callback, userData);
+  AddFilesHelper(
+      directory, String(), additionalFileExcludes, callback, userData);
 }
 
 void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
@@ -74,7 +82,7 @@ void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
   ResourceListing listing;
   library->BuildListing(listing);
 
-  //Add every file in the package to the archive
+  // Add every file in the package to the archive
   String outputPath = library->GetOutputPath();
   String archivePath = library->Name;
 
@@ -92,10 +100,14 @@ void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
       continue;
 
     archive.AddFile(fullPath, relativePath);
-    Z::gEngine->LoadingUpdate("Archive Library", library->Name, resource.Name, ProgressType::Normal, float(itemsDone) / librarySize);
+    Z::gEngine->LoadingUpdate("Archive Library",
+                              library->Name,
+                              resource.Name,
+                              ProgressType::Normal,
+                              float(itemsDone) / librarySize);
   }
 
-  //Finally add the pack file
+  // Finally add the pack file
   String packFile = BuildString(library->Name, ".pack");
   String packFilePath = FilePath::Combine(outputPath, packFile);
 
@@ -104,7 +116,8 @@ void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
 
 void ArchiveLibraryOutput(Archive& archive, StringParam libraryName)
 {
-  ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
+  ContentLibrary* library =
+      Z::gContentSystem->Libraries.FindValue(libraryName, nullptr);
   if (library)
     ArchiveLibraryOutput(archive, library);
 }
@@ -129,7 +142,7 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
   int itemsDone = 0;
   float librarySize = (float)library->GetContentItems().Size();
 
-  forRange(ContentItem* contentItem, library->GetContentItems())
+  forRange(ContentItem * contentItem, library->GetContentItems())
   {
     ++itemsDone;
     bool isTemplate = contentItem->has(ResourceTemplate);
@@ -137,7 +150,7 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
     // Copy each generated Resource
     ResourceListing listing;
     contentItem->BuildListing(listing);
-    forRange(ResourceEntry& entry, listing.All())
+    forRange(ResourceEntry & entry, listing.All())
     {
       // Skip zilch Resource Templates
       if (isTemplate)
@@ -145,7 +158,7 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
         BoundType* resourceType = MetaDatabase::FindType(entry.Type);
 
         // Skip zilch resource types
-        if (resourceType->IsA(zilchDocumentType)     ||
+        if (resourceType->IsA(zilchDocumentType) ||
             resourceType->IsA(ZilchPluginSourceType) ||
             resourceType->IsA(zilchPluginLibraryType))
         {
@@ -157,48 +170,67 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library)
       String source = FilePath::Combine(libraryPath, fileName);
       String destination = FilePath::Combine(libraryOutputPath, fileName);
       CopyFile(destination, source);
-      Z::gEngine->LoadingUpdate("Copying", fileName, "", ProgressType::Normal, float(itemsDone) / librarySize);
+      Z::gEngine->LoadingUpdate("Copying",
+                                fileName,
+                                "",
+                                ProgressType::Normal,
+                                float(itemsDone) / librarySize);
     }
   }
 }
 
 void CopyLibraryOut(StringParam outputDirectory, StringParam name)
 {
-  ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
+  ContentLibrary* library =
+      Z::gContentSystem->Libraries.FindValue(name, nullptr);
   if (library)
     CopyLibraryOut(outputDirectory, library);
 }
 
-void RelativeCopyFile(StringParam dest, StringParam source, StringParam filename)
+void RelativeCopyFile(StringParam dest,
+                      StringParam source,
+                      StringParam filename)
 {
-  CopyFile(FilePath::Combine(dest, filename), FilePath::Combine(source, filename));
+  CopyFile(FilePath::Combine(dest, filename),
+           FilePath::Combine(source, filename));
 }
 
-void ArchiveFileCallback(StringParam fullPath, StringParam relativePath, StringParam fileName, void* userData, float progressPercent)
+void ArchiveFileCallback(StringParam fullPath,
+                         StringParam relativePath,
+                         StringParam fileName,
+                         void* userData,
+                         float progressPercent)
 {
   Archive& archive = *(Archive*)userData;
   archive.AddFile(fullPath, relativePath);
-  Z::gEngine->LoadingUpdate("Archiving", fileName, "", ProgressType::Normal, progressPercent);
+  Z::gEngine->LoadingUpdate(
+      "Archiving", fileName, "", ProgressType::Normal, progressPercent);
 }
 
-void CopyFileCallback(StringParam fullPath, StringParam relativePath, StringParam fileName, void* userData, float progressPercent)
+void CopyFileCallback(StringParam fullPath,
+                      StringParam relativePath,
+                      StringParam fileName,
+                      void* userData,
+                      float progressPercent)
 {
   String& outputDirectory = *(String*)userData;
   String destPath = FilePath::Combine(outputDirectory, relativePath);
   CreateDirectoryAndParents(FilePath::GetDirectoryPath(destPath));
   CopyFile(destPath, fullPath);
-  Z::gEngine->LoadingUpdate("Copying", fileName, "", ProgressType::Normal, progressPercent);
+  Z::gEngine->LoadingUpdate(
+      "Copying", fileName, "", ProgressType::Normal, progressPercent);
 }
 
-} //namespace ExportUtility
+} // namespace ExportUtility
 
-//-------------------------------------------------------------------- Export Content Source
+//Content Source
 struct ExportTargetSource : public DataSource
 {
   ExportTargetList* mExportList;
 
   ExportTargetSource(ExportTargetList* exportList) : mExportList(exportList)
-  {}
+  {
+  }
 
   DataEntry* GetRoot() override
   {
@@ -228,7 +260,9 @@ struct ExportTargetSource : public DataSource
       return 0;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
     ExportTargetList* listing = (ExportTargetList*)dataEntry;
     return (DataEntry*)listing->SortedEntries[index];
@@ -239,7 +273,7 @@ struct ExportTargetSource : public DataSource
     return dataEntry == mExportList;
   }
 
-  void GetData(DataEntry* dataEntry, Any& variant, StringParam column)override
+  void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     // Ignore the root
     if (dataEntry == mExportList)
@@ -259,7 +293,9 @@ struct ExportTargetSource : public DataSource
     }
   }
 
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     ExportTargetEntry* entry = (ExportTargetEntry*)dataEntry;
     if (!column.Empty())
@@ -274,17 +310,15 @@ struct ExportTargetSource : public DataSource
   }
 };
 
-//-------------------------------------------------------------------- ExportTargetList
+//ExportTargetList
 ExportTargetList::ExportTargetList()
 {
 }
-
 
 ExportTargetList::~ExportTargetList()
 {
   DeleteObjectsInContainer(SortedEntries);
 }
-
 
 void ExportTargetList::AddEntry(ExportTargetEntry* entry)
 {
@@ -292,10 +326,9 @@ void ExportTargetList::AddEntry(ExportTargetEntry* entry)
   SortedEntries.PushBack(entry);
 }
 
-
 void ExportTargetList::SetActiveTargets(HashSet<String>& activeTargets)
 {
-  forRange(ExportTargetEntry* entry, SortedEntries)
+  forRange(ExportTargetEntry * entry, SortedEntries)
   {
     if (activeTargets.Contains(entry->TargetName))
       entry->Export = true;
@@ -305,7 +338,7 @@ void ExportTargetList::SetActiveTargets(HashSet<String>& activeTargets)
 HashSet<String> ExportTargetList::GetActiveTargets()
 {
   HashSet<String> activeTargets;
-  forRange(ExportTargetEntry* entry, SortedEntries)
+  forRange(ExportTargetEntry * entry, SortedEntries)
   {
     if (entry->Export)
       activeTargets.Insert(entry->TargetName);
@@ -313,13 +346,11 @@ HashSet<String> ExportTargetList::GetActiveTargets()
   return activeTargets;
 }
 
-//-------------------------------------------------------------------- ExportUI
 
-ExportUI::ExportUI(Composite* parent)
-  : Composite(parent)
+ExportUI::ExportUI(Composite* parent) : Composite(parent)
 {
-  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                    Pixels(0, 2), Thickness::cZero));
+  this->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
 
   new Label(this, cText, "Application Name:");
   mApplicationName = new TextBox(this);
@@ -332,14 +363,16 @@ ExportUI::ExportUI(Composite* parent)
     mApplicationName->SetText(projectSettings->GetProjectName());
 
   new Label(this, cText, "Export Path:");
-  
+
   Composite* pathRow = new Composite(this);
-  pathRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                                         Vec2::cZero, Thickness::cZero));
+  pathRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
 
   mExportPath = new TextBox(pathRow);
   mExportPath->SetEditable(true);
-  mExportPath->SetText(FilePath::Combine(GetUserDocumentsDirectory(), "ZeroExports", projectSettings->GetProjectName()));
+  mExportPath->SetText(FilePath::Combine(GetUserDocumentsDirectory(),
+                                         "ZeroExports",
+                                         projectSettings->GetProjectName()));
   mExportPath->SetSizing(SizeAxis::X, SizePolicy::Flex, Pixels(200));
 
   TextButton* pathSelectButton = new TextButton(pathRow);
@@ -357,8 +390,8 @@ ExportUI::ExportUI(Composite* parent)
   mTreeView->SetDataSource(mSource);
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                                         Vec2::cZero, Thickness::cZero));
+  buttonRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
   {
     TextButton* exportButton = new TextButton(buttonRow);
     exportButton->SetText("Export");
@@ -371,7 +404,8 @@ ExportUI::ExportUI(Composite* parent)
     TextButton* exportContentButton = new TextButton(buttonRow);
     exportContentButton->SetText("Export Content");
     exportContentButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(100));
-    ConnectThisTo(exportContentButton, Events::ButtonPressed, OnExportContentFolder);
+    ConnectThisTo(
+        exportContentButton, Events::ButtonPressed, OnExportContentFolder);
 
     temp = new Composite(buttonRow);
     temp->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
@@ -428,7 +462,7 @@ void ExportUI::OpenExportWindow()
 
   HashSet<String> targets;
   forRange(StringParam target, exporter->mExportTargets.Keys())
-    targets.Insert(target);
+      targets.Insert(target);
 
   Cog* projectCog = Z::gEditor->GetProjectCog();
   ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog);
@@ -488,12 +522,12 @@ void ExportUI::OnCancel(Event* e)
 
 void ExportUI::OnSelectPath(Event* e)
 {
-  //Set up the callback for when project file is selected
+  // Set up the callback for when project file is selected
   const String CallBackEvent = "ExportLocationSelected";
   if (!GetDispatcher()->IsConnected(CallBackEvent, this))
     ConnectThisTo(this, CallBackEvent, OnFolderSelected);
 
-  //Open the open file dialog
+  // Open the open file dialog
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = CallBackEvent;
   config->CallbackObject = this;
@@ -509,7 +543,8 @@ void ExportUI::OnFolderSelected(OsFileSelection* e)
 {
   if (e->Files.Size() > 0)
   {
-    String path = BuildString(FilePath::GetDirectoryPath(e->Files[0]), cDirectorySeparatorCstr);
+    String path = BuildString(FilePath::GetDirectoryPath(e->Files[0]),
+                              cDirectorySeparatorCstr);
     mExportPath->SetText(path);
   }
 }
@@ -524,7 +559,6 @@ void ExportUI::SetAvailableTargets(HashSet<String>& targets)
   mTreeView->Refresh();
 }
 
-
 void ExportUI::SetActiveTargets(HashSet<String>& targets)
 {
   mTargetList.SetActiveTargets(targets);
@@ -538,7 +572,6 @@ void ExportUI::SaveActiveTargets(HashSet<String>& targets)
     exportSettings->mActiveTargets = targets;
 }
 
-//--------------------------------------------------------------------- Exporter
 Exporter::Exporter()
 {
   // Add all available export targets
@@ -565,13 +598,15 @@ void Exporter::ExportGameProject(Cog* projectCog)
   ExportUI::OpenExportWindow();
 }
 
-void Exporter::UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& updater)
+void Exporter::UpdateIcon(ProjectSettings* project,
+                          ExecutableResourceUpdater& updater)
 {
-  //Assume the icon file is located in the project direction with the name "Icon.ico"
+  // Assume the icon file is located in the project direction with the name
+  // "Icon.ico"
   String iconFile = FilePath::Combine(project->ProjectFolder, "Icon.ico");
   if (FileExists(iconFile))
   {
-    //Read the file into memory
+    // Read the file into memory
     size_t bufferSize = 0;
     byte* buffer = ReadFileIntoMemory(iconFile.c_str(), bufferSize);
 
@@ -584,7 +619,7 @@ void Exporter::UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& u
 
 void Exporter::SaveAndBuildContent()
 {
-  // Save all resources and build them so the 
+  // Save all resources and build them so the
   // output directory is up to date
   Editor* editor = Z::gEditor;
   editor->SaveAll(true);
@@ -596,7 +631,7 @@ void Exporter::ExportApplication(HashSet<String> exportTargets)
 
   Z::gEngine->LoadingStart();
   CreateDirectoryAndParents(mOutputDirectory);
-  forRange(ExportTarget* exportTarget, mExportTargets.Values())
+  forRange(ExportTarget * exportTarget, mExportTargets.Values())
   {
     if (exportTargets.Contains(exportTarget->mTargetName))
       exportTarget->ExportApplication();
@@ -610,7 +645,7 @@ void Exporter::ExportContent(HashSet<String> exportTargets)
 
   Z::gEngine->LoadingStart();
   CreateDirectoryAndParents(mOutputDirectory);
-  forRange(ExportTarget* exportTarget, mExportTargets.Values())
+  forRange(ExportTarget * exportTarget, mExportTargets.Values())
   {
     if (exportTargets.Contains(exportTarget->mTargetName))
       exportTarget->ExportContentFolders(mProjectCog);
@@ -618,8 +653,9 @@ void Exporter::ExportContent(HashSet<String> exportTargets)
   Z::gEngine->LoadingFinish();
 }
 
-
-void Exporter::CopyContent(Status& status, String outputDirectory, ExportTarget* target)
+void Exporter::CopyContent(Status& status,
+                           String outputDirectory,
+                           ExportTarget* target)
 {
   Assert(target, "A valid export target should always be provided");
 
@@ -644,26 +680,39 @@ void Exporter::CopyContent(Status& status, String outputDirectory, ExportTarget*
   ExportUtility::CopyLibraryOut(outputDirectory, "UiWidget");
   ExportUtility::CopyLibraryOut(outputDirectory, "EditorUi");
   ExportUtility::CopyLibraryOut(outputDirectory, "Editor");
-  ExportUtility::CopyLibraryOut(outputDirectory, project->ProjectContentLibrary);
+  ExportUtility::CopyLibraryOut(outputDirectory,
+                                project->ProjectContentLibrary);
 
   // Once the build output is separated by platform this should not be needed
   HashSet<String>& additionalExcludes = target->GetAdditionalExcludedFiles();
 
   // Copy default configuration
-  ExportUtility::RelativeCopyFile(outputDirectory, appDirectory, "Configuration.data");
+  ExportUtility::RelativeCopyFile(
+      outputDirectory, appDirectory, "Configuration.data");
 
   // Copy Inno Setup Template
-  target->CopyInstallerSetupFile(outputDirectory, mainConfig->DataDirectory, project->ProjectName, project->GetProjectGuid());
+  target->CopyInstallerSetupFile(outputDirectory,
+                                 mainConfig->DataDirectory,
+                                 project->ProjectName,
+                                 project->GetProjectGuid());
 
   // Add all dlls (and other files next to the exe)
-  ExportUtility::AddFiles(appDirectory, additionalExcludes, ExportUtility::CopyFileCallback, &outputDirectory);
+  ExportUtility::AddFiles(appDirectory,
+                          additionalExcludes,
+                          ExportUtility::CopyFileCallback,
+                          &outputDirectory);
 
-  //Copy the project file
-  CopyFile(FilePath::Combine(outputDirectory, "Project.zeroproj"), project->ProjectFile);
+  // Copy the project file
+  CopyFile(FilePath::Combine(outputDirectory, "Project.zeroproj"),
+           project->ProjectFile);
 
   // Add data directory
   String dataDirectory = mainConfig->DataDirectory;
-  ExportUtility::AddFilesHelper(dataDirectory, "Data", additionalExcludes, ExportUtility::CopyFileCallback, &outputDirectory);
+  ExportUtility::AddFilesHelper(dataDirectory,
+                                "Data",
+                                additionalExcludes,
+                                ExportUtility::CopyFileCallback,
+                                &outputDirectory);
 }
 
-}//namespace
+} // namespace Zero

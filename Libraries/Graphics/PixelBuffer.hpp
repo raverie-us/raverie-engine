@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PixelBuffer.hpp
-///  Declaration of the PixelBuffer class.
-///
-/// Authors: Benjamin Strukus, Trevor Sundberg
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,6 @@ namespace Zero
 class PixelBuffer
 {
 public:
-
   /// Constructor.
   PixelBuffer();
   PixelBuffer(MoveReference<PixelBuffer> rhs);
@@ -26,7 +17,12 @@ public:
   ~PixelBuffer();
 
   /// Resizes the pixel buffer (specifying whether we want to copy the old data)
-  void Resize(uint width, uint height, bool copyOldContents = true, bool clearNewContents = true, ByteColor clearColor = Color::White, bool Upload = true);
+  void Resize(uint width,
+              uint height,
+              bool copyOldContents = true,
+              bool clearNewContents = true,
+              ByteColor clearColor = Color::White,
+              bool Upload = true);
   IntVec2 GetSize();
 
   /// Clear the pixel buffer.
@@ -44,7 +40,7 @@ public:
   /// Adds the given color to the current color taking into account the
   /// transparency of the given color.
   void AddToPixel(uint x, uint y, ByteColor color);
-  
+
   /// Returns a pixel in the buffer.
   ByteColor GetPixel(uint x, uint y);
 
@@ -58,8 +54,8 @@ public:
   void Upload();
 
   void SetAll(byte* data);
-public:
 
+public:
   /// Store the width and height of the texture.
   uint Width;
   uint Height;
@@ -81,4 +77,4 @@ private:
   PixelBuffer& operator=(const PixelBuffer&);
 };
 
-}//namespace Zero
+} // namespace Zero

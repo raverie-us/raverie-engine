@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file HierarchyRange.hpp
-/// Declaration of the Hierarchy component range.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 class Cog;
 
-//--------------------------------------------------------------- Name Condition
 // Conditional policy for comparing names of cogs
 struct NameCondition
 {
@@ -40,7 +31,7 @@ struct RootNameCondition : public RootCondition, public NameCondition
   bool operator()(const Cog* cog);
 };
 
-///Range to visit all objects in a Hierarchy.
+/// Range to visit all objects in a Hierarchy.
 class HierarchyRange
 {
 public:
@@ -48,17 +39,17 @@ public:
   typedef Cog& ref_type;
   typedef Cog& reference;
   typedef ref_type FrontResult;
-  //All in entire tree (including those above)
+  // All in entire tree (including those above)
   static HierarchyRange EntireTree(Cog* object);
-  //All in sub tree (not including the object)
+  // All in sub tree (not including the object)
   static HierarchyRange SubTree(Cog* object);
   HierarchyRange();
-  //Range functions
+  // Range functions
   bool Empty();
   void PopFront();
   ref_type Front();
-private:
 
+private:
   HierarchyRange(Cog* object);
   static Cog* GetRoot(Cog* object);
   static Cog* MostLeft(Cog* object);
@@ -66,4 +57,4 @@ private:
   Cog* mStarting;
 };
 
-}//namespace Zero
+} // namespace Zero

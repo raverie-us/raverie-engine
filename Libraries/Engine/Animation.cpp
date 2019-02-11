@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Animation.cpp
-/// Implementation of the Animation resource and support classes.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2011-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ Object Track
 ZilchDefineType(ObjectTrack, builder, type)
 {
 }
@@ -32,9 +23,9 @@ void ObjectTrack::Serialize(Serializer& stream)
   SerializeName(FullPath);
   SerializeName(ObjectTrackId);
 
-  if(stream.GetMode() == SerializerMode::Saving)
+  if (stream.GetMode() == SerializerMode::Saving)
   {
-    forRange(PropertyTrack& track, PropertyTracks.All())
+    forRange(PropertyTrack & track, PropertyTracks.All())
     {
       stream.StartPolymorphic("PropertyTrack");
 
@@ -56,7 +47,7 @@ void ObjectTrack::Serialize(Serializer& stream)
 
     // Walk all property tracks
     PolymorphicNode propertyTrack;
-    while(stream.GetPolymorphic(propertyTrack))
+    while (stream.GetPolymorphic(propertyTrack))
     {
       // Read the name of the track
       String trackName;
@@ -65,11 +56,12 @@ void ObjectTrack::Serialize(Serializer& stream)
       // If the track name is empty (likely because we failed to serialize
       // the name due to an old format), check to see if the name is in the
       // polymorphic node, which is how it used to be serialized
-      if(trackName.Empty())
+      if (trackName.Empty())
       {
         trackName = propertyTrack.Name;
 
-        ErrorIf(trackName == "PropertyTrack", "Old animation file cannot be read.");
+        ErrorIf(trackName == "PropertyTrack",
+                "Old animation file cannot be read.");
       }
 
       // Pull out the component and property names
@@ -80,24 +72,26 @@ void ObjectTrack::Serialize(Serializer& stream)
 
       // Get the type name
       String typeName;
-      stream.SerializeFieldDefault("TypeName", typeName, String(cInvalidTypeName));
-      
+      stream.SerializeFieldDefault(
+          "TypeName", typeName, String(cInvalidTypeName));
+
       // If it's an invalid type id (likely from an old animation file), lets
       // attempt to look up the type id from meta.
-      if(typeName == cInvalidTypeName)
+      if (typeName == cInvalidTypeName)
       {
         // Attempt to grab the component
-        BoundType* componentType = MetaDatabase::GetInstance()->FindType(componentName);
-        if(componentType)
+        BoundType* componentType =
+            MetaDatabase::GetInstance()->FindType(componentName);
+        if (componentType)
         {
           // Grab the type id from the property
-          if(Property* prop = componentType->GetProperty(propertyName))
+          if (Property* prop = componentType->GetProperty(propertyName))
             typeName = prop->PropertyType->ToString();
         }
 
         // If we still don't have a valid type id, we cannot create the
         // correct property type
-        if(typeName == cInvalidTypeName)
+        if (typeName == cInvalidTypeName)
         {
           String format = "Failed to load animation track of type: %s.";
           String error = BuildString(format, trackName.c_str());
@@ -107,8 +101,9 @@ void ObjectTrack::Serialize(Serializer& stream)
       }
 
       // Create the property track
-      PropertyTrack* newPropertyTrack = MakePropertyTrack(componentName, propertyName, typeName);
-      if(newPropertyTrack)
+      PropertyTrack* newPropertyTrack =
+          MakePropertyTrack(componentName, propertyName, typeName);
+      if (newPropertyTrack)
       {
         AddPropertyTrack(newPropertyTrack);
         newPropertyTrack->Serialize(stream);
@@ -120,27 +115,30 @@ void ObjectTrack::Serialize(Serializer& stream)
   }
 }
 
-void ObjectTrack::UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame)
+void ObjectTrack::UpdateFrame(PlayData& playData,
+                              TrackParams& params,
+                              AnimationFrame& frame)
 {
-  //Get the per instance data for this object track
+  // Get the per instance data for this object track
   ObjectTrackPlayData& thisData = playData[ObjectTrackId];
 
-  //Did the object get destroyed?
+  // Did the object get destroyed?
   Cog* object = thisData.ObjectHandle;
-  if(object)
+  if (object)
   {
-    //Update all sub tracks
+    // Update all sub tracks
     PropertyTrackList::range r = PropertyTracks.All();
-    for(;!r.Empty();r.PopFront())
+    for (; !r.Empty(); r.PopFront())
     {
       PropertyTrack& track = r.Front();
 
-      //Update track with its per instance data
-      PropertyTrackPlayData& instanceData = thisData.mSubTrackPlayData[track.TrackIndex];
+      // Update track with its per instance data
+      PropertyTrackPlayData& instanceData =
+          thisData.mSubTrackPlayData[track.TrackIndex];
 
       // Don't do anything if this specific object doesn't have that component
       // Should this be a warning?
-      if(instanceData.mComponent)
+      if (instanceData.mComponent)
         track.UpdateFrame(instanceData, params, frame);
     }
   }
@@ -148,9 +146,9 @@ void ObjectTrack::UpdateFrame(PlayData& playData, TrackParams& params, Animation
 
 PropertyTrack* ObjectTrack::GetPropertyTrack(StringParam name)
 {
-  forRange(PropertyTrack& propertyTrack, PropertyTracks.All())
+  forRange(PropertyTrack & propertyTrack, PropertyTracks.All())
   {
-    if(propertyTrack.Name == name)
+    if (propertyTrack.Name == name)
       return &propertyTrack;
   }
 
@@ -159,11 +157,12 @@ PropertyTrack* ObjectTrack::GetPropertyTrack(StringParam name)
 
 void ObjectTrack::AddPropertyTrack(PropertyTrack* track)
 {
-  ErrorIf(track->TrackIndex != uint(-1), "Track has already been assigned an index.");
+  ErrorIf(track->TrackIndex != uint(-1),
+          "Track has already been assigned an index.");
 
   track->TrackIndex = mTrackCount;
   ++mTrackCount;
-  
+
   PropertyTracks.PushBack(track);
 }
 
@@ -173,7 +172,7 @@ void ObjectTrack::SetFullPath(StringParam path)
   CogNames.Clear();
 
   forRange(String str, StringTokenRange(path, cAnimationPathDelimiter))
-    CogNames.Append(str);
+      CogNames.Append(str);
 }
 
 StringParam ObjectTrack::GetFullPath() const
@@ -181,7 +180,6 @@ StringParam ObjectTrack::GetFullPath() const
   return FullPath;
 }
 
-//------------------------------------------------------------ Animation
 ZilchDefineType(Animation, builder, type)
 {
   ZilchBindGetterProperty(Duration);
@@ -211,11 +209,11 @@ void Animation::Save(StringParam filename)
 
 void Animation::Serialize(Serializer& stream)
 {
-  if(stream.GetMode() == SerializerMode::Saving)
+  if (stream.GetMode() == SerializerMode::Saving)
   {
     SerializeName(mDuration);
 
-    forRange(ObjectTrack& track, ObjectTracks.All())
+    forRange(ObjectTrack & track, ObjectTracks.All())
     {
       stream.SerializePolymorphic(track);
     }
@@ -226,7 +224,7 @@ void Animation::Serialize(Serializer& stream)
 
     // Walk through each object track
     PolymorphicNode objectNode;
-    while(stream.GetPolymorphic(objectNode))
+    while (stream.GetPolymorphic(objectNode))
     {
       // Create and serialize the new object track
       ObjectTrack* objectTrack = new ObjectTrack();
@@ -235,7 +233,7 @@ void Animation::Serialize(Serializer& stream)
       // Add it
       ObjectTracks.PushBack(objectTrack);
       ++mNumberOfTracks;
-        
+
       // End the object node
       stream.EndPolymorphic();
     }
@@ -247,23 +245,23 @@ void Animation::Unload()
   DeleteObjectsIn(ObjectTracks);
 }
 
-void Animation::UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame)
+void Animation::UpdateFrame(PlayData& playData,
+                            TrackParams& params,
+                            AnimationFrame& frame)
 {
   ObjectTrackList::range r = ObjectTracks.All();
-  for(;!r.Empty();r.PopFront())
+  for (; !r.Empty(); r.PopFront())
   {
     r.Front().UpdateFrame(playData, params, frame);
   }
 }
-
-//----------------------------------------------------------- Animation Loaders
 
 
 class AnimationLoaderData : public ResourceLoader
 {
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override
   {
-    //Just load an empty animation for now
+    // Just load an empty animation for now
     Animation* animation = new Animation();
     AnimationManager::GetInstance()->AddResource(entry, animation);
     return animation;
@@ -277,8 +275,10 @@ class AnimationLoaderData : public ResourceLoader
 
 struct AnimationLoadPattern
 {
-  template<typename readerType>
-  static void LoadObjectTrack(Animation& animation, uint trackId, readerType& reader)
+  template <typename readerType>
+  static void LoadObjectTrack(Animation& animation,
+                              uint trackId,
+                              readerType& reader)
   {
     ObjectTrackHeader trackHeader;
     reader.Read(trackHeader);
@@ -289,25 +289,30 @@ struct AnimationLoadPattern
     track->SetFullPath(fullPath);
 
     // read the position key frames
-    PropertyTrack* translationTrack = MakePropertyTrack("Transform", "Translation", ZilchTypeId(Vec3));
+    PropertyTrack* translationTrack =
+        MakePropertyTrack("Transform", "Translation", ZilchTypeId(Vec3));
     Array<PositionKey> positionKeys;
     positionKeys.Resize(trackHeader.mNumPositionKeys);
     reader.ReadArray(positionKeys.Data(), trackHeader.mNumPositionKeys);
 
     for (size_t i = 0; i < trackHeader.mNumPositionKeys; ++i)
-      translationTrack->InsertKey(positionKeys[i].Position, positionKeys[i].Keytime);
+      translationTrack->InsertKey(positionKeys[i].Position,
+                                  positionKeys[i].Keytime);
 
     // read the rotation key frames
-    PropertyTrack* rotationTrack = MakePropertyTrack("Transform", "Rotation", ZilchTypeId(Quat));
+    PropertyTrack* rotationTrack =
+        MakePropertyTrack("Transform", "Rotation", ZilchTypeId(Quat));
     Array<RotationKey> rotationKeys;
     rotationKeys.Resize(trackHeader.mNumRotationKeys);
     reader.ReadArray(rotationKeys.Data(), trackHeader.mNumRotationKeys);
 
     for (size_t i = 0; i < trackHeader.mNumRotationKeys; ++i)
-      rotationTrack->InsertKey(rotationKeys[i].Rotation, rotationKeys[i].Keytime);
+      rotationTrack->InsertKey(rotationKeys[i].Rotation,
+                               rotationKeys[i].Keytime);
 
     // finally read the scale key frames
-    PropertyTrack* scaleTrack = MakePropertyTrack("Transform", "Scale", ZilchTypeId(Vec3));
+    PropertyTrack* scaleTrack =
+        MakePropertyTrack("Transform", "Scale", ZilchTypeId(Vec3));
     Array<ScalingKey> scalingKeys;
     scalingKeys.Resize(trackHeader.mNumScalingKeys);
     reader.ReadArray(scalingKeys.Data(), trackHeader.mNumScalingKeys);
@@ -330,7 +335,7 @@ struct AnimationLoadPattern
     animation.ObjectTracks.PushBack(track);
   }
 
-  template<typename readerType>
+  template <typename readerType>
   static void Load(Animation* animation, readerType& reader)
   {
     AnimationHeader animHeader;
@@ -345,14 +350,14 @@ struct AnimationLoadPattern
       FileChunk chunk = reader.ReadChunkHeader();
       switch (chunk.Type)
       {
-        case 0:
-          return;
-        case ObjectTrackChunk:
-          LoadObjectTrack(*animation, trackId, reader);
-          break;
-        default:
-          ErrorIf(true, "Incorrect animation data format\n");
-          break;
+      case 0:
+        return;
+      case ObjectTrackChunk:
+        LoadObjectTrack(*animation, trackId, reader);
+        break;
+      default:
+        ErrorIf(true, "Incorrect animation data format\n");
+        break;
       }
       ++trackId;
     }
@@ -361,15 +366,19 @@ struct AnimationLoadPattern
 
 ImplementResourceManager(AnimationManager, Animation);
 
-AnimationManager::AnimationManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+AnimationManager::AnimationManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
-  AddLoader("AnimationBin", new ChunkFileLoader<AnimationManager, AnimationLoadPattern>());
+  AddLoader("AnimationBin",
+            new ChunkFileLoader<AnimationManager, AnimationLoadPattern>());
   AddLoader("Animation", new TextDataFileLoader<AnimationManager>());
   DefaultResourceName = "DefaultAnimation";
   mCanAddFile = true;
   AddGeometryFileFilters(this);
-  mOpenFileFilters.InsertAt(1, FileDialogFilter("Rich Animation (*.Animation.data)", "*.Animation.data"));
+  mOpenFileFilters.InsertAt(
+      1,
+      FileDialogFilter("Rich Animation (*.Animation.data)",
+                       "*.Animation.data"));
 
   // Append the rich animation filter to the "All Animations"
   FileDialogFilter& allFilter = mOpenFileFilters[0];
@@ -379,7 +388,7 @@ AnimationManager::AnimationManager(BoundType* resourceType)
   mCanReload = true;
   mCanCreateNew = true;
   mExtension = DataResourceExtension;
-  //mTemplates.PushBack(ResourceTemplate("RichAnimation", String()));
+  // mTemplates.PushBack(ResourceTemplate("RichAnimation", String()));
 }
 
-}//namespace Zero
+} // namespace Zero

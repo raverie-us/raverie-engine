@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------TypeCastKey
 TypeCastKey::TypeCastKey()
 {
   mPair.first = nullptr;
@@ -32,7 +26,6 @@ bool TypeCastKey::operator==(const TypeCastKey& rhs) const
   return mPair == rhs.mPair;
 }
 
-//-------------------------------------------------------------------UnaryOperatorKey
 UnaryOperatorKey::UnaryOperatorKey()
 {
   mPair.first = nullptr;
@@ -55,7 +48,6 @@ bool UnaryOperatorKey::operator==(const UnaryOperatorKey& rhs) const
   return mPair == rhs.mPair;
 }
 
-//-------------------------------------------------------------------BinaryOperatorKey
 
 BinaryOperatorKey::BinaryOperatorKey()
 {
@@ -64,7 +56,9 @@ BinaryOperatorKey::BinaryOperatorKey()
   mPair.second = (int)Zilch::Grammar::Invalid;
 }
 
-BinaryOperatorKey::BinaryOperatorKey(Zilch::Type* lhsType, Zilch::Type* rhsType, Zilch::Grammar::Enum op)
+BinaryOperatorKey::BinaryOperatorKey(Zilch::Type* lhsType,
+                                     Zilch::Type* rhsType,
+                                     Zilch::Grammar::Enum op)
 {
   mPair.first.first = lhsType;
   mPair.first.second = rhsType;
@@ -81,4 +75,4 @@ bool BinaryOperatorKey::operator==(const BinaryOperatorKey& rhs) const
   return mPair == rhs.mPair;
 }
 
-}//namespace Zero
+} // namespace Zero

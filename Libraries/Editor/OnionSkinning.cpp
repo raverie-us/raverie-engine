@@ -1,34 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file OnionSkinning.cpp
-/// Implementation of the OnionSkinning class.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
 void MakeInvisible(Cog* cog)
 {
-  //if(Model* model = cog->has(Model))
+  // if(Model* model = cog->has(Model))
   //  model->mVisible = false;
 
-  //if(Sprite* sprite = cog->has(Sprite))
+  // if(Sprite* sprite = cog->has(Sprite))
   //  sprite->mVisible = false;
 
-  forRange(Cog& child, cog->GetChildren())
+  forRange(Cog & child, cog->GetChildren())
   {
     MakeInvisible(&child);
   }
 }
 
-//--------------------------------------------------------------- Onion Skinning
-//******************************************************************************
 OnionSkinning::OnionSkinning(AnimationEditor* editor)
 {
   mEditor = editor;
@@ -36,7 +25,6 @@ OnionSkinning::OnionSkinning(AnimationEditor* editor)
   mStepTime = 0.3f;
 }
 
-//******************************************************************************
 void OnionSkinning::Update()
 {
   // Clear any old objects
@@ -48,7 +36,7 @@ void OnionSkinning::Update()
   AnimationScrubber* scrubber = mEditor->GetScrubber();
 
   // Do nothing if onion skinning is disabled
-  if(!settings->mOnionSkinning)
+  if (!settings->mOnionSkinning)
     return;
 
   // Grab the objects needed from the editor
@@ -56,7 +44,7 @@ void OnionSkinning::Update()
   Cog* selected = mEditor->GetSelectedObject();
 
   // Can't do anything without both objects
-  if(animGraphObject == NULL || selected == NULL)
+  if (animGraphObject == NULL || selected == NULL)
     return;
 
   // We need to get the Transform track for the currently selected object
@@ -67,7 +55,7 @@ void OnionSkinning::Update()
   TrackNode* objectTrack = richAnimation->GetObjectTrack(objectPath, false);
 
   // Nothing to do if there is no object track
-  if(objectTrack == NULL)
+  if (objectTrack == NULL)
     return;
 
   // Create all the preview objects
@@ -77,7 +65,7 @@ void OnionSkinning::Update()
   bool translationApplied = ApplyTrack(ZilchTypeId(Transform), "Translation");
 
   // If there was no translation track, no reason to show any other tracks
-  if(!translationApplied)
+  if (!translationApplied)
   {
     Clear();
     return;
@@ -86,20 +74,18 @@ void OnionSkinning::Update()
   ApplyTrack(ZilchTypeId(Transform), "Scale");
 }
 
-//******************************************************************************
 void OnionSkinning::Clear()
 {
   // Destroy all objects
-  forRange(Cog* cog, mPreviewObjects.All())
+  forRange(Cog * cog, mPreviewObjects.All())
   {
-    if(cog)
+    if (cog)
       cog->Destroy();
   }
 
   mPreviewObjects.Clear();
 }
 
-//******************************************************************************
 void OnionSkinning::CreateObjects()
 {
   Cog* selected = mEditor->GetSelectedObject();
@@ -107,26 +93,30 @@ void OnionSkinning::CreateObjects()
   // Save out the current object so we can copy it
   // **NOTE: 'Cog::Serialize' and 'Factory::BuildFromStream' have become out of
   //         sync.  Specifically: 'Cog::Serialize' does not save out 'LinkId',
-  //         whereas 'Factory::BuildFromStream' blindly tries to load in a LinkId.
-  //         So, binary saving/loading is no longer a valid operation with cogs.
-  //         'Cog::SaveToDataBlock' and 'Cog::CreateFromDataBlock' use binary
-  //         saving and loading, respectively.  Instead use text saving/loading. 
-  //DataBlock data = Cog::SaveToDataBlock(selected);
+  //         whereas 'Factory::BuildFromStream' blindly tries to load in a
+  //         LinkId. So, binary saving/loading is no longer a valid operation
+  //         with cogs. 'Cog::SaveToDataBlock' and 'Cog::CreateFromDataBlock'
+  //         use binary saving and loading, respectively.  Instead use text
+  //         saving/loading.
+  // DataBlock data = Cog::SaveToDataBlock(selected);
   String stringData = CogSerialization::SaveToStringForCopy(selected);
 
   // Create all objects
-  for(uint i = 0; i < mObjectCount; ++i)
+  for (uint i = 0; i < mObjectCount; ++i)
   {
-    // Create the object.  (See **NOTE above for info on 'Cog::CreateFromDataBlock')
-    //Cog* newObject = Cog::CreateFromDataBlock(selected->GetSpace(), data);
-    Cog* newObject = selected->CreateFromString(selected->GetSpace(), stringData);
+    // Create the object.  (See **NOTE above for info on
+    // 'Cog::CreateFromDataBlock')
+    // Cog* newObject = Cog::CreateFromDataBlock(selected->GetSpace(), data);
+    Cog* newObject =
+        selected->CreateFromString(selected->GetSpace(), stringData);
 
     // Attach to our parent if we're not a root object
-    if(Cog* parent = selected->GetParent())
+    if (Cog* parent = selected->GetParent())
       newObject->AttachToPreserveLocal(parent);
 
     // We don't want it to show up in the editor or be selectable
-    newObject->mFlags.SetFlag(CogFlags::Transient | CogFlags::Locked | CogFlags::ObjectViewHidden);
+    newObject->mFlags.SetFlag(CogFlags::Transient | CogFlags::Locked |
+                              CogFlags::ObjectViewHidden);
 
     // Make it invisible
     MakeInvisible(newObject);
@@ -135,8 +125,8 @@ void OnionSkinning::CreateObjects()
   }
 }
 
-//******************************************************************************
-bool OnionSkinning::ApplyTrack(BoundType* componentType, StringParam propertyName)
+bool OnionSkinning::ApplyTrack(BoundType* componentType,
+                               StringParam propertyName)
 {
   RichAnimation* richAnim = mEditor->GetEditorData()->mRichAnimation;
 
@@ -146,18 +136,18 @@ bool OnionSkinning::ApplyTrack(BoundType* componentType, StringParam propertyNam
   Cog* selected = mEditor->GetSelectedObject();
 
   // Get the property track to sample the value
-  TrackNode* track = richAnim->GetPropertyTrack(selected, animGraphObject,
-                                            componentType, propertyName, false);
+  TrackNode* track = richAnim->GetPropertyTrack(
+      selected, animGraphObject, componentType, propertyName, false);
 
   // If the property track doesn't exist, there's nothing for us to do
-  if(track == NULL)
+  if (track == NULL)
     return false;
 
   // Grab the meta type so we can get the meta property
   Property* metaProperty = componentType->GetProperty(propertyName);
 
   // Apply the track to all objects
-  for(uint i = 0; i < mObjectCount; ++i)
+  for (uint i = 0; i < mObjectCount; ++i)
   {
     Cog* object = mPreviewObjects[i];
 
@@ -175,7 +165,6 @@ bool OnionSkinning::ApplyTrack(BoundType* componentType, StringParam propertyNam
   return true;
 }
 
-//******************************************************************************
 float OnionSkinning::GetObjectSampleTime(uint objectIndex)
 {
   // Offset it by the scrubber time
@@ -201,4 +190,4 @@ float OnionSkinning::GetObjectSampleTime(uint objectIndex)
   return t;
 }
 
-}//namespace Zero
+} // namespace Zero

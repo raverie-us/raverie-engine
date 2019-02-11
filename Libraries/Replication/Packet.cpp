@@ -1,107 +1,97 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  RawPacket                                      //
-//---------------------------------------------------------------------------------//
+//                                  RawPacket //
 
-RawPacket::RawPacket()
-  : mContainsEventMessage(false),
-    mIpAddress(),
-    mData()
+RawPacket::RawPacket() : mContainsEventMessage(false), mIpAddress(), mData()
 {
 }
 
-RawPacket::RawPacket(const RawPacket& rhs)
-  : mContainsEventMessage(rhs.mContainsEventMessage),
+RawPacket::RawPacket(const RawPacket& rhs) :
+    mContainsEventMessage(rhs.mContainsEventMessage),
     mIpAddress(rhs.mIpAddress),
     mData(rhs.mData)
 {
 }
 
-RawPacket::RawPacket(MoveReference<RawPacket> rhs)
-  : mContainsEventMessage(rhs->mContainsEventMessage),
+RawPacket::RawPacket(MoveReference<RawPacket> rhs) :
+    mContainsEventMessage(rhs->mContainsEventMessage),
     mIpAddress(rhs->mIpAddress),
     mData(ZeroMove(rhs->mData))
 {
 }
 
-RawPacket& RawPacket::operator =(const RawPacket& rhs)
+RawPacket& RawPacket::operator=(const RawPacket& rhs)
 {
   mContainsEventMessage = rhs.mContainsEventMessage;
-  mIpAddress            = rhs.mIpAddress;
-  mData                 = rhs.mData;
+  mIpAddress = rhs.mIpAddress;
+  mData = rhs.mData;
 
   return *this;
 }
 
-RawPacket& RawPacket::operator =(MoveReference<RawPacket> rhs)
+RawPacket& RawPacket::operator=(MoveReference<RawPacket> rhs)
 {
   mContainsEventMessage = rhs->mContainsEventMessage;
-  mIpAddress            = rhs->mIpAddress;
-  mData                 = ZeroMove(rhs->mData);
+  mIpAddress = rhs->mIpAddress;
+  mData = ZeroMove(rhs->mData);
 
   return *this;
 }
 
-//---------------------------------------------------------------------------------//
-//                                    Packet                                       //
-//---------------------------------------------------------------------------------//
+//                                    Packet //
 
-Packet::Packet(const IpAddress& ipAddress, bool isStandalone, PacketSequenceId sequenceId)
-  : mIpAddress(ipAddress),
+Packet::Packet(const IpAddress& ipAddress,
+               bool isStandalone,
+               PacketSequenceId sequenceId) :
+    mIpAddress(ipAddress),
     mIsStandalone(isStandalone),
     mSequenceId(sequenceId)
 {
-  if(mIsStandalone)
+  if (mIsStandalone)
     Assert(mSequenceId == 0);
 }
 
-Packet::Packet(const Packet& rhs)
-  : mIpAddress(rhs.mIpAddress),
+Packet::Packet(const Packet& rhs) :
+    mIpAddress(rhs.mIpAddress),
     mIsStandalone(rhs.mIsStandalone),
     mSequenceId(rhs.mSequenceId)
 {
 }
 
-Packet& Packet::operator =(const Packet& rhs)
+Packet& Packet::operator=(const Packet& rhs)
 {
-  mIpAddress    = rhs.mIpAddress;
+  mIpAddress = rhs.mIpAddress;
   mIsStandalone = rhs.mIsStandalone;
-  mSequenceId   = rhs.mSequenceId;
+  mSequenceId = rhs.mSequenceId;
 
   return *this;
 }
 
-bool Packet::operator ==(const Packet& rhs) const
+bool Packet::operator==(const Packet& rhs) const
 {
   return GetSequenceId() == rhs.GetSequenceId();
 }
-bool Packet::operator !=(const Packet& rhs) const
+bool Packet::operator!=(const Packet& rhs) const
 {
   return GetSequenceId() != rhs.GetSequenceId();
 }
-bool Packet::operator  <(const Packet& rhs) const
+bool Packet::operator<(const Packet& rhs) const
 {
   return GetSequenceId() < rhs.GetSequenceId();
 }
-bool Packet::operator ==(PacketSequenceId rhs) const
+bool Packet::operator==(PacketSequenceId rhs) const
 {
   return GetSequenceId() == rhs;
 }
-bool Packet::operator !=(PacketSequenceId rhs) const
+bool Packet::operator!=(PacketSequenceId rhs) const
 {
   return GetSequenceId() != rhs;
 }
-bool Packet::operator  <(PacketSequenceId rhs) const
+bool Packet::operator<(PacketSequenceId rhs) const
 {
   return GetSequenceId() < rhs;
 }
@@ -122,58 +112,57 @@ PacketSequenceId Packet::GetSequenceId() const
 
 Bits Packet::GetHeaderBits() const
 {
-  return IsStandalone() ? MinPacketHeaderBits
-                        : MaxPacketHeaderBits;
+  return IsStandalone() ? MinPacketHeaderBits : MaxPacketHeaderBits;
 }
 
-bool operator ==(PacketSequenceId lhs, const Packet& rhs)
+bool operator==(PacketSequenceId lhs, const Packet& rhs)
 {
   return lhs == rhs.GetSequenceId();
 }
-bool operator  <(PacketSequenceId lhs, const Packet& rhs)
+bool operator<(PacketSequenceId lhs, const Packet& rhs)
 {
   return lhs < rhs.GetSequenceId();
 }
 
-//---------------------------------------------------------------------------------//
-//                                  OutPacket                                      //
-//---------------------------------------------------------------------------------//
+//                                  OutPacket //
 
-OutPacket::OutPacket(const IpAddress& destination, bool isStandalone, PacketSequenceId sequenceId)
-  : Packet(destination, isStandalone, sequenceId),
+OutPacket::OutPacket(const IpAddress& destination,
+                     bool isStandalone,
+                     PacketSequenceId sequenceId) :
+    Packet(destination, isStandalone, sequenceId),
     mMessages(),
     mSendTime(0)
 {
 }
 
-OutPacket::OutPacket(const OutPacket& rhs)
-  : Packet(rhs),
+OutPacket::OutPacket(const OutPacket& rhs) :
+    Packet(rhs),
     mMessages(rhs.mMessages),
     mSendTime(rhs.mSendTime)
 {
 }
 
-OutPacket::OutPacket(MoveReference<OutPacket> rhs)
-  : Packet(*rhs),
+OutPacket::OutPacket(MoveReference<OutPacket> rhs) :
+    Packet(*rhs),
     mMessages(ZeroMove(rhs->mMessages)),
     mSendTime(rhs->mSendTime)
 {
 }
 
-OutPacket& OutPacket::operator =(const OutPacket& rhs)
+OutPacket& OutPacket::operator=(const OutPacket& rhs)
 {
   Packet::operator=(rhs);
-  mMessages       = rhs.mMessages;
-  mSendTime       = rhs.mSendTime;
+  mMessages = rhs.mMessages;
+  mSendTime = rhs.mSendTime;
 
   return *this;
 }
 
-OutPacket& OutPacket::operator =(MoveReference<OutPacket> rhs)
+OutPacket& OutPacket::operator=(MoveReference<OutPacket> rhs)
 {
   Packet::operator=(*rhs);
-  mMessages       = ZeroMove(rhs->mMessages);
-  mSendTime       = rhs->mSendTime;
+  mMessages = ZeroMove(rhs->mMessages);
+  mSendTime = rhs->mSendTime;
 
   return *this;
 }
@@ -193,16 +182,14 @@ bool OutPacket::HasMessages() const
 }
 bool OutPacket::HasCustomMessages() const
 {
-  forRange(Message& message, mMessages.All())
-    if(message.IsCustomType())
-      return true;
+  forRange(Message & message,
+           mMessages.All()) if (message.IsCustomType()) return true;
   return false;
 }
 bool OutPacket::HasProtocolMessages() const
 {
-  forRange(Message& message, mMessages.All())
-    if(!message.IsCustomType())
-      return true;
+  forRange(Message & message,
+           mMessages.All()) if (!message.IsCustomType()) return true;
   return false;
 }
 
@@ -226,14 +213,15 @@ Bits OutPacket::GetTotalBits() const
   Bits result = GetHeaderBits();
 
   // Message sizes
-  forRange(Message& message, mMessages.All())
-    result += message.GetTotalBits();
+  forRange(Message & message, mMessages.All()) result += message.GetTotalBits();
 
   return result;
 }
 
 template <>
-Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket)
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction,
+                          BitStream& bitStream,
+                          OutPacket& outPacket)
 {
   // Write operation only
   Assert(direction == SerializeDirection::Write);
@@ -252,59 +240,54 @@ Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStre
   bitStream.Write(outPacket.mIsStandalone);
 
   // Not a standalone packet?
-  if(!outPacket.mIsStandalone)
+  if (!outPacket.mIsStandalone)
   {
     // Write packet sequence ID
     bitStream.Write(outPacket.mSequenceId);
   }
 
   // (Packet header size should be correct)
-  Assert((bitStream.GetBitsWritten() - bitsWrittenStart) == outPacket.GetHeaderBits());
+  Assert((bitStream.GetBitsWritten() - bitsWrittenStart) ==
+         outPacket.GetHeaderBits());
 
   //
   // Write Messages
   //
-  forRange(Message& message, outPacket.mMessages.All())
-    bitStream.Write(message);
+  forRange(Message & message, outPacket.mMessages.All())
+      bitStream.Write(message);
 
   // Success
   return bitStream.GetBitsWritten() - bitsWrittenStart;
 }
 
-//---------------------------------------------------------------------------------//
-//                                   InPacket                                      //
-//---------------------------------------------------------------------------------//
+//                                   InPacket //
 
-InPacket::InPacket(const IpAddress& source)
-  : Packet(source),
-    mMessages()
+InPacket::InPacket(const IpAddress& source) : Packet(source), mMessages()
 {
 }
 
-InPacket::InPacket(const InPacket& rhs)
-  : Packet(rhs),
-    mMessages(rhs.mMessages)
+InPacket::InPacket(const InPacket& rhs) : Packet(rhs), mMessages(rhs.mMessages)
 {
 }
 
-InPacket::InPacket(MoveReference<InPacket> rhs)
-  : Packet(*rhs),
+InPacket::InPacket(MoveReference<InPacket> rhs) :
+    Packet(*rhs),
     mMessages(ZeroMove(rhs->mMessages))
 {
 }
 
-InPacket& InPacket::operator =(const InPacket& rhs)
+InPacket& InPacket::operator=(const InPacket& rhs)
 {
   Packet::operator=(rhs);
-  mMessages       = rhs.mMessages;
+  mMessages = rhs.mMessages;
 
   return *this;
 }
 
-InPacket& InPacket::operator =(MoveReference<InPacket> rhs)
+InPacket& InPacket::operator=(MoveReference<InPacket> rhs)
 {
   Packet::operator=(*rhs);
-  mMessages       = ZeroMove(rhs->mMessages);
+  mMessages = ZeroMove(rhs->mMessages);
 
   return *this;
 }
@@ -329,14 +312,15 @@ Bits InPacket::GetTotalBits() const
   Bits result = GetHeaderBits();
 
   // Message sizes
-  forRange(Message& message, mMessages.All())
-    result += message.GetTotalBits();
+  forRange(Message & message, mMessages.All()) result += message.GetTotalBits();
 
   return result;
 }
 
 template <>
-Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket)
+Bits Serialize<InPacket>(SerializeDirection::Enum direction,
+                         BitStream& bitStream,
+                         InPacket& inPacket)
 {
   // Read operation only
   Assert(direction == SerializeDirection::Read);
@@ -351,14 +335,15 @@ Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStrea
   ProtocolId protocolId;
   ReturnIf(!bitStream.Read(protocolId), 0, "");
 
-  // (Their protocol ID should match ours, as we discard invalid packets at the raw packet receive stage)
+  // (Their protocol ID should match ours, as we discard invalid packets at the
+  // raw packet receive stage)
   Assert(protocolId == Peer::GetProtocolId());
 
   // Read 'Is standalone?' flag
   ReturnIf(!bitStream.Read(inPacket.mIsStandalone), 0, "");
 
   // Not a standalone packet?
-  if(!inPacket.mIsStandalone)
+  if (!inPacket.mIsStandalone)
   {
     // Read packet sequence ID
     ReturnIf(!bitStream.Read(inPacket.mSequenceId), 0, "");
@@ -372,11 +357,11 @@ Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStrea
   //
 
   // Enough bits left to possibly read another message?
-  while(bitStream.GetBitsUnread() >= MinMessageHeaderBits)
+  while (bitStream.GetBitsUnread() >= MinMessageHeaderBits)
   {
     // Read a message
     Message message(ProtocolMessageType::Invalid);
-    if(!bitStream.Read(message)) // Unable?
+    if (!bitStream.Read(message)) // Unable?
     {
       Assert(false);
       break;

@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CheckBox.hpp
-///  
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------- Check Box
 
 // Basic Check Box
 class CheckBox : public Composite
@@ -24,8 +15,8 @@ public:
   ~CheckBox();
 
   void SetInvalid();
-  
-  //Is the check box editable?
+
+  // Is the check box editable?
   void SetEditable(bool editable);
   bool GetEditable();
 
@@ -45,7 +36,6 @@ public:
   Vec2 GetMinSize() override;
 
 private:
-
   void OnLeftClick(MouseEvent* event);
   void OnKeyDown(KeyboardEvent* event);
   void OnFocusGained(FocusEvent* event);
@@ -58,7 +48,6 @@ private:
   bool mChecked;
 };
 
-//--------------------------------------------------------------- Text Check Box
 
 // Check Box with text label next to the control
 class TextCheckBox : public Composite
@@ -85,9 +74,9 @@ public:
 
   void OnLeftClick(MouseEvent* event);
 
-//private:
+  // private:
   Label* mText;
   CheckBox* mCheckBox;
 };
 
-}
+} // namespace Zero

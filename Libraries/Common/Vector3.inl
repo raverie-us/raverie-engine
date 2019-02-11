@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Diagnostic.hpp"
 
 namespace Math
@@ -92,7 +87,7 @@ inline Vector3 Vector3::operator*(Vec3Param rhs) const
 }
 
 inline Vector3 Vector3::operator/(Vec3Param rhs) const
-{  
+{
   ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0),
           "Vector3 - Division by zero.");
   return Vector3(x / rhs.x, y / rhs.y, z / rhs.z);
@@ -109,8 +104,8 @@ inline real Vector3::Dot(Vec3Param rhs) const
 }
 
 inline real Dot(Vec3Param lhs, Vec3Param rhs)
-{  
+{
   return lhs.Dot(rhs);
 }
 
-}//namespace Math
+} // namespace Math

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
@@ -13,7 +8,8 @@ const Vector3 Vector3::cZero(real(0.0), real(0.0), real(0.0));
 const Vector3 Vector3::cXAxis(real(1.0), real(0.0), real(0.0));
 const Vector3 Vector3::cYAxis(real(0.0), real(1.0), real(0.0));
 const Vector3 Vector3::cZAxis(real(0.0), real(0.0), real(1.0));
-const Vector3 Vector3::Axes[] = {Vector3::cXAxis, Vector3::cYAxis, Vector3::cZAxis};
+const Vector3 Vector3::Axes[] = {
+    Vector3::cXAxis, Vector3::cYAxis, Vector3::cZAxis};
 
 Vector3::Vector3(real xx, real yy, real zz)
 {
@@ -57,8 +53,7 @@ real Vector3::operator[](uint index) const
 
 bool Vector3::operator==(Vec3Param rhs) const
 {
-  return Math::Equal(x, rhs.x) &&
-         Math::Equal(y, rhs.y) &&
+  return Math::Equal(x, rhs.x) && Math::Equal(y, rhs.y) &&
          Math::Equal(z, rhs.z);
 }
 
@@ -69,30 +64,22 @@ bool Vector3::operator!=(Vec3Param rhs) const
 
 BoolVec3 Vector3::operator<(Vec3Param rhs) const
 {
-  return BoolVec3(x < rhs.x,
-                  y < rhs.y,
-                  z < rhs.z);
+  return BoolVec3(x < rhs.x, y < rhs.y, z < rhs.z);
 }
 
 BoolVec3 Vector3::operator<=(Vec3Param rhs) const
 {
-  return BoolVec3(x <= rhs.x,
-                  y <= rhs.y,
-                  z <= rhs.z);
+  return BoolVec3(x <= rhs.x, y <= rhs.y, z <= rhs.z);
 }
 
 BoolVec3 Vector3::operator>(Vec3Param rhs) const
 {
-  return BoolVec3(x > rhs.x,
-                  y > rhs.y,
-                  z > rhs.z);
+  return BoolVec3(x > rhs.x, y > rhs.y, z > rhs.z);
 }
 
 BoolVec3 Vector3::operator>=(Vec3Param rhs) const
 {
-  return BoolVec3(x >= rhs.x,
-                  y >= rhs.y,
-                  z >= rhs.z);
+  return BoolVec3(x >= rhs.x, y >= rhs.y, z >= rhs.z);
 }
 
 void Vector3::ZeroOut()
@@ -166,7 +153,7 @@ real Vector3::AttemptNormalize(Vec3Ref value)
   // Although the squared length may not be zero, the sqrt of a small number
   // may be truncated to zero, causing a divide by zero crash.  This is why
   // we check to make sure that it is larger than our epsilon squared.
-  if(lengthSq >= Epsilon() * Epsilon())
+  if (lengthSq >= Epsilon() * Epsilon())
   {
     lengthSq = Sqrt(lengthSq);
     value /= lengthSq;
@@ -219,7 +206,10 @@ Vector3 Vector3::Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue)
   return result;
 }
 
-Vector3 Vector3::DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped)
+Vector3 Vector3::DebugClamp(Vec3Param value,
+                            Vec3Param minValue,
+                            Vec3Param maxValue,
+                            bool& wasClamped)
 {
   Vector3 result;
   result.x = Math::DebugClamp(value.x, minValue.x, maxValue.x, wasClamped);
@@ -293,7 +283,8 @@ Vector3 Vector3::ProjectOnPlane(Vec3Param input, Vec3Param planeNormal)
   return GenericProjectOnPlane(input, planeNormal);
 }
 
-Vector3 Vector3::ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector)
+Vector3 Vector3::ReflectAcrossVector(Vec3Param input,
+                                     Vec3Param normalizedVector)
 {
   return GenericReflectAcrossVector(input, normalizedVector);
 }
@@ -303,7 +294,9 @@ Vector3 Vector3::ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal)
   return GenericReflectAcrossPlane(input, planeNormal);
 }
 
-Vector3 Vector3::Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex)
+Vector3 Vector3::Refract(Vec3Param input,
+                         Vec3Param planeNormal,
+                         real refractionIndex)
 {
   return GenericRefract(input, planeNormal, refractionIndex);
 }
@@ -317,9 +310,9 @@ real Vector3::AngleBetween(Vec3Param a, Vec3Param b)
 
 bool Vector3::ApproximatelyEqual(Vec3Param lhs, Vec3Param rhs, real epsilon)
 {
-   return Math::Equal(lhs.x, rhs.x, epsilon) &&
-          Math::Equal(lhs.y, rhs.y, epsilon) &&
-          Math::Equal(lhs.z, rhs.z, epsilon);
+  return Math::Equal(lhs.x, rhs.x, epsilon) &&
+         Math::Equal(lhs.y, rhs.y, epsilon) &&
+         Math::Equal(lhs.z, rhs.z, epsilon);
 }
 
 bool Vector3::Valid() const
@@ -413,7 +406,7 @@ Vec3Ref Vector3::Negate()
   return *this;
 }
 
-//-------------------------------------------------------------------Global Functions
+//Functions
 Vector3 operator*(real lhs, Vec3Param rhs)
 {
   return rhs * lhs;
@@ -494,7 +487,10 @@ Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue)
   return Vector3::Clamp(value, minValue, maxValue);
 }
 
-Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped)
+Vector3 DebugClamp(Vec3Param value,
+                   Vec3Param minValue,
+                   Vec3Param maxValue,
+                   bool& wasClamped)
 {
   return Vector3::DebugClamp(value, minValue, maxValue, wasClamped);
 }
@@ -569,7 +565,6 @@ real AngleBetween(Vec3Param a, Vec3Param b)
   return Vector3::AngleBetween(a, b);
 }
 
-//------------------------------------------------------------- Legacy
 bool Equal(Vec3Param lhs, Vec3Param rhs, real epsilon)
 {
   return Math::Equal(lhs.x, rhs.x, epsilon) &&
@@ -657,4 +652,4 @@ real DistanceToLineSq(Vec3Param start, Vec3Param end, Vec3Param point)
   return (ptoa - proj).LengthSq();
 }
 
-}// namespace Math
+} // namespace Math

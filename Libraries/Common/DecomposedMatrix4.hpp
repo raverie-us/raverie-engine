@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DecomposedMatrix4.hpp
-/// Declaration of the DecomposedMatrix4 structure.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Math
@@ -25,7 +17,8 @@ struct ZeroShared DecomposedMatrix4
   Vector3 TransformNormal(Vec3Param normal);
   Vector3 InverseTransformNormal(Vec3Param normal);
 
-  /// Transform the surface normal by doing the inverse transpose of the transform.
+  /// Transform the surface normal by doing the inverse transpose of the
+  /// transform.
   Vector3 TransformSurfaceNormal(Vec3Param direction);
   Vector3 InverseTransformSurfaceNormal(Vec3Param direction);
 
@@ -37,4 +30,4 @@ struct ZeroShared DecomposedMatrix4
   Vector3 Translation;
 };
 
-}//namespace Math
+} // namespace Math

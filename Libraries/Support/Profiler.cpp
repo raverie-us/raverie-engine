@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Profiler.cpp
-/// Implementation of the Profile Record, Manager, and Block class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Profiler.hpp"
 #include "Timer.hpp"
@@ -43,13 +35,13 @@ void ProfileSystem::Add(Record* record)
 void ProfileSystem::Add(cstr parentName, Record* record)
 {
   Array<Record*>::range r = mRecordList.All();
-  //if this object has a parent, then walk through the record list
-  //to find the parent
-  if(parentName != nullptr)
+  // if this object has a parent, then walk through the record list
+  // to find the parent
+  if (parentName != nullptr)
   {
-    for(;!r.Empty();r.PopFront())
+    for (; !r.Empty(); r.PopFront())
     {
-      if(strcmp(r.Front()->mName,parentName)==0)
+      if (strcmp(r.Front()->mName, parentName) == 0)
       {
         r.Front()->AddChild(record);
         break;
@@ -57,13 +49,13 @@ void ProfileSystem::Add(cstr parentName, Record* record)
     }
   }
 
-  //always add this record to the record list
+  // always add this record to the record list
   mRecordList.PushBack(record);
 }
 
 ProfileTime ProfileSystem::GetTime()
 {
-  //TODO: Fix for multiple threads. (Thread local storage?)
+  // TODO: Fix for multiple threads. (Thread local storage?)
   return mTimer.GetTickTime();
 }
 
@@ -76,7 +68,7 @@ Record::Record(void)
 }
 
 Record::Record(cstr name)
-{ 
+{
   Initialize(name, nullptr, 0xFFFFFFFF);
 }
 
@@ -97,7 +89,7 @@ void Record::Initialize(cstr name, cstr parentName, u32 color)
 void Record::Clear()
 {
   mTotalTime = 0;
-  mMaxTime =0;
+  mMaxTime = 0;
 
   mSmoothAvg = 0.0f;
   mOldTicks = 0;
@@ -112,12 +104,12 @@ void Record::Update()
   ProfileTime delta = mTotalTime - mOldTicks;
   mInstantAvg = (float)delta;
 
-  //Better way of smoothing?
+  // Better way of smoothing?
   float newAvg = mSmoothAvg * 0.90f + 0.1f * mInstantAvg;
   mSmoothAvg = newAvg;
 
   RangeType range = GetChildren();
-  while(!range.Empty())
+  while (!range.Empty())
   {
     range.Front().Update();
     range.PopFront();
@@ -131,12 +123,12 @@ void Record::Update()
 
 void Record::AverageRunningSample()
 {
-  mSamples[sSampleIndex] = mRunningSample / (float)(mRunningCount != 0 ? mRunningCount : 1);
+  mSamples[sSampleIndex] =
+      mRunningSample / (float)(mRunningCount != 0 ? mRunningCount : 1);
   mRunningSample = 0.0f;
   mRunningCount = 0;
 
-  forRange(Record& record, GetChildren())
-    record.AverageRunningSample();
+  forRange(Record & record, GetChildren()) record.AverageRunningSample();
 }
 
 float Record::Average()
@@ -163,13 +155,14 @@ void Record::AddChild(Record* record)
 void Record::EnterRecord(ProfileTime time)
 {
   ++mHits;
-  mTotalTime+=time;
-  //update the max time that was ever spent in this record.
-  if(time > mMaxTime)
+  mTotalTime += time;
+  // update the max time that was ever spent in this record.
+  if (time > mMaxTime)
   {
     mMaxTime = time;
-    //if(mInstantAvg != 0.0f && 3.0f * mInstantAvg < (float)time)
-    //  DebugPrint("%s has an average of %g and spike with %g\n",mName,mInstantAvg,(float)time);
+    // if(mInstantAvg != 0.0f && 3.0f * mInstantAvg < (float)time)
+    //  DebugPrint("%s has an average of %g and spike with
+    //  %g\n",mName,mInstantAvg,(float)time);
   }
 }
 
@@ -182,33 +175,34 @@ ScopeTimer::ScopeTimer(Record* data)
 ScopeTimer::~ScopeTimer()
 {
   ProfileTime endTime = ProfileSystem::Instance->GetTime();
-  mData->EnterRecord(endTime-mStartTime);
+  mData->EnterRecord(endTime - mStartTime);
 }
-
 
 void PrintProfileGraph(Record* record, double total, int level)
 {
-  for(int i=0;i<level;++i)
+  for (int i = 0; i < level; ++i)
     DebugPrint("\t");
 
-  DebugPrint("%s : %3.2f\n", record->GetName(), ((double)record->GetTotalTime() / total) * 100.0);
+  DebugPrint("%s : %3.2f\n",
+             record->GetName(),
+             ((double)record->GetTotalTime() / total) * 100.0);
   InListBaseLink<Profile::Record>::range records = record->GetChildren();
 
-  while(!records.Empty())
+  while (!records.Empty())
   {
     Profile::Record& r = records.Front();
-    PrintProfileGraph(&r, (double)record->GetTotalTime(), level+1);
+    PrintProfileGraph(&r, (double)record->GetTotalTime(), level + 1);
     records.PopFront();
   }
 }
 
 void PrintProfileGraph()
 {
-  Array<Profile::Record*>::range records = Profile::ProfileSystem::Instance->GetRecords();
+  Array<Profile::Record*>::range records =
+      Profile::ProfileSystem::Instance->GetRecords();
   Record* root = records.Front();
   PrintProfileGraph(root, (double)root->GetTotalTime(), 0);
-
 }
 
-}//namespace Profiler
-}//namespace Zero
+} // namespace Profile
+} // namespace Zero

@@ -1,35 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file EulerOrder.cpp
-///  Implementation of the Euler angles order as described in Graphic Gems IV,
-///  EulerOrder design referenced from Insomniac Games.
-///  
-///  Authors: Benjamin Strukus
-///  Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 namespace Math
 {
 
-EulerOrder::EulerOrder(EulerOrders::Enum eulerOrder)
-  : Order(eulerOrder)
+EulerOrder::EulerOrder(EulerOrders::Enum eulerOrder) : Order(eulerOrder)
 {
   //
 }
 
-EulerOrder& EulerOrder::operator = (EulerOrderParam rhs)
+EulerOrder& EulerOrder::operator=(EulerOrderParam rhs)
 {
   Order = rhs.Order;
   return *this;
 }
 
-bool EulerOrder::operator == (EulerOrderParam rhs)
+bool EulerOrder::operator==(EulerOrderParam rhs)
 {
   return Order == rhs.Order;
 }
 
-bool EulerOrder::operator != (EulerOrderParam rhs)
+bool EulerOrder::operator!=(EulerOrderParam rhs)
 {
   return Order != rhs.Order;
 }
@@ -69,27 +59,33 @@ bool EulerOrder::OddParity(void) const
   return ((uint(Order) >> 2) & 1) == EulerOrders::Odd;
 }
 
-void EulerOrder::GetOrder(EulerOrder order, uint& i, uint& j, uint& k, uint& h,
-                          uint& parity, uint& repeated, uint& frame)
+void EulerOrder::GetOrder(EulerOrder order,
+                          uint& i,
+                          uint& j,
+                          uint& k,
+                          uint& h,
+                          uint& parity,
+                          uint& repeated,
+                          uint& frame)
 {
   uint orderValue = uint(order.Order);
-  
+
   frame = orderValue & 1;
   orderValue >>= 1;
-  
+
   repeated = orderValue & 1;
-  orderValue >>= 1;      
-  
+  orderValue >>= 1;
+
   parity = orderValue & 1;
-  orderValue >>= 1;      
-  
-  i = EulerOrders::Safe[orderValue & 3];      
-  
-  j = EulerOrders::Next[i + parity];      
-  
-  k = EulerOrders::Next[i + 1 - parity];  
-  
-  h = repeated ? k : i;           
+  orderValue >>= 1;
+
+  i = EulerOrders::Safe[orderValue & 3];
+
+  j = EulerOrders::Next[i + parity];
+
+  k = EulerOrders::Next[i + 1 - parity];
+
+  h = repeated ? k : i;
 }
 
-}// namespace Math
+} // namespace Math

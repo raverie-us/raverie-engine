@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2011-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,24 +15,33 @@ DeclareEnum3(AnimationPlayMode, PlayOnce, Loop, Pingpong);
 DeclareEnum2(AnimationDirection, Forward, Backward);
 
 /// Blend between two looping animation like walk to run
-AnimationNode* BuildCrossBlend(AnimationGraph* animGraph, AnimationNode* a, 
-                               AnimationNode* b, float transitionTime);
+AnimationNode* BuildCrossBlend(AnimationGraph* animGraph,
+                               AnimationNode* a,
+                               AnimationNode* b,
+                               float transitionTime);
 
 /// Blend from the current animation position to the beginning of the next.
-AnimationNode* BuildDirectBlend(AnimationGraph* animGraph, AnimationNode* a, 
-                                AnimationNode* b, float transitionTime);
+AnimationNode* BuildDirectBlend(AnimationGraph* animGraph,
+                                AnimationNode* a,
+                                AnimationNode* b,
+                                float transitionTime);
 
-AnimationNode* BuildSelectiveNode(AnimationGraph* t, AnimationNode* a, 
-                                  AnimationNode* b, Cog* rootBone);
+AnimationNode* BuildSelectiveNode(AnimationGraph* t,
+                                  AnimationNode* a,
+                                  AnimationNode* b,
+                                  Cog* rootBone);
 
 // Rename to Sequence
-AnimationNode* BuildChainNode(AnimationGraph* t, AnimationNode* a, AnimationNode* b);
+AnimationNode* BuildChainNode(AnimationGraph* t,
+                              AnimationNode* a,
+                              AnimationNode* b);
 
 /// Base animation node.
-AnimationNode* BuildBasic(AnimationGraph* animGraph, Animation* animation, 
-                          float t, AnimationPlayMode::Enum playMode);
+AnimationNode* BuildBasic(AnimationGraph* animGraph,
+                          Animation* animation,
+                          float t,
+                          AnimationPlayMode::Enum playMode);
 
-//------------------------------------------------------------------ Blend Track
 struct BlendTrack
 {
   uint Index;
@@ -47,43 +51,45 @@ struct BlendTrack
 
 typedef HashMap<String, BlendTrack*> BlendTracks;
 
-//----------------------------------------------------- Property Track Play Data
-///Data needed for each track to play
+/// Data needed for each track to play
 struct PropertyTrackPlayData
 {
-  PropertyTrackPlayData() : mBlend(NULL) {}
+  PropertyTrackPlayData() : mBlend(NULL)
+  {
+  }
 
   BlendTrack* mBlend;
-  //Current key frame of the animation track
+  // Current key frame of the animation track
   uint mKeyframeIndex;
-  //Component this track animates.
+  // Component this track animates.
   Object* mComponent;
 };
 
 class ObjectTrack;
 
-//------------------------------------------------------------------ Blend Track
-//Data needed for an object track
+// Data needed for an object track
 struct ObjectTrackPlayData
 {
-  ObjectTrackPlayData() {}
-  //Object being animated.
+  ObjectTrackPlayData()
+  {
+  }
+  // Object being animated.
   CogId ObjectHandle;
-  //Per sub track data for this track.
+  // Per sub track data for this track.
   Array<PropertyTrackPlayData> mSubTrackPlayData;
-  ///Track
+  /// Track
   ObjectTrack* Track;
 };
 
-//--------------------------------------------------------- Animation Frame Data
 struct AnimationFrameData
 {
-  AnimationFrameData() : Active(false) {}
+  AnimationFrameData() : Active(false)
+  {
+  }
   bool Active;
   Any Value;
 };
 
-//-------------------------------------------------------------- Animation Frame
 struct AnimationFrame
 {
   Array<AnimationFrameData> Tracks;
@@ -91,10 +97,9 @@ struct AnimationFrame
 
 typedef Array<ObjectTrackPlayData> PlayData;
 
-//--------------------------------------------------------------- Animation Node
 DeclareEnum2(AnimationNodeState, Running, Finished);
 
-//Node in animation graph
+// Node in animation graph
 class AnimationNode : public ReferenceCountedEventObject
 {
 public:
@@ -104,20 +109,32 @@ public:
 
   /// Constructor / destructor.
   AnimationNode();
-  virtual ~AnimationNode(){}
+  virtual ~AnimationNode()
+  {
+  }
 
   /// Used when the meta database has changed.
-  virtual void ReLinkAnimations(){}
+  virtual void ReLinkAnimations()
+  {
+  }
 
-  virtual AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                                uint frameId, EventList eventsToSend) = 0;
-  virtual AnimationNode* Clone(){return NULL;}
-  virtual bool IsPlayingInNode(StringParam animName)=0;
-  virtual void PrintNode(uint tabs)=0;
-  virtual bool IsActive(){return mTime <= mDuration;}
+  virtual AnimationNode* Update(AnimationGraph* animGraph,
+                                float dt,
+                                uint frameId,
+                                EventList eventsToSend) = 0;
+  virtual AnimationNode* Clone()
+  {
+    return NULL;
+  }
+  virtual bool IsPlayingInNode(StringParam animName) = 0;
+  virtual void PrintNode(uint tabs) = 0;
+  virtual bool IsActive()
+  {
+    return mTime <= mDuration;
+  }
 
   virtual String GetDisplayName();
-  
+
   AnimationNode* GetParent();
 
   /// Collapses all children to a pose node on the next Update.
@@ -168,7 +185,6 @@ protected:
   AnimationNode* mParent;
 };
 
-//-------------------------------------------------------------------- Pose Node
 class PoseNode : public AnimationNode
 {
 public:
@@ -178,13 +194,17 @@ public:
   PoseNode(AnimationFrame& pose);
 
   /// AnimationNode Interface.
-  AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                        uint frameId, EventList eventsToSend) override;
-  virtual bool IsPlayingInNode(StringParam animName){return false;}
+  AnimationNode* Update(AnimationGraph* animGraph,
+                        float dt,
+                        uint frameId,
+                        EventList eventsToSend) override;
+  virtual bool IsPlayingInNode(StringParam animName)
+  {
+    return false;
+  }
   virtual void PrintNode(uint tabs);
 };
 
-//-------------------------------------------------------------- Basic Animation
 /// This node simply plays a single animation.
 class BasicAnimation : public AnimationNode
 {
@@ -194,13 +214,17 @@ public:
   /// Constructors.
   BasicAnimation();
   BasicAnimation(AnimationGraph* animGraph);
-  BasicAnimation(AnimationGraph* animGraph, Animation* animation, float t,
-                 AnimationPlayMode::Enum playMode);  
+  BasicAnimation(AnimationGraph* animGraph,
+                 Animation* animation,
+                 float t,
+                 AnimationPlayMode::Enum playMode);
 
   /// AnimationNode Interface.
   void ReLinkAnimations() override;
-  AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                        uint frameId, EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph,
+                        float dt,
+                        uint frameId,
+                        EventList eventsToSend) override;
   void UpdateFrame(AnimationGraph* animGraph);
   AnimationNode* Clone() override;
   bool IsPlayingInNode(StringParam animName) override;
@@ -230,8 +254,7 @@ protected:
   PlayData mPlayData;
 };
 
-//------------------------------------------------------------------- Dual Blend
-/// This node is an interface for animation nodes that deal with 
+/// This node is an interface for animation nodes that deal with
 /// multiple animations. It's templated for the clone function.
 template <typename DerivedType>
 class DualBlend : public AnimationNode
@@ -246,10 +269,14 @@ public:
 
   /// AnimationNode Interface.
   void ReLinkAnimations() override;
-  virtual String GetName()=0;
+  virtual String GetName() = 0;
   AnimationNode* Clone() override;
-  AnimationNode* CollapseToA(AnimationGraph* animGraph, uint frameId, EventList eventsToSend);
-  AnimationNode* CollapseToB(AnimationGraph* animGraph, uint frameId, EventList eventsToSend);
+  AnimationNode* CollapseToA(AnimationGraph* animGraph,
+                             uint frameId,
+                             EventList eventsToSend);
+  AnimationNode* CollapseToB(AnimationGraph* animGraph,
+                             uint frameId,
+                             EventList eventsToSend);
   bool IsPlayingInNode(StringParam animName) override;
 
   /// Left node.
@@ -267,7 +294,6 @@ public:
   HandleOf<AnimationNode> mB;
 };
 
-//----------------------------------------------------------------- Direct Blend
 /// Blends directly between the two animations (the animations do not continue
 /// to play while the blend node is in affect).
 class DirectBlend : public DualBlend<DirectBlend>
@@ -280,13 +306,14 @@ public:
 
   /// AnimationNode Interface.
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                        uint frameId, EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph,
+                        float dt,
+                        uint frameId,
+                        EventList eventsToSend) override;
   void PrintNode(uint tabs) override;
 };
 
 // Normalized CrossBlend vs Basic
-//------------------------------------------------------------------ Cross Blend
 DeclareEnum2(AnimationBlendType,
              // Does no cadence matching.
              Standard,
@@ -313,8 +340,10 @@ public:
 
   /// AnimationNode Interface.
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                        uint frameId, EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph,
+                        float dt,
+                        uint frameId,
+                        EventList eventsToSend) override;
   void PrintNode(uint tabs) override;
 
   /// Updates the time of the 'To' animation to sync the cadence with the
@@ -336,7 +365,6 @@ public:
   AnimationBlendMode::Enum mMode;
 };
 
-//--------------------------------------------------------------- Selective Node
 class SelectiveNode : public DualBlend<SelectiveNode>
 {
 public:
@@ -347,8 +375,10 @@ public:
 
   /// AnimationNode Interface.
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                        uint frameId, EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph,
+                        float dt,
+                        uint frameId,
+                        EventList eventsToSend) override;
   AnimationNode* Clone() override;
   void PrintNode(uint tabs) override;
 
@@ -359,7 +389,6 @@ public:
   HashSet<uint> mSelectiveBones;
 };
 
-//------------------------------------------------------------------- Chain Node
 class ChainNode : public DualBlend<ChainNode>
 {
 public:
@@ -369,10 +398,12 @@ public:
   ChainNode();
 
   String GetName() override;
-  AnimationNode* Update(AnimationGraph* animGraph, float dt,
-                        uint frameId, EventList eventsToSend) override;
+  AnimationNode* Update(AnimationGraph* animGraph,
+                        float dt,
+                        uint frameId,
+                        EventList eventsToSend) override;
   bool IsPlayingInNode(StringParam animName) override;
   void PrintNode(uint tabs) override;
 };
 
-}// namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -49,11 +44,18 @@ ZilchDefineType(RevoluteJoint, builder, type)
   ZeroBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
-  // Instead of binding the angles as usual, bind them with basis editors for cleaner updating with gizmos
-  //BindAngleAccessors();
-  ZilchBindGetterSetterProperty(LocalBasisA)->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
-  ZilchBindGetterSetterProperty(LocalBasisB)->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
-  ZilchBindGetterSetterProperty(WorldBasis)->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
+  // Instead of binding the angles as usual, bind them with basis editors for
+  // cleaner updating with gizmos
+  // BindAngleAccessors();
+  ZilchBindGetterSetterProperty(LocalBasisA)
+      ->Add(new EditorRotationBasis(
+          "RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
+  ZilchBindGetterSetterProperty(LocalBasisB)
+      ->Add(new EditorRotationBasis(
+          "RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
+  ZilchBindGetterSetterProperty(WorldBasis)
+      ->Add(new EditorRotationBasis(
+          "RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
   ZilchBindGetterSetterProperty(FrameOfReference);
 
   ZilchBindMethod(SetWorldFrame);
@@ -68,7 +70,8 @@ void RevoluteJoint::Serialize(Serializer& stream)
 {
   Joint::Serialize(stream);
 
-  // Turn the frame index into a bool for whether or not object A's frame is used
+  // Turn the frame index into a bool for whether or not object A's frame is
+  // used
   bool UseFrameA = (mPrimaryFrameIndex == 0);
   SerializeNameDefault(UseFrameA, true);
 
@@ -76,10 +79,10 @@ void RevoluteJoint::Serialize(Serializer& stream)
   SerializeAngles(stream, mReferenceAngle);
 
   // When loading, turn the bool back into the index
-  if(stream.GetMode() == SerializerMode::Loading)
+  if (stream.GetMode() == SerializerMode::Loading)
   {
     mPrimaryFrameIndex = 0;
-    if(!UseFrameA)
+    if (!UseFrameA)
       mPrimaryFrameIndex = 1;
   }
 }
@@ -93,22 +96,22 @@ void RevoluteJoint::ComputeInitialConfiguration()
 {
   // First just grab the body points from the object link
   ComputeCurrentAnchors(mAnchors);
-  
+
   // Next compute the axis of the revolute as the axis between the two points
   Vec3 p0 = GetWorldPointA();
   Vec3 p1 = GetWorldPointB();
   Vec3 axis = p1 - p0;
   real length = axis.AttemptNormalize();
   // If we got an invalid axis then just use the y axis...
-  if(length == real(0.0))
+  if (length == real(0.0))
     axis = Vec3::cYAxis;
   SetWorldAxis(axis);
 }
 
 void RevoluteJoint::ComponentAdded(BoundType* typeId, Component* component)
 {
-  Joint::ComponentAdded(typeId,component);
-  if(typeId == ZilchTypeId(JointLimit))
+  Joint::ComponentAdded(typeId, component);
+  if (typeId == ZilchTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -130,7 +133,10 @@ void RevoluteJoint::UpdateAtoms()
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
+  UpdateAtomsFragment(this,
+                      sInfo.mAtomCount,
+                      moleculeData,
+                      DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 uint RevoluteJoint::MoleculeCount() const
@@ -143,7 +149,11 @@ void RevoluteJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
+  ComputeMoleculesFragment(this,
+                           molecules,
+                           sInfo.mAtomCount,
+                           moleculeData,
+                           DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 void RevoluteJoint::WarmStart(MoleculeWalker& molecules)
@@ -171,30 +181,37 @@ void RevoluteJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
+  ComputePositionMoleculesFragment(this,
+                                   molecules,
+                                   sInfo.mAtomCount,
+                                   moleculeData,
+                                   DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 void RevoluteJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
 
   Collider* collider0 = GetCollider(0);
   Collider* collider1 = GetCollider(1);
-  if(collider0 == nullptr || collider1 == nullptr)
+  if (collider0 == nullptr || collider1 == nullptr)
     return;
 
-  Mat3 basis0 = collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
-  Mat3 basis1 = collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
+  Mat3 basis0 =
+      collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
+  Mat3 basis1 =
+      collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
   DrawHinge(this, mAnchors, basis0, basis1, mPrimaryFrameIndex);
 }
 
-uint RevoluteJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint RevoluteJoint::GetAtomIndexFilter(uint atomIndex,
+                                       real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 3)
+  if (atomIndex < 3)
     return LinearAxis;
-  else if(atomIndex < 6)
+  else if (atomIndex < 6)
     return AngularAxis;
   return 0;
 }
@@ -239,7 +256,7 @@ Vec3 RevoluteJoint::GetWorldAxis() const
 {
   uint objFrame = mPrimaryFrameIndex;
   Collider* collider = GetCollider(objFrame);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return Vec3::cZero;
 
   Mat3 rot = collider->GetWorldRotation();
@@ -249,14 +266,14 @@ Vec3 RevoluteJoint::GetWorldAxis() const
 
 void RevoluteJoint::SetWorldAxis(Vec3Param axis)
 {
-  if(axis == Vec3::cZero)
+  if (axis == Vec3::cZero)
     return;
 
   Vec3 normalizedAxis = axis.AttemptNormalized();
 
   uint objFrame = mPrimaryFrameIndex;
   Collider* collider = GetCollider(objFrame);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return;
 
   UpdateColliderCachedTransforms();
@@ -273,7 +290,7 @@ void RevoluteJoint::SetWorldAxis(Vec3Param axis)
 void RevoluteJoint::SetWorldFrame(QuatParam rot)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
   {
     OperationQueue::RegisterSideEffect(this, "LocalBasisA", GetLocalBasisA());
     OperationQueue::RegisterSideEffect(this, "LocalBasisB", GetLocalBasisB());
@@ -285,14 +302,14 @@ void RevoluteJoint::SetWorldFrame(QuatParam rot)
 
   // Bring the world frame back into each object's space
   Collider* collider0 = GetCollider(0);
-  if(collider0 != nullptr)
+  if (collider0 != nullptr)
   {
     Quat obj0Rot = Math::ToQuaternion(collider0->GetWorldRotation());
     mReferenceAngle[0] = obj0Rot.Inverted() * rot;
   }
 
   Collider* collider1 = GetCollider(1);
-  if(collider1 != nullptr)
+  if (collider1 != nullptr)
   {
     Quat obj1Rot = Math::ToQuaternion(collider1->GetWorldRotation());
     mReferenceAngle[1] = obj1Rot.Inverted() * rot;
@@ -302,7 +319,7 @@ void RevoluteJoint::SetWorldFrame(QuatParam rot)
 Quat RevoluteJoint::GetWorldBasis()
 {
   Collider* collider = GetCollider(mPrimaryFrameIndex);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return Quat::cIdentity;
 
   UpdateColliderCachedTransforms();
@@ -315,7 +332,7 @@ Quat RevoluteJoint::GetWorldBasis()
 void RevoluteJoint::SetWorldBasis(QuatParam basis)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
   {
     OperationQueue::RegisterSideEffect(this, "LocalBasisA", GetLocalBasisA());
     OperationQueue::RegisterSideEffect(this, "LocalBasisB", GetLocalBasisB());
@@ -326,12 +343,12 @@ void RevoluteJoint::SetWorldBasis(QuatParam basis)
   Collider* collider0 = GetCollider(0);
   Collider* collider1 = GetCollider(1);
 
-  if(collider0 != nullptr)
+  if (collider0 != nullptr)
   {
     QuatParam localToWorld = Math::ToQuaternion(collider0->GetWorldRotation());
     mReferenceAngle[0] = localToWorld.Inverted() * basis;
   }
-  if(collider1 != nullptr)
+  if (collider1 != nullptr)
   {
     QuatParam localToWorld = Math::ToQuaternion(collider1->GetWorldRotation());
     mReferenceAngle[1] = localToWorld.Inverted() * basis;
@@ -340,14 +357,14 @@ void RevoluteJoint::SetWorldBasis(QuatParam basis)
 
 JointFrameOfReference::Enum RevoluteJoint::GetFrameOfReference() const
 {
-  if(mPrimaryFrameIndex == 0)
+  if (mPrimaryFrameIndex == 0)
     return JointFrameOfReference::ObjectA;
   return JointFrameOfReference::ObjectB;
 }
 
 void RevoluteJoint::SetFrameOfReference(JointFrameOfReference::Enum objectFrame)
 {
-  if(objectFrame == JointFrameOfReference::ObjectA)
+  if (objectFrame == JointFrameOfReference::ObjectA)
     mPrimaryFrameIndex = 0;
   else
     mPrimaryFrameIndex = 1;
@@ -363,7 +380,7 @@ Quat RevoluteJoint::BuildFrameFromAxis(QuatParam oldWorldFrame, Vec3Param axis)
   Vec3 newXFrame;
   // If the x axis and the new hinge were almost the same, we'll
   // build an invalid matrix, if so switch to building the y axis
-  if(newYFrame.LengthSq() < real(.01))
+  if (newYFrame.LengthSq() < real(.01))
   {
     newXFrame = Math::Cross(frame.GetBasis(1), axis);
     newYFrame = Math::Cross(axis, newXFrame);
@@ -385,6 +402,6 @@ void RevoluteJoint::SetBodyAxisInternal(uint objIndex, Vec3Param axis)
   refAngle = BuildFrameFromAxis(refAngle, axis);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

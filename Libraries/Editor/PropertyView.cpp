@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyView.cpp
-/// Implementation of PropertyView and supporting classes.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,19 +7,24 @@ namespace Zero
 namespace PropertyViewUi
 {
 const cstr cLocation = "EditorUi/PropertyView";
-Tweakable(float, ObjectSize,      Pixels(24), cLocation); // Size of objects
-Tweakable(float, PropertySize,    Pixels(20), cLocation); // Size of each property widget
-Tweakable(float, PropertySpacing, Pixels(2),  cLocation); // Pixels in between each property
-Tweakable(float, IndentSize,      Pixels(10), cLocation); // Indent per level
-}
+Tweakable(float, ObjectSize, Pixels(24), cLocation); // Size of objects
+Tweakable(float,
+          PropertySize,
+          Pixels(20),
+          cLocation); // Size of each property widget
+Tweakable(float,
+          PropertySpacing,
+          Pixels(2),
+          cLocation); // Pixels in between each property
+Tweakable(float, IndentSize, Pixels(10), cLocation); // Indent per level
+} // namespace PropertyViewUi
 
 namespace Events
 {
-  DefineEvent(NameActivated);
-  DefineEvent(OpenAdd);
-}//namespace Events
+DefineEvent(NameActivated);
+DefineEvent(OpenAdd);
+} // namespace Events
 
-//---------------------------------------------------------------- Property Grid
 ZilchDefineType(PropertyView, builder, type)
 {
   ZilchBindOverloadedMethod(SetObject, ZilchInstanceOverload(void, Object*));
@@ -36,10 +33,9 @@ ZilchDefineType(PropertyView, builder, type)
   ZilchBindMethod(ActivateAutoUpdate);
 }
 
-//******************************************************************************
-PropertyView::PropertyView(Composite* parent)
-  : Composite(parent)
-  , mFixedHeight(false)
+PropertyView::PropertyView(Composite* parent) :
+    Composite(parent),
+    mFixedHeight(false)
 {
   mScrollArea = new ScrollArea(this);
   mScrollArea->SetClientSize(Pixels(10, 10));
@@ -54,16 +50,14 @@ PropertyView::PropertyView(Composite* parent)
 
   SetPropertyInterface(&mDefaultPropertyInterface);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
-  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+  ConnectThisTo(
+      MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
-//******************************************************************************
 PropertyView::~PropertyView()
 {
-
 }
 
-//******************************************************************************
 void PropertyView::DisconnectAllObjects()
 {
   // Disconnect from all old objects
@@ -76,20 +70,18 @@ void PropertyView::DisconnectAllObjects()
   }
 }
 
-//******************************************************************************
 Handle PropertyView::GetObject()
 {
   return mSelectedObject;
 }
 
-//******************************************************************************
 void PropertyView::Invalidate()
 {
   this->MarkAsNeedsUpdate();
 
   // We need to release handles in case of meta changing. See the comment
   // above ObjectPropertyNode::ReleaseHandles
-  if(mRoot)
+  if (mRoot)
     mRoot->mNode->ReleaseHandles();
 
   // Destroy the tree
@@ -98,20 +90,19 @@ void PropertyView::Invalidate()
   mSelectedObjects.Clear();
 
   // Clear the additional widgets
-  forRange(Widget* widget, mAddtionalWidgets.All())
-    widget->Destroy();
+  forRange(Widget * widget, mAddtionalWidgets.All()) widget->Destroy();
   mAddtionalWidgets.Clear();
 }
 
-//******************************************************************************
 void PropertyView::Rebuild()
 {
   Handle instance = GetObject();
-  if(instance.IsNotNull())
+  if (instance.IsNotNull())
   {
-    //SafeDelete(mRootObjectNode);
-    auto rootObjectNode = mPropertyInterface->BuildObjectTree(nullptr, instance);
-    if(rootObjectNode == nullptr)
+    // SafeDelete(mRootObjectNode);
+    auto rootObjectNode =
+        mPropertyInterface->BuildObjectTree(nullptr, instance);
+    if (rootObjectNode == nullptr)
       return;
 
     PropertyWidgetInitializer initializer;
@@ -132,8 +123,7 @@ void PropertyView::Rebuild()
   Refresh();
 }
 
-//******************************************************************************
-void PropertyView::SetObject(HandleParam newObject, 
+void PropertyView::SetObject(HandleParam newObject,
                              PropertyInterface* newInterface)
 {
   DisconnectAllObjects();
@@ -142,15 +132,15 @@ void PropertyView::SetObject(HandleParam newObject,
   mSelectedObjects.Clear();
 
   // If it's not a valid object, just rebuild the tree with nothing in it
-  if(newObject.IsNull())
+  if (newObject.IsNull())
   {
-    //not a valid object clear the grid.
+    // not a valid object clear the grid.
     mSelectedObject = Handle();
     Invalidate();
     return;
   }
 
-  //Store the handle
+  // Store the handle
   mSelectedObject = newObject;
 
   // Set the property interface without rebuilding the tree (we're going
@@ -163,44 +153,50 @@ void PropertyView::SetObject(HandleParam newObject,
   forRange(Handle object, mSelectedObjects.All())
   {
     // Connect if handle is a valid Object
-    if(Object* objectPointer = object.Get<Object*>())
+    if (Object* objectPointer = object.Get<Object*>())
     {
       if (EventDispatcher* dispatcher = objectPointer->GetDispatcherObject())
       {
-        Connect(objectPointer, Events::ComponentsModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
-        Connect(objectPointer, Events::ObjectStructureModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+        Connect(objectPointer,
+                Events::ComponentsModified,
+                this,
+                &ZilchSelf::OnInvalidate,
+                ConnectNotify::Ignore);
+        Connect(objectPointer,
+                Events::ObjectStructureModified,
+                this,
+                &ZilchSelf::OnInvalidate,
+                ConnectNotify::Ignore);
       }
     }
   }
 
-  //Refresh and rebuild.
+  // Refresh and rebuild.
   Invalidate();
 }
 
-//******************************************************************************
 void PropertyView::SetObject(Object* object)
 {
   PropertyView::SetObject(Handle(object));
 }
 
-//******************************************************************************
 void PropertyView::UpdateTransform()
 {
   mScrollArea->SetSize(mSize);
 
-  if(mDestroyed)
+  if (mDestroyed)
     return;
 
-  if(mRoot == nullptr)
-     Rebuild();
+  if (mRoot == nullptr)
+    Rebuild();
 
-  if(mRoot)
+  if (mRoot)
   {
     float rootHeight = mRoot->GetSize().y;
 
     // Subtract the width if the scroll bar is active
     float width = mSize.x;
-    if(rootHeight > mSize.y)
+    if (rootHeight > mSize.y)
       width -= mScrollArea->GetScrollBarSize();
 
     // If there is extra height use if for layouts
@@ -215,7 +211,7 @@ void PropertyView::UpdateTransform()
   }
   else
   {
-    // Nothing selected reset the 
+    // Nothing selected reset the
     mScrollArea->SetClientSize(Vec2(10, 10));
   }
 
@@ -225,7 +221,10 @@ void PropertyView::UpdateTransform()
 void PropertyView::SizeToContents()
 {
   UpdateTransform();
-  ReturnIf(mRoot == nullptr,, "No valid on object selected on property grid. Size will be invalid");
+  ReturnIf(
+      mRoot == nullptr,
+      ,
+      "No valid on object selected on property grid. Size will be invalid");
   Vec2 sizeNeeded = mRoot->GetSize();
   this->SetSize(sizeNeeded);
 }
@@ -238,20 +237,18 @@ Vec2 PropertyView::GetMinSize()
     return mMinSize;
 }
 
-//******************************************************************************
 void PropertyView::ActivateAutoUpdate()
 {
   ConnectThisTo(this->GetRootWidget(), Events::WidgetUpdate, OnWidgetUpdate);
 }
 
-//******************************************************************************
 void PropertyView::Refresh()
 {
   // Is the object still valid?
   Handle instance = GetObject();
-  if(instance.IsNotNull())
+  if (instance.IsNotNull())
   {
-    if(mRoot == nullptr)
+    if (mRoot == nullptr)
     {
       Rebuild();
     }
@@ -264,33 +261,31 @@ void PropertyView::Refresh()
   else
   {
     // Object is lost, clear the tree
-    if(mRoot != nullptr)
+    if (mRoot != nullptr)
       Invalidate();
   }
 }
 
-//******************************************************************************
-void PropertyView::SetPropertyInterface(PropertyInterface* propInterface, 
+void PropertyView::SetPropertyInterface(PropertyInterface* propInterface,
                                         bool rebuild)
 {
   mPropertyInterface = propInterface;
 
   // Use the default if none was specified
-  if(mPropertyInterface == nullptr)
+  if (mPropertyInterface == nullptr)
     mPropertyInterface = &mDefaultPropertyInterface;
 
   mPropertyInterface->mPropertyGrid = this;
 
-  if(rebuild)
+  if (rebuild)
     Invalidate();
 }
 
-//******************************************************************************
 void PropertyView::AddCustomPropertyIcon(CustomIconCreatorFunction callback,
                                          void* clientData)
 {
   // If it's already in the array, no need to add it
-  if(mCustomIconCallbacks.Contains(callback))
+  if (mCustomIconCallbacks.Contains(callback))
     return;
 
   // Insert the client data
@@ -301,10 +296,9 @@ void PropertyView::AddCustomPropertyIcon(CustomIconCreatorFunction callback,
   Rebuild();
 }
 
-//******************************************************************************
 void PropertyView::RemoveCustomPropertyIcon(CustomIconCreatorFunction callback)
 {
-  if(!mCustomIconCallbacks.Contains(callback))
+  if (!mCustomIconCallbacks.Contains(callback))
     return;
 
   mCustomIconCallbacks.EraseValueError(callback);
@@ -314,42 +308,38 @@ void PropertyView::RemoveCustomPropertyIcon(CustomIconCreatorFunction callback)
   Rebuild();
 }
 
-//******************************************************************************
 void PropertyView::OnWidgetUpdate(UpdateEvent* update)
 {
   // Only refresh if the property grid is active (could be hidden behind a tab)
-  if(GetGlobalActive())
+  if (GetGlobalActive())
     Refresh();
 }
 
-//******************************************************************************
 void PropertyView::OnInvalidate(Event* e)
 {
   Invalidate();
 }
 
-//******************************************************************************
 void PropertyView::OnKeyDown(KeyboardEvent* e)
 {
-  if(!e->CtrlPressed)
+  if (!e->CtrlPressed)
     return;
 
-  if(e->Key == Keys::Z)
+  if (e->Key == Keys::Z)
   {
     mPropertyInterface->Undo();
     e->Handled = true;
   }
-  else if(e->Key == Keys::Y)
+  else if (e->Key == Keys::Y)
   {
     mPropertyInterface->Redo();
     e->Handled = true;
   }
 }
 
-//******************************************************************************
 void PropertyView::OnMetaModified(MetaLibraryEvent* e)
 {
   Invalidate();
 }
 
-}//namespace Zero
+} // namespace Zero

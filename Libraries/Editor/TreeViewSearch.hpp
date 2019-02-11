@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +10,9 @@ class TreeViewSearch : public Composite
 {
 public:
   typedef TreeViewSearch ZilchSelf;
-  TreeViewSearch(Composite* parent, TreeView* treeView, DataSourceFilter* filter);
+  TreeViewSearch(Composite* parent,
+                 TreeView* treeView,
+                 DataSourceFilter* filter);
   ~TreeViewSearch();
 
   TreeView* mTreeView;
@@ -32,4 +29,4 @@ public:
   void OnDataModified(Event* event);
 };
 
-}
+} // namespace Zero

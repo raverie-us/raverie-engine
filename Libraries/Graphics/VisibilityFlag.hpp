@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -11,7 +10,9 @@ class VisibilityFlag
 public:
   static const uint sMaxVisibilityId = 31;
 
-  VisibilityFlag() : mFlags(0) {}
+  VisibilityFlag() : mFlags(0)
+  {
+  }
 
   inline void SetFlag(uint visibilityId)
   {
@@ -81,7 +82,10 @@ public:
       mDeltaFlags = flagsLeft;
     }
 
-    ChangeRange& All() { return *this; }
+    ChangeRange& All()
+    {
+      return *this;
+    }
 
     uint mDeltaFlags;
     uint mCurrentId;

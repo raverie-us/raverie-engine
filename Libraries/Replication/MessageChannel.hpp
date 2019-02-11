@@ -1,24 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 /// Typedefs
-typedef IdSequence<PacketSequenceId>       PacketSequence;
-typedef PacketSequence::IdSequenceHistory  PacketSequenceHistory;
-typedef IdSequence<MessageSequenceId>      MessageSequence;
+typedef IdSequence<PacketSequenceId> PacketSequence;
+typedef PacketSequence::IdSequenceHistory PacketSequenceHistory;
+typedef IdSequence<MessageSequenceId> MessageSequence;
 typedef MessageSequence::IdSequenceHistory MessageSequenceHistory;
-typedef IdStore<MessageChannelId>          MessageChannelIdStore;
+typedef IdStore<MessageChannelId> MessageChannelIdStore;
 
-//---------------------------------------------------------------------------------//
-//                                 MessageChannel                                  //
-//---------------------------------------------------------------------------------//
+//                                 MessageChannel //
 
 /// Message sequence channel
 class MessageChannel
@@ -29,12 +22,12 @@ public:
   MessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode);
 
   /// Comparison Operators (compares message channel IDs)
-  bool operator ==(const MessageChannel& rhs) const;
-  bool operator !=(const MessageChannel& rhs) const;
-  bool operator  <(const MessageChannel& rhs) const;
-  bool operator ==(MessageChannelId rhs) const;
-  bool operator !=(MessageChannelId rhs) const;
-  bool operator  <(MessageChannelId rhs) const;
+  bool operator==(const MessageChannel& rhs) const;
+  bool operator!=(const MessageChannel& rhs) const;
+  bool operator<(const MessageChannel& rhs) const;
+  bool operator==(MessageChannelId rhs) const;
+  bool operator!=(MessageChannelId rhs) const;
+  bool operator<(MessageChannelId rhs) const;
 
   //
   // Member Functions
@@ -48,14 +41,12 @@ public:
 
 private:
   /// Message channel ID
-  MessageChannelId   mChannelId;
+  MessageChannelId mChannelId;
   /// Message channel transfer mode
   TransferMode::Enum mTransferMode;
 };
 
-//---------------------------------------------------------------------------------//
-//                                OutMessageChannel                                //
-//---------------------------------------------------------------------------------//
+//                                OutMessageChannel //
 
 /// Outgoing message sequence channel
 class OutMessageChannel : public MessageChannel
@@ -63,7 +54,8 @@ class OutMessageChannel : public MessageChannel
 public:
   /// Constructors
   OutMessageChannel();
-  OutMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode);
+  OutMessageChannel(MessageChannelId channelId,
+                    TransferMode::Enum transferMode);
 
 private:
   //
@@ -80,9 +72,7 @@ private:
   friend class LinkOutbox;
 };
 
-//---------------------------------------------------------------------------------//
-//                                InMessageChannel                                 //
-//---------------------------------------------------------------------------------//
+//                                InMessageChannel //
 
 /// Incoming message sequence channel
 class InMessageChannel : public MessageChannel
@@ -99,10 +89,10 @@ public:
   InMessageChannel(MoveReference<InMessageChannel> rhs);
 
   /// Copy Assignment Operator
-  InMessageChannel& operator =(const InMessageChannel& rhs);
+  InMessageChannel& operator=(const InMessageChannel& rhs);
 
   /// Move Assignment Operator
-  InMessageChannel& operator =(MoveReference<InMessageChannel> rhs);
+  InMessageChannel& operator=(MoveReference<InMessageChannel> rhs);
 
 private:
   //
@@ -122,36 +112,38 @@ private:
   void Open();
   /// Closes the channel
   void Close(MessageSequenceId finalSequenceId);
-  /// Returns true if the channel is already closed (may not be ready for deletion, but has been closed)
+  /// Returns true if the channel is already closed (may not be ready for
+  /// deletion, but has been closed)
   bool IsClosed();
 
   /// Returns true if the channel is ready to be deleted, else false
   bool ReadyToDelete() const;
 
   /// Last message sequence ID
-  MessageSequenceId           mLastSequenceId;
+  MessageSequenceId mLastSequenceId;
   /// Fragmented messages sorted by sequence ID
   ArraySet<FragmentedMessage> mFragmentedMessages;
   /// Whole messages sorted by sequence ID
-  ArraySet<Message>           mMessages;
+  ArraySet<Message> mMessages;
   /// Whole messages sequence record
-  MessageSequence             mMessageSequence;
+  MessageSequence mMessageSequence;
   /// Channel 'Is closed?' flag
-  bool                        mClosed;
+  bool mClosed;
   /// Final message sequence ID
-  MessageSequenceId           mFinalSequenceId;
+  MessageSequenceId mFinalSequenceId;
 
   /// Friends
   friend class LinkInbox;
 };
 
 /// InMessageChannel Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<InMessageChannel>
 {
-  static inline void MoveWithoutDestruction(InMessageChannel* dest, InMessageChannel* source)
+  static inline void MoveWithoutDestruction(InMessageChannel* dest,
+                                            InMessageChannel* source)
   {
-    new(dest) InMessageChannel(ZeroMove(*source));
+    new (dest) InMessageChannel(ZeroMove(*source));
   }
 };
 

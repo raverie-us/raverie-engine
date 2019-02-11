@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ FPS Sampler
 class FpsSampler : public DataSampler
 {
   void Setup(RangeData& data, EntryLabel& label) override
@@ -26,17 +20,18 @@ class FpsSampler : public DataSampler
     Array<Record*>::range records = ProfileSystem::Instance->GetRecords();
     Record* record = records.Front();
     record->Update();
-    float timeInS = ProfileSystem::Instance->GetTimeInSeconds((ProfileTime)record->Average());
+    float timeInS = ProfileSystem::Instance->GetTimeInSeconds(
+        (ProfileTime)record->Average());
 
     float fps = 0.0f;
-    if(timeInS != 0.0f)
+    if (timeInS != 0.0f)
       fps = 1.0f / timeInS;
-    //Return frame rate zero to one
-    return fps; 
+    // Return frame rate zero to one
+    return fps;
   }
 };
 
-//------------------------------------------------------------------ Oscilloscope sampler
+//Oscilloscope sampler
 class OscilloscopeSampler : public DataSampler
 {
   typedef OscilloscopeSampler ZilchSelf;
@@ -50,7 +45,7 @@ class OscilloscopeSampler : public DataSampler
 
     mIndex = 0;
 
-    //ConnectThisTo(&mInput, Events::SoundInputArrived, OnSoundInput);
+    // ConnectThisTo(&mInput, Events::SoundInputArrived, OnSoundInput);
   }
 
   float Sample() override
@@ -71,7 +66,6 @@ class OscilloscopeSampler : public DataSampler
   Array<float> mLastData;
 };
 
-//--------------------------------------------------------------- Memory Sampler
 class MemorySampler : public DataSampler
 {
 public:
@@ -107,7 +101,6 @@ class ObjectSampler : public DataSampler
   }
 };
 
-//------------------------------------------------------------------ Cos Sampler
 class CosSampler : public DataSampler
 {
 public:
@@ -161,8 +154,9 @@ void AddGraph(Editor* editor)
 
 void SetupGraphCommands(Cog* configCog, CommandManager* commands)
 {
-  commands->AddCommand("Performance", BindCommandFunction(AddPerformance), true);
+  commands->AddCommand(
+      "Performance", BindCommandFunction(AddPerformance), true);
   commands->AddCommand("Graph", BindCommandFunction(AddGraph), true);
 }
 
-}
+} // namespace Zero

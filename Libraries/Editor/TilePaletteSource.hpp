@@ -1,12 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////////
-/////
-///// \file TilePaletteSource.hpp
-///// Declaration of the TilePalette resource.
-/////
-///// Authors: Nathan Carlson
-///// Copyright 2013, DigiPen Institute of Technology
-/////
-/////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -38,4 +30,4 @@ public:
   TilePaletteSourceManager(BoundType* resourceType);
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -57,13 +52,17 @@
 namespace Zilch
 {
 
-ZilchDeclareStaticLibrary(ShaderIntrinsicsLibrary, ZilchNoNamespace, ZeroNoImportExport);
+ZilchDeclareStaticLibrary(ShaderIntrinsicsLibrary,
+                          ZilchNoNamespace,
+                          ZeroNoImportExport);
 
-}//namespace Zilch
+} // namespace Zilch
 
 namespace Zero
 {
 
-ZilchDeclareStaticLibrary(ShaderSettingsLibrary, ZilchNoNamespace, ZeroNoImportExport);
+ZilchDeclareStaticLibrary(ShaderSettingsLibrary,
+                          ZilchNoNamespace,
+                          ZeroNoImportExport);
 
-}//namespace Zero
+} // namespace Zero

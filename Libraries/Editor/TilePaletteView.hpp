@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TilePaletteView.hpp
-///
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,20 +9,29 @@ class TileEditor2D;
 class PaletteText;
 class TilePaletteSprite;
 
-//------------------------------------------------------------------------ Tile Palette Entry
+//Palette Entry
 struct TilePaletteEntry
 {
   TilePaletteSprite* frame;
   TileMap::Tile tile;
 };
 
-//------------------------------------------------------------------------ Tile Palette Change
+//Palette Change
 struct TilePaletteChange
 {
-  TilePaletteChange() {}
-  TilePaletteChange(IntVec2 location) : mLocation(location) {}
+  TilePaletteChange()
+  {
+  }
+  TilePaletteChange(IntVec2 location) : mLocation(location)
+  {
+  }
 
-  enum ChangeType {Edited, Created, Removed};
+  enum ChangeType
+  {
+    Edited,
+    Created,
+    Removed
+  };
 
   IntVec2 mLocation;
   TileMap::Tile mOldTile;
@@ -40,12 +41,12 @@ struct TilePaletteChange
 
 typedef Array<TilePaletteChange> TilePaletteChangeList;
 
-//------------------------------------------------------------------------ Tile Sprite
+//Sprite
 class TilePaletteSprite : public Composite
 {
 public:
   ZilchDeclareType(TilePaletteSprite, TypeCopyMode::ReferenceType);
-  
+
   TilePaletteSprite(Composite* parent);
   ~TilePaletteSprite();
 
@@ -67,11 +68,14 @@ public:
   TextureView* mFrameOverlay;
 };
 
-//------------------------------------------------------------------------ Tile Palette Operation
+//Palette Operation
 class TilePaletteOperation : public Operation
 {
 public:
-  TilePaletteOperation( ) { mName = "TilePalette Operation"; }
+  TilePaletteOperation()
+  {
+    mName = "TilePalette Operation";
+  }
   void Undo() override;
   void Redo() override;
 
@@ -80,7 +84,7 @@ public:
   TilePaletteChangeList mChangeList;
 };
 
-//------------------------------------------------------------------------ Tile Palette View
+//Palette View
 class TilePaletteView : public Composite
 {
 public:
@@ -142,7 +146,8 @@ public:
   void SetShowCollision(bool showCollision);
   void AddCollisionOverlays();
   void RemoveCollisionOverlays();
-  TilePaletteSprite* CreateTilePaletteSprite(SpriteSource* sprite, PhysicsMesh* collision);
+  TilePaletteSprite* CreateTilePaletteSprite(SpriteSource* sprite,
+                                             PhysicsMesh* collision);
 
   void AddToPaletteSource(IntVec2 location, TileMap::Tile tile);
   void RemoveFromPaletteSource(IntVec2 location);
@@ -181,20 +186,28 @@ public:
   class SelectionRange
   {
   public:
-
     struct Selection
     {
-      Selection(TilePaletteEntry* entry, IntVec2 location) : mEntry(entry), mLocation(location) {}
+      Selection(TilePaletteEntry* entry, IntVec2 location) :
+          mEntry(entry),
+          mLocation(location)
+      {
+      }
       TilePaletteEntry* mEntry;
       IntVec2 mLocation;
     };
 
-    SelectionRange(PaletteEntryMap* paletteTiles, IntVec2 selectionStart, IntVec2 selectionEnd);
+    SelectionRange(PaletteEntryMap* paletteTiles,
+                   IntVec2 selectionStart,
+                   IntVec2 selectionEnd);
 
     bool Empty();
     Selection Front();
     void PopFront();
-    SelectionRange& All() { return *this; }
+    SelectionRange& All()
+    {
+      return *this;
+    }
 
     PaletteEntryMap* mPaletteTiles;
     TilePaletteEntry* mCurrentEntry;
@@ -204,4 +217,4 @@ public:
   };
 };
 
-}
+} // namespace Zero

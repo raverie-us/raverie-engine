@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2012-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,17 +18,18 @@ public:
 
   virtual void DebugDraw(void);
 
-  Cog * GetOtherObject(void);
-  void SetOtherObject(Cog *cog);
+  Cog* GetOtherObject(void);
+  void SetOtherObject(Cog* cog);
 
   // UI functions
   void ComputeCSO(void);
 
 private:
-
   struct Face
   {
-    Face(void) {}
+    Face(void)
+    {
+    }
     Face(Vec3 p0, Vec3 p1, Vec3 p2)
     {
       vertices[0] = p0;

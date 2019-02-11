@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Thread.cpp
-/// Implementation of the Thread class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -48,18 +40,22 @@ size_t Thread::GetCurrentThreadId()
   return SDL_GetThreadID(nullptr);
 }
 
-bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName)
+bool Thread::Initialize(EntryFunction entry,
+                        void* instance,
+                        StringParam threadName)
 {
   ZeroGetPrivateData(ThreadPrivateData);
 
   mThreadName = threadName;
 
-  self->mHandle = SDL_CreateThread((SDL_ThreadFunction)entry, threadName.c_str(), instance);
+  self->mHandle =
+      SDL_CreateThread((SDL_ThreadFunction)entry, threadName.c_str(), instance);
 
   if (self->mHandle == nullptr)
   {
     String errorString = SDL_GetError();
-    String message = String::Format("Failed to create thread: %s", errorString.c_str());
+    String message =
+        String::Format("Failed to create thread: %s", errorString.c_str());
     Error(message.c_str());
     return false;
   }
@@ -73,8 +69,8 @@ bool Thread::IsValid()
   return self->mHandle != nullptr;
 }
 
-// Detaches the thread and it runs until it is finished. The thread cleans itself up.
-// Do not call close on a thread that has called WaitForCompletion()
+// Detaches the thread and it runs until it is finished. The thread cleans
+// itself up. Do not call close on a thread that has called WaitForCompletion()
 void Thread::Close()
 {
   ZeroGetPrivateData(ThreadPrivateData);
@@ -100,7 +96,7 @@ OsInt Thread::WaitForCompletion()
 OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 {
   ZeroGetPrivateData(ThreadPrivateData);
-  if(!IsValid())
+  if (!IsValid())
     return (OsInt)-1;
 
   int result;
@@ -112,10 +108,10 @@ OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 bool Thread::IsCompleted()
 {
   ZeroGetPrivateData(ThreadPrivateData);
-  if(!IsValid())
+  if (!IsValid())
     return true;
 
   return false;
 }
 
-}//namespace Zero
+} // namespace Zero

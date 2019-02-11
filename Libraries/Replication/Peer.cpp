@@ -1,24 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                    Peer                                         //
-//---------------------------------------------------------------------------------//
+//                                    Peer //
 
 void Peer::ResetSession()
 {
   /// Operating Data
   mIpv4Address.Clear();
   mIpv6Address.Clear();
-  mInternetProtocol  = InternetProtocol::Unspecified;
+  mInternetProtocol = InternetProtocol::Unspecified;
   mTransportProtocol = TransportProtocol::Unspecified;
 
   /// Thread Data
@@ -32,8 +25,9 @@ void Peer::ResetSession()
   InitializeStats();
 }
 
-Peer::Peer(ProcessReceivedCustomPacketFn processReceivedCustomPacketFn, ProcessReceivedCustomMessageFn processReceivedCustomMessageFn)
-  : BandwidthStats<true>(),
+Peer::Peer(ProcessReceivedCustomPacketFn processReceivedCustomPacketFn,
+           ProcessReceivedCustomMessageFn processReceivedCustomMessageFn) :
+    BandwidthStats<true>(),
 
     /// Operating Data
     mGuid(0), // TODO
@@ -94,27 +88,27 @@ Peer::~Peer()
   Close();
 }
 
-bool Peer::operator ==(const Peer& rhs) const
+bool Peer::operator==(const Peer& rhs) const
 {
   return mGuid == rhs.mGuid;
 }
-bool Peer::operator !=(const Peer& rhs) const
+bool Peer::operator!=(const Peer& rhs) const
 {
   return mGuid != rhs.mGuid;
 }
-bool Peer::operator  <(const Peer& rhs) const
+bool Peer::operator<(const Peer& rhs) const
 {
   return mGuid < rhs.mGuid;
 }
-bool Peer::operator ==(Guid rhs) const
+bool Peer::operator==(Guid rhs) const
 {
   return mGuid == rhs;
 }
-bool Peer::operator !=(Guid rhs) const
+bool Peer::operator!=(Guid rhs) const
 {
   return mGuid != rhs;
 }
-bool Peer::operator  <(Guid rhs) const
+bool Peer::operator<(Guid rhs) const
 {
   return mGuid < rhs;
 }
@@ -146,10 +140,8 @@ const IpAddress& Peer::GetLocalIpv6Address() const
 
 bool Peer::IsOpen() const
 {
-  return mIpv4Socket.IsOpen()
-      || mIpv6Socket.IsOpen()
-      || !mIpv4ReceiveThread.IsCompleted()
-      || !mIpv6ReceiveThread.IsCompleted();
+  return mIpv4Socket.IsOpen() || mIpv6Socket.IsOpen() ||
+         !mIpv4ReceiveThread.IsCompleted() || !mIpv6ReceiveThread.IsCompleted();
 }
 
 InternetProtocol::Enum Peer::GetInternetProtocol() const
@@ -162,7 +154,10 @@ TransportProtocol::Enum Peer::GetTransportProtocol() const
   return mTransportProtocol;
 }
 
-void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProtocol, TransportProtocol::Enum transportProtocol)
+void Peer::Open(Status& status,
+                ushort port,
+                InternetProtocol::Enum internetProtocol,
+                TransportProtocol::Enum transportProtocol)
 {
   // TODO: Support TCP option
   UnusedParameter(transportProtocol);
@@ -175,12 +170,15 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
   //
 
   // Open IPv4 socket?
-  if(internetProtocol == InternetProtocol::V4
-  || internetProtocol == InternetProtocol::Both)
+  if (internetProtocol == InternetProtocol::V4 ||
+      internetProtocol == InternetProtocol::Both)
   {
     // Open IPv4 socket
-    mIpv4Socket.Open(status, SocketAddressFamily::InternetworkV4, SocketType::Datagram, SocketProtocol::Udp);
-    if(status.Succeeded()) // Successful?
+    mIpv4Socket.Open(status,
+                     SocketAddressFamily::InternetworkV4,
+                     SocketType::Datagram,
+                     SocketProtocol::Udp);
+    if (status.Succeeded()) // Successful?
     {
       // Specify automatic IPv4 host and specified port
       IpAddress ipAddress;
@@ -189,18 +187,19 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
 
       // Bind IPv4 socket
       mIpv4Socket.Bind(status, ipAddress);
-      if(status.Succeeded()) // Successful?
+      if (status.Succeeded()) // Successful?
       {
         // Set IPv4 socket to blocking mode
         mIpv4Socket.SetBlocking(status, true);
 
         // Enable socket broadcast capability
         bool canBroadcast = true;
-        mIpv4Socket.SetSocketOption(status, SocketOption::CanBroadcast, canBroadcast);
+        mIpv4Socket.SetSocketOption(
+            status, SocketOption::CanBroadcast, canBroadcast);
       }
     }
   }
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
   {
     // Close IPv4 socket
     Status status;
@@ -209,12 +208,15 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
   }
 
   // Open IPv6 socket?
-  if(internetProtocol == InternetProtocol::V6
-  || internetProtocol == InternetProtocol::Both)
+  if (internetProtocol == InternetProtocol::V6 ||
+      internetProtocol == InternetProtocol::Both)
   {
     // Open IPv6 socket
-    mIpv6Socket.Open(status, SocketAddressFamily::InternetworkV6, SocketType::Datagram, SocketProtocol::Udp);
-    if(status.Succeeded()) // Successful?
+    mIpv6Socket.Open(status,
+                     SocketAddressFamily::InternetworkV6,
+                     SocketType::Datagram,
+                     SocketProtocol::Udp);
+    if (status.Succeeded()) // Successful?
     {
       // Specify automatic IPv6 host and specified port
       IpAddress ipAddress;
@@ -223,14 +225,14 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
 
       // Bind IPv6 socket
       mIpv6Socket.Bind(status, ipAddress);
-      if(status.Succeeded()) // Successful?
+      if (status.Succeeded()) // Successful?
       {
         // Set IPv6 socket to blocking mode
         mIpv6Socket.SetBlocking(status, true);
       }
     }
   }
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
   {
     // Close IPv6 socket
     Status status;
@@ -244,20 +246,20 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
   mInternetProtocol = InternetProtocol::Unspecified;
 
   // Both IPv4 and IPv6 sockets opened?
-  if(mIpv4Socket.IsOpen() && mIpv6Socket.IsOpen())
+  if (mIpv4Socket.IsOpen() && mIpv6Socket.IsOpen())
   {
     mInternetProtocol = InternetProtocol::Both;
     mIpv4Address = mIpv4Socket.GetBoundLocalAddress();
     mIpv6Address = mIpv6Socket.GetBoundLocalAddress();
   }
   // Only IPv4 socket opened?
-  else if(mIpv4Socket.IsOpen())
+  else if (mIpv4Socket.IsOpen())
   {
     mInternetProtocol = InternetProtocol::V4;
     mIpv4Address = mIpv4Socket.GetBoundLocalAddress();
   }
   // Only IPv6 socket opened?
-  else if(mIpv6Socket.IsOpen())
+  else if (mIpv6Socket.IsOpen())
   {
     mInternetProtocol = InternetProtocol::V6;
     mIpv6Address = mIpv6Socket.GetBoundLocalAddress();
@@ -274,12 +276,15 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
   //
 
   // Using IPv4 socket?
-  if(mIpv4Socket.IsOpen())
+  if (mIpv4Socket.IsOpen())
   {
     // Launch IPv4 receive thread
     mExitIpv4ReceiveThread = false;
-    bool result = mIpv4ReceiveThread.Initialize(Thread::ObjectEntryCreator<Peer, &Peer::Ipv4ReceiveThreadFn>, this, "PeerIpv4ReceiveThread");
-    if(!result) // Unable?
+    bool result = mIpv4ReceiveThread.Initialize(
+        Thread::ObjectEntryCreator<Peer, &Peer::Ipv4ReceiveThreadFn>,
+        this,
+        "PeerIpv4ReceiveThread");
+    if (!result) // Unable?
     {
       status.SetFailed("Unable to launch peer IPv4 receive thread");
       Close();
@@ -288,12 +293,15 @@ void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProt
   }
 
   // Using IPv6 socket?
-  if(mIpv6Socket.IsOpen())
+  if (mIpv6Socket.IsOpen())
   {
     // Launch IPv6 receive thread
     mExitIpv6ReceiveThread = false;
-    bool result = mIpv6ReceiveThread.Initialize(Thread::ObjectEntryCreator<Peer, &Peer::Ipv6ReceiveThreadFn>, this, "PeerIpv6ReceiveThread");
-    if(!result) // Unable?
+    bool result = mIpv6ReceiveThread.Initialize(
+        Thread::ObjectEntryCreator<Peer, &Peer::Ipv6ReceiveThreadFn>,
+        this,
+        "PeerIpv6ReceiveThread");
+    if (!result) // Unable?
     {
       status.SetFailed("Unable to launch peer IPv6 receive thread");
       Close();
@@ -312,8 +320,7 @@ void Peer::Close()
   //
 
   // Gracefully disconnect all links
-  forRange(PeerLink* link, mLinks.All())
-    link->Disconnect();
+  forRange(PeerLink * link, mLinks.All()) link->Disconnect();
 
   // Update once to send graceful disconnects
   Update();
@@ -332,12 +339,12 @@ void Peer::Close()
   Update();
 
   // (All links should be destroyed)
-  //Assert(mCreatedLinks.Empty());
+  // Assert(mCreatedLinks.Empty());
   Assert(mLinks.Empty());
   Assert(mDestroyedLinks.Empty());
 
   // (All peer plugins should be destroyed)
-  //Assert(mAddedPlugins.Empty());
+  // Assert(mAddedPlugins.Empty());
   Assert(mPlugins.Empty());
   Assert(mRemovedPlugins.Empty());
 
@@ -346,7 +353,7 @@ void Peer::Close()
   //
 
   // IPv4 receive thread running?
-  if(!mIpv4ReceiveThread.IsCompleted())
+  if (!mIpv4ReceiveThread.IsCompleted())
   {
     mExitIpv4ReceiveThread = true;
     Assert(mIpv4Address.IsValid());
@@ -355,7 +362,7 @@ void Peer::Close()
   }
 
   // IPv6 receive thread running?
-  if(!mIpv6ReceiveThread.IsCompleted())
+  if (!mIpv6ReceiveThread.IsCompleted())
   {
     mExitIpv6ReceiveThread = true;
     Assert(mIpv6Address.IsValid());
@@ -368,7 +375,7 @@ void Peer::Close()
   //
 
   // IPv4 socket open?
-  if(mIpv4Socket.IsOpen())
+  if (mIpv4Socket.IsOpen())
   {
     Status status;
     mIpv4Socket.Close(status);
@@ -376,7 +383,7 @@ void Peer::Close()
   }
 
   // IPv6 socket open?
-  if(mIpv6Socket.IsOpen())
+  if (mIpv6Socket.IsOpen())
   {
     Status status;
     mIpv6Socket.Close(status);
@@ -388,7 +395,7 @@ void Peer::Close()
   //
 
   // IPv4 receive thread running?
-  if(!mIpv4ReceiveThread.IsCompleted())
+  if (!mIpv4ReceiveThread.IsCompleted())
   {
     // Close IPv4 receive thread
     mExitIpv4ReceiveThread = true;
@@ -398,7 +405,7 @@ void Peer::Close()
   }
 
   // IPv6 receive thread running?
-  if(!mIpv6ReceiveThread.IsCompleted())
+  if (!mIpv6ReceiveThread.IsCompleted())
   {
     // Close IPv6 receive thread
     mExitIpv6ReceiveThread = true;
@@ -414,7 +421,7 @@ void Peer::Close()
 bool Peer::Send(const IpAddress& ipAddress, const Message& message)
 {
   // Not open?
-  if(!IsOpen())
+  if (!IsOpen())
     return false;
 
   // Create standalone outgoing packet
@@ -432,14 +439,14 @@ bool Peer::Send(const IpAddress& ipAddress, const Message& message)
 bool Peer::Send(const IpAddress& ipAddress, const Array<Message>& messages)
 {
   // Not open?
-  if(!IsOpen())
+  if (!IsOpen())
     return false;
 
   // Create standalone outgoing packet
   OutPacket outPacket(ipAddress, true);
 
   // For all messages
-  forRange(Message& message, messages.All())
+  forRange(Message & message, messages.All())
   {
     // Copy message
     Message messageCopy(message);
@@ -455,14 +462,14 @@ bool Peer::Send(const IpAddress& ipAddress, const Array<Message>& messages)
 bool Peer::Update()
 {
   // Fatal error occurred since last update call?
-  if(mFatalError)
+  if (mFatalError)
   {
     Close();
     return false;
   }
 
   // Peer not open?
-  if(!IsOpen())
+  if (!IsOpen())
     return false;
 
   // Update current local time and frame ID
@@ -506,16 +513,17 @@ void* Peer::GetUserData() const
 PeerLink* Peer::CreateLink(const IpAddress& ipAddress)
 {
   // Link of that IP address is already active?
-  if(mLinks.FindPointer(ipAddress))
+  if (mLinks.FindPointer(ipAddress))
     return nullptr;
 
   // Link of that IP address was just created?
-  if(mCreatedLinks.FindPointer(ipAddress))
+  if (mCreatedLinks.FindPointer(ipAddress))
     return nullptr;
 
   // Push new link to created links
   // Will be added later on update
-  PeerLink* link = new PeerLink(this, ipAddress, TransmissionDirection::Outgoing);
+  PeerLink* link =
+      new PeerLink(this, ipAddress, TransmissionDirection::Outgoing);
   PeerLinkSet::pointer_bool_pair result = mCreatedLinks.Insert(link);
   Assert(result.second); // (Insertion should have succeeded)
 
@@ -527,7 +535,7 @@ PeerLink* Peer::GetLink(const IpAddress& ipAddress) const
 {
   // Find active link
   PeerLinkSet::pointer result = mLinks.FindPointer(ipAddress);
-  if(result) // Found?
+  if (result) // Found?
     return *result;
 
   // Failure
@@ -541,9 +549,8 @@ uint Peer::GetLinkCount(LinkStatus::Enum linkStatus) const
 {
   uint result = 0;
 
-  forRange(PeerLink* link, mLinks.All())
-    if(link->GetStatus() == linkStatus)
-      ++result;
+  forRange(PeerLink * link,
+           mLinks.All()) if (link->GetStatus() == linkStatus)++ result;
 
   return result;
 }
@@ -556,7 +563,7 @@ void Peer::DestroyLink(const IpAddress& ipAddress)
 {
   // Find active link
   PeerLinkSet::iterator iter = mLinks.FindIterator(ipAddress);
-  if(iter != mLinks.End()) // Found?
+  if (iter != mLinks.End()) // Found?
   {
     // Push link to destroyed links (if it hasn't already been added)
     // Will be deleted later on update
@@ -567,8 +574,7 @@ void Peer::DestroyLinks()
 {
   // Push link to destroyed links (if it hasn't already been added)
   // Will be deleted later on update
-  forRange(PeerLink* link, mLinks.All())
-    mDestroyedLinks.Insert(link);
+  forRange(PeerLink * link, mLinks.All()) mDestroyedLinks.Insert(link);
 }
 
 //
@@ -578,11 +584,11 @@ void Peer::DestroyLinks()
 PeerPlugin* Peer::AddPlugin(PeerPlugin* plugin, StringParam name)
 {
   // Plugin of that name is already active?
-  if(mPlugins.FindPointer(name))
+  if (mPlugins.FindPointer(name))
     return nullptr;
 
   // Plugin of that name was just added?
-  if(mAddedPlugins.FindPointer(name))
+  if (mAddedPlugins.FindPointer(name))
     return nullptr;
 
   // Add new plugin to added plugins
@@ -599,7 +605,7 @@ PeerPlugin* Peer::GetPlugin(StringParam name) const
 {
   // Find active plugin
   PeerPluginSet::pointer result = mPlugins.FindPointer(name);
-  if(result) // Found?
+  if (result) // Found?
     return *result;
 
   // Failure
@@ -618,7 +624,7 @@ void Peer::RemovePlugin(StringParam name)
 {
   // Find active plugin
   PeerPluginSet::iterator iter = mPlugins.FindIterator(name);
-  if(iter != mPlugins.End()) // Found?
+  if (iter != mPlugins.End()) // Found?
   {
     // Add plugin to removed plugins (if it hasn't already been added)
     // Will be deleted later on update
@@ -629,8 +635,7 @@ void Peer::RemovePlugins()
 {
   // Add plugin to removed plugins (if it hasn't already been added)
   // Will be deleted later on update
-  forRange(PeerPlugin* plugin, mPlugins.All())
-    mRemovedPlugins.Insert(plugin);
+  forRange(PeerPlugin * plugin, mPlugins.All()) mRemovedPlugins.Insert(plugin);
 }
 
 //
@@ -671,10 +676,10 @@ ConnectResponseMode::Enum Peer::GetConnectResponseMode() const
   return ConnectResponseMode::Enum(uint32(mConnectResponseMode));
 }
 
-Array< Pair<String, String> > Peer::GetConfigSummary() const
+Array<Pair<String, String>> Peer::GetConfigSummary() const
 {
   // TODO
-  return Array< Pair<String, String> >();
+  return Array<Pair<String, String>>();
 }
 String Peer::GetConfigSummaryString() const
 {
@@ -691,18 +696,18 @@ void Peer::ResetStats()
   BandwidthStats<true>::ResetStats();
 
   mLinksUpdated = false;
-  mLinksMin     = 0;
-  mLinksAvg     = 0;
-  mLinksMax     = 0;
+  mLinksMin = 0;
+  mLinksAvg = 0;
+  mLinksMax = 0;
 
   mConnectionsUpdated = false;
-  mConnectionsMin     = 0;
-  mConnectionsAvg     = 0;
-  mConnectionsMax     = 0;
+  mConnectionsMin = 0;
+  mConnectionsAvg = 0;
+  mConnectionsMax = 0;
 
   // For all links
-  forRange(PeerLink* link, mLinks.All())
-    link->ResetStats(); // Reset their stats
+  forRange(PeerLink * link, mLinks.All())
+      link->ResetStats(); // Reset their stats
 }
 
 uint Peer::GetMinLinks() const
@@ -731,10 +736,10 @@ uint Peer::GetMaxConnections() const
   return mConnectionsMax;
 }
 
-Array< Pair< String, Array<String> > > Peer::GetStatsSummary() const
+Array<Pair<String, Array<String>>> Peer::GetStatsSummary() const
 {
   // TODO
-  return Array< Pair< String, Array<String> > >();
+  return Array<Pair<String, Array<String>>>();
 }
 String Peer::GetStatsSummaryString() const
 {
@@ -753,7 +758,7 @@ void Peer::InitializeStats()
 
 void Peer::UpdateLinks(uint32 sample)
 {
-  if(mLinksUpdated)
+  if (mLinksUpdated)
   {
     mLinksMin = std::min(uint32(mLinksMin), sample);
     mLinksAvg = Average(float(mLinksAvg), float(sample), 0.2);
@@ -761,15 +766,15 @@ void Peer::UpdateLinks(uint32 sample)
   }
   else
   {
-    mLinksMin     = sample;
-    mLinksAvg     = float(sample);
-    mLinksMax     = sample;
+    mLinksMin = sample;
+    mLinksAvg = float(sample);
+    mLinksMax = sample;
     mLinksUpdated = true;
   }
 }
 void Peer::UpdateConnections(uint32 sample)
 {
-  if(mConnectionsUpdated)
+  if (mConnectionsUpdated)
   {
     mConnectionsMin = std::min(uint32(mConnectionsMin), sample);
     mConnectionsAvg = Average(float(mConnectionsAvg), float(sample), 0.2);
@@ -777,9 +782,9 @@ void Peer::UpdateConnections(uint32 sample)
   }
   else
   {
-    mConnectionsMin     = sample;
-    mConnectionsAvg     = float(sample);
-    mConnectionsMax     = sample;
+    mConnectionsMin = sample;
+    mConnectionsAvg = float(sample);
+    mConnectionsMax = sample;
     mConnectionsUpdated = true;
   }
 }
@@ -800,21 +805,25 @@ TimeMs Peer::UpdateAndGetReceiveTime()
 bool Peer::SendPacket(OutPacket& outPacket)
 {
   // [Peer Plugin Event] Stop?
-  if(!PluginEventOnPacketSend(outPacket))
+  if (!PluginEventOnPacketSend(outPacket))
     return true;
 
   // Write packet to bitstream
   mSendBitStream.Write(outPacket);
 
   // Choose correct socket (IPv4 or IPv6)
-  Socket& socket = outPacket.GetDestinationIpAddress().GetInternetProtocol() == InternetProtocol::V4
-                 ? mIpv4Socket
-                 : mIpv6Socket;
+  Socket& socket = outPacket.GetDestinationIpAddress().GetInternetProtocol() ==
+                           InternetProtocol::V4
+                       ? mIpv4Socket
+                       : mIpv6Socket;
 
   // Send packet over socket
   Status status;
-  Bytes result = socket.SendTo(status, mSendBitStream.GetData(), mSendBitStream.GetBytesWritten(), outPacket.GetDestinationIpAddress());
-  if(result) // Successful?
+  Bytes result = socket.SendTo(status,
+                               mSendBitStream.GetData(),
+                               mSendBitStream.GetBytesWritten(),
+                               outPacket.GetDestinationIpAddress());
+  if (result) // Successful?
   {
     Assert(status.Succeeded());
     Assert(result == mSendBitStream.GetBytesWritten());
@@ -832,30 +841,33 @@ void Peer::UpdateSendStats(Bytes sentPacketBytes)
 {
   // Update current send time
   TimeMs sendNow = UpdateAndGetSendTime();
-  double sendDt  = mSendTimer.TimeDelta();
+  double sendDt = mSendTimer.TimeDelta();
 
   // Update stats
   UpdatePacketsSent();
-  UpdateOutgoingBandwidthUsage(double(BYTES_TO_BITS(sentPacketBytes)) / sendDt / double(1000) * double(cOneSecondTimeMs));
+  UpdateOutgoingBandwidthUsage(double(BYTES_TO_BITS(sentPacketBytes)) / sendDt /
+                               double(1000) * double(cOneSecondTimeMs));
   UpdateSendRate(uint(cOneSecondTimeMs / sendDt));
   UpdateSentPacketBytes(sentPacketBytes);
 }
 void Peer::UpdateReceiveStats(Bytes receivedPacketBytes)
 {
-//<>-<>-<>-<>-< Receive Stats Locked >-<>-<>-<>-<>-
+  //<>-<>-<>-<>-< Receive Stats Locked >-<>-<>-<>-<>-
   Lock lock(mReceiveStatsLock);
 
   // Update current receive time
   TimeMs receiveNow = UpdateAndGetReceiveTime();
-  double receiveDt  = mReceiveTimer.TimeDelta();
+  double receiveDt = mReceiveTimer.TimeDelta();
 
   // Update stats
   UpdatePacketsReceived();
-  UpdateIncomingBandwidthUsage(double(BYTES_TO_BITS(receivedPacketBytes)) / receiveDt / double(1000) * double(cOneSecondTimeMs));
+  UpdateIncomingBandwidthUsage(double(BYTES_TO_BITS(receivedPacketBytes)) /
+                               receiveDt / double(1000) *
+                               double(cOneSecondTimeMs));
   UpdateReceiveRate(uint(cOneSecondTimeMs / receiveDt));
   UpdateReceivedPacketBytes(receivedPacketBytes);
 
-//-<>-<>-<>-<>-< Receive Stats Unlocked >-<>-<>-<>-<>
+  //-<>-<>-<>-<>-< Receive Stats Unlocked >-<>-<>-<>-<>
 }
 
 bool Peer::IsValidRawPacket(RawPacket& rawPacket)
@@ -863,7 +875,7 @@ bool Peer::IsValidRawPacket(RawPacket& rawPacket)
   rawPacket.mData.ClearBitsRead();
 
   // Packet is too small to have been written from our protocol?
-  if(rawPacket.mData.GetBitsWritten() < MinPacketHeaderBits)
+  if (rawPacket.mData.GetBitsWritten() < MinPacketHeaderBits)
   {
     // Invalid packet
     return false;
@@ -871,7 +883,7 @@ bool Peer::IsValidRawPacket(RawPacket& rawPacket)
 
   // Read packet header's protocol ID
   ProtocolId protocolId = 0;
-  if(!rawPacket.mData.Read(protocolId)) // Unable?
+  if (!rawPacket.mData.Read(protocolId)) // Unable?
   {
     // Invalid packet
     Assert(false);
@@ -881,7 +893,7 @@ bool Peer::IsValidRawPacket(RawPacket& rawPacket)
   rawPacket.mData.ClearBitsRead();
 
   // Packet's protocol ID does not match ours?
-  if(protocolId != GetProtocolId())
+  if (protocolId != GetProtocolId())
   {
     // Invalid packet
     return false;
@@ -893,107 +905,113 @@ bool Peer::IsValidRawPacket(RawPacket& rawPacket)
 
 OsInt Peer::Ipv4ReceiveThreadFn()
 {
-try
-{
-  //
-  // Receive Loop
-  //
-  RawPacket rawPacket;
-  rawPacket.mData.Reserve(EthernetMtuBytes);
-  while(!mExitIpv4ReceiveThread)
+  try
   {
-    // Wait to receive a packet over socket
-    Status status;
-    SocketAddress sourceAddress;
-    Bytes result = mIpv4Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, sourceAddress);
-    rawPacket.mData.SetBytesWritten(result);
-    rawPacket.mIpAddress = sourceAddress;
-    if(result && IsValidRawPacket(rawPacket)) // Successful?
+    //
+    // Receive Loop
+    //
+    RawPacket rawPacket;
+    rawPacket.mData.Reserve(EthernetMtuBytes);
+    while (!mExitIpv4ReceiveThread)
     {
-      Assert(rawPacket.mIpAddress.IsValid());
+      // Wait to receive a packet over socket
+      Status status;
+      SocketAddress sourceAddress;
+      Bytes result = mIpv4Socket.ReceiveFrom(status,
+                                             rawPacket.mData.GetDataExposed(),
+                                             EthernetMtuBytes,
+                                             sourceAddress);
+      rawPacket.mData.SetBytesWritten(result);
+      rawPacket.mIpAddress = sourceAddress;
+      if (result && IsValidRawPacket(rawPacket)) // Successful?
+      {
+        Assert(rawPacket.mIpAddress.IsValid());
 
-      { //<>-<>-<>-<>-< IPv4 Raw Packets Locked >-<>-<>-<>-<>-
-        Lock lock(mIpv4RawPacketsLock);
+        { //<>-<>-<>-<>-< IPv4 Raw Packets Locked >-<>-<>-<>-<>-
+          Lock lock(mIpv4RawPacketsLock);
 
-        // Push raw packet copy
-        mIpv4RawPackets.PushBack(rawPacket);
+          // Push raw packet copy
+          mIpv4RawPackets.PushBack(rawPacket);
 
-      } //-<>-<>-<>-<>-< IPv4 Raw Packets Unlocked >-<>-<>-<>-<>
+        } //-<>-<>-<>-<>-< IPv4 Raw Packets Unlocked >-<>-<>-<>-<>
 
-      // Update stats
-      UpdateReceiveStats(result);
+        // Update stats
+        UpdateReceiveStats(result);
+      }
+
+      // Clear for next receive
+      rawPacket.mIpAddress.Clear();
+      rawPacket.mData.Clear(false);
     }
 
-    // Clear for next receive
-    rawPacket.mIpAddress.Clear();
-    rawPacket.mData.Clear(false);
+    // Success
+    return 0;
   }
-
-  // Success
-  return 0;
-}
-catch(const std::exception& error)
-{
-  // [Peer Event]
-  PeerEventFatalError(error.what());
-}
-catch(...)
-{
-  // [Peer Event]
-  PeerEventFatalError("Unknown IPv4 receive thread error");
-}
+  catch (const std::exception& error)
+  {
+    // [Peer Event]
+    PeerEventFatalError(error.what());
+  }
+  catch (...)
+  {
+    // [Peer Event]
+    PeerEventFatalError("Unknown IPv4 receive thread error");
+  }
   // Failure
   return 1;
 }
 OsInt Peer::Ipv6ReceiveThreadFn()
 {
-try
-{
-  //
-  // Receive Loop
-  //
-  RawPacket rawPacket;
-  rawPacket.mData.Reserve(EthernetMtuBytes);
-  while(!mExitIpv6ReceiveThread)
+  try
   {
-    // Wait to receive a packet over socket
-    Status status;
-    Bytes result = mIpv6Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, rawPacket.mIpAddress);
-    rawPacket.mData.SetBytesWritten(result);
-    if(result && IsValidRawPacket(rawPacket)) // Successful?
+    //
+    // Receive Loop
+    //
+    RawPacket rawPacket;
+    rawPacket.mData.Reserve(EthernetMtuBytes);
+    while (!mExitIpv6ReceiveThread)
     {
-      Assert(rawPacket.mIpAddress.IsValid());
+      // Wait to receive a packet over socket
+      Status status;
+      Bytes result = mIpv6Socket.ReceiveFrom(status,
+                                             rawPacket.mData.GetDataExposed(),
+                                             EthernetMtuBytes,
+                                             rawPacket.mIpAddress);
+      rawPacket.mData.SetBytesWritten(result);
+      if (result && IsValidRawPacket(rawPacket)) // Successful?
+      {
+        Assert(rawPacket.mIpAddress.IsValid());
 
-      { //<>-<>-<>-<>-< IPv6 Raw Packets Locked >-<>-<>-<>-<>-
-        Lock lock(mIpv6RawPacketsLock);
+        { //<>-<>-<>-<>-< IPv6 Raw Packets Locked >-<>-<>-<>-<>-
+          Lock lock(mIpv6RawPacketsLock);
 
-        // Push raw packet copy
-        mIpv6RawPackets.PushBack(rawPacket);
+          // Push raw packet copy
+          mIpv6RawPackets.PushBack(rawPacket);
 
-      } //-<>-<>-<>-<>-< IPv6 Raw Packets Unlocked >-<>-<>-<>-<>
+        } //-<>-<>-<>-<>-< IPv6 Raw Packets Unlocked >-<>-<>-<>-<>
 
-      // Update stats
-      UpdateReceiveStats(result);
+        // Update stats
+        UpdateReceiveStats(result);
+      }
+
+      // Clear for next receive
+      rawPacket.mIpAddress.Clear();
+      rawPacket.mData.Clear(false);
     }
 
-    // Clear for next receive
-    rawPacket.mIpAddress.Clear();
-    rawPacket.mData.Clear(false);
+    // Success
+    return 0;
   }
-
-  // Success
-  return 0;
-}
-catch(const std::exception& error)
-{
-  // [Peer Event]
-  PeerEventFatalError(error.what());
-}
-catch(...)
-{
-  // [Peer Event]
-  PeerEventFatalError("Unknown IPv6 receive thread error");
-}
+  catch (const std::exception& error)
+  {
+    // [Peer Event]
+    PeerEventFatalError(error.what());
+  }
+  catch (...)
+  {
+    // [Peer Event]
+    PeerEventFatalError("Unknown IPv6 receive thread error");
+  }
   // Failure
   return 1;
 }
@@ -1004,9 +1022,9 @@ void Peer::UpdatePeerState()
   // Update Peer
   //
   Array<RawPacket> rawPackets;
-  Array<InPacket>  inPackets;
-  TimeMs           elapsedExitGraceDuration = 0;
-  TimeMs           lastExitGraceTime        = 0;
+  Array<InPacket> inPackets;
+  TimeMs elapsedExitGraceDuration = 0;
+  TimeMs lastExitGraceTime = 0;
   mSendBitStream.Reserve(EthernetMtuBytes);
 
   //
@@ -1016,7 +1034,7 @@ void Peer::UpdatePeerState()
     //
     // Remove Plugins
     //
-    forRange(PeerPlugin* plugin, mRemovedPlugins.All())
+    forRange(PeerPlugin * plugin, mRemovedPlugins.All())
     {
       // Uninitialize plugin
       plugin->Uninitialize();
@@ -1026,7 +1044,7 @@ void Peer::UpdatePeerState()
       Assert(result.second); // (Erase should have succeeded)
 
       // Should this plugin be deleted?
-      if(plugin->ShouldDeleteAfterRemoval())
+      if (plugin->ShouldDeleteAfterRemoval())
       {
         // Delete plugin
         delete plugin;
@@ -1037,14 +1055,14 @@ void Peer::UpdatePeerState()
     //
     // Add Plugins
     //
-    forRange(PeerPlugin* plugin, mAddedPlugins.All())
+    forRange(PeerPlugin * plugin, mAddedPlugins.All())
     {
       // Initialize plugin
-      if(plugin->Initialize(this)) // Continue?
+      if (plugin->Initialize(this)) // Continue?
       {
         // Add plugin to active plugins
         PeerPluginSet::pointer_bool_pair result = mPlugins.Insert(plugin);
-        Assert(result.second);  // (Insertion should have succeeded)
+        Assert(result.second); // (Insertion should have succeeded)
       }
       // Stop?
       else
@@ -1053,7 +1071,7 @@ void Peer::UpdatePeerState()
         plugin->Uninitialize();
 
         // Should this plugin be deleted?
-        if(plugin->ShouldDeleteAfterRemoval())
+        if (plugin->ShouldDeleteAfterRemoval())
         {
           // Delete plugin
           delete plugin;
@@ -1070,7 +1088,7 @@ void Peer::UpdatePeerState()
     //
     // Remove Links
     //
-    forRange(PeerLink* link, mDestroyedLinks.All())
+    forRange(PeerLink * link, mDestroyedLinks.All())
     {
       // [Peer Plugin Event]
       PluginEventOnLinkRemove(link);
@@ -1087,14 +1105,14 @@ void Peer::UpdatePeerState()
     //
     // Add Links
     //
-    forRange(PeerLink* link, mCreatedLinks.All())
+    forRange(PeerLink * link, mCreatedLinks.All())
     {
       // [Peer Plugin Event] Continue?
-      if(PluginEventOnLinkAdd(link))
+      if (PluginEventOnLinkAdd(link))
       {
         // Add link to active links
         PeerLinkSet::pointer_bool_pair result = mLinks.Insert(link);
-        Assert(result.second);  // (Insertion should have succeeded)
+        Assert(result.second); // (Insertion should have succeeded)
       }
       // Stop?
       else
@@ -1142,14 +1160,14 @@ void Peer::UpdatePeerState()
   //
   // Process Received Packets
   //
-  forRange(InPacket& inPacket, inPackets.All())
+  forRange(InPacket & inPacket, inPackets.All())
   {
     // [Peer Plugin Event] Stop?
-    if(!PluginEventOnPacketReceive(inPacket))
+    if (!PluginEventOnPacketReceive(inPacket))
       continue;
 
     // Is a standalone packet?
-    if(inPacket.IsStandalone())
+    if (inPacket.IsStandalone())
     {
       // Let the user process the custom packet
       ProcessReceivedCustomPacket(inPacket);
@@ -1158,21 +1176,22 @@ void Peer::UpdatePeerState()
 
     // Get the link representing this packet's remote peer
     PeerLink* link = mLinks.FindValue(inPacket.GetSourceIpAddress(), nullptr);
-    if(!link) // Doesn't exist?
+    if (!link) // Doesn't exist?
     {
       // Link limit already reached?
-      if(mLinks.Size() >= GetLinkLimit())
+      if (mLinks.Size() >= GetLinkLimit())
         continue; // Ignore packet
 
       // Create new incoming link
-      link = new PeerLink(this, inPacket.GetSourceIpAddress(), TransmissionDirection::Incoming);
+      link = new PeerLink(
+          this, inPacket.GetSourceIpAddress(), TransmissionDirection::Incoming);
 
       // [Peer Plugin Event] Continue?
-      if(PluginEventOnLinkAdd(link))
+      if (PluginEventOnLinkAdd(link))
       {
         // Add link to active links
         PeerLinkSet::pointer_bool_pair result = mLinks.Insert(link);
-        Assert(result.second);  // (Insertion should have succeeded)
+        Assert(result.second); // (Insertion should have succeeded)
       }
       else
       {
@@ -1198,7 +1217,7 @@ void Peer::UpdatePeerState()
   //
   // Update Links
   //
-  forRange(PeerLink* link, mLinks.All())
+  forRange(PeerLink * link, mLinks.All())
   {
     // Update link state and process received custom messages
     link->UpdateLinkState();
@@ -1212,8 +1231,7 @@ void Peer::UpdatePeerState()
   //
   // Update Plugins
   //
-  forRange(PeerPlugin* plugin, mPlugins.All())
-    plugin->OnUpdate();
+  forRange(PeerPlugin * plugin, mPlugins.All()) plugin->OnUpdate();
 }
 void Peer::ProcessReceivedCustomPackets()
 {
@@ -1221,12 +1239,12 @@ void Peer::ProcessReceivedCustomPackets()
   // Assert(customPackets.Empty());
   // { //<>-<>-<>-<>-< Released Raw Packets Locked >-<>-<>-<>-<>-
   //   Lock lock(mReleasedCustomPacketsLock);
-  // 
+  //
   //   // Get custom packets
   //   customPackets.Swap(mReleasedCustomPackets);
-  // 
+  //
   // } //-<>-<>-<>-<>-< Released Raw Packets Unlocked >-<>-<>-<>-<>
-  // 
+  //
   // // For every custom packet
   // forRange(RawPacket& packet, customPackets.All())
   // {
@@ -1240,14 +1258,15 @@ void Peer::ProcessReceivedCustomPacket(InPacket& packet)
   return mProcessReceivedCustomPacketFn(this, packet);
 }
 
-void Peer::TranslateRawPackets(Array<RawPacket>& rawPackets, Array<InPacket>& inPackets)
+void Peer::TranslateRawPackets(Array<RawPacket>& rawPackets,
+                               Array<InPacket>& inPackets)
 {
   // For all RawPackets
-  forRange(RawPacket& rawPacket, rawPackets.All())
+  forRange(RawPacket & rawPacket, rawPackets.All())
   {
     // Read as InPacket
     InPacket inPacket(rawPacket.mIpAddress);
-    if(rawPacket.mData.Read(inPacket)) // Successful?
+    if (rawPacket.mData.Read(inPacket)) // Successful?
       inPackets.PushBack(ZeroMove(inPacket));
   }
   rawPackets.Clear();
@@ -1256,8 +1275,8 @@ void Peer::TranslateRawPackets(Array<RawPacket>& rawPackets, Array<InPacket>& in
 bool Peer::PluginEventOnPacketSend(OutPacket& packet)
 {
   // Ask all plugins if they wish to continue
-  forRange(PeerPlugin* plugin, mPlugins.All())
-    if(!plugin->OnPacketSend(packet)) // Stop?
+  forRange(PeerPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnPacketSend(packet)) // Stop?
       return false;
 
   // Continue
@@ -1266,8 +1285,8 @@ bool Peer::PluginEventOnPacketSend(OutPacket& packet)
 bool Peer::PluginEventOnPacketReceive(InPacket& packet)
 {
   // Ask all plugins if they wish to continue
-  forRange(PeerPlugin* plugin, mPlugins.All())
-    if(!plugin->OnPacketReceive(packet)) // Stop?
+  forRange(PeerPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnPacketReceive(packet)) // Stop?
       return false;
 
   // Continue
@@ -1277,8 +1296,8 @@ bool Peer::PluginEventOnPacketReceive(InPacket& packet)
 bool Peer::PluginEventOnLinkAdd(PeerLink* link)
 {
   // Ask all plugins if they wish to continue
-  forRange(PeerPlugin* plugin, mPlugins.All())
-    if(!plugin->OnLinkAdd(link)) // Stop?
+  forRange(PeerPlugin * plugin,
+           mPlugins.All()) if (!plugin->OnLinkAdd(link)) // Stop?
       return false;
 
   // Continue
@@ -1287,8 +1306,7 @@ bool Peer::PluginEventOnLinkAdd(PeerLink* link)
 void Peer::PluginEventOnLinkRemove(PeerLink* link)
 {
   // Notify all plugins
-  forRange(PeerPlugin* plugin, mPlugins.All())
-    plugin->OnLinkRemove(link);
+  forRange(PeerPlugin * plugin, mPlugins.All()) plugin->OnLinkRemove(link);
 }
 
 void Peer::PeerEventIncomingLinkCreated(const IpAddress& ipAddress)
@@ -1323,22 +1341,20 @@ void Peer::PeerEventFatalError(const String& errorString)
 
 void Peer::PushUserEventMessage(MoveReference<Message> message)
 {
-// //<>-<>-<>-<>-< Released Raw Packets Locked >-<>-<>-<>-<>-
-//   Lock lock(mReleasedCustomPacketsLock);
-// 
-//   // Create raw packet containing just the event message
-//   RawPacket rawPacket;
-//   rawPacket.mContainsEventMessage = true;
-//   rawPacket.mData.Write(*message);
-// 
-//   // Release raw packet to the user
-//   mReleasedCustomPackets.PushBack(ZeroMove(rawPacket));
-// //-<>-<>-<>-<>-< Released Raw Packets Unlocked >-<>-<>-<>-<>
+  // //<>-<>-<>-<>-< Released Raw Packets Locked >-<>-<>-<>-<>-
+  //   Lock lock(mReleasedCustomPacketsLock);
+  //
+  //   // Create raw packet containing just the event message
+  //   RawPacket rawPacket;
+  //   rawPacket.mContainsEventMessage = true;
+  //   rawPacket.mData.Write(*message);
+  //
+  //   // Release raw packet to the user
+  //   mReleasedCustomPackets.PushBack(ZeroMove(rawPacket));
+  // //-<>-<>-<>-<>-< Released Raw Packets Unlocked >-<>-<>-<>-<>
 }
 
-//---------------------------------------------------------------------------------//
-//                                 PeerPlugin                                      //
-//---------------------------------------------------------------------------------//
+//                                 PeerPlugin //
 
 PeerPlugin::~PeerPlugin()
 {
@@ -1348,27 +1364,27 @@ PeerPlugin::~PeerPlugin()
 // Member Functions
 //
 
-bool PeerPlugin::operator ==(const PeerPlugin& rhs) const
+bool PeerPlugin::operator==(const PeerPlugin& rhs) const
 {
   return mName == rhs.mName;
 }
-bool PeerPlugin::operator !=(const PeerPlugin& rhs) const
+bool PeerPlugin::operator!=(const PeerPlugin& rhs) const
 {
   return mName != rhs.mName;
 }
-bool PeerPlugin::operator  <(const PeerPlugin& rhs) const
+bool PeerPlugin::operator<(const PeerPlugin& rhs) const
 {
   return mName < rhs.mName;
 }
-bool PeerPlugin::operator ==(const String& rhs) const
+bool PeerPlugin::operator==(const String& rhs) const
 {
   return mName == rhs;
 }
-bool PeerPlugin::operator !=(const String& rhs) const
+bool PeerPlugin::operator!=(const String& rhs) const
 {
   return mName != rhs;
 }
-bool PeerPlugin::operator  <(const String& rhs) const
+bool PeerPlugin::operator<(const String& rhs) const
 {
   return mName < rhs;
 }
@@ -1388,9 +1404,7 @@ Peer* PeerPlugin::GetPeer() const
   return mPeer;
 }
 
-PeerPlugin::PeerPlugin()
-  : mName(),
-    mPeer(nullptr)
+PeerPlugin::PeerPlugin() : mName(), mPeer(nullptr)
 {
 }
 

@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,17 +6,27 @@ namespace Zero
 
 DeclareEnum18(TokenState,
               Start,
-              Identifier, EnumerationStart, Enumeration,
-              StringLiteralStart, StringLiteralEscape, StringLiteral,
-              Integer, ZeroInteger, NegativeStart,
-              FloatStart, Float, ExplicitFloat,
-              ScientificNotationStart, ScientificNotationSign, ScientificNotationFloat,
-              HexStart, Hex);
+              Identifier,
+              EnumerationStart,
+              Enumeration,
+              StringLiteralStart,
+              StringLiteralEscape,
+              StringLiteral,
+              Integer,
+              ZeroInteger,
+              NegativeStart,
+              FloatStart,
+              Float,
+              ExplicitFloat,
+              ScientificNotationStart,
+              ScientificNotationSign,
+              ScientificNotationFloat,
+              HexStart,
+              Hex);
 
-//**************************************************************************************************
 inline DataTokenType::Enum GetTokenFromState(TokenState::Enum currentState)
 {
-  switch(currentState)
+  switch (currentState)
   {
   case TokenState::Identifier:
     return DataTokenType::Identifier;
@@ -43,16 +48,13 @@ inline DataTokenType::Enum GetTokenFromState(TokenState::Enum currentState)
   }
 }
 
-//------------------------------------------------------------------------------ Data Tree Tokenizer
-//**************************************************************************************************
-DataTreeTokenizer::DataTreeTokenizer(StringParam text) : 
-  mLineNumber(0)
+//Data Tree Tokenizer
+DataTreeTokenizer::DataTreeTokenizer(StringParam text) : mLineNumber(0)
 {
   mText = text;
   mRange = mText.All();
 }
 
-//**************************************************************************************************
 bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
 {
   EatWhitespace();
@@ -68,43 +70,44 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
   // Start in the starting state
   TokenState::Enum currentState = TokenState::Start;
 
-  while(!mRange.Empty())
+  while (!mRange.Empty())
   {
     Rune rune = mRange.Front();
     bool tokenAccepted = false;
 
-    switch(currentState)
+    switch (currentState)
     {
-      //---------------------------------------------------------------------------- Start
+      //----------------------------------------------------------------------------
+      //Start
     case TokenState::Start:
     {
-      if(IsAlpha(rune) || rune == '_')
+      if (IsAlpha(rune) || rune == '_')
         currentState = TokenState::Identifier;
-      else if(rune == '\"')
+      else if (rune == '\"')
         currentState = TokenState::StringLiteralStart;
-      else if(rune == '-')
+      else if (rune == '-')
         currentState = TokenState::NegativeStart;
-      else if(rune == '0')
+      else if (rune == '0')
         currentState = TokenState::ZeroInteger;
-      else if(IsNumber(rune))
+      else if (IsNumber(rune))
         currentState = TokenState::Integer;
-      else if(IsSymbol(rune))
+      else if (IsSymbol(rune))
       {
-        if(rune == '=')
+        if (rune == '=')
           token.mType = DataTokenType::Assignment;
-        else if(rune == '{')
+        else if (rune == '{')
           token.mType = DataTokenType::OpenCurley;
-        else if(rune == '}')
+        else if (rune == '}')
           token.mType = DataTokenType::CloseCurley;
-        else if(rune == '[')
+        else if (rune == '[')
           token.mType = DataTokenType::OpenBracket;
-        else if(rune == ']')
+        else if (rune == ']')
           token.mType = DataTokenType::CloseBracket;
-        else if(rune == ',')
+        else if (rune == ',')
           token.mType = DataTokenType::Comma;
-        else if(rune == ':')
+        else if (rune == ':')
           token.mType = DataTokenType::Colon;
-      
+
         mRange.PopFront();
         return (token.mType != DataTokenType::None);
       }
@@ -115,18 +118,20 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       }
       break;
     }
-    //------------------------------------------------------------- String Literal Start
+    //------------------------------------------------------------- String
+    //Literal Start
     case TokenState::StringLiteralStart:
     {
-      if(rune == '\\')
+      if (rune == '\\')
         currentState = TokenState::StringLiteralEscape;
-      else if(rune == '\"')
+      else if (rune == '\"')
         currentState = TokenState::StringLiteral;
 
       // Otherwise, we accept any character so we don't need to do anything
       break;
     }
-    //------------------------------------------------------------ String Literal Escape
+    //------------------------------------------------------------ String
+    //Literal Escape
     case TokenState::StringLiteralEscape:
     {
       currentState = TokenState::StringLiteralStart;
@@ -134,7 +139,8 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       // Otherwise, we accept any character so we don't need to do anything
       break;
     }
-    //------------------------------------------------------------------- String Literal
+    //------------------------------------------------------------------- String
+    //Literal
     case TokenState::StringLiteral:
     {
       tokenAccepted = true;
@@ -142,156 +148,172 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       // Otherwise, we accept any character so we don't need to do anything
       break;
     }
-    //----------------------------------------------------------------------- Identifier
+    //-----------------------------------------------------------------------
+    //Identifier
     case TokenState::Identifier:
     {
       // Transition to enum if it's a period
-      if(rune == '.')
+      if (rune == '.')
         currentState = TokenState::EnumerationStart;
       // Only accept alpha and underscores
-      else if(!IsAlpha(rune) && rune != '_' && !IsNumber(rune))
+      else if (!IsAlpha(rune) && rune != '_' && !IsNumber(rune))
         tokenAccepted = true;
 
       break;
     }
-    //---------------------------------------------------------------- Enumeration Start
+    //----------------------------------------------------------------
+    //Enumeration Start
     case TokenState::EnumerationStart:
     {
-      if(IsAlpha(rune) || rune == '_')
+      if (IsAlpha(rune) || rune == '_')
         currentState = TokenState::Enumeration;
       else
         status.SetFailed("Expected literal after enumeration start");
 
       break;
     }
-    //---------------------------------------------------------------------- Enumeration
+    //----------------------------------------------------------------------
+    //Enumeration
     case TokenState::Enumeration:
     {
       // Only accept alpha and underscores
-      if(!IsAlpha(rune) && rune != '_' && !IsNumber(rune))
+      if (!IsAlpha(rune) && rune != '_' && !IsNumber(rune))
         tokenAccepted = true;
       break;
     }
-    //-------------------------------------------------------------------------- Integer
+    //--------------------------------------------------------------------------
+    //Integer
     case TokenState::Integer:
     {
-      if(IsNumber(rune))
+      if (IsNumber(rune))
         break;
-      else if(rune == '.')
+      else if (rune == '.')
         currentState = TokenState::FloatStart;
-      else if(rune == 'f')
+      else if (rune == 'f')
         currentState = TokenState::ExplicitFloat;
-      else if(rune == 'e')
+      else if (rune == 'e')
         currentState = TokenState::ScientificNotationStart;
       else
         tokenAccepted = true;
       break;
     }
-    //------------------------------------------------------------------- Negative Start
+    //-------------------------------------------------------------------
+    //Negative Start
     case TokenState::NegativeStart:
     {
-      if(rune == '0')
+      if (rune == '0')
         currentState = TokenState::ZeroInteger;
-      else if(IsNumber(rune))
+      else if (IsNumber(rune))
         currentState = TokenState::Integer;
       else
         status.SetFailed("Negative symbol must be followed by a number");
       break;
     }
-    //--------------------------------------------------------------------- Zero Integer
+    //--------------------------------------------------------------------- Zero
+    //Integer
     case TokenState::ZeroInteger:
     {
-      if(IsNumber(rune))
+      if (IsNumber(rune))
         currentState = TokenState::Integer;
-      else if(rune == 'x' || rune == 'X')
+      else if (rune == 'x' || rune == 'X')
         currentState = TokenState::HexStart;
-      else if(rune == '.')
+      else if (rune == '.')
         currentState = TokenState::FloatStart;
       else
         tokenAccepted = true;
       break;
     }
-    //------------------------------------------------------------------------ Hex Start
+    //------------------------------------------------------------------------
+    //Hex Start
     case TokenState::HexStart:
     {
-      if(IsHex(rune))
+      if (IsHex(rune))
         currentState = TokenState::Hex;
       else
         status.SetFailed("Incomplete hex value");
       break;
     }
-    //------------------------------------------------------------------------------ Hex
+    //------------------------------------------------------------------------------
+    //Hex
     case TokenState::Hex:
     {
-      if(IsHex(rune))
+      if (IsHex(rune))
         currentState = TokenState::Hex;
       else
         tokenAccepted = true;
       break;
     }
-    //---------------------------------------------------------------------- Float Start
+    //----------------------------------------------------------------------
+    //Float Start
     case TokenState::FloatStart:
     {
-      if(IsNumber(rune))
+      if (IsNumber(rune))
         currentState = TokenState::Float;
       else
         status.SetFailed("Incomplete float. A number must follow the '.'");
       break;
     }
-    //---------------------------------------------------------------------------- Float
+    //----------------------------------------------------------------------------
+    //Float
     case TokenState::Float:
     {
-      if(rune == 'e')
+      if (rune == 'e')
         currentState = TokenState::ScientificNotationStart;
-      else if(!IsNumber(rune))
+      else if (!IsNumber(rune))
         tokenAccepted = true;
       break;
     }
-    //------------------------------------------------------------------- Explicit Float
+    //-------------------------------------------------------------------
+    //Explicit Float
     case TokenState::ExplicitFloat:
     {
       tokenAccepted = true;
       break;
     }
-    //--------------------------------------------------------- Scientific Notation Start
+    //--------------------------------------------------------- Scientific
+    //Notation Start
     case TokenState::ScientificNotationStart:
     {
-      if(rune == '+' || rune == '-')
+      if (rune == '+' || rune == '-')
         currentState = TokenState::ScientificNotationSign;
-      else if(IsNumber(rune))
+      else if (IsNumber(rune))
         currentState = TokenState::ScientificNotationFloat;
       else
-        status.SetFailed("Incomplete scientific notation. A number or +- should follow 'e'");
+        status.SetFailed(
+            "Incomplete scientific notation. A number or +- should follow 'e'");
       break;
     }
-    //--------------------------------------------------------- Scientific Notation Sign
+    //--------------------------------------------------------- Scientific
+    //Notation Sign
     case TokenState::ScientificNotationSign:
     {
-      if(IsNumber(rune))
+      if (IsNumber(rune))
         currentState = TokenState::ScientificNotationFloat;
       else
-        status.SetFailed("Incomplete scientific notation. A number should follow the + or -");
+        status.SetFailed("Incomplete scientific notation. A number should "
+                         "follow the + or -");
       break;
     }
-    //-------------------------------------------------------- Scientific Notation Float
+    //-------------------------------------------------------- Scientific
+    //Notation Float
     case TokenState::ScientificNotationFloat:
     {
-      if(rune == 'f')
+      if (rune == 'f')
         currentState = TokenState::ExplicitFloat;
-      else if(!IsNumber(rune))
+      else if (!IsNumber(rune))
         tokenAccepted = true;
       break;
     }
     }
 
     // Return if parsing failed
-    if(status.Failed())
+    if (status.Failed())
     {
       Error(BuildString("Tokenizer error: ", status.Message).c_str());
       return false;
     }
 
-    if(tokenAccepted)
+    if (tokenAccepted)
       break;
     else
       mRange.PopFront();
@@ -302,45 +324,44 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
 
   // If we found a valid token, assign the text and return success
   // Strip the quotes for string literals
-  if(token.mType == DataTokenType::StringLiteral)
+  if (token.mType == DataTokenType::StringLiteral)
     token.mText = mText.SubString(tokenStart + 1, mRange.Begin() - 1);
-  else if(token.mType != DataTokenType::None)
+  else if (token.mType != DataTokenType::None)
     token.mText = mText.SubString(tokenStart, mRange.Begin());
 
   // Lookup keywords
-  if(token.mType == DataTokenType::Identifier)
+  if (token.mType == DataTokenType::Identifier)
   {
-    if(token.mText == "var")
+    if (token.mText == "var")
       token.mType = DataTokenType::Var;
-    else if(token.mText == "true")
+    else if (token.mText == "true")
       token.mType = DataTokenType::True;
-    else if(token.mText == "false")
+    else if (token.mText == "false")
       token.mType = DataTokenType::False;
   }
 
   return (token.mType != DataTokenType::None);
 }
 
-//**************************************************************************************************
 void DataTreeTokenizer::EatWhitespace()
 {
   bool lastWasCarriageReturn = false;
 
-  while(!mRange.Empty())
+  while (!mRange.Empty())
   {
     Rune rune = mRange.Front();
 
     // Increase line number if it's a newline
-    if(rune == '\r')
+    if (rune == '\r')
     {
       ++mLineNumber;
     }
-    else if(rune == '\n')
+    else if (rune == '\n')
     {
-      if(!lastWasCarriageReturn)
+      if (!lastWasCarriageReturn)
         ++mLineNumber;
     }
-    else if(!IsSpace(rune))
+    else if (!IsSpace(rune))
     {
       break;
     }
@@ -351,4 +372,4 @@ void DataTreeTokenizer::EatWhitespace()
   }
 }
 
-}//namespace Zero
+} // namespace Zero

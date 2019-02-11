@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationEditor.hpp
-/// Declaration of AnimationEditor Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -31,24 +23,24 @@ class ContextMenuEvent;
 class AnimationSelector;
 class AnimationToolBox;
 
-//------------------------------------------------------------- Animation Editor
 DeclareEnum5(ErrorState,
-             None,       // No Error
-             NoObject,   // No object selected
-             NoAnimGraph, // No time-line on the object
-             ReadOnly,   // Animation is read only
+             None,                   // No Error
+             NoObject,               // No object selected
+             NoAnimGraph,            // No time-line on the object
+             ReadOnly,               // Animation is read only
              AnimationFromGeometry); // The animation was from a geometry file
                                      // and must first be converted to a
                                      // rich animation
 
-//--------------------------------------------------------------- Key Frame Icon
 /// This icon is added to the property grid for creating key frames.
 class PropertyKeyIcon : public Composite
 {
 public:
   typedef PropertyKeyIcon ZilchSelf;
-  PropertyKeyIcon(Composite* parent, HandleParam object,
-                  Property* metaProperty, AnimationEditor* editor);
+  PropertyKeyIcon(Composite* parent,
+                  HandleParam object,
+                  Property* metaProperty,
+                  AnimationEditor* editor);
 
   void UpdateTransform() override;
 
@@ -63,7 +55,6 @@ public:
   AnimationEditor* mEditor;
 };
 
-//------------------------------------------------------------- Animation Editor
 class AnimationEditor : public Composite
 {
 public:
@@ -153,7 +144,8 @@ private:
   /// We want to update the animation while scrubbing.
   void OnPlayHeadModified(Event* event);
 
-  /// When the animator is deactivated remove the key frame icons from the property grid
+  /// When the animator is deactivated remove the key frame icons from the
+  /// property grid
   void OnAnimatorDeactivated(Event* event);
 
   /// Updates the objects in the active animation to the given time.
@@ -175,7 +167,7 @@ private:
   void OnKeyDownViewport(KeyboardEvent* e);
 
   /// We want the same functionality as the OnkeyDownViewport function,
-  /// but if it's pressed when the animator has focus. We also want to 
+  /// but if it's pressed when the animator has focus. We also want to
   /// have the graph area focus on the selected curves when 'F' is pressed,
   /// but we don't want that to happen when it's pressed in the main view port.
   void OnKeyDown(KeyboardEvent* e);
@@ -264,7 +256,8 @@ private:
 
 Archetype* GetAnimationPreviewArchetype(Animation* animation);
 
-Cog* CreateAnimationPreview(Space* space, Animation* animation,
+Cog* CreateAnimationPreview(Space* space,
+                            Animation* animation,
                             Archetype* previewArchetype = NULL);
 
-} //namespace Zero
+} // namespace Zero

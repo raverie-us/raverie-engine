@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Serialization.cpp
-/// Implementation of the Serializer interface.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------------- Data Attributes
+//Attributes
 namespace SerializationAttributes
 {
 DefineStringConstant(Id);
@@ -20,81 +12,65 @@ DefineStringConstant(InheritId);
 DefineStringConstant(ChildOrderOverride);
 DefineStringConstant(LocallyAdded);
 DefineStringConstant(LocallyRemoved);
-}
+} // namespace SerializationAttributes
 
-//******************************************************************************
 DataAttribute::DataAttribute(StringParam name, StringParam value) :
-  mName(name),
-  mValue(value)
+    mName(name),
+    mValue(value)
 {
-
 }
 
 const Guid PolymorphicNode::cInvalidUniqueNodeId = (Guid)-1;
 
-//------------------------------------------------------------- Polymorphic Info
-//******************************************************************************
-PolymorphicInfo::PolymorphicInfo() 
-  : mTypeName(nullptr)
-  , mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId)
-  , mFieldName(nullptr)
-  , mFlags(0)
+PolymorphicInfo::PolymorphicInfo() :
+    mTypeName(nullptr),
+    mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId),
+    mFieldName(nullptr),
+    mFlags(0)
 {
-
 }
 
-//------------------------------------------------------------------- Serializer
 
-//******************************************************************************
 Serializer::Serializer()
 {
   mSerializationContext = NULL;
   mPatching = false;
 }
 
-//******************************************************************************
 Serializer::~Serializer()
 {
-
 }
 
-//******************************************************************************
 void* Serializer::GetSerializationContext()
 {
   return mSerializationContext;
 }
 
-//******************************************************************************
 void Serializer::SetSerializationContext(void* context)
 {
   mSerializationContext = context;
 }
 
-//******************************************************************************
 SerializerMode::Enum Serializer::GetMode()
 {
   return mMode;
 }
 
-//******************************************************************************
 SerializerType::Enum Serializer::GetType()
 {
   return mSerializerType;
 }
 
-//******************************************************************************
 bool Serializer::Start(BoundType* type, cstr fieldName, StructType structType)
 {
   return Start(type->Name.c_str(), fieldName, structType);
 }
 
-//******************************************************************************
 void Serializer::End(BoundType* type, StructType structType)
 {
   End(type->Name.c_str(), structType);
 }
 
-//******************************************************************************
 void Serializer::StartPolymorphic(cstr typeName)
 {
   PolymorphicInfo info;
@@ -102,8 +78,8 @@ void Serializer::StartPolymorphic(cstr typeName)
   StartPolymorphicInternal(info);
 }
 
-//******************************************************************************
-void Serializer::StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flags)
+void Serializer::StartPolymorphic(cstr typeName,
+                                  PolymorphicSaveFlags::Enum flags)
 {
   PolymorphicInfo info;
   info.mTypeName = typeName;
@@ -111,7 +87,6 @@ void Serializer::StartPolymorphic(cstr typeName, PolymorphicSaveFlags::Enum flag
   StartPolymorphicInternal(info);
 }
 
-//******************************************************************************
 void Serializer::StartPolymorphic(BoundType* objectType)
 {
   Handle object;
@@ -119,7 +94,6 @@ void Serializer::StartPolymorphic(BoundType* objectType)
   StartPolymorphic(object);
 }
 
-//******************************************************************************
 void Serializer::StartPolymorphic(HandleParam object)
 {
   PolymorphicInfo info;
@@ -128,8 +102,8 @@ void Serializer::StartPolymorphic(HandleParam object)
   StartPolymorphicInternal(info);
 }
 
-//******************************************************************************
-void Serializer::StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId)
+void Serializer::StartPolymorphicInheritence(cstr typeName,
+                                             cstr dataInheritanceId)
 {
   PolymorphicInfo info;
   info.mTypeName = typeName;
@@ -137,8 +111,8 @@ void Serializer::StartPolymorphicInheritence(cstr typeName, cstr dataInheritance
   StartPolymorphicInternal(info);
 }
 
-//******************************************************************************
-void Serializer::StartPolymorphicInheritence(cstr typeName, cstr dataInheritanceId,
+void Serializer::StartPolymorphicInheritence(cstr typeName,
+                                             cstr dataInheritanceId,
                                              PolymorphicSaveFlags::Enum flags)
 {
   PolymorphicInfo info;
@@ -148,38 +122,35 @@ void Serializer::StartPolymorphicInheritence(cstr typeName, cstr dataInheritance
   StartPolymorphicInternal(info);
 }
 
-//******************************************************************************
 void Serializer::StartPolymorphicInternal(const PolymorphicInfo& info)
 {
   Error(cPolymorphicSerializationError);
 }
 
-//******************************************************************************
-void Serializer::AddSubtractivePolymorphicNode(BoundType* boundType, Guid nodeId)
+void Serializer::AddSubtractivePolymorphicNode(BoundType* boundType,
+                                               Guid nodeId)
 {
   AddSubtractivePolymorphicNode(boundType->Name.c_str(), nodeId);
 }
 
-//******************************************************************************
-bool Serializer::SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange)
+bool Serializer::SimpleField(cstr typeName,
+                             cstr fieldName,
+                             StringRange& stringRange)
 {
   DoNotifyError("Unimplemented function", "SimpleField not implemented");
   return true;
 }
 
-//******************************************************************************
 DataBlock Serializer::ExtractAsDataBlock()
 {
   return DataBlock();
 }
 
-//******************************************************************************
 String Serializer::DebugLocation()
 {
   return "Unknown";
 }
 
-//******************************************************************************
 void EncodeBinary(ByteBufferBlock& buffer, String& encodedOut)
 {
   // We should replace this with a base64 encoding of zipped data
@@ -192,10 +163,10 @@ void EncodeBinary(ByteBufferBlock& buffer, String& encodedOut)
   {
     byte c = buffer.GetBegin()[i];
     byte high = c / 16;
-    byte low  = c % 16;
+    byte low = c % 16;
 
     high += (high < 10) ? '0' : 'A';
-    low  += (low  < 10) ? '0' : 'A';
+    low += (low < 10) ? '0' : 'A';
 
     node->Data[i * 2 + 1] = high;
     node->Data[i * 2 + 2] = low;
@@ -204,7 +175,6 @@ void EncodeBinary(ByteBufferBlock& buffer, String& encodedOut)
   encodedOut = String(node);
 }
 
-//******************************************************************************
 bool DecodeBinary(ByteBufferBlock& buffer, const String& encoded)
 {
   // If there's no data to decode, then early out
@@ -221,10 +191,10 @@ bool DecodeBinary(ByteBufferBlock& buffer, const String& encoded)
     for (size_t i = 0; i < bufferSize; ++i)
     {
       byte high = encoded.Data()[i * 2 + 1];
-      byte low  = encoded.Data()[i * 2 + 2];
+      byte low = encoded.Data()[i * 2 + 2];
 
       high -= (high < 'A') ? '0' : 'A';
-      low  -= (low  < 'A') ? '0' : 'A';
+      low -= (low < 'A') ? '0' : 'A';
 
       buffer.GetBegin()[i] = high * 16 + low;
     }
@@ -235,4 +205,4 @@ bool DecodeBinary(ByteBufferBlock& buffer, const String& encoded)
   return false;
 }
 
-}//namespace Zero
+} // namespace Zero

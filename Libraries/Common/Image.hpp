@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Image.hpp
-/// Image class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -39,7 +31,7 @@ public:
   // Allocate a image buffer
   void Allocate(int width, int height);
 
-  //Resize clipping or adding bottom right
+  // Resize clipping or adding bottom right
   void Resize(int width, int height, uint color);
   void ClearColorTo(uint color);
 
@@ -91,7 +83,7 @@ public:
   void PopFront()
   {
     ++X;
-    if(X >= endX)
+    if (X >= endX)
     {
       ++Y;
       X = startX;
@@ -112,11 +104,23 @@ public:
 void CopyImageExpand(Image* dest, Image* source);
 void CopyImage(Image* dest, Image* source);
 void CopyImage(Image* dest, Image* source, int startDestX, int startDestY);
-void CopyImage(Image* dest, Image* source, int startDestX, int startDestY,
-                                   int sourceX, int sourceY, int sizeX, int sizeY);
+void CopyImage(Image* dest,
+               Image* source,
+               int startDestX,
+               int startDestY,
+               int sourceX,
+               int sourceY,
+               int sizeX,
+               int sizeY);
 
-void FillPixelBorders(Image* image, IntVec2 topLeft, IntVec2 bottomRight, int borderWidth);
-void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWidth);
+void FillPixelBorders(Image* image,
+                      IntVec2 topLeft,
+                      IntVec2 bottomRight,
+                      int borderWidth);
+void AddPixelBorders(Image* image,
+                     int frameWidth,
+                     int frameHeight,
+                     int borderWidth);
 
 // Removed Alpha artifact created by edge transparent pixels when mip mapping.
 void FixAlphaHalo(Image* image);
@@ -124,4 +128,4 @@ void FixAlphaHalo(Image* image);
 // Set all pixels that match color to transparent
 void SetColorToAlpha(Image* buffer, uint color);
 
-}
+} // namespace Zero

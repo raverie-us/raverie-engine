@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,9 +7,9 @@ namespace Zero
 namespace Physics
 {
 
-///A structure to wrap the internal storage details of mass. This hides the
-///fact that mass is a Vec3 to deal with axis locking and makes future changes
-///painless (hopefully).
+/// A structure to wrap the internal storage details of mass. This hides the
+/// fact that mass is a Vec3 to deal with axis locking and makes future changes
+/// painless (hopefully).
 struct Mass
 {
   Mass();
@@ -35,8 +30,8 @@ private:
   real mInvMass;
 };
 
-///A structure to wrap the internal storage details of inertia. This should
-///make the future change of the model inertia being a Vec3
+/// A structure to wrap the internal storage details of inertia. This should
+/// make the future change of the model inertia being a Vec3
 ///(diagonalized Mat3) painless.
 
 struct Inertia
@@ -62,6 +57,6 @@ private:
   Mat3 mInvInertiaTensorW;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

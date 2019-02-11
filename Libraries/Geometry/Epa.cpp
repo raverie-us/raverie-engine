@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Epa.cpp
-/// Expanding polytope algorithm for finding contact data on a CSO.
-///
-/// Authors: Nathan Carlson
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Intersection
 {
 
-void Epa::Init(const Simplex &simplex)
+void Epa::Init(const Simplex& simplex)
 {
   mVertices.Clear();
   mEdges.Clear();
@@ -33,8 +25,9 @@ void Epa::Init(const Simplex &simplex)
   // Compute normals of initial faces
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
-    Face &face = mFaces[i];
-    face.normal = (mVertices[face.p1].cso - mVertices[face.p0].cso).Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
+    Face& face = mFaces[i];
+    face.normal = (mVertices[face.p1].cso - mVertices[face.p0].cso)
+                      .Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
     face.normal.AttemptNormalize();
   }
 
@@ -48,10 +41,13 @@ Vec3 Epa::GetClosestFaceNormal(void)
 
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
-    Face &face = mFaces[i];
+    Face& face = mFaces[i];
 
     Vec3 closest = Vec3::cZero;
-    ClosestPointOnTriangleToPoint(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso, &closest);
+    ClosestPointOnTriangleToPoint(mVertices[face.p0].cso,
+                                  mVertices[face.p1].cso,
+                                  mVertices[face.p2].cso,
+                                  &closest);
 
     float dist = -closest.Length();
     if (dist > mDistClosest)
@@ -70,7 +66,7 @@ float Epa::GetClosestDistance(void)
   return mDistClosest;
 }
 
-void Epa::GetClosestFace(CSOVertex *retFace)
+void Epa::GetClosestFace(CSOVertex* retFace)
 {
   retFace[0] = mVertices[mFaces[mIndexClosest].p0];
   retFace[1] = mVertices[mFaces[mIndexClosest].p1];
@@ -81,7 +77,8 @@ bool Epa::Expand(CSOVertex newPoint)
 {
   // Primary terminating condition
   // When new support point is not far enough from the closest face
-  if (mFaces[mIndexClosest].normal.Dot(newPoint.cso - mVertices[mFaces[mIndexClosest].p0].cso) < 0.001f)
+  if (mFaces[mIndexClosest].normal.Dot(
+          newPoint.cso - mVertices[mFaces[mIndexClosest].p0].cso) < 0.001f)
     return false;
 
   // If point is already in the CSO, fail to expand
@@ -96,19 +93,19 @@ bool Epa::Expand(CSOVertex newPoint)
   // float maxDot = 0.0f;
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
-    Face &face = mFaces[i];
+    Face& face = mFaces[i];
     float dot = face.normal.Dot(newPoint.cso - mVertices[face.p0].cso);
     if (dot > 0.00001f)
-    // {
+      // {
       visibleFaces.PushBack(i);
-      // maxDot = dot > maxDot ? dot : maxDot;
+    // maxDot = dot > maxDot ? dot : maxDot;
     // }
   }
 
-  // The edge case of not having any visible faces that are a reasonable distance from the support point
-  // should no longer happen due to the primary terminating condition above
-  // bool clearFaces = maxDot < 0.0001f;
-  // if (clearFaces)
+  // The edge case of not having any visible faces that are a reasonable
+  // distance from the support point should no longer happen due to the primary
+  // terminating condition above bool clearFaces = maxDot < 0.0001f; if
+  // (clearFaces)
   //   visibleFaces.Clear();
 
   // Degenerate point, can't expand
@@ -120,7 +117,7 @@ bool Epa::Expand(CSOVertex newPoint)
   // Evaluate faces back to front for easy array clean up
   for (unsigned i = visibleFaces.Size() - 1; i < visibleFaces.Size(); --i)
   {
-    Face &face = mFaces[visibleFaces[i]];
+    Face& face = mFaces[visibleFaces[i]];
 
     // Add every edge of the triangular face
     // If there is a duplicate edge, then two adjacent faces are being removed
@@ -140,11 +137,13 @@ bool Epa::Expand(CSOVertex newPoint)
   unsigned index = mVertices.Size() - 1;
   for (unsigned i = 0; i < mEdges.Size(); ++i)
   {
-    Edge &edge = mEdges[i];
+    Edge& edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
-    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso).Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
+    newFace.normal =
+        (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
+            .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
     float length = newFace.normal.AttemptNormalize();
-    if(length != 0)
+    if (length != 0)
       mFaces.PushBack(newFace);
   }
   mEdges.Clear();
@@ -164,7 +163,7 @@ bool Epa::DebugStep(void)
   mVisibleFaces.Clear();
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
-    Face &face = mFaces[i];
+    Face& face = mFaces[i];
     float dot = face.normal.Dot(mDebugPoint.cso - mVertices[face.p0].cso);
     if (dot > 0.0000001f)
       mVisibleFaces.PushBack(i);
@@ -183,7 +182,7 @@ bool Epa::DebugStep(void)
   // Evaluate faces back to front for easy array clean up
   for (unsigned i = mVisibleFaces.Size() - 1; i < mVisibleFaces.Size(); --i)
   {
-    Face &face = mFaces[mVisibleFaces[i]];
+    Face& face = mFaces[mVisibleFaces[i]];
 
     // Add every edge of the triangular face
     // If there is a duplicate edge, then two adjacent faces are being removed
@@ -210,9 +209,11 @@ bool Epa::DebugStep(void)
   unsigned index = mVertices.Size() - 1;
   for (unsigned i = 0; i < mEdges.Size(); ++i)
   {
-    Edge &edge = mEdges[i];
+    Edge& edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
-    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso).Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
+    newFace.normal =
+        (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
+            .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
     newFace.normal.AttemptNormalize();
     mFaces.PushBack(newFace);
   }
@@ -225,17 +226,20 @@ bool Epa::DebugStep(void)
 
 void Epa::DrawDebug(void)
 {
-  Zero::gDebugDraw->Add(Zero::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
+  Zero::gDebugDraw->Add(
+      Zero::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
 
   for (unsigned i = 0; i < mEdges.Size(); ++i)
   {
-    Edge &edge = mEdges[i];
-    Zero::gDebugDraw->Add(Zero::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso).Color(Color::Orange));
+    Edge& edge = mEdges[i];
+    Zero::gDebugDraw->Add(
+        Zero::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso)
+            .Color(Color::Orange));
   }
 
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
-    Face &face = mFaces[i];
+    Face& face = mFaces[i];
     ByteColor color;
     if (mVisibleFaces.FindIndex(i) != Zero::Array<unsigned>::InvalidIndex)
       color = Color::Orange;
@@ -243,7 +247,12 @@ void Epa::DrawDebug(void)
       color = Color::Red;
     else
       color = Color::Blue;
-      Zero::gDebugDraw->Add(Zero::Debug::Triangle(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso).Color(color).Border(true).Alpha(50));
+    Zero::gDebugDraw->Add(Zero::Debug::Triangle(mVertices[face.p0].cso,
+                                                mVertices[face.p1].cso,
+                                                mVertices[face.p2].cso)
+                              .Color(color)
+                              .Border(true)
+                              .Alpha(50));
   }
 }
 

@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MainWindow.hpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +9,6 @@ namespace Events
 DeclareEvent(MainWindowTransformUpdated);
 }
 
-//----------------------------------------------------- MainWindowTransformEvent
 class MainWindowTransformEvent : public Event
 {
 public:
@@ -27,7 +19,6 @@ public:
                            Vec2Param newScreenPosition = Vec2::cZero,
                            Vec2Param oldScreenSize = Vec2::cZero,
                            Vec2Param newScreenSize = Vec2::cZero);
-
 
   OsWindow* mTargetWindow;
 
@@ -81,12 +72,16 @@ public:
 class OsDocker : public Docker
 {
 public:
-  void Dock(Widget* widget, DockArea::Enum area) override {};
-  DockArea::Enum GetDockArea() override { return DockArea::Floating; }
-  void Zoom(Widget* widget) override {};
+  void Dock(Widget* widget, DockArea::Enum area) override{};
+  DockArea::Enum GetDockArea() override
+  {
+    return DockArea::Floating;
+  }
+  void Zoom(Widget* widget) override{};
   void Show(Widget* widget) override;
   void WidgetDestroyed(Widget* widget) override;
-  WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction) override;
+  WindowBorderArea::Enum GetWindowBorderArea(Widget* widget,
+                                             DockMode::Enum direction) override;
 };
 
-}//namespace Zero
+} // namespace Zero

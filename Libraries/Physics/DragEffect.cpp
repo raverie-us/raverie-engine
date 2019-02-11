@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -34,16 +29,17 @@ void DragEffect::Serialize(Serializer& stream)
 
 void DragEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // Deal with dt being 0 (timescale of 0 for instance)
   real invDt = 0;
-  if(dt != 0)
+  if (dt != 0)
     invDt = 1 / dt;
 
   // Clamp the max linear and angular damping values so that they can't reverse
-  // the object's direction (and explode) but will instead exactly stop the object.
+  // the object's direction (and explode) but will instead exactly stop the
+  // object.
   real linearDamping = Math::Min(mLinearDamping, invDt);
   real angularDamping = Math::Min(mAngularDamping, invDt);
 
@@ -52,20 +48,20 @@ void DragEffect::ApplyEffect(RigidBody* obj, real dt)
   // the mass so it will divide out when the force is integrated.
 
   Vec3 force = -obj->mVelocity * mLinearDrag;
-  if(linearDamping != 0.0f)
+  if (linearDamping != 0.0f)
   {
     Vec3 linearAcceleration = -obj->mVelocity * linearDamping;
     force += obj->mInvMass.ApplyInverted(linearAcceleration);
   }
   obj->ApplyForceNoWakeUp(force);
-  
+
   Vec3 torque = -obj->mAngularVelocity * mAngularDrag;
-  if(angularDamping != 0.0f)
+  if (angularDamping != 0.0f)
   {
     Vec3 angularAcceleration = -obj->mAngularVelocity * angularDamping;
     torque = obj->mInvInertia.ApplyInverted(angularAcceleration);
   }
-  
+
   obj->ApplyTorqueNoWakeUp(torque);
 }
 
@@ -113,4 +109,4 @@ void DragEffect::SetAngularDrag(real angularDrag)
   CheckWakeUp();
 }
 
-}//namespace Zero
+} // namespace Zero

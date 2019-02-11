@@ -1,22 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyWidgets.cpp
-/// Implementation of PropertyView and supporting classes.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Property Edit Action
-//******************************************************************************
 PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init,
-                                       Function* method, HandleParam instance)
-  : PropertyWidget(init)
+                                       Function* method,
+                                       HandleParam instance) :
+    PropertyWidget(init)
 {
   mLabel->SetActive(false);
   mMethod = method;
@@ -28,29 +19,27 @@ PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init,
 
   mButton->SetSizing(SizePolicy::Flex, 1.0f);
   Thickness thickness(20, 0, 0, 0);
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, thickness));
+  SetLayout(
+      CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, thickness));
 }
 
-//******************************************************************************
 void PropertyEditAction::OnButtonPress(Event* event)
 {
   mProp->InvokeFunction(mInstance, mMethod);
 
-  if(mMethod->HasAttribute(FunctionAttributes::cInvalidatesObject))
+  if (mMethod->HasAttribute(FunctionAttributes::cInvalidatesObject))
     mProp->mPropertyGrid->Invalidate();
 }
 
-//------------------------------------------------------------ Add Object Widget
 ZilchDefineType(AddObjectWidget, builder, type)
 {
-
 }
 
-//******************************************************************************
-AddObjectWidget::AddObjectWidget(PropertyWidgetInitializer& init, 
-                                 PropertyWidgetObject* parentNode, PropertyView* grid, 
-                                 HandleParam instance)
-  : PropertyWidget(init)
+AddObjectWidget::AddObjectWidget(PropertyWidgetInitializer& init,
+                                 PropertyWidgetObject* parentNode,
+                                 PropertyView* grid,
+                                 HandleParam instance) :
+    PropertyWidget(init)
 {
   mMouseOver = false;
   mParentWidgetObject = parentNode;
@@ -61,21 +50,22 @@ AddObjectWidget::AddObjectWidget(PropertyWidgetInitializer& init,
   mMetaArray = parentNode->mNode->mMetaArray;
 
   String addName;
-  if(mComposition)
+  if (mComposition)
     addName = mComposition->GetAddName();
-  else if(mMetaArray)
+  else if (mMetaArray)
     addName = mMetaArray->mContainedType->Name;
   String text = BuildString("Add ", addName, "...");
   mLabel->SetText(text);
   mLabel->SizeToContents();
 
   mAddIcon = CreateAttached<Element>("Plus");
-  mAddIcon->SetSize(Pixels(16,16));
+  mAddIcon->SetSize(Pixels(16, 16));
   mAddIcon->SetInteractive(false);
   mAddIcon->SetVisible(false);
 
-  if(mComposition)
-    ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+  if (mComposition)
+    ConnectThisTo(
+        MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   ConnectThisTo(this, Events::MouseEnterHierarchy, OnMouseEnter);
@@ -104,28 +94,29 @@ FloatingSearchView* AddObjectWidget::OpenSearch(Vec3 position)
 
   mActiveSearch = viewPopUp;
 
-  ConnectThisTo(provider, Events::AlternateSearchCompleted, OnAlternateSearchCompleted);
+  ConnectThisTo(
+      provider, Events::AlternateSearchCompleted, OnAlternateSearchCompleted);
   ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
 
   return viewPopUp;
 }
 
-//******************************************************************************
 void AddObjectWidget::OnLeftClick(MouseEvent* event)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View", "Cannot add components while in read-only mode");
+    DoNotifyWarning("Property View",
+                    "Cannot add components while in read-only mode");
     return;
   }
 
   Handle parentObject = mParentWidgetObject->mNode->mObject;
-  if(MetaArray* metaArray = mMetaArray)
+  if (MetaArray* metaArray = mMetaArray)
   {
     Any value;
     value.DefaultConstruct(metaArray->mContainedType);
     metaArray->Add(parentObject, value);
-    //mProp->AddComponent(parentObject, String());
+    // mProp->AddComponent(parentObject, String());
     mParentWidgetObject->mGrid->Invalidate();
   }
   else
@@ -135,7 +126,6 @@ void AddObjectWidget::OnLeftClick(MouseEvent* event)
   }
 }
 
-//******************************************************************************
 void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
 {
   Resource* resource = event->mResourceAdd->SourceResource;
@@ -143,21 +133,22 @@ void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
 
   // If a cog, or selection of cogs, invoked the add resource dialog to create
   // a ZilchComponent - then add that new component to those compositions.
-  if(resourceType == ZilchTypeId(ZilchScript))
+  if (resourceType == ZilchTypeId(ZilchScript))
   {
     String componentName = event->mResourceAdd->Name;
-    
+
     // This should never return a valid type. When scripts are added, we do not
     // compile until the next update; however to future proof it incase we
     // ever change it - first search for the type, then create a proxy
     // if it doesn't exist.
     BoundType* componentType = MetaDatabase::FindType(componentName);
 
-    if(componentType == nullptr)
+    if (componentType == nullptr)
     {
       // Create a Proxy to be used for this component
-      componentType = ProxyObject<Component>::CreateProxyType(componentName, ProxyReason::TypeDidntExist);
-      if(componentType == nullptr)
+      componentType = ProxyObject<Component>::CreateProxyType(
+          componentName, ProxyReason::TypeDidntExist);
+      if (componentType == nullptr)
       {
         Error("Could not create proxy type");
         return;
@@ -171,19 +162,20 @@ void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
   }
 }
 
-//******************************************************************************
-void AddObjectWidget::OnAlternateSearchCompleted(AlternateSearchCompletedEvent* event)
+void AddObjectWidget::OnAlternateSearchCompleted(
+    AlternateSearchCompletedEvent* event)
 {
-  AddResourceWindow* addDialog = OpenAddWindow(ZilchTypeId(ZilchScript), nullptr, event->mSearchText);
+  AddResourceWindow* addDialog =
+      OpenAddWindow(ZilchTypeId(ZilchScript), nullptr, event->mSearchText);
   ConnectThisTo(addDialog, Events::PostAddResource, OnPostResourceAdded);
 }
 
-//******************************************************************************
 void AddObjectWidget::OnSearchCompleted(SearchViewEvent* event)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Property View", "Cannot add components while in read-only mode");
+    DoNotifyWarning("Property View",
+                    "Cannot add components while in read-only mode");
     return;
   }
 
@@ -192,26 +184,24 @@ void AddObjectWidget::OnSearchCompleted(SearchViewEvent* event)
 
   mActiveSearch.SafeDestroy();
 
-  if(parentObject.IsNull())
+  if (parentObject.IsNull())
     return;
 
   mComposition->AddComponent(parentObject, boundType);
 }
 
-//******************************************************************************
 void AddObjectWidget::OnMetaModified(Event* event)
 {
   mActiveSearch.SafeDestroy();
 }
 
-//******************************************************************************
 void AddObjectWidget::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   mBorder->SetSize(mSize);
   mBorder->SetColor(Vec4(0.867f, 0.46f, 0.2f, 0.75f));
   mBackground->MoveToBack();
-  if(mMouseOver)
+  if (mMouseOver)
     mBackground->SetColor(ComponentUi::TitleHighlight);
   else
     mBackground->SetColor(ComponentUi::TitleColor);
@@ -228,14 +218,12 @@ void AddObjectWidget::UpdateTransform()
   PropertyWidget::UpdateTransform();
 }
 
-//******************************************************************************
 void AddObjectWidget::OnMouseEnter(MouseEvent* event)
 {
   mMouseOver = true;
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void AddObjectWidget::OnMouseExit(MouseEvent* event)
 {
   mMouseOver = false;
@@ -247,4 +235,4 @@ void AddObjectWidget::OnOpenAdd(Event* e)
   OpenSearch(this->GetScreenPosition());
 }
 
-}//namespace Zero
+} // namespace Zero

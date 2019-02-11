@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------- Active Project Menu
 class ActiveProjectMenu : public Composite
 {
 public:
@@ -17,8 +11,9 @@ public:
   typedef ActiveProjectMenu ZilchSelf;
 
   /// Returns the modal the project ui was created under.
-  static Modal* OpenProject(Composite* modalParent, CachedProject* cachedProject,
-                          LauncherWindow* launcher);
+  static Modal* OpenProject(Composite* modalParent,
+                            CachedProject* cachedProject,
+                            LauncherWindow* launcher);
 
   /// Constructor.
   ActiveProjectMenu(Composite* parent, LauncherWindow* launcher);
@@ -78,7 +73,7 @@ public:
   Text* mTags;
   Text* mLocation;
 
-  IconButton* mEditProjectNameIconButton;  
+  IconButton* mEditProjectNameIconButton;
   IconButton* mInstallBuild;
   TextButton* mRunWithDebugger;
   TextButton* mBackupProjectButton;
@@ -93,4 +88,4 @@ public:
   LauncherWindow* mLauncher;
 };
 
-}//namespace Zero
+} // namespace Zero

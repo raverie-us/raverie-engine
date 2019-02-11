@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Claeys, Trevor Sundberg
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,29 +9,27 @@ namespace Events
 DefineEvent(PreScriptCompile);
 DefineEvent(CompileZilchFragments);
 DefineEvent(ResourceLibraryConstructed);
-}//namespace Events
+} // namespace Events
 
 ZilchDefineType(ZilchCompiledEvent, builder, type)
 {
-
 }
 
 ZilchDefineType(ZilchCompileFragmentEvent, builder, type)
 {
-
 }
 
-//----------------------------------------------------------------------------------- Resource Entry
-//**************************************************************************************************
-ZilchCompileFragmentEvent::ZilchCompileFragmentEvent(Module& dependencies,
-  Array<ZilchDocumentResource*>& fragments, ResourceLibrary* owningLibrary) :
-  mDependencies(dependencies),
-  mFragments(fragments),
-  mOwningLibrary(owningLibrary)
+//Resource Entry
+ZilchCompileFragmentEvent::ZilchCompileFragmentEvent(
+    Module& dependencies,
+    Array<ZilchDocumentResource*>& fragments,
+    ResourceLibrary* owningLibrary) :
+    mDependencies(dependencies),
+    mFragments(fragments),
+    mOwningLibrary(owningLibrary)
 {
 }
 
-//**************************************************************************************************
 ResourceEntry::ResourceEntry()
 {
   mLibrarySource = nullptr;
@@ -45,21 +38,31 @@ ResourceEntry::ResourceEntry()
   mLibrary = nullptr;
 }
 
-//**************************************************************************************************
-ResourceEntry::ResourceEntry(uint order, StringParam type, StringParam name,
-  StringParam location, ResourceId id, 
-  ContentItem* library, BuilderComponent* builder)
-  : LoadOrder(order), Type(type), Name(name), Location(location), 
-  mResourceId(id), mLibrarySource(library), mBuilder(builder),
-  mLibrary(nullptr)
+ResourceEntry::ResourceEntry(uint order,
+                             StringParam type,
+                             StringParam name,
+                             StringParam location,
+                             ResourceId id,
+                             ContentItem* library,
+                             BuilderComponent* builder) :
+    LoadOrder(order),
+    Type(type),
+    Name(name),
+    Location(location),
+    mResourceId(id),
+    mLibrarySource(library),
+    mBuilder(builder),
+    mLibrary(nullptr)
 {
-
 }
 
 String ResourceEntry::ToString(bool shortFormat) const
 {
   String idString = Zero::ToString(this->mResourceId, shortFormat);
-  return String::Format("Resource %s:%s Loader '%s'", Name.c_str(), idString.c_str(), Type.c_str());
+  return String::Format("Resource %s:%s Loader '%s'",
+                        Name.c_str(),
+                        idString.c_str(),
+                        Type.c_str());
 }
 
 void ResourceEntry::Serialize(Serializer& stream)
@@ -89,7 +92,8 @@ ZilchDefineType(ResourcePackageDisplay, builder, type)
 
 String ResourcePackageDisplay::GetName(HandleParam object)
 {
-  ResourcePackage* resourcePackage = object.Get<ResourcePackage*>(GetOptions::AssertOnNull);
+  ResourcePackage* resourcePackage =
+      object.Get<ResourcePackage*>(GetOptions::AssertOnNull);
   return String::Format("Resource Package %s", resourcePackage->Name.c_str());
 }
 
@@ -125,14 +129,11 @@ void ResourcePackage::Serialize(Serializer& stream)
   stream.SerializeField("Resources", Resources);
 }
 
-//--------------------------------------------------------------------------------- Compiled Library
-//**************************************************************************************************
-SwapLibrary::SwapLibrary() :
-  mCompileStatus(ZilchCompileStatus::Modified)
+//Compiled Library
+SwapLibrary::SwapLibrary() : mCompileStatus(ZilchCompileStatus::Modified)
 {
 }
 
-//**************************************************************************************************
 LibraryRef SwapLibrary::GetNewestLibrary()
 {
   if (mPendingLibrary)
@@ -140,22 +141,23 @@ LibraryRef SwapLibrary::GetNewestLibrary()
   return mCurrentLibrary;
 }
 
-//**************************************************************************************************
 bool SwapLibrary::HasPendingLibrary()
 {
   return (mPendingLibrary != nullptr);
 }
 
-//**************************************************************************************************
 void SwapLibrary::Commit()
 {
   if (mPendingLibrary)
   {
     ErrorIf(mCompileStatus != ZilchCompileStatus::Compiled,
-      "When committing and we have a pending library the compile status should have already been set to Compiled");
+            "When committing and we have a pending library the compile status "
+            "should have already been set to Compiled");
 
     // Verify mCurrentLibrary was unloaded.
-    ErrorIf(mCurrentLibrary != nullptr, "The current library must be unloaded before committing a pending library.");
+    ErrorIf(mCurrentLibrary != nullptr,
+            "The current library must be unloaded before committing a pending "
+            "library.");
 
     MetaDatabase::GetInstance()->AddLibrary(mPendingLibrary, true);
     mCurrentLibrary = mPendingLibrary;
@@ -166,7 +168,6 @@ void SwapLibrary::Commit()
   }
 }
 
-//**************************************************************************************************
 void SwapLibrary::Unload()
 {
   // This can be null if it's the first compilation
@@ -180,60 +181,65 @@ void SwapLibrary::Unload()
   mCurrentLibrary = nullptr;
 }
 
-//--------------------------------------------------------------------------------- Resource Library
+//Resource Library
 BoundType* ResourceLibrary::sScriptType = nullptr;
 BoundType* ResourceLibrary::sFragmentType = nullptr;
 bool ResourceLibrary::sLibraryUnloading = false;
 
-//**************************************************************************************************
 ZilchDefineType(ResourceLibrary, builder, type)
 {
 }
 
-//**************************************************************************************************
 ResourceLibrary::ResourceLibrary()
 {
   Resources.Reserve(256);
 
   // When the project is compiled, we want to add extensions to it
-  EventConnect(&mScriptProject, Zilch::Events::PreParser, &ResourceLibrary::OnScriptProjectPreParser, this);
-  EventConnect(&mScriptProject, Zilch::Events::PostSyntaxer, &ResourceLibrary::OnScriptProjectPostSyntaxer, this);
-  EventConnect(&mScriptProject, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
+  EventConnect(&mScriptProject,
+               Zilch::Events::PreParser,
+               &ResourceLibrary::OnScriptProjectPreParser,
+               this);
+  EventConnect(&mScriptProject,
+               Zilch::Events::PostSyntaxer,
+               &ResourceLibrary::OnScriptProjectPostSyntaxer,
+               this);
+  EventConnect(&mScriptProject,
+               Zilch::Events::TypeParsed,
+               &EngineLibraryExtensions::TypeParsedCallback);
 
   ObjectEvent toSend(this);
   Z::gResources->DispatchEvent(Events::ResourceLibraryConstructed, &toSend);
 }
 
-//**************************************************************************************************
 ResourceLibrary::~ResourceLibrary()
 {
 }
 
-//**************************************************************************************************
 void ResourceLibrary::Add(Resource* resource, bool isNew)
 {
   resource->mResourceLibrary = this;
   Resources.PushBack(resource);
 
   // Filter zilch resources into their appropriate containers
-  ErrorIf(sScriptType == nullptr || sFragmentType == nullptr, "Script and Fragment types must be set");
+  ErrorIf(sScriptType == nullptr || sFragmentType == nullptr,
+          "Script and Fragment types must be set");
   BoundType* resourceType = ZilchVirtualTypeId(resource);
-  if(resourceType->IsA(sScriptType))
+  if (resourceType->IsA(sScriptType))
   {
     mScripts.PushBack((ZilchDocumentResource*)resource);
     ScriptsModified();
   }
-  else if(resourceType->IsA(sFragmentType))
+  else if (resourceType->IsA(sFragmentType))
   {
     mFragments.PushBack((ZilchDocumentResource*)resource);
     FragmentsModified();
   }
-  else if(resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
+  else if (resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
   {
     mPlugins.PushBack((ZilchLibraryResource*)resource);
     PluginsModified();
   }
-  
+
   // Resource was added
   ResourceEvent e;
   e.EventResource = resource;
@@ -242,31 +248,31 @@ void ResourceLibrary::Add(Resource* resource, bool isNew)
   DispatchEvent(Events::ResourceAdded, &e);
 }
 
-//**************************************************************************************************
 void ResourceLibrary::Remove(Resource* resource)
 {
-  // Store a reference so we can remove from the array, then delete after (just in case the handle
-  // in the array was the last reference)
+  // Store a reference so we can remove from the array, then delete after (just
+  // in case the handle in the array was the last reference)
   HandleOf<Resource> resourceHandle = resource;
 
-  // Allow resources to do any required cleanup before being removed, same as when a library is unloaded.
+  // Allow resources to do any required cleanup before being removed, same as
+  // when a library is unloaded.
   resource->Unload();
 
   Resources.EraseValueError(resourceHandle);
 
   // Remove zilch resources from their containers
   BoundType* resourceType = ZilchVirtualTypeId(resource);
-  if(resourceType->IsA(sScriptType))
+  if (resourceType->IsA(sScriptType))
   {
     mScripts.EraseValue((ZilchDocumentResource*)resource);
     ScriptsModified();
   }
-  else if(resourceType->IsA(sFragmentType))
+  else if (resourceType->IsA(sFragmentType))
   {
     mFragments.EraseValue((ZilchDocumentResource*)resource);
     FragmentsModified();
   }
-  else if(resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
+  else if (resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
   {
     ZilchLibraryResource* libraryResource = (ZilchLibraryResource*)resource;
     mPlugins.EraseValue(libraryResource);
@@ -278,14 +284,12 @@ void ResourceLibrary::Remove(Resource* resource)
   delete resource;
 }
 
-//**************************************************************************************************
 void ResourceLibrary::AddDependency(ResourceLibrary* dependency)
 {
   Dependencies.PushBack(dependency);
   dependency->Dependents.PushBack(this);
 }
 
-//**************************************************************************************************
 bool ResourceLibrary::BuiltType(BoundType* type)
 {
   LibraryRef sourceLib = type->SourceLibrary;
@@ -296,7 +300,7 @@ bool ResourceLibrary::BuiltType(BoundType* type)
   if (mSwapFragment.mCurrentLibrary == sourceLib)
     return true;
 
-  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  forRange(SwapLibrary & swapPlugin, mSwapPlugins.Values())
   {
     if (swapPlugin.mCurrentLibrary == sourceLib)
       return true;
@@ -305,8 +309,8 @@ bool ResourceLibrary::BuiltType(BoundType* type)
   return false;
 }
 
-//**************************************************************************************************
-BoundType* GetReplacingTypeFromSwapLibrary(SwapLibrary& swapLibrary, BoundType* oldType)
+BoundType* GetReplacingTypeFromSwapLibrary(SwapLibrary& swapLibrary,
+                                           BoundType* oldType)
 {
   LibraryRef sourceLib = oldType->SourceLibrary;
 
@@ -319,76 +323,88 @@ BoundType* GetReplacingTypeFromSwapLibrary(SwapLibrary& swapLibrary, BoundType* 
   return nullptr;
 }
 
-//**************************************************************************************************
 BoundType* ResourceLibrary::GetReplacingType(BoundType* oldType)
 {
-  if (BoundType* newType = GetReplacingTypeFromSwapLibrary(mSwapScript, oldType))
+  if (BoundType* newType =
+          GetReplacingTypeFromSwapLibrary(mSwapScript, oldType))
     return newType;
 
-  if (BoundType* newType = GetReplacingTypeFromSwapLibrary(mSwapFragment, oldType))
+  if (BoundType* newType =
+          GetReplacingTypeFromSwapLibrary(mSwapFragment, oldType))
     return newType;
 
-  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  forRange(SwapLibrary & swapPlugin, mSwapPlugins.Values())
   {
-    if (BoundType* newType = GetReplacingTypeFromSwapLibrary(swapPlugin, oldType))
+    if (BoundType* newType =
+            GetReplacingTypeFromSwapLibrary(swapPlugin, oldType))
       return newType;
   }
 
   return nullptr;
 }
 
-//**************************************************************************************************
 bool ResourceLibrary::CanReference(ResourceLibrary* library)
 {
   // Make sure to check ourself before dependencies
-  if(library == this)
+  if (library == this)
     return true;
 
-  forRange(ResourceLibrary* dependentLibrary, Dependencies.All())
+  forRange(ResourceLibrary * dependentLibrary, Dependencies.All())
   {
-    if(dependentLibrary == library)
+    if (dependentLibrary == library)
       return true;
   }
   return false;
 }
 
-//**************************************************************************************************
 void ResourceLibrary::Unload()
 {
-  ErrorIf(!Dependents.Empty(), "Cannot unload a Resource Library when other libraries depend on us");
+  ErrorIf(!Dependents.Empty(),
+          "Cannot unload a Resource Library when other libraries depend on us");
 
-  // Call unload on every resource so that references to other resources within the library can be cleared.
-  forRange(Resource* resource, Resources.All())
+  // Call unload on every resource so that references to other resources within
+  // the library can be cleared.
+  forRange(Resource * resource, Resources.All())
   {
     if (resource != nullptr)
       resource->Unload();
     else
-      DoNotifyError("Error", String::Format("A resource owned by library '%s' was incorrectly removed.", Name.c_str()));
+      DoNotifyError(
+          "Error",
+          String::Format(
+              "A resource owned by library '%s' was incorrectly removed.",
+              Name.c_str()));
   }
 
-  // Validate all reference counts are now 1, otherwise there is likely a leaking handle somewhere.
-  forRange(Resource* resource, Resources.All())
+  // Validate all reference counts are now 1, otherwise there is likely a
+  // leaking handle somewhere.
+  forRange(Resource * resource, Resources.All())
   {
     if (resource != nullptr && resource->GetReferenceCount() != 1)
     {
       // Report error and manually delete the resource.
       String resourceType = resource->ZilchGetDerivedType()->Name;
-      String error = String::Format("%s resource '%s' is being referenced while unloading library '%s'.", resourceType.c_str(), resource->Name.c_str(), Name.c_str());
+      String error = String::Format(
+          "%s resource '%s' is being referenced while unloading library '%s'.",
+          resourceType.c_str(),
+          resource->Name.c_str(),
+          Name.c_str());
       DoNotifyError("Error", error);
       resource->GetManager()->Remove(resource, RemoveMode::Unloading);
       delete resource;
     }
   }
 
-  // Resources use this flag to detect incorrect removal of non-runtime resources.
-  // Changing this flag and removing library resources should only ever happen here.
+  // Resources use this flag to detect incorrect removal of non-runtime
+  // resources. Changing this flag and removing library resources should only
+  // ever happen here.
   sLibraryUnloading = true;
   Resources.Clear();
   sLibraryUnloading = false;
 
   // Remove ourself as dependents on our dependencies
-  forRange(ResourceLibrary* dependency, Dependencies.All())
-    dependency->Dependents.EraseValue(this);
+  forRange(ResourceLibrary * dependency, Dependencies.All())
+      dependency->Dependents.EraseValue(this);
 
   // Remove ourself from the resource system
   Z::gResources->LoadedResourceLibraries.Erase(Name);
@@ -396,7 +412,7 @@ void ResourceLibrary::Unload()
   mSwapFragment.Unload();
   mSwapScript.Unload();
 
-  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  forRange(SwapLibrary & swapPlugin, mSwapPlugins.Values())
   {
     swapPlugin.Unload();
   }
@@ -407,18 +423,16 @@ void ResourceLibrary::Unload()
   delete this;
 }
 
-//**************************************************************************************************
 void ResourceLibrary::ScriptsModified()
 {
   mSwapScript.mCompileStatus = ZilchCompileStatus::Modified;
   ZilchManager::GetInstance()->mShouldAttemptCompile = true;
 
   // All dependents must be recompiled, so mark them as modified
-  forRange(ResourceLibrary* dependent, Dependents.All())
-    dependent->ScriptsModified();
+  forRange(ResourceLibrary * dependent, Dependents.All())
+      dependent->ScriptsModified();
 }
 
-//**************************************************************************************************
 void ResourceLibrary::FragmentsModified()
 {
   mSwapScript.mCompileStatus = ZilchCompileStatus::Modified;
@@ -426,43 +440,46 @@ void ResourceLibrary::FragmentsModified()
   ZilchManager::GetInstance()->mShouldAttemptCompile = true;
 
   // All dependents must be recompiled, so mark them as modified
-  forRange(ResourceLibrary* dependent, Dependents.All())
-    dependent->FragmentsModified();
+  forRange(ResourceLibrary * dependent, Dependents.All())
+      dependent->FragmentsModified();
 }
 
-//**************************************************************************************************
 void ResourceLibrary::PluginsModified()
 {
-  // Plugins are always fully compiled so they don't need to have a 'modified' state
-  // However, since we decided that scripts in the same resource library (and in dependent libraries)
-  // are always dependent upon the plugins, then we must mark all scripts as being modified
+  // Plugins are always fully compiled so they don't need to have a 'modified'
+  // state However, since we decided that scripts in the same resource library
+  // (and in dependent libraries) are always dependent upon the plugins, then we
+  // must mark all scripts as being modified
   ScriptsModified();
 }
 
-//**************************************************************************************************
-bool AddDependencies(Module& module, ResourceLibrary* library,
-                     HashSet<ResourceLibrary*>& modifiedLibrariesOut, bool onlyFragments)
+bool AddDependencies(Module& module,
+                     ResourceLibrary* library,
+                     HashSet<ResourceLibrary*>& modifiedLibrariesOut,
+                     bool onlyFragments)
 {
-  forRange(ResourceLibrary* dependency, library->Dependencies)
+  forRange(ResourceLibrary * dependency, library->Dependencies)
   {
     // Blindly call compile and force all our dependencies to be compiled
     // (will return instantly if it's already compiled!)
     // If the library did not compile, we cannot possibly compile ourselves
-    if(dependency->CompileScripts(modifiedLibrariesOut) == false)
+    if (dependency->CompileScripts(modifiedLibrariesOut) == false)
       return false;
 
     // Depth first
-    if(AddDependencies(module, dependency, modifiedLibrariesOut, onlyFragments) == false)
+    if (AddDependencies(
+            module, dependency, modifiedLibrariesOut, onlyFragments) == false)
       return false;
 
     if (!onlyFragments)
     {
-      forRange(SwapLibrary& swapPlugin, dependency->mSwapPlugins.Values())
+      forRange(SwapLibrary & swapPlugin, dependency->mSwapPlugins.Values())
       {
         LibraryRef pluginLibrary = swapPlugin.GetNewestLibrary();
 
         // This will only ever be null in the case of templates since
-        // we should have successfully compiled all the plugins above in CompileScripts
+        // we should have successfully compiled all the plugins above in
+        // CompileScripts
         if (pluginLibrary != nullptr)
           module.Append(pluginLibrary);
       }
@@ -475,29 +492,29 @@ bool AddDependencies(Module& module, ResourceLibrary* library,
   return true;
 }
 
-//**************************************************************************************************
 void ResourceLibrary::OnScriptProjectPreParser(ParseEvent* e)
 {
-  // This isnt' the best solution, however because we can't intercept the plugin library before
-  // its done we need to add extensions for the plugins here (such as .YourComponent).
-  forRange(SwapLibrary& swapLibrary, mSwapPlugins.Values())
-    EngineLibraryExtensions::AddNativeExtensions(*e->Builder, swapLibrary.GetNewestLibrary()->BoundTypes);
+  // This isnt' the best solution, however because we can't intercept the plugin
+  // library before its done we need to add extensions for the plugins here
+  // (such as .YourComponent).
+  forRange(SwapLibrary & swapLibrary, mSwapPlugins.Values())
+      EngineLibraryExtensions::AddNativeExtensions(
+          *e->Builder, swapLibrary.GetNewestLibrary()->BoundTypes);
 
   EngineLibraryExtensions::AddExtensionsPreCompilation(*e->Builder, this);
 }
 
-//**************************************************************************************************
 void ResourceLibrary::OnScriptProjectPostSyntaxer(ParseEvent* e)
 {
   EngineLibraryExtensions::AddExtensionsPostCompilation(*e->Builder);
 }
 
-//**************************************************************************************************
-bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrariesOut)
+bool ResourceLibrary::CompileScripts(
+    HashSet<ResourceLibrary*>& modifiedLibrariesOut)
 {
-  // If we already compiled, then we know that all dependent libraries must have been good
-  // This means that if we ever referenced 
-  if(mSwapScript.mCompileStatus == ZilchCompileStatus::Compiled)
+  // If we already compiled, then we know that all dependent libraries must have
+  // been good This means that if we ever referenced
+  if (mSwapScript.mCompileStatus == ZilchCompileStatus::Compiled)
     return true;
 
   // Currently the version is used to detect duplicate errors
@@ -505,16 +522,17 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   ++ZilchManager::GetInstance()->mVersion;
 
   // Scripts cannot compile if fragments do not compile
-  if(CompileFragments(modifiedLibrariesOut) == false)
+  if (CompileFragments(modifiedLibrariesOut) == false)
     return false;
 
   // Scripts cannot compile if plugins do not compile
-  if(CompilePlugins(modifiedLibrariesOut) == false)
+  if (CompilePlugins(modifiedLibrariesOut) == false)
     return false;
 
   Module dependencies;
-  
-  // Remove the core library from dependencies as we're going to add it from native libraries
+
+  // Remove the core library from dependencies as we're going to add it from
+  // native libraries
   dependencies.Clear();
 
   // Add all native libraries
@@ -524,10 +542,10 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   AddDependencies(dependencies, this, modifiedLibrariesOut, false);
 
   // Add our fragment library (it may be null if we didn't have any fragments)
-  if(LibraryRef newestFragment = mSwapFragment.GetNewestLibrary())
+  if (LibraryRef newestFragment = mSwapFragment.GetNewestLibrary())
     dependencies.Append(newestFragment);
 
-  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  forRange(SwapLibrary & swapPlugin, mSwapPlugins.Values())
   {
     LibraryRef pluginLibrary = swapPlugin.GetNewestLibrary();
 
@@ -544,17 +562,20 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   mScriptProject.Clear();
 
   // Add all scripts
-  forRange(ZilchDocumentResource* script, mScripts)
+  forRange(ZilchDocumentResource * script, mScripts)
   {
-    // Templates shouldn't be compiled. They contain potentially invalid code and identifiers
-    // such as RESOURCE_NAME_ that are replaced when a new resource is created from the template
-    if(script->GetResourceTemplate() == nullptr)
-      mScriptProject.AddCodeFromString(script->mText, script->GetOrigin(), script);
+    // Templates shouldn't be compiled. They contain potentially invalid code
+    // and identifiers such as RESOURCE_NAME_ that are replaced when a new
+    // resource is created from the template
+    if (script->GetResourceTemplate() == nullptr)
+      mScriptProject.AddCodeFromString(
+          script->mText, script->GetOrigin(), script);
   }
 
-  mSwapScript.mPendingLibrary = mScriptProject.Compile(this->Name, dependencies, EvaluationMode::Project);
+  mSwapScript.mPendingLibrary =
+      mScriptProject.Compile(this->Name, dependencies, EvaluationMode::Project);
 
-  if(mSwapScript.mPendingLibrary != nullptr)
+  if (mSwapScript.mPendingLibrary != nullptr)
   {
     modifiedLibrariesOut.Insert(this);
     mSwapScript.mCompileStatus = ZilchCompileStatus::Compiled;
@@ -564,11 +585,12 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   return false;
 }
 
-//**************************************************************************************************
-bool ResourceLibrary::CompileFragments(HashSet<ResourceLibrary*>& modifiedLibraries)
+bool ResourceLibrary::CompileFragments(
+    HashSet<ResourceLibrary*>& modifiedLibraries)
 {
-  // If we already compiled, then we know that all dependent libraries must have been good
-  if(mSwapFragment.mCompileStatus == ZilchCompileStatus::Compiled)
+  // If we already compiled, then we know that all dependent libraries must have
+  // been good
+  if (mSwapFragment.mCompileStatus == ZilchCompileStatus::Compiled)
     return true;
 
   Module dependencies;
@@ -585,10 +607,11 @@ bool ResourceLibrary::CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrar
   ZilchManager::GetInstance()->DispatchEvent(Events::CompileZilchFragments, &e);
   mSwapFragment.mPendingLibrary = e.mReturnedLibrary;
 
-  if(mSwapFragment.mPendingLibrary != nullptr)
+  if (mSwapFragment.mPendingLibrary != nullptr)
   {
     modifiedLibraries.Insert(this);
-    ZilchManager::GetInstance()->mPendingFragmentProjectLibrary = mSwapFragment.mPendingLibrary;
+    ZilchManager::GetInstance()->mPendingFragmentProjectLibrary =
+        mSwapFragment.mPendingLibrary;
     mSwapFragment.mCompileStatus = ZilchCompileStatus::Compiled;
     return true;
   }
@@ -596,17 +619,19 @@ bool ResourceLibrary::CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrar
   return false;
 }
 
-//**************************************************************************************************
-bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrariesOut)
+bool ResourceLibrary::CompilePlugins(
+    HashSet<ResourceLibrary*>& modifiedLibrariesOut)
 {
-  // Plugins should only depend on the Core library and native Zero libraries (the only libraries we generate headers for)
-  // In the future we could attempt to generate other library headers (dependencies...)
+  // Plugins should only depend on the Core library and native Zero libraries
+  // (the only libraries we generate headers for) In the future we could attempt
+  // to generate other library headers (dependencies...)
   Module pluginDependencies;
-  pluginDependencies.Append(MetaDatabase::GetInstance()->mNativeLibraries.All());
+  pluginDependencies.Append(
+      MetaDatabase::GetInstance()->mNativeLibraries.All());
 
   bool allPluginsSucceeded = true;
 
-  forRange(ZilchLibraryResource* libraryResource, mPlugins.All())
+  forRange(ZilchLibraryResource * libraryResource, mPlugins.All())
   {
     if (libraryResource->GetResourceTemplate() != nullptr)
       continue;
@@ -618,13 +643,18 @@ bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrarie
       String pluginPath = libraryResource->GetSharedLibraryPath();
       Resource* origin = libraryResource->GetOriginResource();
 
-      swapPlugin.mPendingLibrary = Plugin::LoadFromFile(status, pluginDependencies, pluginPath, origin);
+      swapPlugin.mPendingLibrary =
+          Plugin::LoadFromFile(status, pluginDependencies, pluginPath, origin);
 
-      // If the status failed, it could just be because the plugin was empty (we're in progress compiling it).
-      // Note: We'll get a separate error if the plugin fails to compile or if we can't find the compiler.
+      // If the status failed, it could just be because the plugin was empty
+      // (we're in progress compiling it). Note: We'll get a separate error if
+      // the plugin fails to compile or if we can't find the compiler.
       if (status.Failed() && status.Context != Plugin::StatusContextEmpty)
       {
-        Console::Print(Filter::DefaultFilter, "Plugin Error (%s): %s\n", libraryResource->Name.c_str(), status.Message.c_str());
+        Console::Print(Filter::DefaultFilter,
+                       "Plugin Error (%s): %s\n",
+                       libraryResource->Name.c_str(),
+                       status.Message.c_str());
       }
 
       if (swapPlugin.mPendingLibrary != nullptr)
@@ -634,7 +664,8 @@ bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrarie
       }
       else
       {
-        // We failed to compile one plugin, so we should stop all other script compilation
+        // We failed to compile one plugin, so we should stop all other script
+        // compilation
         allPluginsSucceeded = false;
       }
     }
@@ -643,30 +674,29 @@ bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrarie
   return allPluginsSucceeded;
 }
 
-//**************************************************************************************************
 void ResourceLibrary::PreCommitUnload()
 {
-  // These unload calls are for removing types from the meta database before committing
-  // any pending types in order to prevent any type discrepancies or issues.
-  // Do NOT unload types unless there is actually a new library pending commit.
+  // These unload calls are for removing types from the meta database before
+  // committing any pending types in order to prevent any type discrepancies or
+  // issues. Do NOT unload types unless there is actually a new library pending
+  // commit.
   if (mSwapFragment.mPendingLibrary)
     mSwapFragment.Unload();
 
-  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
-    if (swapPlugin.mPendingLibrary)
+  forRange(SwapLibrary & swapPlugin,
+           mSwapPlugins.Values()) if (swapPlugin.mPendingLibrary)
       swapPlugin.Unload();
 
   if (mSwapScript.mPendingLibrary)
     mSwapScript.Unload();
 }
 
-//**************************************************************************************************
 void ResourceLibrary::Commit()
 {
   // Replace the fragment library
   mSwapFragment.Commit();
 
-  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+  forRange(SwapLibrary & swapPlugin, mSwapPlugins.Values())
   {
     swapPlugin.Commit();
   }
@@ -675,4 +705,4 @@ void ResourceLibrary::Commit()
   mSwapScript.Commit();
 }
 
-}//namespace Zero
+} // namespace Zero

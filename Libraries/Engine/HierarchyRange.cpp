@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file HierarchyRange.cpp
-/// Implementation of the Hierarchy component range.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -61,7 +53,7 @@ HierarchyRange::HierarchyRange()
 HierarchyRange::HierarchyRange(Cog* s)
 {
   mStarting = s;
-  //Start on the most left node
+  // Start on the most left node
   mCurrent = MostLeft(s);
 }
 
@@ -73,16 +65,16 @@ bool HierarchyRange::Empty()
 void HierarchyRange::PopFront()
 {
   ErrorIf(Empty(), "Attempting to popFront on an empty HierarchyRange");
-  //simple stackless tree transversal
-  if(mCurrent->GetParent() && mCurrent != mStarting)
+  // simple stackless tree transversal
+  if (mCurrent->GetParent() && mCurrent != mStarting)
   {
-    //Get the next sibling if no next sibling move to the parent
+    // Get the next sibling if no next sibling move to the parent
     Hierarchy* p = mCurrent->GetParent()->has(Hierarchy);
     Cog* nextSib = (Cog*)HierarchyList::Next(mCurrent);
-    if(nextSib == p->Children.End())
+    if (nextSib == p->Children.End())
     {
       // We don't want to go above our starting point in the tree
-      if(mCurrent->GetParent() != mStarting)
+      if (mCurrent->GetParent() != mStarting)
         mCurrent = mCurrent->GetParent();
       else
         mCurrent = nullptr;
@@ -101,9 +93,9 @@ HierarchyRange::ref_type HierarchyRange::Front()
 
 Cog* HierarchyRange::MostLeft(Cog* object)
 {
-  while(Hierarchy* p = object->has(Hierarchy))
+  while (Hierarchy* p = object->has(Hierarchy))
   {
-    if(!p->Children.Empty())
+    if (!p->Children.Empty())
       object = &p->Children.Front();
     else
       return object;
@@ -113,9 +105,9 @@ Cog* HierarchyRange::MostLeft(Cog* object)
 
 Cog* HierarchyRange::GetRoot(Cog* object)
 {
-  while(object->GetParent() != nullptr)
+  while (object->GetParent() != nullptr)
     object = object->GetParent();
   return object;
 }
 
-}//namespace Zero
+} // namespace Zero

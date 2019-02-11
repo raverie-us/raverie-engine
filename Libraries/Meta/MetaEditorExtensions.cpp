@@ -1,32 +1,24 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------ Editor Property Extension 
-//**************************************************************************************************
+//Editor Property Extension
 ZilchDefineType(EditorPropertyExtension, builder, type)
 {
 }
 
-//---------------------------------------------------------------------- Editor Indexed String Array
-//**************************************************************************************************
+//Indexed String Array
 ZilchDefineType(EditorIndexedStringArray, builder, type)
 {
 }
 
-//**************************************************************************************************
-EditorIndexedStringArray::EditorIndexedStringArray(GetStringsFunc sourceArray)
-  : AccessSourceArray(sourceArray) {};
+EditorIndexedStringArray::EditorIndexedStringArray(GetStringsFunc sourceArray) :
+    AccessSourceArray(sourceArray){};
 
-//**************************************************************************************************
-void EditorIndexedStringArray::Enumerate(HandleParam instance, Property* property,
+void EditorIndexedStringArray::Enumerate(HandleParam instance,
+                                         Property* property,
                                          Array<String>& strings)
 {
   if (AccessSourceArray)
@@ -35,55 +27,48 @@ void EditorIndexedStringArray::Enumerate(HandleParam instance, Property* propert
     strings = mFixedValues;
 }
 
-//------------------------------------------------------------------------------------- Editor Range
-//**************************************************************************************************
+//Editor Range
 ZilchDefineType(EditorRange, builder, type)
 {
   ZilchBindFieldProperty(Min);
   ZilchBindFieldProperty(Max);
-  ZilchBindFieldProperty(Increment)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(Increment)->AddAttribute(
+      PropertyAttributes::cOptional);
 }
 
-//**************************************************************************************************
-EditorRange::EditorRange()
-  : Min(-Math::PositiveMax())
-  , Max(Math::PositiveMax())
-  , Increment(0.01f)
+EditorRange::EditorRange() :
+    Min(-Math::PositiveMax()),
+    Max(Math::PositiveMax()),
+    Increment(0.01f)
 {
-
 }
 
-//**************************************************************************************************
-EditorRange::EditorRange(float minValue, float maxValue, float increment)
-  : Min(minValue)
-  , Max(maxValue)
-  , Increment(increment)
+EditorRange::EditorRange(float minValue, float maxValue, float increment) :
+    Min(minValue),
+    Max(maxValue),
+    Increment(increment)
 {
-
 }
 
-//**************************************************************************************************
 void EditorRange::PostProcess(Status& status, ReflectionObject* owner)
 {
-  if(Increment == 0)
+  if (Increment == 0)
   {
     status.SetFailed("'Increment' cannot be 0.");
     return;
   }
-  if(Min >= Max)
+  if (Min >= Max)
   {
     status.SetFailed("'Max' must be greater than or equal to 'Min'.");
     return;
   }
 }
 
-//------------------------------------------------------------------------------------ Editor Slider
-//**************************************************************************************************
+//Editor Slider
 ZilchDefineType(EditorSlider, builder, type)
 {
 }
 
-//**************************************************************************************************
 EditorSlider::EditorSlider()
 {
   Min = 0;
@@ -91,37 +76,34 @@ EditorSlider::EditorSlider()
   Increment = 0.01f;
 }
 
-//------------------------------------------------------------------------------ EditorRotationBasis
-//**************************************************************************************************
+//EditorRotationBasis
 ZilchDefineType(EditorRotationBasis, builder, type)
 {
 }
 
-//**************************************************************************************************
-EditorRotationBasis::EditorRotationBasis()
-  : mIntData(0)
-  , mGizmoName("EditorGizmo")
+EditorRotationBasis::EditorRotationBasis() :
+    mIntData(0),
+    mGizmoName("EditorGizmo")
 {
 }
 
-//**************************************************************************************************
-EditorRotationBasis::EditorRotationBasis(StringParam archetypeName)
-  : mIntData(0)
-  , mGizmoName("EditorGizmo")
-  , mArchetypeName(archetypeName)
+EditorRotationBasis::EditorRotationBasis(StringParam archetypeName) :
+    mIntData(0),
+    mGizmoName("EditorGizmo"),
+    mArchetypeName(archetypeName)
 {
 }
 
-//**************************************************************************************************
-EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData)
-  : mIntData(intData)
-  , mGizmoName(gizmoName)
-  , mArchetypeName(archetypeName)
+EditorRotationBasis::EditorRotationBasis(StringParam archetypeName,
+                                         StringParam gizmoName,
+                                         int intData) :
+    mIntData(intData),
+    mGizmoName(gizmoName),
+    mArchetypeName(archetypeName)
 {
 }
 
-//---------------------------------------------------------------------------------- Editor Resource
-//**************************************************************************************************
+//Editor Resource
 ZilchDefineType(MetaEditorResource, builder, type)
 {
   ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
@@ -130,98 +112,87 @@ ZilchDefineType(MetaEditorResource, builder, type)
   ZilchBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
 }
 
-//**************************************************************************************************
-MetaEditorResource::MetaEditorResource(bool allowAdd, bool allowNone, StringParam filterTag,
-                                       bool forceCompact, bool searchPreview)
-  : FilterTag(filterTag)
-  , AllowAdd(allowAdd)
-  , AllowNone(allowNone)
-  , ForceCompact(forceCompact)
-  , SearchPreview(searchPreview)
-  , Filter(nullptr)
+MetaEditorResource::MetaEditorResource(bool allowAdd,
+                                       bool allowNone,
+                                       StringParam filterTag,
+                                       bool forceCompact,
+                                       bool searchPreview) :
+    FilterTag(filterTag),
+    AllowAdd(allowAdd),
+    AllowNone(allowNone),
+    ForceCompact(forceCompact),
+    SearchPreview(searchPreview),
+    Filter(nullptr)
 {
-
 }
 
-//**************************************************************************************************
-MetaEditorResource::MetaEditorResource(SearchFilter filter)
-  : AllowAdd(false)
-  , AllowNone(false)
-  , FilterTag("")
-  , ForceCompact(false)
-  , SearchPreview(true)
-  , Filter(filter)
+MetaEditorResource::MetaEditorResource(SearchFilter filter) :
+    AllowAdd(false),
+    AllowNone(false),
+    FilterTag(""),
+    ForceCompact(false),
+    SearchPreview(true),
+    Filter(filter)
 {
-
 }
 
-//**************************************************************************************************
-bool MetaEditorResource::FilterPropertySearchResult(HandleParam object, Property* property,
-                                                    HandleParam result, Status& status)
+bool MetaEditorResource::FilterPropertySearchResult(HandleParam object,
+                                                    Property* property,
+                                                    HandleParam result,
+                                                    Status& status)
 {
   if (Filter)
     return Filter(object, property, result, status);
   return true;
 }
 
-//----------------------------------------------------------------------------- Meta Property Filter
-//**************************************************************************************************
+//Meta Property Filter
 ZilchDefineType(MetaPropertyFilter, builder, type)
 {
 }
 
-//----------------------------------------------------------------------- Meta Property Basic Filter
-//**************************************************************************************************
+//Property Basic Filter
 ZilchDefineType(MetaPropertyBasicFilter, builder, type)
 {
 }
 
-//-------------------------------------------------------------------------------- Meta Editor Gizmo
-//**************************************************************************************************
+//Meta Editor Gizmo
 ZilchDefineType(MetaEditorGizmo, builder, type)
 {
   ZilchBindFieldProperty(mGizmoArchetype);
 }
 
-//-------------------------------------------------------------------------------- Meta Shader Input
-//**************************************************************************************************
+//Meta Shader Input
 ZilchDefineType(MetaShaderInput, builder, type)
 {
-  ZilchBindFieldProperty(mFragmentName)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindFieldProperty(mInputName)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(mFragmentName)
+      ->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindFieldProperty(mInputName)
+      ->AddAttribute(PropertyAttributes::cOptional);
 }
 
-//--------------------------------------------------------------------------------------- Meta Group
-//**************************************************************************************************
+//Meta Group
 ZilchDefineType(MetaGroup, builder, type)
 {
   ZilchBindFieldProperty(mName);
 }
 
-//**************************************************************************************************
-MetaGroup::MetaGroup(StringParam name)
-  : mName(name)
+MetaGroup::MetaGroup(StringParam name) : mName(name)
 {
-
 }
 
-//----------------------------------------------------------------------------------- Meta Custom Ui
-//**************************************************************************************************
+//Meta Custom Ui
 ZilchDefineType(MetaCustomUi, builder, type)
 {
 }
 
-//---------------------------------------------------------------------------------- Property Rename
-//**************************************************************************************************
+//Property Rename
 ZilchDefineType(MetaPropertyRename, builder, type)
 {
 }
 
-//**************************************************************************************************
-MetaPropertyRename::MetaPropertyRename(StringParam oldName)
-  : mOldName(oldName)
+MetaPropertyRename::MetaPropertyRename(StringParam oldName) : mOldName(oldName)
 {
-
 }
 
-}//namespace Zero
+} // namespace Zero

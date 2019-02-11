@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "png.h"
@@ -14,7 +9,9 @@ namespace Zero
 const uint PngSignatureSize = 8;
 
 // Read data from any Stream
-static void StreamReadData(png_structp pngPtr, png_bytep data, png_size_t length)
+static void StreamReadData(png_structp pngPtr,
+                           png_bytep data,
+                           png_size_t length)
 {
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
   Stream* stream = (Stream*)ioPtr;
@@ -22,7 +19,9 @@ static void StreamReadData(png_structp pngPtr, png_bytep data, png_size_t length
 }
 
 // Write data to any Stream
-static void StreamWriteData(png_structp pngPtr, png_bytep data, png_size_t length)
+static void StreamWriteData(png_structp pngPtr,
+                            png_bytep data,
+                            png_size_t length)
 {
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
   Stream* stream = (Stream*)ioPtr;
@@ -52,7 +51,8 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
   if (!IsPng(stream))
     return false;
 
-  png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_structp pngPtr =
+      png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   png_infop infoPtr = png_create_info_struct(pngPtr);
 
   if (setjmp(png_jmpbuf(pngPtr)))
@@ -72,7 +72,7 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
   png_read_info(pngPtr, infoPtr);
 
   // Load the data into the structure
-  info.Width =  png_get_image_width(pngPtr, infoPtr);
+  info.Width = png_get_image_width(pngPtr, infoPtr);
   info.Height = png_get_image_height(pngPtr, infoPtr);
   int bitDepth = png_get_bit_depth(pngPtr, infoPtr);
 
@@ -95,12 +95,16 @@ bool IsPngLoadFormat(TextureFormat::Enum format)
 
 bool IsPngSaveFormat(TextureFormat::Enum format)
 {
-  return
-    format == TextureFormat::RGBA8 ||
-    format == TextureFormat::RGBA16;
+  return format == TextureFormat::RGBA8 || format == TextureFormat::RGBA16;
 }
 
-void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat)
+void LoadPng(Status& status,
+             Stream* stream,
+             byte** output,
+             uint* width,
+             uint* height,
+             TextureFormat::Enum* format,
+             TextureFormat::Enum requireFormat)
 {
   if (!IsPngLoadFormat(requireFormat))
   {
@@ -108,7 +112,8 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
     return;
   }
 
-  // Init pointer value so memory can be cleaned up if an error occurs after allocation
+  // Init pointer value so memory can be cleaned up if an error occurs after
+  // allocation
   byte* imageData = nullptr;
 
   // Create and initialize the png_struct with the desired error handler
@@ -116,7 +121,8 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
   // you can supply null for the last three parameters.  We also supply the
   // the compiler header file version, so that we know if the application
   // was compiled with a compatible version of the library.  REQUIRED
-  png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_structp pngPtr =
+      png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (pngPtr == nullptr)
   {
     status.SetFailed("Can not read png file");
@@ -146,17 +152,27 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
     return;
   }
 
-  // If you are using replacement read functions, instead of calling png_init_io()
+  // If you are using replacement read functions, instead of calling
+  // png_init_io()
   png_set_read_fn(pngPtr, (png_voidp)stream, StreamReadData);
 
   // The call to png_read_info() gives us all of the information from the
   // PNG file before the first IDAT (image data chunk).  REQUIRED
-  // This reads the header, and if it fails it will jump back to the setjmp point.
+  // This reads the header, and if it fails it will jump back to the setjmp
+  // point.
   png_read_info(pngPtr, infoPtr);
 
   png_uint_32 readWidth, readHeight;
   int readDepth, colorType, interlaceType;
-  png_get_IHDR(pngPtr, infoPtr, &readWidth, &readHeight, &readDepth, &colorType, &interlaceType, nullptr, nullptr);
+  png_get_IHDR(pngPtr,
+               infoPtr,
+               &readWidth,
+               &readHeight,
+               &readDepth,
+               &colorType,
+               &interlaceType,
+               nullptr,
+               nullptr);
 
   // Strip 16 bits/color files down to 8 bits/color.
   if (requireFormat == TextureFormat::RGBA8)
@@ -181,14 +197,14 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
   if (colorType == PNG_COLOR_TYPE_GRAY && readDepth < 8)
     png_set_expand_gray_1_2_4_to_8(pngPtr);
 
-
   // Expand paletted or RGB images with transparency to full alpha channels
   // so the data will be available as RGBA quartets.
   if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(pngPtr);
 
   // Expand grayscale images to RGB/RGBA
-  if (colorType == PNG_COLOR_TYPE_GRAY || colorType == PNG_COLOR_TYPE_GRAY_ALPHA)
+  if (colorType == PNG_COLOR_TYPE_GRAY ||
+      colorType == PNG_COLOR_TYPE_GRAY_ALPHA)
     png_set_gray_to_rgb(pngPtr);
 
   // Add filler (or alpha) byte (before/after each RGB triplet)
@@ -231,7 +247,12 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
     *format = TextureFormat::RGBA8;
 }
 
-void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format)
+void SavePng(Status& status,
+             Stream* stream,
+             const byte* image,
+             uint width,
+             uint height,
+             TextureFormat::Enum format)
 {
   if (!IsPngSaveFormat(format))
   {
@@ -246,7 +267,8 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
   }
 
   // Initialize the write struct
-  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+  png_structp png_ptr =
+      png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
   // Initialize the info struct.
   png_infop pngInfo = png_create_info_struct(png_ptr);
@@ -265,14 +287,14 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
 
   // Set image attributes
   png_set_IHDR(png_ptr,
-    pngInfo,
-    width,
-    height,
-    bitDepth,
-    PNG_COLOR_TYPE_RGB_ALPHA,
-    PNG_INTERLACE_NONE,
-    PNG_COMPRESSION_TYPE_DEFAULT,
-    PNG_FILTER_TYPE_DEFAULT);
+               pngInfo,
+               width,
+               height,
+               bitDepth,
+               PNG_COLOR_TYPE_RGB_ALPHA,
+               PNG_INTERLACE_NONE,
+               PNG_COMPRESSION_TYPE_DEFAULT,
+               PNG_FILTER_TYPE_DEFAULT);
 
   png_set_write_fn(png_ptr, (png_voidp)stream, StreamWriteData, CustomFlush);
 
@@ -283,7 +305,7 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
   // Allocated Rows
   png_byte** rows = (png_byte**)alloca(height * sizeof(byte*));
   for (uint y = 0; y < height; ++y)
-    rows[y] = (png_byte *)(byte*)(image + bytesPerRow * y);
+    rows[y] = (png_byte*)(byte*)(image + bytesPerRow * y);
 
   // Write the image data to the file
   png_set_rows(png_ptr, pngInfo, rows);
@@ -293,4 +315,4 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
   png_destroy_write_struct(&png_ptr, &pngInfo);
 }
 
-}
+} // namespace Zero

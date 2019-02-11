@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Trevor Sundberg
-/// Copyright 2016 DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -42,14 +37,17 @@ public:
   String mTweakableFileName;
 
   // When exporting a project, the engine will run and this will be set to true.
-  // It's currently used for determining which config file the engine should load.
+  // It's currently used for determining which config file the engine should
+  // load.
   bool mEmbeddedPackage;
 
-  // When exporting a stand alone application this is the temp working directory for it
+  // When exporting a stand alone application this is the temp working directory
+  // for it
   String mEmbeddedWorkingDirectory;
 
-  // Load the application's config file. Current this is used to allow the launcher
-  // to load a different config file from the editor and run a bit of extra logic.
+  // Load the application's config file. Current this is used to allow the
+  // launcher to load a different config file from the editor and run a bit of
+  // extra logic.
   virtual Cog* LoadConfig();
 };
 
@@ -65,7 +63,7 @@ public:
 private:
 };
 
-}//namespace Zero
+} // namespace Zero
 
 #include "Rectangle.hpp"
 #include "Resource.hpp"

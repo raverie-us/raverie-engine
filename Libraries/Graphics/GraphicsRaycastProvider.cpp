@@ -1,19 +1,16 @@
-// Authors: Joshua Davis, Nathan Carlson
-// Copyright 2010, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 String GraphicsRaycastProviderToString(const BoundType* type, const byte* value)
 {
   static String Name("Graphics");
   return Name;
 }
 
-//**************************************************************************************************
 ZilchDefineType(GraphicsRaycastProvider, builder, type)
 {
   ZilchBindFieldProperty(mMultiSelectGraphical);
@@ -25,15 +22,15 @@ ZilchDefineType(GraphicsRaycastProvider, builder, type)
   ZeroBindExpanded();
 }
 
-//**************************************************************************************************
 GraphicsRaycastProvider::GraphicsRaycastProvider()
 {
   mMultiSelectGraphical = true;
   mVisibleOnly = false;
 }
 
-//**************************************************************************************************
-void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results)
+void GraphicsRaycastProvider::RayCast(Ray& ray,
+                                      CastInfo& castInfo,
+                                      RaycastResultList& results)
 {
   GraphicsSpace* graphicsSpace = castInfo.mTargetSpace->has(GraphicsSpace);
 
@@ -45,30 +42,48 @@ void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResul
   rayCast.mUv = Vec2(0.0f);
   rayCast.mT = 0.0f;
 
-  forRangeBroadphaseTree (GraphicsBroadPhase, graphicsSpace->mBroadPhase, Ray, ray)
+  forRangeBroadphaseTree(
+      GraphicsBroadPhase, graphicsSpace->mBroadPhase, Ray, ray)
   {
     if (RayTest(range.Front(), rayCast, castInfo))
-      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
+      results.AddItem(rayCast.mObject,
+                      rayCast.mT,
+                      ray.Start + ray.Direction * rayCast.mT,
+                      rayCast.mNormal,
+                      rayCast.mUv,
+                      true);
   }
-  
-  forRange (Graphical& graphical, graphicsSpace->mGraphicalsNeverCulled.All())
+
+  forRange(Graphical & graphical, graphicsSpace->mGraphicalsNeverCulled.All())
   {
     if (RayTest(&graphical, rayCast, castInfo))
-      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
+      results.AddItem(rayCast.mObject,
+                      rayCast.mT,
+                      ray.Start + ray.Direction * rayCast.mT,
+                      rayCast.mNormal,
+                      rayCast.mUv,
+                      true);
   }
 
   if (mVisibleOnly == false)
   {
-    forRange (Graphical& graphical, graphicsSpace->mGraphicalsAlwaysCulled.All())
+    forRange(Graphical & graphical,
+             graphicsSpace->mGraphicalsAlwaysCulled.All())
     {
       if (RayTest(&graphical, rayCast, castInfo))
-        results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
+        results.AddItem(rayCast.mObject,
+                        rayCast.mT,
+                        ray.Start + ray.Direction * rayCast.mT,
+                        rayCast.mNormal,
+                        rayCast.mUv,
+                        true);
     }
   }
 }
 
-//**************************************************************************************************
-void GraphicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results)
+void GraphicsRaycastProvider::FrustumCast(Frustum& frustum,
+                                          CastInfo& castInfo,
+                                          RaycastResultList& results)
 {
   // Skip Graphical tests
   if (mMultiSelectGraphical == false)
@@ -76,13 +91,15 @@ void GraphicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, 
 
   GraphicsSpace* graphicsSpace = castInfo.mTargetSpace->has(GraphicsSpace);
 
-  forRangeBroadphaseTree (GraphicsBroadPhase, graphicsSpace->mBroadPhase, Frustum, frustum)
+  forRangeBroadphaseTree(
+      GraphicsBroadPhase, graphicsSpace->mBroadPhase, Frustum, frustum)
   {
     if (FrustumTest(range.Front(), frustum, castInfo))
-      results.AddItem(range.Front()->GetOwner(), 0.0f, Vec3::cZero, Vec3::cZero);
+      results.AddItem(
+          range.Front()->GetOwner(), 0.0f, Vec3::cZero, Vec3::cZero);
   }
 
-  forRange (Graphical& graphical, graphicsSpace->mGraphicalsNeverCulled.All())
+  forRange(Graphical & graphical, graphicsSpace->mGraphicalsNeverCulled.All())
   {
     if (FrustumTest(&graphical, frustum, castInfo))
       results.AddItem(graphical.GetOwner(), 0.0f, Vec3::cZero, Vec3::cZero);
@@ -90,7 +107,8 @@ void GraphicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, 
 
   if (mVisibleOnly == false)
   {
-    forRange (Graphical& graphical, graphicsSpace->mGraphicalsAlwaysCulled.All())
+    forRange(Graphical & graphical,
+             graphicsSpace->mGraphicalsAlwaysCulled.All())
     {
       if (FrustumTest(&graphical, frustum, castInfo))
         results.AddItem(graphical.GetOwner(), 0.0f, Vec3::cZero, Vec3::cZero);
@@ -98,27 +116,31 @@ void GraphicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, 
   }
 }
 
-//**************************************************************************************************
-bool GraphicsRaycastProvider::RayTest(Graphical* graphical, GraphicsRayCast& rayCast, CastInfo& castInfo)
+bool GraphicsRaycastProvider::RayTest(Graphical* graphical,
+                                      GraphicsRayCast& rayCast,
+                                      CastInfo& castInfo)
 {
   Cog* cog = graphical->GetOwner();
   if (cog->mFlags.IsSet(CogFlags::Locked))
     return false;
 
-  if (cog->mFlags.IsSet(CogFlags::SelectionLimited) && cog->has(SelectionIcon) != graphical)
+  if (cog->mFlags.IsSet(CogFlags::SelectionLimited) &&
+      cog->has(SelectionIcon) != graphical)
     return false;
 
   return graphical->TestRay(rayCast, castInfo);
 }
 
-//**************************************************************************************************
-bool GraphicsRaycastProvider::FrustumTest(Graphical* graphical, Frustum& frustum, CastInfo& castInfo)
+bool GraphicsRaycastProvider::FrustumTest(Graphical* graphical,
+                                          Frustum& frustum,
+                                          CastInfo& castInfo)
 {
   Cog* cog = graphical->GetOwner();
   if (cog->mFlags.IsSet(CogFlags::Locked))
     return false;
 
-  if (cog->mFlags.IsSet(CogFlags::SelectionLimited) && cog->has(SelectionIcon) != graphical)
+  if (cog->mFlags.IsSet(CogFlags::SelectionLimited) &&
+      cog->has(SelectionIcon) != graphical)
     return false;
 
   return graphical->TestFrustum(frustum, castInfo);

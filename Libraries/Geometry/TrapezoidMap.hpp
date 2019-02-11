@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TrapezoidMap.hpp
-/// Interface for the trapezoid map.
-/// 
-/// Authors: Killian Koenig
-/// Copyright 2013, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,10 +12,8 @@ public:
   typedef s32 NodeId;
   typedef s32 RegionId;
 
-
-
   struct Node
-  { 
+  {
     NodeId Left;
     NodeId Right;
 
@@ -40,7 +30,7 @@ public:
       Region
     };
 
-    u8 Type;    
+    u8 Type;
   };
 
   // Trapezoidal region graph structure
@@ -65,25 +55,28 @@ public:
 
     s32 WindingOrder;
 
-
     void SetTop(s32 left, s32 right)
     {
-      TopNeighbor[0] = left; TopNeighbor[1] = right;
+      TopNeighbor[0] = left;
+      TopNeighbor[1] = right;
     }
 
     void SetTop(s32 top)
     {
-      TopNeighbor[0] = top; TopNeighbor[1] = -1;
+      TopNeighbor[0] = top;
+      TopNeighbor[1] = -1;
     }
 
     void SetBottom(s32 left, s32 right)
     {
-      BotNeighbor[0] = left;  BotNeighbor[1] = right;
+      BotNeighbor[0] = left;
+      BotNeighbor[1] = right;
     }
 
     void SetBottom(s32 bottom)
     {
-      BotNeighbor[0] = bottom;  BotNeighbor[1] = -1;
+      BotNeighbor[0] = bottom;
+      BotNeighbor[1] = -1;
     }
   };
 
@@ -93,7 +86,10 @@ public:
   };
 
 public:
-  TrapezoidMap(const Array<Vec2>& vertices, const Array<uint>& contours, s32 maxEdges, s32 seed);
+  TrapezoidMap(const Array<Vec2>& vertices,
+               const Array<uint>& contours,
+               s32 maxEdges,
+               s32 seed);
 
   // Gets the region that the query point lies inside
   const Region* Query(const Vec2& point) const;
@@ -107,10 +103,10 @@ public:
   // Leaf nodes are "regions"
   NodeId mRoot;
   IndexPool<Node, NodeId> mNodes;
-  
+
   // Forms a graph connecting all regions
-  // Regions can have 0, 1, or 2 region neighbors above, 
-  // 0, 1, or 2 region neighbors below, and a left and right edge  
+  // Regions can have 0, 1, or 2 region neighbors above,
+  // 0, 1, or 2 region neighbors below, and a left and right edge
   IndexPool<Region> mRegions;
 
   // Maps the corresponding edge index to the point with the higher
@@ -125,7 +121,7 @@ public:
   Array<VertexId> mEndIndex;
   Array<VertexId> mPrevIndex;
 
-  // Copy of the input vertices 
+  // Copy of the input vertices
   Array<Vec2> mVertices;
 
   Array<VertexId> mFarthestEnd;
@@ -152,26 +148,27 @@ public:
   const Region* QueryInternal(NodeId rootId, VertexId vertexId) const;
 
   NodeId MergeAbove(RegionId regionId, RegionId* parent);
-  
-  // Inserts an edge into the tree/graph dividing space on either side of that edge
+
+  // Inserts an edge into the tree/graph dividing space on either side of that
+  // edge
   bool InsertEdge(EdgeId edgeId);
 
   // Inserts a vertex into the tree/graph dividing space vertically
   void InsertVertex(NodeId rootId, VertexId vertexId);
 
-  bool UpdateAbove(Region* originalCopy, 
-                   RegionId indexL, 
+  bool UpdateAbove(Region* originalCopy,
+                   RegionId indexL,
                    RegionId indexR,
                    VertexId topEdgeIndex,
                    RegionId leftParent,
                    RegionId rightParent);
 
-  bool UpdateBelow(Region* O, 
-                   RegionId indexL, 
-                   RegionId indexR, 
-                   EdgeId botEdgeIndex, 
-                   RegionId*, 
-                   RegionId*, 
+  bool UpdateBelow(Region* O,
+                   RegionId indexL,
+                   RegionId indexR,
+                   EdgeId botEdgeIndex,
+                   RegionId*,
+                   RegionId*,
                    bool isLast);
 
   bool IsLeft(EdgeId edgeStart, EdgeId edgeEnd, const Vec2& point) const;
@@ -179,6 +176,6 @@ public:
 
   VertexId FindCommonTopPoint(RegionId indexL, RegionId indexR);
   RegionId FindRegionBelow(RegionId indexO, EdgeId edgeStart);
-};  
+};
 
-} // Zero
+} // namespace Zero

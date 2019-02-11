@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,14 +10,12 @@ class MouseCapture;
 class ViewportMouseEvent;
 class MouseEvent;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  /// Sent out right before the GizmoDrag Component starts a drag.
-  DeclareEvent(GizmoPreDrag);
-}
+/// Sent out right before the GizmoDrag Component starts a drag.
+DeclareEvent(GizmoPreDrag);
+} // namespace Events
 
-//----------------------------------------------------------- Gizmo Update Event
 class GizmoUpdateEvent : public GizmoEvent
 {
 public:
@@ -33,7 +26,8 @@ public:
   GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e);
   GizmoUpdateEvent(GizmoUpdateEvent* rhs);
 
-  /// Movement of the mouse (in world space) constrained to the gizmo's drag-mode.
+  /// Movement of the mouse (in world space) constrained to the gizmo's
+  /// drag-mode.
   Vec3 mConstrainedWorldMovement;
 
   /// Difference of the mouse position (in world space, constrained to the
@@ -45,7 +39,6 @@ public:
   Vec3 mInitialGrabPoint;
 };
 
-//------------------------------------------------------------------- Gizmo Drag
 DeclareEnum3(GizmoDragMode, Line, Plane, ViewPlane);
 DeclareEnum2(GizmoGrabMode, Hold, Toggle);
 
@@ -103,7 +96,7 @@ public:
   /// Whether or not the mouse is currently down on this Gizmo.
   bool mMouseDown;
 
-  /// The view-port position that the mouse went down on. 
+  /// The view-port position that the mouse went down on.
   Vec2 mMouseDownPosition;
 
   /// How far the mouse needs to move before starting a drag.
@@ -127,9 +120,9 @@ public:
   GizmoGrabMode::Enum mGrabMode;
   /// Direction drag occurs.
   Vec3 mLineDirection;
-  /// Plane on which drag occurs, depending on DragMode. 
+  /// Plane on which drag occurs, depending on DragMode.
   Vec3 mPlaneNormal;
   bool mNormalInWorld;
 };
 
-}//namespace Zero
+} // namespace Zero

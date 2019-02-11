@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2012-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------BuoyancyEffect
 /// Applies a buoyancy force to an object in a given direction.
 class BuoyancyEffect : public PhysicsEffect
 {
@@ -49,5 +43,5 @@ private:
   /// The direction of gravity in world-space.
   Vec3 mGravity;
 };
-  
-}// namespace Zero
+
+} // namespace Zero

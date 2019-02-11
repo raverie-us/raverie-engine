@@ -1,17 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ComponentHierarchy.cpp
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------- Component Hierarchy Base
 /// Needed for an intrusive link
 template <typename ComponentType>
 class ComponentHierarchyBase : public Component
@@ -20,7 +12,6 @@ public:
   IntrusiveLink(ComponentHierarchyBase<ComponentType>, HierarchyLink);
 };
 
-//---------------------------------------------------------- Component Hierarchy
 /// Maintains a hierarchy of specific Components. When a hierarchy of Components
 /// is required, this removes the need to manually manage the hierarchy, and
 /// also removes the overhead of component lookups while iterating over the
@@ -32,11 +23,12 @@ public:
   ZilchDeclareType(ComponentHierarchy, TypeCopyMode::ReferenceType);
 
   // Typedefs.
-  typedef ComponentHierarchy<ComponentType>                               self_type;
-  typedef ComponentHierarchyBase<ComponentType>                           base_type;
-  typedef BaseInList<base_type, ComponentType, &base_type::HierarchyLink> ChildList;
-  typedef typename ChildList::range                                       ChildListRange;
-  typedef typename ChildList::reverse_range                               ChildListReverseRange;
+  typedef ComponentHierarchy<ComponentType> self_type;
+  typedef ComponentHierarchyBase<ComponentType> base_type;
+  typedef BaseInList<base_type, ComponentType, &base_type::HierarchyLink>
+      ChildList;
+  typedef typename ChildList::range ChildListRange;
+  typedef typename ChildList::reverse_range ChildListReverseRange;
 
   /// Constructor.
   ComponentHierarchy();
@@ -67,18 +59,23 @@ public:
   /// Returns whether or not we are an ancestor of the given Cog.
   bool IsAncestorOf(ComponentType& descendant);
 
-  ChildListRange GetChildren(){return mChildren.All();}
-  ChildListReverseRange GetChildrenReverse() { return mChildren.ReverseAll(); }
-  
-  /// Returns the amount of children. Note that this function has to iterate over
-  /// all children to calculate the count.
+  ChildListRange GetChildren()
+  {
+    return mChildren.All();
+  }
+  ChildListReverseRange GetChildrenReverse()
+  {
+    return mChildren.ReverseAll();
+  }
+
+  /// Returns the amount of children. Note that this function has to iterate
+  /// over all children to calculate the count.
   uint GetChildCount();
 
   ComponentType* mParent;
   ChildList mChildren;
 };
 
-//******************************************************************************
 template <typename ComponentType>
 ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
 {
@@ -92,40 +89,34 @@ ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
   ZilchBindFieldGetter(mParent);
   ZilchBindGetter(Root);
   ZilchBindGetter(ChildCount);
-  
+
   ZilchBindMethod(GetChildren);
   ZilchBindMethod(IsDescendantOf);
   ZilchBindMethod(IsAncestorOf);
 }
 
-//******************************************************************************
 template <typename ComponentType>
-ComponentHierarchy<ComponentType>::ComponentHierarchy()
-  : mParent(nullptr)
+ComponentHierarchy<ComponentType>::ComponentHierarchy() : mParent(nullptr)
 {
-
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentHierarchy<ComponentType>::~ComponentHierarchy()
 {
-  forRange(ComponentType& child, GetChildren())
-    child.mParent = nullptr;
-  
+  forRange(ComponentType & child, GetChildren()) child.mParent = nullptr;
+
   if (mParent)
     mParent->mChildren.Erase(this);
   mChildren.Clear();
 }
 
-//******************************************************************************
 template <typename ComponentType>
 void ComponentHierarchy<ComponentType>::Initialize(CogInitializer& initializer)
 {
   // Add ourself to our parent
-  if(Cog* parent = base_type::GetOwner()->GetParent())
+  if (Cog* parent = base_type::GetOwner()->GetParent())
   {
-    if(ComponentType* component = parent->has(ComponentType))
+    if (ComponentType* component = parent->has(ComponentType))
     {
       mParent = component;
       mParent->mChildren.PushBack(this);
@@ -133,11 +124,11 @@ void ComponentHierarchy<ComponentType>::Initialize(CogInitializer& initializer)
   }
 
   // If we were dynamically added, we need to add all of our children. If we
-  // aren't dynamically added, our children will add themselves to our child list
-  // in their initialize
+  // aren't dynamically added, our children will add themselves to our child
+  // list in their initialize
   if (initializer.Flags & CreationFlags::DynamicallyAdded)
   {
-    forRange(Cog& childCog, base_type::GetOwner()->GetChildren())
+    forRange(Cog & childCog, base_type::GetOwner()->GetChildren())
     {
       if (ComponentType* child = childCog.has(ComponentType))
       {
@@ -149,32 +140,31 @@ void ComponentHierarchy<ComponentType>::Initialize(CogInitializer& initializer)
 
   ConnectThisTo(base_type::GetOwner(), Events::ChildAttached, OnChildAttached);
   ConnectThisTo(base_type::GetOwner(), Events::ChildDetached, OnChildDetached);
-  ConnectThisTo(base_type::GetOwner(), Events::ChildrenOrderChanged, OnChildrenOrderChanged);
+  ConnectThisTo(base_type::GetOwner(),
+                Events::ChildrenOrderChanged,
+                OnChildrenOrderChanged);
 }
 
-//******************************************************************************
 template <typename ComponentType>
 void ComponentHierarchy<ComponentType>::OnChildAttached(HierarchyEvent* e)
 {
-  if(e->Parent != base_type::GetOwner())
+  if (e->Parent != base_type::GetOwner())
     return;
 
-  if(ComponentType* component = e->Child->has(ComponentType))
+  if (ComponentType* component = e->Child->has(ComponentType))
     mChildren.PushBack(component);
 }
 
-//******************************************************************************
 template <typename ComponentType>
 void ComponentHierarchy<ComponentType>::OnChildDetached(HierarchyEvent* e)
 {
-  if(e->Parent != base_type::GetOwner())
+  if (e->Parent != base_type::GetOwner())
     return;
 
-  if(ComponentType* component = e->Child->has(ComponentType))
+  if (ComponentType* component = e->Child->has(ComponentType))
     mChildren.Erase(component);
 }
 
-//******************************************************************************
 template <typename ComponentType>
 void ComponentHierarchy<ComponentType>::OnChildrenOrderChanged(Event* e)
 {
@@ -182,59 +172,53 @@ void ComponentHierarchy<ComponentType>::OnChildrenOrderChanged(Event* e)
   // where, so we're just going to re-build the child list
   mChildren.Clear();
 
-  forRange(Cog& child, base_type::GetOwner()->GetChildren())
+  forRange(Cog & child, base_type::GetOwner()->GetChildren())
   {
-    if(ComponentType* childComponent = child.has(ComponentType))
+    if (ComponentType* childComponent = child.has(ComponentType))
       mChildren.PushBack(childComponent);
   }
 }
 
-//******************************************************************************
 template <typename ComponentType>
 void ComponentHierarchy<ComponentType>::AttachTo(AttachmentInfo& info)
 {
-  if(info.Child == base_type::GetOwner())
+  if (info.Child == base_type::GetOwner())
     mParent = info.Parent->has(ComponentType);
 }
 
-//******************************************************************************
 template <typename ComponentType>
 void ComponentHierarchy<ComponentType>::Detached(AttachmentInfo& info)
 {
-  if(info.Child == base_type::GetOwner())
+  if (info.Child == base_type::GetOwner())
     mParent = nullptr;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetPreviousSibling()
 {
   ComponentType* prev = (ComponentType*)ChildList::Prev(this);
-  if(mParent && prev != mParent->mChildren.End())
+  if (mParent && prev != mParent->mChildren.End())
     return prev;
   return nullptr;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetNextSibling()
 {
   ComponentType* next = (ComponentType*)ChildList::Next(this);
-  if(mParent && next != mParent->mChildren.End())
+  if (mParent && next != mParent->mChildren.End())
     return next;
   return nullptr;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetLastDirectChild()
 {
-  if(!mChildren.Empty())
+  if (!mChildren.Empty())
     return &mChildren.Back();
   return nullptr;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetLastDeepestChild()
 {
@@ -244,25 +228,24 @@ ComponentType* ComponentHierarchy<ComponentType>::GetLastDeepestChild()
     return (ComponentType*)this;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetNextInHierarchyOrder()
 {
   // If this object has children return the first child
-  if(!mChildren.Empty())
+  if (!mChildren.Empty())
     return &mChildren.Front();
 
   // Return next sibling if there is one
   ComponentType* nextSibling = GetNextSibling();
-  if(nextSibling)
+  if (nextSibling)
     return nextSibling;
 
   // Loop until the root or a parent has a sibling
   ComponentType* parent = mParent;
-  while(parent != nullptr)
+  while (parent != nullptr)
   {
     ComponentType* parentSibling = parent->GetNextSibling();
-    if(parentSibling)
+    if (parentSibling)
       return parentSibling;
     else
       parent = parent->mParent;
@@ -270,7 +253,6 @@ ComponentType* ComponentHierarchy<ComponentType>::GetNextInHierarchyOrder()
   return nullptr;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetPreviousInHierarchyOrder()
 {
@@ -278,31 +260,28 @@ ComponentType* ComponentHierarchy<ComponentType>::GetPreviousInHierarchyOrder()
   ComponentType* prevSibling = GetPreviousSibling();
 
   // If this is first node of a child it is previous node
-  if(prevSibling == nullptr)
+  if (prevSibling == nullptr)
     return mParent;
 
   // Return the last child of the sibling
   return prevSibling->GetLastDeepestChild();
 }
 
-//******************************************************************************
 template <typename ComponentType>
 ComponentType* ComponentHierarchy<ComponentType>::GetRoot()
 {
   ComponentType* curr = (ComponentType*)this;
-  while(curr->mParent)
+  while (curr->mParent)
     curr = curr->mParent;
   return curr;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 bool ComponentHierarchy<ComponentType>::IsDescendantOf(ComponentType& ancestor)
 {
   return ancestor.IsAncestorOf(*(ComponentType*)this);
 }
 
-//******************************************************************************
 template <typename ComponentType>
 bool ComponentHierarchy<ComponentType>::IsAncestorOf(ComponentType& descendant)
 {
@@ -317,14 +296,12 @@ bool ComponentHierarchy<ComponentType>::IsAncestorOf(ComponentType& descendant)
   return false;
 }
 
-//******************************************************************************
 template <typename ComponentType>
 uint ComponentHierarchy<ComponentType>::GetChildCount()
 {
   uint count = 0;
-  forRange(ComponentType& child, GetChildren())
-    ++count;
+  forRange(ComponentType & child, GetChildren())++ count;
   return count;
 }
 
-}//namespace Zero
+} // namespace Zero

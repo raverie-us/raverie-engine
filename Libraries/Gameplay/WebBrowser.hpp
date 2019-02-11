@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,23 +6,24 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(WebBrowserPopup);
-  DeclareEvent(WebBrowserPointQuery);
-  DeclareEvent(WebBrowserConsoleMessage);
-  DeclareEvent(WebBrowserStatusChanged);
-  DeclareEvent(WebBrowserTitleChanged);
-  DeclareEvent(WebBrowserUrlChanged);
-  DeclareEvent(WebBrowserCursorChanged);
-  DeclareEvent(WebBrowserDownloadStarted);
-  DeclareEvent(WebBrowserDownloadUpdated);
-}
+DeclareEvent(WebBrowserPopup);
+DeclareEvent(WebBrowserPointQuery);
+DeclareEvent(WebBrowserConsoleMessage);
+DeclareEvent(WebBrowserStatusChanged);
+DeclareEvent(WebBrowserTitleChanged);
+DeclareEvent(WebBrowserUrlChanged);
+DeclareEvent(WebBrowserCursorChanged);
+DeclareEvent(WebBrowserDownloadStarted);
+DeclareEvent(WebBrowserDownloadUpdated);
+} // namespace Events
 
 class UpdateEvent;
 class WebBrowser;
 
 // Everything we need to startup and shutdown browsers (singleton)
 // Also manages all instances of browsers
-class WebBrowserManager : public ExplicitSingleton<WebBrowserManager, EventObject>
+class WebBrowserManager
+    : public ExplicitSingleton<WebBrowserManager, EventObject>
 {
 public:
   ZilchDeclareType(WebBrowserManager, TypeCopyMode::ReferenceType);
@@ -49,15 +45,12 @@ class WebBrowserSetup : public Object
 {
 public:
   ZilchDeclareType(WebBrowserSetup, TypeCopyMode::ReferenceType);
-  WebBrowserSetup
-  (
-    StringParam url = cWebBrowserDefaultUrl,
-    IntVec2Param size = cWebBrowserDefaultSize,
-    IntVec2Param clientPosition = IntVec2::cZero,
-    bool transparent = cWebBrowserDefaultTransparent,
-    Vec4Param backgroundColor = cWebBrowserDefaultBackgroundColor,
-    Vec2Param scrollSpeed = cWebBrowserDefaultScrollSpeed
-  );
+  WebBrowserSetup(StringParam url = cWebBrowserDefaultUrl,
+                  IntVec2Param size = cWebBrowserDefaultSize,
+                  IntVec2Param clientPosition = IntVec2::cZero,
+                  bool transparent = cWebBrowserDefaultTransparent,
+                  Vec4Param backgroundColor = cWebBrowserDefaultBackgroundColor,
+                  Vec2Param scrollSpeed = cWebBrowserDefaultScrollSpeed);
 
   String mUrl;
   IntVec2 mSize;
@@ -76,11 +69,13 @@ public:
   WebBrowser(const WebBrowserSetup& setup);
   ~WebBrowser();
 
-  /// Returns true if this browser is implemented as a browser that floats on top of everything.
+  /// Returns true if this browser is implemented as a browser that floats on
+  /// top of everything.
   static bool GetIsFloatingOnTop();
 
-  /// Returns if this browser is considered secure which means that it follows browsing standards
-  /// for security, such as not allowing cross-origin requests unless explicitly allowed by the server.
+  /// Returns if this browser is considered secure which means that it follows
+  /// browsing standards for security, such as not allowing cross-origin
+  /// requests unless explicitly allowed by the server.
   static bool GetIsSecurityRestricted();
 
   static HandleOf<WebBrowser> Create();
@@ -97,22 +92,26 @@ public:
   Math::IntVec2 GetClientPosition();
   void SetClientPosition(Math::IntVec2Param clientPosition);
 
-  /// For browsers that float on top, you can control how they appear on top of each other
-  /// by using the z-index (only works relative to one another). Higher values appear on top.
-  /// This is only used when the browser 'IsFloatingOnTop'.
+  /// For browsers that float on top, you can control how they appear on top of
+  /// each other by using the z-index (only works relative to one another).
+  /// Higher values appear on top. This is only used when the browser
+  /// 'IsFloatingOnTop'.
   int GetZIndex();
   void SetZIndex(int zindex);
 
-  /// Get the texture created by the web browser. Note that this may not be filled out when 'IsFloatingOnTop' is set.
+  /// Get the texture created by the web browser. Note that this may not be
+  /// filled out when 'IsFloatingOnTop' is set.
   Texture* GetTexture();
 
-  /// The background color of the browser when no CSS background is specified or when pages are loading.
-  /// Note that changing this MAY cause the browser page to refresh/reinitialize.
+  /// The background color of the browser when no CSS background is specified or
+  /// when pages are loading. Note that changing this MAY cause the browser page
+  /// to refresh/reinitialize.
   Vec4 GetBackgroundColor();
   void SetBackgroundColor(Vec4Param color);
 
-  /// Whether the browser renderer allows transparency when no CSS background is specified or when pages are loading.
-  /// Note that changing this MAY cause the browser page to refresh/reinitialize.
+  /// Whether the browser renderer allows transparency when no CSS background is
+  /// specified or when pages are loading. Note that changing this MAY cause the
+  /// browser page to refresh/reinitialize.
   bool GetTransparent();
   void SetTransparent(bool transparent);
 
@@ -147,26 +146,48 @@ public:
 
   void SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers);
   void SimulateTextTyped(int character, BrowserModifiers::Enum modifiers);
-  void SimulateMouseMove(IntVec2Param localPosition, BrowserModifiers::Enum modifiers);
-  void SimulateMouseClick(IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers);
-  void SimulateMouseDoubleClick(IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers);
-  void SimulateMouseScroll(IntVec2Param localPosition, Vec2Param delta, BrowserModifiers::Enum modifiers);
+  void SimulateMouseMove(IntVec2Param localPosition,
+                         BrowserModifiers::Enum modifiers);
+  void SimulateMouseClick(IntVec2Param localPosition,
+                          MouseButtons::Enum button,
+                          bool down,
+                          BrowserModifiers::Enum modifiers);
+  void SimulateMouseDoubleClick(IntVec2Param localPosition,
+                                MouseButtons::Enum button,
+                                BrowserModifiers::Enum modifiers);
+  void SimulateMouseScroll(IntVec2Param localPosition,
+                           Vec2Param delta,
+                           BrowserModifiers::Enum modifiers);
 
   // Internal
   PixelBuffer mBuffer;
   Browser mBrowser;
 
 private:
-  static void OnPaint(BrowserColorFormat::Enum format, const byte* data, Math::IntVec2Param bufferSize, const Array<IntRect>& dirtyRectangles, Browser* browser);
+  static void OnPaint(BrowserColorFormat::Enum format,
+                      const byte* data,
+                      Math::IntVec2Param bufferSize,
+                      const Array<IntRect>& dirtyRectangles,
+                      Browser* browser);
   static void OnPopup(StringParam name, StringParam url, Browser* browser);
-  static void OnPointQuery(Math::IntVec2Param browserPixelPosition, Math::IntVec2* monitorPixelPositionOut, Browser* browser);
-  static void OnConsoleMessage(StringParam message, StringParam source, int line, bool* handledOut, Browser* browser);
+  static void OnPointQuery(Math::IntVec2Param browserPixelPosition,
+                           Math::IntVec2* monitorPixelPositionOut,
+                           Browser* browser);
+  static void OnConsoleMessage(StringParam message,
+                               StringParam source,
+                               int line,
+                               bool* handledOut,
+                               Browser* browser);
   static void OnStatusChanged(StringParam text, Browser* browser);
   static void OnTitleChanged(StringParam text, Browser* browser);
   static void OnUrlChanged(StringParam url, bool* handledOut, Browser* browser);
   static void OnCursorChanged(Cursor::Enum cursor, Browser* browser);
-  static void OnDownloadStarted(BrowserDownload& download, bool* cancelOut, Browser* browser);
-  static void OnDownloadUpdated(const BrowserDownload& download, bool* cancelOut, Browser* browser);
+  static void OnDownloadStarted(BrowserDownload& download,
+                                bool* cancelOut,
+                                Browser* browser);
+  static void OnDownloadUpdated(const BrowserDownload& download,
+                                bool* cancelOut,
+                                Browser* browser);
 };
 
 class WebBrowserEvent : public Event
@@ -247,7 +268,7 @@ public:
 
   /// The url that we are navigating to
   String mUrl;
-  
+
   /// If we handled the event (cancels the navigation)
   bool mHandled;
 };

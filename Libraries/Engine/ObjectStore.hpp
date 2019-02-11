@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ObjectStore.hpp
-/// Declaration of the ObjectStore.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,7 +11,7 @@ class ObjectStore : public ExplicitSingleton<ObjectStore>
 {
 public:
   ZilchDeclareType(ObjectStore, TypeCopyMode::ReferenceType);
-  
+
   /// Set the object store name. This is to prevent
   /// store name conflicts.
   void SetStoreName(StringParam storeName);
@@ -39,7 +31,7 @@ public:
   /// Restore an object to the space.
   Cog* Restore(StringParam name, Space* space);
 
-  /// Restore an object if it is not stored use the archetype to create it. 
+  /// Restore an object if it is not stored use the archetype to create it.
   Cog* RestoreOrArchetype(StringParam name, Archetype* archetype, Space* space);
 
   /// Attempts to remove an object from the store.
@@ -52,12 +44,12 @@ public:
   String GetDirectoryPath();
 
 private:
-  //Helper function for file names.
+  // Helper function for file names.
   String GetFile(StringParam name);
   void SetupDirectory();
 
-  /// Populate the internal array of file names in the ObjectStore, if the proper
-  /// ObjectStore directory exists.
+  /// Populate the internal array of file names in the ObjectStore, if the
+  /// proper ObjectStore directory exists.
   void PopulateEntries(StringParam storePath);
 
   String mStoreName;
@@ -66,4 +58,4 @@ private:
   Array<String> mEntries;
 };
 
-}
+} // namespace Zero

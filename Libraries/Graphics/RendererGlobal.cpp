@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -8,11 +7,13 @@ namespace Zero
 
 namespace Z
 {
-  Renderer* gRenderer;
+Renderer* gRenderer;
 }
 
-//**************************************************************************************************
-ZilchDefineExternalBaseType(GraphicsDriverSupport, TypeCopyMode::ReferenceType, builder, type)
+ZilchDefineExternalBaseType(GraphicsDriverSupport,
+                            TypeCopyMode::ReferenceType,
+                            builder,
+                            type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
 

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///  
-///  Authors: Joshua Davis
-///  Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,8 +8,9 @@ template <typename ArrayType>
 class BoundArrayRange;
 
 /// Base functionality for binding a pre-existing array. Currently designed as
-/// a templated base to reduce code duplication, especially while prototyping. Possibly split to
-/// individual classes (due to differences, code documentation, etc...) or make generic enough to use elsewhere later.
+/// a templated base to reduce code duplication, especially while prototyping.
+/// Possibly split to individual classes (due to differences, code
+/// documentation, etc...) or make generic enough to use elsewhere later.
 template <typename OwningType, typename DataTypeT>
 class BoundArray : public SafeId32Object
 {
@@ -41,7 +37,7 @@ public:
 
   DataTypeT Get(int arrayIndex) const
   {
-    if(!ValidateArrayIndex(arrayIndex))
+    if (!ValidateArrayIndex(arrayIndex))
       return DataTypeT();
 
     return (*mBoundArray)[arrayIndex];
@@ -60,16 +56,20 @@ public:
   bool ValidateArrayIndex(int arrayIndex) const
   {
     int count = GetCount();
-    if(arrayIndex >= count)
+    if (arrayIndex >= count)
     {
-      String msg = String::Format("Index %d is invalid. Array only contains %d element(s).", arrayIndex, count);
+      String msg = String::Format(
+          "Index %d is invalid. Array only contains %d element(s).",
+          arrayIndex,
+          count);
       DoNotifyException("Invalid index", msg);
       return false;
     }
     return true;
   }
 
-  /// The array that this class represents. Assumes that this data cannot go away without this class also going away.
+  /// The array that this class represents. Assumes that this data cannot go
+  /// away without this class also going away.
   ArrayType* mBoundArray;
 };
 
@@ -98,9 +98,11 @@ public:
   {
     // Validate that the range hasn't been destroyed
     ArrayType* array = mArray;
-    if(array == nullptr)
+    if (array == nullptr)
     {
-      DoNotifyException("Range is invalid", "The array this range is referencing has been destroyed.");
+      DoNotifyException(
+          "Range is invalid",
+          "The array this range is referencing has been destroyed.");
       return true;
     }
 
@@ -109,10 +111,12 @@ public:
 
   FrontResult Front()
   {
-    // If the range is empty (or the range has been destroyed) then throw an exception.
-    if(Empty())
+    // If the range is empty (or the range has been destroyed) then throw an
+    // exception.
+    if (Empty())
     {
-      DoNotifyException("Invalid Range Operation", "Cannot access an item in an empty range.");
+      DoNotifyException("Invalid Range Operation",
+                        "Cannot access an item in an empty range.");
       return FrontResult();
     }
     return mArray->Get(mIndex);
@@ -138,35 +142,35 @@ class IndexedHalfEdge;
 class IndexedHalfEdgeFace;
 class IndexedHalfEdgeMesh;
 
-//-------------------------------------------------------------------IndexedHalfEdgeMeshVertexArray
-class IndexedHalfEdgeMeshVertexArray : public BoundArray<IndexedHalfEdgeMesh, Vec3>
+class IndexedHalfEdgeMeshVertexArray
+    : public BoundArray<IndexedHalfEdgeMesh, Vec3>
 {
 public:
   ZilchDeclareType(IndexedHalfEdgeMeshVertexArray, TypeCopyMode::ReferenceType);
 };
 
-//-------------------------------------------------------------------IndexedHalfEdgeMeshEdgeArray
-class IndexedHalfEdgeMeshEdgeArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdge*>
+class IndexedHalfEdgeMeshEdgeArray
+    : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdge*>
 {
 public:
   ZilchDeclareType(IndexedHalfEdgeMeshEdgeArray, TypeCopyMode::ReferenceType);
 };
 
-//-------------------------------------------------------------------IndexedHalfEdgeFaceEdgeIndexArray
-class IndexedHalfEdgeFaceEdgeIndexArray : public BoundArray<IndexedHalfEdgeFace, int>
+class IndexedHalfEdgeFaceEdgeIndexArray
+    : public BoundArray<IndexedHalfEdgeFace, int>
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeFaceEdgeIndexArray, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(IndexedHalfEdgeFaceEdgeIndexArray,
+                   TypeCopyMode::ReferenceType);
 };
 
-//-------------------------------------------------------------------IndexedHalfEdgeMeshFaceArray
-class IndexedHalfEdgeMeshFaceArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdgeFace*>
+class IndexedHalfEdgeMeshFaceArray
+    : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdgeFace*>
 {
 public:
   ZilchDeclareType(IndexedHalfEdgeMeshFaceArray, TypeCopyMode::ReferenceType);
 };
 
-//-------------------------------------------------------------------IndexedHalfEdge
 class IndexedHalfEdge : public SafeId32Object
 {
 public:
@@ -180,7 +184,6 @@ public:
   int mFaceIndex;
 };
 
-//-------------------------------------------------------------------IndexedHalfEdgeFace
 class IndexedHalfEdgeFace : public SafeId32Object
 {
 public:
@@ -200,13 +203,14 @@ public:
   BoundEdgeArray mBoundEdges;
 };
 
-//-------------------------------------------------------------------IndexedHalfEdgeMesh
-/// An index based half-edge mesh. This is an edge-centric mesh representation that allows
-/// efficient traversal from edges to anywhere else. Each edge is broken up into two
-/// half-edges, one for each face it's a part of. Most sub-shapes contain indices back into
-/// the 'global' list (e.g. an edge contains the index of the vertex in the mesh's vertex list).
-/// This mesh format is meant for efficient traversal, but manipulation is not as easy with indices.
-/// This should be loaded into a more efficient format (such as pointers) if manipulating a mesh.
+/// An index based half-edge mesh. This is an edge-centric mesh representation
+/// that allows efficient traversal from edges to anywhere else. Each edge is
+/// broken up into two half-edges, one for each face it's a part of. Most
+/// sub-shapes contain indices back into the 'global' list (e.g. an edge
+/// contains the index of the vertex in the mesh's vertex list). This mesh
+/// format is meant for efficient traversal, but manipulation is not as easy
+/// with indices. This should be loaded into a more efficient format (such as
+/// pointers) if manipulating a mesh.
 class IndexedHalfEdgeMesh : public ReferenceCountedObject
 {
 public:
@@ -232,15 +236,16 @@ public:
   BoundEdgeArray* GetEdges();
   /// The list of faces in this mesh.
   BoundFaceArray* GetFaces();
-  
+
   // The internal data that's efficient to work with at run-time
   VertexArray mVertices;
   EdgeArray mEdges;
   FaceArray mFaces;
-  // The proxy arrays for binding. This allows safe referencing of the underlying primitives.
+  // The proxy arrays for binding. This allows safe referencing of the
+  // underlying primitives.
   BoundVertexArray mBoundVertices;
   BoundEdgeArray mBoundEdges;
   BoundFaceArray mBoundFaces;
 };
 
-}// namespace Zero
+} // namespace Zero

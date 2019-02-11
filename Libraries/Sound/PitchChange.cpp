@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -12,22 +7,21 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//--------------------------------------------------------------------------- Pitch Change Handler
+//Pitch Change Handler
 
-//************************************************************************************************
 PitchChangeHandler::PitchChangeHandler() :
-  mPitchCents(0),
-  mPitchFactor(1.0f),
-  mFramesToInterpolate(0),
-  mInputFrameCount(0),
-  mInputSampleCount(0),
-  mChannels(0)
+    mPitchCents(0),
+    mPitchFactor(1.0f),
+    mFramesToInterpolate(0),
+    mInputFrameCount(0),
+    mInputSampleCount(0),
+    mChannels(0)
 {
   ResetLastSamples();
 }
 
-//************************************************************************************************
-void PitchChangeHandler::CalculateBufferSize(unsigned outputSampleCount, unsigned numberOfChannels)
+void PitchChangeHandler::CalculateBufferSize(unsigned outputSampleCount,
+                                             unsigned numberOfChannels)
 {
   PreviousData = CurrentData;
 
@@ -42,11 +36,13 @@ void PitchChangeHandler::CalculateBufferSize(unsigned outputSampleCount, unsigne
   else
   {
     // Starting and ending pitch factors for interpolation
-    float startingPitchFactor = PitchInterpolator.ValueAtIndex(CurrentData.mInterpolationFramesProcessed);
+    float startingPitchFactor = PitchInterpolator.ValueAtIndex(
+        CurrentData.mInterpolationFramesProcessed);
     float endingPitchFactor = PitchInterpolator.GetEndValue();
 
     // How many frames are left in the interpolation
-    unsigned interpolationFrames = mFramesToInterpolate - CurrentData.mInterpolationFramesProcessed;
+    unsigned interpolationFrames =
+        mFramesToInterpolate - CurrentData.mInterpolationFramesProcessed;
 
     double framesWithoutInterpolation(0.0);
 
@@ -56,15 +52,17 @@ void PitchChangeHandler::CalculateBufferSize(unsigned outputSampleCount, unsigne
       // Set the interpolation frames to the buffer size
       interpolationFrames = outputFrames;
       // Set the ending pitch factor using the buffer size
-      endingPitchFactor = PitchInterpolator.ValueAtIndex(CurrentData.mInterpolationFramesProcessed
-        + outputFrames);
+      endingPitchFactor = PitchInterpolator.ValueAtIndex(
+          CurrentData.mInterpolationFramesProcessed + outputFrames);
     }
     // Otherwise, find out how many frames won't be interpolated
     else
-      framesWithoutInterpolation = (outputFrames - interpolationFrames) * endingPitchFactor;
+      framesWithoutInterpolation =
+          (outputFrames - interpolationFrames) * endingPitchFactor;
 
     // Buffer size uses the average pitch factor
-    framesToGet = (startingPitchFactor + endingPitchFactor) / 2.0f * interpolationFrames;
+    framesToGet =
+        (startingPitchFactor + endingPitchFactor) / 2.0f * interpolationFrames;
     // Add any additional frames beyond the end of interpolation
     framesToGet += framesWithoutInterpolation;
 
@@ -82,8 +80,8 @@ void PitchChangeHandler::CalculateBufferSize(unsigned outputSampleCount, unsigne
   CurrentData.mBufferSizeFraction = framesToGet - mInputFrameCount;
 }
 
-//************************************************************************************************
-void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outputBuffer)
+void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer,
+                                       BufferType* outputBuffer)
 {
   unsigned outputBufferSize = outputBuffer->Size();
 
@@ -94,7 +92,8 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
     if (CurrentData.mInterpolating)
     {
       CurrentData.mInterpolationFramesProcessed += mInputFrameCount;
-      mPitchFactor = PitchInterpolator.ValueAtIndex(CurrentData.mInterpolationFramesProcessed);
+      mPitchFactor = PitchInterpolator.ValueAtIndex(
+          CurrentData.mInterpolationFramesProcessed);
       if (CurrentData.mInterpolationFramesProcessed >= mFramesToInterpolate)
         CurrentData.mInterpolating = false;
     }
@@ -110,8 +109,9 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
 
   // Step through all frames in the output buffer
   BufferRange outputRange = outputBuffer->All();
-  for (unsigned outputFrameIndex = 0; outputFrameIndex + mChannels <= outputBufferSize;
-    outputFrameIndex += mChannels)
+  for (unsigned outputFrameIndex = 0;
+       outputFrameIndex + mChannels <= outputBufferSize;
+       outputFrameIndex += mChannels)
   {
     // Sample index of current source frame
     int sourceFrameStart = frameIndex * mChannels;
@@ -122,13 +122,15 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
     if (sourceFrameStart + mChannels > mInputSampleCount)
     {
       // Copy the previous frame into the output buffer
-      memcpy(outputBuffer->Data() + outputFrameIndex, inputBuffer->Data() + previousFrameStart,
-        sizeof(float) * mChannels);
+      memcpy(outputBuffer->Data() + outputFrameIndex,
+             inputBuffer->Data() + previousFrameStart,
+             sizeof(float) * mChannels);
       continue;
     }
 
     // Go through all samples in this frame
-    for (unsigned channel = 0; channel < mChannels; ++channel, outputRange.PopFront())
+    for (unsigned channel = 0; channel < mChannels;
+         ++channel, outputRange.PopFront())
     {
       // First sample is from the previous frame
       if (previousFrameStart < 0)
@@ -143,15 +145,17 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
         secondSample = (*inputBuffer)[sourceFrameStart + channel];
 
       // Interpolate between the two samples for the output sample
-      outputRange.Front() = firstSample + ((secondSample - firstSample)
-        * ((float)CurrentData.mPitchFrameIndex - frameIndex));
+      outputRange.Front() =
+          firstSample + ((secondSample - firstSample) *
+                         ((float)CurrentData.mPitchFrameIndex - frameIndex));
     }
 
     // If currently interpolating, get updated pitch factor
     if (CurrentData.mInterpolating)
     {
       ++CurrentData.mInterpolationFramesProcessed;
-      mPitchFactor = PitchInterpolator.ValueAtIndex(CurrentData.mInterpolationFramesProcessed);
+      mPitchFactor = PitchInterpolator.ValueAtIndex(
+          CurrentData.mInterpolationFramesProcessed);
 
       // Check if the interpolation is finished
       if (CurrentData.mInterpolationFramesProcessed >= mFramesToInterpolate)
@@ -172,17 +176,16 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
     CurrentData.mPitchFrameIndex -= (int)CurrentData.mPitchFrameIndex;
 
   // Save last frame of samples
-  memcpy(CurrentData.LastSamples, inputBuffer->Data() + (mInputSampleCount - mChannels),
-    sizeof(float) * mChannels);
+  memcpy(CurrentData.LastSamples,
+         inputBuffer->Data() + (mInputSampleCount - mChannels),
+         sizeof(float) * mChannels);
 }
 
-//************************************************************************************************
 float PitchChangeHandler::GetPitchFactor()
 {
   return mPitchFactor;
 }
 
-//************************************************************************************************
 void PitchChangeHandler::SetPitchFactor(float factor, float timeToInterpolate)
 {
   // If the time is zero, set the pitch directly
@@ -195,9 +198,11 @@ void PitchChangeHandler::SetPitchFactor(float factor, float timeToInterpolate)
   // Otherwise start interpolating
   else
   {
-    // If we are already interpolating, make sure the pitch factor is set correctly
+    // If we are already interpolating, make sure the pitch factor is set
+    // correctly
     if (CurrentData.mInterpolating)
-      mPitchFactor = PitchInterpolator.ValueAtIndex(CurrentData.mInterpolationFramesProcessed);
+      mPitchFactor = PitchInterpolator.ValueAtIndex(
+          CurrentData.mInterpolationFramesProcessed);
     else
       CurrentData.mInterpolating = true;
 
@@ -207,35 +212,30 @@ void PitchChangeHandler::SetPitchFactor(float factor, float timeToInterpolate)
   }
 }
 
-//************************************************************************************************
 void PitchChangeHandler::ResetLastSamples()
 {
   memset(CurrentData.LastSamples, 0, sizeof(float) * cMaxChannels);
 }
 
-//************************************************************************************************
 void PitchChangeHandler::ResetToStartOfMix()
 {
   CurrentData = PreviousData;
 }
 
-//************************************************************************************************
 bool PitchChangeHandler::Interpolating()
 {
   return CurrentData.mInterpolating;
 }
 
-//************************************************************************************************
 PitchChangeHandler::Data::Data() :
-  mInterpolationFramesProcessed(0),
-  mInterpolating(false),
-  mPitchFrameIndex(0.0),
-  mBufferSizeFraction(0.0)
+    mInterpolationFramesProcessed(0),
+    mInterpolating(false),
+    mPitchFrameIndex(0.0),
+    mBufferSizeFraction(0.0)
 {
   memset(LastSamples, 0, sizeof(float) * cMaxChannels);
 }
 
-//************************************************************************************************
 PitchChangeHandler::Data& PitchChangeHandler::Data::operator=(const Data& other)
 {
   mInterpolationFramesProcessed = other.mInterpolationFramesProcessed;

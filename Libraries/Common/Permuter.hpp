@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -27,13 +22,19 @@ public:
 
   Permuter();
   Permuter(size_t arraySize, size_t selectCount);
-  
+
   bool Empty() const;
   FrontResult Front() const;
   void PopFront();
-  Permuter& All() { return *this; }
-  const Permuter& All() const { return *this; }
-  
+  Permuter& All()
+  {
+    return *this;
+  }
+  const Permuter& All() const
+  {
+    return *this;
+  }
+
   // Internals
   void ComputeStats();
 
@@ -54,8 +55,14 @@ public:
   bool Empty() const;
   FrontResult Front() const;
   void PopFront();
-  MultiPermuter& All() { return *this; }
-  const MultiPermuter& All() const { return *this; }
+  MultiPermuter& All()
+  {
+    return *this;
+  }
+  const MultiPermuter& All() const
+  {
+    return *this;
+  }
 
   // Internals
   Permuter mPermuter;

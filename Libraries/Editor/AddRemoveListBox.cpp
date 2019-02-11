@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AddRemoveListBox.cpp
-/// Implementation of the AddRemoveListBox Widget.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,14 +6,16 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(AddPressed);
-  DefineEvent(RemovePressed);
-  DefineEvent(MoveUpPressed);
-  DefineEvent(MoveDownPressed);
-}
+DefineEvent(AddPressed);
+DefineEvent(RemovePressed);
+DefineEvent(MoveUpPressed);
+DefineEvent(MoveDownPressed);
+} // namespace Events
 
-AddRemoveListBox::AddRemoveListBox(Composite* parent, float width, 
-                                   StringParam dataTypeName) : Composite(parent)
+AddRemoveListBox::AddRemoveListBox(Composite* parent,
+                                   float width,
+                                   StringParam dataTypeName) :
+    Composite(parent)
 {
   mDataTypeName = dataTypeName;
 
@@ -114,7 +108,7 @@ void AddRemoveListBox::RemovePressed(ObjectEvent* event)
 {
   // Return if the data source is null or nothing is in there
   ListSource* dataSource = mListBox->GetDataSource();
-  if(dataSource == nullptr || dataSource->GetCount() == 0)
+  if (dataSource == nullptr || dataSource->GetCount() == 0)
     return;
 
   ObjectEvent objectEvent(this);
@@ -126,7 +120,7 @@ void AddRemoveListBox::MoveUpPressed(ObjectEvent* event)
 {
   // Return if the data source is null or nothing is in there
   ListSource* dataSource = mListBox->GetDataSource();
-  if(dataSource == nullptr || dataSource->GetCount() == 0)
+  if (dataSource == nullptr || dataSource->GetCount() == 0)
     return;
 
   ObjectEvent objectEvent(this);
@@ -138,7 +132,7 @@ void AddRemoveListBox::MoveDownPressed(ObjectEvent* event)
 {
   // Return if the data source is null or nothing is in there
   ListSource* dataSource = mListBox->GetDataSource();
-  if(dataSource == nullptr || dataSource->GetCount() == 0)
+  if (dataSource == nullptr || dataSource->GetCount() == 0)
     return;
 
   ObjectEvent objectEvent(this);
@@ -146,4 +140,4 @@ void AddRemoveListBox::MoveDownPressed(ObjectEvent* event)
   GetDispatcher()->Dispatch(Events::MoveDownPressed, &objectEvent);
 }
 
-}//namespace Zero
+} // namespace Zero

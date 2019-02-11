@@ -1,27 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Project.hpp
-/// Declaration of the Project component class.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DeclareEvent(ProjectLoaded);
-  DeclareEvent(NoProjectLoaded);
-}
+DeclareEvent(ProjectLoaded);
+DeclareEvent(NoProjectLoaded);
+} // namespace Events
 
-//---------------------------------------------------------------------- Project
 /// Project component store primary data for a project. Projects are separate
-/// games with their own content and settings. 
+/// games with their own content and settings.
 class ProjectSettings : public Component
 {
 public:
@@ -43,7 +33,8 @@ public:
   /// Returns the path to the generated content folder for this project.
   String GetContentFolder();
 
-  /// Returns the path to the content folder containing editor specific content (screen shot, editor settings, etc...).
+  /// Returns the path to the content folder containing editor specific content
+  /// (screen shot, editor settings, etc...).
   String GetEditorContentFolder();
 
   void Save();
@@ -91,13 +82,14 @@ public:
   String ContentFolder;
   /// Editor specific content (screen shot, editor settings, etc...)
   String EditorContentFolder;
-  /// Should a screenshot of the project be taken every time the project is saved.
+  /// Should a screenshot of the project be taken every time the project is
+  /// saved.
   bool AutoTakeProjectScreenshot;
 
   /// Project File Path
   String ProjectFile;
 
-  //Content Library for this Project.
+  // Content Library for this Project.
   ContentLibrary* ProjectContentLibrary;
   ResourceLibrary* ProjectResourceLibrary;
   Array<ResourceLibrary*> SharedResourceLibraries;
@@ -108,19 +100,19 @@ private:
   Guid mGuid;
 };
 
-//---------------------------------------------------- Content Library Reference
 class ContentLibraryReference : public SafeId32Object
 {
 public:
   ZilchDeclareType(ContentLibraryReference, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
-  void SetDefaults() {}
+  void SetDefaults()
+  {
+  }
 
   String mContentLibraryName;
 };
 
-//--------------------------------------------------------------- Shared Content
 /// Component that enables a project to shared content libraries.
 class SharedContent : public Component
 {
@@ -133,7 +125,6 @@ public:
   Array<ContentLibraryReference> ExtraContentLibraries;
 };
 
-//---------------------------------------------------------- Project Description
 class ProjectDescription : public Component
 {
 public:
@@ -161,8 +152,9 @@ public:
 
   void Serialize(Serializer& stream) override;
 
-  /// If a pre-launch popup should be used to determine how application window is sized.
-  //bool mUseLaunchOptionsPopup;
+  /// If a pre-launch popup should be used to determine how application window
+  /// is sized.
+  // bool mUseLaunchOptionsPopup;
   /// If application launches in fullscreen mode.
   bool mLaunchFullscreen;
   /// Resolution of application when launched in windowed mode.
@@ -178,7 +170,8 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  /// If the frame rate should sync with the monitor's refresh rate, superseded by LimitFrameRate.
+  /// If the frame rate should sync with the monitor's refresh rate, superseded
+  /// by LimitFrameRate.
   bool mVerticalSync;
   /// If the engine should limit the frame rate.
   bool mLimitFrameRate;
@@ -202,7 +195,8 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  /// Maximum number of debug objects allowed at any one time to prevent accidentally running out of memory.
+  /// Maximum number of debug objects allowed at any one time to prevent
+  /// accidentally running out of memory.
   int GetMaxDebugObjects();
   void SetMaxDebugObjects(int maxDebugObjects);
   int mMaxDebugObjects;
@@ -215,8 +209,8 @@ public:
 
   void Serialize(Serializer& stream) override;
 
-  //String mOutputDirectory;
+  // String mOutputDirectory;
   HashSet<String> mActiveTargets;
 };
 
-}//namespace Zero
+} // namespace Zero

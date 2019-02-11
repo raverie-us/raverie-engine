@@ -1,23 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------Hash Policy for enum types
-template<>
+//for enum types
+template <>
 struct ZeroShared HashPolicy<spv::Op> : public HashPolicy<int>
 {
 };
 
-template<>
+template <>
 struct ZeroShared HashPolicy<spv::Capability> : public HashPolicy<int>
 {
 };
 
-}//namespace Zero
+} // namespace Zero

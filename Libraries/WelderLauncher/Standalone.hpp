@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,18 +7,26 @@ namespace Zero
 namespace Events
 {
 DeclareEvent(TemplateProjectPreviewUpdated);
-}//namespace Events
+} // namespace Events
 
 DeclareEnum4(InstallState, NotInstalled, Installing, Installed, Uninstalling);
 // How different two build ids are (typically for project to build)
-DeclareEnum6(BuildUpdateState, DifferentBranch, Older, Newer, NewerBreaking, OlderBreaking, Same);
+DeclareEnum6(BuildUpdateState,
+             DifferentBranch,
+             Older,
+             Newer,
+             NewerBreaking,
+             OlderBreaking,
+             Same);
 
 typedef HashSet<String> TagSet;
-void BuildTagSetFromTokenDelimitedList(StringParam tagData, TagSet& tagSet, char delimiter);
+void BuildTagSetFromTokenDelimitedList(StringParam tagData,
+                                       TagSet& tagSet,
+                                       char delimiter);
 
-//-------------------------------------------------------------------BuildId
 /// Common storage and querying of a build's id. Allows easy searching,
-/// displaying, serialization, and updating of what the id of a build is (in case new information is needed).
+/// displaying, serialization, and updating of what the id of a build is (in
+/// case new information is needed).
 class BuildId
 {
 public:
@@ -37,9 +40,11 @@ public:
   /// Mostly used as a fallback method for some cases that should never happen.
   static BuildId GetCurrentLauncherId();
 
-  /// Legacy for when no meta exists. Parse a build's name and extract id information.
+  /// Legacy for when no meta exists. Parse a build's name and extract id
+  /// information.
   bool Parse(StringParam buildName);
-  /// Same as above, but also saves the date-time information while setting the revision id.
+  /// Same as above, but also saves the date-time information while setting the
+  /// revision id.
   bool Parse(StringParam buildName, String& year, String& month, String& day);
 
   /// Get the display string for this build. Optionally show
@@ -52,8 +57,11 @@ public:
   /// Needed for uniquely identifying/hashing a build.
   String ToIdString() const;
   /// Returns the full unique id of a build. Parts of the id can be
-  /// disabled for things like display names and whatnot. A shared helper function.
-  String GetFullId(bool showExperimentalBranch, bool showChangeset, bool showPlatform) const;
+  /// disabled for things like display names and whatnot. A shared helper
+  /// function.
+  String GetFullId(bool showExperimentalBranch,
+                   bool showChangeset,
+                   bool showPlatform) const;
 
   // HashPolicy Interface
   size_t Hash() const;
@@ -61,7 +69,7 @@ public:
   bool operator!=(const BuildId& rhs) const;
   bool CompareBuilds(const BuildId& rhs, bool legacyCompare) const;
 
-  // What kind of a change is updating from this to rhs. 
+  // What kind of a change is updating from this to rhs.
   BuildUpdateState::Enum CheckForUpdate(const BuildId& rhs) const;
   // Is 'this' build older than 'rhs'.
   bool IsOlderThan(const BuildId& rhs) const;
@@ -75,13 +83,13 @@ public:
   String mShortChangeSet;
 };
 
-//-------------------------------------------------------------------ZeroBuild
-/// Represents a standalone "installer" of zero that is either installed locally or on the server.
+/// Represents a standalone "installer" of zero that is either installed locally
+/// or on the server.
 class ZeroBuild : public EventObject
 {
 public:
   ZeroBuild();
-  
+
   void ForwardEvent(Event* e);
   void InstallCompleted(Event* e);
   void UninstallCompleted(Event* e);
@@ -108,13 +116,18 @@ public:
   String SaveMetaFileToString();
   static String GetMetaFilePath(StringParam basePath);
 
-  // If we don't already have a meta cog, then create one from the empty archetype
-  // and make sure it has all of the necessary components. Returns true if the meta was null.
+  // If we don't already have a meta cog, then create one from the empty
+  // archetype and make sure it has all of the necessary components. Returns
+  // true if the meta was null.
   bool CreateMetaIfNull();
 
   // Given a legacy build name, parse out the date-time and revision id.
   // Returns false if the build's name didn't match the legacy pattern.
-  static bool ParseLegacyBuildName(StringParam buildName, String& year, String& month, String& day, String& revisionId);
+  static bool ParseLegacyBuildName(StringParam buildName,
+                                   String& year,
+                                   String& month,
+                                   String& day,
+                                   String& revisionId);
   void GetReleaseDate(String& year, String& month, String& day);
 
   bool IsBad();
@@ -126,17 +139,19 @@ public:
 
   // No copying allowed
 private:
-  ZeroBuild(const ZeroBuild& rhs) {};
-  void operator=(const ZeroBuild& rhs) {};
-public:
+  ZeroBuild(const ZeroBuild& rhs){};
+  void operator=(const ZeroBuild& rhs){};
 
+public:
   InstallState::Enum mInstallState;
   bool mOnServer;
 
-  /// A cog representing the meta for this build. This cog is assumed to never die except on shutdown.
+  /// A cog representing the meta for this build. This cog is assumed to never
+  /// die except on shutdown.
   Cog* mMetaCog;
 
-  /// The folder where this build is installed (if it's been installed), aka the folder with ZeroEditor.exe.
+  /// The folder where this build is installed (if it's been installed), aka the
+  /// folder with ZeroEditor.exe.
   String mInstallLocation;
 
   // The extension used for builds. Makes it easier to change all at once.
@@ -144,24 +159,28 @@ public:
   const static String mDeprecatedTag;
 };
 
-/// Represents information about a template project for the user. This may reside locally or on the server.
+/// Represents information about a template project for the user. This may
+/// reside locally or on the server.
 class TemplateProject : public EventObject
 {
 public:
   typedef TemplateProject ZilchSelf;
-  
+
   TemplateProject();
 
   /// Get the serialized data representing this template
   ZeroTemplate* GetZeroTemplate(bool createIfNull);
-  /// If we don't already have a meta cog, then create one from the empty archetype
-  /// and make sure it has all of the necessary components. Returns true if the meta was null.
+  /// If we don't already have a meta cog, then create one from the empty
+  /// archetype and make sure it has all of the necessary components. Returns
+  /// true if the meta was null.
   bool CreateMetaIfNull();
   /// Saves the meta file to a string so that it can be saved out somewhere.
-  /// Typically used to save on another thread where serialization doesn't currently work.
+  /// Typically used to save on another thread where serialization doesn't
+  /// currently work.
   String SaveMetaFileToString();
 
-  /// The key used to hash template projects (built from the SKU and VersionIdString).
+  /// The key used to hash template projects (built from the SKU and
+  /// VersionIdString).
   String GetIdString();
   /// The name to display to users for the template.
   String GetDisplayName();
@@ -173,7 +192,8 @@ public:
   float GetSortPriority();
   /// The name of the template file if it has been downloaded.
   String GetLocalTemplateFileName();
-  /// Returns the path to the installed template file. If the template wasn't installed then this path will be invalid.
+  /// Returns the path to the installed template file. If the template wasn't
+  /// installed then this path will be invalid.
   String GetInstalledTemplatePath();
 
   /// Can this template project run with the given build id?
@@ -191,23 +211,26 @@ public:
   bool mIsDownloaded;
   bool mIsDifferentFromServer;
 
-  /// A cog representing the meta for this project. This cog is assumed to never die except on shutdown.
+  /// A cog representing the meta for this project. This cog is assumed to never
+  /// die except on shutdown.
   Cog* mMetaCog;
-  
+
   /// Cached information for the display icon
   Image mIconImage;
   HandleOf<Texture> mIconTexture;
 
-  // The extension used for template projects. Makes it easier to change all at once.
+  // The extension used for template projects. Makes it easier to change all at
+  // once.
   const static String mExtensionWithDot;
-  // A few places need the extension without the dot due to how file path currently works
-  // (needs the '.' to combine but returns without the '.' when parsing)
+  // A few places need the extension without the dot due to how file path
+  // currently works (needs the '.' to combine but returns without the '.' when
+  // parsing)
   const static String mExtensionWithoutDot;
   const static String mBackupIconTextureName;
 
 private:
-  TemplateProject(const TemplateProject& rhs) {};
-  void operator=(const TemplateProject& rhs) {};
+  TemplateProject(const TemplateProject& rhs){};
+  void operator=(const TemplateProject& rhs){};
 };
 
-}//namespace Zero
+} // namespace Zero

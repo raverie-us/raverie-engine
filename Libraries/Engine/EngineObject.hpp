@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------EngineObject
-/// Base class for common engine/system objects. Provides overloaded new/delete to track memory allocations.
+/// Base class for common engine/system objects. Provides overloaded new/delete
+/// to track memory allocations.
 class EngineObject : public EventObject
 {
 public:
@@ -21,4 +16,4 @@ public:
   virtual ~EngineObject();
 };
 
-}// namespace Zero
+} // namespace Zero

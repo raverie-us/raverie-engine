@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MultiManager.cpp
-///
-/// Authors: Chris Peters
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,14 +17,16 @@ MultiManager::MultiManager(RootWidget* rootWidget, MultiDock* mainDock)
 
 void MultiManager::ManageWidget(Widget* widget)
 {
-  if(widget->mManager != this)
+  if (widget->mManager != this)
   {
     widget->mManager = this;
     ManagedWidgets.Insert(widget);
   }
 }
 
-Window* MultiManager::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible)
+Window* MultiManager::AddManagedWidget(Widget* widget,
+                                       DockArea::Enum dockArea,
+                                       bool visible)
 {
   LayoutInfo info;
   info.Area = dockArea;
@@ -47,10 +42,10 @@ Window* MultiManager::AddManagedWidget(Widget* widget, LayoutInfo& info)
 {
   ManageWidget(widget);
 
-  if(widget->mHideOnClose)
+  if (widget->mHideOnClose)
     Info[info.Name] = info;
 
-  if(info.Visible)
+  if (info.Visible)
   {
     return mMainDock->AddWidget(widget, info);
   }
@@ -67,8 +62,8 @@ Widget* MultiManager::FindWidgetWith(HandleParam searchObject)
   WindowTabEvent event;
   event.SearchObject = searchObject;
 
-  forRange(Widget* child, ManagedWidgets.All())
-    child->DispatchBubble(Events::TabFind, &event);
+  forRange(Widget * child, ManagedWidgets.All())
+      child->DispatchBubble(Events::TabFind, &event);
 
   return event.TabWidgetFound;
 }
@@ -79,8 +74,8 @@ Widget* MultiManager::FindWidget(StringParam name)
   WindowTabEvent event;
   event.Name = name;
 
-  forRange(Widget* child, ManagedWidgets.All())
-    child->DispatchBubble(Events::TabFind, &event);
+  forRange(Widget * child, ManagedWidgets.All())
+      child->DispatchBubble(Events::TabFind, &event);
 
   return event.TabWidgetFound;
 }
@@ -89,7 +84,7 @@ Widget* MultiManager::InternalActivateWidget(Widget* widget)
 {
   String name = widget->GetName();
 
-  // Widget was in the non active 
+  // Widget was in the non active
   InactiveWidgets.Erase(name);
 
   LayoutInfo& location = Info[name];
@@ -102,7 +97,7 @@ Widget* MultiManager::InternalActivateWidget(Widget* widget)
 Widget* MultiManager::ShowWidgetWith(HandleParam searchObject)
 {
   Widget* widget = FindWidgetWith(searchObject);
-  if(widget)
+  if (widget)
     Zero::ShowWidget(widget);
   return widget;
 }
@@ -110,14 +105,14 @@ Widget* MultiManager::ShowWidgetWith(HandleParam searchObject)
 Widget* MultiManager::ShowWidget(StringParam name)
 {
   Widget* widget = InactiveWidgets.FindValue(name, nullptr);
-  if(widget)
+  if (widget)
   {
     InternalActivateWidget(widget);
   }
   else
   {
     widget = this->FindWidget(name);
-    if(widget)
+    if (widget)
       Zero::ShowWidget(widget);
   }
 
@@ -146,7 +141,7 @@ Widget* MultiManager::HideWidget(StringParam name)
   return nullptr;
 }
 
-  void MultiManager::Destroyed(Widget* widget)
+void MultiManager::Destroyed(Widget* widget)
 {
   ManagedWidgets.Erase(widget);
 }
@@ -154,14 +149,14 @@ Widget* MultiManager::HideWidget(StringParam name)
 void MultiManager::Closed(Widget* widget)
 {
   // A widget on a tabbed window is being closed
-  // return it to the hidden state if hide on close 
+  // return it to the hidden state if hide on close
   // is set
-  if(widget->mHideOnClose)
+  if (widget->mHideOnClose)
   {
     String name = widget->GetName();
 
     // Final clean up
-    if(mMainDock->mDestroyed)
+    if (mMainDock->mDestroyed)
     {
       widget->Destroy();
       return;
@@ -170,7 +165,7 @@ void MultiManager::Closed(Widget* widget)
     LayoutInfo& info = Info[name];
     Window* window = GetWindowContaining(widget);
 
-    if(window && window->mDocker)
+    if (window && window->mDocker)
     {
       info.Size = window->GetSize();
       info.Area = window->mDocker->GetDockArea();
@@ -198,7 +193,7 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
   RootWidget* targetRoot = widget->GetRootWidget();
   RootWidget* mainRoot = mMainDock->GetRootWidget();
 
-  if(targetRoot == mainRoot)
+  if (targetRoot == mainRoot)
   {
     // Create a new Os window and attach the tab to it
     OsWindow* currentOsWindow = mainRoot->GetOsWindow();
@@ -206,14 +201,18 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
     Window* currentWindow = tabWidget->mTabArea->mParentWindow;
 
     // Open window on current location
-    IntVec2 windowPos = ToIntVec2(ToVector2(currentWindow->GetScreenPosition()));
+    IntVec2 windowPos =
+        ToIntVec2(ToVector2(currentWindow->GetScreenPosition()));
     windowPos += currentOsWindow->GetMonitorClientPosition();
-    IntVec2 windowSize = Math::ToIntVec2( currentWindow->GetSize() );
+    IntVec2 windowSize = Math::ToIntVec2(currentWindow->GetSize());
     String name = tabWidget->mTitle->GetText();
 
     // Create a new top level window
-    WindowStyleFlags::Enum windowFlags = (WindowStyleFlags::Enum)(WindowStyleFlags::Resizable | WindowStyleFlags::OnTaskBar | WindowStyleFlags::ClientOnly);
-    OsWindow* newOsWindow = shell->CreateOsWindow(name, windowSize, windowPos, currentOsWindow, windowFlags);
+    WindowStyleFlags::Enum windowFlags = (WindowStyleFlags::Enum)(
+        WindowStyleFlags::Resizable | WindowStyleFlags::OnTaskBar |
+        WindowStyleFlags::ClientOnly);
+    OsWindow* newOsWindow = shell->CreateOsWindow(
+        name, windowSize, windowPos, currentOsWindow, windowFlags);
     newOsWindow->SetMinClientSize(IntVec2(500, 500));
     MainWindow* rootWidget = new MainWindow(newOsWindow);
     rootWidget->SetTitle(name);
@@ -223,14 +222,13 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
     // Attach a window to it
     Window* window = new Window(rootWidget);
     ManageWidget(window);
-    newOsWindow->SetMinClientSize( ToIntVec2(currentWindow->GetMinSize()));
+    newOsWindow->SetMinClientSize(ToIntVec2(currentWindow->GetMinSize()));
     window->mDocker = new OsDocker();
     window->AttachAsTab(widget);
 
     // Remove this tab
     tabWidget->SetOwnedWidget(nullptr);
     tabWidget->mTabArea->CloseTab(tabWidget);
-
   }
   else
   {
@@ -243,7 +241,6 @@ void MultiManager::Transfer(TabWidget* tabWidget, Widget* widget)
     // Close the old window
     targetRoot->GetOsWindow()->Close();
   }
-
 }
 
 void MultiManager::OnWindowKeyDown(KeyboardEvent* event)
@@ -253,4 +250,4 @@ void MultiManager::OnWindowKeyDown(KeyboardEvent* event)
   this->DispatchEvent(Events::OsKeyDown, event);
 }
 
-}
+} // namespace Zero

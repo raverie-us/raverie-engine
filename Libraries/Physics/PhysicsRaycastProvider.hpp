@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,8 +12,12 @@ public:
 
   PhysicsRaycastProvider();
 
-  void RayCast(Ray& ray, CastInfo& castInfo, RaycastResultList& results) override;
-  void FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultList& results) override;
+  void RayCast(Ray& ray,
+               CastInfo& castInfo,
+               RaycastResultList& results) override;
+  void FrustumCast(Frustum& frustum,
+                   CastInfo& castInfo,
+                   RaycastResultList& results) override;
 
   /// Should dynamic colliders (those with rigid bodies) be selected?
   bool mDynamicColliders;
@@ -32,4 +31,4 @@ public:
   bool mMultiSelectKinematic;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MouseCapture.cpp
-/// Implementation of the MouseCapture Component.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,13 +6,12 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(MouseDragStart);
-  DefineEvent(MouseDragMove);
-  DefineEvent(MouseDragUpdate);
-  DefineEvent(MouseDragEnd);
-}
+DefineEvent(MouseDragStart);
+DefineEvent(MouseDragMove);
+DefineEvent(MouseDragUpdate);
+DefineEvent(MouseDragEnd);
+} // namespace Events
 
-//-------------------------------------------------------------- Tool Mouse Drag
 class MouseCaptureDrag : public MouseManipulation
 {
 public:
@@ -28,8 +19,8 @@ public:
   HandleOf<ReactiveViewport> mViewport;
 
   //****************************************************************************
-  MouseCaptureDrag(ViewportMouseEvent* e, Cog* captureObject)
-    : MouseManipulation(e->GetMouse(), e->GetViewport())
+  MouseCaptureDrag(ViewportMouseEvent* e, Cog* captureObject) :
+      MouseManipulation(e->GetMouse(), e->GetViewport())
   {
     mViewport = e->GetViewport();
     mMouseCaptureObject = captureObject;
@@ -37,7 +28,7 @@ public:
     // Button could not be determined in 'MouseManipulation' constructor,
     // because a mouse up event could have triggered this drag.
     // [ex: Toggle to drag].
-    if(mButton == MouseButtons::None)
+    if (mButton == MouseButtons::None)
       mButton = e->Button;
   }
 
@@ -56,7 +47,7 @@ public:
   void ForwardMouseEvent(MouseEvent* e, StringParam eventId)
   {
     ReactiveViewport* viewport = *mViewport;
-    if(viewport == NULL)
+    if (viewport == NULL)
       return;
 
     // Create the viewport event
@@ -74,7 +65,7 @@ public:
   void ForwardEvent(Event* e)
   {
     Cog* captureObject = mMouseCaptureObject;
-    if(captureObject == nullptr)
+    if (captureObject == nullptr)
       return;
 
     Debug::ActiveDrawSpace debugContext(captureObject->GetSpace()->GetId().Id);
@@ -87,13 +78,13 @@ public:
   void OnMouseButtonUp(MouseEvent* e)
   {
     Cog* captureObject = mMouseCaptureObject;
-    if(captureObject == nullptr)
+    if (captureObject == nullptr)
       return;
 
-    if(MouseCapture* capture = captureObject->has(MouseCapture))
+    if (MouseCapture* capture = captureObject->has(MouseCapture))
     {
       // The button that created the capture is the one that has to end it.
-      if(mButton == e->Button)
+      if (mButton == e->Button)
       {
         ReactiveViewport* viewport = *mViewport;
 
@@ -101,7 +92,7 @@ public:
         ViewportMouseEvent eventToSend(e);
         eventToSend.EventId = e->EventId;
 
-        if(viewport != nullptr)
+        if (viewport != nullptr)
           viewport->InitViewportEvent(eventToSend);
 
         capture->ReleaseCapture(&eventToSend);
@@ -109,7 +100,6 @@ public:
         e->Handled = eventToSend.Handled;
         e->HandledEventScript = eventToSend.HandledEventScript;
       }
-
     }
   }
 
@@ -153,10 +143,10 @@ public:
   void OnKeyDown(KeyboardEvent* e) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == NULL)
+    if (viewport == NULL)
       return;
 
-    //viewport->DispatchEvent(Events::KeyDown, e);
+    // viewport->DispatchEvent(Events::KeyDown, e);
     ForwardEvent(e);
 
     // Event should be considered handled if the mouse is captured.
@@ -170,10 +160,10 @@ public:
   void OnKeyUp(KeyboardEvent* e) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == NULL)
+    if (viewport == NULL)
       return;
 
-    //viewport->DispatchEvent(Events::KeyUp, e);
+    // viewport->DispatchEvent(Events::KeyUp, e);
     ForwardEvent(e);
     e->Handled = true;
   }
@@ -182,18 +172,16 @@ public:
   void OnKeyRepeated(KeyboardEvent* e) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == NULL)
+    if (viewport == NULL)
       return;
 
-    //viewport->DispatchEvent(Events::KeyRepeated, e);
+    // viewport->DispatchEvent(Events::KeyRepeated, e);
     ForwardEvent(e);
     e->Handled = true;
   }
 };
 
-//---------------------------------------------------------------- Mouse Capture
 
-//******************************************************************************
 ZilchDefineType(MouseCapture, builder, type)
 {
   ZeroBindComponent();
@@ -202,7 +190,8 @@ ZilchDefineType(MouseCapture, builder, type)
 
   ZilchBindMethod(Capture);
   ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void));
-  ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void, ViewportMouseEvent*));
+  ZilchBindOverloadedMethod(ReleaseCapture,
+                            ZilchInstanceOverload(void, ViewportMouseEvent*));
   ZilchBindGetter(IsCaptured);
 
   ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
@@ -211,18 +200,16 @@ ZilchDefineType(MouseCapture, builder, type)
   ZeroBindEvent(Events::MouseDragEnd, ViewportMouseEvent);
 }
 
-//******************************************************************************
 void MouseCapture::Initialize(CogInitializer& initializer)
 {
   ConnectThisTo(GetOwner(), Events::MouseDragUpdate, OnMouseDragUpdate);
 }
 
-//******************************************************************************
 bool MouseCapture::Capture(ViewportMouseEvent* e)
 {
-  if(GetIsCaptured())
+  if (GetIsCaptured())
     return false;
-  
+
   // Create the viewport event
   ViewportMouseEvent eventToSend(e);
   ReactiveViewport* viewport = e->GetViewport();
@@ -236,13 +223,11 @@ bool MouseCapture::Capture(ViewportMouseEvent* e)
   return true;
 }
 
-//******************************************************************************
 void MouseCapture::ReleaseCapture()
 {
   ReleaseCapture(&mLastMouseEvent);
 }
 
-//******************************************************************************
 void MouseCapture::ReleaseCapture(ViewportMouseEvent* e)
 {
   // Don't do anything if we weren't captured
@@ -255,19 +240,16 @@ void MouseCapture::ReleaseCapture(ViewportMouseEvent* e)
   mManipulation.SafeDestroy();
 }
 
-//******************************************************************************
 bool MouseCapture::GetIsCaptured()
 {
   return mManipulation.IsNotNull();
 }
 
-//******************************************************************************
 void MouseCapture::OnDestroy(u32 flags)
 {
   mManipulation.SafeDestroy();
 }
 
-//******************************************************************************
 void MouseCapture::OnMouseDragUpdate(ViewportMouseEvent* e)
 {
   mLastMouseEvent = *e;

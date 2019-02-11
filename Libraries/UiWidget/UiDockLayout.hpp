@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Dock Layout
 class UiDockLayout : public UiLayout
 {
 public:
@@ -27,4 +21,4 @@ public:
   Vec2 mSpacing;
 };
 
-}//namespace Zero
+} // namespace Zero

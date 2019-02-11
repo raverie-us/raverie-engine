@@ -1,15 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------- ZilchScript Resource
+//Resource
 /// Zilch script file Resource.
 class ZilchScript : public ZilchDocumentResource
 {
@@ -24,10 +19,11 @@ public:
 
   // ZilchDocumentResource Interface.
   void GetLibraries(Array<LibraryRef>& libraries) override;
-  void GetLibrariesRecursive(Array<LibraryRef>& libraries, ResourceLibrary* library);
+  void GetLibrariesRecursive(Array<LibraryRef>& libraries,
+                             ResourceLibrary* library);
 };
 
-//------------------------------------------------------------- ZilchScriptLoader
+//ZilchScriptLoader
 class ZilchScriptLoader : public ResourceLoader
 {
 public:
@@ -36,7 +32,7 @@ public:
   void ReloadFromFile(Resource* resource, ResourceEntry& entry) override;
 };
 
-//------------------------------------------------------------- ZilchScript Manager
+//Manager
 // Resource manager for ZilchScript
 class ZilchScriptManager : public ResourceManager
 {
@@ -44,23 +40,32 @@ public:
   DeclareResourceManager(ZilchScriptManager, ZilchScript);
 
   ZilchScriptManager(BoundType* resourceType);
-  
+
   // ResourceManager Interface
-  void ValidateNewName(Status& status, StringParam name, BoundType* optionalType) override;
-  void ValidateRawName(Status& status, StringParam name, BoundType* optionalType) override;
+  void ValidateNewName(Status& status,
+                       StringParam name,
+                       BoundType* optionalType) override;
+  void ValidateRawName(Status& status,
+                       StringParam name,
+                       BoundType* optionalType) override;
   String GetTemplateSourceFile(ResourceAdd& resourceAdd) override;
 
-  //Internals
+  // Internals
   void OnResourceLibraryConstructed(ObjectEvent* e);
 
-  static void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location);
-  static void DispatchZeroZilchError(const CodeLocation& location, StringParam message, Project* buildingProject);
-  
+  static void DispatchScriptError(StringParam eventId,
+                                  StringParam shortMessage,
+                                  StringParam fullMessage,
+                                  const CodeLocation& location);
+  static void DispatchZeroZilchError(const CodeLocation& location,
+                                     StringParam message,
+                                     Project* buildingProject);
+
   static void OnMemoryLeak(MemoryLeakEvent* event);
-  
+
   // We ignore duplicate exceptions until the version is incremented
   HashSet<String> mDuplicateExceptions;
   int mLastExceptionVersion;
 };
 
-}//namespace Zero
+} // namespace Zero

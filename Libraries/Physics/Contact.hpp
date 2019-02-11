@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,10 +16,11 @@ class Contact;
 class ContactManager;
 class IConstraintSolver;
 
-DeclareBitField6(ContactFlags,OnIsland, Ghost, SkipsResolution, Valid, NewContact, Active);
+DeclareBitField6(
+    ContactFlags, OnIsland, Ghost, SkipsResolution, Valid, NewContact, Active);
 
-///A constraint specifically for solving a non-penetration constraint.
-///This should not be created anywhere but in the constraint solver.
+/// A constraint specifically for solving a non-penetration constraint.
+/// This should not be created anywhere but in the constraint solver.
 class Contact
 {
 public:
@@ -58,9 +54,8 @@ public:
   void UpdateManifoldInternal(Manifold* manifold);
   Manifold* GetManifold();
 
-  ///Returns how many contacts this constraint is over.
+  /// Returns how many contacts this constraint is over.
   uint GetContactCount() const;
-
 
   virtual void UpdateAtoms();
   virtual uint MoleculeCount() const;
@@ -73,17 +68,20 @@ public:
   void ComputePositionMolecules(MoleculeWalker& fragments);
 
   virtual void DebugDraw();
-  virtual uint GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const;
+  virtual uint GetAtomIndexFilter(uint atomIndex,
+                                  real& desiredConstraintValue) const;
 
   bool GetShouldBaumgarteBeUsed() const;
   real GetLinearBaumgarte() const;
   real GetLinearErrorCorrection() const;
-  //Not used, but needed for an interface
-  real GetAngularErrorCorrection() const {return 0;};
+  // Not used, but needed for an interface
+  real GetAngularErrorCorrection() const
+  {
+    return 0;
+  };
 
   Collider* GetCollider(uint index) const;
 
-  
   Link<Contact> SolverLink;
 
   EdgeType mEdges[2];
@@ -91,13 +89,13 @@ public:
   ContactManager* mContactManager;
   IConstraintSolver* mSolver;
 
-//private:
+  // private:
 
   Manifold* mManifold;
 
   BitField<ContactFlags::Enum> mFlags;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

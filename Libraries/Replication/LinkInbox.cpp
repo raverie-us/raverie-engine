@@ -1,61 +1,59 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
 LinkInbox::LinkInbox(PeerLink* link)
-/// Operating Data
-  : mLink(link),
+    /// Operating Data
+    :
+    mLink(link),
 
-  /// Packet Data
-  mReceivedPackets(),
-  mLastReceiveTime(link->GetLocalTime()),
-  mIncomingPacketSequence(),
-  mLastOutPacketSequenceHistorySendTime(mLastReceiveTime),
-  mLastOutPacketSequenceHistoryNESQ(0),
-  mLastInPacketSequenceHistoryNESQ(0),
+    /// Packet Data
+    mReceivedPackets(),
+    mLastReceiveTime(link->GetLocalTime()),
+    mIncomingPacketSequence(),
+    mLastOutPacketSequenceHistorySendTime(mLastReceiveTime),
+    mLastOutPacketSequenceHistoryNESQ(0),
+    mLastInPacketSequenceHistoryNESQ(0),
 
-  /// Channel Data
-  mCustomDefaultChannel(0, TransferMode::Immediate),
-  mProtocolDefaultChannel(0, TransferMode::Immediate),
-  mChannels(),
+    /// Channel Data
+    mCustomDefaultChannel(0, TransferMode::Immediate),
+    mProtocolDefaultChannel(0, TransferMode::Immediate),
+    mChannels(),
 
-  /// Message Data
-  mReleasedCustomMessages(),
-  mReleasedProtocolMessages()
+    /// Message Data
+    mReleasedCustomMessages(),
+    mReleasedProtocolMessages()
 {
 }
 
 LinkInbox::LinkInbox(MoveReference<LinkInbox> rhs)
-/// Operating Data
-  : mLink(rhs->mLink),
+    /// Operating Data
+    :
+    mLink(rhs->mLink),
 
-  /// Packet Data
-  mReceivedPackets(ZeroMove(rhs->mReceivedPackets)),
-  mLastReceiveTime(rhs->mLastReceiveTime),
-  mIncomingPacketSequence(ZeroMove(rhs->mIncomingPacketSequence)),
-  mLastOutPacketSequenceHistorySendTime(rhs->mLastOutPacketSequenceHistorySendTime),
-  mLastOutPacketSequenceHistoryNESQ(rhs->mLastOutPacketSequenceHistoryNESQ),
-  mLastInPacketSequenceHistoryNESQ(rhs->mLastInPacketSequenceHistoryNESQ),
+    /// Packet Data
+    mReceivedPackets(ZeroMove(rhs->mReceivedPackets)),
+    mLastReceiveTime(rhs->mLastReceiveTime),
+    mIncomingPacketSequence(ZeroMove(rhs->mIncomingPacketSequence)),
+    mLastOutPacketSequenceHistorySendTime(
+        rhs->mLastOutPacketSequenceHistorySendTime),
+    mLastOutPacketSequenceHistoryNESQ(rhs->mLastOutPacketSequenceHistoryNESQ),
+    mLastInPacketSequenceHistoryNESQ(rhs->mLastInPacketSequenceHistoryNESQ),
 
-  /// Channel Data
-  mCustomDefaultChannel(ZeroMove(rhs->mCustomDefaultChannel)),
-  mProtocolDefaultChannel(ZeroMove(rhs->mProtocolDefaultChannel)),
-  mChannels(ZeroMove(rhs->mChannels)),
+    /// Channel Data
+    mCustomDefaultChannel(ZeroMove(rhs->mCustomDefaultChannel)),
+    mProtocolDefaultChannel(ZeroMove(rhs->mProtocolDefaultChannel)),
+    mChannels(ZeroMove(rhs->mChannels)),
 
-  /// Message Data
-  mReleasedCustomMessages(ZeroMove(rhs->mReleasedCustomMessages)),
-  mReleasedProtocolMessages(ZeroMove(rhs->mReleasedProtocolMessages))
+    /// Message Data
+    mReleasedCustomMessages(ZeroMove(rhs->mReleasedCustomMessages)),
+    mReleasedProtocolMessages(ZeroMove(rhs->mReleasedProtocolMessages))
 {
 }
 
-LinkInbox& LinkInbox::operator =(MoveReference<LinkInbox> rhs)
+LinkInbox& LinkInbox::operator=(MoveReference<LinkInbox> rhs)
 {
   /// Operating Data
   mLink = rhs->mLink;
@@ -64,7 +62,8 @@ LinkInbox& LinkInbox::operator =(MoveReference<LinkInbox> rhs)
   mReceivedPackets = ZeroMove(rhs->mReceivedPackets);
   mLastReceiveTime = rhs->mLastReceiveTime;
   mIncomingPacketSequence = ZeroMove(rhs->mIncomingPacketSequence);
-  mLastOutPacketSequenceHistorySendTime = rhs->mLastOutPacketSequenceHistorySendTime;
+  mLastOutPacketSequenceHistorySendTime =
+      rhs->mLastOutPacketSequenceHistorySendTime;
   mLastOutPacketSequenceHistoryNESQ = rhs->mLastOutPacketSequenceHistoryNESQ;
   mLastInPacketSequenceHistoryNESQ = rhs->mLastInPacketSequenceHistoryNESQ;
 
@@ -84,7 +83,8 @@ LinkInbox& LinkInbox::operator =(MoveReference<LinkInbox> rhs)
 // Incoming Message Channel Management
 //
 
-InMessageChannel* LinkInbox::GetIncomingChannel(MessageChannelId channelId) const
+InMessageChannel*
+LinkInbox::GetIncomingChannel(MessageChannelId channelId) const
 {
   return mChannels.FindPointer(channelId);
 }
@@ -104,7 +104,7 @@ uint LinkInbox::GetIncomingChannelCount() const
 void LinkInbox::ReceivePacket(MoveReference<InPacket> packet)
 {
   // For every message
-  forRange(Message& message, packet->GetMessages().All())
+  forRange(Message & message, packet->GetMessages().All())
   {
     // Message has an accurate remote timestamp?
     TimeMs remoteTimestamp = 0;
@@ -123,7 +123,8 @@ void LinkInbox::ReceivePacket(MoveReference<InPacket> packet)
     // Convert to local timestamp
     TimeMs localTimestamp = mLink->RemoteToLocalTime(remoteTimestamp);
 
-    // Set local timestamp (later logic assumes timestamps are always in local time)
+    // Set local timestamp (later logic assumes timestamps are always in local
+    // time)
     message.SetTimestamp(localTimestamp);
   }
 
@@ -146,24 +147,25 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
 
   // For every packet
   ArraySet<MessageChannelId> updatedChannels;
-  forRange(InPacket& packet, mReceivedPackets.All())
+  forRange(InPacket & packet, mReceivedPackets.All())
   {
     //
     // Process Packet
     //
 
     // Attempt to add packet to sequence
-    if (!mIncomingPacketSequence.Add(packet.GetSequenceId())) // Is network-duplicate?
-      continue; // Ignore packet
+    if (!mIncomingPacketSequence.Add(
+            packet.GetSequenceId())) // Is network-duplicate?
+      continue;                      // Ignore packet
 
-                //
-                // Process Incoming Messages
-                //
+    //
+    // Process Incoming Messages
+    //
 
-                // For every message
-    forRange(Message& message, packet.GetMessages().All())
+    // For every message
+    forRange(Message & message, packet.GetMessages().All())
     {
-      MessageChannelId  channelId = message.GetChannelId();
+      MessageChannelId channelId = message.GetChannelId();
 
       //
       // Get Channel
@@ -198,7 +200,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
       if (channel && channel->IsDuplicate(message))
         continue; // Ignore message
 
-                  // Process message
+      // Process message
       switch (message.GetType())
       {
       case ProtocolMessageType::ChannelOpened:
@@ -207,24 +209,27 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
         if (channel)
           break; // Ignore message
 
-                 // [Link Plugin Event] Continue?
+        // [Link Plugin Event] Continue?
         if (mLink->PluginEventOnIncomingChannelOpen(channelId))
         {
           // Read channel opened message data
           ChannelOpenedData channelOpenedData;
           if (!message.GetData().Read(channelOpenedData)) // Unable?
-            break; // Ignore message
+            break;                                        // Ignore message
 
-                   // Add new incoming message channel
-          InMessageChannel newChannel(channelId, channelOpenedData.mTransferMode);
-          ArraySet<InMessageChannel>::pointer_bool_pair result = mChannels.Insert(ZeroMove(newChannel));
+          // Add new incoming message channel
+          InMessageChannel newChannel(channelId,
+                                      channelOpenedData.mTransferMode);
+          ArraySet<InMessageChannel>::pointer_bool_pair result =
+              mChannels.Insert(ZeroMove(newChannel));
           Assert(result.second); // (Insertion should have succeeded)
 
-                                 // Open new incoming message channel
+          // Open new incoming message channel
           result.first->Open();
 
           // [Link Event]
-          mLink->LinkEventIncomingChannelOpened(channelId, channelOpenedData.mTransferMode);
+          mLink->LinkEventIncomingChannelOpened(
+              channelId, channelOpenedData.mTransferMode);
         }
       }
       break;
@@ -235,7 +240,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
         if (!channel || channel->IsClosed())
           break; // Ignore message
 
-                 // [Link Plugin Event]
+        // [Link Plugin Event]
         mLink->PluginEventOnIncomingChannelClose(channelId);
 
         // Close incoming message channel
@@ -250,8 +255,8 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
         if (!message.GetData().Read(packetSequenceHistoryData)) // Unable?
           break; // Ignore message
 
-                 // Does this packet sequence history record contain newer data?
-                 // (Is this record more recent than the last record we received?)
+        // Does this packet sequence history record contain newer data?
+        // (Is this record more recent than the last record we received?)
         PacketSequenceHistory& packetRecord = packetSequenceHistoryData;
         if (packetRecord.mNext > mLastInPacketSequenceHistoryNESQ)
         {
@@ -269,7 +274,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
             // Packet was ACKd?
             if (packetACKd)
               remoteACKs.PushBack(packetSequenceId); // Add to ACKs
-                                                      // Packet was NAKd?
+                                                     // Packet was NAKd?
             else
               remoteNAKs.PushBack(packetSequenceId); // Add to NAKs
           }
@@ -284,7 +289,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
         if (!channel)
           break; // Ignore message
 
-                 // Attempt to push message into channel for later release
+        // Attempt to push message into channel for later release
         channel->Push(ZeroMove(message));
       }
       break;
@@ -294,13 +299,15 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
       // Update Channel
       //
 
-      // (Take released messages and erase the channel if it's ready to be deleted)
+      // (Take released messages and erase the channel if it's ready to be
+      // deleted)
 
       // Non-default (non-zero) channel?
       if (channelId != 0)
       {
         // Find updated channel
-        ArraySet<InMessageChannel>::iterator updatedChannel = mChannels.FindIterator(channelId);
+        ArraySet<InMessageChannel>::iterator updatedChannel =
+            mChannels.FindIterator(channelId);
         if (updatedChannel != mChannels.End()) // Found?
         {
           // Release pending messages
@@ -326,7 +333,8 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
         ReleaseCustomMessages(customReleasedMessages);
 
         // Release pending protocol messages
-        Array<Message> protocolReleasedMessages = mProtocolDefaultChannel.Release();
+        Array<Message> protocolReleasedMessages =
+            mProtocolDefaultChannel.Release();
         ReleaseProtocolMessages(protocolReleasedMessages);
       }
 
@@ -341,10 +349,14 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
 
   // Time to send a packet sequence history update?
   TimeMs now = mLink->GetLocalTime();
-  if ((now - mLastOutPacketSequenceHistorySendTime) > (mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRateFactor()))
+  if ((now - mLastOutPacketSequenceHistorySendTime) >
+      (mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRateFactor()))
   {
     // Get packet sequence history data
-    PacketSequenceHistoryData packetSequenceHistoryData = mIncomingPacketSequence.GetSequenceHistory(uint(mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRangeFactor()));
+    PacketSequenceHistoryData packetSequenceHistoryData =
+        mIncomingPacketSequence.GetSequenceHistory(
+            uint(mLink->GetSendRate() *
+                 mLink->GetPacketSequenceHistoryRangeFactor()));
 
     // Record contains newer data?
     if (packetSequenceHistoryData.mNext > mLastOutPacketSequenceHistoryNESQ)
@@ -365,7 +377,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
 void LinkInbox::ReleaseCustomMessages(Array<Message>& messages)
 {
   // For all messages
-  forRange(Message& message, messages.All())
+  forRange(Message & message, messages.All())
   {
     // Should be a custom message
     Assert(message.IsCustomType());
@@ -382,7 +394,7 @@ void LinkInbox::ReleaseCustomMessages(Array<Message>& messages)
 void LinkInbox::ReleaseProtocolMessages(Array<Message>& messages)
 {
   // For all messages
-  forRange(Message& message, messages.All())
+  forRange(Message & message, messages.All())
   {
     // Should be a protocol message
     Assert(!message.IsCustomType());

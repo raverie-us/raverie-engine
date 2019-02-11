@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CodeSplitWindow.hpp
-///  Declare the CodeSplitWindow and CodeSplitWindow.
-///
-/// Authors: Joshua Davis
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,7 +12,7 @@ class KeyboardEvent;
 /// Interface for the code translator.
 struct CodeTranslator
 {
-  virtual ~CodeTranslator() {};
+  virtual ~CodeTranslator(){};
   virtual void Translate(HashMap<String, String>& files);
 
   virtual uint GetSourceLexer();
@@ -45,4 +37,4 @@ public:
   String mCommandToRunOnSave;
 };
 
-}//namespace Zero
+} // namespace Zero

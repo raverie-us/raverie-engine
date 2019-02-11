@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -8,21 +7,24 @@ namespace Zero
 
 namespace Tags
 {
-  DeclareTag(Graphical);
+DeclareTag(Graphical);
 }
 
 namespace Events
 {
-  DeclareEvent(EnterView);
-  DeclareEvent(EnterViewAny);
-  DeclareEvent(ExitView);
-  DeclareEvent(ExitViewAll);
-}
+DeclareEvent(EnterView);
+DeclareEvent(EnterViewAny);
+DeclareEvent(ExitView);
+DeclareEvent(ExitViewAll);
+} // namespace Events
 
 static float cMinimumBoundingSize = 0.01f;
 static float cMinimumBoundingHalfSize = cMinimumBoundingSize * 0.5f;
 
-void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation);
+void MakeLocalToViewAligned(Mat4& localToView,
+                            Mat4Param localToWorld,
+                            Mat4Param worldToView,
+                            Vec3Param translation);
 
 class PropertyShaderInput
 {
@@ -59,9 +61,14 @@ public:
   // Graphical Interface
 
   virtual Aabb GetLocalAabb() = 0;
-  virtual void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) = 0;
-  virtual void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) = 0;
-  virtual void MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum);
+  virtual void ExtractFrameData(FrameNode& frameNode,
+                                FrameBlock& frameBlock) = 0;
+  virtual void ExtractViewData(ViewNode& viewNode,
+                               ViewBlock& viewBlock,
+                               FrameBlock& frameBlock) = 0;
+  virtual void MidPhaseQuery(Array<GraphicalEntry>& entries,
+                             Camera& camera,
+                             Frustum* frustum);
   virtual bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo);
   virtual bool TestFrustum(const Frustum& frustum, CastInfo& castInfo);
   virtual void AddToSpace();
@@ -74,12 +81,14 @@ public:
   void SetVisible(bool visible);
   bool mVisible;
 
-  /// If the graphical should not be drawn when its bounding volume is outside of the view frustum.
+  /// If the graphical should not be drawn when its bounding volume is outside
+  /// of the view frustum.
   bool GetViewCulling();
   void SetViewCulling(bool culling);
   bool mViewCulling;
 
-  /// If object receives events when entering/exiting the view of an active camera.
+  /// If object receives events when entering/exiting the view of an active
+  /// camera.
   bool mVisibilityEvents;
 
   /// Manually set the bounding box that is used for frustum culling.
@@ -87,12 +96,14 @@ public:
   void SetOverrideBoundingBox(bool overrideBoundingBox);
   bool mOverrideBoundingBox;
 
-  /// Center of the bounding box defined in local space, world transform will be applied.
+  /// Center of the bounding box defined in local space, world transform will be
+  /// applied.
   Vec3 GetLocalAabbCenter();
   void SetLocalAabbCenter(Vec3 center);
   Vec3 mLocalAabbCenter;
 
-  /// Half extents of the bounding box defined in local space, world transform will be applied.
+  /// Half extents of the bounding box defined in local space, world transform
+  /// will be applied.
   Vec3 GetLocalAabbHalfExtents();
   void SetLocalAabbHalfExtents(Vec3 halfExtents);
   Vec3 mLocalAabbHalfExtents;
@@ -100,7 +111,8 @@ public:
   /// Can be used by a RenderGroup to define draw order, from lowest to highest.
   int mGroupSortValue;
 
-  /// The composition of shader fragments that determines how the graphical is rendered.
+  /// The composition of shader fragments that determines how the graphical is
+  /// rendered.
   Material* GetMaterial();
   void SetMaterial(Material* material);
   HandleOf<Material> mMaterial;
@@ -110,7 +122,8 @@ public:
   void SetShaderInputs(ShaderInputs* shaderInputs);
   HandleOf<ShaderInputs> mShaderInputs;
 
-  /// The world space axis aligned bounding volume that is used for frustum culling.
+  /// The world space axis aligned bounding volume that is used for frustum
+  /// culling.
   Aabb GetWorldAabb();
 
   // Internal
@@ -118,7 +131,8 @@ public:
   // Returns local aabb transformed to world space without re-axis aligning.
   Obb GetWorldObb();
 
-  // Returns the local aabb as specified by the graphical type or the override if active.
+  // Returns the local aabb as specified by the graphical type or the override
+  // if active.
   Aabb GetLocalAabbInternal();
 
   void UpdateBroadPhaseAabb();
@@ -136,7 +150,8 @@ public:
 
   Array<PropertyShaderInput> mPropertyShaderInputs;
 
-  // TODO: add this to separate derived class so it is not bloat for HeightMap/MultiSprite
+  // TODO: add this to separate derived class so it is not bloat for
+  // HeightMap/MultiSprite
   GraphicalEntryData mGraphicalEntryData;
 
   VisibilityFlag mVisibleFlags;

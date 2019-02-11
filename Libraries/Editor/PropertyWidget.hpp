@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyWidget.hpp
-/// Declaration of PropertyWidget.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,6 @@ namespace Zero
 class PropertyView;
 class PropertyWidgetObject;
 
-//-------------------------------------------------- Property Widget Initializer
 struct PropertyWidgetInitializer
 {
   /// The parent composite.
@@ -32,24 +23,22 @@ struct PropertyWidgetInitializer
   ObjectPropertyNode* ObjectNode;
 };
 
-//------------------------------------------------------------------------------
 namespace StyleMode
 {
-  enum Enum
-  {
-    Regular,
-    Node
-  };
-}//namespace StyleMode
+enum Enum
+{
+  Regular,
+  Node
+};
+} // namespace StyleMode
 
-//-------------------------------------------------------------- Property Widget
 class PropertyWidget : public Composite
 {
 public:
   ZilchDeclareType(PropertyWidget, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
-  PropertyWidget(PropertyWidgetInitializer& i, 
+  PropertyWidget(PropertyWidgetInitializer& i,
                  StyleMode::Enum style = StyleMode::Regular);
   ~PropertyWidget();
 
@@ -57,10 +46,15 @@ public:
   void UpdateTransform();
 
   /// Called when the property grid refreshes.
-  virtual void Refresh() {}
-  virtual String GetToolTip(ToolTipColorScheme::Enum* color){return String();}
+  virtual void Refresh()
+  {
+  }
+  virtual String GetToolTip(ToolTipColorScheme::Enum* color)
+  {
+    return String();
+  }
 
-  //Helper functions for layout
+  // Helper functions for layout
   LayoutResult GetNameLayout();
   LayoutResult GetContentLayout(LayoutResult& nameLayout);
 
@@ -68,15 +62,18 @@ public:
   void OnMouseHover(MouseEvent* event);
 
   /// Whether or not it's an object widget.
-  virtual bool IsObjectWidget(){return false;}
+  virtual bool IsObjectWidget()
+  {
+    return false;
+  }
 
-  /// Used for animations. It's the position that the object should 
+  /// Used for animations. It's the position that the object should
   /// be at in the layout.
   Vec3 mDestination;
 
   /// Our parent widget will always be a PropertyWidgetObject.
   PropertyWidgetObject* Parent;
- 
+
   Link<PropertyWidget> link;
   PropertyView* mGrid;
   PropertyInterface* mProp;
@@ -89,14 +86,15 @@ protected:
   Label* mLabel;
 };
 
-typedef PropertyWidget* (*MakePropertyWidget)(PropertyWidgetInitializer& initializer);
+typedef PropertyWidget* (*MakePropertyWidget)(
+    PropertyWidgetInitializer& initializer);
 
-//--------------------------------------------------------- Meta Property Editor
 // Creates a custom editor widget for modifying properties.
 // This meta component is expected to be found in two places:
 //   1. On a property type (e.g. float, String, Resource, etc...)
 //   2. On a EditorPropertyExtension
-//     - These have priority over the property type, because it's on a per property basis
+//     - These have priority over the property type, because it's on a per
+//     property basis
 class MetaPropertyEditor : public ReferenceCountedEventObject
 {
 public:
@@ -106,7 +104,7 @@ public:
   {
     Maker = make;
   }
-  
+
   PropertyWidget* CreateWidget(PropertyWidgetInitializer& initializer)
   {
     return Maker(initializer);
@@ -115,10 +113,10 @@ public:
   MakePropertyWidget Maker;
 };
 
-template<typename propEditorType>
+template <typename propEditorType>
 PropertyWidget* CreateProperty(PropertyWidgetInitializer& initializer)
 {
   return new propEditorType(initializer);
 }
 
-}//namespace Zero
+} // namespace Zero

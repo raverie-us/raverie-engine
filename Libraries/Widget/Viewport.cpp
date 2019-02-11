@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Viewport.cpp
-/// Implementation of the Viewport widget.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,19 +6,18 @@ namespace Zero
 
 namespace ViewportUi
 {
-  const cstr cLocation = "EditorUi/Viewport";
-  Tweakable(Vec4, BorderColor, Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "EditorUi/Viewport";
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace ViewportUi
 
-//--------------------------------------------------------------------- Viewport
 ZilchDefineType(Viewport, builder, type)
 {
 }
 
-Viewport::Viewport(Composite* parent, Space* space, Camera* camera)
-  : Composite(parent)
-  , mTargetSpace(space)
-  , mCamera(camera)
+Viewport::Viewport(Composite* parent, Space* space, Camera* camera) :
+    Composite(parent),
+    mTargetSpace(space),
+    mCamera(camera)
 {
   for (uint i = 0; i < 4; ++i)
   {
@@ -48,16 +39,15 @@ void Viewport::OnDestroy()
 
 void Viewport::OnMouseFileDrop(MouseFileDropEvent* event)
 {
-  if(mTargetSpace != nullptr)
+  if (mTargetSpace != nullptr)
     mTargetSpace->DispatchEvent(Events::MouseFileDrop, event);
 
-  if(mCamera != nullptr)
+  if (mCamera != nullptr)
   {
     Cog* cog = mCamera->GetCameraViewportCog();
-    if(cog != nullptr)
+    if (cog != nullptr)
       cog->DispatchEvent(Events::MouseFileDrop, event);
   }
-
 }
 
 Space* Viewport::GetTargetSpace()
@@ -70,23 +60,24 @@ Camera* Viewport::GetCamera()
   return mCamera;
 }
 
-//void Viewport::SetScalingAndSize(ViewportScaling::Enum scalingMode, uint width, uint height)
+// void Viewport::SetScalingAndSize(ViewportScaling::Enum scalingMode, uint
+// width, uint height)
 //{
 //  mRenderView->mTargetSize = IntVec2(width, height);
 //  mRenderView->mScalingMode = scalingMode;
 //}
 
-//void Viewport::SetMarginColor(Vec4 color)
+// void Viewport::SetMarginColor(Vec4 color)
 //{
 //  mRenderView->mMarginColor = color;
 //}
 
-//void Viewport::ScreenCaptureBackBuffer(Image& image)
+// void Viewport::ScreenCaptureBackBuffer(Image& image)
 //{
 //  mRenderView->ScreenCaptureBackBuffer(image);
 //}
 //
-//void Viewport::ScreenCapture(StringParam filename)
+// void Viewport::ScreenCapture(StringParam filename)
 //{
 //  mRenderView->ScreenCaptureBackBuffer(filename);
 //}
@@ -121,9 +112,11 @@ Vec3 Viewport::ViewportToWorld(Vec2Param viewportPoint)
   Vec3 basisY = rotation.BasisY();
 
   // Start at near plane center
-  Vec3 worldPoint = transform->GetWorldTranslation() + basisZ * mCamera->mNearPlane;
+  Vec3 worldPoint =
+      transform->GetWorldTranslation() + basisZ * mCamera->mNearPlane;
   // Offset from the center to the final point
-  // Half offsets on sizePercent values are because viewport (0, 0) is top left of near plane
+  // Half offsets on sizePercent values are because viewport (0, 0) is top left
+  // of near plane
   worldPoint += (basisX * nearSize.x) * (sizePercent.x - 0.5f);
   worldPoint += (basisY * nearSize.y) * (0.5f - sizePercent.y);
 
@@ -175,7 +168,7 @@ Vec3 Viewport::ScreenToWorldZPlane(Vec2Param screenPoint, float worldDepth)
   Ray ray = ScreenToWorldRay(screenPoint);
 
   float t = 0.0f;
-  if(ray.Direction.z != 0.0f)
+  if (ray.Direction.z != 0.0f)
     t = (worldDepth - ray.Start.z) / ray.Direction.z;
   return ray.GetPoint(t);
 }
@@ -198,13 +191,19 @@ Vec3 Viewport::ScreenToWorldViewPlane(Vec2Param screenPoint, float viewDepth)
   plane.Set(viewDirection, planePoint);
 
   Intersection::IntersectionPoint iPoint;
-  Intersection::Type result = Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &iPoint);
+  Intersection::Type result = Intersection::RayPlane(ray.Start,
+                                                     ray.Direction,
+                                                     plane.GetNormal(),
+                                                     plane.GetDistance(),
+                                                     &iPoint);
   if (result == Intersection::None)
     return ray.GetPoint(0.0f);
   return iPoint.Points[0];
 }
 
-Vec3 Viewport::ScreenToWorldPlane(Vec2Param screenPoint, Vec3Param worldPlaneNormal, Vec3Param worldPlanePosition)
+Vec3 Viewport::ScreenToWorldPlane(Vec2Param screenPoint,
+                                  Vec3Param worldPlaneNormal,
+                                  Vec3Param worldPlanePosition)
 {
   Ray ray = ScreenToWorldRay(screenPoint);
 
@@ -212,8 +211,12 @@ Vec3 Viewport::ScreenToWorldPlane(Vec2Param screenPoint, Vec3Param worldPlaneNor
   plane.Set(worldPlaneNormal, worldPlanePosition);
 
   Intersection::IntersectionPoint iPoint;
-  Intersection::Type result = Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &iPoint);
-  if(result == Intersection::None)
+  Intersection::Type result = Intersection::RayPlane(ray.Start,
+                                                     ray.Direction,
+                                                     plane.GetNormal(),
+                                                     plane.GetDistance(),
+                                                     &iPoint);
+  if (result == Intersection::None)
     return ray.GetPoint(0.0f);
   return iPoint.Points[0];
 }
@@ -238,10 +241,10 @@ Vec2 Viewport::ViewPlaneSize(float viewDepth)
 
   return Vec2((boxPoints[0] - boxPoints[1]).Length(),
               (boxPoints[1] - boxPoints[2]).Length());
-
 }
 
-Frustum Viewport::SubFrustum(Vec2Param upperLeftScreen, Vec2Param lowerRightScreen)
+Frustum Viewport::SubFrustum(Vec2Param upperLeftScreen,
+                             Vec2Param lowerRightScreen)
 {
   float farPlaneDistance = mCamera->mFarPlane;
 
@@ -275,9 +278,11 @@ void Viewport::SetSize(Vec2 baseSize, Vec2 newSize)
   Composite::SetSize(newSize);
 
   mMargin[0]->SetSize(Pixels(baseSize.x, (baseSize.y - newSize.y) * 0.5f)); // T
-  mMargin[1]->SetSize(Pixels(baseSize.x, baseSize.y - newSize.y - mMargin[0]->mSize.y)); // B
+  mMargin[1]->SetSize(
+      Pixels(baseSize.x, baseSize.y - newSize.y - mMargin[0]->mSize.y));   // B
   mMargin[2]->SetSize(Pixels((baseSize.x - newSize.x) * 0.5f, newSize.y)); // L
-  mMargin[3]->SetSize(Pixels(baseSize.x - newSize.x - mMargin[2]->mSize.x, newSize.y)); // R
+  mMargin[3]->SetSize(
+      Pixels(baseSize.x - newSize.x - mMargin[2]->mSize.x, newSize.y)); // R
 }
 
 void Viewport::SetTranslation(Vec3 baseOffset, Vec3 newOffset)
@@ -286,9 +291,13 @@ void Viewport::SetTranslation(Vec3 baseOffset, Vec3 newOffset)
 
   Vec3 marginBase = baseOffset - newOffset;
   mMargin[0]->SetTranslation(marginBase); // T
-  mMargin[1]->SetTranslation(marginBase + Vec3(0.0f, mMargin[0]->mSize.y + mSize.y, 0.0f)); // B
-  mMargin[2]->SetTranslation(marginBase + Vec3(0.0f, mMargin[0]->mSize.y, 0.0f)); // L
-  mMargin[3]->SetTranslation(marginBase + Vec3(mMargin[2]->mSize.x + mSize.x, mMargin[0]->mSize.y, 0.0f)); // R
+  mMargin[1]->SetTranslation(
+      marginBase + Vec3(0.0f, mMargin[0]->mSize.y + mSize.y, 0.0f)); // B
+  mMargin[2]->SetTranslation(marginBase +
+                             Vec3(0.0f, mMargin[0]->mSize.y, 0.0f)); // L
+  mMargin[3]->SetTranslation(marginBase + Vec3(mMargin[2]->mSize.x + mSize.x,
+                                               mMargin[0]->mSize.y,
+                                               0.0f)); // R
 }
 
 void Viewport::SetMarginColor(Vec4 color)
@@ -299,13 +308,16 @@ void Viewport::SetMarginColor(Vec4 color)
   mMargin[3]->SetColor(color);
 }
 
-ViewportDisplay::ViewportDisplay(Composite* parent)
-  : Widget(parent)
+ViewportDisplay::ViewportDisplay(Composite* parent) : Widget(parent)
 {
   mViewport = (Viewport*)parent;
 }
 
-void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock,
+                                   FrameBlock& frameBlock,
+                                   Mat4Param parentTx,
+                                   ColorTransform colorTx,
+                                   WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -315,19 +327,23 @@ void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock,
   Vec2 size = mViewport->mSize;
   Vec4 color = mViewport->mColor * colorTx.ColorMultiply;
 
-  ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, mViewport->mViewportTexture);
-  frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
+  ViewNode& viewNode = AddRenderNodes(
+      viewBlock, frameBlock, clipRect, mViewport->mViewportTexture);
+  frameBlock.mRenderQueues->AddStreamedQuad(
+      viewNode, Vec3(0, 0, 0), Vec3(size, 0), Vec2(0, 0), Vec2(1, 1), color);
 
   // override blend settings
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
-  BlendSettings& blendSettings = frameBlock.mRenderQueues->mBlendSettingsOverrides.PushBack();
+  BlendSettings& blendSettings =
+      frameBlock.mRenderQueues->mBlendSettingsOverrides.PushBack();
   blendSettings.mBlendMode = BlendMode::Enabled;
   blendSettings.mSourceFactor = BlendFactor::One;
   blendSettings.mDestFactor = BlendFactor::InvSourceAlpha;
 
   frameNode.mBlendSettingsOverride = true;
-  frameNode.mBlendSettingsIndex = frameBlock.mRenderQueues->mBlendSettingsOverrides.Size() - 1;
+  frameNode.mBlendSettingsIndex =
+      frameBlock.mRenderQueues->mBlendSettingsOverrides.Size() - 1;
 }
 
-}//namespace Zero
+} // namespace Zero

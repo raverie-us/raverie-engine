@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "HashMap.hpp"
@@ -12,8 +7,10 @@
 namespace Zero
 {
 
-/// A hashset that preserving insertion order, typically for displaying data in a consistent order such as in a property grid.
-/// Currently implemented as a hashset of linked list nodes. Can be optimized later, meant as a quick and easy solution for now.
+/// A hashset that preserving insertion order, typically for displaying data in
+/// a consistent order such as in a property grid. Currently implemented as a
+/// hashset of linked list nodes. Can be optimized later, meant as a quick and
+/// easy solution for now.
 template <typename T>
 class OrderedHashSet
 {
@@ -30,20 +27,32 @@ public:
     InsertOrOverride(p0);
     InsertOrOverride(p1);
   }
-  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2)
+  OrderedHashSet(ContainerInitializerDummy*,
+                 const T& p0,
+                 const T& p1,
+                 const T& p2)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
     InsertOrOverride(p2);
   }
-  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2, const T& p3)
+  OrderedHashSet(ContainerInitializerDummy*,
+                 const T& p0,
+                 const T& p1,
+                 const T& p2,
+                 const T& p3)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
     InsertOrOverride(p2);
     InsertOrOverride(p3);
   }
-  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2, const T& p3, const T& p4)
+  OrderedHashSet(ContainerInitializerDummy*,
+                 const T& p0,
+                 const T& p1,
+                 const T& p2,
+                 const T& p3,
+                 const T& p4)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
@@ -51,7 +60,13 @@ public:
     InsertOrOverride(p3);
     InsertOrOverride(p4);
   }
-  OrderedHashSet(ContainerInitializerDummy*, const T& p0, const T& p1, const T& p2, const T& p3, const T& p4, const T& p5)
+  OrderedHashSet(ContainerInitializerDummy*,
+                 const T& p0,
+                 const T& p1,
+                 const T& p2,
+                 const T& p3,
+                 const T& p4,
+                 const T& p5)
   {
     InsertOrOverride(p0);
     InsertOrOverride(p1);
@@ -63,9 +78,10 @@ public:
 
   struct Node
   {
-    Node() {}
-    Node(const T& value) :
-      mValue(value)
+    Node()
+    {
+    }
+    Node(const T& value) : mValue(value)
     {
     }
     T mValue;
@@ -134,7 +150,8 @@ public:
   void InsertOrOverride(const T& value)
   {
     Node* node = mMap.FindValue(value, nullptr);
-    // If the key already exist then just override the value, don't update the order in the list
+    // If the key already exist then just override the value, don't update the
+    // order in the list
     if (node != nullptr)
     {
       node->mValue = value;
@@ -181,10 +198,22 @@ public:
   struct Range
   {
     typedef T& FrontResult;
-    bool Empty() { return mRange.Empty(); }
-    T& Front() { return mRange.Front().mValue; }
-    void PopFront() { mRange.PopFront(); }
-    Range& All() { return *this; }
+    bool Empty()
+    {
+      return mRange.Empty();
+    }
+    T& Front()
+    {
+      return mRange.Front().mValue;
+    }
+    void PopFront()
+    {
+      mRange.PopFront();
+    }
+    Range& All()
+    {
+      return *this;
+    }
     ListTypeRange mRange;
   };
 
@@ -206,5 +235,4 @@ public:
   ListType mList;
 };
 
-}//namespace Zero
-
+} // namespace Zero

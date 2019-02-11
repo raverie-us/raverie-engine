@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2018, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,7 +8,6 @@ namespace Events
 {
 DeclareEvent(PathFinderMeshFinished);
 }
-
 
 struct NavMeshPolygon;
 struct NavMeshEdge;
@@ -34,8 +28,9 @@ const NavMeshPolygonId cInvalidMeshId = (u32)-1;
 
 class PathFinderAlgorithmMesh;
 
-//------------------------------------------------------------------------------------ Nav Mesh Edge
-/// This edge is a half edge, meaning adjacent polygons each have their own edge.
+//Nav Mesh Edge
+/// This edge is a half edge, meaning adjacent polygons each have their own
+/// edge.
 struct NavMeshEdge
 {
   /// Constructor.
@@ -59,18 +54,22 @@ struct NavMeshEdge
     NavMeshPolygon* mIgnore;
   };
 
-  /// Returns all triangles connected to this edge, except the given triangle to ignore.
+  /// Returns all triangles connected to this edge, except the given triangle to
+  /// ignore.
   PolygonRange AllConnectedTriangles(NavMeshPolygon* ignore = nullptr);
 
   /// The user added cost to traversing this edge. This can be used to simulate
-  /// areas that you would like a path to avoid (but can still go through if it must).
+  /// areas that you would like a path to avoid (but can still go through if it
+  /// must).
   float mCost;
 
-  /// The index to the tail vertex of this edge. Edges are sorted in counter-clockwise order,
-  /// so the tail vertex is on the clockwise side of the edge.
-  /// To get the direction of the edge, you could write something like this:
+  /// The index to the tail vertex of this edge. Edges are sorted in
+  /// counter-clockwise order, so the tail vertex is on the clockwise side of
+  /// the edge. To get the direction of the edge, you could write something like
+  /// this:
   ///   'mNextEdge->mTailVertex' - 'mTailVertex'
-  /// Note that these are indices and you would have to access the vertex buffer first.
+  /// Note that these are indices and you would have to access the vertex buffer
+  /// first.
   u32 mTailVertex;
 
   /// The owning polygon of this edge.
@@ -84,7 +83,7 @@ struct NavMeshEdge
   NavMeshEdge* mPreviousConnected;
 };
 
-//--------------------------------------------------------------------------------- Nav Mesh Polygon
+//Nav Mesh Polygon
 struct NavMeshPolygon
 {
   typedef InList<NavMeshEdge, &NavMeshEdge::mEdgeLink> EdgeList;
@@ -96,7 +95,9 @@ struct NavMeshPolygon
   /// Range of all adjacent triangles.
   struct PolygonRange
   {
-    PolygonRange(){}
+    PolygonRange()
+    {
+    }
     PolygonRange(NavMeshPolygon* polygon);
 
     inline bool Empty();
@@ -124,7 +125,8 @@ struct NavMeshPolygon
   bool mCollision;
 
   /// The user added cost to traversing a node. This can be used to simulate
-  /// areas that you would like a path to avoid (but can still go through if it must).
+  /// areas that you would like a path to avoid (but can still go through if it
+  /// must).
   float mCost;
 
   /// A list of all the edges for this polygon.
@@ -133,7 +135,7 @@ struct NavMeshPolygon
   u32 mId;
 };
 
-//---------------------------------------------------------------------- Path Finder Mesh Node Range
+//Finder Mesh Node Range
 class PathFinderMeshNodeRange
 {
 public:
@@ -152,10 +154,11 @@ public:
   NavMeshPolygon::PolygonRange mRange;
 };
 
-//----------------------------------------------------------------------- Path Finder Algorithm Mesh
-class PathFinderAlgorithmMesh : public PathFinderAlgorithm<PathFinderAlgorithmMesh,
-                                                           NavMeshPolygonId,
-                                                           PathFinderMeshNodeRange>
+//Finder Algorithm Mesh
+class PathFinderAlgorithmMesh
+    : public PathFinderAlgorithm<PathFinderAlgorithmMesh,
+                                 NavMeshPolygonId,
+                                 PathFinderMeshNodeRange>
 {
 public:
   PathFinderAlgorithmMesh();
@@ -168,23 +171,29 @@ public:
   /// Returns the index of the newly created position.
   u32 AddVertex(Vec3Param pos);
 
-  /// Creates an empty polygon and returns an id for edges to be added at a later time.
+  /// Creates an empty polygon and returns an id for edges to be added at a
+  /// later time.
   NavMeshPolygonId AddPolygon();
   NavMeshPolygonId AddPolygon(Array<u32>& vertices);
   NavMeshPolygonId AddPolygon(ArrayClass<u32>& vertices);
   NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2);
-  NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
+  NavMeshPolygonId
+  AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
 
   /// Adds an edge to the polygon with the given id.
-  NavMeshEdgeId AddEdgeToPolygon(NavMeshPolygonId polygonId, u32 vertex0, u32 vertex1);
+  NavMeshEdgeId AddEdgeToPolygon(NavMeshPolygonId polygonId,
+                                 u32 vertex0,
+                                 u32 vertex1);
 
-  /// A higher cost of a polygon makes the A* algorithm less likely to traverse that polygon.
+  /// A higher cost of a polygon makes the A* algorithm less likely to traverse
+  /// that polygon.
   void SetPolygonCost(NavMeshPolygonId polygonId, float cost);
 
   /// The client data will be included in the final path.
   void SetPolygonClientData(NavMeshPolygonId polygonId, Cog* clientData);
 
-  /// A higher cost of a polygon makes the A* algorithm less likely to traverse that polygon.
+  /// A higher cost of a polygon makes the A* algorithm less likely to traverse
+  /// that polygon.
   void SetEdgeCost(NavMeshEdgeId edgeId, float cost);
 
   /// The client data will be included in the final path.
@@ -212,7 +221,7 @@ public:
   HashMap<NavMeshEdge*, CogId> mEdgeClientData;
 };
 
-//--------------------------------------------------------------------------------- Path Finder Mesh
+//Path Finder Mesh
 /// A* pathfinding on a mesh.
 class PathFinderMesh : public PathFinder
 {
@@ -229,32 +238,39 @@ public:
   // PathFinder Interface
   Variant WorldPositionToNodeKey(Vec3Param worldPosition) override;
   Vec3 NodeKeyToWorldPosition(VariantParam nodeKey) override;
-  void FindPathGeneric(VariantParam start, VariantParam goal, Array<Variant>& pathOut) override;
-  HandleOf<PathFinderRequest> FindPathGenericThreaded(VariantParam start, VariantParam goal) override;
+  void FindPathGeneric(VariantParam start,
+                       VariantParam goal,
+                       Array<Variant>& pathOut) override;
+  HandleOf<PathFinderRequest>
+  FindPathGenericThreaded(VariantParam start, VariantParam goal) override;
   StringParam GetCustomEventName() override;
 
   // NavMesh Interface
-  /// Builds a 
+  /// Builds a
   void SetMesh(Mesh* graphicsMesh);
   void SetMesh(Mesh* graphicsMesh, float maxSlope);
-  //void SetMesh(PhysicsMesh* mesh);
+  // void SetMesh(PhysicsMesh* mesh);
 
   /// Returns the index of the newly created position.
   u32 AddVertex(Vec3Param pos);
 
-  /// Creates an empty polygon and returns an id for edges to be added at a later time.
+  /// Creates an empty polygon and returns an id for edges to be added at a
+  /// later time.
   NavMeshPolygonId AddPolygon(Array<u32>& vertices);
   NavMeshPolygonId AddPolygon(ArrayClass<u32>& vertices);
   NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2);
-  NavMeshPolygonId AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
+  NavMeshPolygonId
+  AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3);
 
-  /// A higher cost of a polygon makes the A* algorithm less likely to traverse that polygon.
+  /// A higher cost of a polygon makes the A* algorithm less likely to traverse
+  /// that polygon.
   void SetPolygonCost(NavMeshPolygonId polygonId, float cost);
 
   /// The client data will be included in the final path.
   void SetPolygonClientData(NavMeshPolygonId polygonId, Cog* clientData);
 
-  /// A higher cost of a polygon makes the A* algorithm less likely to traverse that polygon.
+  /// A higher cost of a polygon makes the A* algorithm less likely to traverse
+  /// that polygon.
   void SetEdgeCost(NavMeshEdgeId edgeId, float cost);
 
   /// The client data will be included in the final path.
@@ -263,14 +279,18 @@ public:
   /// Clear the grid of all collision and costs.
   void Clear();
 
-  /// Finds a path between cell indices (or returns an empty array if no path could be found).
-  HandleOf<ArrayClass<Vec3>> FindPath(NavMeshPolygonId start, NavMeshPolygonId goal);
+  /// Finds a path between cell indices (or returns an empty array if no path
+  /// could be found).
+  HandleOf<ArrayClass<Vec3>> FindPath(NavMeshPolygonId start,
+                                      NavMeshPolygonId goal);
   using ZilchBase::FindPath;
 
   /// Finds a path on another thread between cell indices.
-  /// When the thread is completed, the events PathFinderGridCompleted or PathFinderGridFailed will be 
-  /// sent on both the returned PathFinderRequest and on the Cog that owns this component (on this.Owner).
-  HandleOf<PathFinderRequest> FindPathThreaded(NavMeshPolygonId start, NavMeshPolygonId goal);
+  /// When the thread is completed, the events PathFinderGridCompleted or
+  /// PathFinderGridFailed will be sent on both the returned PathFinderRequest
+  /// and on the Cog that owns this component (on this.Owner).
+  HandleOf<PathFinderRequest> FindPathThreaded(NavMeshPolygonId start,
+                                               NavMeshPolygonId goal);
   using ZilchBase::FindPathThreaded;
 
   /// Returns the triangle closest to the given world position.
@@ -286,4 +306,4 @@ public:
   CopyOnWriteHandle<PathFinderAlgorithmMesh> mMesh;
 };
 
-}//namespace Zero
+} // namespace Zero

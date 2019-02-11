@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Math
@@ -18,16 +13,16 @@ struct ZeroShared BlockVector3
   Vector3& operator[](uint index);
 
   real& GlobalIndex(uint index);
-  
-  //Binary Assignment Operators (reals)
+
+  // Binary Assignment Operators (reals)
   void operator*=(real rhs);
 
-  //Binary Assignment Operators (vectors)
+  // Binary Assignment Operators (vectors)
   void operator+=(const BlockVector3& rhs);
   void operator-=(const BlockVector3& rhs);
 
   real Dot(const BlockVector3& rhs) const;
-  void Scale(const BlockVector3& rhs, BlockVector3& out) const; 
+  void Scale(const BlockVector3& rhs, BlockVector3& out) const;
 
   Zero::Array<Vector3> mBlocks;
 };
@@ -44,7 +39,7 @@ struct ZeroShared BlockMatrix3
 
   BlockMatrix3 Transposed() const;
   BlockMatrix3 Transform(const BlockMatrix3& rhs) const;
-  void Transform(const BlockVector3& rhs, BlockVector3& out) const; 
+  void Transform(const BlockVector3& rhs, BlockVector3& out) const;
 
   typedef Zero::Array<Matrix3> Cells;
   typedef Zero::Array<Cells> Rows;
@@ -55,7 +50,7 @@ struct ZeroShared BlockCgPolicy
 {
   real& operator()(BlockMatrix3& A, uint row, uint col)
   {
-    return A.GlobalIndex(row,col);
+    return A.GlobalIndex(row, col);
   }
 
   real& operator()(BlockVector3& v, uint i)
@@ -97,50 +92,59 @@ struct ZeroShared BlockCgPolicy
   BlockVector3 Transform(const BlockMatrix3& mat, const BlockVector3& vec)
   {
     BlockVector3 result;
-    mat.Transform(vec,result);
+    mat.Transform(vec, result);
     return result;
   }
 
-  //v1 * scalar + v2
-  //out is assumed to only ever be aliased as v2
-  void MultiplyAdd(const BlockVector3& v1, real scalar, BlockVector3& v2, BlockVector3* out)
+  // v1 * scalar + v2
+  // out is assumed to only ever be aliased as v2
+  void MultiplyAdd(const BlockVector3& v1,
+                   real scalar,
+                   BlockVector3& v2,
+                   BlockVector3* out)
   {
     uint size = v1.GetSize();
-    for(uint i = 0; i < size; ++i)
+    for (uint i = 0; i < size; ++i)
     {
       (*out)[i] = v2[i] + v1[i] * scalar;
     }
   }
 
   //-(v1 * scalar - v2) = v2 - v1 * scalar
-  //out is assumed to only ever be aliased as v2
-  void MultiplySubtract(const BlockVector3& v1, real scalar, BlockVector3& v2, BlockVector3* out)
+  // out is assumed to only ever be aliased as v2
+  void MultiplySubtract(const BlockVector3& v1,
+                        real scalar,
+                        BlockVector3& v2,
+                        BlockVector3* out)
   {
     uint size = v1.GetSize();
-    for(uint i = 0; i < size; ++i)
+    for (uint i = 0; i < size; ++i)
     {
       (*out)[i] = v2[i] - v1[i] * scalar;
     }
   }
 
   //-(mat * v1 - v2) = v2 - mat * v1
-  //out is assumed to only ever be aliased as v2
-  void NegativeTransformSubtract(const BlockMatrix3& mat, const BlockVector3& v1, BlockVector3& v2, BlockVector3* out)
+  // out is assumed to only ever be aliased as v2
+  void NegativeTransformSubtract(const BlockMatrix3& mat,
+                                 const BlockVector3& v1,
+                                 BlockVector3& v2,
+                                 BlockVector3* out)
   {
     uint size = v1.GetSize();
-    for(uint i = 0; i < size; ++i)
+    for (uint i = 0; i < size; ++i)
     {
       Vector3 sum = Vector3::cZero;
 
-      for(uint j = 0; j < size; ++j)
+      for (uint j = 0; j < size; ++j)
       {
-        Matrix3 m = mat(i,j);
+        Matrix3 m = mat(i, j);
         Vector3 v = v1[j];
-        sum += Math::Transform(m,v);
+        sum += Math::Transform(m, v);
       }
       (*out)[i] = v2[i] - sum;
     }
   }
 };
 
-}//namespace Math
+} // namespace Math

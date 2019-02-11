@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Plane.cpp
-/// Implementation of the Plane class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -34,7 +26,6 @@ Plane::Plane(Vec4Param data)
 
 Plane::~Plane()
 {
-
 }
 
 void Plane::Flip()
@@ -47,36 +38,36 @@ void Plane::Set(Vec4Param data)
   mData = data;
 }
 
-///Sets the normal and distance to the origin of the plane.
+/// Sets the normal and distance to the origin of the plane.
 void Plane::Set(Vec3Param normal, real distance)
 {
   mData.Set(normal.x, normal.y, normal.z, distance);
 }
 
-///Sets the normal and distance to the plane (read the explanation of 
-///the SetPosition function for an explanation of how the position is treated.
+/// Sets the normal and distance to the plane (read the explanation of
+/// the SetPosition function for an explanation of how the position is treated.
 void Plane::Set(Vec3Param normal, Vec3Param position)
 {
-  //Calculate the distance.
+  // Calculate the distance.
   real distance = position.Dot(normal);
-  //Set the data.
+  // Set the data.
   mData.Set(normal.x, normal.y, normal.z, distance);
 }
 
-///Returns the normal of the plane.
+/// Returns the normal of the plane.
 Vec3 Plane::GetNormal() const
 {
-  //mData is a Vec3, so we need to cast it to a Vec3.
+  // mData is a Vec3, so we need to cast it to a Vec3.
   return *(Vec3*)(&mData);
 }
 
-///Returns the distance from the plane to the origin.
+/// Returns the distance from the plane to the origin.
 real Plane::GetDistance() const
 {
   return mData.w;
 }
 
-///Sets the passed in values to the normal and distance from the plane to
+/// Sets the passed in values to the normal and distance from the plane to
 /// the origin.
 void Plane::GetNormalAndDistance(Vec3Ref normal, real& distance) const
 {
@@ -89,11 +80,11 @@ real Plane::SignedDistanceToPlane(Vec3Param point)
   return Geometry::SignedDistanceToPlane(point, GetNormal(), GetDistance());
 }
 
-///Returns both the normal and the distance to the origin in a Vec4.
-///Read the comment above mData to see how the memory is laid out.
+/// Returns both the normal and the distance to the origin in a Vec4.
+/// Read the comment above mData to see how the memory is laid out.
 const Vec4& Plane::GetData() const
 {
   return mData;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,24 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tags.hpp
-/// Declaration of the Tags composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 namespace Events
 {
-  DeclareEvent(TagDeleted);
-  DeclareEvent(TagsModified);
-  DeclareEvent(SearchDataModified);
-}
+DeclareEvent(TagDeleted);
+DeclareEvent(TagsModified);
+DeclareEvent(SearchDataModified);
+} // namespace Events
 
-//-------------------------------------------------------------------- Tag Event
 class TagEvent : public Event
 {
 public:
@@ -27,7 +18,6 @@ public:
   String mTagName;
 };
 
-//-------------------------------------------------------------------------- Tag
 class TagLabel : public Composite
 {
 public:
@@ -57,7 +47,6 @@ private:
   Element* mBackground;
 };
 
-//----------------------------------------------------------------- TagChainBase
 class TagChainBase : public Composite
 {
 public:
@@ -66,15 +55,18 @@ public:
   /// Constructor.
   TagChainBase(Composite* parent);
 
-  virtual bool AddTag(StringParam tagName, bool removeable, bool sendsEvents = true);
+  virtual bool AddTag(StringParam tagName,
+                      bool removeable,
+                      bool sendsEvents = true);
   void GetTags(Array<String>& tags, bool includeNonRemoveable = true);
   void GetTags(HashSet<String>& tags, bool includeNonRemoveable = true);
   void ClearTags();
 
   /// Returns whether or not the given tag is contained in this tag chain.
   bool ContainsTag(StringParam tag);
-  
+
   bool mSorted;
+
 protected:
   void OnTagDeleted(TagEvent* e);
   void Modified();
@@ -82,7 +74,6 @@ protected:
   Array<TagLabel*> mTags;
 };
 
-//--------------------------------------------------------------------- TagChain
 class TagChain : public TagChainBase
 {
 public:
@@ -101,7 +92,6 @@ private:
   Vec2 mLastSize;
 };
 
-//------------------------------------------------------------------- TagTextBox
 DeclareEnum2(SearchIconSide, Left, Right);
 
 class TagChainTextBox : public TagChainBase
@@ -116,24 +106,30 @@ public:
   void UpdateTransform() override;
   Vec2 GetMinSize() override;
 
-  bool AddTag(StringParam tagName, bool removeable, bool sendsEvents = true) override;
+  bool AddTag(StringParam tagName,
+              bool removeable,
+              bool sendsEvents = true) override;
   void ClearSearch();
   void ClearTags();
 
   void Refresh();
   bool TakeFocusOverride() override;
 
-  String GetText(){return mSearchBar->GetText();}
+  String GetText()
+  {
+    return mSearchBar->GetText();
+  }
 
   void SetSearchIconSide(SearchIconSide::Type side);
 
   /// Active Search Data.
   SearchData mSearch;
   uint mSearchIndex;
-  
+
   bool mAddTagsOnEnter;
 
   TextBox* mSearchBar;
+
 private:
   void OnTagDeleted(TagEvent* e);
 
@@ -149,7 +145,6 @@ private:
   ScrollArea* mArea;
 };
 
-//-------------------------------------------------------------------- TagEditor
 class TagEditor : public Composite
 {
 public:
@@ -175,7 +170,9 @@ protected:
   /// Validates the given text as a tag and adds it.
   void SubmitText(StringParam text);
 
-  virtual void Modified(){}
+  virtual void Modified()
+  {
+  }
 
   /// Event response.
   void OnSearchBoxChanged(Event* e);
@@ -187,7 +184,6 @@ protected:
   IconButton* mAddButton;
 };
 
-//---------------------------------------------------------- Resource Tag Editor
 class ResourceTagEditor : public TagEditor
 {
 public:
@@ -207,7 +203,7 @@ private:
   void Modified();
   void OnTagDeleted(TagEvent* e);
 
-  Array< HandleOf<Resource> > mResources;
+  Array<HandleOf<Resource>> mResources;
 };
 
-}// namespace Zero
+} // namespace Zero

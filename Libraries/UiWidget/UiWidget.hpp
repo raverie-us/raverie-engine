@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,19 +15,19 @@ class UiWidget;
 // Typedefs
 typedef Array<UiWidget*> UiWidgetArray;
 
-//-------------------------------------------------------------------------------------------- Focus
+//Focus
 DeclareEnum2(UiFocusDirection, Forward, Backward);
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction);
 
-//------------------------------------------------------------------------------------------- Events
+//Events
 namespace Events
 {
 
 DeclareEvent(UiPreUpdate);
 DeclareEvent(UiPostUpdate);
-//DeclareEvent(UiWidgetGetMinSize);
+// DeclareEvent(UiWidgetGetMinSize);
 
-}//namespace Events
+} // namespace Events
 
 // Sent with the transform update events.
 class UiTransformUpdateEvent : public Event
@@ -41,7 +36,9 @@ public:
   /// Meta Initialization.
   ZilchDeclareType(UiTransformUpdateEvent, TypeCopyMode::ReferenceType);
 
-  UiTransformUpdateEvent() : mRootWidget(nullptr) {}
+  UiTransformUpdateEvent() : mRootWidget(nullptr)
+  {
+  }
 
   UiRootWidget* GetRootWidget();
 
@@ -50,7 +47,7 @@ public:
 
 DeclareEnum2(Axis, X, Y);
 
-//------------------------------------------------------------------------------------------- Sizing
+//Sizing
 // Used for determining how this widget should be sized when in a layout.
 DeclareEnum3(UiSizePolicy,
              Auto,  // Uses default widget size
@@ -61,80 +58,79 @@ DeclareEnum3(UiSizePolicy,
 DeclareEnum3(UiVerticalAlignment, Bottom, Center, Top);
 DeclareEnum3(UiHorizontalAlignment, Left, Center, Right);
 
-//---------------------------------------------------------------------------------------- Dock Mode
+//Dock Mode
 // We can't use our bitfield declaration macros because we need to set
 // custom values for the different entries.
 namespace UiDockMode
 {
-  typedef uint Type;
-  static const cstr EnumName = "UiDockMode";
-  enum Enum
-  {
-    Left   = (1 << 1),
-    Top    = (1 << 2),
-    Right  = (1 << 3),
-    Bottom = (1 << 4),
-  };
-  enum { Size = 4 };
-  static const cstr Names[] =
-  {
-    "Left", "Top", "Right", "Bottom", NULL
-  };
-  static const uint Values[] =
-  {
-    Left, Top, Right, Bottom
-  };
+typedef uint Type;
+static const cstr EnumName = "UiDockMode";
+enum Enum
+{
+  Left = (1 << 1),
+  Top = (1 << 2),
+  Right = (1 << 3),
+  Bottom = (1 << 4),
+};
+enum
+{
+  Size = 4
+};
+static const cstr Names[] = {"Left", "Top", "Right", "Bottom", NULL};
+static const uint Values[] = {Left, Top, Right, Bottom};
 
-  uint GetAxis(UiDockMode::Enum mode);
+uint GetAxis(UiDockMode::Enum mode);
 
-}//namespace DockMode
+} // namespace UiDockMode
 
-//--------------------------------------------------------------------------- Transform Update State
+//Transform Update State
 DeclareEnum3(UiTransformUpdateState,
-             Updated,       // The Widget is completely up to date
-             ChildUpdate,   // A children of this Widget needs updating
-             LocalUpdate);  // This Widget needs updating
+             Updated,      // The Widget is completely up to date
+             ChildUpdate,  // A children of this Widget needs updating
+             LocalUpdate); // This Widget needs updating
 
-//------------------------------------------------------------------------------------- Widget Flags
-DeclareBitField11(UiWidgetFlags,
-  // If inactive, it will not draw this Widget and all children. It will
-  // also not be updated in layouts.
-  Active,
-  // Whether or not to draw just this widget and all children.
-  Visible,
-  // Whether or not this Widget should get mouse and keyboard events.
-  Interactive,
-  // If true, we will be ignored when our parent updates the layout. Disable
-  // this if you want to manually place this widget.
-  InLayout,
-  // The widget will be rendered after all objects in the widget hierarchy.
-  OnTop,
-  // Whether or not we want our children to display outside of our size.
-  ClipChildren,
-  // Mouse is over object
-  MouseOver,
-  // Mouse is over object or child  has focus
-  MouseOverHierarchy,
-  // If true, when the widget is clicked on, it will gain focus and keyboard
-  // events will be sent directly to this widget.
-  CanTakeFocus,
-  // Object has focus
-  HasFocus,
-  // Object has focus or child has focus
-  HierarchyHasFocus);
+//Widget Flags
+DeclareBitField11(
+    UiWidgetFlags,
+    // If inactive, it will not draw this Widget and all children. It will
+    // also not be updated in layouts.
+    Active,
+    // Whether or not to draw just this widget and all children.
+    Visible,
+    // Whether or not this Widget should get mouse and keyboard events.
+    Interactive,
+    // If true, we will be ignored when our parent updates the layout. Disable
+    // this if you want to manually place this widget.
+    InLayout,
+    // The widget will be rendered after all objects in the widget hierarchy.
+    OnTop,
+    // Whether or not we want our children to display outside of our size.
+    ClipChildren,
+    // Mouse is over object
+    MouseOver,
+    // Mouse is over object or child  has focus
+    MouseOverHierarchy,
+    // If true, when the widget is clicked on, it will gain focus and keyboard
+    // events will be sent directly to this widget.
+    CanTakeFocus,
+    // Object has focus
+    HasFocus,
+    // Object has focus or child has focus
+    HierarchyHasFocus);
 
-// Macros to make it easy to define setters / getters for all the flags. The reason we need
-#define DeclareWidgetFlagSetterGetter(flag)             \
-        bool Get##flag()                                \
-        {                                               \
-          return mFlags.IsSet(UiWidgetFlags::flag);     \
-        }                                               \
-        void Set##flag(bool state)                      \
-        {                                               \
-          mFlags.SetState(UiWidgetFlags::flag, state);  \
-        }
+// Macros to make it easy to define setters / getters for all the flags. The
+// reason we need
+#define DeclareWidgetFlagSetterGetter(flag)                                    \
+  bool Get##flag()                                                             \
+  {                                                                            \
+    return mFlags.IsSet(UiWidgetFlags::flag);                                  \
+  }                                                                            \
+  void Set##flag(bool state)                                                   \
+  {                                                                            \
+    mFlags.SetState(UiWidgetFlags::flag, state);                               \
+  }
 
-//--------------------------------------------------------------------- Ui Widget Cast Results Range
+//Widget Cast Results Range
 class UiWidgetCastResultsRange
 {
 public:
@@ -144,7 +140,7 @@ public:
 
   /// Meta Initialization.
   ZilchDeclareType(UiWidgetCastResultsRange, TypeCopyMode::ValueType);
-  
+
   /// Constructor.
   UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets);
 
@@ -158,7 +154,7 @@ public:
   uint mIndex;
 };
 
-//------------------------------------------------------------------------------------------- Widget
+//Widget
 typedef ComponentHierarchy<UiWidget> UiWidgetComponentHierarchy;
 class UiWidget : public UiWidgetComponentHierarchy
 {
@@ -185,7 +181,7 @@ public:
   void ComponentAdded(BoundType* typeId, Component* component) override;
   void ComponentRemoved(BoundType* typeId, Component* component) override;
 
-  /// The order of children changes how they're 
+  /// The order of children changes how they're
   void OnChildrenOrderChanged(Event* e);
 
   /// Returns the minimum size that this widget needs to be.
@@ -203,13 +199,17 @@ public:
   /// the 'ignore' widget will not be included. The ignore was added for
   /// trying to find the widget underneath a dragging window. The window is
   /// directly under the mouse, so we want to ignore it.
-  virtual UiWidget* CastPoint(Vec2Param worldPoint, UiWidget* ignore = nullptr,
+  virtual UiWidget* CastPoint(Vec2Param worldPoint,
+                              UiWidget* ignore = nullptr,
                               bool interactiveOnly = false);
-  UiWidgetCastResultsRange CastRect(RectangleParam worldRect, UiWidget* ignore = nullptr, bool interactiveOnly = false);
+  UiWidgetCastResultsRange CastRect(RectangleParam worldRect,
+                                    UiWidget* ignore = nullptr,
+                                    bool interactiveOnly = false);
 
   Rectangle GetBodyRectangle();
 
-  /// Returns our rect relative to parent. The origin of this Rect is bottom left.
+  /// Returns our rect relative to parent. The origin of this Rect is bottom
+  /// left.
   Rectangle GetLocalRectangle();
   void SetLocalRectangle(RectangleParam rectangle);
 
@@ -220,7 +220,7 @@ public:
   /// Active getter / setter.
   bool GetActive();
   void SetActive(bool state);
-  
+
   /// Local Translation relative to parent.
   Vec2 GetLocalTranslation();
   void SetLocalTranslation(Vec2Param localTranslation);
@@ -232,8 +232,9 @@ public:
   /// Transforms a local point into world space.
   Vec2 TransformPoint(Vec2Param localPosition);
 
-  /// Transforms a world point into this Widget's local space. Note, this is not the same space
-  /// as LocalTranslation. LocalTranslation is in this Widget's parent space.
+  /// Transforms a world point into this Widget's local space. Note, this is not
+  /// the same space as LocalTranslation. LocalTranslation is in this Widget's
+  /// parent space.
   Vec2 TransformPointInverse(Vec2Param worldPosition);
 
   /// Size getter / setter. This acts as a shortcut to the Area Component.
@@ -245,45 +246,54 @@ public:
   Vec2 GetWorldLocation(Location::Enum location);
   void SetWorldLocation(Location::Enum location, Vec2Param worldTranslation);
 
-#define LocationGetterSetter(location)                                                                             \
-  Vec2 GetLocal##location() { return GetLocalLocation(Location::location); }                                       \
-  void SetLocal##location(Vec2Param localTranslation) { SetLocalLocation(Location::location, localTranslation); }  \
-  Vec2 GetWorld##location() { return GetWorldLocation(Location::location); }                                       \
-  void SetWorld##location(Vec2Param worldTranslation) { SetWorldLocation(Location::location, worldTranslation); }
+#define LocationGetterSetter(location)                                         \
+  Vec2 GetLocal##location()                                                    \
+  {                                                                            \
+    return GetLocalLocation(Location::location);                               \
+  }                                                                            \
+  void SetLocal##location(Vec2Param localTranslation)                          \
+  {                                                                            \
+    SetLocalLocation(Location::location, localTranslation);                    \
+  }                                                                            \
+  Vec2 GetWorld##location()                                                    \
+  {                                                                            \
+    return GetWorldLocation(Location::location);                               \
+  }                                                                            \
+  void SetWorld##location(Vec2Param worldTranslation)                          \
+  {                                                                            \
+    SetWorldLocation(Location::location, worldTranslation);                    \
+  }
 
-  LocationGetterSetter(TopLeft)
-  LocationGetterSetter(TopCenter)
-  LocationGetterSetter(TopRight)
-  LocationGetterSetter(CenterLeft)
-  LocationGetterSetter(Center)
-  LocationGetterSetter(CenterRight)
-  LocationGetterSetter(BottomLeft)
-  LocationGetterSetter(BottomCenter)
-  LocationGetterSetter(BottomRight)
+  LocationGetterSetter(TopLeft) LocationGetterSetter(TopCenter)
+      LocationGetterSetter(TopRight) LocationGetterSetter(CenterLeft)
+          LocationGetterSetter(Center) LocationGetterSetter(CenterRight)
+              LocationGetterSetter(BottomLeft)
+                  LocationGetterSetter(BottomCenter)
+                      LocationGetterSetter(BottomRight)
 #undef LocationGetterSetter
 
-  float GetLocalTop();
-  void  SetLocalTop(float localTop);
+                          float GetLocalTop();
+  void SetLocalTop(float localTop);
   float GetWorldTop();
-  void  SetWorldTop(float worldTop);
+  void SetWorldTop(float worldTop);
   float GetLocalRight();
-  void  SetLocalRight(float localRight);
+  void SetLocalRight(float localRight);
   float GetWorldRight();
-  void  SetWorldRight(float worldRight);
+  void SetWorldRight(float worldRight);
   float GetLocalBottom();
-  void  SetLocalBottom(float localBottom);
+  void SetLocalBottom(float localBottom);
   float GetWorldBottom();
-  void  SetWorldBottom(float worldBottom);
+  void SetWorldBottom(float worldBottom);
   float GetLocalLeft();
-  void  SetLocalLeft(float localLeft);
+  void SetLocalLeft(float localLeft);
   float GetWorldLeft();
-  void  SetWorldLeft(float worldLeft);
+  void SetWorldLeft(float worldLeft);
 
   /// When the area changes, we want to mark ourselves as needing to be updated.
   void OnAreaChanged(Event* e);
 
   /// Lets the Widget system know that this object has been modified and needs
-  /// to be re-laid out. 
+  /// to be re-laid out.
   void MarkAsNeedsUpdate();
 
   /// Used internally to hide the idea of a local transform update.
@@ -387,8 +397,7 @@ public:
 private:
   friend class UiRootWidget;
 
-  union
-  {
+  union {
     UiSizePolicy::Enum mSizePolicy[Axis::Size];
     struct
     {
@@ -396,7 +405,7 @@ private:
       UiSizePolicy::Enum mSizePolicyY;
     };
   };
-  
+
   Vec2 mFlexSize;
   Vec2 mAbsoluteMinSize;
   UiVerticalAlignment::Enum mVerticalAlignment;
@@ -410,4 +419,4 @@ extern const float cUiWidgetSnapSize;
 
 typedef ComponentHandle<UiWidget> UiWidgetHandle;
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,11 +7,13 @@ namespace Zero
 class DataNode;
 struct DataTreeContext;
 
-//--------------------------------------------------------------------------------- Data Tree Parser
+//Data Tree Parser
 class DataTreeParser
 {
 public:
-  static bool BuildTree(DataTreeContext& context, StringRange data, DataNode* fileRoot);
+  static bool BuildTree(DataTreeContext& context,
+                        StringRange data,
+                        DataNode* fileRoot);
 
 private:
   DataTreeParser(DataTreeContext& context);
@@ -47,4 +44,4 @@ private:
   DataTreeContext& mContext;
 };
 
-}//namespace Zero
+} // namespace Zero

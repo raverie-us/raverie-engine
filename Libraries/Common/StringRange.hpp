@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StringRange.hpp
-///
-/// Authors: Chris Peters, Joshua Davis, Dane Curbow
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Hashing.hpp"
@@ -15,8 +8,8 @@ namespace Zero
 {
 
 const char* const cEmpty = "";
-const int Utf8ContinunationByteSignature = 0x80; //10000000
-const int Utf8ContinunationByteMask = 0xC0; //11000000
+const int Utf8ContinunationByteSignature = 0x80; // 10000000
+const int Utf8ContinunationByteMask = 0xC0;      // 11000000
 
 class ZeroShared StringRange
 {
@@ -32,9 +25,9 @@ public:
   StringRange(StringIterator pbegin, size_t sizeInBytes);
   StringRange(cstr currentByte, cstr endByte);
   StringRange(cstr originalBegin, cstr currentByte, cstr endByte);
-  //For internal iterator use only and SubStringFromByteIndices
+  // For internal iterator use only and SubStringFromByteIndices
   explicit StringRange(StringParam orginalStr, cstr currentByte, cstr endByte);
-  
+
   StringRange& operator=(StringRangeParam rhs);
 
   Rune Front() const;
@@ -70,8 +63,10 @@ public:
   bool Contains(StringRangeParam value) const;
   bool StartsWith(StringRangeParam value) const;
   bool EndsWith(StringRangeParam value) const;
-  StringRange FindRangeExclusive(StringRangeParam startRange, StringRangeParam endRange) const;
-  StringRange FindRangeInclusive(StringRangeParam startRange, StringRangeParam endRange) const;
+  StringRange FindRangeExclusive(StringRangeParam startRange,
+                                 StringRangeParam endRange) const;
+  StringRange FindRangeInclusive(StringRangeParam startRange,
+                                 StringRangeParam endRange) const;
   String Replace(StringRangeParam oldValue, StringRangeParam newValue) const;
   StringSplitRange Split(StringRangeParam separator) const;
   StringRange Trim() const;
@@ -83,7 +78,8 @@ public:
   bool IsAllUpper() const;
   bool IsAllWhitespace() const;
   StringRange SubString(StringIterator begin, StringIterator end) const;
-  StringRange SubStringFromByteIndices(size_t startIndex, size_t endIndex) const;
+  StringRange SubStringFromByteIndices(size_t startIndex,
+                                       size_t endIndex) const;
 
   cstr Data() const;
   bool Empty() const;
@@ -96,27 +92,33 @@ public:
   void IncrementByRune();
   void IncrementPointerByRune(cstr& ptr);
   void DecrementPointerByRune(cstr& ptr);
-  Rune  ReadCurrentRune() const;
+  Rune ReadCurrentRune() const;
 
   bool ValidateByte(cstr byte) const;
   bool IsValid();
 
   bool ValidateRange() const;
-  
+
   bool IsContinuationByte(cstr byte) const;
   bool IsCurrentRuneWhitespace() const;
   bool IsCurrentRuneUpper() const;
   bool IsCurrentRuneLower() const;
 
-  StringRange& All() { return *this; }
-  const StringRange& All() const { return *this; }
+  StringRange& All()
+  {
+    return *this;
+  }
+  const StringRange& All() const
+  {
+    return *this;
+  }
 
   String mOriginalString;
   cstr mBegin;
   cstr mEnd;
 };
 
-//------------------------------------------------------------------- String Split Range
+//Split Range
 /// A range that splits a StringRange based upon a separator range.
 class ZeroShared StringSplitRange
 {
@@ -126,8 +128,14 @@ public:
   void PopFront();
   bool Empty();
 
-  StringSplitRange& All() { return *this; }
-  const StringSplitRange& All() const { return *this; }
+  StringSplitRange& All()
+  {
+    return *this;
+  }
+  const StringSplitRange& All() const
+  {
+    return *this;
+  }
 
   void SkipNext();
 
@@ -143,7 +151,6 @@ inline bool operator!=(const StringRange& left, cstr right);
 inline bool operator<(const StringRange& left, cstr right);
 inline bool operator<(cstr left, const StringRange& right);
 
-//----------------------------------------------------------- String Iterator
 // An iterator for StringRange to make moving backwards in the StringRange safe
 class ZeroShared StringIterator
 {
@@ -171,13 +178,13 @@ public:
   StringIterator& operator+=(uint numElements);
   StringIterator& operator-=(uint numElements);
   char operator[](uint numBytes) const;
-  
+
   StringIterator& operator++();
   StringIterator& operator--();
   Rune operator*();
   Rune operator*() const;
 
-  Rune  ReadCurrentRune() const;
+  Rune ReadCurrentRune() const;
 
   bool ValidByte() const;
   bool IsCurrentRuneWhitespace() const;
@@ -191,7 +198,6 @@ public:
   StringRange mIteratorRange;
 };
 
-//----------------------------------------------------------- String Token Range
 class ZeroShared StringTokenRange
 {
 public:
@@ -222,17 +228,17 @@ inline bool operator<(const String& left, cstr right)
   return strcmp(left.Data(), right) < 0;
 }
 
-//String vs other StringRange
+// String vs other StringRange
 inline bool operator==(const String& left, const StringRange& right)
 {
   return left.SizeInBytes() == right.SizeInBytes() &&
-    strncmp(left.Data(), right.Data(), right.SizeInBytes()) == 0;
+         strncmp(left.Data(), right.Data(), right.SizeInBytes()) == 0;
 }
 
 inline bool operator==(const StringRange& left, const String& right)
 {
   return left.SizeInBytes() == right.SizeInBytes() &&
-    strncmp(left.Data(), right.Data(), left.SizeInBytes()) == 0;
+         strncmp(left.Data(), right.Data(), left.SizeInBytes()) == 0;
 }
 
 inline bool operator<(const String& left, const StringRange& right)
@@ -245,17 +251,17 @@ inline bool operator<(const StringRange& left, const String& right)
   return strncmp(left.Data(), right.Data(), left.SizeInBytes()) < 0;
 }
 
-//-------------------------------------------------------------------String range vs cstr
+//range vs cstr
 inline bool operator==(const StringRange& left, cstr right)
 {
   return left.SizeInBytes() == strlen(right) &&
-    strncmp(left.Data(), right, left.SizeInBytes()) == 0;
+         strncmp(left.Data(), right, left.SizeInBytes()) == 0;
 }
 
 inline bool operator==(cstr left, const StringRange& right)
 {
   return strlen(left) == right.SizeInBytes() &&
-    strncmp(left, right.Data(), right.SizeInBytes()) == 0;
+         strncmp(left, right.Data(), right.SizeInBytes()) == 0;
 }
 
 inline bool operator!=(const StringRange& left, cstr right)
@@ -273,12 +279,11 @@ inline bool operator<(cstr left, const StringRange& right)
   return strncmp(left, right.Data(), right.SizeInBytes()) < 0;
 }
 
-//--------------------------------------------------- Hash Policy (String Range)
-//Hash policy for string range
-template<>
+// Hash policy for string range
+template <>
 struct ZeroShared HashPolicy<StringRange>
 {
-  inline size_t operator () (const StringRange& value) const
+  inline size_t operator()(const StringRange& value) const
   {
     return HashString(value.mBegin, value.SizeInBytes());
   }
@@ -288,7 +293,7 @@ struct ZeroShared HashPolicy<StringRange>
     return left == right;
   }
 
-  template<typename stringType>
+  template <typename stringType>
   inline bool Equal(const StringRange& left, const stringType& right) const
   {
     // use operator == to other type, usually strings
@@ -296,12 +301,11 @@ struct ZeroShared HashPolicy<StringRange>
   }
 };
 
-//--------------------------------------------------------- Hash Policy (String)
-//Hash policy for String class.
-template<>
+// Hash policy for String class.
+template <>
 struct ZeroShared HashPolicy<String>
 {
-  inline size_t operator () (const String& value) const
+  inline size_t operator()(const String& value) const
   {
     return value.Hash();
   }
@@ -312,8 +316,7 @@ struct ZeroShared HashPolicy<String>
   }
 };
 
-//------------------------------------------------------- Move Operator (String)
-template<>
+template <>
 struct ZeroShared MoveWithoutDestructionOperator<String>
 {
   static inline void MoveWithoutDestruction(String* dest, String* source)
@@ -322,14 +325,16 @@ struct ZeroShared MoveWithoutDestructionOperator<String>
   }
 };
 
-//------------------------------------------------------------- Global Functions
 // Wraps text input on space boundaries (does not add -)
 String WordWrap(StringRange input, size_t maxLineLength);
 
 template <typename RangeType, typename PolicyType>
-String String::JoinRange(StringRangeParam separator, RangeType range, PolicyType policy)
+String String::JoinRange(StringRangeParam separator,
+                         RangeType range,
+                         PolicyType policy)
 {
-  // First we need to know how big the range is, so copy the range and iterate over to count
+  // First we need to know how big the range is, so copy the range and iterate
+  // over to count
   RangeType counterRange = range;
   size_t count = 0;
   for (; !counterRange.Empty(); counterRange.PopFront())
@@ -341,14 +346,15 @@ String String::JoinRange(StringRangeParam separator, RangeType range, PolicyType
   // Fill out the array of StringRanges
   for (; !range.Empty(); range.PopFront())
   {
-    new(values + i) StringRange();
+    new (values + i) StringRange();
     values[i] = policy.ToStringRange(range.Front());
     ++i;
   }
 
   String result = JoinInternal(separator, values, count);
 
-  // Have to manually call the destructor on every string range since we called placement new
+  // Have to manually call the destructor on every string range since we called
+  // placement new
   for (size_t i = 0; i < count; ++i)
   {
     values[i].~StringRange();

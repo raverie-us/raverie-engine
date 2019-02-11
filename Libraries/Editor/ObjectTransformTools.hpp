@@ -1,32 +1,28 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Ryan Edgemon, Josh Claeys
-/// Copyright 2016-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------- Events ---
 namespace Events
 {
 DeclareEvent(ToolCreateGizmoEvent);
 DeclareEvent(DuplicateFirstChance);
-}
+} // namespace Events
 
 class ToolGizmoEvent : public Event
 {
 public:
   ZilchDeclareType(ToolGizmoEvent, TypeCopyMode::ReferenceType);
-  ToolGizmoEvent(Cog* gizmo) { mGizmo = gizmo; }
+  ToolGizmoEvent(Cog* gizmo)
+  {
+    mGizmo = gizmo;
+  }
 
 public:
   Cog* mGizmo;
 };
 
-//------------------------------------------------------------- GizmoCreator ---
 class GizmoCreator : public Component
 {
 public:
@@ -51,8 +47,6 @@ public:
   HandleOf<Space> mSpace;
 };
 
-
-//------------------------------------------------------ ObjectTransformTool ---
 class ObjectTransformTool : public Component
 {
 public:
@@ -90,8 +84,8 @@ public:
 
   Space* GetSpaceFromSelection(MetaSelection* selection);
 
-  virtual void GizmoCreated(Cog* gizmo) {};
-  virtual void CopyPropertiesToGizmo() {};
+  virtual void GizmoCreated(Cog* gizmo){};
+  virtual void CopyPropertiesToGizmo(){};
 
 public:
   bool mChangeFromUs;
@@ -107,13 +101,13 @@ public:
   float mSnapDistance;
 };
 
-//------------------------------------------------------ ObjectTranslateTool ---
 /// <Commands>
 ///   <command name = "CopySelection">
 ///     <shortcut> Ctrl + Drag </shortcut>
 ///     <description>
-///       Duplicate all objects in the current selection.  Then, set the 
-///       duplicates to be the current selection and target of the TranslateTool.
+///       Duplicate all objects in the current selection.  Then, set the
+///       duplicates to be the current selection and target of the
+///       TranslateTool.
 ///     </description>
 ///   </command>
 ///   <command name = "SnapToSurface">
@@ -148,15 +142,15 @@ public:
   void Serialize(Serializer& stream);
   void Initialize(CogInitializer& initializer);
 
-  GizmoDragMode::Enum GetDragMode( );
+  GizmoDragMode::Enum GetDragMode();
 
-  bool GetSnapping( );
+  bool GetSnapping();
   void SetSnapping(bool snapping);
 
   float GetSnapDistance();
   void SetSnapDistance(float distance);
 
-  GizmoSnapMode::Enum GetSnapMode( );
+  GizmoSnapMode::Enum GetSnapMode();
   void SetSnapMode(GizmoSnapMode::Enum mode);
 
   void OnGizmoObjectsDuplicated(Event* event);
@@ -168,7 +162,6 @@ public:
   GizmoSnapMode::Enum mSnapMode;
 };
 
-//---------------------------------------------------------- ObjectScaleTool ---
 /// <Commands>
 ///   <command name = "OffAxesScale">
 ///     <shortcut> Ctrl + Drag </shortcut>
@@ -201,21 +194,21 @@ public:
   void Serialize(Serializer& stream);
   void Initialize(CogInitializer& initializer);
 
-  GizmoDragMode::Enum GetDragMode( );
+  GizmoDragMode::Enum GetDragMode();
 
-  bool GetSnapping( );
+  bool GetSnapping();
   void SetSnapping(bool snapping);
 
   void SetSnapDistance(float distance);
   float GetSnapDistance();
 
-  GizmoSnapMode::Enum GetSnapMode( );
+  GizmoSnapMode::Enum GetSnapMode();
   void SetSnapMode(GizmoSnapMode::Enum mode);
 
-  bool GetAffectTranslation( );
+  bool GetAffectTranslation();
   void SetAffectTranslation(bool affectTranslation);
 
-  bool GetAffectScale( );
+  bool GetAffectScale();
   void SetAffectScale(bool affectScale);
 
   void CopyPropertiesToGizmo() override;
@@ -223,14 +216,15 @@ public:
 public:
   GizmoSnapMode::Enum mSnapMode;
   /// With multiple objects selected, allow their spacial-offest to be affected
-  /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
+  /// about the chosen pivot point, while being locally scaled with
+  /// 'mAffectScale'.
   bool mAffectTranslation;
   /// With multiple objects selected, allow their local scale to be affected
-  /// while being spacially-offset (with 'AffectTranslation') about the chosen pivot point.
+  /// while being spacially-offset (with 'AffectTranslation') about the chosen
+  /// pivot point.
   bool mAffectScale;
 };
 
-//--------------------------------------------------------- ObjectRotateTool ---
 /// <Commands>
 ///   <command name = "TempSnapping">
 ///     <shortcut> Shift (Hold) </shortcut>
@@ -256,7 +250,7 @@ public:
   void Serialize(Serializer& stream);
   void Initialize(CogInitializer& initializer);
 
-  bool GetSnapping( );
+  bool GetSnapping();
   void SetSnapping(bool snapping);
 
   float GetSnapAngle();
@@ -265,18 +259,20 @@ public:
   bool GetAffectTranslation();
   void SetAffectTranslation(bool affectTranslation);
 
-  bool GetAffectRotation( );
+  bool GetAffectRotation();
   void SetAffectRotation(bool affectRotation);
 
   void CopyPropertiesToGizmo() override;
-  
+
 public:
   /// With multiple objects selected, allow their spacial-offest to be rotated
-  /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.
+  /// about the chosen pivot point, while being locally rotated with
+  /// 'mAffectRotation'.
   bool mAffectTranslation;
   /// With multiple objects selected, allow their local rotation to be affected
-  /// while being spacially-rotated (with 'AffectTranslation') about the chosen pivot point.
+  /// while being spacially-rotated (with 'AffectTranslation') about the chosen
+  /// pivot point.
   bool mAffectRotation;
 };
 
-}// end namespace Zero
+} // end namespace Zero

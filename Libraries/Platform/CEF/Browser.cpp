@@ -1,15 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #undef GetNextSibling
 #undef GetFirstChild
 
-// NOTE: This should only ever be included by one cpp (implementation generally hidden)
+// NOTE: This should only ever be included by one cpp (implementation generally
+// hidden)
 #include <include/cef_app.h>
 #include <include/cef_browser.h>
 #include <include/cef_client.h>
@@ -50,83 +46,110 @@ public:
   CefBrowserSettings mSettings;
 };
 
-class Chrome :
-  public CefClient,
-  public CefDisplayHandler,
-  public CefLifeSpanHandler,
-  public CefLoadHandler,
-  public CefRenderHandler,
-  public CefRequestHandler,
-  public CefDownloadHandler
+class Chrome : public CefClient,
+               public CefDisplayHandler,
+               public CefLifeSpanHandler,
+               public CefLoadHandler,
+               public CefRenderHandler,
+               public CefRequestHandler,
+               public CefDownloadHandler
 {
 public:
   Chrome();
   ~Chrome();
 
   // CefClient Interface
-  CefRefPtr<CefDisplayHandler>  GetDisplayHandler()   override { return this; }
-  CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler()  override { return this; }
-  CefRefPtr<CefLoadHandler>     GetLoadHandler()      override { return this; }
-  CefRefPtr<CefRenderHandler>   GetRenderHandler()    override { return this; }
-  CefRefPtr<CefRequestHandler>  GetRequestHandler()   override { return this; }
-  CefRefPtr<CefDownloadHandler> GetDownloadHandler()  override { return this; }
-  
+  CefRefPtr<CefDisplayHandler> GetDisplayHandler() override
+  {
+    return this;
+  }
+  CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() override
+  {
+    return this;
+  }
+  CefRefPtr<CefLoadHandler> GetLoadHandler() override
+  {
+    return this;
+  }
+  CefRefPtr<CefRenderHandler> GetRenderHandler() override
+  {
+    return this;
+  }
+  CefRefPtr<CefRequestHandler> GetRequestHandler() override
+  {
+    return this;
+  }
+  CefRefPtr<CefDownloadHandler> GetDownloadHandler() override
+  {
+    return this;
+  }
+
   // CefRenderHandler Interface
-  bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect) override;
-  void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList & dirtyRects, const void * buffer, int width, int height) override;
-  bool GetScreenPoint
-  (
-    CefRefPtr<CefBrowser> browser,
-    int viewX,
-    int viewY,
-    int& screenX,
-    int& screenY
-  ) override;
-  void OnCursorChange(CefRefPtr<CefBrowser> browser, CefCursorHandle cursor, CursorType type, const CefCursorInfo& custom_cursor_info) override;
+  bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect) override;
+  void OnPaint(CefRefPtr<CefBrowser> browser,
+               PaintElementType type,
+               const RectList& dirtyRects,
+               const void* buffer,
+               int width,
+               int height) override;
+  bool GetScreenPoint(CefRefPtr<CefBrowser> browser,
+                      int viewX,
+                      int viewY,
+                      int& screenX,
+                      int& screenY) override;
+  void OnCursorChange(CefRefPtr<CefBrowser> browser,
+                      CefCursorHandle cursor,
+                      CursorType type,
+                      const CefCursorInfo& custom_cursor_info) override;
 
   // CefDisplayHandler Interface
-  void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) override;
-  void OnStatusMessage(CefRefPtr<CefBrowser> browser, const CefString& value) override;
-  bool OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefString& message, const CefString& source, int line) override;
+  void OnTitleChange(CefRefPtr<CefBrowser> browser,
+                     const CefString& title) override;
+  void OnStatusMessage(CefRefPtr<CefBrowser> browser,
+                       const CefString& value) override;
+  bool OnConsoleMessage(CefRefPtr<CefBrowser> browser,
+                        const CefString& message,
+                        const CefString& source,
+                        int line) override;
 
   // CefLifeSpanHandler Interface
-  bool OnBeforePopup
-  (
-    CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefFrame> frame,
-    const CefString& target_url,
-    const CefString& target_frame_name,
-    CefLifeSpanHandler::WindowOpenDisposition target_disposition,
-    bool user_gesture,
-    const CefPopupFeatures& popupFeatures,
-    CefWindowInfo& windowInfo,
-    CefRefPtr<CefClient>& client,
-    CefBrowserSettings& settings,
-    bool* no_javascript_access
-  ) override;
+  bool
+  OnBeforePopup(CefRefPtr<CefBrowser> browser,
+                CefRefPtr<CefFrame> frame,
+                const CefString& target_url,
+                const CefString& target_frame_name,
+                CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+                bool user_gesture,
+                const CefPopupFeatures& popupFeatures,
+                CefWindowInfo& windowInfo,
+                CefRefPtr<CefClient>& client,
+                CefBrowserSettings& settings,
+                bool* no_javascript_access) override;
   void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
   bool DoClose(CefRefPtr<CefBrowser> browser) override;
   void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
 
   // CefLoadHandler Interface
   void OnLoadError(CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefFrame> frame,
-    ErrorCode errorCode,
-    const CefString& errorText,
-    const CefString& failedUrl) override;
+                   CefRefPtr<CefFrame> frame,
+                   ErrorCode errorCode,
+                   const CefString& errorText,
+                   const CefString& failedUrl) override;
 
   // CefRequestHandler Interface
-  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, bool is_redirect);
+  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+                      CefRefPtr<CefFrame> frame,
+                      CefRefPtr<CefRequest> request,
+                      bool is_redirect);
 
   // CefDownloadHandler Interface
-  void OnBeforeDownload
-  (
-    CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefDownloadItem> download_item,
-    const CefString& suggested_name,
-    CefRefPtr<CefBeforeDownloadCallback> callback
-  ) override;
-  void OnDownloadUpdated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefDownloadItem> download_item, CefRefPtr<CefDownloadItemCallback> callback) override;
+  void OnBeforeDownload(CefRefPtr<CefBrowser> browser,
+                        CefRefPtr<CefDownloadItem> download_item,
+                        const CefString& suggested_name,
+                        CefRefPtr<CefBeforeDownloadCallback> callback) override;
+  void OnDownloadUpdated(CefRefPtr<CefBrowser> browser,
+                         CefRefPtr<CefDownloadItem> download_item,
+                         CefRefPtr<CefDownloadItemCallback> callback) override;
 
   void OnChromePopup(ChromePopupInfo* event);
 
@@ -136,24 +159,23 @@ public:
   Browser* GetWebBrowser(CefRefPtr<CefBrowser> browser);
   CefRefPtr<CefBrowser> GetCefBrowser(Browser* webBrowser);
   HashMap<int, ChromeBrowserData> mIdToData;
-  HashMap<int, CefRefPtr<CefDownloadItem> > mIdToDownload;
+  HashMap<int, CefRefPtr<CefDownloadItem>> mIdToDownload;
 
   // We are currently creating a CefBrowser for this Browser
   Browser* mCreatedWebBrowser;
 
-  // Popups are added on another thread and must be locked / pumped on an update.
+  // Popups are added on another thread and must be locked / pumped on an
+  // update.
   ThreadLock mPopupsLock;
   Array<ChromePopupInfo> mPopups;
 
   IMPLEMENT_REFCOUNTING(Chrome);
 };
 
-//------------------------------------------------------------------ Chrome
 // We need to keep this global object alive
 CefRefPtr<Chrome> gPlatform;
 
-Chrome::Chrome() :
-  mCreatedWebBrowser(nullptr)
+Chrome::Chrome() : mCreatedWebBrowser(nullptr)
 {
 }
 
@@ -175,7 +197,7 @@ void Chrome::OnChromePopup(ChromePopupInfo* event)
     if (name.Empty())
       name = "Popup";
   }
-  
+
   webBrowser->mOnPopup(name, event->mTargetUrl, webBrowser);
 }
 
@@ -209,7 +231,7 @@ CefRefPtr<CefBrowser> Chrome::GetCefBrowser(Browser* webBrowser)
   return browser;
 }
 
-bool Chrome::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
+bool Chrome::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect)
 {
   Browser* webBrowser = GetWebBrowser(browser);
   IntVec2 size = IntVec2(1024, 1024);
@@ -224,7 +246,12 @@ bool Chrome::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect & rect)
   return true;
 }
 
-void Chrome::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height)
+void Chrome::OnPaint(CefRefPtr<CefBrowser> browser,
+                     PaintElementType type,
+                     const RectList& dirtyRects,
+                     const void* buffer,
+                     int width,
+                     int height)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -243,17 +270,18 @@ void Chrome::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const
     rect.SizeY = dirtyRect.height;
   }
 
-  webBrowser->mOnPaint(BrowserColorFormat::BGRA8, (const byte*)buffer, IntVec2(width, height), rects, webBrowser);
+  webBrowser->mOnPaint(BrowserColorFormat::BGRA8,
+                       (const byte*)buffer,
+                       IntVec2(width, height),
+                       rects,
+                       webBrowser);
 }
 
-bool Chrome::GetScreenPoint
-(
-  CefRefPtr<CefBrowser> browser,
-  int viewX,
-  int viewY,
-  int& screenX,
-  int& screenY
-)
+bool Chrome::GetScreenPoint(CefRefPtr<CefBrowser> browser,
+                            int viewX,
+                            int viewY,
+                            int& screenX,
+                            int& screenY)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -272,7 +300,10 @@ bool Chrome::GetScreenPoint
   return true;
 }
 
-void Chrome::OnCursorChange(CefRefPtr<CefBrowser> browser, CefCursorHandle cursorHandle, CursorType type, const CefCursorInfo& custom_cursor_info)
+void Chrome::OnCursorChange(CefRefPtr<CefBrowser> browser,
+                            CefCursorHandle cursorHandle,
+                            CursorType type,
+                            const CefCursorInfo& custom_cursor_info)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -283,99 +314,97 @@ void Chrome::OnCursorChange(CefRefPtr<CefBrowser> browser, CefCursorHandle curso
   Cursor::Enum cursor = Cursor::Arrow;
   switch (type)
   {
-    case CT_POINTER:
-      cursor = Cursor::Arrow;
-      break;
-    case CT_CROSS:
-      cursor = Cursor::Cross;
-      break;
-    case CT_HAND:
-      cursor = Cursor::Hand;
-      break;
-    case CT_IBEAM:
-    case CT_VERTICALTEXT:
-      cursor = Cursor::TextBeam;
-      break;
-    case CT_WAIT:
-      cursor = Cursor::Wait;
-      break;
-    case CT_WESTRESIZE:
-    case CT_EASTRESIZE:
-    case CT_EASTWESTRESIZE:
-    case CT_COLUMNRESIZE:
-      cursor = Cursor::SizeWE;
-      break;
-    case CT_NORTHRESIZE:
-    case CT_SOUTHRESIZE:
-    case CT_NORTHSOUTHRESIZE:
-    case CT_ROWRESIZE:
-      cursor = Cursor::SizeNS;
-      break;
-    case CT_NORTHEASTRESIZE:
-    case CT_SOUTHWESTRESIZE:
-      cursor = Cursor::SizeNESW;
-      break;
-    case CT_NORTHWESTRESIZE:
-    case CT_SOUTHEASTRESIZE:
-      cursor = Cursor::SizeNWSE;
-      break;
-    case CT_NORTHEASTSOUTHWESTRESIZE:
-    case CT_NORTHWESTSOUTHEASTRESIZE:
-      cursor = Cursor::SizeAll;
-      break;
-    case CT_MIDDLEPANNING:
-    case CT_EASTPANNING:
-    case CT_NORTHPANNING:
-    case CT_NORTHEASTPANNING:
-    case CT_NORTHWESTPANNING:
-    case CT_SOUTHPANNING:
-    case CT_SOUTHEASTPANNING:
-    case CT_SOUTHWESTPANNING:
-    case CT_WESTPANNING:
-      cursor = Cursor::Cross;
-      break;
-    case CT_MOVE:
-      cursor = Cursor::SizeAll;
-      break;
-    case CT_NONE:
-      cursor = Cursor::Invisible;
-      break;
-    case CT_NODROP:
-    case CT_NOTALLOWED:
-      cursor = Cursor::Cross;
-      break;
+  case CT_POINTER:
+    cursor = Cursor::Arrow;
+    break;
+  case CT_CROSS:
+    cursor = Cursor::Cross;
+    break;
+  case CT_HAND:
+    cursor = Cursor::Hand;
+    break;
+  case CT_IBEAM:
+  case CT_VERTICALTEXT:
+    cursor = Cursor::TextBeam;
+    break;
+  case CT_WAIT:
+    cursor = Cursor::Wait;
+    break;
+  case CT_WESTRESIZE:
+  case CT_EASTRESIZE:
+  case CT_EASTWESTRESIZE:
+  case CT_COLUMNRESIZE:
+    cursor = Cursor::SizeWE;
+    break;
+  case CT_NORTHRESIZE:
+  case CT_SOUTHRESIZE:
+  case CT_NORTHSOUTHRESIZE:
+  case CT_ROWRESIZE:
+    cursor = Cursor::SizeNS;
+    break;
+  case CT_NORTHEASTRESIZE:
+  case CT_SOUTHWESTRESIZE:
+    cursor = Cursor::SizeNESW;
+    break;
+  case CT_NORTHWESTRESIZE:
+  case CT_SOUTHEASTRESIZE:
+    cursor = Cursor::SizeNWSE;
+    break;
+  case CT_NORTHEASTSOUTHWESTRESIZE:
+  case CT_NORTHWESTSOUTHEASTRESIZE:
+    cursor = Cursor::SizeAll;
+    break;
+  case CT_MIDDLEPANNING:
+  case CT_EASTPANNING:
+  case CT_NORTHPANNING:
+  case CT_NORTHEASTPANNING:
+  case CT_NORTHWESTPANNING:
+  case CT_SOUTHPANNING:
+  case CT_SOUTHEASTPANNING:
+  case CT_SOUTHWESTPANNING:
+  case CT_WESTPANNING:
+    cursor = Cursor::Cross;
+    break;
+  case CT_MOVE:
+    cursor = Cursor::SizeAll;
+    break;
+  case CT_NONE:
+    cursor = Cursor::Invisible;
+    break;
+  case CT_NODROP:
+  case CT_NOTALLOWED:
+    cursor = Cursor::Cross;
+    break;
 
-    case CT_HELP:
-    case CT_CELL:
-    case CT_CONTEXTMENU:
-    case CT_ALIAS:
-    case CT_PROGRESS:
-    case CT_COPY:
-    case CT_ZOOMIN:
-    case CT_ZOOMOUT:
-    case CT_GRAB:
-    case CT_GRABBING:
-    case CT_CUSTOM:
-      break;
+  case CT_HELP:
+  case CT_CELL:
+  case CT_CONTEXTMENU:
+  case CT_ALIAS:
+  case CT_PROGRESS:
+  case CT_COPY:
+  case CT_ZOOMIN:
+  case CT_ZOOMOUT:
+  case CT_GRAB:
+  case CT_GRABBING:
+  case CT_CUSTOM:
+    break;
   }
 
   webBrowser->mOnCursorChanged(cursor, webBrowser);
 }
 
-bool Chrome::OnBeforePopup
-(
-  CefRefPtr<CefBrowser> browser,
-  CefRefPtr<CefFrame> frame,
-  const CefString& target_url,
-  const CefString& target_frame_name,
-  CefLifeSpanHandler::WindowOpenDisposition target_disposition,
-  bool user_gesture,
-  const CefPopupFeatures& popupFeatures,
-  CefWindowInfo& windowInfo,
-  CefRefPtr<CefClient>& client,
-  CefBrowserSettings& settings,
-  bool* no_javascript_access
-)
+bool Chrome::OnBeforePopup(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    const CefString& target_url,
+    const CefString& target_frame_name,
+    CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+    bool user_gesture,
+    const CefPopupFeatures& popupFeatures,
+    CefWindowInfo& windowInfo,
+    CefRefPtr<CefClient>& client,
+    CefBrowserSettings& settings,
+    bool* no_javascript_access)
 {
   mPopupsLock.Lock();
   ChromePopupInfo& toSend = mPopups.PushBack();
@@ -421,10 +450,10 @@ void Chrome::OnBeforeClose(CefRefPtr<CefBrowser> browser)
 }
 
 void Chrome::OnLoadError(CefRefPtr<CefBrowser> browser,
-  CefRefPtr<CefFrame> frame,
-  ErrorCode errorCode,
-  const CefString& errorText,
-  const CefString& failedUrl)
+                         CefRefPtr<CefFrame> frame,
+                         ErrorCode errorCode,
+                         const CefString& errorText,
+                         const CefString& failedUrl)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -435,13 +464,14 @@ void Chrome::OnLoadError(CefRefPtr<CefBrowser> browser,
   // Display a load error message
   std::stringstream ss;
   ss << "<html><body bgcolor=\"white\">"
-    "<h2>Failed to load URL " << std::string(failedUrl) <<
-    " with error " << std::string(errorText) << " (" << errorCode <<
-    ").</h2></body></html>";
+        "<h2>Failed to load URL "
+     << std::string(failedUrl) << " with error " << std::string(errorText)
+     << " (" << errorCode << ").</h2></body></html>";
   frame->LoadString(ss.str(), failedUrl);
 }
 
-void Chrome::OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title)
+void Chrome::OnTitleChange(CefRefPtr<CefBrowser> browser,
+                           const CefString& title)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -449,13 +479,15 @@ void Chrome::OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title
   if (webBrowser == nullptr || !webBrowser->mOnTitleChanged)
     return;
 
-  // This is really gross, but chrome entirely uses wide chars (16) and they have a conversion to std::string
+  // This is really gross, but chrome entirely uses wide chars (16) and they
+  // have a conversion to std::string
   webBrowser->mTitle = title.ToString().c_str();
 
   webBrowser->mOnTitleChanged(webBrowser->mTitle, webBrowser);
 }
 
-void Chrome::OnStatusMessage(CefRefPtr<CefBrowser> browser, const CefString& value)
+void Chrome::OnStatusMessage(CefRefPtr<CefBrowser> browser,
+                             const CefString& value)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -468,7 +500,10 @@ void Chrome::OnStatusMessage(CefRefPtr<CefBrowser> browser, const CefString& val
   webBrowser->mOnStatusChanged(webBrowser->mStatus, webBrowser);
 }
 
-bool Chrome::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefString& message, const CefString& source, int line)
+bool Chrome::OnConsoleMessage(CefRefPtr<CefBrowser> browser,
+                              const CefString& message,
+                              const CefString& source,
+                              int line)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -477,11 +512,18 @@ bool Chrome::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefString& me
     return false;
 
   bool handled = false;
-  webBrowser->mOnConsoleMessage(message.ToString().c_str(), source.ToString().c_str(), line, &handled, webBrowser);
+  webBrowser->mOnConsoleMessage(message.ToString().c_str(),
+                                source.ToString().c_str(),
+                                line,
+                                &handled,
+                                webBrowser);
   return handled;
 }
 
-bool Chrome::OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, bool is_redirect)
+bool Chrome::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+                            CefRefPtr<CefFrame> frame,
+                            CefRefPtr<CefRequest> request,
+                            bool is_redirect)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -490,13 +532,15 @@ bool Chrome::OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> f
     return false;
 
   bool handled = false;
-  webBrowser->mOnUrlChanged(request->GetURL().ToString().c_str(), &handled, webBrowser);
+  webBrowser->mOnUrlChanged(
+      request->GetURL().ToString().c_str(), &handled, webBrowser);
 
   // Check to see if the scheme is supported. If not, don't handle it.
   CefURLParts urlParts;
   if (CefParseURL(request->GetURL(), urlParts))
   {
-    String scheme = String(CefString(&urlParts.scheme).ToString().c_str()).ToLower();
+    String scheme =
+        String(CefString(&urlParts.scheme).ToString().c_str()).ToLower();
 
     // This list was gleaned from cef_scheme.h and posts on the CEF forum
     static const String cHttp("http");
@@ -506,14 +550,11 @@ bool Chrome::OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> f
     static const String cAbout("about");
     static const String cViewCache("view-cache");
 
-    // If the scheme is not one of the above, then respond as if we handled the url
-    bool isUnknownScheme =
-      scheme != cHttp &&
-      scheme != cHttps &&
-      scheme != cFile &&
-      scheme != cFtp &&
-      scheme != cAbout &&
-      scheme != cViewCache;
+    // If the scheme is not one of the above, then respond as if we handled the
+    // url
+    bool isUnknownScheme = scheme != cHttp && scheme != cHttps &&
+                           scheme != cFile && scheme != cFtp &&
+                           scheme != cAbout && scheme != cViewCache;
 
     // Always handle the event in the case of an unknown scheme
     // otherwise the browser will bring the user to an error page
@@ -560,7 +601,8 @@ void FillDownload(BrowserDownload* download, CefRefPtr<CefDownloadItem> item)
 
   String fullPath = item->GetFullPath().ToString().c_str();
   if (fullPath.Empty())
-    fullPath = FilePath::Combine(GetUserDocumentsDirectory(), suggestedFileName);
+    fullPath =
+        FilePath::Combine(GetUserDocumentsDirectory(), suggestedFileName);
 
   download->mFilePath = fullPath;
   download->mIsInProgress = item->IsInProgress();
@@ -572,17 +614,15 @@ void FillDownload(BrowserDownload* download, CefRefPtr<CefDownloadItem> item)
   download->mUrl = url;
   download->mOriginalUrl = originalUrl;
   download->mSuggestedFileName = suggestedFileName;
-  download->mContentDisposition = item->GetContentDisposition().ToString().c_str();
+  download->mContentDisposition =
+      item->GetContentDisposition().ToString().c_str();
   download->mMimeType = item->GetMimeType().ToString().c_str();
 }
 
-void Chrome::OnBeforeDownload
-(
-  CefRefPtr<CefBrowser> browser,
-  CefRefPtr<CefDownloadItem> download_item,
-  const CefString& suggested_name,
-  CefRefPtr<CefBeforeDownloadCallback> callback
-)
+void Chrome::OnBeforeDownload(CefRefPtr<CefBrowser> browser,
+                              CefRefPtr<CefDownloadItem> download_item,
+                              const CefString& suggested_name,
+                              CefRefPtr<CefBeforeDownloadCallback> callback)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -605,7 +645,9 @@ void Chrome::OnBeforeDownload
     callback->Continue(download.mFilePath.c_str(), false);
 }
 
-void Chrome::OnDownloadUpdated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefDownloadItem> download_item, CefRefPtr<CefDownloadItemCallback> callback)
+void Chrome::OnDownloadUpdated(CefRefPtr<CefBrowser> browser,
+                               CefRefPtr<CefDownloadItem> download_item,
+                               CefRefPtr<CefDownloadItemCallback> callback)
 {
   CEF_REQUIRE_UI_THREAD();
 
@@ -626,7 +668,8 @@ void Chrome::OnDownloadUpdated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefDownl
   bool cancel = false;
   webBrowser->mOnDownloadUpdated(download, &cancel, webBrowser);
 
-  bool finished = cancel || download_item->IsCanceled() || download_item->IsComplete();
+  bool finished =
+      cancel || download_item->IsCanceled() || download_item->IsComplete();
 
   if (cancel)
     callback->Cancel();
@@ -648,8 +691,11 @@ void Browser::PlatformCreate()
 
   // We do this so we don't get the 'out of date' chrome suggestions
   // This is mainly because the latest builds of CEF are unstable on Windows
-  CefString(&settings.user_agent) = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/9999.0.9999.0 Safari/537.36";
-  CefString(&settings.browser_subprocess_path).FromASCII("BrowserSubProcess.exe");
+  CefString(&settings.user_agent) =
+      "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) "
+      "Chrome/9999.0.9999.0 Safari/537.36";
+  CefString(&settings.browser_subprocess_path)
+      .FromASCII("BrowserSubProcess.exe");
 
   CefInitialize(args, settings, nullptr, nullptr);
 
@@ -662,7 +708,7 @@ void Browser::PlatformDestroy()
   CEF_REQUIRE_UI_THREAD();
 
   typedef Pair<int, ChromeBrowserData> IdToCefBrowser;
-  forRange(IdToCefBrowser& pair, gPlatform->mIdToData.All())
+  forRange(IdToCefBrowser & pair, gPlatform->mIdToData.All())
   {
     if (pair.second.mCefBrowser != nullptr)
     {
@@ -677,7 +723,8 @@ void Browser::PlatformDestroy()
   // This MUST be done here, because it frees the gPlatform object
   gPlatform = nullptr;
 
-  // We apparently have to do one more iteration of work after force closing all browsers
+  // We apparently have to do one more iteration of work after force closing all
+  // browsers
   CefDoMessageLoopWork();
   CefShutdown();
 }
@@ -687,24 +734,24 @@ void Browser::PlatformUpdate()
   CEF_REQUIRE_UI_THREAD();
 
   CefDoMessageLoopWork();
-  
+
   gPlatform->mPopupsLock.Lock();
-  forRange(ChromePopupInfo& popupInfo, gPlatform->mPopups)
-    gPlatform->OnChromePopup(&popupInfo);
+  forRange(ChromePopupInfo & popupInfo, gPlatform->mPopups)
+      gPlatform->OnChromePopup(&popupInfo);
   gPlatform->mPopups.Clear();
   gPlatform->mPopupsLock.Unlock();
 }
 
 Browser::Browser(const BrowserSetup& setup) :
-  mUserData(nullptr),
-  mLastSetUrl(setup.mUrl),
-  mScrollSpeed(setup.mScrollSpeed),
-  mBackgroundColor(setup.mBackgroundColor),
-  mTransparent(setup.mTransparent),
-  mSize(setup.mSize),
-  mClientPosition(setup.mClientPosition),
-  mZIndex(0),
-  mVisible(true)
+    mUserData(nullptr),
+    mLastSetUrl(setup.mUrl),
+    mScrollSpeed(setup.mScrollSpeed),
+    mBackgroundColor(setup.mBackgroundColor),
+    mTransparent(setup.mTransparent),
+    mSize(setup.mSize),
+    mClientPosition(setup.mClientPosition),
+    mZIndex(0),
+    mVisible(true)
 {
   CefWindowInfo window;
   window.SetAsWindowless(0, setup.mTransparent);
@@ -719,10 +766,11 @@ Browser::Browser(const BrowserSetup& setup) :
   Math::Swap(dstBytes[0], dstBytes[2]);
 
   browserSettings.background_color = backgroundColor;
-  
+
   // These globals are how we pass parameters to the created browser
   gPlatform->mCreatedWebBrowser = this;
-  CefRefPtr<CefBrowser> browser = CefBrowserHost::CreateBrowserSync(window, gPlatform, setup.mUrl.c_str(), browserSettings, nullptr);
+  CefRefPtr<CefBrowser> browser = CefBrowserHost::CreateBrowserSync(
+      window, gPlatform, setup.mUrl.c_str(), browserSettings, nullptr);
   gPlatform->mCreatedWebBrowser = nullptr;
 
   mHandle = (void*)(size_t)browser->GetIdentifier();
@@ -925,7 +973,11 @@ void Browser::SetUrl(StringParam url)
 
 String Browser::GetUrl()
 {
-  String url = gPlatform->GetCefBrowser(this)->GetMainFrame()->GetURL().ToString().c_str();
+  String url = gPlatform->GetCefBrowser(this)
+                   ->GetMainFrame()
+                   ->GetURL()
+                   .ToString()
+                   .c_str();
 
   if (!url.Empty())
     return url;
@@ -933,9 +985,12 @@ String Browser::GetUrl()
   return mLastSetUrl;
 }
 
-void Browser::ExecuteScriptFromLocation(StringParam script, StringParam url, int line)
+void Browser::ExecuteScriptFromLocation(StringParam script,
+                                        StringParam url,
+                                        int line)
 {
-  gPlatform->GetCefBrowser(this)->GetMainFrame()->ExecuteJavaScript(script.c_str(), url.c_str(), line);
+  gPlatform->GetCefBrowser(this)->GetMainFrame()->ExecuteJavaScript(
+      script.c_str(), url.c_str(), line);
 }
 
 void Browser::SimulateKey(int key, bool down, BrowserModifiers::Enum modifiers)
@@ -969,7 +1024,8 @@ void Browser::SimulateTextTyped(int character, BrowserModifiers::Enum modifiers)
   gPlatform->GetCefBrowser(this)->GetHost()->SendKeyEvent(toSend);
 }
 
-void Browser::SimulateMouseMove(Math::IntVec2Param localPosition, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseMove(Math::IntVec2Param localPosition,
+                                BrowserModifiers::Enum modifiers)
 {
   CefMouseEvent toSend;
   toSend.modifiers = (uint32_t)modifiers;
@@ -992,7 +1048,10 @@ cef_mouse_button_type_t GetButton(MouseButtons::Enum button)
   }
 }
 
-void Browser::SimulateMouseClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, bool down, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseClick(Math::IntVec2Param localPosition,
+                                 MouseButtons::Enum button,
+                                 bool down,
+                                 BrowserModifiers::Enum modifiers)
 {
   CefRefPtr<CefBrowser> browser = gPlatform->GetCefBrowser(this);
 
@@ -1015,7 +1074,9 @@ void Browser::SimulateMouseClick(Math::IntVec2Param localPosition, MouseButtons:
   browser->GetHost()->SendMouseClickEvent(toSend, GetButton(button), !down, 1);
 }
 
-void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition, MouseButtons::Enum button, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition,
+                                       MouseButtons::Enum button,
+                                       BrowserModifiers::Enum modifiers)
 {
   CefRefPtr<CefBrowser> browser = gPlatform->GetCefBrowser(this);
 
@@ -1027,7 +1088,9 @@ void Browser::SimulateMouseDoubleClick(Math::IntVec2Param localPosition, MouseBu
   browser->GetHost()->SendMouseClickEvent(toSend, GetButton(button), false, 2);
 }
 
-void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Param delta, BrowserModifiers::Enum modifiers)
+void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition,
+                                  Math::Vec2Param delta,
+                                  BrowserModifiers::Enum modifiers)
 {
   Math::Vec2 deltaScroll = mScrollSpeed * delta;
 
@@ -1036,7 +1099,7 @@ void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition, Math::Vec2Pa
   toSend.x = localPosition.x;
   toSend.y = localPosition.y;
   gPlatform->GetCefBrowser(this)->GetHost()->SendMouseWheelEvent(
-    toSend, (int)Math::Round(deltaScroll.x), (int)Math::Round(deltaScroll.y));
+      toSend, (int)Math::Round(deltaScroll.x), (int)Math::Round(deltaScroll.y));
 }
 
 const bool BrowserSubProcess::IsRequired = true;
@@ -1044,7 +1107,8 @@ const bool BrowserSubProcess::IsRequired = true;
 class ZeroApp : public CefApp
 {
 public:
-  void OnBeforeCommandLineProcessing(const CefString& process, CefRefPtr<CefCommandLine> commands) override
+  void OnBeforeCommandLineProcessing(
+      const CefString& process, CefRefPtr<CefCommandLine> commands) override
   {
     // These options are set for best performance
     commands->AppendSwitchWithValue("disable-surfaces", "1");
@@ -1053,7 +1117,7 @@ public:
     commands->AppendSwitchWithValue("disable-gpu-async-worker-context", "1");
     commands->AppendSwitchWithValue("disable-webgl", "1");
     commands->AppendSwitchWithValue("disable-extensions", "1");
-    //commands->AppendSwitchWithValue("disable-threaded-compositing", "1");
+    // commands->AppendSwitchWithValue("disable-threaded-compositing", "1");
     commands->AppendSwitchWithValue("disable-threaded-scrolling", "1");
     commands->AppendSwitchWithValue("enable-begin-frame-scheduling", "1");
   }
@@ -1063,8 +1127,8 @@ public:
 
 int BrowserSubProcess::Execute()
 {
-  // Execute the sub-process logic. This will block until the sub-process should exit
-  // Note: We purposefully do not care about main arguments
+  // Execute the sub-process logic. This will block until the sub-process should
+  // exit Note: We purposefully do not care about main arguments
   CefMainArgs main_args;
   CefRefPtr<ZeroApp> app(new ZeroApp());
   int result = CefExecuteProcess(main_args, app, nullptr);

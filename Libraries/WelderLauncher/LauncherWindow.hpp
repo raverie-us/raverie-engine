@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,14 +6,13 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(MenuDisplayed);
-  DeclareEvent(MenuHidden);
-  DeclareEvent(VersionListLoaded);
-  DeclareEvent(TemplateListLoaded);
-  DeclareEvent(CheckForUpdates);
-}
+DeclareEvent(MenuDisplayed);
+DeclareEvent(MenuHidden);
+DeclareEvent(VersionListLoaded);
+DeclareEvent(TemplateListLoaded);
+DeclareEvent(CheckForUpdates);
+} // namespace Events
 
-//------------------------------------------------------------------ Menu Button
 /// The Settings button next to the main tab buttons.
 class MenuButton : public Composite
 {
@@ -30,11 +24,15 @@ public:
   Element* mIcon;
 };
 
-//------------------------------------------------------------------------ Menus
-DeclareEnum7(LauncherMenu, Discover, Projects, RecentProjects, NewProject,
-                           Builds, MenuCount, None);
+DeclareEnum7(LauncherMenu,
+             Discover,
+             Projects,
+             RecentProjects,
+             NewProject,
+             Builds,
+             MenuCount,
+             None);
 
-//---------------------------------------------------------------- Launcher Menu
 class MenuData
 {
 public:
@@ -57,7 +55,6 @@ public:
   Composite* mClientArea;
 };
 
-//------------------------------------------------------------- Menu Text Button
 class MenuTextButton : public TextButton
 {
 public:
@@ -76,7 +73,6 @@ public:
   LauncherMenu::Type mMenu;
 };
 
-//------------------------------------------------------------------ Main Button
 /// Will be used for running projects / installing builds.
 class MainButton : public Composite
 {
@@ -130,7 +126,6 @@ public:
   Text* mSubText;
 };
 
-//-------------------------------------------------------------- Launcher Window
 class LauncherWindow : public Composite
 {
 public:
@@ -149,16 +144,19 @@ public:
   /// Check to see if there is a new launcher available
   void CheckForLauncherUpdates();
 
-  /// Prompt response for asking if a user wants to install a new major version (runs installer).
+  /// Prompt response for asking if a user wants to install a new major version
+  /// (runs installer).
   void OnInstallMajorVersion(ModalConfirmEvent* e);
   /// Response for a launcher installer being downloaded.
   void OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e);
-  /// Prompt response for asking if a user wants to install a new patch version (downloads/extracts/restarts).
+  /// Prompt response for asking if a user wants to install a new patch version
+  /// (downloads/extracts/restarts).
   void OnInstallPatchVersion(ModalConfirmEvent* e);
   /// Response for a launcher patch being downloaded.
   void OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e);
-  
-  /// Tell the user that all of their builds must be updated. Needed for emergency patches to old builds.
+
+  /// Tell the user that all of their builds must be updated. Needed for
+  /// emergency patches to old builds.
   void ForceUpdateBuilds();
   void ForceUpdateBuildsAndUpdateConfig();
   void OnForcedBuildsModal(ModalButtonEvent* e);
@@ -173,7 +171,9 @@ public:
   void SetDefaultSubMenu(LauncherMenu::Type parentMenu,
                          LauncherMenu::Type defaultSubMenu);
 
-  void AddMenuButton(LauncherMenu::Type menu, StringParam name, StringParam style);
+  void AddMenuButton(LauncherMenu::Type menu,
+                     StringParam name,
+                     StringParam style);
 
   /// Displays the given composite in the menu area.
   void DisplayInClientArea(Composite* composite);
@@ -202,7 +202,7 @@ public:
 
   /// When the OS window was closed, we want to terminate the engine.
   void OnClosing(Event* e);
-  
+
   /// De-selects all buttons for all menus.
   void DeSelectAllButton();
 
@@ -214,7 +214,8 @@ public:
   void OnOsMouseDrop(OsMouseDropEvent* e);
   /// Callback function for the modal dialog after installing a local build.
   void OnInstallLocalBuild(ModalConfirmEvent* e);
-  /// Callback function for the modal dialog after installing a template project.
+  /// Callback function for the modal dialog after installing a template
+  /// project.
   void OnInstallTemplateProject(ModalConfirmEvent* e);
   void OnInstallProjectPack(ModalConfirmEvent* e);
 
@@ -223,7 +224,7 @@ public:
   void OnOpenProjectFile(OsFileSelection* e);
 
   void OnFileBugPressed(Event* e);
-  
+
   // Tell the OS window to take focus (deals with minimization as well
   void OsWindowTakeFocus();
 
@@ -246,7 +247,7 @@ public:
   Composite* mCustomMenuArea;
   Composite* mCenterPanel;
   Composite* mBottomBar;
-  
+
   /// We want to allow the entire user to drag the launcher window
   /// by dragging anywhere in the entire top bar of the launcher.
   /// This widget is filled in the top bar to allow that.
@@ -282,12 +283,13 @@ public:
   HandleOf<Modal> mActiveProjectModal;
   HandleOf<Modal> mSettingsModal;
 
-  /// Various event objects created to send data via tcpsockets. They need to live for
-  /// an undetermined amount of time so we're just storing them to clean up at the end.
+  /// Various event objects created to send data via tcpsockets. They need to
+  /// live for an undetermined amount of time so we're just storing them to
+  /// clean up at the end.
   Array<EventObject*> mDummyCommunicators;
 
   String mUpdateModalName;
   bool mIsLauncherUpdateCheckQueued;
 };
 
-}//namespace Zero
+} // namespace Zero

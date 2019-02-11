@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,23 +7,20 @@ namespace Zero
 // The attribute parameter name
 const String cAutoRegisterParameterName = "autoRegister";
 
-//---------------------------------------------------------------------- Command
 ZilchDefineType(CogCommand, builder, type)
 {
 }
 
-//******************************************************************************
 CogCommand::CogCommand(Archetype* archetype) :
-  mArchetype(archetype),
-  mScriptComponentType(nullptr)
+    mArchetype(archetype),
+    mScriptComponentType(nullptr)
 {
   SetDisplayName(archetype->Name);
   Name = archetype->Name;
 }
 
-//******************************************************************************
 CogCommand::CogCommand(BoundType* componentType) :
-  mScriptComponentType(componentType)
+    mScriptComponentType(componentType)
 {
   SetDisplayName(componentType->Name);
   Name = componentType->Name;
@@ -36,28 +28,27 @@ CogCommand::CogCommand(BoundType* componentType) :
   Description = componentType->Description;
 
   MetaScriptTagAttribute* tagAttribute =
-    componentType->HasInherited<MetaScriptTagAttribute>();
+      componentType->HasInherited<MetaScriptTagAttribute>();
 
-  if(tagAttribute == nullptr)
+  if (tagAttribute == nullptr)
     return;
 
   Tags = tagAttribute->mTags;
 
   MetaScriptShortcutAttribute* shortcut =
-    componentType->HasInherited<MetaScriptShortcutAttribute>();
+      componentType->HasInherited<MetaScriptShortcutAttribute>();
 
-  if(shortcut == nullptr)
+  if (shortcut == nullptr)
     return;
 
   CommandManager* commandManager = CommandManager::GetInstance();
-  Shortcut = commandManager->BuildShortcutString(shortcut->mCtrl,
-               shortcut->mAlt, shortcut->mShift, shortcut->mKey);
+  Shortcut = commandManager->BuildShortcutString(
+      shortcut->mCtrl, shortcut->mAlt, shortcut->mShift, shortcut->mKey);
 }
 
-//******************************************************************************
 void CogCommand::Execute()
 {
-  if(Cog* cog = mCog)
+  if (Cog* cog = mCog)
   {
     CommandManager* commandManager = CommandManager::GetInstance();
 
@@ -66,56 +57,48 @@ void CogCommand::Execute()
   }
 }
 
-//---------------------------------------------------------- Cog Command Manager
 ZilchDefineType(CogCommandManager, builder, type)
 {
 }
 
-//******************************************************************************
 CogCommandManager::CogCommandManager() :
-  EditorScriptObjects<CogCommand>(ObjectAttributes::cCommand)
+    EditorScriptObjects<CogCommand>(ObjectAttributes::cCommand)
 {
   mCommands = CommandManager::GetInstance();
 }
 
-//******************************************************************************
 void CogCommandManager::AddObject(CogCommand* object)
 {
   mCommands->AddCommand(object);
 }
 
-//******************************************************************************
 void CogCommandManager::RemoveObject(CogCommand* object)
 {
   mCommands->RemoveCommand(object);
 }
 
-//******************************************************************************
 CogCommand* CogCommandManager::GetObject(StringParam objectName)
 {
   Command* command = mCommands->GetCommand(objectName);
   return Type::DynamicCast<CogCommand*>(command);
 }
 
-//******************************************************************************
 uint CogCommandManager::GetObjectCount()
 {
   return mCommands->mCommands.Size();
 }
 
-//******************************************************************************
 CogCommand* CogCommandManager::GetObject(uint index)
 {
   Command* command = mCommands->mCommands[index];
   return Type::DynamicCast<CogCommand*>(command);
 }
 
-//******************************************************************************
 CogCommand* CogCommandManager::UpdateData(StringParam objectName)
 {
   CogCommand* command = (CogCommand*)mCommands->GetCommand(objectName);
 
-  if(command == nullptr)
+  if (command == nullptr)
     return command;
 
   BoundType* componentType = MetaDatabase::GetInstance()->FindType(objectName);
@@ -124,20 +107,25 @@ CogCommand* CogCommandManager::UpdateData(StringParam objectName)
   bool commandModified = false;
 
   // Update command tags, if possible.
-  MetaScriptTagAttribute* tagAttribute = componentType->HasInherited<MetaScriptTagAttribute>();
-  if(tagAttribute != nullptr)
-    commandModified |= mCommands->UpdateCommandTags(command, tagAttribute->mTags);
+  MetaScriptTagAttribute* tagAttribute =
+      componentType->HasInherited<MetaScriptTagAttribute>();
+  if (tagAttribute != nullptr)
+    commandModified |=
+        mCommands->UpdateCommandTags(command, tagAttribute->mTags);
   else
-    commandModified |= mCommands->UpdateCommandTags(command, ""); // Tag attribute removed.
+    commandModified |=
+        mCommands->UpdateCommandTags(command, ""); // Tag attribute removed.
 
   // Update command shortcut, if possible.
-  MetaScriptShortcutAttribute* sc = componentType->HasInherited<MetaScriptShortcutAttribute>();
-  if(sc != nullptr)
-    commandModified |= mCommands->UpdateCommandShortcut(command, sc->mCtrl, sc->mAlt, sc->mShift, sc->mKey);
+  MetaScriptShortcutAttribute* sc =
+      componentType->HasInherited<MetaScriptShortcutAttribute>();
+  if (sc != nullptr)
+    commandModified |= mCommands->UpdateCommandShortcut(
+        command, sc->mCtrl, sc->mAlt, sc->mShift, sc->mKey);
   else
     commandModified |= mCommands->ClearCommandShortcut(command);
 
-  if(commandModified)
+  if (commandModified)
   {
     CommandUpdateEvent eventToSend(command);
     mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);
@@ -146,32 +134,31 @@ CogCommand* CogCommandManager::UpdateData(StringParam objectName)
   return command;
 }
 
-//******************************************************************************
 Space* CogCommandManager::GetSpace(CogCommand*)
 {
   return GetSpace();
 }
 
-//******************************************************************************
 Space* CogCommandManager::GetSpace()
 {
-  if(mCommandSpace.IsNull())
+  if (mCommandSpace.IsNull())
   {
-    if(Z::gEditor->mEditGame != nullptr)
+    if (Z::gEditor->mEditGame != nullptr)
     {
       GameSession* gameSession = Z::gEditor->GetEditGameSession();
 
-      Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
+      Archetype* spaceArchetype =
+          ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
       mCommandSpace = gameSession->CreateSpace(spaceArchetype);
     }
     else
     {
-      mCommandSpace = Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace,
-        CreationFlags::Default, nullptr);
+      mCommandSpace = Z::gFactory->CreateSpace(
+          CoreArchetypes::DefaultSpace, CreationFlags::Default, nullptr);
     }
   }
 
   return mCommandSpace;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,19 +1,25 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-// Implemented by api specific renderer (just call C++ delete on the renderer to destroy it)
+// Implemented by api specific renderer (just call C++ delete on the renderer to
+// destroy it)
 class Renderer;
 Renderer* CreateRenderer(OsHandle windowHandle, String& error);
 
 // Base types for renderer to implement resource render data
-class MaterialRenderData {};
-class MeshRenderData {};
-class TextureRenderData {};
+class MaterialRenderData
+{
+};
+class MeshRenderData
+{
+};
+class TextureRenderData
+{
+};
 
 class RenderTasks;
 class RenderQueues;
@@ -27,9 +33,11 @@ public:
   // Must be filled out by the renderer in initialization.
   /// If block compression formats can be sampled by hardware.
   bool mTextureCompression;
-  /// If blend settings for the output merger stage can be independently set for multiple render targets.
+  /// If blend settings for the output merger stage can be independently set for
+  /// multiple render targets.
   bool mMultiTargetBlend;
-  /// If texture sampler settings can be uniquely specified per sampler shader input.
+  /// If texture sampler settings can be uniquely specified per sampler shader
+  /// input.
   bool mSamplerObjects;
 
   // For detecting Intel drivers to handle driver bugs.
@@ -42,45 +50,45 @@ DeclareEnum3(PrimitiveType, Points, Lines, Triangles);
 // Semantics are used to communicate what this element is
 // with the vertex shader
 DeclareEnum17(VertexSemantic,
-  Position,
-  Normal,
-  Tangent,
-  Bitangent,
-  Uv,
-  UvAux,
-  Color,
-  ColorAux,
-  BoneWeights,
-  BoneIndices,
-  Aux0,
-  Aux1,
-  Aux2,
-  Aux3,
-  Aux4,
-  Aux5,
-  None);
+              Position,
+              Normal,
+              Tangent,
+              Bitangent,
+              Uv,
+              UvAux,
+              Color,
+              ColorAux,
+              BoneWeights,
+              BoneIndices,
+              Aux0,
+              Aux1,
+              Aux2,
+              Aux3,
+              Aux4,
+              Aux5,
+              None);
 
 // Type of element in vertex
 DeclareEnum6(VertexElementType,
-  Byte,
-  Short,
-  Half,
-  Real,
-  // Normalized Types map 0 to 1
-  NormByte,
-  NormShort);
+             Byte,
+             Short,
+             Half,
+             Real,
+             // Normalized Types map 0 to 1
+             NormByte,
+             NormShort);
 
-DeclareEnum3(IndexElementType,
-  Byte,
-  Ushort,
-  Uint);
+DeclareEnum3(IndexElementType, Byte, Ushort, Uint);
 
 #pragma pack(push, 1)
 class VertexAttribute
 {
 public:
-  VertexAttribute() {};
-  VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset);
+  VertexAttribute(){};
+  VertexAttribute(VertexSemantic::Enum semantic,
+                  VertexElementType::Enum type,
+                  byte count,
+                  byte offset);
 
   ByteEnum<VertexSemantic::Enum> mSemantic;
   ByteEnum<VertexElementType::Enum> mType;
@@ -99,9 +107,16 @@ public:
 class StreamedVertex
 {
 public:
-  StreamedVertex() {}
-  StreamedVertex(Vec3 position, Vec2 uv, Vec4 color, Vec2 uvAux = Vec2::cZero)
-    : mPosition(position), mUv(uv), mColor(color), mUvAux(uvAux) {}
+  StreamedVertex()
+  {
+  }
+  StreamedVertex(Vec3 position, Vec2 uv, Vec4 color, Vec2 uvAux = Vec2::cZero) :
+      mPosition(position),
+      mUv(uv),
+      mColor(color),
+      mUvAux(uvAux)
+  {
+  }
 
   Vec3 mPosition;
   Vec2 mUv;
@@ -112,28 +127,52 @@ public:
 // 1.375MB per block at 44 bytes per StreamedVertex.
 typedef PodBlockArray<StreamedVertex, 15> StreamedVertexArray;
 
-//-----------------------------------------------------------Texture Enums
 /// Type of the texture, must match sampler type in shaders
 /// Texture2D - Standard 2 dimensional texture
 /// TextureCube - Uses texture as a cubemap
 ///   Faces are extracted from the image using aspect ratio to determine layout
 DeclareEnum2(TextureType, Texture2D, TextureCube);
 
-DeclareEnum25(TextureFormat, None,
-  R8, RG8, RGB8, RGBA8,              // byte
-  R16, RG16, RGB16, RGBA16,             // short
-  R16f, RG16f, RGB16f, RGBA16f,            // half float
-  R32f, RG32f, RGB32f, RGBA32f,            // float
-  SRGB8, SRGB8A8,                          // gamma
-  Depth16, Depth24, Depth32, Depth32f,     // depth
-  Depth24Stencil8, Depth32fStencil8Pad24); // depth-stencil
+DeclareEnum25(TextureFormat,
+              None,
+              R8,
+              RG8,
+              RGB8,
+              RGBA8, // byte
+              R16,
+              RG16,
+              RGB16,
+              RGBA16, // short
+              R16f,
+              RG16f,
+              RGB16f,
+              RGBA16f, // half float
+              R32f,
+              RG32f,
+              RGB32f,
+              RGBA32f, // float
+              SRGB8,
+              SRGB8A8, // gamma
+              Depth16,
+              Depth24,
+              Depth32,
+              Depth32f, // depth
+              Depth24Stencil8,
+              Depth32fStencil8Pad24); // depth-stencil
 
 // Face identifiers for TextureCube, None is used for Texture2D
-DeclareEnum7(TextureFace, None, PositiveX, PositiveY, PositiveZ, NegativeX, NegativeY, NegativeZ);
+DeclareEnum7(TextureFace,
+             None,
+             PositiveX,
+             PositiveY,
+             PositiveZ,
+             NegativeX,
+             NegativeY,
+             NegativeZ);
 
-/// Block compression, lossy hardware supported formats with very high memory savings
-/// None - No compression will be used
-/// BC1 - RGB stored at 1/2 byte per pixel
+/// Block compression, lossy hardware supported formats with very high memory
+/// savings None - No compression will be used BC1 - RGB stored at 1/2 byte per
+/// pixel
 ///   Used for color maps that don't need alpha, normal maps
 /// BC2 - RGB w/ low precision alpha stored at 1 byte per pixel
 ///   No common usages
@@ -156,13 +195,15 @@ DeclareEnum3(TextureAddressing, Clamp, Repeat, Mirror);
 /// How pixels are sampled when viewing image at a different size
 /// Nearest - Gets the closest pixel unaltered
 /// Bilinear - Gets the 4 closest pixels and linearly blends between them
-/// Trilinear - Same as bilinear with an additional linear blend between mip levels
+/// Trilinear - Same as bilinear with an additional linear blend between mip
+/// levels
 DeclareEnum3(TextureFiltering, Nearest, Bilinear, Trilinear);
 
-/// How pixels are sampled when the ratio of pixels viewed along its u/v directions is not 1:1
-/// (Typically when viewing a texture at an angle)
-/// The options represent how large of a ratio will be accounted for when sampling
-/// x1 = 1:1 (no anisotropy), x16 = 16:1 (high anisotropy), x16 being the best quality
+/// How pixels are sampled when the ratio of pixels viewed along its u/v
+/// directions is not 1:1 (Typically when viewing a texture at an angle) The
+/// options represent how large of a ratio will be accounted for when sampling
+/// x1 = 1:1 (no anisotropy), x16 = 16:1 (high anisotropy), x16 being the best
+/// quality
 DeclareEnum5(TextureAnisotropy, x1, x2, x4, x8, x16);
 
 /// Progressively scaled down versions of the image are produced
@@ -170,7 +211,8 @@ DeclareEnum5(TextureAnisotropy, x1, x2, x4, x8, x16);
 /// None - No mipmaps are generated
 /// PreGenerated - Mipmaps are generated by the engine
 ///   Uses higher quality filtering than the gpu
-///   Required for cubemaps in order to get perspective correct filtering over face edges
+///   Required for cubemaps in order to get perspective correct filtering over
+///   face edges
 /// GpuGenerated - Mipmaps are generated by the gpu at load time
 DeclareEnum3(TextureMipMapping, None, PreGenerated, GpuGenerated);
 
@@ -199,7 +241,8 @@ public:
   TextureAddressing::Enum mAddressingY;
   /// How samples should be blended under minification/magnification.
   TextureFiltering::Enum mFiltering;
-  /// If sampling in hardware should perform comparison instead of fetching. Requires using SamplerShadow2d in the shader.
+  /// If sampling in hardware should perform comparison instead of fetching.
+  /// Requires using SamplerShadow2d in the shader.
   TextureCompareMode::Enum mCompareMode;
   /// Which method of comparison should be used if CompareMode is set to Enable.
   TextureCompareFunc::Enum mCompareFunc;
@@ -233,18 +276,30 @@ public:
 
 uint GetPixelSize(TextureFormat::Enum format);
 
-void SetPixelData(byte* data, uint index, Vec4 value, TextureFormat::Enum format);
-void ReadPixelData(byte* data, uint index, Vec4& value, TextureFormat::Enum format);
+void SetPixelData(byte* data,
+                  uint index,
+                  Vec4 value,
+                  TextureFormat::Enum format);
+void ReadPixelData(byte* data,
+                   uint index,
+                   Vec4& value,
+                   TextureFormat::Enum format);
 
 void SetPixelDataByte(byte* data, uint index, Vec4 value, uint elementCount);
 void SetPixelDataShort(byte* data, uint index, Vec4 value, uint elementCount);
-void SetPixelDataHalfFloat(byte* data, uint index, Vec4 value, uint elementCount);
+void SetPixelDataHalfFloat(byte* data,
+                           uint index,
+                           Vec4 value,
+                           uint elementCount);
 void SetPixelDataFloat(byte* data, uint index, Vec4 value, uint elementCount);
 void SetPixelDataGamma(byte* data, uint index, Vec4 value, uint elementCount);
 
 void ReadPixelDataByte(byte* data, uint index, Vec4& value, uint elementCount);
 void ReadPixelDataShort(byte* data, uint index, Vec4& value, uint elementCount);
-void ReadPixelDataHalfFloat(byte* data, uint index, Vec4& value, uint elementCount);
+void ReadPixelDataHalfFloat(byte* data,
+                            uint index,
+                            Vec4& value,
+                            uint elementCount);
 void ReadPixelDataFloat(byte* data, uint index, Vec4& value, uint elementCount);
 void ReadPixelDataGamma(byte* data, uint index, Vec4& value, uint elementCount);
 
@@ -254,16 +309,47 @@ bool IsFloatColorFormat(TextureFormat::Enum format);
 bool IsDepthFormat(TextureFormat::Enum format);
 bool IsDepthStencilFormat(TextureFormat::Enum format);
 
-void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSize);
-void YInvertBlockCompressed(byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression);
+void YInvertNonCompressed(byte* imageData,
+                          uint width,
+                          uint height,
+                          uint pixelSize);
+void YInvertBlockCompressed(byte* imageData,
+                            uint width,
+                            uint height,
+                            uint dataSize,
+                            TextureCompression::Enum compression);
 
-void BuildOrthographicTransformZero(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
-void BuildOrthographicTransformGl(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
-void BuildOrthographicTransformDx(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
+void BuildOrthographicTransformZero(Mat4& matrix,
+                                    float verticalSize,
+                                    float aspectRatio,
+                                    float nearDistance,
+                                    float farDistance);
+void BuildOrthographicTransformGl(Mat4& matrix,
+                                  float verticalSize,
+                                  float aspectRatio,
+                                  float nearDistance,
+                                  float farDistance);
+void BuildOrthographicTransformDx(Mat4& matrix,
+                                  float verticalSize,
+                                  float aspectRatio,
+                                  float nearDistance,
+                                  float farDistance);
 
-void BuildPerspectiveTransformZero(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
-void BuildPerspectiveTransformGl(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
-void BuildPerspectiveTransformDx(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
+void BuildPerspectiveTransformZero(Mat4& matrix,
+                                   float verticalFov,
+                                   float aspectRatio,
+                                   float nearDistance,
+                                   float farDistance);
+void BuildPerspectiveTransformGl(Mat4& matrix,
+                                 float verticalFov,
+                                 float aspectRatio,
+                                 float nearDistance,
+                                 float farDistance);
+void BuildPerspectiveTransformDx(Mat4& matrix,
+                                 float verticalFov,
+                                 float aspectRatio,
+                                 float nearDistance,
+                                 float farDistance);
 
 class Shader
 {
@@ -277,9 +363,15 @@ public:
 class ShaderEntry
 {
 public:
-  ShaderEntry() {}
-  ShaderEntry(Shader* shader)
-    : mCoreVertex(shader->mCoreVertex), mComposite(shader->mComposite), mRenderPass(shader->mRenderPass) {}
+  ShaderEntry()
+  {
+  }
+  ShaderEntry(Shader* shader) :
+      mCoreVertex(shader->mCoreVertex),
+      mComposite(shader->mComposite),
+      mRenderPass(shader->mRenderPass)
+  {
+  }
 
   String mCoreVertex;
   String mComposite;
@@ -294,7 +386,11 @@ public:
 class ShaderInput
 {
 public:
-  ShaderInput() : mShaderInputType(ShaderInputType::Invalid), mSamplerSettings(0) {}
+  ShaderInput() :
+      mShaderInputType(ShaderInputType::Invalid),
+      mSamplerSettings(0)
+  {
+  }
 
   ShaderInputType::Enum mShaderInputType;
   String mTranslatedInputName;
@@ -396,9 +492,20 @@ public:
   virtual ~Renderer();
 
   // should move these to a file for api dependent utility functions
-  virtual void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) = 0;
-  virtual void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) = 0;
-  virtual bool YInvertImageData(TextureType::Enum type) {return false;}
+  virtual void BuildOrthographicTransform(Mat4Ref matrix,
+                                          float size,
+                                          float aspect,
+                                          float nearPlane,
+                                          float farPlane) = 0;
+  virtual void BuildPerspectiveTransform(Mat4Ref matrix,
+                                         float fov,
+                                         float aspect,
+                                         float nearPlane,
+                                         float farPlane) = 0;
+  virtual bool YInvertImageData(TextureType::Enum type)
+  {
+    return false;
+  }
 
   // Called by main thread
   virtual MaterialRenderData* CreateMaterialRenderData() = 0;
@@ -414,23 +521,28 @@ public:
 
   virtual bool GetLazyShaderCompilation() = 0;
   virtual void SetLazyShaderCompilation(bool isLazy) = 0;
-  virtual void AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount) = 0;
+  virtual void AddShaders(Array<ShaderEntry>& entries,
+                          uint forceCompileBatchCount) = 0;
   virtual void RemoveShaders(Array<ShaderEntry>& entries) = 0;
 
   virtual void SetVSync(bool vsync) = 0;
 
   virtual void GetTextureData(GetTextureDataInfo* info) = 0;
 
-  virtual void ShowProgress(ShowProgressInfo* info) {}
+  virtual void ShowProgress(ShowProgressInfo* info)
+  {
+  }
 
-  virtual void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) = 0;
+  virtual void DoRenderTasks(RenderTasks* renderTasks,
+                             RenderQueues* renderQueues) = 0;
 
   GraphicsDriverSupport mDriverSupport;
 
   // Thread lock for the main thread to set any critical control flags.
   SpinLock mThreadLock;
-  // Intel crashes when blitting to back buffer when window is minimized with certain window style flags set.
-  // Flag is set to false when the window is minimized.
+  // Intel crashes when blitting to back buffer when window is minimized with
+  // certain window style flags set. Flag is set to false when the window is
+  // minimized.
   bool mBackBufferSafe;
 };
 
@@ -446,7 +558,8 @@ public:
   int mCount;
 };
 
-/// Settings for how pixel shader outputs are combined with the RenderTarget's current values.
+/// Settings for how pixel shader outputs are combined with the RenderTarget's
+/// current values.
 class BlendSettings
 {
 public:
@@ -454,7 +567,6 @@ public:
   BlendSettings(const BlendSettings& other);
   ~BlendSettings();
   BlendSettings& operator=(const BlendSettings& rhs);
-
 
   // Only used for safe handling of this type
   HandleIdInfo mHandleId;
@@ -474,15 +586,18 @@ public:
   DeclareByteEnumGetSet(BlendFactor::Enum, DestFactor);
 
   // Separable color/alpha settings
-  /// How source and destination values should be combined, for alpha channel if in separate mode.
+  /// How source and destination values should be combined, for alpha channel if
+  /// in separate mode.
   DeclareByteEnumGetSet(BlendEquation::Enum, BlendEquationAlpha);
-  /// What source value should be multiplied with before combined, for alpha channel if in separate mode.
+  /// What source value should be multiplied with before combined, for alpha
+  /// channel if in separate mode.
   DeclareByteEnumGetSet(BlendFactor::Enum, SourceFactorAlpha);
-  /// What destination value should be multiplied with before combined, for alpha channel if in separate mode.
+  /// What destination value should be multiplied with before combined, for
+  /// alpha channel if in separate mode.
   DeclareByteEnumGetSet(BlendFactor::Enum, DestFactorAlpha);
 
-  static void(*Constructed)(BlendSettings*);
-  static void(*Destructed)(BlendSettings*);
+  static void (*Constructed)(BlendSettings*);
+  static void (*Destructed)(BlendSettings*);
 };
 
 /// Settings for how the depth buffer should control pixel output.
@@ -507,48 +622,60 @@ public:
 
   // TODO: Macro comments for auto-doc
   // Depth settings
-  /// If pixel depth should pass comparison to a depth buffer in order to output.
-  /// And if value should be written to the depth buffer when comparison passes.
+  /// If pixel depth should pass comparison to a depth buffer in order to
+  /// output. And if value should be written to the depth buffer when comparison
+  /// passes.
   DeclareByteEnumGetSet(DepthMode::Enum, DepthMode);
   /// Comparison function for depth test.
   DeclareByteEnumGetSet(TextureCompareFunc::Enum, DepthCompareFunc);
 
   // Stencil settings
-  /// If pixels should also pass a comparison with the stencil buffer in order to output.
+  /// If pixels should also pass a comparison with the stencil buffer in order
+  /// to output.
   DeclareByteEnumGetSet(StencilMode::Enum, StencilMode);
   /// Comparison function for stencil test.
   DeclareByteEnumGetSet(TextureCompareFunc::Enum, StencilCompareFunc);
   /// Operation to perform on stencil value if stencil test fails.
   DeclareByteEnumGetSet(StencilOp::Enum, StencilFailOp);
-  /// Operation to perform on stencil value if stencil test passes but depth test fails.
+  /// Operation to perform on stencil value if stencil test passes but depth
+  /// test fails.
   DeclareByteEnumGetSet(StencilOp::Enum, DepthFailOp);
-  /// Operation to perform on stencil value if both stencil and depth tests pass.
+  /// Operation to perform on stencil value if both stencil and depth tests
+  /// pass.
   DeclareByteEnumGetSet(StencilOp::Enum, DepthPassOp);
   /// Bit mask for buffer value and test value when being compared.
   byte mStencilReadMask;
   /// Bit mask for which bits in the buffer can be modified.
   byte mStencilWriteMask;
-  /// Value that will be used to compare against the stencil buffer for all pixels.
+  /// Value that will be used to compare against the stencil buffer for all
+  /// pixels.
   byte mStencilTestValue;
 
   // If separable front/back face settings are desired
-  /// Comparison function for stencil test, for triangle back faces if in separate mode.
+  /// Comparison function for stencil test, for triangle back faces if in
+  /// separate mode.
   DeclareByteEnumGetSet(TextureCompareFunc::Enum, StencilCompareFuncBackFace);
-  /// Operation to perform on stencil value if stencil test fails, for triangle back faces if in separate mode.
+  /// Operation to perform on stencil value if stencil test fails, for triangle
+  /// back faces if in separate mode.
   DeclareByteEnumGetSet(StencilOp::Enum, StencilFailOpBackFace);
-  /// Operation to perform on stencil value if stencil test passes but depth test fails, for triangle back faces if in separate mode.
+  /// Operation to perform on stencil value if stencil test passes but depth
+  /// test fails, for triangle back faces if in separate mode.
   DeclareByteEnumGetSet(StencilOp::Enum, DepthFailOpBackFace);
-  /// Operation to perform on stencil value if both stencil and depth tests pass, for triangle back faces if in separate mode.
+  /// Operation to perform on stencil value if both stencil and depth tests
+  /// pass, for triangle back faces if in separate mode.
   DeclareByteEnumGetSet(StencilOp::Enum, DepthPassOpBackFace);
-  /// Bit mask for buffer value and test value when being compared, for triangle back faces if in separate mode.
+  /// Bit mask for buffer value and test value when being compared, for triangle
+  /// back faces if in separate mode.
   byte mStencilReadMaskBackFace;
-  /// Bit mask for which bits in the buffer can be modified, for triangle back faces if in separate mode.
+  /// Bit mask for which bits in the buffer can be modified, for triangle back
+  /// faces if in separate mode.
   byte mStencilWriteMaskBackFace;
-  /// Value that will be used to compare against the stencil buffer for all pixels, for triangle back faces if in separate mode.
+  /// Value that will be used to compare against the stencil buffer for all
+  /// pixels, for triangle back faces if in separate mode.
   byte mStencilTestValueBackFace;
 
-  static void(*Constructed)(DepthSettings*);
-  static void(*Destructed)(DepthSettings*);
+  static void (*Constructed)(DepthSettings*);
+  static void (*Destructed)(DepthSettings*);
 };
 
 /// Contains all output targets and render settings needed for a render task.
@@ -557,7 +684,8 @@ class RenderSettings
 public:
   RenderSettings();
 
-  /// Settings to use when blending shader output with the ColorTarget, implicitly BlendSettings0.
+  /// Settings to use when blending shader output with the ColorTarget,
+  /// implicitly BlendSettings0.
   BlendSettings* GetBlendSettings();
   void SetBlendSettings(BlendSettings* blendSettings);
 
@@ -589,7 +717,8 @@ public:
   bool mSingleColorTarget;
 
   // TODO: Macro comments for auto-doc
-  /// If a certain side of triangles should not be rendered. Front faces defined by counter-clockwise vertex winding.
+  /// If a certain side of triangles should not be rendered. Front faces defined
+  /// by counter-clockwise vertex winding.
   DeclareByteEnumGetSet(CullMode::Enum, CullMode);
 
   // Not exposed, only for old ui.
@@ -699,12 +828,44 @@ class RenderQueues
 public:
   void Clear();
 
-  void AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
-  void AddStreamedQuad(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
-  void AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 tileSize, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
-  void AddStreamedQuadNineSliced(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec4 posSlices, Vec4 uvSlices, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedLineRect(ViewNode& viewNode,
+                           Vec3 pos0,
+                           Vec3 pos1,
+                           Vec2 uv0,
+                           Vec2 uv1,
+                           Vec4 color,
+                           Vec2 uvAux0 = Vec2(0, 0),
+                           Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedQuad(ViewNode& viewNode,
+                       Vec3 pos0,
+                       Vec3 pos1,
+                       Vec2 uv0,
+                       Vec2 uv1,
+                       Vec4 color,
+                       Vec2 uvAux0 = Vec2(0, 0),
+                       Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedQuadTiled(ViewNode& viewNode,
+                            Vec3 pos0,
+                            Vec3 pos1,
+                            Vec2 uv0,
+                            Vec2 uv1,
+                            Vec4 color,
+                            Vec2 tileSize,
+                            Vec2 uvAux0 = Vec2(0, 0),
+                            Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedQuadNineSliced(ViewNode& viewNode,
+                                 Vec3 pos0,
+                                 Vec3 pos1,
+                                 Vec2 uv0,
+                                 Vec2 uv1,
+                                 Vec4 color,
+                                 Vec4 posSlices,
+                                 Vec4 uvSlices,
+                                 Vec2 uvAux0 = Vec2(0, 0),
+                                 Vec2 uvAux1 = Vec2(1, 1));
 
-  void AddStreamedQuadView(ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color);
+  void AddStreamedQuadView(
+      ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color);
 
   Array<FrameBlock> mFrameBlocks;
   Array<ViewBlock> mViewBlocks;
@@ -717,7 +878,8 @@ public:
   // temporary, needed for viewport blending
   Array<BlendSettings> mBlendSettingsOverrides;
 
-  /// This was for the old Ui system to add custom shader inputs. It's only set when rendering widgets.
+  /// This was for the old Ui system to add custom shader inputs. It's only set
+  /// when rendering widgets.
   RenderTasks* mRenderTasks;
 };
 
@@ -731,8 +893,7 @@ class RenderTask
 {
 public:
   // We use a large type to ensure alignment on all platforms.
-  union
-  {
+  union {
     u64 mId;
     MaxAlignmentType mAligned;
   };
@@ -754,13 +915,14 @@ public:
   RenderSettings mRenderSettings;
   // Index or id of the RenderGroup that these settings are for.
   uint mRenderGroupIndex;
-  // Name of the RenderPass fragment for shader lookups. Inputs are mapped when creating this task.
+  // Name of the RenderPass fragment for shader lookups. Inputs are mapped when
+  // creating this task.
   String mRenderPassName;
-  // Id used to lookup all shader input data for the RenderPass fragment and all Materials
-  // that will be used in this render task.
+  // Id used to lookup all shader input data for the RenderPass fragment and all
+  // Materials that will be used in this render task.
   uint mShaderInputsId;
-  // If not zero, this is the number of contiguous RenderTaskRenderPass objects in memory
-  // after this one. The renderer must account for this.
+  // If not zero, this is the number of contiguous RenderTaskRenderPass objects
+  // in memory after this one. The renderer must account for this.
   uint mSubRenderGroupCount;
   // Allows sub RenderGroups to be set as excluded from rendering.
   // Only mRenderGroupIndex is valid when this is false.

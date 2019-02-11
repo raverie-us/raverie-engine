@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -8,9 +7,9 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(UpdateActiveCameras);
-  DeclareEvent(UpdateSkeletons);
-}
+DeclareEvent(UpdateActiveCameras);
+DeclareEvent(UpdateSkeletons);
+} // namespace Events
 
 class VisibilityEvent
 {
@@ -28,7 +27,8 @@ class RaycastResultList;
 
 typedef AvlDynamicAabbTree<Graphical*> GraphicsBroadPhase;
 
-/// Core space component that manages all interactions between graphics related objects.
+/// Core space component that manages all interactions between graphics related
+/// objects.
 class GraphicsSpace : public Component
 {
 public:
@@ -48,13 +48,17 @@ public:
   void RemoveCamera(Camera* camera);
 
   void OnLogicUpdate(UpdateEvent* event);
-  //void OnFrameUpdate(UpdateEvent* updateEvent);
+  // void OnFrameUpdate(UpdateEvent* updateEvent);
   void OnFrameUpdate(float frameDt);
 
   void RenderTasksUpdate(RenderTasks& renderTasks);
   void RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& renderQueues);
 
-  void AddToVisibleGraphicals(Graphical& graphical, Camera& camera, Vec3 cameraPos, Vec3 cameraDir, Frustum* frustum = nullptr);
+  void AddToVisibleGraphicals(Graphical& graphical,
+                              Camera& camera,
+                              Vec3 cameraPos,
+                              Vec3 cameraDir,
+                              Frustum* frustum = nullptr);
   void CreateDebugGraphicals();
 
   Link<GraphicsSpace> EngineLink;
@@ -73,8 +77,9 @@ public:
   /// If graphics for this Space should be running.
   bool mActive;
 
-  // Using only 8 graphicals currently to handle wireframe/fill/thick-line/text and on-top flag
-  // Will need to be more generic when custom materials can be added to debug objects
+  // Using only 8 graphicals currently to handle wireframe/fill/thick-line/text
+  // and on-top flag Will need to be more generic when custom materials can be
+  // added to debug objects
   DebugGraphical* mDebugDrawGraphicals[8];
 
   // Fills out the passed in vector with all objects inside the given Aabb.
@@ -102,7 +107,8 @@ public:
   VisibilityMap mRegisteredVisibilityMap;
   VisibilityEventList mVisibilityEvents;
 
-  /// If the random number generator used by graphics objects should be seeded randomly.
+  /// If the random number generator used by graphics objects should be seeded
+  /// randomly.
   bool mRandomSeed;
   /// Value to seed the random number generator with.
   uint mSeed;

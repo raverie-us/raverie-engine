@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -93,30 +88,33 @@ HdrHeaderGrammar& HdrHeaderGrammar::GetInstance()
 HdrHeaderGrammar::HdrHeaderGrammar()
 {
   GrammarRule<Character>& tokenStart = mTokenGrammar["TokenStart"];
-  GrammarRule<Character>& comment    = mTokenGrammar["Comment"];
+  GrammarRule<Character>& comment = mTokenGrammar["Comment"];
   GrammarRule<Character>& whitespace = mTokenGrammar["Whitespace"];
-  GrammarRule<Character>& token      = mTokenGrammar["Token"];
+  GrammarRule<Character>& token = mTokenGrammar["Token"];
   GrammarRule<Character>& assignment = mTokenGrammar["Assignment"];
-  GrammarRule<Character>& sign       = mTokenGrammar["Sign"];
+  GrammarRule<Character>& sign = mTokenGrammar["Sign"];
 
   tokenStart |= comment | whitespace | token | assignment | sign;
-  comment    |= T("#") << *T("^\r\n");
+  comment |= T("#") << *T("^\r\n");
   whitespace |= *T(" \t\r\n");
-  token      |= T("a-zA-Z_0-9") << *T("a-zA-Z_0-9");
+  token |= T("a-zA-Z_0-9") << *T("a-zA-Z_0-9");
   assignment |= T("=") << *T("^\r\n");
-  sign       |= T("+-");
+  sign |= T("+-");
 
   mTokenGrammar.AddIgnore(whitespace);
 
-  GrammarRule<Token>& start      = mParserGrammar["Start"];
-  GrammarRule<Token>& statement  = mParserGrammar["Statement"];
-  GrammarRule<Token>& variable   = mParserGrammar["Variable"];
+  GrammarRule<Token>& start = mParserGrammar["Start"];
+  GrammarRule<Token>& statement = mParserGrammar["Statement"];
+  GrammarRule<Token>& variable = mParserGrammar["Variable"];
   GrammarRule<Token>& dimensions = mParserGrammar["Dimensions"];
 
-  start      |= P("FirstComment", P(comment)) << *statement << dimensions;
-  statement  |= P(comment) | variable;
-  variable   |= P("Name", P(token)) << P("Value", P(assignment));
-  dimensions |= P("YSign", P(sign)) << P("YName", P(token)) << P("YDim", P(token)) << P("XSign", P(sign)) << P("XName", P(token)) << P("XDim", P(token));
+  start |= P("FirstComment", P(comment)) << *statement << dimensions;
+  statement |= P(comment) | variable;
+  variable |= P("Name", P(token)) << P("Value", P(assignment));
+  dimensions |= P("YSign", P(sign))
+                << P("YName", P(token)) << P("YDim", P(token))
+                << P("XSign", P(sign)) << P("XName", P(token))
+                << P("XDim", P(token));
 
   mTokenStart = &tokenStart;
   mStartRule = &start;
@@ -125,14 +123,23 @@ HdrHeaderGrammar::HdrHeaderGrammar()
 class HdrHeaderParser
 {
 public:
-  static bool Parse(Status& status, StringParam header, uint& width, uint& height);
+  static bool
+  Parse(Status& status, StringParam header, uint& width, uint& height);
 
   // Only grabbing values on EndRule
-  void StartRule(GrammarRule<Token>* rule) {}
+  void StartRule(GrammarRule<Token>* rule)
+  {
+  }
   void EndRule(ParseNodeInfo<Token>* info);
-  void TokenParsed(ParseNodeInfo<Token>* info) {}
-  void StartParsing() {}
-  void EndParsing() {}
+  void TokenParsed(ParseNodeInfo<Token>* info)
+  {
+  }
+  void StartParsing()
+  {
+  }
+  void EndParsing()
+  {
+  }
 
   String mFileIdentifier;
   String mFormat;
@@ -142,12 +149,16 @@ public:
   String mHeight;
 };
 
-bool HdrHeaderParser::Parse(Status& status, StringParam header, uint& width, uint& height)
+bool HdrHeaderParser::Parse(Status& status,
+                            StringParam header,
+                            uint& width,
+                            uint& height)
 {
   HdrHeaderGrammar& grammar = HdrHeaderGrammar::GetInstance();
 
   TokenStream<> tokenStream;
-  tokenStream.mRange = TokenRange<>(grammar.mTokenGrammar, *grammar.mTokenStart, header);
+  tokenStream.mRange =
+      TokenRange<>(grammar.mTokenGrammar, *grammar.mTokenStart, header);
 
   HdrHeaderParser hdrHeaderParser;
 
@@ -160,7 +171,8 @@ bool HdrHeaderParser::Parse(Status& status, StringParam header, uint& width, uin
 
   if (hdrHeaderParser.mFileIdentifier != "#?RADIANCE")
   {
-    status.SetFailed("File is not an HDR image, file did not start with '#?RADIANCE'");
+    status.SetFailed(
+        "File is not an HDR image, file did not start with '#?RADIANCE'");
     return false;
   }
 
@@ -233,7 +245,7 @@ void HdrHeaderParser::EndRule(ParseNodeInfo<Token>* info)
 void ParseHdrHeader(Status& status, Stream* stream, uint& width, uint& height)
 {
   // Determine newline type
-  char newline[2] = { 0 };
+  char newline[2] = {0};
   if (FindNewline(stream, newline) == false)
   {
     status.SetFailed("No header found");
@@ -272,9 +284,14 @@ void ParseHdrHeader(Status& status, Stream* stream, uint& width, uint& height)
 }
 
 // Used to make sure no data reads go out of bounds
-#define ValidateRead(data, endData, count) if (data + (count) > endData) return false;
+#define ValidateRead(data, endData, count)                                     \
+  if (data + (count) > endData)                                                \
+    return false;
 
-bool DecodeHdrScanline(byte*& imageData, const byte* endData, uint imageWidth, byte* scanline)
+bool DecodeHdrScanline(byte*& imageData,
+                       const byte* endData,
+                       uint imageWidth,
+                       byte* scanline)
 {
   uint index = 0;
   ValidateRead(imageData, endData, index + 4);
@@ -286,8 +303,8 @@ bool DecodeHdrScanline(byte*& imageData, const byte* endData, uint imageWidth, b
 
   uint scanWidth = (uint)byte2 << 8 | byte3;
 
-  // If first two bytes are of value 2 and next two are the high and low bytes of the scanline width
-  // then scanline is adaptive run length encoded
+  // If first two bytes are of value 2 and next two are the high and low bytes
+  // of the scanline width then scanline is adaptive run length encoded
   if (byte0 == 2 && byte1 == 2 && scanWidth == imageWidth)
   {
     // All four channels (R, G, B, E) are stored separately in this encoding
@@ -298,8 +315,9 @@ bool DecodeHdrScanline(byte*& imageData, const byte* endData, uint imageWidth, b
       {
         ValidateRead(imageData, endData, index + 2);
 
-        // A value greater than 128 means a run of the same value (and actual count is without the high bit),
-        // less than 128 means a run of different values, equal to 128 means nothing and is invalid
+        // A value greater than 128 means a run of the same value (and actual
+        // count is without the high bit), less than 128 means a run of
+        // different values, equal to 128 means nothing and is invalid
         uint count = imageData[index++];
         if (count > 128)
         {
@@ -340,7 +358,8 @@ bool IsHdr(Stream* stream)
   byte* buffer = (byte*)alloca(signatureSize);
   size_t amountRead = stream->Read(buffer, signatureSize);
   stream->Seek(0);
-  return amountRead == signatureSize && memcmp(buffer, cHdrSignature.Data(), signatureSize) == 0;
+  return amountRead == signatureSize &&
+         memcmp(buffer, cHdrSignature.Data(), signatureSize) == 0;
 }
 
 bool ReadHdrInfo(Stream* stream, ImageInfo& info)
@@ -363,7 +382,13 @@ bool IsHdrSaveFormat(TextureFormat::Enum format)
   return format == TextureFormat::RGB32f;
 }
 
-void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat)
+void LoadHdr(Status& status,
+             Stream* stream,
+             byte** output,
+             uint* width,
+             uint* height,
+             TextureFormat::Enum* format,
+             TextureFormat::Enum requireFormat)
 {
   if (!IsHdrLoadFormat(requireFormat))
   {
@@ -377,8 +402,8 @@ void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* h
   if (status.Failed())
     return;
 
-  // At this point, the stream will be just after the header (where the data starts).
-  // Subtract header size
+  // At this point, the stream will be just after the header (where the data
+  // starts). Subtract header size
   size_t size = (size_t)(stream->Size() - stream->Tell());
   ByteBufferBlock block;
   stream->ReadMemoryBlock(status, block, size);
@@ -390,7 +415,8 @@ void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* h
   const byte* endData = imageData + size;
 
   // Allocate full size of final image
-  float* outputImage = (float*)zAllocate(sizeof(float) * imageWidth * imageHeight * 3);
+  float* outputImage =
+      (float*)zAllocate(sizeof(float) * imageWidth * imageHeight * 3);
 
   if (!outputImage)
   {
@@ -407,7 +433,7 @@ void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* h
     status.SetFailed("Failed to allocate memory for the Hdr scanline");
     return;
   }
-  
+
   // Process one scanline at a time
   for (uint line = 0; line < imageHeight; ++line)
   {
@@ -434,7 +460,12 @@ void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* h
   *format = TextureFormat::RGB32f;
 }
 
-void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format)
+void SaveHdr(Status& status,
+             Stream* stream,
+             const byte* image,
+             uint width,
+             uint height,
+             TextureFormat::Enum format)
 {
   if (!IsHdrSaveFormat(format))
   {
@@ -472,7 +503,6 @@ void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint
   stream->Write(outputData, dataSize);
 }
 
-
 void RgbeToRgb32f(byte* rgbe, float* rgb32f)
 {
   byte e = rgbe[3];
@@ -494,8 +524,10 @@ void RgbeToRgb32f(byte* rgbe, float* rgb32f)
 void Rgb32fToRgbe(float* rgb32f, byte* rgbe)
 {
   float maxValue = rgb32f[0];
-  if (rgb32f[1] > maxValue) maxValue = rgb32f[1];
-  if (rgb32f[2] > maxValue) maxValue = rgb32f[2];
+  if (rgb32f[1] > maxValue)
+    maxValue = rgb32f[1];
+  if (rgb32f[2] > maxValue)
+    maxValue = rgb32f[2];
 
   if (maxValue < 1e-32)
   {

@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 /// Applies a wind force in a given direction. The wind force is calculated from
-/// the squared wind speed and is scaled by the approximate surface area of the 
+/// the squared wind speed and is scaled by the approximate surface area of the
 /// object in the direction of the force.
 class WindEffect : public PhysicsEffect
 {
@@ -46,7 +41,7 @@ private:
 
   /// The speed of the wind.
   real mWindSpeed;
-  
+
   /// The direction of the wind.
   Vec3 mWindDirection;
   Vec3 mWorldWindDirection;
@@ -54,4 +49,4 @@ private:
   bool mLocalSpaceDirection;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,41 +1,43 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-  //----------------------------------------------------------------------------------------- Location
-DeclareEnum9(Location, TopLeft,    TopCenter,    TopRight,
-                       CenterLeft, Center,       CenterRight,
-                       BottomLeft, BottomCenter, BottomRight);
+//Location
+DeclareEnum9(Location,
+             TopLeft,
+             TopCenter,
+             TopRight,
+             CenterLeft,
+             Center,
+             CenterRight,
+             BottomLeft,
+             BottomCenter,
+             BottomRight);
 
 // Extensions
 namespace Location
 {
-  // Returns whether or not the given location is a cardinal direction (CenterLeft, TopCenter,
-  // CenterRight, BottomCenter).
-  bool IsCardinal(Location::Enum location);
+// Returns whether or not the given location is a cardinal direction
+// (CenterLeft, TopCenter, CenterRight, BottomCenter).
+bool IsCardinal(Location::Enum location);
 
-  // Returns the axis of the given location. This is only valid for the cardinal directions
-  // (CenterLeft, TopCenter, CenterRight, BottomCenter).
-  int GetCardinalAxis(Location::Enum location);
+// Returns the axis of the given location. This is only valid for the cardinal
+// directions (CenterLeft, TopCenter, CenterRight, BottomCenter).
+int GetCardinalAxis(Location::Enum location);
 
-  // Returns the direction of the given location from the center.
-  Vec2 GetDirection(Location::Enum location);
+// Returns the direction of the given location from the center.
+Vec2 GetDirection(Location::Enum location);
 
-  // Returns the direction from 'from' to 'to'.
-  Vec2 GetDirection(Location::Enum from, Location::Enum to);
+// Returns the direction from 'from' to 'to'.
+Vec2 GetDirection(Location::Enum from, Location::Enum to);
 
-  // Returns the location on the opposite side of the given location.
-  Location::Enum GetOpposite(Location::Enum location);
-} //namespace Location
+// Returns the location on the opposite side of the given location.
+Location::Enum GetOpposite(Location::Enum location);
+} // namespace Location
 
-//---------------------------------------------------------------------------------------- Thickness
+//Thickness
 struct Thickness
 {
   ZilchDeclareType(Thickness, TypeCopyMode::ValueType);
@@ -60,20 +62,47 @@ struct Thickness
   float Right;
   float Bottom;
 
-  Vec2 Size() const { return Vec2(Width(), Height()); }
-  Vec2 SizeX() const { return Vec2(Left, Right); }
-  Vec2 SizeY() const { return Vec2(Top, Bottom); }
-  Vec2 TopLeft() const { return Vec2(Left, Top); }
-  Vec2 TopRight() const { return Vec2(Right, Top); }
-  Vec2 BottomLeft() const { return Vec2(Left, Bottom); }
-  Vec2 BottomRight() const { return Vec2(Right, Bottom); }
-  float Width() const { return Left + Right; }
-  float Height() const { return Top + Bottom; }
+  Vec2 Size() const
+  {
+    return Vec2(Width(), Height());
+  }
+  Vec2 SizeX() const
+  {
+    return Vec2(Left, Right);
+  }
+  Vec2 SizeY() const
+  {
+    return Vec2(Top, Bottom);
+  }
+  Vec2 TopLeft() const
+  {
+    return Vec2(Left, Top);
+  }
+  Vec2 TopRight() const
+  {
+    return Vec2(Right, Top);
+  }
+  Vec2 BottomLeft() const
+  {
+    return Vec2(Left, Bottom);
+  }
+  Vec2 BottomRight() const
+  {
+    return Vec2(Right, Bottom);
+  }
+  float Width() const
+  {
+    return Left + Right;
+  }
+  float Height() const
+  {
+    return Top + Bottom;
+  }
 
   static const Thickness cZero;
 };
 
-//---------------------------------------------------------------------------------------- Rectangle
+//Rectangle
 struct Rectangle;
 typedef const Rectangle& RectangleParam;
 
@@ -88,31 +117,33 @@ struct Rectangle
   static Rectangle MinAndMax(Vec3Param min, Vec3Param max);
 
   bool operator==(RectangleParam rhs) const;
-  
+
   /// Translates the rectangle by the passed in vector.
   void Translate(Vec2Param translation);
 
-  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
-  /// result in the Aabb around the rotated rectangle.
+  /// Applies transformation to the Rectangle. Note that Rectangle is
+  /// non-rotated, so this will result in the Aabb around the rotated rectangle.
   void Transform(Mat2Param transform);
 
-  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
-  /// result in the Aabb around the rotated rectangle. The given transform is assumed to be a
-  /// 2D transformation.
+  /// Applies transformation to the Rectangle. Note that Rectangle is
+  /// non-rotated, so this will result in the Aabb around the rotated rectangle.
+  /// The given transform is assumed to be a 2D transformation.
   void Transform(Mat3Param transform);
 
   /// Takes a full 3D transformation matrix and brings it down to a 2D matrix.
-  /// Applies transformation to the Rectangle. Note that Rectangle is non-rotated, so this will
-  /// result in the Aabb around the rotated rectangle.
+  /// Applies transformation to the Rectangle. Note that Rectangle is
+  /// non-rotated, so this will result in the Aabb around the rotated rectangle.
   void Transform(Mat4Param transform);
 
-  /// Returns a copy of ourself transformed by the given matrix. Note that Rectangle is non-rotated,
-  /// so this will result in the Aabb around the rotated rectangle.
+  /// Returns a copy of ourself transformed by the given matrix. Note that
+  /// Rectangle is non-rotated, so this will result in the Aabb around the
+  /// rotated rectangle.
   Rectangle Transformed(Mat2Param transform) const;
 
-  /// Returns a copy of ourself transformed by the given matrix. Note that Rectangle is non-rotated,
-  /// so this will result in the Aabb around the rotated rectangle. The given transform is assumed
-  /// to be a 2D transformation.
+  /// Returns a copy of ourself transformed by the given matrix. Note that
+  /// Rectangle is non-rotated, so this will result in the Aabb around the
+  /// rotated rectangle. The given transform is assumed to be a 2D
+  /// transformation.
   Rectangle Transformed(Mat3Param transform) const;
 
   /// Takes a full 3D transformation matrix and brings it down to a 2D matrix.
@@ -122,8 +153,10 @@ struct Rectangle
   void SetSize(Location::Enum origin, Vec2Param size);
   void ResizeToPoint(Location::Enum location, float position);
   void ResizeToPoint(Location::Enum location, Vec2Param position);
-  void ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize);
-  
+  void ResizeToPoint(Location::Enum location,
+                     Vec2Param position,
+                     Vec2Param minSize);
+
   void Expand(Vec2Param point);
 
   /// Returns true if the given point is inside the Rectangle.
@@ -169,4 +202,4 @@ struct Rectangle
 
 String ToString(const Rectangle& value, bool shortFormat = false);
 
-}//namespace Zero
+} // namespace Zero

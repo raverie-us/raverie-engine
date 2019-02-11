@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SampleCurve.cpp
-/// Implementation of the SampleCurve resource.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -22,7 +14,6 @@ ZilchDefineType(SampleCurve, builder, type)
 SampleCurve::SampleCurve()
 {
 }
-
 
 void SampleCurve::SetDefaults()
 {
@@ -47,9 +38,10 @@ void SampleCurve::Initialize()
   mRange.Set(mWidthRange.y - mWidthRange.x, mHeightRange.y - mHeightRange.x);
 
   mPiecewiseFunction.mError = mError;
-  forRange(ControlPoint& cp, mControlPoints.All())
+  forRange(ControlPoint & cp, mControlPoints.All())
   {
-    mPiecewiseFunction.AddControlPoint(cp.GetPosition(), cp.TangentIn, cp.TangentOut);
+    mPiecewiseFunction.AddControlPoint(
+        cp.GetPosition(), cp.TangentIn, cp.TangentOut);
   }
 
   // Bake the curve for faster sampling
@@ -85,14 +77,17 @@ bool SampleCurve::IsBaked()
   return mPiecewiseFunction.IsBaked();
 }
 
-uint SampleCurve::AddControlPoint(Vec2Param pos, Vec2Param tanIn,
+uint SampleCurve::AddControlPoint(Vec2Param pos,
+                                  Vec2Param tanIn,
                                   uint editorFlags)
 {
   return AddControlPoint(pos, tanIn, -tanIn, editorFlags);
 }
 
-uint SampleCurve::AddControlPoint(Vec2Param pos, Vec2Param tanIn,
-                                  Vec2Param tanOut, uint editorFlags)
+uint SampleCurve::AddControlPoint(Vec2Param pos,
+                                  Vec2Param tanIn,
+                                  Vec2Param tanOut,
+                                  uint editorFlags)
 {
   return InsertControlPoint(ControlPoint(pos, tanIn, tanOut, editorFlags));
 }
@@ -110,7 +105,7 @@ void SampleCurve::GetCurve(Vec3Array& curve)
   sFunction.Clear();
   sFunction.mControlPoints.Reserve(mControlPoints.Size());
 
-  forRange(ControlPoint& cp, mControlPoints.All())
+  forRange(ControlPoint & cp, mControlPoints.All())
   {
     sFunction.AddControlPoint(cp.GetPosition(), cp.TangentIn, cp.TangentOut);
   }
@@ -208,18 +203,22 @@ uint SampleCurve::InsertControlPoint(ControlPoint cp)
   // Sort the control points along the x
   Sort(mControlPoints.All(), SortByX());
 
-  mPiecewiseFunction.AddControlPoint(cp.GetPosition(), cp.TangentIn, cp.TangentOut);
+  mPiecewiseFunction.AddControlPoint(
+      cp.GetPosition(), cp.TangentIn, cp.TangentOut);
 
   return mControlPoints.FindIndex(cp);
 }
 
-//---------------------------------------------------------------- Control Point
-SampleCurve::ControlPoint::ControlPoint(Vec2Param pos, Vec2Param tanIn,
-                                          Vec2Param tanOut, uint editorFlags)
-  : Time(pos.x), Value(pos.y), TangentIn(tanIn),
-    TangentOut(tanOut), EditorFlags(editorFlags)
+SampleCurve::ControlPoint::ControlPoint(Vec2Param pos,
+                                        Vec2Param tanIn,
+                                        Vec2Param tanOut,
+                                        uint editorFlags) :
+    Time(pos.x),
+    Value(pos.y),
+    TangentIn(tanIn),
+    TangentOut(tanOut),
+    EditorFlags(editorFlags)
 {
-
 }
 
 bool SampleCurve::ControlPoint::operator==(const ControlPoint& rhs)
@@ -243,8 +242,8 @@ Vec2 SampleCurve::ControlPoint::GetPosition()
 
 ImplementResourceManager(CurveManager, SampleCurve);
 
-CurveManager::CurveManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+CurveManager::CurveManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("SampleCurve", new TextDataFileLoader<CurveManager>());
   DefaultResourceName = "DefaultCurve";
@@ -263,4 +262,4 @@ SampleCurve* CurveManager::CreateNewResourceInternal(StringParam name)
   return curve;
 }
 
-}//namespace Zero
+} // namespace Zero

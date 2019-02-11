@@ -1,20 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// \file TilePaletteProperty.cpp
-/// Implementation of the property interface for TilePalette selections.
-///
-/// Authors: Nathan Carlson
-/// Copyright 2014, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------- TilePaletteProperty
-//******************************************************************************
-PropertyState TilePaletteProperty::GetValue(HandleParam object, PropertyPathParam propertyPath)
+PropertyState TilePaletteProperty::GetValue(HandleParam object,
+                                            PropertyPathParam propertyPath)
 {
   TilePaletteView* paletteView = object.Get<TilePaletteView*>();
 
@@ -34,4 +25,4 @@ PropertyState TilePaletteProperty::GetValue(HandleParam object, PropertyPathPara
     return PropertyState();
 }
 
-}//namespace Zero
+} // namespace Zero

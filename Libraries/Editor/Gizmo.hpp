@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,28 +9,26 @@ class Editor;
 class MouseCapture;
 class ViewportMouseEvent;
 
-//------------------------------------------------------------------------- Tags
 namespace Tags
 {
-  DeclareTag(Gizmo);
+DeclareTag(Gizmo);
 }
 
 namespace Events
 {
-  DeclareEvent(GizmoRayTest);
-  DeclareEvent(GizmoModified);
-  /// Sent on root Gizmo's when the target has been set. This only happens with
-  /// Gizmos that were created by the editor to edit a specific Component.
-  /// This event is only sent because in their Initialize, the editing object
-  /// won't be accessible (it's set right after creation).
-  DeclareEvent(GizmoTargetSet);
-  DeclareEvent(MouseEnterGizmo);
-  DeclareEvent(MouseEnterGizmoHierarchy);
-  DeclareEvent(MouseExitGizmo);
-  DeclareEvent(MouseExitGizmoHierarchy);
-}
+DeclareEvent(GizmoRayTest);
+DeclareEvent(GizmoModified);
+/// Sent on root Gizmo's when the target has been set. This only happens with
+/// Gizmos that were created by the editor to edit a specific Component.
+/// This event is only sent because in their Initialize, the editing object
+/// won't be accessible (it's set right after creation).
+DeclareEvent(GizmoTargetSet);
+DeclareEvent(MouseEnterGizmo);
+DeclareEvent(MouseEnterGizmoHierarchy);
+DeclareEvent(MouseExitGizmo);
+DeclareEvent(MouseExitGizmoHierarchy);
+} // namespace Events
 
-//------------------------------------------------------------------ Gizmo Event
 /// Event sent on a Gizmo when it has been modified by the user.
 class GizmoEvent : public Event
 {
@@ -50,7 +43,8 @@ public:
   Cog* GetGizmo();
   ViewportMouseEvent* GetViewportMouseEvent();
 
-  /// OperationQueue is valid only when 'Finished' returns true. Expect null otherwise.
+  /// OperationQueue is valid only when 'Finished' returns true. Expect null
+  /// otherwise.
   OperationQueue* GetOperationQueue();
   bool GetFinished();
 
@@ -67,7 +61,6 @@ public:
   HandleOf<OperationQueue> mOperationQueue;
 };
 
-//--------------------------------------------------------- Gizmo Ray Test Event
 /// Sent to all Gizmos when the mouse moves on the view-port. All Gizmos should
 /// respond to this event and add ray-cast results to it through RegisterResult.
 class GizmoRayTestEvent : public Event
@@ -77,7 +70,7 @@ public:
   /// Constructor.
   GizmoRayTestEvent();
 
-  /// This result will be 
+  /// This result will be
   void RegisterResult(Cog* gizmo, float distance, int pickingPriority);
 
   /// Easy access to the world ray on the mouse event.
@@ -90,7 +83,6 @@ public:
   int mPickingPriority;
 };
 
-//------------------------------------------------------------------------ Gizmo
 /// Registers itself with the GizmoSpace. This allows GizmoSpace to keep track
 /// of which Gizmo the mouse is over, as well as send other input events
 /// directly to Gizmos.
@@ -138,7 +130,6 @@ public:
   CogId mEditingObject;
 };
 
-//------------------------------------------------------------------ Gizmo Space
 class GizmoSpace : public Component
 {
 public:
@@ -147,7 +138,10 @@ public:
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
-  bool ShouldSerialize() override { return false; }
+  bool ShouldSerialize() override
+  {
+    return false;
+  }
 
   /// Registers the given Gizmo with the Space.
   void AddOrUpdateGizmo(Cog* cog);
@@ -169,4 +163,4 @@ public:
   HashSet<CogId> mRootGizmos;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,3 +1,4 @@
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,7 +16,7 @@ void OpenZeroHub()
 
 void OpenDocumentation()
 {
-	Os::SystemOpenNetworkFile(Urls::cUserOnlineDocs);
+  Os::SystemOpenNetworkFile(Urls::cUserOnlineDocs);
 }
 
 void ExitEditor()
@@ -27,8 +28,8 @@ void Restart()
 {
   bool quitSuccess = Z::gEditor->RequestQuit(true);
 
-  if(quitSuccess)
-    Os::SystemOpenFile( GetApplication().c_str() );
+  if (quitSuccess)
+    Os::SystemOpenFile(GetApplication().c_str());
 }
 
 void FullScreen(Editor* editor)
@@ -55,12 +56,11 @@ void ShowTextWindow(StringParam windowTitle, StringParam windowText)
 
 void ShowAbout()
 {
-  String text = 
-    "DigiPen Zero Engine\n"
-    "Copyright: \n"
-    "DigiPen Institute of Technology 2016\n"
-    "All rights reserved. \n"
-    "Version: \n";
+  String text = "DigiPen Zero Engine\n"
+                "Copyright: \n"
+                "DigiPen Institute of Technology 2016\n"
+                "All rights reserved. \n"
+                "Version: \n";
   ShowTextWindow("About", BuildString(text, GetBuildVersionName()));
 }
 
@@ -70,7 +70,8 @@ VersionStatus::Type GlobalVersionStatus = VersionStatus::Unknown;
 
 void BuildVersion()
 {
-  String buildVersionString = String::Format("BuildVersion: %s", GetBuildVersionName());
+  String buildVersionString =
+      String::Format("BuildVersion: %s", GetBuildVersionName());
   ZPrintFilter(Filter::DefaultFilter, "%s\n", buildVersionString.c_str());
   OsShell* platform = Z::gEngine->has(OsShell);
   platform->SetClipboardText(buildVersionString);
@@ -78,12 +79,13 @@ void BuildVersion()
 
 void WriteBuildInfo()
 {
-  String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
+  String sourceDir =
+      Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
   Environment* environment = Environment::GetInstance();
   String filePath = environment->GetParsedArgument("WriteBuildInfo");
-  if(filePath.Empty() || filePath == "true")
+  if (filePath.Empty() || filePath == "true")
     filePath = FilePath::CombineWithExtension(sourceDir, "Meta", ".data");
-  
+
   StringBuilder builder;
   builder.AppendFormat("MajorVersion %d\n", GetMajorVersion());
   builder.AppendFormat("MinorVersion %d\n", GetMinorVersion());
@@ -91,8 +93,9 @@ void WriteBuildInfo()
   builder.AppendFormat("RevisionId %d\n", GetRevisionNumber());
   builder.AppendFormat("Platform \"%s\"\n", GetPlatformString());
   cstr experimentalBranchName = GetExperimentalBranchName();
-  if(experimentalBranchName != nullptr)
-    builder.AppendFormat("ExperimentalBranchName \"%s\"\n", experimentalBranchName);
+  if (experimentalBranchName != nullptr)
+    builder.AppendFormat("ExperimentalBranchName \"%s\"\n",
+                         experimentalBranchName);
   builder.AppendFormat("ShortChangeSet \"%s\"\n", GetShortChangeSetString());
   builder.AppendFormat("ChangeSet \"%s\"\n", GetChangeSetString());
   builder.AppendFormat("ChangeSetDate \"%s\"\n", GetChangeSetDateString());
@@ -119,7 +122,9 @@ void CrashEngine()
   Z::gEngine->CrashEngine();
 }
 
-void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr category)
+void SortAndPrintMetaTypeList(StringBuilder& builder,
+                              Array<String>& names,
+                              cstr category)
 {
   if (names.Empty())
     return;
@@ -128,7 +133,7 @@ void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr
 
   builder.Append(category);
   builder.Append(":\n");
-  forRange(String& name, names.All())
+  forRange(String & name, names.All())
   {
     builder.Append("  ");
     builder.Append(name);
@@ -137,7 +142,8 @@ void SortAndPrintMetaTypeList(StringBuilder& builder, Array<String>& names, cstr
   builder.Append("\n");
 }
 
-// Special class to delay dispatching the unit test command until scripts have been compiled
+// Special class to delay dispatching the unit test command until scripts have
+// been compiled
 class UnitTestDelayRunner : public Composite
 {
 public:
@@ -145,12 +151,15 @@ public:
 
   void OnScriptsCompiled(Event* e)
   {
-    ActionSequence* seq = new ActionSequence(Z::gEditor, ActionExecuteMode::FrameUpdate);
-    //wait a little bit so we the scripts will be finished compiling (and hooked up)
+    ActionSequence* seq =
+        new ActionSequence(Z::gEditor, ActionExecuteMode::FrameUpdate);
+    // wait a little bit so we the scripts will be finished compiling (and
+    // hooked up)
     seq->Add(new ActionDelay(0.1f));
     seq->Add(new ActionEvent(Z::gEngine, "RunUnitTests", new Event()));
 
-    //when the game plays the scripts will be compiled again so don't dispatch this event
+    // when the game plays the scripts will be compiled again so don't dispatch
+    // this event
     DisconnectAll(Z::gEngine, this);
     this->Destroy();
   }
@@ -184,23 +193,29 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("About", BindCommandFunction(ShowAbout), true);
 
   commands->AddCommand("Exit", BindCommandFunction(ExitEditor));
-  commands->AddCommand("ToggleFullScreen", BindCommandFunction(FullScreen), true);
+  commands->AddCommand(
+      "ToggleFullScreen", BindCommandFunction(FullScreen), true);
   commands->AddCommand("Restart", BindCommandFunction(Restart));
 
   commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion), true);
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));
   commands->AddCommand("RunUnitTests", BindCommandFunction(RunUnitTests));
-  commands->AddCommand("RecordUnitTestFile", BindCommandFunction(RecordUnitTestFile));
-  commands->AddCommand("PlayUnitTestFile", BindCommandFunction(PlayUnitTestFile));
+  commands->AddCommand("RecordUnitTestFile",
+                       BindCommandFunction(RecordUnitTestFile));
+  commands->AddCommand("PlayUnitTestFile",
+                       BindCommandFunction(PlayUnitTestFile));
 
-  if(DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+  if (DeveloperConfig* devConfig =
+          Z::gEngine->GetConfigCog()->has(DeveloperConfig))
   {
-    commands->AddCommand("OpenTestWidgets", BindCommandFunction(OpenTestWidgetsCommand));
+    commands->AddCommand("OpenTestWidgets",
+                         BindCommandFunction(OpenTestWidgetsCommand));
     commands->AddCommand("CrashEngine", BindCommandFunction(CrashEngine));
   }
   commands->AddCommand("Help", BindCommandFunction(OpenHelp), true);
   commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub), true);
-  commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation), true);
+  commands->AddCommand(
+      "Documentation", BindCommandFunction(OpenDocumentation), true);
 }
 
-}
+} // namespace Zero

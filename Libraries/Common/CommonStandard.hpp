@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // The first thing we do is detect the platform.
@@ -47,13 +42,15 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} // namespace Zero
 
 #include "MaxSizeof.hpp"
 
-static const constexpr size_t MaxPrimtiveSize = MaxSizeof4(void*, uintptr_t, uintmax_t, double);
+static const constexpr size_t MaxPrimtiveSize =
+    MaxSizeof4(void*, uintptr_t, uintmax_t, double);
 typedef double MaxAlignmentType;
-#define ZeroAlignCount(SizeBytes) ((SizeBytes + sizeof(::MaxAlignmentType) - 1) / sizeof(::MaxAlignmentType))
+#define ZeroAlignCount(SizeBytes)                                              \
+  ((SizeBytes + sizeof(::MaxAlignmentType) - 1) / sizeof(::MaxAlignmentType))
 
 #include "Standard.hpp"
 #include "Typedefs.hpp"
@@ -142,7 +139,7 @@ typedef double MaxAlignmentType;
 namespace Math
 {
 #include "Typedefs.hpp"
-}// namespace Math
+} // namespace Math
 
 #include "Reals.hpp"
 #include "MatrixStorage.hpp"
@@ -185,21 +182,22 @@ namespace Math
 
 #include "MathToString.hpp"
 
-// Currently the SIMD extensions are not technically platform agnostic and need to be revisited.
-// It may be acceptable to include the intrinsic headers on multiple platforms, but it's unknown.
+// Currently the SIMD extensions are not technically platform agnostic and need
+// to be revisited. It may be acceptable to include the intrinsic headers on
+// multiple platforms, but it's unknown.
 #if defined(USESSE)
-#include "SimMath.hpp"
-#include "SimVectors.hpp"
-#include "SimMatrix3.hpp"
-#include "SimMatrix4.hpp"
-#include "SimConversion.hpp"
+#  include "SimMath.hpp"
+#  include "SimVectors.hpp"
+#  include "SimMatrix3.hpp"
+#  include "SimMatrix4.hpp"
+#  include "SimConversion.hpp"
 #endif
 
 namespace Zero
 {
 #include "BasicNativeTypesMath.inl"
 #include "MathImports.hpp"
-}
+} // namespace Zero
 
 #include "Rect.hpp"
 #include "Image.hpp"

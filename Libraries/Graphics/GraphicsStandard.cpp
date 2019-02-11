@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -81,7 +80,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(MaterialFactory);
   ZilchInitializeType(CompositionLabelExtension);
   ZilchInitializeType(HideBaseFilter);
-  
+
   // Events
   ZilchInitializeType(GraphicalEvent);
   ZilchInitializeType(GraphicalSortEvent);
@@ -106,7 +105,7 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   ZilchInitializeType(DebugGraphicalText);
   ZilchInitializeType(DefinitionSet);
   ZilchInitializeTypeAs(GraphicsDepthSettings, "DepthSettings");
-  //ZilchInitializeType(DynamicMeshParticleEmitter);
+  // ZilchInitializeType(DynamicMeshParticleEmitter);
   ZilchInitializeType(Font);
   ZilchInitializeType(GraphicalEntry);
   ZilchInitializeType(GraphicalRangeInterface);
@@ -174,7 +173,6 @@ ZilchDefineStaticLibrary(GraphicsLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void GraphicsLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -196,7 +194,6 @@ void GraphicsLibrary::Initialize()
   ResourceLibrary::sFragmentType = ZilchTypeId(ZilchFragment);
 }
 
-//**************************************************************************************************
 void GraphicsLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();

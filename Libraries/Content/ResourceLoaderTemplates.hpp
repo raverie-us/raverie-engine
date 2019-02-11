@@ -1,34 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceLoaderTemplates.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------- Resource Loader Data File
 
-//Resource loader for engine's data file format (.data)
-template<typename ResourceMananger, DataFileFormat::Enum defaultFormat>
+// Resource loader for engine's data file format (.data)
+template <typename ResourceMananger, DataFileFormat::Enum defaultFormat>
 class GenericDataLoader : public ResourceLoader
 {
 public:
-  typedef typename ResourceMananger::ResourceType  ResourceType;
+  typedef typename ResourceMananger::ResourceType ResourceType;
 
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override
   {
-    //try to create a new resource from a data file
+    // try to create a new resource from a data file
     ResourceType* resource = new ResourceType();
     resource->mContentItem = entry.mLibrarySource;
-    if(LoadFromDataFile(*resource, entry.FullPath, defaultFormat, false))
+    if (LoadFromDataFile(*resource, entry.FullPath, defaultFormat, false))
     {
-      if(entry.mBuilder)
+      if (entry.mBuilder)
         resource->FilterTag = entry.mBuilder->GetTag();
 
       resource->Name = entry.Name;
@@ -36,7 +27,7 @@ public:
       ResourceMananger::GetInstance()->AddResource(entry, resource);
       return resource;
     }
-    //if failed, we have to release the memory that was allocated
+    // if failed, we have to release the memory that was allocated
     else
     {
       delete resource;
@@ -66,21 +57,21 @@ public:
   }
 };
 
-template<typename ResourceMananger>
+template <typename ResourceMananger>
 class ObjectInheritanceFileLoader : public ResourceLoader
 {
 public:
-  typedef typename ResourceMananger::ResourceType  ResourceType;
+  typedef typename ResourceMananger::ResourceType ResourceType;
 
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override
   {
-    //try to create a new resource from a data file
+    // try to create a new resource from a data file
     ResourceType* resource = new ResourceType();
     resource->mContentItem = entry.mLibrarySource;
-    //if(LoadFromDataFile(*resource, entry.FullPath, defaultFormat, false))
-    if(LoadResource(resource, entry))
+    // if(LoadFromDataFile(*resource, entry.FullPath, defaultFormat, false))
+    if (LoadResource(resource, entry))
     {
-      if(entry.mBuilder)
+      if (entry.mBuilder)
         resource->FilterTag = entry.mBuilder->GetTag();
 
       resource->Name = entry.Name;
@@ -88,7 +79,7 @@ public:
       ResourceMananger::GetInstance()->AddResource(entry, resource);
       return resource;
     }
-    //if failed, we have to release the memory that was allocated
+    // if failed, we have to release the memory that was allocated
     else
     {
       delete resource;
@@ -98,15 +89,15 @@ public:
 
   HandleOf<Resource> LoadFromBlock(ResourceEntry& entry) override
   {
-    //ResourceType* resource = new ResourceType();
-    //resource->mContentItem = entry.mLibrarySource;
+    // ResourceType* resource = new ResourceType();
+    // resource->mContentItem = entry.mLibrarySource;
     //
-    //LoadFromDataBlock(*resource, entry.Block, defaultFormat);
-    //resource->Initialize();
+    // LoadFromDataBlock(*resource, entry.Block, defaultFormat);
+    // resource->Initialize();
     //
-    //ResourceMananger::GetInstance()->AddResource(entry, resource);
+    // ResourceMananger::GetInstance()->AddResource(entry, resource);
     //
-    //return resource;
+    // return resource;
 
     return nullptr;
   }
@@ -116,7 +107,7 @@ public:
     ResourceType* resource = (ResourceType*)resourceToReload;
     resource->Unload();
     LoadResource(resource, entry);
-    //LoadFromDataFile(*resource, entry.FullPath, defaultFormat, false);
+    // LoadFromDataFile(*resource, entry.FullPath, defaultFormat, false);
     resource->Initialize();
   }
 
@@ -126,7 +117,7 @@ public:
     Status status;
     loader.OpenFile(status, entry.FullPath);
 
-    if(status.Failed())
+    if (status.Failed())
       return false;
 
     PolymorphicNode node;
@@ -143,23 +134,25 @@ public:
   }
 };
 
-template<typename ResourceMananger>
-class TextDataFileLoader : public GenericDataLoader<ResourceMananger, DataFileFormat::Text>
-{
-public:
-}; 
-
-template<typename ResourceMananger>
-class BinaryDataFileLoader : public GenericDataLoader<ResourceMananger, DataFileFormat::Binary>
+template <typename ResourceMananger>
+class TextDataFileLoader
+    : public GenericDataLoader<ResourceMananger, DataFileFormat::Text>
 {
 public:
 };
 
-template<typename ResourceMananger, typename LoadPattern>
+template <typename ResourceMananger>
+class BinaryDataFileLoader
+    : public GenericDataLoader<ResourceMananger, DataFileFormat::Binary>
+{
+public:
+};
+
+template <typename ResourceMananger, typename LoadPattern>
 class ChunkFileLoader : public ResourceLoader
 {
 public:
-  typedef typename ResourceMananger::ResourceType  ResourceType;
+  typedef typename ResourceMananger::ResourceType ResourceType;
 
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override
   {
@@ -202,9 +195,6 @@ public:
 
     resource->SendModified();
   }
-
 };
 
-}
-
-
+} // namespace Zero

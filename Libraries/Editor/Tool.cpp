@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tool.cpp
-/// Implementation of the Tool classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,10 +6,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ToolActivate);
-  DefineEvent(ToolDeactivate);
-  DefineEvent(ToolDraw);
-}
+DefineEvent(ToolActivate);
+DefineEvent(ToolDeactivate);
+DefineEvent(ToolDraw);
+} // namespace Events
 
 ZilchDefineType(Tool, builder, type)
 {
@@ -28,15 +20,17 @@ ZilchDefineType(ViewportTextWidget, builder, type)
 {
 }
 
-//-------------------------------------------------------------- Tool Mouse Drag
 class ToolMouseDrag : public MouseManipulation
 {
 public:
   Tool* mTool;
   HandleOf<Viewport> mViewport;
 
-  ToolMouseDrag(Composite* owner, Mouse* mouse, Tool* tool, Viewport* viewport)
-    : MouseManipulation(mouse, owner)
+  ToolMouseDrag(Composite* owner,
+                Mouse* mouse,
+                Tool* tool,
+                Viewport* viewport) :
+      MouseManipulation(mouse, owner)
   {
     mTool = tool;
     mViewport = viewport;
@@ -46,7 +40,7 @@ public:
   ~ToolMouseDrag()
   {
     Viewport* viewport = mViewport;
-    if(viewport == nullptr)
+    if (viewport == nullptr)
       return;
 
     mTool->EndDrag(viewport);
@@ -56,18 +50,19 @@ public:
   void OnMouseMove(MouseEvent* event) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == nullptr)
+    if (viewport == nullptr)
       return;
 
-    bool valid = mTool->MouseDragMovement(viewport, mMouseStartPosition, event->Position);
-    if(!valid)
+    bool valid = mTool->MouseDragMovement(
+        viewport, mMouseStartPosition, event->Position);
+    if (!valid)
       this->Destroy();
   }
 
   void OnMouseUpdate(MouseEvent* event) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == nullptr)
+    if (viewport == nullptr)
       return;
 
     mTool->MouseDragUpdate(viewport, mMouseStartPosition, event->Position);
@@ -76,17 +71,17 @@ public:
   void OnKeyDown(KeyboardEvent* event) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == nullptr)
+    if (viewport == nullptr)
       return;
 
     viewport->DispatchEvent(Events::KeyDown, event);
-    mTool->KeyDown(viewport,event);
+    mTool->KeyDown(viewport, event);
   }
 
   void OnKeyUp(KeyboardEvent* event) override
   {
     Viewport* viewport = mViewport;
-    if(viewport == nullptr)
+    if (viewport == nullptr)
       return;
 
     viewport->DispatchEvent(Events::KeyUp, event);
@@ -108,8 +103,11 @@ public:
   }
 };
 
-//------------------------------------------------------------------------- Tool
-Component* Tool::GetOrCreateEditComponent(BoundType* componentType, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate)
+Component* Tool::GetOrCreateEditComponent(BoundType* componentType,
+                                          StringParam defaultName,
+                                          StringParam defaultArchetype,
+                                          CogId& lastEdited,
+                                          bool canCreate)
 {
   // Get the current selection
   MetaSelection* selection = Z::gEditor->GetSelection();
@@ -221,13 +219,10 @@ Component* Tool::GetOrCreateEditComponent(BoundType* componentType, StringParam 
       if (created != nullptr)
       {
         // Tell the user that the object was created
-        DoNotify
-        (
-          "Object Created",
-          "A tool editable object was created since none could "
-          "be found (either in the selection or space)",
-          "Warning"
-        );
+        DoNotify("Object Created",
+                 "A tool editable object was created since none could "
+                 "be found (either in the selection or space)",
+                 "Warning");
 
         // Clear the archetype from the object (we don't want them modifying it)
         created->ClearArchetype();
@@ -278,4 +273,4 @@ void Tool::BeginDrag(Viewport* viewport)
   new ToolMouseDrag(viewport->GetParent(), mouse, this, viewport);
 }
 
-}//namespace Zero
+} // namespace Zero

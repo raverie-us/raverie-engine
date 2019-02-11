@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,8 +9,8 @@ struct Joint;
 namespace Physics
 {
 
-///Run time solving data. Used to store runtime only data in a scratch
-///space for efficient solving.
+/// Run time solving data. Used to store runtime only data in a scratch
+/// space for efficient solving.
 struct ConstraintMolecule
 {
   void SetLimit(real min, real max);
@@ -33,10 +28,10 @@ struct ConstraintMolecule
   uint mAtomIndex;
 };
 
-///Used to give constraints an array of molecules where the underlying structure
-///may be larger than a fragment. This is so the same code path can be taken
-///for anything that wants to store an array of ConstraintMolecules plus something
-///else.
+/// Used to give constraints an array of molecules where the underlying
+/// structure may be larger than a fragment. This is so the same code path can be
+/// taken for anything that wants to store an array of ConstraintMolecules plus
+/// something else.
 struct MoleculeWalker
 {
   MoleculeWalker();
@@ -48,8 +43,7 @@ struct MoleculeWalker
 
   ConstraintMolecule& operator[](uint i);
 
-  union
-  {
+  union {
     byte* mRawBuffer;
     ConstraintMolecule* mMolecules;
   };
@@ -57,16 +51,22 @@ struct MoleculeWalker
   uint mStride;
 };
 
-///Stores temporary world data to compute molecules.
+/// Stores temporary world data to compute molecules.
 struct MoleculeData
 {
-  MoleculeData() {};
-  
+  MoleculeData(){};
+
   void SetUp(AnchorAtom* anchor, const AngleAtom* angle, const Joint* joint);
-  void SetUp(AnchorAtom* anchor, const AngleAtom* angle, AxisAtom* axis, const Joint* joint);
+  void SetUp(AnchorAtom* anchor,
+             const AngleAtom* angle,
+             AxisAtom* axis,
+             const Joint* joint);
   void SetUp(AnchorAtom* anchor, const AngleAtom* angle, Contact* contact);
 
-  void SetUp(AnchorAtom* anchor, const AngleAtom* angle, Collider* collider1, Collider* collider2);
+  void SetUp(AnchorAtom* anchor,
+             const AngleAtom* angle,
+             Collider* collider1,
+             Collider* collider2);
   void SetLinearBasis(Vec3Param axis);
   void SetAngularBasis(Vec3Param axis);
   void SetAngularBases(Mat3Param basis);
@@ -84,6 +84,6 @@ struct MoleculeData
   Mat3 mWorldBases[2];
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

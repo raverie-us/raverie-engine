@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -11,9 +10,13 @@ OsInt RendererThreadMain(void* rendererThreadJobQueue);
 class RendererJob
 {
 public:
-  virtual ~RendererJob() {}
+  virtual ~RendererJob()
+  {
+  }
   virtual void Execute() = 0;
-  virtual void ReturnExecute() {}
+  virtual void ReturnExecute()
+  {
+  }
 };
 
 class RendererJobQueue
@@ -55,7 +58,10 @@ public:
 
   void Execute() override;
   virtual void OnExecute() = 0;
-  virtual bool OnShouldRun() {return false;}
+  virtual bool OnShouldRun()
+  {
+    return false;
+  }
 
   void Lock();
   void Unlock();

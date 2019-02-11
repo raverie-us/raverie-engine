@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tools.hpp
-/// Declaration of the Tools classes.
-/// 
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -22,23 +14,24 @@ struct BaseCastFilter;
 class ViewportMouseEvent;
 class Mouse;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
 DeclareEvent(SelectToolPreSelect);
 DeclareEvent(SelectToolFrustumCast);
 DeclareEvent(SelectToolPreDraw);
-}
+} // namespace Events
 
 class SelectToolFrustumEvent : public Event
 {
 public:
   ZilchDeclareType(SelectToolFrustumEvent, TypeCopyMode::ReferenceType);
 
-  SelectToolFrustumEvent( ) : Handled(false), HandledEventScript(false) {}
+  SelectToolFrustumEvent() : Handled(false), HandledEventScript(false)
+  {
+  }
 
-  Space* GetSpace( );
-  Frustum GetFrustum( );
+  Space* GetSpace();
+  Frustum GetFrustum();
 
   bool Handled;
   bool HandledEventScript;
@@ -47,7 +40,6 @@ public:
   Frustum mFrustum;
 };
 
-//------------------------------------------------------------------ Select Tool
 /// <Commands>
 ///   <command name = "MultiSelect">
 ///     <shortcut> Shift + Click </shortcut>
@@ -78,7 +70,7 @@ public:
 
   /// Constructor.
   SelectTool();
-  
+
   /// Component Interface.
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -92,47 +84,60 @@ public:
   /// Select objects on mouse up.
   void OnLeftMouseUp(ViewportMouseEvent* e);
 
-  typedef bool(*CogSelectFilter)(Cog*, Cog*);
+  typedef bool (*CogSelectFilter)(Cog*, Cog*);
 
-  static Cog* WalkRayCast(Cog* current, RaycastResultList& result, CogSelectFilter func);
-  // Checks the object to select against the archetype selection setup if it is an archetype
+  static Cog* WalkRayCast(Cog* current,
+                          RaycastResultList& result,
+                          CogSelectFilter func);
+  // Checks the object to select against the archetype selection setup if it is
+  // an archetype
   static Cog* ArchetypeSelect(MetaSelection* selection, Cog* toSelect);
-  // Check the object to select in the context of an archetype or hierarchy depending on the selection options
-  static Cog* SmartSelect(MetaSelection* selection, Cog* toSelect, bool rootSelect, bool archetypeSelect);
+  // Check the object to select in the context of an archetype or hierarchy
+  // depending on the selection options
+  static Cog* SmartSelect(MetaSelection* selection,
+                          Cog* toSelect,
+                          bool rootSelect,
+                          bool archetypeSelect);
 
   void Select(ViewportMouseEvent* e);
   SelectionResult RayCastSelect(Viewport* viewport, Vec2 mousePosition);
-  RaycastResultList RayCastSelectInternal(Viewport* viewport, Vec2 mousePosition);
-  
+  RaycastResultList RayCastSelectInternal(Viewport* viewport,
+                                          Vec2 mousePosition);
+
   Cog* RayCast(Viewport* viewport, Vec2 mousePosition);
 
   /// Add a provider for testing raycasting. Note: The tool expects
   /// to own the provider passed in (aka it calls delete on it).
   void AddCastProvider(RaycastProvider* provider);
 
-  //Regular expressions
+  // Regular expressions
   String mFilterAccept;
   String mFilterReject;
 
-  ///Selects the root archetype of the tree,
-  ///subsequent clicks will select the nearest archetype
-  ///followed by any direct children following that.
+  /// Selects the root archetype of the tree,
+  /// subsequent clicks will select the nearest archetype
+  /// followed by any direct children following that.
   bool mArchetypeSelect;
 
-  ///Selects the root of a hierarchy first,
-  ///subsequent clicks will select children objects
+  /// Selects the root of a hierarchy first,
+  /// subsequent clicks will select children objects
   bool mRootSelect;
-  
-  ///If a parent of a hierarchy is already selected drag select will only select all the children
-  ///of the currently selected parent.
+
+  /// If a parent of a hierarchy is already selected drag select will only
+  /// select all the children of the currently selected parent.
   bool mSmartGroupSelect;
 
-  //stores all of the providers for raycasting and does the actual casting.
+  // stores all of the providers for raycasting and does the actual casting.
   Raycaster mRaycaster;
 };
 
-//---------------------------------------------------------------- Creation Tool
-DeclareEnum6(Placement, OnTop, LookAtPlane, LookAtPoint, ViewAtDepth, CameraLocation, PlaneXY);
+DeclareEnum6(Placement,
+             OnTop,
+             LookAtPlane,
+             LookAtPoint,
+             ViewAtDepth,
+             CameraLocation,
+             PlaneXY);
 
 class CreationTool : public Component
 {
@@ -146,7 +151,7 @@ public:
   /// Component Interface.
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
-  
+
   /// Create the object when the mouse is clicked.
   void OnLeftMouseDown(ViewportMouseEvent* e);
 
@@ -159,15 +164,20 @@ public:
 
   /// Functions
   void UpdateMouse(Viewport* viewport, Vec2 screenPosition);
-  Cog* CreateAt(Viewport* viewport, Archetype* archetypeName, 
+  Cog* CreateAt(Viewport* viewport,
+                Archetype* archetypeName,
                 Vec3Param position);
-  Cog* CreateWithViewport(Viewport* viewport, Vec2 screenPosition, 
+  Cog* CreateWithViewport(Viewport* viewport,
+                          Vec2 screenPosition,
                           StringParam archetypeName);
-  Cog* CreateWithViewport(Viewport* viewport, Vec2 screenPosition, 
+  Cog* CreateWithViewport(Viewport* viewport,
+                          Vec2 screenPosition,
                           Archetype* archetype);
 
   Vec3 PointOnViewPlane(EditorCameraController* controller, Ray& worldRay);
-  Vec3 PointOnTopOrViewPlane(Viewport* viewport, EditorCameraController* controller, Ray& worldRay);
+  Vec3 PointOnTopOrViewPlane(Viewport* viewport,
+                             EditorCameraController* controller,
+                             Ray& worldRay);
   Vec3 GetPlacementLocation(Viewport* viewport, Vec2 screenPosition);
 
   /// The object that is spawned.
@@ -184,18 +194,17 @@ public:
   float mSnapDistance;
   /// Tool offset from mouse position or predetermined spawn location.
   Vec3 mOffset;
-  /// Spawn point distance from camera when using ViewAtDepth mode. 
+  /// Spawn point distance from camera when using ViewAtDepth mode.
   float mDepth;
   float mDepthPlane;
   Vec3 mTargetPoint;
   Vec3 mMouseDir;
   Vec2 mMousePos;
   bool mValidPoint;
-  //stores all of the providers for raycasting
+  // stores all of the providers for raycasting
   Raycaster mRaycaster;
 };
 
-//------------------------------------------------------- Object Connecting Tool
 /// <Commands>
 ///   <command name = "ToolDeactivate">
 ///     <shortcut> Esc </shortcut>
@@ -217,7 +226,7 @@ public:
 
   /// Start the event connection when a mouse clicks on an object.
   void OnLeftMouseDown(ViewportMouseEvent* e);
-  
+
   /// Draw the connection being made.
   void OnToolDraw(Event* e);
 
@@ -233,7 +242,7 @@ public:
   /// Invalidate objects when we're disabled.
   void OnToolDeactivate(Event*);
 
-  virtual void DoConnection()=0;
+  virtual void DoConnection() = 0;
 
   Vec3 PointOnObjectA;
   Vec3 PointOnObjectB;
@@ -241,7 +250,6 @@ public:
   CogId ObjectB;
 };
 
-//--------------------------------------------------------------- Parenting Tool
 /// <Commands>
 ///   <command name = "ToolDeactivate">
 ///     <shortcut> Esc </shortcut>
@@ -267,4 +275,4 @@ public:
   bool mMaintainPosition;
 };
 
-}//namespace Zero
+} // namespace Zero

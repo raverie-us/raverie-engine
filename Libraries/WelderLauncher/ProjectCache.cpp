@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,9 +9,8 @@ namespace Events
 
 DefineEvent(ScreenshotUpdated);
 
-}//namespace Events
+} // namespace Events
 
-//-------------------------------------------------------------------LauncherProjectInfo
 ZilchDefineType(LauncherProjectInfo, builder, type)
 {
   ZeroBindComponent();
@@ -28,14 +22,15 @@ void LauncherProjectInfo::Serialize(Serializer& stream)
   SerializeNameDefault(mTags, String());
   mBuildId.Serialize(stream, false);
 
-  // If we're loading and we have no platform then default to the current build (legacy builds)
-  if(stream.GetMode() == SerializerMode::Loading && mBuildId.mPlatform.Empty())
+  // If we're loading and we have no platform then default to the current build
+  // (legacy builds)
+  if (stream.GetMode() == SerializerMode::Loading && mBuildId.mPlatform.Empty())
     mBuildId.mPlatform = ZeroPlatform;
 }
 
 void LauncherProjectInfo::AddTag(StringParam tag)
 {
-  if(mTags.Empty())
+  if (mTags.Empty())
     mTags = tag;
   else
     mTags = BuildString(mTags, ",", tag);
@@ -44,7 +39,7 @@ void LauncherProjectInfo::AddTag(StringParam tag)
 void LauncherProjectInfo::GetSortedTagList(Array<String>& tagList)
 {
   StringSplitRange range = mTags.Split(",");
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     tagList.PushBack(range.Front());
   Sort(tagList.All());
 }
@@ -59,14 +54,15 @@ void LauncherProjectInfo::SetBuildId(const BuildId& buildId)
   mBuildId = buildId;
 }
 
-// Simple macros to wrap getting/setting a property from a component in a data tree.
-// Just used to turn the type-name into a string to help renames work correctly.
-#define GetChildComponentPropertyValueMacro(component, propertyName) \
+// Simple macros to wrap getting/setting a property from a component in a data
+// tree. Just used to turn the type-name into a string to help renames work
+// correctly.
+#define GetChildComponentPropertyValueMacro(component, propertyName)           \
   GetChildComponentPropertyValue(#component, "ProjectName")
 #define SetChildComponentPropertyValueMacro(component, propertyName, newValue) \
   SetChildComponentPropertyValue(#component, propertyName, newValue)
 
-//------------------------------------------------------------------------ CachedProject
+//CachedProject
 CachedProject::CachedProject()
 {
   mProjectCog = nullptr;
@@ -82,14 +78,16 @@ bool CachedProject::Load(StringParam projectFilePath)
   mLoader.OpenFile(status, projectFilePath);
 
   // Load the project file and make sure everything succeeds
-  mProjectCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), mLoader, 0, nullptr);
-  if(mProjectCog == nullptr)
+  mProjectCog = Z::gFactory->CreateFromStream(
+      Z::gEngine->GetEngineSpace(), mLoader, 0, nullptr);
+  if (mProjectCog == nullptr)
     return false;
 
-  // Add a launcher info if it doesn't already exist. If it didn't exist then we have to copy
-  // old values from other components to the launcher's component. If it did exist then keep all old values the same.
+  // Add a launcher info if it doesn't already exist. If it didn't exist then we
+  // have to copy old values from other components to the launcher's component.
+  // If it did exist then keep all old values the same.
   mLauncherInfo = mProjectCog->has(LauncherProjectInfo);
-  if(mLauncherInfo == nullptr)
+  if (mLauncherInfo == nullptr)
   {
     mLauncherInfo = HasOrAdd<LauncherProjectInfo>(mProjectCog);
 
@@ -103,7 +101,8 @@ bool CachedProject::Load(StringParam projectFilePath)
     mLauncherInfo->SetBuildId(buildId);
 
     // Load the project tags
-    String descriptionTags = GetChildComponentPropertyValueMacro(ProjectDescription, "Tags");
+    String descriptionTags =
+        GetChildComponentPropertyValueMacro(ProjectDescription, "Tags");
     ParseTags(mLauncherInfo, descriptionTags);
 
     AddOrReplaceDataNodeComponent(mLauncherInfo);
@@ -117,29 +116,33 @@ bool CachedProject::Load(StringParam projectFilePath)
 
 void CachedProject::UpdateTexture()
 {
-  String editorContentFolder = FilePath::Combine(GetProjectFolder(), "EditorContent");
-  String screenShotFilePath = FilePath::Combine(editorContentFolder, "ProjectScreenshot.png");
+  String editorContentFolder =
+      FilePath::Combine(GetProjectFolder(), "EditorContent");
+  String screenShotFilePath =
+      FilePath::Combine(editorContentFolder, "ProjectScreenshot.png");
 
   Texture* currentTexture = mScreenshotTexture;
   // If we already had a texture and it is not newer then don't re-load it
-  if(currentTexture != nullptr && FileExists(screenShotFilePath))
+  if (currentTexture != nullptr && FileExists(screenShotFilePath))
   {
     TimeType modifiedTime = GetFileModifiedTime(screenShotFilePath);
-    if(modifiedTime == mLastLoadTime)
+    if (modifiedTime == mLastLoadTime)
       return;
 
     mLastLoadTime = GetFileModifiedTime(screenShotFilePath);
-  }  
+  }
 
   // Create a background task to load the screenshot from disk to an Image
-  LoadImageFromDiskTaskJob* job = new LoadImageFromDiskTaskJob(screenShotFilePath);
+  LoadImageFromDiskTaskJob* job =
+      new LoadImageFromDiskTaskJob(screenShotFilePath);
   BackgroundTask* task = Z::gBackgroundTasks->Execute(job, "Update texture");
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnImageLoaded);
 }
 
 void CachedProject::OnImageLoaded(BackgroundTaskEvent* e)
 {
-  LoadImageFromDiskTaskJob* job = (LoadImageFromDiskTaskJob*)e->mTask->GetFinishedJob();
+  LoadImageFromDiskTaskJob* job =
+      (LoadImageFromDiskTaskJob*)e->mTask->GetFinishedJob();
 
   // Load the image into a texture (must be done on the main thread)
   Image& image = job->mImage;
@@ -164,7 +167,8 @@ void CachedProject::SetBuildId(const BuildId& buildId)
   mLauncherInfo->SetBuildId(buildId);
 
   // Legacy, set the engine version in old project file formats
-  SetProjectPropertyValue("ProjectEngineRevision", ToString(buildId.mRevisionId));
+  SetProjectPropertyValue("ProjectEngineRevision",
+                          ToString(buildId.mRevisionId));
 }
 
 String CachedProject::GetDisplayString(bool showPlatform) const
@@ -198,21 +202,28 @@ String CachedProject::GetProjectName()
   return GetProjectPropertyValue("ProjectName");
 }
 
-bool CachedProject::RenameAndMoveProject(Status& status, StringParam newProjectName)
+bool CachedProject::RenameAndMoveProject(Status& status,
+                                         StringParam newProjectName)
 {
-  // Rename the zeroproj file in the old location (avoid calling delete where possible)
-  String renamedZeroProjPath = FilePath::CombineWithExtension(mProjectFolder, newProjectName, ".zeroproj");
-  ZPrint("Moving and renaming project '%s' to '%s'.\n", mProjectPath.c_str(), renamedZeroProjPath.c_str());
+  // Rename the zeroproj file in the old location (avoid calling delete where
+  // possible)
+  String renamedZeroProjPath = FilePath::CombineWithExtension(
+      mProjectFolder, newProjectName, ".zeroproj");
+  ZPrint("Moving and renaming project '%s' to '%s'.\n",
+         mProjectPath.c_str(),
+         renamedZeroProjPath.c_str());
 
   bool success = MoveFile(renamedZeroProjPath, mProjectPath);
-  
+
   String parentDirectory = FilePath::GetDirectoryPath(mProjectFolder);
   String newFolder = FilePath::Combine(parentDirectory, newProjectName);
   // Move the project's folder
   success &= MoveFolderContents(newFolder, mProjectFolder);
-  if(!success)
+  if (!success)
   {
-    String msg = String::Format("Failed to move project from '%s' to '%s'", mProjectFolder.c_str(), newFolder.c_str());
+    String msg = String::Format("Failed to move project from '%s' to '%s'",
+                                mProjectFolder.c_str(),
+                                newFolder.c_str());
     DoNotifyError("Failed to move project", msg);
     status.SetFailed(msg);
     return success;
@@ -225,7 +236,8 @@ bool CachedProject::RenameAndMoveProject(Status& status, StringParam newProjectN
   SetProjectPropertyValue("ProjectName", newProjectName);
 
   // Update the path of the zero proj file
-  mProjectPath = FilePath::CombineWithExtension(newFolder, newProjectName, ".zeroproj");
+  mProjectPath =
+      FilePath::CombineWithExtension(newFolder, newProjectName, ".zeroproj");
 
   // Save out the new zeroproj file that should have up-to-date properties
   Save(false);
@@ -237,12 +249,12 @@ bool CachedProject::RenameAndMoveProject(Status& status, StringParam newProjectN
 void CachedProject::DeleteEmptyDirectoriesRecursively(StringParam path)
 {
   // Only process directories
-  if(!DirectoryExists(path))
+  if (!DirectoryExists(path))
     return;
 
   // Try to remove all empty child directories first
   FileRange firstRange(path);
-  for(; !firstRange.Empty(); firstRange.PopFront())
+  for (; !firstRange.Empty(); firstRange.PopFront())
   {
     String subPath = firstRange.FrontEntry().GetFullPath();
     DeleteEmptyDirectoriesRecursively(subPath);
@@ -251,7 +263,7 @@ void CachedProject::DeleteEmptyDirectoriesRecursively(StringParam path)
   // If this directory is empty then we can remove it,
   // otherwise something still exists so do nothing.
   FileRange secondRange(path);
-  if(secondRange.Empty())
+  if (secondRange.Empty())
     DeleteDirectory(path);
 }
 
@@ -260,7 +272,7 @@ void CachedProject::GetTags(HashSet<String>& tags)
   Array<String> sortedTags;
   mLauncherInfo->GetSortedTagList(sortedTags);
 
-  for(size_t i = 0; i < sortedTags.Size(); ++i)
+  for (size_t i = 0; i < sortedTags.Size(); ++i)
     tags.Insert(sortedTags[i]);
 }
 
@@ -268,56 +280,60 @@ String CachedProject::GetTagsDisplayString(StringParam separator)
 {
   Array<String> sortedTags;
   mLauncherInfo->GetSortedTagList(sortedTags);
-  
+
   return String::JoinRange(separator, sortedTags.All());
 }
 
 void CachedProject::Save(bool overwriteRevisionNumber)
 {
-  if(overwriteRevisionNumber)
+  if (overwriteRevisionNumber)
     SetBuildId(GetBuildId());
 
   // Overwrite the launcher's info in the data tree
   AddOrReplaceDataNodeComponent(mLauncherInfo);
 
   // At some point we should update the project description information...
-  //ProjectDescription* projDescription = mProjectCog->has(ProjectDescription);
-  //if(projDescription != nullptr)
+  // ProjectDescription* projDescription = mProjectCog->has(ProjectDescription);
+  // if(projDescription != nullptr)
   //  AddOrReplaceDataNodeComponent(projDescription);
 
   // Create the saver
   Status status;
   TextSaver saver;
-  saver.Open(status, mProjectPath.c_str(), (DataVersion::Enum)mLoader.mLoadedFileVersion);
+  saver.Open(status,
+             mProjectPath.c_str(),
+             (DataVersion::Enum)mLoader.mLoadedFileVersion);
 
   // Save out the entire tree
   mLoader.Reset();
   DataNode* root = mLoader.GetNext();
-  if(root == nullptr)
+  if (root == nullptr)
     return;
 
   root->SaveToStream(saver);
   saver.Close();
 }
 
-void CachedProject::ParseTags(LauncherProjectInfo* launcherInfo, StringParam tags)
+void CachedProject::ParseTags(LauncherProjectInfo* launcherInfo,
+                              StringParam tags)
 {
   // Tags are comma separated
   StringSplitRange tagRange = tags.Split(",");
-  for(; !tagRange.Empty(); tagRange.PopFront())
+  for (; !tagRange.Empty(); tagRange.PopFront())
   {
     // In some versions of the engine, tags were just a comma separated list.
-    // In later versions the tags were split with ':' to give the tag a category 
-    // for Project or User tags. We only parse project tags and throw away user tags now
-    // (user tags were used to filter things to only ProjectFun or similar things).
+    // In later versions the tags were split with ':' to give the tag a category
+    // for Project or User tags. We only parse project tags and throw away user
+    // tags now (user tags were used to filter things to only ProjectFun or
+    // similar things).
     StringRange tag = tagRange.Front();
 
     // Skip empty tags
-    if(tag.Empty())
+    if (tag.Empty())
       continue;
 
     StringRange foundRange = tag.FindFirstOf(":");
-    if(foundRange.Empty())
+    if (foundRange.Empty())
     {
       launcherInfo->AddTag(tag);
       continue;
@@ -325,64 +341,71 @@ void CachedProject::ParseTags(LauncherProjectInfo* launcherInfo, StringParam tag
 
     StringRange tagName = tag.SubString(tag.Begin(), foundRange.Begin());
     StringRange tagType = tag.SubString(foundRange.Begin() + 1, tag.End());
-    if(tagType == "Project")
+    if (tagType == "Project")
       launcherInfo->AddTag(tagName);
   }
 }
 
-DataNode* CachedProject::GetComponentPropertyNode(StringParam componentType, StringParam propertyName)
+DataNode* CachedProject::GetComponentPropertyNode(StringParam componentType,
+                                                  StringParam propertyName)
 {
   // Reset to tree otherwise the root won't be correct
   mLoader.Reset();
   DataNode* root = mLoader.GetNext();
-  if(root == nullptr)
+  if (root == nullptr)
     return nullptr;
 
   // Find the component node
   bool dummy;
-  DataNode* componentNode = root->FindChildWithTypeName(componentType, String(), dummy);
-  if(componentNode == nullptr)
+  DataNode* componentNode =
+      root->FindChildWithTypeName(componentType, String(), dummy);
+  if (componentNode == nullptr)
     return nullptr;
 
   // Find the property's node
   DataNode* propertyNode = componentNode->FindChildWithName(propertyName);
-  if(propertyNode == nullptr || propertyNode->mNodeType != DataNodeType::Value)
+  if (propertyNode == nullptr || propertyNode->mNodeType != DataNodeType::Value)
     return nullptr;
 
   return propertyNode;
 }
 
-String CachedProject::GetChildComponentPropertyValue(StringParam componentType, StringParam propertyName)
+String CachedProject::GetChildComponentPropertyValue(StringParam componentType,
+                                                     StringParam propertyName)
 {
   DataNode* valueNode = GetComponentPropertyNode(componentType, propertyName);
-  if(valueNode != nullptr)
+  if (valueNode != nullptr)
     return valueNode->mTextValue;
   return String();
 }
 
-void CachedProject::SetChildComponentPropertyValue(StringParam componentType, StringParam propertyName, StringParam value)
+void CachedProject::SetChildComponentPropertyValue(StringParam componentType,
+                                                   StringParam propertyName,
+                                                   StringParam value)
 {
   DataNode* valueNode = GetComponentPropertyNode(componentType, propertyName);
-  if(valueNode != nullptr)
+  if (valueNode != nullptr)
     valueNode->mTextValue = value;
 }
 
 void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
 {
-  // In order to update a component's node in the tree, we have to remove the old node if it
-  // exists and then re-add the new data as a child node. To do this requires serializing
-  // the component and then creating a data set from it.
+  // In order to update a component's node in the tree, we have to remove the
+  // old node if it exists and then re-add the new data as a child node. To do
+  // this requires serializing the component and then creating a data set from
+  // it.
 
   mLoader.Reset();
   DataNode* root = mLoader.GetNext();
-  if(root == nullptr)
+  if (root == nullptr)
     return;
 
   // Remove an old node by the same name if it exists
   bool foundDuplicate;
   String componentName = component->ZilchGetDerivedType()->Name;
-  DataNode* child = root->FindChildWithTypeName(componentName, String(), foundDuplicate);
-  if(child != nullptr)
+  DataNode* child =
+      root->FindChildWithTypeName(componentName, String(), foundDuplicate);
+  if (child != nullptr)
     child->Destroy();
 
   Status status;
@@ -394,38 +417,45 @@ void CachedProject::AddOrReplaceDataNodeComponent(Component* component)
   // Extract the text as a data block and then read that block into a data node
   DataBlock dataBlock = saver.ExtractAsDataBlock();
   uint fileVersion;
-  ReadDataSet(status, String((char*)dataBlock.Data, dataBlock.Size),
-              String(), &mLoader, &fileVersion, root);
+  ReadDataSet(status,
+              String((char*)dataBlock.Data, dataBlock.Size),
+              String(),
+              &mLoader,
+              &fileVersion,
+              root);
 }
 
 String CachedProject::GetProjectPropertyValue(StringParam propertyName)
 {
-  DataNode* valueNode = GetComponentPropertyNode("ProjectSettings", propertyName);
-  if(valueNode != nullptr)
+  DataNode* valueNode =
+      GetComponentPropertyNode("ProjectSettings", propertyName);
+  if (valueNode != nullptr)
     return valueNode->mTextValue;
   valueNode = GetComponentPropertyNode("Project", propertyName);
-  if(valueNode != nullptr)
+  if (valueNode != nullptr)
     return valueNode->mTextValue;
   return String();
 }
 
-void CachedProject::SetProjectPropertyValue(StringParam propertyName, StringParam value)
+void CachedProject::SetProjectPropertyValue(StringParam propertyName,
+                                            StringParam value)
 {
-  DataNode* valueNode = GetComponentPropertyNode("ProjectSettings", propertyName);
-  if(valueNode != nullptr)
+  DataNode* valueNode =
+      GetComponentPropertyNode("ProjectSettings", propertyName);
+  if (valueNode != nullptr)
   {
     valueNode->mTextValue = value;
     return;
   }
   valueNode = GetComponentPropertyNode("Project", propertyName);
-  if(valueNode != nullptr)
+  if (valueNode != nullptr)
   {
     valueNode->mTextValue = value;
     return;
   }
 }
 
-//------------------------------------------------------------------------ ProjectCache
+//ProjectCache
 ProjectCache::ProjectCache(Cog* configCog)
 {
   mConfigCog = configCog;
@@ -435,7 +465,7 @@ ProjectCache::ProjectCache(Cog* configCog)
 ProjectCache::~ProjectCache()
 {
   CachedProjectMap::valuerange range = mProjectMap.Values();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     CachedProject* cachedProject = range.Front();
     delete cachedProject;
@@ -445,39 +475,46 @@ ProjectCache::~ProjectCache()
 CachedProject* ProjectCache::LoadProjectFile(StringParam projectFilePath)
 {
   // If the project already exists then just return it
-  CachedProject* cachedProject = mProjectMap.FindValue(projectFilePath, nullptr);
-  if(cachedProject != nullptr)
+  CachedProject* cachedProject =
+      mProjectMap.FindValue(projectFilePath, nullptr);
+  if (cachedProject != nullptr)
     return cachedProject;
 
-  // Otherwise create the project. If we fail to load then delete the project we just created.
+  // Otherwise create the project. If we fail to load then delete the project we
+  // just created.
   cachedProject = new CachedProject();
-  if(!cachedProject->Load(projectFilePath))
+  if (!cachedProject->Load(projectFilePath))
   {
     delete cachedProject;
     return nullptr;
   }
-  
+
   // Set our map of zeroproj files paths to project
   mProjectMap[projectFilePath] = cachedProject;
 
   return cachedProject;
 }
 
-bool ProjectCache::ReloadProjectFile(CachedProject* cachedProject, bool preserveVersionId)
+bool ProjectCache::ReloadProjectFile(CachedProject* cachedProject,
+                                     bool preserveVersionId)
 {
   BuildId buildId = cachedProject->GetBuildId();
 
   String projectFilePath = cachedProject->GetProjectPath();
   bool successfulLoad = cachedProject->Load(projectFilePath);
 
-  if(preserveVersionId)
+  if (preserveVersionId)
     cachedProject->SetBuildId(buildId);
 
   return successfulLoad;
 }
 
-CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName, StringParam projectDir, StringParam templatePath, const BuildId& buildId,
-  const HashSet<String>& projectTags)
+CachedProject*
+ProjectCache::CreateProjectFromTemplate(StringParam projectName,
+                                        StringParam projectDir,
+                                        StringParam templatePath,
+                                        const BuildId& buildId,
+                                        const HashSet<String>& projectTags)
 {
   // Extract the zip to the project's install location
   Archive archive(ArchiveMode::Decompressing);
@@ -488,68 +525,78 @@ CachedProject* ProjectCache::CreateProjectFromTemplate(StringParam projectName, 
   String oldProjectName = FilePath::GetFileNameWithoutExtension(templatePath);
   String oldProjectFilePath = FindZeroProj(projectDir, oldProjectName);
   // Build the new project's full path
-  String newProjectFilePath = FilePath::CombineWithExtension(projectDir, projectName, ".zeroproj");
-  
+  String newProjectFilePath =
+      FilePath::CombineWithExtension(projectDir, projectName, ".zeroproj");
+
   // Rename the project to the new project's name
-  if(FileExists(oldProjectFilePath))
+  if (FileExists(oldProjectFilePath))
     MoveFile(newProjectFilePath, oldProjectFilePath);
 
   // Create the cached project from this template zero proj
   CachedProject* cachedProject = new CachedProject();
   bool loadedSuccessfully = cachedProject->Load(newProjectFilePath);
-  // If we failed to load a valid project file (typically due to some invalid naming) then notify the user and exit
-  if(!loadedSuccessfully)
+  // If we failed to load a valid project file (typically due to some invalid
+  // naming) then notify the user and exit
+  if (!loadedSuccessfully)
   {
-    DoNotifyError("Failed to load project", String::Format("The project file at %s is invalid.", newProjectFilePath.c_str()));
+    DoNotifyError("Failed to load project",
+                  String::Format("The project file at %s is invalid.",
+                                 newProjectFilePath.c_str()));
     delete cachedProject;
     return nullptr;
   }
   cachedProject->SetBuildId(buildId);
   cachedProject->SetProjectPropertyValue("ProjectName", projectName);
-  cachedProject->SetProjectPropertyValue("Guid", ToString(GenerateUniqueId64()));
+  cachedProject->SetProjectPropertyValue("Guid",
+                                         ToString(GenerateUniqueId64()));
   mProjectMap[newProjectFilePath] = cachedProject;
 
   // Add the tag info to the project (for legacy tags)
-  ProjectDescription* projectInfo = HasOrAdd<ProjectDescription>(cachedProject->mProjectCog);
+  ProjectDescription* projectInfo =
+      HasOrAdd<ProjectDescription>(cachedProject->mProjectCog);
   projectInfo->mProjectTags = projectTags;
   // Add the tag info to the launcher's project data
-  LauncherProjectInfo* launcherInfo = HasOrAdd<LauncherProjectInfo>(cachedProject->mProjectCog);
+  LauncherProjectInfo* launcherInfo =
+      HasOrAdd<LauncherProjectInfo>(cachedProject->mProjectCog);
   AutoDeclare(tagRange, projectTags.All());
-  for(; !tagRange.Empty(); tagRange.PopFront())
+  for (; !tagRange.Empty(); tagRange.PopFront())
     launcherInfo->AddTag(tagRange.Front());
 
   // Then save the project under its new name
   cachedProject->Save(false);
-  
+
   return cachedProject;
 }
 
 void ProjectCache::UpdateAllTextures()
 {
   CachedProjectMap::valuerange range = mProjectMap.Values();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     CachedProject* cachedProject = range.Front();
     cachedProject->UpdateTexture();
   }
 }
 
-String ProjectCache::FindZeroProj(StringParam searchpath, StringParam projectName)
+String ProjectCache::FindZeroProj(StringParam searchpath,
+                                  StringParam projectName)
 {
   // Get the old zero proj file (by the template name)
-  String expectedProjectFilePath = FilePath::CombineWithExtension(searchpath, projectName, ".zeroproj");
+  String expectedProjectFilePath =
+      FilePath::CombineWithExtension(searchpath, projectName, ".zeroproj");
 
   // If this file exists then we can just return its path
-  if(FileExists(expectedProjectFilePath))
+  if (FileExists(expectedProjectFilePath))
     return expectedProjectFilePath;
 
-  // Otherwise, search the path for any zero proj file and return the first we find
+  // Otherwise, search the path for any zero proj file and return the first we
+  // find
   FileRange fileRange(searchpath);
-  for(; !fileRange.Empty(); fileRange.PopFront())
+  for (; !fileRange.Empty(); fileRange.PopFront())
   {
     String fileName = fileRange.Front();
     String ext = FilePath::GetExtension(fileName);
-    if(ext.ToLower() == "zeroproj")
+    if (ext.ToLower() == "zeroproj")
     {
       String foundProjectName = fileName;
       expectedProjectFilePath = FilePath::Combine(searchpath, fileName);
@@ -560,4 +607,4 @@ String ProjectCache::FindZeroProj(StringParam searchpath, StringParam projectNam
   return expectedProjectFilePath;
 }
 
-}//namespace Zero
+} // namespace Zero

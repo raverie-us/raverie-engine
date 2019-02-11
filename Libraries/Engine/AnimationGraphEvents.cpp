@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,13 +6,12 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(AnimationBlendEnded);
-  DefineEvent(AnimationEnded);
-  DefineEvent(AnimationLooped);
-  DefineEvent(AnimationPostUpdate);
-}//namespace Events
+DefineEvent(AnimationBlendEnded);
+DefineEvent(AnimationEnded);
+DefineEvent(AnimationLooped);
+DefineEvent(AnimationPostUpdate);
+} // namespace Events
 
- //-------------------------------------------------------- Animation Graph Event
 ZilchDefineType(AnimationGraphEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -26,4 +20,4 @@ ZilchDefineType(AnimationGraphEvent, builder, type)
   ZilchBindFieldGetter(mPlayMode);
 }
 
-}//namespace Zero
+} // namespace Zero

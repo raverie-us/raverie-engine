@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TileLayout.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 // Helper for computed tiled Layouts
-// As many tiles will be place on a row that  will fit and then as many rows 
+// As many tiles will be place on a row that  will fit and then as many rows
 // are used to fit all items. Tiles will also be spaced on each row.
 struct TileLayout
 {
@@ -28,7 +20,7 @@ struct TileLayout
   {
     int firstVisibleRow = int(minY / (TileSize.y + Spacing.y));
     int lastVisibleRow = int(maxY / (TileSize.y + Spacing.y)) + 1;
-    return IntVec2((firstVisibleRow)*TilesX, (lastVisibleRow)*TilesX -1);
+    return IntVec2((firstVisibleRow)*TilesX, (lastVisibleRow)*TilesX - 1);
   }
 
   TileLayout()
@@ -53,12 +45,12 @@ struct TileLayout
     // Need max number of tiles for spacing
     float maxTilesX = (float)TilesX;
 
-    // Number of tiles on Y based on X 
+    // Number of tiles on Y based on X
     // Adding TilesX-1 will round up
-    TilesY = (tileCount + TilesX-1) / TilesX;
+    TilesY = (tileCount + TilesX - 1) / TilesX;
 
     // All items fit one row
-    if(TilesX > tileCount)
+    if (TilesX > tileCount)
     {
       TilesX = tileCount;
       TilesY = 1;
@@ -80,7 +72,8 @@ struct TileLayout
 
   Vec2 GetSizeNeeded()
   {
-    return Vec2(TilesX * (Spacing.x + TileSize.x), TilesY * (Spacing.y + TileSize.y));
+    return Vec2(TilesX * (Spacing.x + TileSize.x),
+                TilesY * (Spacing.y + TileSize.y));
   }
 
   int GetTileInDirection(int tileIndex, IntVec2Param direction)
@@ -98,14 +91,14 @@ struct TileLayout
   void GetOverlappingTiles(WidgetRect& rect, Array<int>& overlappingTiles)
   {
     // This could be optimized to not loop over all tiles
-    for(int i = 0; i < TilesX * TilesY; ++i)
+    for (int i = 0; i < TilesX * TilesY; ++i)
     {
       WidgetRect tile = ComputeRect(i);
-      if(rect.Overlap(tile))
+      if (rect.Overlap(tile))
         overlappingTiles.PushBack(i);
 
       // We've gone passed the bottom of the given rect
-      if(tile.Y > (rect.Y + rect.SizeY))
+      if (tile.Y > (rect.Y + rect.SizeY))
         break;
     }
   }
@@ -134,4 +127,4 @@ struct TileLayout
   }
 };
 
-}
+} // namespace Zero

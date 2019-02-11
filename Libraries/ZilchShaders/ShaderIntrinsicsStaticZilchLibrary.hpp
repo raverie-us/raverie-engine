@@ -1,18 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ShaderIntrinsicsStaticZilchLibrary
 /// The zilch shader library wrapper around Zilch's ShaderIntrinsics library.
-/// This needs to be built and have the Parse function called once before all shader translation.
-/// Contains the image/sampler types.
+/// This needs to be built and have the Parse function called once before all
+/// shader translation. Contains the image/sampler types.
 class ShaderIntrinsicsStaticZilchLibrary
 {
 public:
@@ -26,12 +20,20 @@ public:
   ZilchShaderIRLibraryRef GetLibrary();
 
 private:
-  void CreateImageAndSampler(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
-    Zilch::BoundType* zilchSampledType, Zilch::BoundType* zilchImageType, Zilch::BoundType* zilchSampledImageType,
-    int dimension, int depthMode);
-  void CreateStorageImage(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
-    Zilch::BoundType* zilchSampledType, Zilch::BoundType* zilchImageType,
-    int dimension, int depthMode, int imageFormat);
+  void CreateImageAndSampler(ZilchSpirVFrontEnd* translator,
+                             ZilchShaderIRLibrary* shaderLibrary,
+                             Zilch::BoundType* zilchSampledType,
+                             Zilch::BoundType* zilchImageType,
+                             Zilch::BoundType* zilchSampledImageType,
+                             int dimension,
+                             int depthMode);
+  void CreateStorageImage(ZilchSpirVFrontEnd* translator,
+                          ZilchShaderIRLibrary* shaderLibrary,
+                          Zilch::BoundType* zilchSampledType,
+                          Zilch::BoundType* zilchImageType,
+                          int dimension,
+                          int depthMode,
+                          int imageFormat);
 
   void PopulateStageRequirementsData(ZilchShaderIRLibrary* shaderLibrary);
 
@@ -39,4 +41,4 @@ private:
   static ShaderIntrinsicsStaticZilchLibrary* mInstance;
 };
 
-}//namespace Zero
+} // namespace Zero

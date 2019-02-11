@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -21,10 +16,8 @@ DefineEvent(GroupCollisionPersisted);
 DefineEvent(GroupCollisionEnded);
 DefineEvent(GroupCollisionPreSolve);
 DefineEvent(PhysicsUpdateFinished);
-}//namespace Events
+} // namespace Events
 
-
-//-------------------------------------------------------------------BaseCollisionEvent
 ZilchDefineType(BaseCollisionEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -100,22 +93,25 @@ Collider* BaseCollisionEvent::GetOtherCollider()
 
 void BaseCollisionEvent::MatchCollisionFilterOrder(CollisionFilter* filter)
 {
-  // To help make SendToA and SendToB make more sense, flip the event's order to match the same as the filter.
-  // This means SendToA will send to the collider with the same collision group as the first one in the filter. 
-  // If both collision groups are the same then no flip happens but there's no logical order then anyways.
+  // To help make SendToA and SendToB make more sense, flip the event's order to
+  // match the same as the filter. This means SendToA will send to the collider
+  // with the same collision group as the first one in the filter. If both
+  // collision groups are the same then no flip happens but there's no logical
+  // order then anyways.
   Collider* firstCollider = GetCollider();
-  ResourceId firstGroupId = firstCollider->mCollisionGroupInstance->mResource->mResourceId;
-  if(firstGroupId != filter->first())
+  ResourceId firstGroupId =
+      firstCollider->mCollisionGroupInstance->mResource->mResourceId;
+  if (firstGroupId != filter->first())
     mObjectIndex = !mObjectIndex;
 }
 
 const Physics::ManifoldPoint& BaseCollisionEvent::GetPoint(uint index)
 {
-  ErrorIf(index >= GetContactPointCount(), "Point index is greater than the number of contact points.");
+  ErrorIf(index >= GetContactPointCount(),
+          "Point index is greater than the number of contact points.");
   return mManifold->Contacts[index];
 }
 
-//-------------------------------------------------------------------CollisionEvent
 ZilchDefineType(CollisionEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -137,7 +133,9 @@ void CollisionEvent::Set(Physics::Manifold* manifold, StringParam eventType)
   UpdatePoint();
 }
 
-void CollisionEvent::Set(Physics::Manifold* manifold, const Physics::ManifoldPoint& point, StringParam eventType)
+void CollisionEvent::Set(Physics::Manifold* manifold,
+                         const Physics::ManifoldPoint& point,
+                         StringParam eventType)
 {
   BaseCollisionEvent::Set(manifold, eventType);
   mContactPoint = point;
@@ -152,21 +150,21 @@ ContactPoint CollisionEvent::GetFirstPoint()
 
 void CollisionEvent::UpdatePoint()
 {
-  if(mCollisionType == CollisionStarted || mCollisionType == CollisionPersisted)
+  if (mCollisionType == CollisionStarted ||
+      mCollisionType == CollisionPersisted)
     mContactPoint = mManifold->Contacts[mContactIndex];
 }
 
 String CollisionEvent::GetEventName(BaseCollisionEvent::CollisionType type)
 {
-  if(type == BaseCollisionEvent::CollisionStarted)
+  if (type == BaseCollisionEvent::CollisionStarted)
     return Events::CollisionStarted;
-  else if(type == BaseCollisionEvent::CollisionPersisted)
+  else if (type == BaseCollisionEvent::CollisionPersisted)
     return Events::CollisionPersisted;
   else
     return Events::CollisionEnded;
 }
 
-//-------------------------------------------------------------------CollisionGroupEvent
 ZilchDefineType(CollisionGroupEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -180,19 +178,22 @@ ZilchDefineType(CollisionGroupEvent, builder, type)
 
 CollisionGroupEvent::CollisionGroupEvent()
 {
-  
 }
 
-void CollisionGroupEvent::Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType)
+void CollisionGroupEvent::Set(Physics::Manifold* manifold,
+                              const CollisionFilter& pair,
+                              CollisionFilterBlock* block,
+                              StringParam eventType)
 {
-  BaseCollisionEvent::Set(manifold,eventType);
+  BaseCollisionEvent::Set(manifold, eventType);
   mBlock = block;
 
   mTypeAName = pair.GetTypeAName();
   mTypeBName = pair.GetTypeBName();
-  
+
   // Put the objects in the same ordering as the pair
-  if(manifold->Objects[0]->mCollisionGroupInstance->mResource->mResourceId != pair.TypeA)
+  if (manifold->Objects[0]->mCollisionGroupInstance->mResource->mResourceId !=
+      pair.TypeA)
     mObjectIndex = !mObjectIndex;
 }
 
@@ -208,15 +209,14 @@ String CollisionGroupEvent::GetTypeBName()
 
 String CollisionGroupEvent::GetEventName(BaseCollisionEvent::CollisionType type)
 {
-  if(type == BaseCollisionEvent::CollisionStarted)
+  if (type == BaseCollisionEvent::CollisionStarted)
     return Events::GroupCollisionStarted;
-  else if(type == BaseCollisionEvent::CollisionPersisted)
+  else if (type == BaseCollisionEvent::CollisionPersisted)
     return Events::GroupCollisionPersisted;
   else
     return Events::GroupCollisionEnded;
 }
 
-//-------------------------------------------------------------------PreSolveEvent
 ZilchDefineType(PreSolveEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -232,12 +232,13 @@ PreSolveEvent::PreSolveEvent()
   mBlock = nullptr;
 }
 
-void PreSolveEvent::Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock)
+void PreSolveEvent::Set(Physics::Manifold* manifold,
+                        CollisionFilterBlock* preSolveBlock)
 {
   BaseCollisionEvent::Set(manifold, String());
   mBlock = preSolveBlock;
 
-  if(!mBlock->mEventOverride.Empty())
+  if (!mBlock->mEventOverride.Empty())
     EventId = mBlock->mEventOverride;
   else
     EventId = Events::GroupCollisionPreSolve;
@@ -263,4 +264,4 @@ void PreSolveEvent::SetFriction(real friction)
   mManifold->DynamicFriction = friction;
 }
 
-}//namespace Zero
+} // namespace Zero

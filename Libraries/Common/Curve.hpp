@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Curve.hpp
-/// Declaration of the Curve class.
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Math
@@ -16,7 +8,6 @@ typedef Zero::Array<Math::Vector3> Vec3Array;
 
 DeclareEnum3(CurveType, Linear, BSpline, CatmullRom);
 
-//------------------------------------------------------------------------ Curve
 /// A generic curve object that can switched between different spline types.
 struct ZeroShared SplineCurve
 {
@@ -48,24 +39,28 @@ struct ZeroShared SplineCurve
   bool DistanceSq(Vec3 point, uint resolution, real& distSq) const;
 
 private:
-  /// Get the correct set of control points for baking (continuous set or closed set).
+  /// Get the correct set of control points for baking (continuous set or closed
+  /// set).
   void GetSmoothPoints(Vec3Array& pts) const;
   void MakeContinuous(Vec3Array& points) const;
   void MakeClosed(Vec3Array& points) const;
 
   template <typename Policy>
-  void GetPoints(const Vec3Array& points, Vec3Array& results, uint resolution) const;
+  void GetPoints(const Vec3Array& points,
+                 Vec3Array& results,
+                 uint resolution) const;
   template <typename Policy>
   void GetPoints(const Vec3Array& points, Vec3Array& results, real error) const;
 
   template <typename Policy>
-  Vec3 ComputePoint(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
+  Vec3 ComputePoint(
+      real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
 
-  // Used to store a stack of a point on the curve (and how to compute that point)
-  // so that sub-division can be performed at a later time.
+  // Used to store a stack of a point on the curve (and how to compute that
+  // point) so that sub-division can be performed at a later time.
   struct PointData
   {
-    PointData() {};
+    PointData(){};
     PointData(real t, Vec3Param point)
     {
       T = t;
@@ -76,7 +71,8 @@ private:
     Vec3 Point;
   };
   template <typename Policy>
-  PointData ComputePointData(real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
+  PointData ComputePointData(
+      real t, Vec3Param a, Vec3Param b, Vec3Param c, Vec3Param d) const;
 
   //---------------------------------------------------------- B-Spline Policy
   struct BSplinePolicy
@@ -98,8 +94,9 @@ public:
   bool mClosed;
 };
 
-/// A curve that has been baked out to a set of points and their respective arc-lengths.
-/// This table can be used to find a point at a given distance along a curve.
+/// A curve that has been baked out to a set of points and their respective
+/// arc-lengths. This table can be used to find a point at a given distance
+/// along a curve.
 class ZeroShared BakedCurve
 {
 public:
@@ -134,7 +131,6 @@ private:
   Zero::Array<BakedData> mArcLengthTable;
 };
 
-//----------------------------------------------------------- Piecewise Function
 struct ZeroShared PiecewiseFunction
 {
   struct ControlPoint;
@@ -194,4 +190,4 @@ private:
   Vec3Array mBakedCurve;
 };
 
-}//namespace Math
+} // namespace Math

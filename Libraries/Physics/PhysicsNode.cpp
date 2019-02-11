@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,7 +13,6 @@ PhysicsNode::PhysicsNode()
 
 PhysicsNode::~PhysicsNode()
 {
-
 }
 
 WorldTransformation* PhysicsNode::GetTransform()
@@ -33,16 +27,16 @@ Physics::PhysicsQueue* PhysicsNode::GetQueue()
 
 RigidBody* PhysicsNode::GetActiveBody()
 {
-  if(mCollider != nullptr)
+  if (mCollider != nullptr)
     return mCollider->GetActiveBody();
   return nullptr;
 }
 
 Cog* PhysicsNode::GetCogOwner()
 {
-  if(mCollider)
+  if (mCollider)
     return mCollider->GetOwner();
-  if(mBody)
+  if (mBody)
     return mBody->GetOwner();
   return nullptr;
 }
@@ -63,7 +57,8 @@ void PhysicsNode::RemoveParent(PhysicsNode* node)
 void PhysicsNode::SetOwner(Collider* collider)
 {
   ErrorIf(mCollider != nullptr,
-    "Physics Queue already had a collider owner. Did you forget to remove the previous owner?");
+          "Physics Queue already had a collider owner. Did you forget to "
+          "remove the previous owner?");
 
   mCollider = collider;
   mCollider->mPhysicsNode = this;
@@ -72,7 +67,8 @@ void PhysicsNode::SetOwner(Collider* collider)
 void PhysicsNode::SetOwner(RigidBody* body)
 {
   ErrorIf(mBody != nullptr,
-    "Physics Queue already had a rigid body owner. Did you forget to remove the previous owner?");
+          "Physics Queue already had a rigid body owner. Did you forget to "
+          "remove the previous owner?");
 
   mBody = body;
   mBody->mPhysicsNode = this;
@@ -81,16 +77,16 @@ void PhysicsNode::SetOwner(RigidBody* body)
 void PhysicsNode::RemoveOwner(Collider* collider)
 {
   //(don't do this because during a component removal, it triggers a transform
-  //update which can re-enter and blow up when the node on the object is null)
-  //mCollider->mPhysicsNode = nullptr;
+  // update which can re-enter and blow up when the node on the object is null)
+  // mCollider->mPhysicsNode = nullptr;
   mCollider = nullptr;
 }
 
 void PhysicsNode::RemoveOwner(RigidBody* body)
 {
   //(don't do this because during a component removal, it triggers a transform
-  //update which can re-enter and blow up when the node on the object is null)
-  //mBody->mPhysicsNode = nullptr;
+  // update which can re-enter and blow up when the node on the object is null)
+  // mBody->mPhysicsNode = nullptr;
   mBody = nullptr;
 }
 
@@ -111,19 +107,20 @@ void PhysicsNode::Queue(Physics::BroadPhaseAction& action)
 
 bool PhysicsNode::IsTransformOrMassQueued()
 {
-  //if there is any action queued up then the state will not be empty
+  // if there is any action queued up then the state will not be empty
   return mQueue.mTransformAction.mState != Physics::TransformAction::Empty ||
          mQueue.mMassAction.mState != Physics::MassAction::Empty;
 }
 
 void PhysicsNode::UpdateTransformAndMass(PhysicsSpace* space)
 {
-  //Make sure that there is something to do first.
-  //The update call below walks through the entire tree and is therefore expensive
-  //to be calling constantly if there is no change. Whenever any action is queued up,
-  //it should propagate to all children in the tree, meaning that if there is a change
-  //required higher up the tree that affects us then our state will have been set.
-  if(!IsTransformOrMassQueued())
+  // Make sure that there is something to do first.
+  // The update call below walks through the entire tree and is therefore
+  // expensive to be calling constantly if there is no change. Whenever any
+  // action is queued up, it should propagate to all children in the tree,
+  // meaning that if there is a change required higher up the tree that affects
+  // us then our state will have been set.
+  if (!IsTransformOrMassQueued())
     return;
 
   space->UpdateTransformAndMassOfTree(this);
@@ -146,24 +143,27 @@ uint PhysicsNode::BroadPhaseToRemoveFrom()
 
 void PhysicsNode::QueueSelf()
 {
-  if(!mQueue.IsQueued())
+  if (!mQueue.IsQueued())
   {
-    //need to get to the space somehow, go through the collider
-    //or body depending on which one we have
-    if(mCollider)
+    // need to get to the space somehow, go through the collider
+    // or body depending on which one we have
+    if (mCollider)
       mCollider->mSpace->QueuePhysicsNode(this);
-    else if(mBody)
+    else if (mBody)
       mBody->mSpace->QueuePhysicsNode(this);
     else
-      ErrorIf(true, "Action was queued on a dead queue. Make sure all changes are done before removing the owner.");
+      ErrorIf(true,
+              "Action was queued on a dead queue. Make sure all changes are "
+              "done before removing the owner.");
 
-    mQueue.mBroadPhaseAction.SetState(Physics::BroadPhaseAction::CurrStateQueued);
+    mQueue.mBroadPhaseAction.SetState(
+        Physics::BroadPhaseAction::CurrStateQueued);
   }
 }
 
 bool PhysicsNode::IsParentQueued() const
 {
-  if(mParent)
+  if (mParent)
     return mParent->GetQueue()->IsQueued();
   return false;
 }
@@ -175,8 +175,8 @@ bool PhysicsNode::IsDying() const
 
 bool PhysicsNode::IsBodyRoot()
 {
-  //could in theory changes this to be checking if our body pointer is null.
-  //if that is the case that would mean we are not a root.
+  // could in theory changes this to be checking if our body pointer is null.
+  // if that is the case that would mean we are not a root.
   return mParent && (GetActiveBody() != mParent->GetActiveBody());
 }
 
@@ -187,23 +187,23 @@ void PhysicsNode::ReadTransform()
 
 void PhysicsNode::RecomputeWorldTransform()
 {
-  //figure out if we need to include our parent's transform
+  // figure out if we need to include our parent's transform
   WorldTransformation* parentTransformation = nullptr;
-  if(mParent)
+  if (mParent)
     parentTransformation = mParent->GetTransform();
 
-  mTransform.ComputeTransformation(parentTransformation,this);
+  mTransform.ComputeTransformation(parentTransformation, this);
 
-  if(mBody)
+  if (mBody)
     mBody->mRotationQuat = Math::ToQuaternion(mTransform.GetWorldRotation());
 
-  if(mCollider)
+  if (mCollider)
     mCollider->ComputeWorldBoundingVolumes();
 
-  //Due to transform updates being propagated, we do not have to do anything
-  //to the children. If a parent is added to the queue, then all of its
-  //children will also be added due to either updates being propagated
-  //from parent to child, or due to integration queuing up all children.
+  // Due to transform updates being propagated, we do not have to do anything
+  // to the children. If a parent is added to the queue, then all of its
+  // children will also be added due to either updates being propagated
+  // from parent to child, or due to integration queuing up all children.
 }
 
-}//namespace Zero
+} // namespace Zero

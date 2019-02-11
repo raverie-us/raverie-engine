@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Precompiled.hpp
-/// Precompiled Header Class
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "GameplayStandard.hpp"
@@ -17,4 +9,3 @@
 
 // Internal Gameplay Includes
 #include "TileMapSourceLoadPattern.hpp"
-

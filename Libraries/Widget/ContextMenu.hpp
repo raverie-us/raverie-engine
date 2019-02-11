@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContextMenu.hpp
-///
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,22 +10,22 @@ class MenuBarItem;
 
 namespace Events
 {
-  DeclareEvent(MenuDestroy);
-  DeclareEvent(MenuItemSelected);
-  DeclareEvent(MenuItemHover);
-  DeclareEvent(MouseHoverSibling);
-  DeclareEvent(MenuEntryModified);
-  DeclareEvent(ContextMenuCreated);
-}
+DeclareEvent(MenuDestroy);
+DeclareEvent(MenuItemSelected);
+DeclareEvent(MenuItemHover);
+DeclareEvent(MouseHoverSibling);
+DeclareEvent(MenuEntryModified);
+DeclareEvent(ContextMenuCreated);
+} // namespace Events
 
 namespace MenuUi
 {
-  DeclareTweakable(Vec4, BackgroundColor);
-  DeclareTweakable(Vec2, BorderPadding);
-  DeclareTweakable(Vec4, GutterColor);
-}
+DeclareTweakable(Vec4, BackgroundColor);
+DeclareTweakable(Vec2, BorderPadding);
+DeclareTweakable(Vec4, GutterColor);
+} // namespace MenuUi
 
-//------------------------------------------------------------------------------------------ Context
+//Context
 class Context
 {
 public:
@@ -47,7 +40,7 @@ public:
   Handle Get(BoundType* boundType);
   Handle Get(StringParam typeName);
 
-  template<typename ContextType>
+  template <typename ContextType>
   ContextType* Get();
 
   /// Clears all context.
@@ -60,7 +53,7 @@ public:
 typedef Context& ContextRef;
 typedef const Context& ContextParam;
 
-//------------------------------------------------------------------------------- Context Menu Event
+//Context Menu Event
 class ContextMenuEvent : public Event
 {
   ZilchDeclareType(ContextMenuEvent, TypeCopyMode::ReferenceType);
@@ -79,14 +72,18 @@ class ContextMenuEntry : public SafeId32EventObject
 public:
   ZilchDeclareType(ContextMenuEntry, TypeCopyMode::ReferenceType);
 
-  ContextMenuEntry(StringParam name = String(), StringParam icon = String(), bool readOnly = false);
+  ContextMenuEntry(StringParam name = String(),
+                   StringParam icon = String(),
+                   bool readOnly = false);
   virtual ~ContextMenuEntry();
 
   // Context Menu Entry Interface (for use in zilch and C++)
   /// Adds the provided entry to the this entries children
   void AddEntry(ContextMenuEntry* entry);
-  /// Adds a new entry with the provided name with an icon if one is provided to this menu entries children
-  ContextMenuEntry* AddEntry(StringParam name = String(), bool readOnly = false);
+  /// Adds a new entry with the provided name with an icon if one is provided to
+  /// this menu entries children
+  ContextMenuEntry* AddEntry(StringParam name = String(),
+                             bool readOnly = false);
   ContextMenuEntry* AddDivider();
   ContextMenuEntry* AddCommand(Command* command);
   ContextMenuEntry* AddCommandByName(StringParam commandName);
@@ -97,8 +94,9 @@ public:
   void RemoveEntry(ContextMenuEntry* entry);
   /// Removes all child entries
   void Clear();
-  
-  /// Returns the children entry with the provided name if it exists and null otherwise
+
+  /// Returns the children entry with the provided name if it exists and null
+  /// otherwise
   ContextMenuEntry* GetEntry(StringParam name);
   /// Returns a range with all this menu entries children
   ContextMenuEntryChildren::range GetEntries();
@@ -122,10 +120,12 @@ public:
   ContextMenuEntry* mParent;
   ContextMenuEntryChildren mChildren;
 
-  // Used to store any specific context information for use by selecting a menu item
+  // Used to store any specific context information for use by selecting a menu
+  // item
   Context mContext;
-  
-  // Used to disable a menu item from being selectable and greys out the item text
+
+  // Used to disable a menu item from being selectable and greys out the item
+  // text
   bool mEnabled;
   // If provided a tooltip can display the reason why the item is disabled
   String mDisabledText;
@@ -164,7 +164,7 @@ public:
   String mMenuName;
 };
 
-///Item on a context Menu.
+/// Item on a context Menu.
 class ContextMenuItem : public Composite
 {
 public:
@@ -176,14 +176,14 @@ public:
   virtual void UpdateTransform() override;
   Vec2 GetMinSize() override;
 
-  //Events
+  // Events
   void OnLeftClick(MouseEvent* event);
   void OnMouseEnter(MouseEvent* event);
   void OnMouseExit(MouseEvent* event);
   void OnMouseHover(MouseEvent* event);
   void OnSiblingHover(ObjectEvent* event);
 
-  //String Name;
+  // String Name;
   String ClientData;
 
   /// Whether or not the check is displayed.
@@ -218,8 +218,7 @@ class ContextMenuDivider : public Composite
 public:
   Element* mBackground;
 
-  ContextMenuDivider(Composite* parent, Vec4 color)
-    : Composite(parent)
+  ContextMenuDivider(Composite* parent, Vec4 color) : Composite(parent)
   {
     mBackground = CreateAttached<Element>(cWhiteSquare);
     mBackground->SetColor(color);
@@ -240,7 +239,7 @@ public:
   }
 };
 
-///Content Menu PopUp
+/// Content Menu PopUp
 class ContextMenu : public PopUp
 {
 public:
@@ -267,30 +266,33 @@ public:
   void AddZeroContextMenu(StringParam menuName);
   void AddCommand(Command* command);
   void AddCommandByName(StringParam commandName);
-  
+
   // Popup Interface
   void ShiftOntoScreen(Vec3 offset) override;
   void OnMouseDown(MouseEvent* event) override;
   void OnAnyGained(FocusEvent* event) override;
-  void OnFocusOut(FocusEvent* event)  override;
-  
+  void OnFocusOut(FocusEvent* event) override;
+
   bool IsPositionInHierarchy(Vec2Param screenPosition);
   bool IsFocusOnHierarchy(Widget* focusObject);
-  
+
   ContextMenu* mParentMenu;
   ContextMenu* mSubMenu;
   Vec3 mSubMenuOffset;
   ContextMenuEntry* mRootEntry;
-  // Flag for tracking when the context menu has been altered and needs to be rebuilt
+  // Flag for tracking when the context menu has been altered and needs to be
+  // rebuilt
   bool mDirty;
 
   // For internal use only
   Array<Widget*> mItems;
+
 private:
   friend class ContextMenuItem;
 
   ContextMenu* GetRootContextMenu();
-  // These functions only check from the current menu an down through its sub menus
+  // These functions only check from the current menu an down through its sub
+  // menus
   bool IsPositionInSubMenuRecursive(Vec2Param screenPosition);
   bool IsFocusInSubMenuRecursive(Widget* focusObject);
 
@@ -315,7 +317,7 @@ public:
   MenuBar* GetMenuBar();
   void CloseContextMenu();
   void ClearOpenMenu(FocusEvent* event);
-  
+
   HandleOf<MenuBar> mMenuBar;
   ContextMenu* mContextMenu;
   Text* mText;
@@ -329,7 +331,7 @@ public:
   ZilchDeclareType(MenuBar, TypeCopyMode::ReferenceType);
 
   MenuBar(Composite* widget);
-  
+
   void LoadMenu(StringParam name);
   MenuBarItem* GetOpenMenuBarItem();
 
@@ -338,16 +340,17 @@ public:
   String mMenuName;
 };
 
-#define ConnectMenu(menu, optionName, function, readOnly)         \
-  { ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly); \
-   ConnectThisTo(entry, Zero::Events::MenuItemSelected, function); }
+#define ConnectMenu(menu, optionName, function, readOnly)                      \
+  {                                                                            \
+    ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly);    \
+    ConnectThisTo(entry, Zero::Events::MenuItemSelected, function);            \
+  }
 
-//**************************************************************************************************
-template<typename ContextType>
+template <typename ContextType>
 ContextType* Context::Get()
 {
   BoundType* type = ZilchTypeId(ContextType);
   return Get(type).Get<ContextType*>();
 }
 
-}//namespace Zero
+} // namespace Zero

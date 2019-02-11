@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleEmitters.hpp
-/// Declaration of the Particle emitters.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------- Spherical Particle Emitter
 
 /// Emits particles inside a sphere
 class SphericalParticleEmitter : public ParticleEmitterShared
@@ -23,18 +14,21 @@ public:
   SphericalParticleEmitter();
   ~SphericalParticleEmitter();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //ParticleEmitter Interface
-  int EmitParticles(ParticleList* particleList, float dt, 
-                    Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  // ParticleEmitter Interface
+  int EmitParticles(ParticleList* particleList,
+                    float dt,
+                    Mat4Ref transform,
+                    Vec3Param velocity,
+                    float timeAlive) override;
+
 private:
 };
 
-//--------------------------------------------------------- Box Particle Emitter
-/// Emits particles inside a box 
+/// Emits particles inside a box
 class BoxParticleEmitter : public ParticleEmitterShared
 {
 public:
@@ -43,16 +37,18 @@ public:
   BoxParticleEmitter();
   ~BoxParticleEmitter();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //ParticleEmitter Interface
-  int EmitParticles(ParticleList* particleList, float dt, 
-                    Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  // ParticleEmitter Interface
+  int EmitParticles(ParticleList* particleList,
+                    float dt,
+                    Mat4Ref transform,
+                    Vec3Param velocity,
+                    float timeAlive) override;
 };
 
-//------------------------------------------------------- Mesh Particle Emitter
 DeclareEnum3(MeshEmitMode, Vertex, Edge, Face);
 
 /// Emits particles on a mesh surface
@@ -64,13 +60,16 @@ public:
   MeshParticleEmitter();
   ~MeshParticleEmitter();
 
-  //Component Interface
+  // Component Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  //ParticleEmitter Interface
-  int EmitParticles(ParticleList* particleList, float dt, 
-                    Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  // ParticleEmitter Interface
+  int EmitParticles(ParticleList* particleList,
+                    float dt,
+                    Mat4Ref transform,
+                    Vec3Param velocity,
+                    float timeAlive) override;
 
   void GetNextEmitPoint(Vec3Ptr position, Vec3Ptr normal);
 
@@ -94,7 +93,7 @@ private:
   HandleOf<Mesh> mMesh;
 
   Math::WeightedProbabilityTable<uint> mFaceTable;
-  typedef Pair<uint,uint> Edge;
+  typedef Pair<uint, uint> Edge;
   Math::WeightedProbabilityTable<Edge> mEdgeTable;
 };
 

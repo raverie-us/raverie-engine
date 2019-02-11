@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PrimitiveBatch.hpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "GraphicsApi/BatchBuffer.hpp"
 
@@ -14,11 +6,15 @@ namespace Zero
 {
 
 /// Templated wrapper around batch buffer.
-template<typename VertexType>
+template <typename VertexType>
 class PrimitiveBatcher
 {
 public:
-  void Begin(DrawContext* dc, BatchBuffer* buffer, const VertexLayouts::Element* layout, uint vertexSize, PrimitiveType::Enum type)
+  void Begin(DrawContext* dc,
+             BatchBuffer* buffer,
+             const VertexLayouts::Element* layout,
+             uint vertexSize,
+             PrimitiveType::Enum type)
   {
     mPrimtiveType = type;
     mBuffer = buffer;
@@ -28,7 +24,7 @@ public:
 
   VertexType* CheckFlush(uint count)
   {
-    if(mCurrent + count >= mEnd)
+    if (mCurrent + count >= mEnd)
       Flush();
     return mCurrent;
   }
@@ -67,4 +63,4 @@ public:
   PrimitiveType::Enum mPrimtiveType;
 };
 
-}
+} // namespace Zero

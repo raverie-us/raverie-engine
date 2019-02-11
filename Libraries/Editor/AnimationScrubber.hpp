@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationScrubber.hpp
-/// Declaration of the AnimationScrubber Composite
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -30,10 +22,9 @@ const String cBackgroundElement = "ScrubBackground";
 // Events
 namespace Events
 {
-  DeclareEvent(PlayHeadModified);
+DeclareEvent(PlayHeadModified);
 }
 
-//-------------------------------------------------------------------- Key Frame
 class KeyFrameIcon : public Composite
 {
 public:
@@ -68,7 +59,7 @@ public:
   /// as modified.
   void MoveTo(float time);
 
-  /// Should be called after being moved.  This will push 
+  /// Should be called after being moved.  This will push
   /// all data to the animation.
   void FinishMove();
 
@@ -76,7 +67,7 @@ public:
   void Hide();
   void Show();
 
-  /// Attempts to remove the given key frame. 
+  /// Attempts to remove the given key frame.
   bool AttemptRemove(KeyFrame* keyFrame);
 
   KeyFrameIcon* Duplicate();
@@ -93,7 +84,6 @@ public:
   AnimationScrubber* mScrubber;
 };
 
-//----------------------------------------------------------- Animation Scrubber
 class AnimationScrubber : public Composite
 {
 public:
@@ -101,7 +91,8 @@ public:
   typedef AnimationScrubber ZilchSelf;
 
   /// Constructor.
-  AnimationScrubber(Composite* parent, AnimationEditor* editor,
+  AnimationScrubber(Composite* parent,
+                    AnimationEditor* editor,
                     ScrollingGraph* graphData);
 
   /// Information about the animation we're modifying.
@@ -215,6 +206,6 @@ namespace AnimScrubberUi
 {
 DeclareTweakable(Vec4, PlayHeadColor);
 DeclareTweakable(Vec4, GhostPlayHeadColor);
-}
+} // namespace AnimScrubberUi
 
-}//namespace Zero
+} // namespace Zero

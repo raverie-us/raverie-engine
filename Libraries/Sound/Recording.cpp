@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -12,9 +7,8 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//----------------------------------------------------------------------------------- Recording Node
+//Recording Node
 
-//**************************************************************************************************
 ZilchDefineType(RecordingNode, builder, type)
 {
   ZeroBindDocumented();
@@ -26,57 +20,51 @@ ZilchDefineType(RecordingNode, builder, type)
   ZilchBindGetterSetter(StreamToDisk);
 }
 
-//**************************************************************************************************
 RecordingNode::RecordingNode(StringParam name, unsigned ID) :
-  SimpleCollapseNode(name, ID, false, false),
-  mFileName("RecordedOutput.wav"),
-  mSamplesRecorded(0),
-  cMaxValue((float)((1 << 15) - 1)),
-  mRecording(cFalse),
-  mPaused(cFalse),
-  mChannels(0),
-  mStreaming(cTrue)
+    SimpleCollapseNode(name, ID, false, false),
+    mFileName("RecordedOutput.wav"),
+    mSamplesRecorded(0),
+    cMaxValue((float)((1 << 15) - 1)),
+    mRecording(cFalse),
+    mPaused(cFalse),
+    mChannels(0),
+    mStreaming(cTrue)
 {
-
 }
 
-//**************************************************************************************************
 RecordingNode::~RecordingNode()
 {
   StopRecording();
 }
 
-//**************************************************************************************************
 String RecordingNode::GetFileName()
 {
   return mFileName;
 }
 
-//**************************************************************************************************
 void RecordingNode::SetFileName(String& fileName)
 {
   mFileName = String::Format("%s.wav", fileName.c_str());
 }
 
-//**************************************************************************************************
 void RecordingNode::StartRecording()
 {
   if (mRecording.Get() == cTrue)
     return;
 
-  mFileStream.Open(mFileName.c_str(), FileMode::Write, FileAccessPattern::Sequential);
+  mFileStream.Open(
+      mFileName.c_str(), FileMode::Write, FileAccessPattern::Sequential);
   if (mFileStream.IsOpen())
   {
     mSamplesRecorded = 0;
 
-    WavHeader header = { 0 };
+    WavHeader header = {0};
     mFileStream.Write(reinterpret_cast<byte*>(&header), sizeof(header));
 
     mRecording.Set(cTrue);
   }
 }
 
-//**************************************************************************************************
 void RecordingNode::StopRecording()
 {
   if (mRecording.Get() == cFalse)
@@ -87,22 +75,20 @@ void RecordingNode::StopRecording()
   if (!mFileStream.IsOpen())
     return;
 
-  WavHeader header =
-  {
-    { 'R', 'I', 'F', 'F' },
-    36 + (mSamplesRecorded * 2),
-    { 'W', 'A', 'V', 'E' },
-    { 'f', 'm', 't', ' ' },
-    16,                                       // fmt chunk size
-    1,                                        // audio format
-    (unsigned short)mChannels,                // number of channels
-    cSystemSampleRate,                        // sampling rate
-    cSystemSampleRate * mChannels * 16 / 8,   // bytes per second
-    2 * 16 / 8,                               // bytes per sample
-    16,                                       // bits per sample
-    { 'd', 'a', 't', 'a' },
-    mSamplesRecorded * 2
-  };
+  WavHeader header = {{'R', 'I', 'F', 'F'},
+                      36 + (mSamplesRecorded * 2),
+                      {'W', 'A', 'V', 'E'},
+                      {'f', 'm', 't', ' '},
+                      16,                        // fmt chunk size
+                      1,                         // audio format
+                      (unsigned short)mChannels, // number of channels
+                      cSystemSampleRate,         // sampling rate
+                      cSystemSampleRate * mChannels * 16 /
+                          8,      // bytes per second
+                      2 * 16 / 8, // bytes per sample
+                      16,         // bits per sample
+                      {'d', 'a', 't', 'a'},
+                      mSamplesRecorded * 2};
 
   mFileStream.Seek(0);
   mFileStream.Write(reinterpret_cast<byte*>(&header), sizeof(header));
@@ -124,13 +110,11 @@ void RecordingNode::StopRecording()
   mFileStream.Close();
 }
 
-//**************************************************************************************************
 bool RecordingNode::GetPaused()
 {
   return mPaused.Get() == cTrue;
 }
 
-//**************************************************************************************************
 void RecordingNode::SetPaused(bool paused)
 {
   if (paused)
@@ -139,31 +123,32 @@ void RecordingNode::SetPaused(bool paused)
     mPaused.Set(cFalse);
 }
 
-//**************************************************************************************************
 bool RecordingNode::GetStreamToDisk()
 {
   return mStreaming;
 }
 
-//**************************************************************************************************
 void RecordingNode::SetStreamToDisk(bool stream)
 {
   mStreaming = stream;
 }
 
-//**************************************************************************************************
-bool RecordingNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
-  ListenerNode* listener, const bool firstRequest)
+bool RecordingNode::GetOutputSamples(BufferType* outputBuffer,
+                                     const unsigned numberOfChannels,
+                                     ListenerNode* listener,
+                                     const bool firstRequest)
 {
   // Get input
-  bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
+  bool isThereOutput =
+      AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
 
   // If there is input data, move input to output buffer
   if (isThereOutput)
     mInputSamplesThreaded.Swap(*outputBuffer);
 
-  // If we are recording, not paused, this is the first time input was requested, and we still
-  // have a sibling node, create a task to write the data to the file
+  // If we are recording, not paused, this is the first time input was
+  // requested, and we still have a sibling node, create a task to write the
+  // data to the file
   if (mRecording.Get() == cTrue && mPaused.Get() == cFalse && firstRequest)
   {
     // If there was no input data, set the buffer to zero
@@ -171,15 +156,17 @@ bool RecordingNode::GetOutputSamples(BufferType* outputBuffer, const unsigned nu
       memset(outputBuffer->Data(), 0, sizeof(float) * outputBuffer->Size());
 
     Zero::Array<float>* buffer = new Zero::Array<float>(*outputBuffer);
-    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&RecordingNode::WriteBuffer, this, buffer,
-      numberOfChannels), this);
+    Z::gSound->Mixer.AddTaskThreaded(
+        CreateFunctor(
+            &RecordingNode::WriteBuffer, this, buffer, numberOfChannels),
+        this);
   }
 
   return isThereOutput;
 }
 
-//**************************************************************************************************
-void RecordingNode::WriteBuffer(Zero::Array<float>* buffer, unsigned numberOfChannels)
+void RecordingNode::WriteBuffer(Zero::Array<float>* buffer,
+                                unsigned numberOfChannels)
 {
   if (mRecording.Get() == cFalse || !mFileStream.IsOpen())
   {
@@ -209,9 +196,8 @@ void RecordingNode::WriteBuffer(Zero::Array<float>* buffer, unsigned numberOfCha
   delete buffer;
 }
 
-//---------------------------------------------------------------------------------- Save Audio Node
+//Save Audio Node
 
-//**************************************************************************************************
 ZilchDefineType(SaveAudioNode, builder, type)
 {
   ZeroBindDocumented();
@@ -222,62 +208,60 @@ ZilchDefineType(SaveAudioNode, builder, type)
   ZilchBindMethod(ClearSavedAudio);
 }
 
-//**************************************************************************************************
 SaveAudioNode::SaveAudioNode(StringParam name, unsigned ID) :
-  SimpleCollapseNode(name, ID, false, false),
-  mSaveData(false),
-  mPlayData(false),
-  mPlaybackIndexThreaded(0)
+    SimpleCollapseNode(name, ID, false, false),
+    mSaveData(false),
+    mPlayData(false),
+    mPlaybackIndexThreaded(0)
 {
-
 }
 
-//**************************************************************************************************
 bool SaveAudioNode::GetSaveAudio()
 {
   return mSaveData.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void SaveAudioNode::SetSaveAudio(bool save)
 {
   if (save)
   {
-    Z::gSound->Mixer.AddTask(CreateFunctor(&SaveAudioNode::ClearSavedAudioThreaded, this), this);
+    Z::gSound->Mixer.AddTask(
+        CreateFunctor(&SaveAudioNode::ClearSavedAudioThreaded, this), this);
     mSaveData.Set(true, AudioThreads::MainThread);
   }
   else
     mSaveData.Set(false, AudioThreads::MixThread);
 }
 
-//**************************************************************************************************
 void SaveAudioNode::PlaySavedAudio()
 {
   mPlayData.Set(true, AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void SaveAudioNode::StopPlaying()
 {
   mPlayData.Set(false, AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void SaveAudioNode::ClearSavedAudio()
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&SaveAudioNode::ClearSavedAudioThreaded, this), this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&SaveAudioNode::ClearSavedAudioThreaded, this), this);
 }
 
-//**************************************************************************************************
-bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
-  ListenerNode* listener, const bool firstRequest)
+bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer,
+                                     const unsigned numberOfChannels,
+                                     ListenerNode* listener,
+                                     const bool firstRequest)
 {
   // Get input data
-  bool isInputData = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
+  bool isInputData =
+      AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
 
   // If there is input data and we are saving, append the samples to the buffer
   if (mSaveData.Get(AudioThreads::MixThread) && isInputData)
-    AppendToBuffer(&mSavedSamplesThreaded, mInputSamplesThreaded, 0, outputBuffer->Size());
+    AppendToBuffer(
+        &mSavedSamplesThreaded, mInputSamplesThreaded, 0, outputBuffer->Size());
 
   // If there is input data, move it to the output buffer
   if (isInputData)
@@ -287,20 +271,23 @@ bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned nu
   if (mPlayData.Get(AudioThreads::MixThread))
   {
     // The samples to copy can't be more than the samples available
-    size_t samplesToCopy = Math::Min(outputBuffer->Size(), mSavedSamplesThreaded.Size()
-      - mPlaybackIndexThreaded);
+    size_t samplesToCopy =
+        Math::Min(outputBuffer->Size(),
+                  mSavedSamplesThreaded.Size() - mPlaybackIndexThreaded);
 
     // If there's no input data, copy the saved samples into the output buffer
     if (!isInputData)
     {
-      memcpy(outputBuffer->Data(), mSavedSamplesThreaded.Data() + mPlaybackIndexThreaded,
-        sizeof(float) * samplesToCopy);
+      memcpy(outputBuffer->Data(),
+             mSavedSamplesThreaded.Data() + mPlaybackIndexThreaded,
+             sizeof(float) * samplesToCopy);
 
       // If there are extra samples in the output buffer, set them all to zero
       if (samplesToCopy < outputBuffer->Size())
       {
-        memset(outputBuffer->Data() + (outputBuffer->Size() - samplesToCopy), 0,
-          outputBuffer->Size() - samplesToCopy);
+        memset(outputBuffer->Data() + (outputBuffer->Size() - samplesToCopy),
+               0,
+               outputBuffer->Size() - samplesToCopy);
       }
     }
     // If there is input data, add the saved samples to the existing data
@@ -326,7 +313,6 @@ bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned nu
   return isInputData;
 }
 
-//**************************************************************************************************
 void SaveAudioNode::ClearSavedAudioThreaded()
 {
   mSavedSamplesThreaded.Clear();

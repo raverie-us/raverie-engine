@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "spirv_optimizer_options.h"
@@ -11,23 +6,25 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------BaseSpirVOptimizerPass
 BaseSpirVOptimizerPass::BaseSpirVOptimizerPass()
 {
   mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
 }
 
-bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass, Array<String>& flags, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream)
+bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass,
+                                          Array<String>& flags,
+                                          ShaderByteStream& inputByteStream,
+                                          ShaderByteStream& outputByteStream)
 {
   bool success = true;
 
   spv_context context = spvContextCreate((spv_target_env)mTargetEnv);
   spv_diagnostic diagnostic = nullptr;
-  
+
   // Create the options object with the given pass and flags
   spv_optimizer_options options;
   CreateOptimizerOptions(options, primaryPass, flags);
-  
+
   // Construct spirv binary data from out byte stream
   uint32_t wordCount = inputByteStream.WordCount();
   uint32_t* code = (uint32_t*)inputByteStream.Data();
@@ -35,10 +32,11 @@ bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass, Array<String>& flags,
 
   // Run the actual optimizer
   spv_binary binaryOut;
-  spv_result_t result = spvOptimizeWithOptions(context, options, &binary, &binaryOut, &diagnostic);
+  spv_result_t result = spvOptimizeWithOptions(
+      context, options, &binary, &binaryOut, &diagnostic);
 
   // On success, load the result into the output stream
-  if(result == SPV_SUCCESS)
+  if (result == SPV_SUCCESS)
   {
     success = true;
     outputByteStream.LoadWords(binaryOut->code, binaryOut->wordCount);
@@ -58,10 +56,12 @@ bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass, Array<String>& flags,
   return success;
 }
 
-void BaseSpirVOptimizerPass::CreateOptimizerOptions(spv_optimizer_options& options, int primaryPass, Array<String>& flags)
+void BaseSpirVOptimizerPass::CreateOptimizerOptions(
+    spv_optimizer_options& options, int primaryPass, Array<String>& flags)
 {
   options = spvOptimizerOptionsCreate();
-  // We always assume the validator should never be run (that's a separate pass).
+  // We always assume the validator should never be run (that's a separate
+  // pass).
   spvOptimizerOptionsSetRunValidator(options, false);
   // Set the primary pass.
   options->passes_ = (spv_optimizer_passes_t)primaryPass;
@@ -69,14 +69,15 @@ void BaseSpirVOptimizerPass::CreateOptimizerOptions(spv_optimizer_options& optio
   SetOptimizerOptionsFlags(options, flags);
 }
 
-void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(spv_optimizer_options& options, Array<String>& flags)
+void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(
+    spv_optimizer_options& options, Array<String>& flags)
 {
   size_t flagsCount = flags.Size();
   // Allocate an array of c-strings (one extra for null)
   options->flags_ = new char*[flagsCount + 1];
   options->flags_[flagsCount] = nullptr;
   // Copy over each individual flag
-  for(size_t i = 0; i < flagsCount; ++i)
+  for (size_t i = 0; i < flagsCount; ++i)
   {
     String& srcFlag = flags[i];
     char*& destFlag = options->flags_[i];
@@ -89,14 +90,15 @@ void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(spv_optimizer_options& opt
   }
 }
 
-void BaseSpirVOptimizerPass::DestroyOptimizerOptions(spv_optimizer_options& options)
+void BaseSpirVOptimizerPass::DestroyOptimizerOptions(
+    spv_optimizer_options& options)
 {
   int flagIndex = 0;
   // Deallocate each individual flag followed by the 'array'.
-  while(true)
+  while (true)
   {
     char* flag = options->flags_[flagIndex];
-    if(flag == nullptr)
+    if (flag == nullptr)
       break;
 
     delete flag;
@@ -114,25 +116,30 @@ String BaseSpirVOptimizerPass::GetErrorLog()
   return mErrorLog;
 }
 
-//-------------------------------------------------------------------SpirVOptimizerPass
-bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+bool SpirVOptimizerPass::RunTranslationPass(
+    ShaderTranslationPassResult& inputData,
+    ShaderTranslationPassResult& outputData)
 {
   Array<String> flags;
-  bool success = RunOptimizer(SPV_OPTIMIZER_SIZE_PASS, flags, inputData.mByteStream, outputData.mByteStream);
-  
+  bool success = RunOptimizer(SPV_OPTIMIZER_SIZE_PASS,
+                              flags,
+                              inputData.mByteStream,
+                              outputData.mByteStream);
+
   // By default, all of the reflection data is the same as the input stage
-  if(success)
+  if (success)
     outputData.mReflectionData = inputData.mReflectionData;
   return success;
 }
 
-//-------------------------------------------------------------------SpirVValidatorPass
 SpirVValidatorPass::SpirVValidatorPass()
 {
   mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
 }
 
-bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+bool SpirVValidatorPass::RunTranslationPass(
+    ShaderTranslationPassResult& inputData,
+    ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -147,10 +154,11 @@ bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputDa
   uint32_t* code = (uint32_t*)inputData.mByteStream.Data();
   spv_const_binary_t binary{code, wordCount};
 
-  spv_result_t result = spvValidateWithOptions(context, options, &binary, &diagnostic);
+  spv_result_t result =
+      spvValidateWithOptions(context, options, &binary, &diagnostic);
 
   // If there's failure for any reason
-  if(result != SPV_SUCCESS)
+  if (result != SPV_SUCCESS)
   {
     success = false;
 
@@ -173,17 +181,19 @@ String SpirVValidatorPass::GetErrorLog()
   return mErrorLog;
 }
 
-//-------------------------------------------------------------------SpirVFileWriterPass
 SpirVFileWriterPass::SpirVFileWriterPass(StringParam targetDirectory)
 {
   mTargetDirectory = targetDirectory;
   mExtension = ".spv";
 }
 
-bool SpirVFileWriterPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+bool SpirVFileWriterPass::RunTranslationPass(
+    ShaderTranslationPassResult& inputData,
+    ShaderTranslationPassResult& outputData)
 {
   String typeName = inputData.mReflectionData.mShaderTypeName;
-  String filePath = FilePath::CombineWithExtension(mTargetDirectory, typeName, mExtension);
+  String filePath =
+      FilePath::CombineWithExtension(mTargetDirectory, typeName, mExtension);
 
   ShaderByteStream& byteStream = inputData.mByteStream;
 
@@ -200,4 +210,4 @@ String SpirVFileWriterPass::GetErrorLog()
   return String();
 }
 
-}//namespace Zero
+} // namespace Zero

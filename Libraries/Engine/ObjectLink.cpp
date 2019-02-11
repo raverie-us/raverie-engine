@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,16 +6,15 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ObjectLinkChanged);
-  DefineEvent(ObjectLinkPointChanged);
-}//namespace Events
+DefineEvent(ObjectLinkChanged);
+DefineEvent(ObjectLinkPointChanged);
+} // namespace Events
 
-//-------------------------------------------------------------------ObjectLinkEdge
 ZilchDefineType(ObjectLinkEdge, builder, type)
 {
   ZeroBindDocumented();
-  // This should be safe to bind even though we contain an inlist link because when
-  // we're returned we can't perform any operations on the link itself.
+  // This should be safe to bind even though we contain an inlist link because
+  // when we're returned we can't perform any operations on the link itself.
   ZilchBindDefaultCopyDestructor();
 
   ZilchBindGetterProperty(SelfCog);
@@ -41,7 +35,7 @@ bool ObjectLinkEdge::IsValid() const
 Cog* ObjectLinkEdge::GetSelfCog()
 {
   ObjectLinkAnchor* selfAnchor = mSelfAnchorHandle;
-  if(selfAnchor != nullptr)
+  if (selfAnchor != nullptr)
     return selfAnchor->GetOwner();
   return nullptr;
 }
@@ -49,10 +43,10 @@ Cog* ObjectLinkEdge::GetSelfCog()
 Cog* ObjectLinkEdge::GetOtherCog()
 {
   ObjectLink* objectLink = GetObjectLink();
-  if(objectLink == nullptr)
+  if (objectLink == nullptr)
     return nullptr;
 
-  if(&objectLink->mEdges[0] == this)
+  if (&objectLink->mEdges[0] == this)
     return objectLink->mEdges[1].GetSelfCog();
   return objectLink->mEdges[0].GetSelfCog();
 }
@@ -67,19 +61,21 @@ void ObjectLinkEdge::Set(ObjectLink* link, Cog* cog)
 {
   mObjectLinkHandle = link;
 
-  // Find the ObjectLinkAnchor on the passed in cog (if it doesn't exist then add it)
+  // Find the ObjectLinkAnchor on the passed in cog (if it doesn't exist then
+  // add it)
   ObjectLinkAnchor* cogAnchor = nullptr;
-  if(cog != nullptr)
+  if (cog != nullptr)
     cogAnchor = HasOrAdd<ObjectLinkAnchor>(cog);
 
   // If we were previously linked then unlink first
   ObjectLinkAnchor* oldSelfAnchor = mSelfAnchorHandle;
-  if(oldSelfAnchor != nullptr)
+  if (oldSelfAnchor != nullptr)
     oldSelfAnchor->mEdges.Unlink(this);
 
-  // Set the anchor and if we it exists (will always exist if the cog wasn't null) then add this edge to the anchor
+  // Set the anchor and if we it exists (will always exist if the cog wasn't
+  // null) then add this edge to the anchor
   mSelfAnchorHandle = cogAnchor;
-  if(cogAnchor != nullptr)
+  if (cogAnchor != nullptr)
     cogAnchor->mEdges.PushBack(this);
 }
 
@@ -87,15 +83,14 @@ void ObjectLinkEdge::Clear()
 {
   // If we were already linked then first unlink from the anchor
   ObjectLinkAnchor* selfAnchor = mSelfAnchorHandle;
-  if(selfAnchor != nullptr)
+  if (selfAnchor != nullptr)
     selfAnchor->mEdges.Erase(this);
-  
+
   // Debug safety...
   mSelfAnchorHandle = nullptr;
   mObjectLinkHandle = nullptr;
 }
 
-//-------------------------------------------------------------------ObjectLinkRange
 ObjectLinkRange::ObjectLinkRange()
 {
 }
@@ -103,8 +98,8 @@ ObjectLinkRange::ObjectLinkRange()
 ObjectLinkRange::ObjectLinkRange(Cog* cog)
 {
   ObjectLinkAnchor* anchor = cog->has(ObjectLinkAnchor);
-  //if we have a anchor, make a valid range, otherwise make an empty range
-  if(anchor)
+  // if we have a anchor, make a valid range, otherwise make an empty range
+  if (anchor)
     mRange = anchor->mEdges.All();
   else
     mRange = EdgeRange(nullptr, nullptr);
@@ -130,7 +125,6 @@ ObjectLinkEdge& ObjectLinkRange::Front()
   return mRange.Front();
 }
 
-//-------------------------------------------------------------------ObjectLinkAnchor
 ZilchDefineType(ObjectLinkAnchor, builder, type)
 {
   ZeroBindComponent();
@@ -153,14 +147,13 @@ ObjectLinkRange ObjectLinkAnchor::GetObjectLinks()
 void ObjectLinkAnchor::ClearLinks()
 {
   // Remove all edges from this anchor
-  while(!mEdges.Empty())
+  while (!mEdges.Empty())
   {
     ObjectLinkEdge& edge = mEdges.Front();
     edge.Clear();
   }
 }
 
-//-------------------------------------------------------------------ObjectLink
 ObjectLink::ObjectLink()
 {
   mBodyPoints[IndexA].ZeroOut();
@@ -174,8 +167,10 @@ ZilchDefineType(ObjectLink, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 
-  ZilchBindGetterSetterProperty(ObjectAPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(ObjectBPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(ObjectAPath)
+      ->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  ZilchBindGetterSetterProperty(ObjectBPath)
+      ->AddAttribute(PropertyAttributes::cLocalModificationOverride);
 
   ZilchBindGetterSetter(ObjectA);
   ZilchBindGetterSetter(ObjectB);
@@ -204,11 +199,13 @@ void ObjectLink::Initialize(CogInitializer& initializer)
 {
   // We can't do anything in initialize as cog paths can't be resolved until
   // OnAllObjects Created. Just listen for when these cog path's change.
-  ConnectThisTo(&mObjectPaths[IndexA], Events::CogPathCogChanged, OnObjectAChanged);
-  ConnectThisTo(&mObjectPaths[IndexB], Events::CogPathCogChanged, OnObjectBChanged);
+  ConnectThisTo(
+      &mObjectPaths[IndexA], Events::CogPathCogChanged, OnObjectAChanged);
+  ConnectThisTo(
+      &mObjectPaths[IndexB], Events::CogPathCogChanged, OnObjectBChanged);
 
   // Hack: For now add the visualizer here (so you can click on the object link)
-  if(Z::gRuntimeEditor)
+  if (Z::gRuntimeEditor)
     Z::gRuntimeEditor->Visualize(this, "Connection");
 }
 
@@ -217,7 +214,7 @@ void ObjectLink::OnAllObjectsCreated(CogInitializer& initializer)
   // To deal with ordering issues, some joints might trigger an on all objects
   // created on this object. This may be the first time we are run and it may
   // not, so just prevent from being run twice here.
-  if(mValid)
+  if (mValid)
     return;
 
   mValid = true;
@@ -305,7 +302,7 @@ Vec3 ObjectLink::GetWorldPointA()
 void ObjectLink::SetWorldPointA(Vec3Param worldPoint)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "LocalPointA", GetLocalPointA());
 
   SetWorldPoint(worldPoint, IndexA);
@@ -319,27 +316,28 @@ Vec3 ObjectLink::GetWorldPointB()
 void ObjectLink::SetWorldPointB(Vec3Param worldPoint)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "LocalPointB", GetLocalPointB());
 
   SetWorldPoint(worldPoint, IndexB);
 }
 
 Vec3 ObjectLink::GetWorldPosition()
-{ 
+{
   // Get the world point from each object
   Vec3 worldPointA = GetWorldPointA();
   Vec3 worldPointB = GetWorldPointB();
 
-  // Get each objects transform so we can determine if we should average the positions or not
+  // Get each objects transform so we can determine if we should average the
+  // positions or not
   Transform* transformA = GetTransform(IndexA);
   Transform* transformB = GetTransform(IndexB);
 
   // If A doesn't have a transform but B does then just use B's position
-  if(transformA == nullptr && transformB != nullptr)
+  if (transformA == nullptr && transformB != nullptr)
     return worldPointB;
   // The flip case (we have A but not B)
-  if(transformB == nullptr && transformA != nullptr)
+  if (transformB == nullptr && transformA != nullptr)
     return worldPointA;
 
   // Otherwise show the center of the 2
@@ -362,7 +360,7 @@ void ObjectLink::OnObjectBChanged(Event* e)
 
 Cog* ObjectLink::GetCog(ObjectIndex index)
 {
-  if(index != IndexA && index != IndexB)
+  if (index != IndexA && index != IndexB)
     return nullptr;
 
   return mObjectPaths[index].GetCog();
@@ -370,7 +368,7 @@ Cog* ObjectLink::GetCog(ObjectIndex index)
 
 void ObjectLink::SetCog(Cog* newCog, ObjectIndex index)
 {
-  if(index != IndexA && index != IndexB)
+  if (index != IndexA && index != IndexB)
     return;
 
   // Set the cog path for the new cog
@@ -385,7 +383,7 @@ void ObjectLink::LinkCog(Cog* newCog, ObjectIndex index)
   Cog* oldCog = GetCog(index);
 
   // Remove the old link info and set the new info
-  if(mEdges[index].IsValid())
+  if (mEdges[index].IsValid())
     mEdges[index].Clear();
   mEdges[index].Set(this, newCog);
 
@@ -416,9 +414,9 @@ Transform* ObjectLink::GetTransform(ObjectIndex index)
   Cog* cog = GetCog(index);
 
   Transform* transform = nullptr;
-  if(cog != nullptr)
+  if (cog != nullptr)
     transform = cog->has(Transform);
-  
+
   return transform;
 }
 
@@ -440,10 +438,10 @@ Vec3 ObjectLink::GetWorldPoint(ObjectIndex index)
 {
   // Start with the local point
   Vec3 worldPoint = GetLocalPoint(index);
-  
+
   // If we can get a transform then bring the point into world space
   Transform* transform = GetTransform(index);
-  if(transform != nullptr)
+  if (transform != nullptr)
     worldPoint = transform->TransformPoint(worldPoint);
 
   return worldPoint;
@@ -455,7 +453,7 @@ void ObjectLink::SetWorldPoint(Vec3Param worldPoint, ObjectIndex index)
 
   // If we can get a transform the bring the world point into local space
   Transform* transform = GetTransform(index);
-  if(transform != nullptr)
+  if (transform != nullptr)
     localPoint = transform->TransformPointInverse(worldPoint);
 
   SetLocalPoint(localPoint, index);
@@ -463,13 +461,12 @@ void ObjectLink::SetWorldPoint(Vec3Param worldPoint, ObjectIndex index)
 
 void ObjectLink::Unlink()
 {
-  //unlink the edges and mark ourself as being invalid now
+  // unlink the edges and mark ourself as being invalid now
   mEdges[0].Clear();
   mEdges[1].Clear();
   mValid = false;
 }
 
-//-------------------------------------------------------------------ObjectLinkEvent
 ZilchDefineType(ObjectLinkEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -493,7 +490,6 @@ void ObjectLinkEvent::Set(uint edgeIndex, Cog* oldCog, Cog* newCog)
   NewCog = newCog;
 }
 
-//-------------------------------------------------------------------ObjectLinkPointChangedEvent
 ZilchDefineType(ObjectLinkPointChangedEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -508,11 +504,13 @@ ObjectLinkPointChangedEvent::ObjectLinkPointChangedEvent()
   mEdgeId = 0;
 }
 
-void ObjectLinkPointChangedEvent::Set(uint edgeIndex, Vec3Param oldPoint, Vec3Param newPoint)
+void ObjectLinkPointChangedEvent::Set(uint edgeIndex,
+                                      Vec3Param oldPoint,
+                                      Vec3Param newPoint)
 {
   mEdgeId = edgeIndex;
   mOldLocalPoint = oldPoint;
   mNewLocalPoint = newPoint;
 }
 
-}//namespace Zero
+} // namespace Zero

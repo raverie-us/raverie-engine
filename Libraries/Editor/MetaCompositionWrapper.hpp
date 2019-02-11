@@ -1,28 +1,25 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2016-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------------------------------- Meta Composition
+//Meta Composition
 class MetaCompositionWrapper : public MetaComposition
 {
 public:
   ZilchDeclareType(MetaCompositionWrapper, TypeCopyMode::ReferenceType);
 
-  MetaCompositionWrapper(BoundType* typeToWrap) : 
-    MetaComposition(nullptr)
+  MetaCompositionWrapper(BoundType* typeToWrap) : MetaComposition(nullptr)
   {
     mContainedComposition = typeToWrap->HasInherited<MetaComposition>();
     mComponentType = mContainedComposition->mComponentType;
-    mSupportsComponentAddition = mContainedComposition->mSupportsComponentAddition;
-    mSupportsComponentRemoval = mContainedComposition->mSupportsComponentRemoval;
-    mSupportsComponentReorder = mContainedComposition->mSupportsComponentReorder;
+    mSupportsComponentAddition =
+        mContainedComposition->mSupportsComponentAddition;
+    mSupportsComponentRemoval =
+        mContainedComposition->mSupportsComponentRemoval;
+    mSupportsComponentReorder =
+        mContainedComposition->mSupportsComponentReorder;
   }
 
   uint GetComponentCount(HandleParam owner) override
@@ -60,12 +57,16 @@ public:
     return mContainedComposition->GetComponentIndex(owner, component);
   }
 
-  void Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action, HandleParam owner = nullptr) override
+  void Enumerate(Array<BoundType*>& addTypes,
+                 EnumerateAction::Enum action,
+                 HandleParam owner = nullptr) override
   {
     mContainedComposition->Enumerate(addTypes, action, owner);
   }
 
-  bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override
+  bool CanAddComponent(HandleParam owner,
+                       BoundType* typeToAdd,
+                       AddInfo* info = nullptr) override
   {
     return mContainedComposition->CanAddComponent(owner, typeToAdd, info);
   }
@@ -75,28 +76,44 @@ public:
     return mContainedComposition->MakeObject(typeToCreate);
   }
 
-  void AddComponent(HandleParam owner, HandleParam component, int index = -1,
-                    bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override
+  void AddComponent(HandleParam owner,
+                    HandleParam component,
+                    int index = -1,
+                    bool ignoreDependencies = false,
+                    MetaCreationContext* creationContext = nullptr) override
   {
-    mContainedComposition->AddComponent(owner, component, index, ignoreDependencies, creationContext);
+    mContainedComposition->AddComponent(
+        owner, component, index, ignoreDependencies, creationContext);
   }
 
-  void AddComponent(HandleParam owner, BoundType* componentType, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override
+  void AddComponent(HandleParam owner,
+                    BoundType* componentType,
+                    int index = -1,
+                    bool ignoreDependencies = false,
+                    MetaCreationContext* creationContext = nullptr) override
   {
-    mContainedComposition->AddComponent(owner, componentType, index, ignoreDependencies, creationContext);
+    mContainedComposition->AddComponent(
+        owner, componentType, index, ignoreDependencies, creationContext);
   }
 
-  bool CanRemoveComponent(HandleParam owner, HandleParam component, String& reason) override
+  bool CanRemoveComponent(HandleParam owner,
+                          HandleParam component,
+                          String& reason) override
   {
     return mContainedComposition->CanRemoveComponent(owner, component, reason);
   }
 
-  void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override
+  void RemoveComponent(HandleParam owner,
+                       HandleParam component,
+                       bool ignoreDependencies = false) override
   {
-    mContainedComposition->RemoveComponent(owner, component, ignoreDependencies);
+    mContainedComposition->RemoveComponent(
+        owner, component, ignoreDependencies);
   }
 
-  void MoveComponent(HandleParam owner, HandleParam component, uint destination) override
+  void MoveComponent(HandleParam owner,
+                     HandleParam component,
+                     uint destination) override
   {
     mContainedComposition->MoveComponent(owner, component, destination);
   }
@@ -110,4 +127,4 @@ public:
   MetaComposition* mContainedComposition;
 };
 
-}//namespace Zero
+} // namespace Zero

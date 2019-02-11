@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TransformSupport.cpp
-/// Helper functions for the Transform component.
-/// 
-/// Authors: Benjamin Strukus
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -21,7 +13,7 @@ Mat3 GenerateRotationMatrix(Vec3Param facing)
 
 void GenerateRotationMatrix(Vec3Param facing, Mat3Ptr matrix)
 {
-  //Generate an orthonormal basis from the facing vector
+  // Generate an orthonormal basis from the facing vector
   Vec3 right, up;
   Math::GenerateOrthonormalBasis(facing, &right, &up);
   GenerateRotationMatrix(facing, up, right, matrix);
@@ -36,7 +28,7 @@ Mat3 GenerateRotationMatrix(Vec3Param facing, Vec3Param up)
 
 void GenerateRotationMatrix(Vec3Param facing, Vec3Param up, Mat3Ptr matrix)
 {
-  //Get the right vector
+  // Get the right vector
   Vec3 right = Math::Cross(facing, up);
   GenerateRotationMatrix(facing, up, right, matrix);
 }
@@ -48,7 +40,9 @@ Mat3 GenerateRotationMatrix(Vec3Param facing, Vec3Param up, Vec3Param right)
   return rotation;
 }
 
-void GenerateRotationMatrix(Vec3Param facing, Vec3Param up, Vec3Param right, 
+void GenerateRotationMatrix(Vec3Param facing,
+                            Vec3Param up,
+                            Vec3Param right,
                             Mat3Ptr matrix)
 {
   matrix->SetBasis(0, right);
@@ -81,4 +75,4 @@ void GenerateRotationMatrix(EulerAnglesParam eulerAngles, Mat3Ptr matrix)
   Math::ToMatrix3(eulerAngles, matrix);
 }
 
-}// namespace Zero
+} // namespace Zero

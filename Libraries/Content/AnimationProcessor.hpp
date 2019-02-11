@@ -1,7 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +11,7 @@ struct SceneTrack
   String FullPath;
   Array<PositionKey> PositionKeys;
   Array<RotationKey> RotationKeys;
-  Array<ScalingKey>  ScalingKeys;
+  Array<ScalingKey> ScalingKeys;
 };
 
 struct AnimationData
@@ -31,7 +28,9 @@ typedef Array<AnimationData> AnimationDataArray;
 class AnimationProcessor
 {
 public:
-  AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData, AnimationNodeRedirectMap& animationRedirectMap);
+  AnimationProcessor(AnimationBuilder* animationBuilder,
+                     HierarchyDataMap& hierarchyData,
+                     AnimationNodeRedirectMap& animationRedirectMap);
   ~AnimationProcessor();
 
   void ExtractAndProcessAnimationData(const aiScene* scene);
@@ -43,4 +42,4 @@ public:
   AnimationNodeRedirectMap& mAnimationRedirectMap;
 };
 
-}// namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016 DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,11 +6,10 @@ namespace Zero
 
 void ZilchConsolePrint(ConsoleEvent* e);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(ZilchScriptLibrary)
 {
   builder.CreatableInScriptDefault = false;
-  
+
   ZilchInitializeType(ZilchComponent);
   ZilchInitializeType(ZilchEvent);
   ZilchInitializeType(ZilchObject);
@@ -27,7 +21,6 @@ ZilchDefineStaticLibrary(ZilchScriptLibrary)
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void ZilchScriptLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -39,20 +32,19 @@ void ZilchScriptLibrary::Initialize()
 
   ResourceLibrary::sScriptType = ZilchTypeId(ZilchScript);
 
-  EventConnect(&Zilch::Console::Events, Zilch::Events::ConsoleWrite, ZilchConsolePrint);
+  EventConnect(
+      &Zilch::Console::Events, Zilch::Events::ConsoleWrite, ZilchConsolePrint);
 }
 
-//**************************************************************************************************
 void ZilchScriptLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
 }
 
-//**************************************************************************************************
 void ZilchConsolePrint(ConsoleEvent* e)
 {
   // Print out the standard formatted error message to the console
   Console::Print(Filter::DefaultFilter, "%s", e->Text.c_str());
 }
 
-}//namespace Zero
+} // namespace Zero

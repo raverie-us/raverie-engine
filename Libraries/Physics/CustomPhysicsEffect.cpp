@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,11 +6,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(CustomPhysicsEffectPrecalculatePhase);
-  DefineEvent(ApplyCustomPhysicsEffect);
-}//namespace Events
+DefineEvent(CustomPhysicsEffectPrecalculatePhase);
+DefineEvent(ApplyCustomPhysicsEffect);
+} // namespace Events
 
-//-------------------------------------------------------------------CustomPhysicsEffectEvent
 ZilchDefineType(CustomPhysicsEffectEvent, builder, type)
 {
   ZeroBindComponent();
@@ -34,14 +28,14 @@ CustomPhysicsEffectEvent::CustomPhysicsEffectEvent()
   mDt = 0;
 }
 
-//-------------------------------------------------------------------CustomPhysicsEffect
 ZilchDefineType(CustomPhysicsEffect, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
 
-  ZeroBindEvent(Events::CustomPhysicsEffectPrecalculatePhase, CustomPhysicsEffectEvent);
+  ZeroBindEvent(Events::CustomPhysicsEffectPrecalculatePhase,
+                CustomPhysicsEffectEvent);
   ZeroBindEvent(Events::ApplyCustomPhysicsEffect, CustomPhysicsEffectEvent);
 }
 
@@ -58,19 +52,20 @@ void CustomPhysicsEffect::Serialize(Serializer& stream)
 
 void CustomPhysicsEffect::PreCalculate(real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   CustomPhysicsEffectEvent toSend;
   toSend.mEffect = this;
   toSend.mRigidBody = nullptr;
   toSend.mDt = dt;
-  GetOwner()->DispatchEvent(Events::CustomPhysicsEffectPrecalculatePhase, &toSend);
+  GetOwner()->DispatchEvent(Events::CustomPhysicsEffectPrecalculatePhase,
+                            &toSend);
 }
 
 void CustomPhysicsEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   CustomPhysicsEffectEvent toSend;
@@ -80,4 +75,4 @@ void CustomPhysicsEffect::ApplyEffect(RigidBody* obj, real dt)
   GetOwner()->DispatchEvent(Events::ApplyCustomPhysicsEffect, &toSend);
 }
 
-}//namespace Zero
+} // namespace Zero

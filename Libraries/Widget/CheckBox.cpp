@@ -1,39 +1,29 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CheckBox.cpp
-///  
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------- Check Box
 const String cCheckBoxIcon = "Background";
 const String cCheckIcon = "Icon";
 const String cCheckInvalidIcon = "InvalidIcon";
 
 namespace CheckBoxUi
 {
-  const cstr cLocation = "EditorUi/Controls/CheckBox";
-  Tweakable(Vec4, BackgroundColor,    Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor,        Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, CheckColor,         Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReadOnlyCheckColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, FocusBorderColor,   Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec2, CheckSize,          Vec2(12,12), cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/CheckBox";
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, CheckColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReadOnlyCheckColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, FocusBorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec2, CheckSize, Vec2(12, 12), cLocation);
+} // namespace CheckBoxUi
 
 ZilchDefineType(CheckBox, builder, type)
 {
 }
 
-CheckBox::CheckBox(Composite* parent)
-  : Composite(parent)
+CheckBox::CheckBox(Composite* parent) : Composite(parent)
 {
   static const String className = "CheckBox";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -58,7 +48,6 @@ CheckBox::CheckBox(Composite* parent)
 
 CheckBox::~CheckBox()
 {
-
 }
 
 void CheckBox::SetInvalid()
@@ -98,7 +87,7 @@ void CheckBox::SetChecked(bool value)
 void CheckBox::SetCheckedDirect(bool value)
 {
   mChecked = value;
-  if(mChecked)
+  if (mChecked)
   {
     mCheckIcon->SetVisible(true);
     mCheckIcon->ChangeDefinition(mDefSet->GetDefinition(cCheckIcon));
@@ -116,7 +105,7 @@ void CheckBox::ToggleChecked()
 
 bool CheckBox::TakeFocusOverride()
 {
-  if(!mAllowEdit)
+  if (!mAllowEdit)
     return false;
 
   this->HardTakeFocus();
@@ -143,7 +132,7 @@ void CheckBox::UpdateTransform()
   mBackground->SetTranslation(boxOffset);
   mBackground->SetSize(boxSize);
 
-  if(HasFocus())
+  if (HasFocus())
     mBorder->SetColor(CheckBoxUi::FocusBorderColor);
   else
     mBorder->SetColor(CheckBoxUi::BorderColor);
@@ -153,12 +142,12 @@ void CheckBox::UpdateTransform()
 
 void CheckBox::OnKeyDown(KeyboardEvent* event)
 {
-  if(event->Key == Keys::Space || event->Key == Keys::Enter)
+  if (event->Key == Keys::Space || event->Key == Keys::Enter)
   {
     if (!event->GetModifierPressed())
       ToggleChecked();
   }
-  
+
   TabJump(this, event);
 }
 
@@ -172,7 +161,6 @@ void CheckBox::OnLeftClick(MouseEvent* event)
   ToggleChecked();
 }
 
-//--------------------------------------------------------------- Text Check Box
 ZilchDefineType(TextCheckBox, builder, type)
 {
 }
@@ -227,4 +215,4 @@ void TextCheckBox::OnLeftClick(MouseEvent* event)
   mCheckBox->ToggleChecked();
 }
 
-}
+} // namespace Zero

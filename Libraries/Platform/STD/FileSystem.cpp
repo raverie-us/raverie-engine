@@ -1,36 +1,32 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #if defined(PLATFORM_EMSCRIPTEN)
-#include <experimental/filesystem>
+#  include <experimental/filesystem>
 #else
-#include <filesystem>
+#  include <filesystem>
 #endif
-
 
 namespace std
 {
-  namespace experimental
-  {
-  }
-  using namespace experimental;
+namespace experimental
+{
 }
+using namespace experimental;
+} // namespace std
 
 namespace fs = std::filesystem;
 
 namespace Zero
 {
-const Rune  cDirectorySeparatorRune = Rune(fs::path::preferred_separator);
-const char cDirectorySeparatorCstr[] = { (char)fs::path::preferred_separator, '\0' };
+const Rune cDirectorySeparatorRune = Rune(fs::path::preferred_separator);
+const char cDirectorySeparatorCstr[] = {(char)fs::path::preferred_separator,
+                                        '\0'};
 bool cFileSystemCaseSensitive = true;
 
 // There is no initialization or virtual file system on this platform
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
+                                             void* userData)
 {
 }
 
@@ -38,7 +34,9 @@ FileSystemInitializer::~FileSystemInitializer()
 {
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath,
+                               DataBlock* stealData,
+                               TimeType modifiedTime)
 {
 }
 
@@ -63,7 +61,10 @@ void SetWorkingDirectory(StringParam path)
 String GetUserLocalDirectory()
 {
   std::error_code error;
-  return fs::temp_directory_path(error).append("LocalDirectory").u8string().c_str();
+  return fs::temp_directory_path(error)
+      .append("LocalDirectory")
+      .u8string()
+      .c_str();
 }
 #endif
 
@@ -71,7 +72,10 @@ String GetUserLocalDirectory()
 String GetUserDocumentsDirectory()
 {
   std::error_code error;
-  return fs::temp_directory_path(error).append("DocumentsDirectory").u8string().c_str();
+  return fs::temp_directory_path(error)
+      .append("DocumentsDirectory")
+      .u8string()
+      .c_str();
 }
 #endif
 
@@ -86,7 +90,9 @@ String GetApplicationDirectory()
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.
-  ReturnIf(gCommandLineArguments.Empty(), "/Main.app", "The command line arguments should not be empty, were they set?");
+  ReturnIf(gCommandLineArguments.Empty(),
+           "/Main.app",
+           "The command line arguments should not be empty, were they set?");
   return gCommandLineArguments.Front();
 }
 #endif
@@ -106,7 +112,8 @@ bool FileExists(StringParam filePath)
 bool FileWritable(StringParam filePath)
 {
   // Not the greatest way to check for writable...
-  // We can use permissions, but we still don't know if we have the ability to write to a file.
+  // We can use permissions, but we still don't know if we have the ability to
+  // write to a file.
   FILE* file = fopen(filePath.c_str(), "a");
   if (file)
   {
@@ -149,7 +156,10 @@ void CreateDirectoryAndParents(StringParam directory)
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   std::error_code error;
-  fs::copy_file(source.c_str(), dest.c_str(), fs::copy_options::overwrite_existing, error);
+  fs::copy_file(source.c_str(),
+                dest.c_str(),
+                fs::copy_options::overwrite_existing,
+                error);
   return !(bool)error;
 }
 
@@ -205,19 +215,20 @@ struct FileRangePrivateData
   fs::directory_iterator mEnd;
 };
 
-
 FileRange::FileRange(StringParam filePath)
 {
   ZeroConstructPrivateData(FileRangePrivateData);
   mPath = filePath;
-  if(mPath.Empty())
+  if (mPath.Empty())
   {
-    Error("Cannot create a file range from an empty directory/path string (working directory as empty string not supported)");
+    Error("Cannot create a file range from an empty directory/path string "
+          "(working directory as empty string not supported)");
     return;
   }
 
   std::error_code error;
-  fs::directory_iterator begin = fs::directory_iterator(filePath.c_str(), error);
+  fs::directory_iterator begin =
+      fs::directory_iterator(filePath.c_str(), error);
   self->mIterator = begin;
   self->mEnd = fs::end(begin);
 }
@@ -262,4 +273,4 @@ String UniqueFileId(StringParam fullpath)
   return CanonicalizePath(FilePath::Normalize(fullpath));
 }
 
-}//namespace Zero
+} // namespace Zero

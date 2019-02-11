@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SampleCurveEditor.hpp
-/// Declaration of the SampleCurveEditor Composite.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,7 +11,6 @@ class GraphWidget;
 class MetaDropEvent;
 class MultiSampleCurveEditor;
 
-//---------------------------------------------------------- Sample Curve Editor
 class SampleCurveEditor : public CurveEditor
 {
 public:
@@ -38,7 +29,6 @@ public:
   GraphWidget* mGraph;
 };
 
-//---------------------------------------------------------- Sample Curve Object
 class SampleCurveObject : public CurveObject
 {
 public:
@@ -78,7 +68,6 @@ private:
   HandleOf<SampleCurve> mSampleCurve;
 };
 
-//---------------------------------------------------- Multi Sample Curve Editor
 class MultiSampleCurveEditor : public Composite
 {
 public:
@@ -117,4 +106,4 @@ private:
   SampleCurveEditor* mCurveEditor;
 };
 
-}// namespace Zero
+} // namespace Zero

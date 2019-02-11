@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Thread.hpp
-/// Declaration of the ExternalLibrary class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,8 @@ extern const cstr cSharedLibraryExtensionWithoutDot;
 extern const cstr cExecutableExtensionWithDot;
 extern const cstr cSharedLibraryExtensionWithDot;
 
-/// An externally loaded native library (example, a Windows .dll or *nix .so file)
+/// An externally loaded native library (example, a Windows .dll or *nix .so
+/// file)
 class ZeroShared ExternalLibrary
 {
 public:
@@ -42,4 +35,4 @@ private:
   OsHandle mHandle;
 };
 
-}//namespace Zero
+} // namespace Zero

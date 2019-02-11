@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,32 +9,45 @@ namespace Physics
 
 JointInfo LinearAxisJoint::sInfo = JointInfo(1, 0);
 
-/// The linearAxisJoint's policy for Atom updating as well as Molecule computing.
+/// The linearAxisJoint's policy for Atom updating as well as Molecule
+/// computing.
 struct LinearAxisPolicy : public DefaultFragmentPolicy<LinearAxisJoint>
 {
   void AxisValue(MoleculeData& data, int atomIndex, LinearAxisJoint* joint)
   {
-    ErrorIf(atomIndex >= 1, "LinearAxisJoint only has one atom. Cannot compute atom number %d.", atomIndex);
+    ErrorIf(atomIndex >= 1,
+            "LinearAxisJoint only has one atom. Cannot compute atom number %d.",
+            atomIndex);
     joint->mAtoms[atomIndex].mError = real(0.0);
   }
 
-  void ErrorFragment(int atomIndex, LinearAxisJoint* joint, ImpulseLimitAtom& molLimit)
+  void ErrorFragment(int atomIndex,
+                     LinearAxisJoint* joint,
+                     ImpulseLimitAtom& molLimit)
   {
-    ErrorIf(atomIndex >= 1, "LinearAxisJoint only has one atom. Cannot compute atom number %d.", atomIndex);
+    ErrorIf(atomIndex >= 1,
+            "LinearAxisJoint only has one atom. Cannot compute atom number %d.",
+            atomIndex);
     uint flag = 1 << atomIndex;
     ConstraintAtom& atom = joint->mAtoms[atomIndex];
 
-    // Compute the error of this constraint. have to compute the error at this time
-    // so that the limit values are known
+    // Compute the error of this constraint. have to compute the error at this
+    // time so that the limit values are known
     ComputeError(atom, molLimit, joint->mNode->mLimit, 0, flag);
     ModifyErrorWithSlop(joint, atom);
   }
 
   // Returns baumgarte
-  real AxisFragment(MoleculeData& data, int atomIndex, LinearAxisJoint* joint, ConstraintMolecule& mol)
+  real AxisFragment(MoleculeData& data,
+                    int atomIndex,
+                    LinearAxisJoint* joint,
+                    ConstraintMolecule& mol)
   {
-    ErrorIf(atomIndex >= 1, "LinearAxisJoint only has one atom. Cannot compute atom number %d.", atomIndex);
-    mol.mJacobian.Set(data.LinearAxes[0], Vec3::cZero, Vec3::cZero, Vec3::cZero);
+    ErrorIf(atomIndex >= 1,
+            "LinearAxisJoint only has one atom. Cannot compute atom number %d.",
+            atomIndex);
+    mol.mJacobian.Set(
+        data.LinearAxes[0], Vec3::cZero, Vec3::cZero, Vec3::cZero);
 
     return joint->GetLinearBaumgarte();
   }
@@ -79,8 +87,9 @@ void LinearAxisJoint::OnAllObjectsCreated(CogInitializer& initializer)
   Joint::OnAllObjectsCreated(initializer);
 
   // If we are not dynamically created, we don't need to do some extra logic
-  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
-  if(!dynamicallyCreated)
+  bool dynamicallyCreated =
+      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  if (!dynamicallyCreated)
     return;
 
   // By default this joint is for dynamic character controller which
@@ -89,7 +98,7 @@ void LinearAxisJoint::OnAllObjectsCreated(CogInitializer& initializer)
   // If we are dynamically created then add a joint motor assuming we
   // don't already have one (shouldn't be possible but oh well)
   JointMotor* motor = GetOwner()->has(JointMotor);
-  if(motor == nullptr)
+  if (motor == nullptr)
   {
     motor = new JointMotor();
     GetOwner()->AddComponent(motor);
@@ -125,7 +134,8 @@ void LinearAxisJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, LinearAxisPolicy());
+  ComputeMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, LinearAxisPolicy());
 }
 
 void LinearAxisJoint::WarmStart(MoleculeWalker& molecules)
@@ -153,18 +163,20 @@ void LinearAxisJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, LinearAxisPolicy());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, LinearAxisPolicy());
 }
 
 void LinearAxisJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   Vec3 obj1Pos = GetCollider(0)->GetWorldTranslation();
   gDebugDraw->Add(Debug::Line(obj1Pos, obj1Pos + mWorldAxis));
 }
 
-uint LinearAxisJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint LinearAxisJoint::GetAtomIndexFilter(uint atomIndex,
+                                         real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;
@@ -200,6 +212,6 @@ void LinearAxisJoint::SetWorldAxis(Vec3Param axis)
   mWorldAxis = axis;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

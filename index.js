@@ -1,3 +1,4 @@
+// MIT Licensed (see LICENSE.md).
 const execa = require('execa');
 const path = require('path');
 const mkdirp = require('mkdirp');

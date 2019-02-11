@@ -1,32 +1,51 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
 
-const Matrix3 Matrix3::cIdentity(real(1.0), real(0.0), real(0.0),
-                                 real(0.0), real(1.0), real(0.0),
-                                 real(0.0), real(0.0), real(1.0));
+const Matrix3 Matrix3::cIdentity(real(1.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(1.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(1.0));
 
-Matrix3::Matrix3(real p00, real p01, real p02, 
-                 real p10, real p11, real p12, 
-                 real p20, real p21, real p22)
+Matrix3::Matrix3(real p00,
+                 real p01,
+                 real p02,
+                 real p10,
+                 real p11,
+                 real p12,
+                 real p20,
+                 real p21,
+                 real p22)
 {
-  m00 = p00;  m01 = p01;  m02 = p02;
-  m10 = p10;  m11 = p11;  m12 = p12; 
-  m20 = p20;  m21 = p21;  m22 = p22;
+  m00 = p00;
+  m01 = p01;
+  m02 = p02;
+  m10 = p10;
+  m11 = p11;
+  m12 = p12;
+  m20 = p20;
+  m21 = p21;
+  m22 = p22;
 }
 
 Matrix3::Matrix3(ConstRealPointer data_)
 {
-  m00 = data_[0]; m01 = data_[1]; m02 = data_[2];
-  m10 = data_[3]; m11 = data_[4]; m12 = data_[5];
-  m20 = data_[6]; m21 = data_[7]; m22 = data_[8];
+  m00 = data_[0];
+  m01 = data_[1];
+  m02 = data_[2];
+  m10 = data_[3];
+  m11 = data_[4];
+  m12 = data_[5];
+  m20 = data_[6];
+  m21 = data_[7];
+  m22 = data_[8];
 }
 
 Vector3& Matrix3::operator[](uint index)
@@ -133,9 +152,7 @@ Matrix3 Matrix3::operator*(Mat3Param rhs) const
 bool Matrix3::operator==(Mat3Param rhs) const
 {
   const Matrix3& self = *this;
-  return self[0] == rhs[0] &&
-         self[1] == rhs[1] &&
-         self[2] == rhs[2];
+  return self[0] == rhs[0] && self[1] == rhs[1] && self[2] == rhs[2];
 }
 
 bool Matrix3::operator!=(Mat3Param rhs) const
@@ -217,8 +234,8 @@ bool Matrix3::Valid() const
 
 real Matrix3::Determinant() const
 {
-  return (m00 * m11 * m22 + m10 * m21 * m02 + m01 * m12 * m20) 
-       - (m02 * m11 * m20 + m10 * m01 * m22 + m00 * m21 * m12);
+  return (m00 * m11 * m22 + m10 * m21 * m02 + m01 * m12 * m20) -
+         (m02 * m11 * m20 + m10 * m01 * m22 + m00 * m21 * m12);
 }
 
 void Matrix3::InvertInternal(real invDeterminant)
@@ -233,9 +250,15 @@ void Matrix3::InvertInternal(real invDeterminant)
   real t21 = (m01 * m20 - m00 * m21) * invDeterminant;
   real t22 = (m00 * m11 - m01 * m10) * invDeterminant;
 
-  m00 = t00;  m01 = t01;  m02 = t02;
-  m10 = t10;  m11 = t11;  m12 = t12;
-  m20 = t20;  m21 = t21;  m22 = t22;
+  m00 = t00;
+  m01 = t01;
+  m02 = t02;
+  m10 = t10;
+  m11 = t11;
+  m12 = t12;
+  m20 = t20;
+  m21 = t21;
+  m22 = t22;
 }
 
 void Matrix3::Transpose(Mat3Ref mat)
@@ -279,7 +302,7 @@ bool Matrix3::SafeInvert(Mat3Ref mat)
 
   real determinant = mat.Determinant();
   real invDeterminant;
-  if(Math::Abs(determinant) < Math::PositiveMin())
+  if (Math::Abs(determinant) < Math::PositiveMin())
   {
     invDeterminant = Math::PositiveMin();
     success = false;
@@ -398,22 +421,24 @@ Matrix3 Matrix3::GenerateTranslation(Vec2Param translation)
   return result;
 }
 
-Matrix3 Matrix3::GenerateTransform(Vec2Param translation, real rotationRadians, Vec2Param scale)
+Matrix3 Matrix3::GenerateTransform(Vec2Param translation,
+                                   real rotationRadians,
+                                   Vec2Param scale)
 {
   Matrix3 result;
 
-  //Translation
+  // Translation
   result.m02 = translation.x;
   result.m12 = translation.y;
   result.m22 = real(1.0);
 
-  //Rotation
+  // Rotation
   result.m00 = Math::Cos(rotationRadians);
   result.m01 = -Math::Sin(rotationRadians);
   result.m10 = -result.m01;
   result.m11 = result.m00;
 
-  //Scale
+  // Scale
   result.m00 *= scale.x;
   result.m10 *= scale.x;
   result.m01 *= scale.y;
@@ -426,7 +451,7 @@ Matrix3 Matrix3::GenerateTransform(Vec2Param translation, real rotationRadians, 
 Matrix3 Matrix3::GenerateTransform(QuatParam rotation, Vec3Param scale)
 {
   Matrix3 result;
-  //Rotational component
+  // Rotational component
   real xx = rotation.x * rotation.x;
   real xy = rotation.x * rotation.y;
   real xz = rotation.x * rotation.z;
@@ -449,7 +474,7 @@ Matrix3 Matrix3::GenerateTransform(QuatParam rotation, Vec3Param scale)
   result.m21 = real(2.0) * (yz + xw);
   result.m22 = real(1.0) - real(2.0) * (xx + yy);
 
-  //Scale component
+  // Scale component
   result.m00 *= scale.x;
   result.m10 *= scale.x;
   result.m20 *= scale.x;
@@ -467,7 +492,7 @@ Matrix3 Matrix3::GenerateTransform(QuatParam rotation, Vec3Param scale)
 Matrix3 Matrix3::GenerateTransform(Mat3Param rotation, Vec3Param scale)
 {
   Matrix3 result;
-  //Rotational component
+  // Rotational component
   result.m00 = rotation.m00;
   result.m01 = rotation.m01;
   result.m02 = rotation.m02;
@@ -480,7 +505,7 @@ Matrix3 Matrix3::GenerateTransform(Mat3Param rotation, Vec3Param scale)
   result.m21 = rotation.m21;
   result.m22 = rotation.m22;
 
-  //Scale component
+  // Scale component
   result.m00 *= scale.x;
   result.m10 *= scale.x;
   result.m20 *= scale.x;
@@ -495,15 +520,19 @@ Matrix3 Matrix3::GenerateTransform(Mat3Param rotation, Vec3Param scale)
   return result;
 }
 
-void Matrix3::Decompose(Mat3Param transform, Vec2Ref translation, real& rotationRadians, Vec2Ref scale)
+void Matrix3::Decompose(Mat3Param transform,
+                        Vec2Ref translation,
+                        real& rotationRadians,
+                        Vec2Ref scale)
 {
 }
 
-void Matrix3::Decompose(Mat3Param transform, Mat3Ref rotationRadians, Vec3Ref scale)
+void Matrix3::Decompose(Mat3Param transform,
+                        Mat3Ref rotationRadians,
+                        Vec3Ref scale)
 {
 }
 
-//-------------------------------------------------------------------Legacy
 
 Matrix3 Matrix3::Transposed() const
 {
@@ -588,7 +617,7 @@ void Matrix3::BuildTransform(Mat3Param rotate, Vec3Param scale)
 
 Mat3Ref Matrix3::Orthonormalize()
 {
-  Vector3 basis[3] = { BasisX(), BasisY(), BasisZ() };
+  Vector3 basis[3] = {BasisX(), BasisY(), BasisZ()};
   Normalize(basis[0]);
 
   basis[1] = Vector3::MultiplyAdd(basis[1], basis[0], -Dot(basis[1], basis[0]));
@@ -646,7 +675,7 @@ void Matrix3::SetCross(uint index, real x, real y, real z)
   SetCross(index, crossVector);
 }
 
-//-------------------------------------------------------------------Global Functions
+//Functions
 Matrix3 operator*(real lhs, Mat3Param rhs)
 {
   return rhs * lhs;
@@ -672,7 +701,6 @@ Vector2 MultiplyNormal(Mat3Param lhs, Vec2Param rhs)
   return Matrix3::MultiplyNormal(lhs, rhs);
 }
 
-//-------------------------------------------------------------------Legacy
 Matrix3 BuildTransform(Vec2Param translate, real radians, Vec2Param scale)
 {
   return Matrix3::GenerateTransform(translate, radians, scale);
@@ -692,7 +720,7 @@ void Transform(Mat3Param matrix, Vec3Ptr vector)
 {
   ErrorIf(vector == nullptr, "Matrix3 - Null pointer passed for vector.");
   Vector3 result = Matrix3::Multiply(matrix, *vector);
-  
+
   vector->Set(result.x, result.y, result.z);
 }
 
@@ -738,13 +766,13 @@ real Cofactor(Mat3Param matrix, uint row, uint column)
 
   real matrix2[4];
   uint i = 0;
-  for(uint r = 0; r < 3; ++r)
+  for (uint r = 0; r < 3; ++r)
   {
-    if(r != row)
+    if (r != row)
     {
-      for(uint c = 0; c < 3; ++c)
+      for (uint c = 0; c < 3; ++c)
       {
-        if(c != column)
+        if (c != column)
         {
           matrix2[i] = matrix(r, c);
           ++i;
@@ -758,9 +786,9 @@ real Cofactor(Mat3Param matrix, uint row, uint column)
 
 void Diagonalize(Mat3Ptr matrix)
 {
-  ///Diagonalizes a symmetric matrix (M = M^T)
+  /// Diagonalizes a symmetric matrix (M = M^T)
   ErrorIf(matrix == nullptr, "Matrix3 - Null pointer passed for matrix.");
-  
+
   Matrix3 quatMatrix = ToMatrix3(CreateDiagonalizer(*matrix));
   *matrix = Multiply(Multiply(quatMatrix, *matrix), quatMatrix.Transposed());
 }
@@ -782,4 +810,4 @@ Matrix3 Inverted(Mat3Param matrix)
   return Matrix3::Inverted(matrix);
 }
 
-}// namespace Math
+} // namespace Math

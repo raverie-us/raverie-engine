@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Status.hpp"
 #include "SourceControl.hpp"
@@ -15,7 +10,6 @@ namespace Zero
 class Svn : public SourceControl
 {
 public:
-
   void Add(Status& status, StringParam filePath) override
   {
     // svn add, parents to add parent directories
@@ -32,7 +26,9 @@ public:
     RunSimpleCommandLine(status, commandLine);
   }
 
-  void Rename(Status& status, StringParam sourcePath, StringParam destPath) override
+  void Rename(Status& status,
+              StringParam sourcePath,
+              StringParam destPath) override
   {
     // svn move
     String source = BuildString(" \"", sourcePath, "\"");
@@ -41,7 +37,9 @@ public:
     RunSimpleCommandLine(status, commandLine);
   }
 
-  void GetRevisions(Status& status, StringParam path, Array<Revision>& revisions) override
+  void GetRevisions(Status& status,
+                    StringParam path,
+                    Array<Revision>& revisions) override
   {
   }
 };
@@ -52,4 +50,4 @@ SourceControl* GetSvn()
   return &svn;
 }
 
-}
+} // namespace Zero

@@ -1,12 +1,12 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 // These functions must be defined by the platform (as well as CreateRenderer)
-// These could be virtual functions on the OpenglRenderer, however there should only be
-// one implementation of OpenGL per platform, so we can avoid the virtual overhead.
+// These could be virtual functions on the OpenglRenderer, however there should
+// only be one implementation of OpenGL per platform, so we can avoid the
+// virtual overhead.
 class OpenglRenderer;
 extern void zglSetSwapInterval(OpenglRenderer* renderer, int interval);
 extern IntVec2 zglGetWindowRenderableSize(OpenglRenderer* renderer);
@@ -15,7 +15,7 @@ extern void zglSwapBuffers(OpenglRenderer* renderer);
 // Links regarding the portability of GLAPIENTRY:
 // http://lists.openscenegraph.org/pipermail/osg-users-openscenegraph.org/2007-October/003023.html
 // http://sourceforge.net/p/glew/bugs/227/
-typedef void (GLAPIENTRY *UniformFunction)(GLint, GLsizei, const void*);
+typedef void(GLAPIENTRY* UniformFunction)(GLint, GLsizei, const void*);
 
 class StreamedVertexBuffer
 {
@@ -23,8 +23,13 @@ public:
   void Initialize();
   void Destroy();
 
-  void AddVertices(StreamedVertex* vertices, uint count, PrimitiveType::Enum primitiveType);
-  void AddVertices(StreamedVertexArray& vertices, uint start, uint count, PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertex* vertices,
+                   uint count,
+                   PrimitiveType::Enum primitiveType);
+  void AddVertices(StreamedVertexArray& vertices,
+                   uint start,
+                   uint count,
+                   PrimitiveType::Enum primitiveType);
   void FlushBuffer(bool deactivate);
 
   uint mBufferSize;
@@ -75,14 +80,27 @@ public:
 class OpenglRenderer : public Renderer
 {
 public:
-  // This must be called by the derived class after the OpenGL context has been created.
-  void Initialize(OsHandle windowHandle, OsHandle deviceContext, OsHandle renderContext, String& error);
+  // This must be called by the derived class after the OpenGL context has been
+  // created.
+  void Initialize(OsHandle windowHandle,
+                  OsHandle deviceContext,
+                  OsHandle renderContext,
+                  String& error);
 
-  // This must be called by the derived class before the OpenGL context has been destroyed.
+  // This must be called by the derived class before the OpenGL context has been
+  // destroyed.
   void Shutdown();
 
-  void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) override;
-  void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) override;
+  void BuildOrthographicTransform(Mat4Ref matrix,
+                                  float size,
+                                  float aspect,
+                                  float nearPlane,
+                                  float farPlane) override;
+  void BuildPerspectiveTransform(Mat4Ref matrix,
+                                 float fov,
+                                 float aspect,
+                                 float nearPlane,
+                                 float farPlane) override;
   bool YInvertImageData(TextureType::Enum type) override;
 
   GlMaterialRenderData* CreateMaterialRenderData() override;
@@ -98,7 +116,8 @@ public:
 
   bool GetLazyShaderCompilation() override;
   void SetLazyShaderCompilation(bool isLazy) override;
-  void AddShaders(Array<ShaderEntry>& entries, uint forceCompileBatchCount) override;
+  void AddShaders(Array<ShaderEntry>& entries,
+                  uint forceCompileBatchCount) override;
   void RemoveShaders(Array<ShaderEntry>& entries) override;
 
   void SetVSync(bool vsync) override;
@@ -107,7 +126,8 @@ public:
 
   void ShowProgress(ShowProgressInfo* info) override;
 
-  void DoRenderTasks(RenderTasks* renderTasks, RenderQueues* renderQueues) override;
+  void DoRenderTasks(RenderTasks* renderTasks,
+                     RenderQueues* renderQueues) override;
 
   void DoRenderTaskRange(RenderTaskRange& taskRange);
   void DoRenderTaskClearTarget(RenderTaskClearTarget* task);
@@ -121,7 +141,9 @@ public:
   void DrawStatic(ViewNode& viewNode, FrameNode& frameNode);
   void DrawStreamed(ViewNode& viewNode, FrameNode& frameNode);
 
-  void SetShaderParameter(ShaderInputType::Enum inputType, StringParam name, void* data);
+  void SetShaderParameter(ShaderInputType::Enum inputType,
+                          StringParam name,
+                          void* data);
   void SetShaderParameterMatrix(StringParam name, Mat3& transform);
   void SetShaderParameterMatrix(StringParam name, Mat4& transform);
   void SetShaderParameterMatrixInv(StringParam name, Mat3& transform);
@@ -129,11 +151,16 @@ public:
   void SetShaderParameters(FrameBlock* frameBlock, ViewBlock* viewBlock);
   void SetShaderParameters(FrameNode* frameNode, ViewNode* viewNode);
   void SetShaderParameters(IndexRange inputRange, uint& nextTextureSlot);
-  void SetShaderParameters(u64 objectId, uint shaderInputsId, uint& nextTextureSlot);
+  void SetShaderParameters(u64 objectId,
+                           uint shaderInputsId,
+                           uint& nextTextureSlot);
 
   GlShader* GetShader(ShaderKey& shaderKey);
   void CreateShader(ShaderEntry& entry);
-  void CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader);
+  void CreateShader(StringParam vertexSource,
+                    StringParam geometrySource,
+                    StringParam pixelSource,
+                    GLuint& shader);
   void SetShader(GLuint shader);
 
   void DelayedRenderDataDestruction();

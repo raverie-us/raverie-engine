@@ -1,16 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "ZilchScript.hpp"
 
 namespace Zero
 {
-//-------------------------------------------------------------------ZilchPluginSource
 class BackgroundTask;
 class UpdateEvent;
 class ZilchPluginConfig;
@@ -38,7 +32,8 @@ public:
   ZilchPluginLibrary* GetLibrary() const;
 
   // Copies the library and header files to the plugin shared directory
-  // We pretty much litter this function in every call to open the plugin (ide, folder, upon loading, etc)
+  // We pretty much litter this function in every call to open the plugin (ide,
+  // folder, upon loading, etc)
   void ForceCopyPluginDependencies();
   void CopyPluginDependencies();
   void CopyPluginDependenciesOnce();
@@ -74,7 +69,6 @@ public:
   int mOpenIdeAfterToolsInstallCounter;
 };
 
-//-------------------------------------------------------------------ZilchPluginSourceLoader
 class ZilchPluginSourceLoader : public ResourceLoader
 {
 public:
@@ -82,7 +76,6 @@ public:
   void ReloadFromFile(Resource* resource, ResourceEntry& entry) override;
 };
 
-//-------------------------------------------------------------------ZilchPluginSourceManager
 class ZilchPluginSourceManager : public ResourceManager
 {
 public:
@@ -92,9 +85,13 @@ public:
   ~ZilchPluginSourceManager();
 
   // ResourceManager Interface
-  void ValidateNewName(Status& status, StringParam name, BoundType* optionalType) override;
-  void ValidateRawName(Status& status, StringParam name, BoundType* optionalType) override;
-  
+  void ValidateNewName(Status& status,
+                       StringParam name,
+                       BoundType* optionalType) override;
+  void ValidateRawName(Status& status,
+                       StringParam name,
+                       BoundType* optionalType) override;
+
   void OnResourceEvent(ResourceEvent* event);
 
   bool IsCompilingPlugins();
@@ -104,7 +101,6 @@ public:
   size_t mCompilingPluginCount;
 };
 
-//-------------------------------------------------------------------ZilchPluginLibrary
 class ZilchPluginLibrary : public ZilchLibraryResource
 {
 public:
@@ -112,7 +108,7 @@ public:
 
   ZilchPluginLibrary();
   ~ZilchPluginLibrary();
-  
+
   String SharedLibraryPath;
   String GetSharedLibraryPath() const override;
   Resource* GetOriginResource() const override;
@@ -120,14 +116,12 @@ public:
   ZilchPluginSource* GetSource() const;
 };
 
-//-------------------------------------------------------------------ZilchPluginLibraryLoader
 class ZilchPluginLibraryLoader : public ResourceLoader
 {
 public:
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override;
 };
 
-//-------------------------------------------------------------------ZilchPluginLibraryManager
 class ZilchPluginLibraryManager : public ResourceManager
 {
 public:
@@ -135,8 +129,8 @@ public:
 
   ZilchPluginLibraryManager(BoundType* resourceType);
   ~ZilchPluginLibraryManager();
-  
+
   void OnResourceEvent(ResourceEvent* event);
 };
 
-}//namespace Zero
+} // namespace Zero

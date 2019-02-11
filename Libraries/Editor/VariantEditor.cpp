@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TreeView.cpp
-/// Implementation of Tree View
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,10 +6,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(TextUpdated);
+DefineEvent(TextUpdated);
 } // namespace Events
 
-//----------------------------------------------------------------------- Meta Initialization
+//Initialization
 ZilchDefineType(TextUpdatedEvent, builder, type)
 {
   ZilchBindField(mChangeAccepted);
@@ -33,14 +25,12 @@ ZilchDefineType(FormattedInPlaceText, builder, type)
   ZilchBindDefaultCopyDestructor();
 }
 
-//------------------------------------------------------------------ Text Editor
 ZilchDefineType(InPlaceTextEditor, builder, type)
 {
-
 }
 
-InPlaceTextEditor::InPlaceTextEditor(Composite* parent, u32 flags)
-  :ValueEditor(parent)
+InPlaceTextEditor::InPlaceTextEditor(Composite* parent, u32 flags) :
+    ValueEditor(parent)
 {
   mText = new Label(this);
   mText->SetTextClipping(true);
@@ -48,7 +38,7 @@ InPlaceTextEditor::InPlaceTextEditor(Composite* parent, u32 flags)
 
   mAdditionalText = new Label(this);
 
-  if(flags & InPlaceTextEditorFlags::EditOnDoubleClick)
+  if (flags & InPlaceTextEditorFlags::EditOnDoubleClick)
     ConnectThisTo(this, Events::DoubleClick, OnDoubleClick);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
 }
@@ -66,7 +56,7 @@ void InPlaceTextEditor::UpdateTransform()
   mText->SizeToContents();
 
   // Place the hint text
-  if(mAdditionalText->GetActive())
+  if (mAdditionalText->GetActive())
   {
     Vec2 textSize = mText->GetSize();
     mAdditionalText->SetTranslation(Pixels(textSize.x, 0, 0));
@@ -74,12 +64,12 @@ void InPlaceTextEditor::UpdateTransform()
 
   // Place icons in reverse order
   float currIconPos = mSize.x;
-  for(uint i = mCustomIcons.Size() - 1; i < mCustomIcons.Size(); --i)
+  for (uint i = mCustomIcons.Size() - 1; i < mCustomIcons.Size(); --i)
   {
     Element* icon = mCustomIcons[i];
 
     currIconPos -= icon->GetSize().x;
-    
+
     // Padding
     currIconPos -= Pixels(2);
 
@@ -98,8 +88,8 @@ void InPlaceTextEditor::Edit()
 
   TextBox* edit = new TextBox(this);
   edit->SetTranslation(Vec3::cZero);
-  edit->SetText( mText->GetText() );
-  edit->SetSize( this->GetSize() - Vec2(GetIconsWidth(), 0) );
+  edit->SetText(mText->GetText());
+  edit->SetSize(this->GetSize() - Vec2(GetIconsWidth(), 0));
   edit->SetEditable(true);
   edit->TakeFocus();
 
@@ -113,7 +103,7 @@ void InPlaceTextEditor::Edit()
 
 void InPlaceTextEditor::SetVariant(AnyParam variant)
 {
-  if(variant.StoredType == ZilchTypeId(FormattedInPlaceText))
+  if (variant.StoredType == ZilchTypeId(FormattedInPlaceText))
   {
     FormattedInPlaceText formatting = variant.Get<FormattedInPlaceText>();
     mText->SetText(formatting.mText);
@@ -126,12 +116,12 @@ void InPlaceTextEditor::SetVariant(AnyParam variant)
 
     // Update custom icons
     uint i = 0;
-    for(; i < formatting.mCustomIcons.Size(); ++i)
+    for (; i < formatting.mCustomIcons.Size(); ++i)
     {
       String iconDefinition = formatting.mCustomIcons[i];
 
       Element* currIcon = nullptr;
-      if(i >= mCustomIcons.Size())
+      if (i >= mCustomIcons.Size())
       {
         currIcon = CreateAttached<Element>(iconDefinition);
         mCustomIcons.PushBack(currIcon);
@@ -139,7 +129,8 @@ void InPlaceTextEditor::SetVariant(AnyParam variant)
       else
       {
         currIcon = mCustomIcons[i];
-        BaseDefinition* definition = mDefSet->GetDefinitionOrNull(iconDefinition);
+        BaseDefinition* definition =
+            mDefSet->GetDefinitionOrNull(iconDefinition);
         currIcon->ChangeDefinition(definition);
       }
 
@@ -147,7 +138,7 @@ void InPlaceTextEditor::SetVariant(AnyParam variant)
     }
 
     // Delete any extra icons
-    while(i < mCustomIcons.Size())
+    while (i < mCustomIcons.Size())
     {
       mCustomIcons.Back()->Destroy();
       mCustomIcons.PopBack();
@@ -159,7 +150,8 @@ void InPlaceTextEditor::SetVariant(AnyParam variant)
     mText->SetText(text);
     mAdditionalText->SetActive(false);
   }
-  // No matter which text is set we need to size the text itself to the text it contains
+  // No matter which text is set we need to size the text itself to the text it
+  // contains
   mText->SizeToContents();
 }
 
@@ -183,7 +175,8 @@ void InPlaceTextEditor::GetEditTextVariant(Any& variant)
 
 void InPlaceTextEditor::SizeAllText()
 {
-  // check if we have width left after just the text to display additional information
+  // check if we have width left after just the text to display additional
+  // information
   float remainingWidth = mSize.x - mText->GetMinSize().x;
   if (remainingWidth > 0)
   {
@@ -204,13 +197,13 @@ void InPlaceTextEditor::SizeAllText()
 
 void InPlaceTextEditor::OnTextBoxChanged(ObjectEvent* event)
 {
-  if(mEdit)
+  if (mEdit)
   {
     TextUpdatedEvent* textEvent = new TextUpdatedEvent(this);
     this->DispatchEvent(Events::TextUpdated, textEvent);
-    //Store the new value if there was no resource name conflict
-    if(textEvent->mChangeAccepted)
-      mText->SetText( mEdit->GetText() );
+    // Store the new value if there was no resource name conflict
+    if (textEvent->mChangeAccepted)
+      mText->SetText(mEdit->GetText());
     mText->SetVisible(true);
     mEdit->Destroy();
     delete textEvent;
@@ -220,7 +213,7 @@ void InPlaceTextEditor::OnTextBoxChanged(ObjectEvent* event)
 
 void InPlaceTextEditor::OnKeyDown(KeyboardEvent* event)
 {
-  if(Editable && event->Key == Keys::F2)
+  if (Editable && event->Key == Keys::F2)
     Edit();
 }
 
@@ -242,7 +235,7 @@ void InPlaceTextEditor::OnDoubleClick(Event* event)
 float InPlaceTextEditor::GetIconsWidth()
 {
   float width = 0.0f;
-  for(uint i = 0; i < mCustomIcons.Size(); ++i)
+  for (uint i = 0; i < mCustomIcons.Size(); ++i)
   {
     width += mCustomIcons[i]->GetSize().x;
 
@@ -252,12 +245,13 @@ float InPlaceTextEditor::GetIconsWidth()
   return width;
 }
 
-ValueEditor* CreateInPlaceTextEditor(Composite* composite, AnyParam data, u32 flags)
+ValueEditor* CreateInPlaceTextEditor(Composite* composite,
+                                     AnyParam data,
+                                     u32 flags)
 {
   return new InPlaceTextEditor(composite, flags);
 }
 
-//-------------------------------------------------------------- Resource Editor
 class ResourceDisplay : public ValueEditor
 {
 public:
@@ -268,15 +262,15 @@ public:
   TextBox* mText;
   HandleOf<FloatingSearchView> mActiveSearch;
 
-  ResourceDisplay(Composite* parent, AnyParam resourceType)
-    : ValueEditor(parent)
+  ResourceDisplay(Composite* parent, AnyParam resourceType) :
+      ValueEditor(parent)
   {
     mResourceType = resourceType.Get<String>();
     mText = new TextBox(this);
     mText->HideBackground(true);
     mText->SetEditable(false);
     mText->SetTextClipping(true);
-    mText->SetTranslation(Pixels(0,-1,0));
+    mText->SetTranslation(Pixels(0, -1, 0));
     mText->SetText("TEST RESOURCE");
 
     ConnectThisTo(mText, Events::DoubleClick, OnDoubleClick);
@@ -284,21 +278,22 @@ public:
 
   void OnDoubleClick(MouseEvent* event)
   {
-    if(!Editable)
+    if (!Editable)
       return;
 
-    if(mActiveSearch == nullptr)
+    if (mActiveSearch == nullptr)
     {
       FloatingSearchView* viewPopUp = new FloatingSearchView(this);
       Vec3 mousePos = ToVector3(event->GetMouse()->GetClientPosition());
       SearchView* searchView = viewPopUp->mView;
-      viewPopUp->SetSize(Pixels(300,400));
+      viewPopUp->SetSize(Pixels(300, 400));
       viewPopUp->ShiftOntoScreen(mousePos);
       viewPopUp->UpdateTransformExternal();
 
       searchView->AddHiddenTag("Resources");
       searchView->AddHiddenTag(mResourceType);
-      searchView->mSearch->SearchProviders.PushBack(GetResourceSearchProvider()) ;
+      searchView->mSearch->SearchProviders.PushBack(
+          GetResourceSearchProvider());
 
       searchView->TakeFocus();
       viewPopUp->UpdateTransformExternal();
@@ -321,7 +316,6 @@ public:
 
   void Edit() override
   {
-    
   }
 
   void SizeToContents() override
@@ -353,12 +347,13 @@ public:
   }
 };
 
-ValueEditor* CreateResourceDisplay(Composite* composite, AnyParam data, u32 flags)
+ValueEditor* CreateResourceDisplay(Composite* composite,
+                                   AnyParam data,
+                                   u32 flags)
 {
   return new ResourceDisplay(composite, data);
 }
 
-//------------------------------------------------------------------ Icon Editor
 const String cDefaultIcon = "ItemIcon";
 class IconDisplay : public ValueEditor
 {
@@ -367,20 +362,19 @@ public:
 
   Element* mIcon;
 
-  IconDisplay(Composite* parent)
-    : ValueEditor(parent)
+  IconDisplay(Composite* parent) : ValueEditor(parent)
   {
     mIcon = CreateAttached<Element>(cDefaultIcon);
     SetLayout(CreateFillLayout());
-    mIcon->SetTranslation(Pixels(0,6,0));
+    mIcon->SetTranslation(Pixels(0, 6, 0));
     mIcon->SetNotInLayout(false);
   }
-  
+
   void SetVariant(AnyParam variant) override
   {
     ErrorIf(!variant.Is<String>(), "Variant for IconEditor must be a String.");
     String icon = variant.Get<String>();
-    if(icon.Empty())
+    if (icon.Empty())
     {
       mIcon->SetActive(false);
       mIcon->SetVisible(false);
@@ -388,7 +382,7 @@ public:
     else
     {
       BaseDefinition* definition = mDefSet->GetDefinitionOrNull(icon);
-      if(definition == nullptr)
+      if (definition == nullptr)
         definition = mDefSet->GetDefinition(cDefaultIcon);
       mIcon->ChangeDefinition(definition);
 
@@ -411,7 +405,6 @@ ValueEditor* CreateIconDisplay(Composite* composite, AnyParam data, u32 flags)
   return new IconDisplay(composite);
 }
 
-//------------------------------------------------------------------ Icon Editor
 class BooleanEditor : public ValueEditor
 {
 public:
@@ -419,8 +412,7 @@ public:
 
   CheckBox* mCheckBox;
 
-  BooleanEditor(Composite* parent)
-    : ValueEditor(parent)
+  BooleanEditor(Composite* parent) : ValueEditor(parent)
   {
     mCheckBox = new CheckBox(this);
     ConnectThisTo(mCheckBox, Events::ValueChanged, OnValueChanged);
@@ -457,10 +449,8 @@ ValueEditor* CreateBooleanEditor(Composite* composite, AnyParam data, u32 flags)
   return new BooleanEditor(composite);
 }
 
-//--------------------------------------------------------- Value Editor Factory
 ZilchDefineType(ValueEditorFactory, builder, type)
 {
-
 }
 
 ValueEditorFactory::ValueEditorFactory()
@@ -471,18 +461,21 @@ ValueEditorFactory::ValueEditorFactory()
   RegisterEditor(cDefaultBooleanEditor, CreateBooleanEditor);
 }
 
-void ValueEditorFactory::RegisterEditor(StringParam type, ValueEditorCreator creator)
+void ValueEditorFactory::RegisterEditor(StringParam type,
+                                        ValueEditorCreator creator)
 {
   mRegisteredEditors.Insert(type, creator);
 }
 
-ValueEditor* ValueEditorFactory::GetEditor(StringParam type, Composite* parent, 
-                                           AnyParam data, u32 flags)
+ValueEditor* ValueEditorFactory::GetEditor(StringParam type,
+                                           Composite* parent,
+                                           AnyParam data,
+                                           u32 flags)
 {
   ValueEditorCreator creator = mRegisteredEditors.FindValue(type, nullptr);
-  if(creator)
+  if (creator)
     return creator(parent, data, flags);
   return nullptr;
 }
 
-}//namespace Zero
+} // namespace Zero

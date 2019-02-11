@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentPackage.hpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +9,6 @@ namespace Events
 DeclareEvent(TextureLoaded);
 }
 
-//------------------------------------------------------------- Content Package
 class ContentPackage : public EventObject
 {
 public:
@@ -64,4 +55,4 @@ private:
   HandleOf<AsyncWebRequest> mRequest;
 };
 
-}//namespace Zero
+} // namespace Zero

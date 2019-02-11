@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -36,13 +31,12 @@ DynamicMotor::~DynamicMotor()
 {
   // Delete the primary joint
   Cog* primary = mVelJointCog;
-  if(primary)
+  if (primary)
     primary->ForceDestroy();
 }
 
 void DynamicMotor::Serialize(Serializer& stream)
 {
-  
 }
 
 void DynamicMotor::Initialize(CogInitializer& initializer)
@@ -61,13 +55,18 @@ RelativeVelocityJoint* DynamicMotor::CreateJoint()
 {
   // Create the velocity joint
   JointCreator jointCreator;
-  Cog* jointCog = jointCreator.CreateWorldPoints(mSpace->mWorldCollider->GetOwner(), GetOwner(), CoreArchetypes::ObjectLink, Vec3::cZero);
-  if(jointCog == nullptr)
+  Cog* jointCog =
+      jointCreator.CreateWorldPoints(mSpace->mWorldCollider->GetOwner(),
+                                     GetOwner(),
+                                     CoreArchetypes::ObjectLink,
+                                     Vec3::cZero);
+  if (jointCog == nullptr)
     return nullptr;
 
   jointCog->SetEditorOnly();
   jointCog->AddComponentByName("RelativeVelocityJoint");
-  jointCog->SetName(String::Format("%s%s", GetOwner()->GetName().c_str(), "MotorJoint"));
+  jointCog->SetName(
+      String::Format("%s%s", GetOwner()->GetName().c_str(), "MotorJoint"));
   // Store the CogId to the joint
   mVelJointCog = jointCog->GetId();
 
@@ -96,11 +95,11 @@ RelativeVelocityJoint* DynamicMotor::GetJoint()
 {
   // Check to see if we have a valid cog with a relative velocity joint
   RelativeVelocityJoint* joint = mVelJointCog.has(RelativeVelocityJoint);
-  if(joint == nullptr)
+  if (joint == nullptr)
   {
     // Destroy the old cog and create a new joint cog (there's some issues with
-    // recently dynamically deleted components still getting events that means we
-    // can't just re-add the component, but rather we need a new composition)
+    // recently dynamically deleted components still getting events that means
+    // we can't just re-add the component, but rather we need a new composition)
     mVelJointCog.SafeDestroy();
     joint = CreateJoint();
   }
@@ -123,7 +122,7 @@ void DynamicMotor::SetReferenceFrameToObject(Cog* object)
 
 void DynamicMotor::MoveInDirection(Vec3Param direction, Vec3Param up)
 {
-  if(mActive == false)
+  if (mActive == false)
     return;
 
   RelativeVelocityJoint* velJoint = GetJoint();
@@ -133,7 +132,7 @@ void DynamicMotor::MoveInDirection(Vec3Param direction, Vec3Param up)
 
   Vec3 dir = direction;
   real speed = dir.AttemptNormalize();
-  if(speed != real(0.0))
+  if (speed != real(0.0))
   {
     // Set the primary axis
     velJoint->SetAxis(0, dir);
@@ -150,13 +149,14 @@ void DynamicMotor::MoveInDirection(Vec3Param direction, Vec3Param up)
     // could prevent gravity from affecting us. Because of this project
     // out the new up from the old right and forward.
     Vec3 oldForward = velJoint->GetAxis(0);
-    Vec3 forward = oldForward - Math::Dot(normalizedUp, oldForward) * normalizedUp;
+    Vec3 forward =
+        oldForward - Math::Dot(normalizedUp, oldForward) * normalizedUp;
     forward.AttemptNormalize();
     velJoint->SetAxis(0, forward);
 
     // Set the right axis
     Vec3 right = Math::Cross(direction, up);
-    velJoint->SetAxis(2, right);    
+    velJoint->SetAxis(2, right);
   }
   mBody->ForceAwake();
   velJoint->SetSpeed(0, speed);
@@ -172,7 +172,7 @@ void DynamicMotor::SetActive(bool active)
   RelativeVelocityJoint* velJoint = GetJoint();
   mActive = active;
 
-  if(velJoint == nullptr)
+  if (velJoint == nullptr)
     return;
 
   velJoint->SetAxisActive(0, active);
@@ -193,4 +193,4 @@ void DynamicMotor::SetMaxMoveImpulse(float val)
   velJoint->SetMaxImpulse(2, val);
 }
 
-}//namespace Zero
+} // namespace Zero

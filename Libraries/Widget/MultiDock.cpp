@@ -1,21 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MultiDock.cpp
-/// Implementation of the Multi Dock classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------------------- Docking Area
 DockingArea::DockingArea()
 {
-  DockSize = Vec2(0,0);
+  DockSize = Vec2(0, 0);
   FlexRatio = 0.0f;
   DockShell = 0;
   Area = DockArea::Center;
@@ -26,35 +17,43 @@ typedef WidgetArray::range WidgetRange;
 
 DockArea::Enum ToDockAreaDirection(DockMode::Enum dockArea)
 {
-  switch(dockArea)
+  switch (dockArea)
   {
-  case DockMode::DockLeft: return DockArea::Left;
-  case DockMode::DockRight: return DockArea::Right;
-  case DockMode::DockTop: return DockArea::Top;
-  case DockMode::DockBottom: return DockArea::Bottom;
-  case DockMode::DockFill: return DockArea::Center;
-  default: return DockArea::Center;
+  case DockMode::DockLeft:
+    return DockArea::Left;
+  case DockMode::DockRight:
+    return DockArea::Right;
+  case DockMode::DockTop:
+    return DockArea::Top;
+  case DockMode::DockBottom:
+    return DockArea::Bottom;
+  case DockMode::DockFill:
+    return DockArea::Center;
+  default:
+    return DockArea::Center;
   }
 }
 
-// Get the next docking area from the current docking area in the direction provided
-// NULL if no docking area in that direction
-DockingArea* NextInDirection(MultiDock* multiDock, DockingArea* current, DockArea::Enum direction)
+// Get the next docking area from the current docking area in the direction
+// provided NULL if no docking area in that direction
+DockingArea* NextInDirection(MultiDock* multiDock,
+                             DockingArea* current,
+                             DockArea::Enum direction)
 {
   DockArea::Enum currentArea = current->Area;
   DockArea::Enum testArea = currentArea;
   int currentShell = current->DockShell;
-  for(;;)
+  for (;;)
   {
     int shellDirection = GetSign(currentArea) * GetSign(direction);
 
-    // Shell 0 is where the directions can flip and the 
+    // Shell 0 is where the directions can flip and the
     // center needs to be checked
-    if(currentShell == 0)
+    if (currentShell == 0)
     {
       // If on center go to the side area
       // in the direction of movement but stay in shell 0
-      if(currentArea == DockArea::Center)
+      if (currentArea == DockArea::Center)
       {
         shellDirection = 0;
         testArea = direction;
@@ -62,7 +61,7 @@ DockingArea* NextInDirection(MultiDock* multiDock, DockingArea* current, DockAre
       else
       {
         // If the signs are different move from side to center
-        if(GetSign(currentArea) != GetSign(direction))
+        if (GetSign(currentArea) != GetSign(direction))
         {
           shellDirection = 0;
           testArea = DockArea::Center;
@@ -79,11 +78,13 @@ DockingArea* NextInDirection(MultiDock* multiDock, DockingArea* current, DockAre
     int testShell = currentShell + shellDirection;
 
     // Ran out of shells no areas in direction
-    if( testShell >= int(multiDock->DockingShells.Size()))
+    if (testShell >= int(multiDock->DockingShells.Size()))
       return nullptr;
 
     // If the area is not empty return else keep searching
-    if(!multiDock->DockingShells[testShell].DockAreas[testArea].Widgets.Empty())
+    if (!multiDock->DockingShells[testShell]
+             .DockAreas[testArea]
+             .Widgets.Empty())
       return &multiDock->DockingShells[testShell].DockAreas[testArea];
 
     // Move to next shell / area
@@ -93,22 +94,19 @@ DockingArea* NextInDirection(MultiDock* multiDock, DockingArea* current, DockAre
 }
 
 
-//----------------------------------------------------- Moving Dock Manipulation
-
 // Hint area for docking
 class HintRegion : public Composite
 {
 public:
   Element* mArea;
 
-  HintRegion(Composite* parent)
-    :Composite(parent)
+  HintRegion(Composite* parent) : Composite(parent)
   {
     static const String className = "ListBox";
     mDefSet = mDefSet->GetDefinitionSet(className);
     mArea = CreateAttached<Element>(cSelectionHighlight);
     mArea->SetInteractive(false);
-    mArea->SetColor(Vec4(1,1,1,0.5f));
+    mArea->SetColor(Vec4(1, 1, 1, 0.5f));
   }
 
   void UpdateTransform() override
@@ -117,7 +115,6 @@ public:
     Composite::UpdateTransform();
   }
 };
-
 
 DeclareEnum4(DockHover, None, DockArea, Overlay, Tab);
 
@@ -133,7 +130,7 @@ public:
 
   // Widget being moved
   HandleOf<Widget> mDockMoveTarget;
-  
+
   HandleOf<HintRegion> mDockHint;
   HandleOf<TabArea> mHoverTabs;
   HandleOf<Widget> mHoverWidget;
@@ -147,20 +144,22 @@ public:
   // MouseManipulation Interface
   void OnMouseUpdate(MouseEvent* event) override;
   void OnMouseUp(MouseEvent* event) override;
-  void OnMouseDown(MouseEvent* event) override {};
+  void OnMouseDown(MouseEvent* event) override{};
   void OnMouseMove(MouseEvent* event) override;
   void ChangeHover(DockHover::Enum newHover);
   void CleanUp();
   HintRegion* GetHint();
 };
 
-DockMovingManipulation::DockMovingManipulation(Mouse* mouse, MultiDock* dockOwner, Widget* target)
-  : MouseManipulation(mouse, dockOwner)
+DockMovingManipulation::DockMovingManipulation(Mouse* mouse,
+                                               MultiDock* dockOwner,
+                                               Widget* target) :
+    MouseManipulation(mouse, dockOwner)
 {
   mTargetStartPosition = target->GetTranslation();
   mTargetStartSize = target->GetSize();
   mGrabOffset = mouse->GetClientPosition() - ToVector2(mTargetStartPosition);
-  
+
   MultiDocker* docker = (MultiDocker*)target->GetDocker();
   target->SetDockArea(DockArea::Floating);
 
@@ -180,15 +179,15 @@ DockMovingManipulation::~DockMovingManipulation()
 HintRegion* DockMovingManipulation::GetHint()
 {
   HintRegion* region = mDockHint;
-  if(region == nullptr)
+  if (region == nullptr)
   {
     // Create the hint region
     region = new HintRegion(mMultiDock);
-    region->SetColor(Vec4(1,1,1,0.0f));
+    region->SetColor(Vec4(1, 1, 1, 0.0f));
     region->SetInteractive(false);
 
     ActionSequence* seq = new ActionSequence(region);
-    seq->Add(Fade(region, Vec4(1,1,1,0.8f), 0.2f));
+    seq->Add(Fade(region, Vec4(1, 1, 1, 0.8f), 0.2f));
 
     mDockHint = region;
   }
@@ -207,10 +206,11 @@ void DockMovingManipulation::CleanUp()
 
 void TransferTabs(TabArea* tabArea, Window* window)
 {
-  //Transfer all tabs
-  while(window->mTabArea->mTabs.Size())
+  // Transfer all tabs
+  while (window->mTabArea->mTabs.Size())
   {
-    tabArea->TransferTab(window->mTabArea->mTabs.Front(), tabArea->mPreviewTab, true);
+    tabArea->TransferTab(
+        window->mTabArea->mTabs.Front(), tabArea->mPreviewTab, true);
     tabArea->mPreviewTab = tabArea->mPreviewTab + 1;
   }
   tabArea->mPreviewTab = -1;
@@ -219,28 +219,28 @@ void TransferTabs(TabArea* tabArea, Window* window)
 void DockMovingManipulation::OnMouseUp(MouseEvent* event)
 {
   Widget* dockTarget = mDockMoveTarget;
-  if(dockTarget == nullptr)
+  if (dockTarget == nullptr)
     return CleanUp();
 
   Window* window = (Window*)dockTarget;
   MultiDocker* windowDocker = (MultiDocker*)window->GetDocker();
   MultiDock* multiDock = windowDocker->DockOwner;
 
-  if(mDockHover == DockHover::Tab)
+  if (mDockHover == DockHover::Tab)
   {
     // Drop onto tab area
     TabArea* tabArea = mHoverTabs;
-    if(tabArea == nullptr)
+    if (tabArea == nullptr)
       return CleanUp();
 
     TransferTabs(tabArea, window);
   }
-  else if(mDockHover == DockHover::Overlay)
+  else if (mDockHover == DockHover::Overlay)
   {
-    if(mDockDirection == DockArea::Center)
+    if (mDockDirection == DockArea::Center)
     {
       Window* centerWindow = multiDock->CenterWindow;
-      if(centerWindow)
+      if (centerWindow)
         TransferTabs(centerWindow->mTabArea, window);
       else
         window->SetDockArea(DockArea::Center);
@@ -252,28 +252,30 @@ void DockMovingManipulation::OnMouseUp(MouseEvent* event)
       windowDocker->DockShell = multiDock->DockingShells.Size();
     }
   }
-  else if(mDockHover == DockHover::DockArea)
+  else if (mDockHover == DockHover::DockArea)
   {
     Widget* hoverTarget = mHoverWidget;
-    if(hoverTarget == nullptr)
+    if (hoverTarget == nullptr)
       return CleanUp();
 
     // Dock onto a window
     MultiDocker* hoverDocker = (MultiDocker*)hoverTarget->GetDocker();
-    DockingArea* hoverArea = &mMultiDock->DockingShells[hoverDocker->DockShell].DockAreas[hoverDocker->Area];
+    DockingArea* hoverArea = &mMultiDock->DockingShells[hoverDocker->DockShell]
+                                  .DockAreas[hoverDocker->Area];
     DockArea::Enum hoverAreaEnum = hoverDocker->Area;
 
-    if(hoverAreaEnum == DockArea::Center)
+    if (hoverAreaEnum == DockArea::Center)
     {
-      // The center window docks control in shell 0    
-      // Move out the widgets in the current shell 0 in 
+      // The center window docks control in shell 0
+      // Move out the widgets in the current shell 0 in
       // that direction
-      for(uint i=0;i<DockArea::Count;++i)
+      for (uint i = 0; i < DockArea::Count; ++i)
       {
-        forRange(Widget* widget, mMultiDock->DockingShells[0].DockAreas[i].Widgets.All())
+        forRange(Widget * widget,
+                 mMultiDock->DockingShells[0].DockAreas[i].Widgets.All())
         {
           MultiDocker* docker = (MultiDocker*)widget->GetDocker();
-          if(docker->Area == mDockDirection)
+          if (docker->Area == mDockDirection)
             ++docker->DockShell;
         }
       }
@@ -283,10 +285,10 @@ void DockMovingManipulation::OnMouseUp(MouseEvent* event)
       windowDocker->DockIndex = 0;
       windowDocker->DockShell = 0;
     }
-    else 
+    else
     {
-      //Double all dock indexes so Insert can just +1 or -1
-      for(uint i=0;i<hoverArea->Widgets.Size();++i)
+      // Double all dock indexes so Insert can just +1 or -1
+      for (uint i = 0; i < hoverArea->Widgets.Size(); ++i)
       {
         Widget* widget = hoverArea->Widgets[i];
         MultiDocker* docker = (MultiDocker*)widget->GetDocker();
@@ -298,7 +300,7 @@ void DockMovingManipulation::OnMouseUp(MouseEvent* event)
       window->SetDockArea(hoverAreaEnum);
       windowDocker->DockIndex = hoverDocker->DockIndex + sign;
       windowDocker->DockShell = hoverDocker->DockShell;
-    } 
+    }
   }
 
   return CleanUp();
@@ -306,14 +308,14 @@ void DockMovingManipulation::OnMouseUp(MouseEvent* event)
 
 void DockMovingManipulation::ChangeHover(DockHover::Enum newHover)
 {
-  //If the hover mode has changed
-  if(newHover != mDockHover)
+  // If the hover mode has changed
+  if (newHover != mDockHover)
   {
-    //Clean up old hint
+    // Clean up old hint
     mDockHint.SafeDestroy();
     mDockDirection = DockArea::Floating;
 
-    if(TabArea* tabArea = mHoverTabs)
+    if (TabArea* tabArea = mHoverTabs)
     {
       tabArea->mPreviewTab = -1;
       tabArea->MarkAsNeedsUpdate();
@@ -323,14 +325,18 @@ void DockMovingManipulation::ChangeHover(DockHover::Enum newHover)
   mDockHover = newHover;
 }
 
-bool NearEdge(uint axis, Vec2 testPosition, Vec2 areaSize, float distance, DockArea::Enum& direction)
+bool NearEdge(uint axis,
+              Vec2 testPosition,
+              Vec2 areaSize,
+              float distance,
+              DockArea::Enum& direction)
 {
-  if(testPosition[axis] < distance)
+  if (testPosition[axis] < distance)
   {
     direction = axis ? DockArea::Top : DockArea::Left;
     return true;
   }
-  else if(testPosition[axis] > (areaSize[axis]-distance) )
+  else if (testPosition[axis] > (areaSize[axis] - distance))
   {
     direction = axis ? DockArea::Bottom : DockArea::Right;
     return true;
@@ -348,7 +354,7 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
   Widget* dockTarget = mDockMoveTarget;
 
   // Lost window during manipulation
-  if(dockTarget == nullptr)
+  if (dockTarget == nullptr)
   {
     this->Destroy();
     return;
@@ -369,32 +375,33 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
   const float EdgetLimitR = Pixels(10);
   const float EdgetLimitL = Pixels(10);
   float edgeSize = targetSize.x - EdgetLimitR;
-  if(mGrabOffset.x > edgeSize)
+  if (mGrabOffset.x > edgeSize)
     mGrabOffset.x = edgeSize;
-  if(mGrabOffset.x < EdgetLimitL)
-    mGrabOffset.x  = EdgetLimitL;
-  
+  if (mGrabOffset.x < EdgetLimitL)
+    mGrabOffset.x = EdgetLimitL;
+
   // Clamp movement to screen
   Vec3 newObjectPos = ToVector3(newMousePosition - mGrabOffset);
 
-  if(newObjectPos.x < 0)
+  if (newObjectPos.x < 0)
     newObjectPos.x = 0;
 
-  if(newObjectPos.y < 0)
+  if (newObjectPos.y < 0)
     newObjectPos.y = 0;
 
   dockTarget->SetTranslation(SnapToPixels(newObjectPos));
 
   const Vec2 cCenterRegionSize = Pixels(400, 400);
 
-  WidgetRect centerRect = WidgetRect::CenterAndSize(dockAreaSize * 0.5f, cCenterRegionSize);
-  if(centerRect.Contains(newMousePosition))
+  WidgetRect centerRect =
+      WidgetRect::CenterAndSize(dockAreaSize * 0.5f, cCenterRegionSize);
+  if (centerRect.Contains(newMousePosition))
   {
     ChangeHover(DockHover::Overlay);
     mDockDirection = DockArea::Center;
 
     // Create the edge hint if necessary
-    if(!mDockHint)
+    if (!mDockHint)
     {
       // Create the hint region
       HintRegion* hintRegion = GetHint();
@@ -408,16 +415,18 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
   DockArea::Enum newEdgeDirection = DockArea::Floating;
   const float edgeLimit = Pixels(5);
 
-  NearEdge(Math::cX, newMousePosition, dockAreaSize, edgeLimit, newEdgeDirection);
-  NearEdge(Math::cY, newMousePosition, dockAreaSize, edgeLimit, newEdgeDirection);
+  NearEdge(
+      Math::cX, newMousePosition, dockAreaSize, edgeLimit, newEdgeDirection);
+  NearEdge(
+      Math::cY, newMousePosition, dockAreaSize, edgeLimit, newEdgeDirection);
 
-  if(newEdgeDirection != DockArea::Floating)
+  if (newEdgeDirection != DockArea::Floating)
   {
     ChangeHover(DockHover::Overlay);
     mDockDirection = newEdgeDirection;
 
     // Create the edge hint if necessary
-    if(!mDockHint)
+    if (!mDockHint)
     {
       // Create the hint region
       HintRegion* hintRegion = GetHint();
@@ -434,14 +443,14 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
       hintRegion->SetSize(size);
 
       // For positive directions flip to other side of screen
-      Vec3 position = Vec3(0,0,0);
-      if( GetSign(newEdgeDirection) > 0)
-        position[GetAxis(newEdgeDirection)] = totalSize[GetAxis(newEdgeDirection)] - edgeHintSize;
+      Vec3 position = Vec3(0, 0, 0);
+      if (GetSign(newEdgeDirection) > 0)
+        position[GetAxis(newEdgeDirection)] =
+            totalSize[GetAxis(newEdgeDirection)] - edgeHintSize;
       hintRegion->SetTranslation(position);
     }
     return;
   }
-
 
   // Check for possible tab drops. Use DispatchAt
   // to check tabs areas or windows under the
@@ -457,7 +466,7 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
   this->GetRootWidget()->DispatchAt(dispatchAtParams);
 
   // Above a tab area?
-  if(tabEvent.TabAreaFound)
+  if (tabEvent.TabAreaFound)
   {
     ChangeHover(DockHover::Tab);
 
@@ -466,7 +475,7 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
 
     // What index should this tab be inserted at?
     int index = tabArea->TabIndexAt(event);
-    if(tabArea->mPreviewTab != index)
+    if (tabArea->mPreviewTab != index)
     {
       tabArea->mPreviewTab = index;
       tabArea->MarkAsNeedsUpdate();
@@ -475,14 +484,14 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
     // Update the hint Region
     HintRegion* hintRegion = GetHint();
     Vec2 tabSize = tabArea->GetTabSize();
-    hintRegion->SetTranslation( tabArea->GetTabLocation(index, tabSize) + tabArea->mParentWindow->GetTranslation() );
+    hintRegion->SetTranslation(tabArea->GetTabLocation(index, tabSize) +
+                               tabArea->mParentWindow->GetTranslation());
     hintRegion->SetSize(tabSize);
     return;
   }
 
-
-  //Is this tab above a window?
-  if(tabEvent.WindowFound && tabEvent.WindowFound->GetDocker())
+  // Is this tab above a window?
+  if (tabEvent.WindowFound && tabEvent.WindowFound->GetDocker())
   {
 
     // Get the window the mouse is hovering over
@@ -498,46 +507,53 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
 
     Vec2 hoverMouse = newMousePosition - ToVector2(hoverTrans);
 
-    if(hoverDockArea == DockArea::Center)
+    if (hoverDockArea == DockArea::Center)
     {
       // If it is a center dock window check the both the edges
       float limit = Math::Min(Pixels(60), hoverSize[Math::cX] * 0.2f);
-      if(NearEdge(Math::cX, hoverMouse, hoverSize, limit, newHoverDirection))
+      if (NearEdge(Math::cX, hoverMouse, hoverSize, limit, newHoverDirection))
         axis = Math::cX;
       else
       {
         limit = Math::Min(Pixels(60), hoverSize[Math::cY] * 0.2f);
-        if(NearEdge(Math::cY, hoverMouse, hoverSize, limit, newHoverDirection))
+        if (NearEdge(Math::cY, hoverMouse, hoverSize, limit, newHoverDirection))
           axis = Math::cY;
       }
     }
 
     // Only edge dock if is Top,Left,Right or Down
-    if(hoverDockArea <= DockArea::Right)
+    if (hoverDockArea <= DockArea::Right)
     {
-      //Other areas only dock near the edges on the same axis as the area
-      NearEdge(axis, hoverMouse, hoverSize, hoverSize[axis] * 0.2f, newHoverDirection);
+      // Other areas only dock near the edges on the same axis as the area
+      NearEdge(axis,
+               hoverMouse,
+               hoverSize,
+               hoverSize[axis] * 0.2f,
+               newHoverDirection);
     }
 
     // Is this a valid direction to dock?
-    if(newHoverDirection !=  DockArea::Floating)
+    if (newHoverDirection != DockArea::Floating)
     {
       ChangeHover(DockHover::DockArea);
 
       HintRegion* region = GetHint();
 
-      if(region == nullptr)
+      if (region == nullptr)
         return;
 
-      DockingArea* targetArea = &mMultiDock->DockingShells[hoverDocker->DockShell].DockAreas[hoverDocker->Area];
+      DockingArea* targetArea =
+          &mMultiDock->DockingShells[hoverDocker->DockShell]
+               .DockAreas[hoverDocker->Area];
       int sign = GetSign(newHoverDirection);
 
-      //Is this the last widget in dock are in this dock direction?
-      bool innerArea = ( uint(hoverDocker->DockIndex + sign) < targetArea->Widgets.Size() );
+      // Is this the last widget in dock are in this dock direction?
+      bool innerArea =
+          (uint(hoverDocker->DockIndex + sign) < targetArea->Widgets.Size());
 
       float size = Pixels(10);
 
-      if(targetArea->FlexRatio > 0.0f)
+      if (targetArea->FlexRatio > 0.0f)
         size = dockTarget->GetSize()[axis] * (1.0f / targetArea->FlexRatio);
 
       size = Math::Max(Pixels(200), size);
@@ -545,12 +561,12 @@ void DockMovingManipulation::OnMouseUpdate(MouseEvent* event)
       Vec2 regionSize = hoverSize;
       regionSize[axis] = size;
 
-      if(sign > 0)
+      if (sign > 0)
         hoverTrans[axis] += hoverSize[axis];
 
-      if(innerArea)
+      if (innerArea)
         hoverTrans[axis] -= 0.5f * size;
-      else if(sign > 0)
+      else if (sign > 0)
         hoverTrans[axis] -= size;
 
       region->SetSize(SnapToPixels(regionSize));
@@ -580,31 +596,35 @@ public:
   DockingArea* mArea0;
   DockingArea* mArea1;
 
-  DockedSizingManipuation(Mouse* mouse, MultiDock* multiDock, Widget* widgetToSize, DockMode::Enum direction)
-    :MouseManipulation(mouse, multiDock)
+  DockedSizingManipuation(Mouse* mouse,
+                          MultiDock* multiDock,
+                          Widget* widgetToSize,
+                          DockMode::Enum direction) :
+      MouseManipulation(mouse, multiDock)
   {
     mSized0 = widgetToSize;
     mDockMode = direction;
     mMultiDock = multiDock;
     mDirection = ToDockAreaDirection(direction);
     MultiDocker* docker0 = (MultiDocker*)widgetToSize->GetDocker();
-    DockingArea* dockArea = &mMultiDock->DockingShells[docker0->DockShell].DockAreas[docker0->Area];
+    DockingArea* dockArea =
+        &mMultiDock->DockingShells[docker0->DockShell].DockAreas[docker0->Area];
 
     // It is a area sizing (Size change between two areas) if the direction
     // of change and the dock area are in the same direction.
-    // Otherwise this is a size change between two widgets in the 
+    // Otherwise this is a size change between two widgets in the
     // same dock area.
     mAreaSizing = GetAxis(mDirection) == GetAxis(dockArea->Area);
-    if(dockArea->Area == DockArea::Center)
+    if (dockArea->Area == DockArea::Center)
       mAreaSizing = true;
 
-    if(mAreaSizing)
+    if (mAreaSizing)
     {
       mArea0 = dockArea;
       mArea1 = NextInDirection(multiDock, dockArea, mDirection);
 
       // No area in that direction
-      if(mArea1 == nullptr || mArea1->Widgets.Empty())
+      if (mArea1 == nullptr || mArea1->Widgets.Empty())
       {
         this->Destroy();
         return;
@@ -619,8 +639,8 @@ public:
       int direction = GetSign(mDirection);
       uint nextIndex = docker0->DockIndex + direction;
 
-      //No widget in that direction
-      if(nextIndex >= dockArea->Widgets.Size())
+      // No widget in that direction
+      if (nextIndex >= dockArea->Widgets.Size())
       {
         this->Destroy();
         return;
@@ -642,7 +662,7 @@ public:
 
     Widget* sized0 = mSized0;
     Widget* sized1 = mSized1;
-    if(sized0 == nullptr || sized1 == nullptr)
+    if (sized0 == nullptr || sized1 == nullptr)
     {
       this->Destroy();
       return;
@@ -650,7 +670,7 @@ public:
 
     float minSize = Pixels(100);
 
-    if(mAreaSizing)
+    if (mAreaSizing)
     {
       // Changing size of two dock areas
       int sign = GetSign(mDirection);
@@ -658,8 +678,8 @@ public:
 
       // Clamp size change to prevent areas
       // from getting too small
-      float minChange =  minSize - StartSize0[axis];
-      float maxChange =  StartSize1[axis] - minSize;
+      float minChange = minSize - StartSize0[axis];
+      float maxChange = StartSize1[axis] - minSize;
       float change = delta[axis] * sign;
       change = Math::Clamp(change, minChange, maxChange);
 
@@ -671,7 +691,8 @@ public:
     else
     {
       MultiDocker* docker0 = (MultiDocker*)sized0->GetDocker();
-      DockingArea* dockArea = &mMultiDock->DockingShells[docker0->DockShell].DockAreas[docker0->Area];
+      DockingArea* dockArea = &mMultiDock->DockingShells[docker0->DockShell]
+                                   .DockAreas[docker0->Area];
 
       int sign = GetSign(mDirection);
       int axis = GetAxis(mDirection);
@@ -682,8 +703,8 @@ public:
       // needs to be translated into the amount of flex the represents
       // FlexRatio will convert flex values into pixel and back
 
-      float minChange =  minSize - StartSize0[axis] * dockArea->FlexRatio;
-      float maxChange =  StartSize1[axis] * dockArea->FlexRatio - minSize;
+      float minChange = minSize - StartSize0[axis] * dockArea->FlexRatio;
+      float maxChange = StartSize1[axis] * dockArea->FlexRatio - minSize;
 
       // Clamp to prevent small windows
       float change = delta[axis] * sign;
@@ -708,7 +729,6 @@ public:
   }
 };
 
-//----------------------------------------------------------------- Multi-Docker
 
 MultiDocker::MultiDocker(Widget* widget, MultiDock* owner)
 {
@@ -724,17 +744,17 @@ MultiDocker::MultiDocker(Widget* widget, MultiDock* owner)
 void MultiDocker::Dock(Widget* widget, DockArea::Enum newDockArea)
 {
   DockArea::Enum oldDockArea = this->Area;
-  if(oldDockArea == DockArea::Floating)
+  if (oldDockArea == DockArea::Floating)
   {
     // Store size before docking
     PreDockSize = widget->GetLocalRect();
     FlexSize = widget->GetSize();
   }
 
-  if(oldDockArea == DockArea::Center)
+  if (oldDockArea == DockArea::Center)
     DockOwner->CenterWindow = nullptr;
 
-  if(newDockArea == DockArea::Center)
+  if (newDockArea == DockArea::Center)
     DockOwner->CenterWindow = Type::DynamicCast<Window*>(widget);
 
   Area = newDockArea;
@@ -746,7 +766,7 @@ void MultiDocker::Zoom(Widget* widget)
   Zoomed = !Zoomed;
 
   // Restore size post zoom
-  if(!Zoomed && Area == DockArea::Floating)
+  if (!Zoomed && Area == DockArea::Floating)
     AnimateTo(widget, ToVector3(PreDockSize.TopLeft()), PreDockSize.GetSize());
   else
     PreDockSize = widget->GetRectInParent();
@@ -757,13 +777,12 @@ void MultiDocker::Zoom(Widget* widget)
 
 void MultiDocker::WidgetDestroyed(Widget* widget)
 {
-
 }
 
 void MultiDocker::Show(Widget* widget)
 {
   // Move floating widgets to the front
-  if(Area == DockArea::Floating)
+  if (Area == DockArea::Floating)
     widget->MoveToFront();
 }
 
@@ -772,14 +791,14 @@ bool MultiDocker::StartManipulation(Widget* widget, DockMode::Enum direction)
   // Move the widget to the front so MultiDock with display it last
   widget->MoveToFront();
 
-  if(direction == DockMode::DockFill)
+  if (direction == DockMode::DockFill)
   {
     new DockMovingManipulation(Z::gMouse, DockOwner, widget);
     return true;
   }
 
   // Floating windows use standard size manipulation
-  if(Area == DockArea::Floating)
+  if (Area == DockArea::Floating)
   {
     new SizingManipulation(Z::gMouse, widget, direction);
     return true;
@@ -789,13 +808,11 @@ bool MultiDocker::StartManipulation(Widget* widget, DockMode::Enum direction)
   return true;
 }
 
-//------------------------------------------------------------------- Multi-Dock
 ZilchDefineType(MultiDock, builder, type)
 {
 }
 
-MultiDock::MultiDock(Composite* parent)
-  : Composite(parent)
+MultiDock::MultiDock(Composite* parent) : Composite(parent)
 {
   mDefSet = parent->GetDefinitionSet();
   mExploded = false;
@@ -804,7 +821,6 @@ MultiDock::MultiDock(Composite* parent)
 
 MultiDock::~MultiDock()
 {
-
 }
 
 // Move the window out of the visible area in the direction
@@ -819,31 +835,32 @@ void MoveToSide(MultiDock* dock, LayoutResult& result)
   int sign = GetSign(area);
 
   // Skip floating areas
-  if(area == DockArea::Floating)
+  if (area == DockArea::Floating)
     return;
 
   // Center has no direction
   // just go up
-  if(area == DockArea::Center)
+  if (area == DockArea::Center)
   {
     axis = 1;
     sign = -1;
   }
-  
+
   // Offset in the direction of docking
   Vec3 offscreen = result.Translation;
 
-  if(sign < 0)
+  if (sign < 0)
     offscreen[axis] -= result.Translation[axis] + result.Size[axis];
   else
-    offscreen[axis] += dock->GetSize()[axis] - result.Translation[axis] + result.Size[axis];
+    offscreen[axis] +=
+        dock->GetSize()[axis] - result.Translation[axis] + result.Size[axis];
 
   result.Translation = offscreen;
 }
 
 void MultiDock::CancelZoom()
 {
-  if(Widget* zoomed = mZoomed)
+  if (Widget* zoomed = mZoomed)
   {
     zoomed->GetDocker()->Zoom(zoomed);
     mZoomed = nullptr;
@@ -867,7 +884,7 @@ Window* MultiDock::AddWidget(Widget* widget, LayoutInfo& info)
   Vec2 minSize = widget->GetMinSize();
   DockArea::Enum dockArea = info.Area;
 
-  if(dockArea == DockArea::Center)
+  if (dockArea == DockArea::Center)
   {
     Window* centerWindow = GetCenterWindow();
     centerWindow->AttachAsTab(widget, true);
@@ -880,16 +897,16 @@ Window* MultiDock::AddWidget(Widget* widget, LayoutInfo& info)
   window->AttachAsTab(widget);
   minSize = ExpandSizeByThickness(GetTotalWindowPadding(), minSize);
 
-  if(size.x < minSize.x)
+  if (size.x < minSize.x)
     size.x = minSize.x;
-  if(size.y < minSize.y)
+  if (size.y < minSize.y)
     size.y = minSize.y;
 
   window->SetSize(size);
   window->SetDockArea(dockArea);
 
   // If floating animate the window from the top
-  if(dockArea == DockArea::Floating)
+  if (dockArea == DockArea::Floating)
   {
     Vec3 center = GetCenterPosition(this, window);
     window->SetTranslation(Vec3(center.x, -size.y, 0));
@@ -902,13 +919,14 @@ Window* MultiDock::AddWidget(Widget* widget, LayoutInfo& info)
     Array<LayoutResult> results;
     ComputeLayout(results);
 
-    forRange(LayoutResult& result, results.All())
+    forRange(LayoutResult & result, results.All())
     {
-      if(result.PlacedWidget == window)
+      if (result.PlacedWidget == window)
       {
         // Move out it will be animated in by the normal update
         MoveToSide(this, result);
-        result.PlacedWidget->SetTranslationAndSize(result.Translation, result.Size);
+        result.PlacedWidget->SetTranslationAndSize(result.Translation,
+                                                   result.Size);
       }
     }
   }
@@ -920,8 +938,8 @@ Window* MultiDock::GetCenterWindow()
 {
   Window* centerWindow = CenterWindow;
 
-  // No center window, create one 
-  if(centerWindow == nullptr)
+  // No center window, create one
+  if (centerWindow == nullptr)
   {
     centerWindow = new Window(this);
     centerWindow->SetSize(Pixels(400, 400));
@@ -961,27 +979,31 @@ struct SortByDockIndex
   }
 };
 
-// Compute the layout for all widget in the docking area. Area used is removed from
-// area parameter
-void LayoutDockingArea(MultiDock* dock, DockingArea& dockArea, DockArea::Enum areaIndex,
-  Array<LayoutResult>& results, LayoutArea& layoutArea)
+// Compute the layout for all widget in the docking area. Area used is removed
+// from area parameter
+void LayoutDockingArea(MultiDock* dock,
+                       DockingArea& dockArea,
+                       DockArea::Enum areaIndex,
+                       Array<LayoutResult>& results,
+                       LayoutArea& layoutArea)
 {
   // If there is no widgets set the dock size to zero
   // and return
-  if(dockArea.Widgets.Empty())
+  if (dockArea.Widgets.Empty())
   {
-    //dockArea.DockSize = Vec2(0.0f, 0.0f);
+    // dockArea.DockSize = Vec2(0.0f, 0.0f);
     return;
   }
 
-  // What axis to change depend on if this area has a vertical or horizontal layout
+  // What axis to change depend on if this area has a vertical or horizontal
+  // layout
   DockArea::Enum areaDirection = areaIndex;
   uint axis0 = GetAxis(areaDirection);
   uint axis1 = !axis0;
   int sign = GetSign(areaDirection);
 
   // Dock area is zero when no widgets have been added
-  if(dockArea.DockSize.LengthSq() == 0.0f)
+  if (dockArea.DockSize.LengthSq() == 0.0f)
   {
     // Need to limit
     dockArea.DockSize = dockArea.Widgets.Front()->GetSize();
@@ -994,16 +1016,16 @@ void LayoutDockingArea(MultiDock* dock, DockingArea& dockArea, DockArea::Enum ar
   Vec2 areaSize = layoutArea.Size;
   areaSize[axis0] = size0;
 
-  if(sign > 0)
+  if (sign > 0)
     offset[axis0] += (layoutArea.Size[axis0] - size0);
 
   // Remove and offset LayoutArea by area used for
   // next dock area
   layoutArea.Size[axis0] -= size0;
 
-  //For top and left move LayoutArea offset down
-  //by size used. 
-  if(sign < 0)
+  // For top and left move LayoutArea offset down
+  // by size used.
+  if (sign < 0)
     layoutArea.Offset[axis0] += size0;
 
   // Sort by dock index
@@ -1021,12 +1043,12 @@ void LayoutDockingArea(MultiDock* dock, DockingArea& dockArea, DockArea::Enum ar
   subLayoutArea.VerticalLimit = LimitMode::Limited;
 
   WidgetRange widgets = dockArea.Widgets.All();
-  for(;!widgets.Empty();widgets.PopFront())
+  for (; !widgets.Empty(); widgets.PopFront())
   {
     Widget& widget = *widgets.Front();
     MultiDocker* docker = (MultiDocker*)widget.GetDocker();
 
-    if(widget.GetSizePolicy().Policy[axis1] == SizePolicy::Fixed)
+    if (widget.GetSizePolicy().Policy[axis1] == SizePolicy::Fixed)
     {
       Vec2 size = widget.Measure(subLayoutArea);
       fixedSize += size[axis1];
@@ -1044,7 +1066,7 @@ void LayoutDockingArea(MultiDock* dock, DockingArea& dockArea, DockArea::Enum ar
   // Determinate the how much size is allocated
   // relative to flex size
   float flexRatio = 1.0f;
-  if(totalFlexSize)
+  if (totalFlexSize)
     flexRatio = targetSize / totalFlexSize;
 
   // Store the ratio for size manipulations
@@ -1052,14 +1074,14 @@ void LayoutDockingArea(MultiDock* dock, DockingArea& dockArea, DockArea::Enum ar
 
   uint dockIndex = 0;
   widgets = dockArea.Widgets.All();
-  for(;!widgets.Empty();widgets.PopFront())
+  for (; !widgets.Empty(); widgets.PopFront())
   {
     Widget& widget = *widgets.Front();
     MultiDocker* docker = (MultiDocker*)widget.GetDocker();
     docker->DockIndex = dockIndex;
 
     Vec2 size;
-    if(widget.GetSizePolicy().Policy[axis1] == SizePolicy::Fixed)
+    if (widget.GetSizePolicy().Policy[axis1] == SizePolicy::Fixed)
     {
       // Fixed size
       size = widget.Measure(layoutArea);
@@ -1099,9 +1121,9 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
 
   // Clear out all docking areas
   uint shellIndex = 0;
-  forRange(DockingShell& shell, DockingShells.All())
+  forRange(DockingShell & shell, DockingShells.All())
   {
-    for(uint i=0;i<DockArea::Count;++i)
+    for (uint i = 0; i < DockArea::Count; ++i)
     {
       shell.DockAreas[i].Widgets.Clear();
       shell.DockAreas[i].DockShell = shellIndex;
@@ -1109,30 +1131,30 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
     ++shellIndex;
   }
 
-  for(uint i=0;i<3;++i)
+  for (uint i = 0; i < 3; ++i)
     SpecialAreas[i].Widgets.Clear();
 
   // Walk children and place them in the correct docking area
   uint childCount = 0;
   WidgetListRange children = GetChildren();
-  while(!children.Empty())
+  while (!children.Empty())
   {
     Widget& child = children.Front();
     MultiDocker* docker = (MultiDocker*)child.mDocker;
     uint shellIndex = docker->DockShell;
 
-    if(shellIndex >= DockingShells.Size())
-      DockingShells.Resize(shellIndex+1);
+    if (shellIndex >= DockingShells.Size())
+      DockingShells.Resize(shellIndex + 1);
 
     DockingShell& shell = DockingShells[shellIndex];
 
-    for(uint i=0;i<DockArea::Count;++i)
+    for (uint i = 0; i < DockArea::Count; ++i)
     {
       shell.DockAreas[i].Area = (DockArea::Enum)i;
       shell.DockAreas[i].DockShell = shellIndex;
     }
 
-    if(docker->Zoomed)
+    if (docker->Zoomed)
     {
       // Zoomed control
       child.MoveToFront();
@@ -1140,18 +1162,18 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
       Composite::UpdateTransform();
       mZoomed = &child;
     }
-    else if(child.GetActive())
+    else if (child.GetActive())
     {
       DockArea::Enum dockArea = docker->Area;
 
-      if(dockArea > DockArea::Count)
+      if (dockArea > DockArea::Count)
       {
         SpecialAreas[SpecialIndex(dockArea)].Widgets.PushBack(&child);
       }
       else
       {
         // Center window is always in shell 0
-        if(dockArea == DockArea::Center)
+        if (dockArea == DockArea::Center)
         {
           shellIndex = 0;
           docker->DockShell = 0;
@@ -1172,7 +1194,7 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
   // for all child widgets
   LayoutArea layoutArea;
   layoutArea.Size = mSize;
-  layoutArea.Offset  = Vec3(0, 0, 0);
+  layoutArea.Offset = Vec3(0, 0, 0);
   layoutArea.HorizLimit = LimitMode::Limited;
   layoutArea.VerticalLimit = LimitMode::Limited;
 
@@ -1180,8 +1202,9 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
 
   // Move all floating windows to the front.
   {
-    Array<Widget*>::range children = SpecialAreas[SpecialIndex(DockArea::Floating)].Widgets.All();
-    while(!children.Empty())
+    Array<Widget*>::range children =
+        SpecialAreas[SpecialIndex(DockArea::Floating)].Widgets.All();
+    while (!children.Empty())
     {
       Widget* child = children.Front();
 
@@ -1194,41 +1217,49 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
       child->UpdateTransformExternal();
       children.PopFront();
     }
-
   }
 
-  LayoutDockingArea(this, SpecialAreas[SpecialIndex(DockArea::TopTool)], DockArea::Top, results, layoutArea);
-  LayoutDockingArea(this, SpecialAreas[SpecialIndex(DockArea::BotTool)], DockArea::Bottom, results, layoutArea);
-
+  LayoutDockingArea(this,
+                    SpecialAreas[SpecialIndex(DockArea::TopTool)],
+                    DockArea::Top,
+                    results,
+                    layoutArea);
+  LayoutDockingArea(this,
+                    SpecialAreas[SpecialIndex(DockArea::BotTool)],
+                    DockArea::Bottom,
+                    results,
+                    layoutArea);
 
   // Compute layout for all shell areas
-  for(uint shell = 0; shell< DockingShells.Size();++shell)
+  for (uint shell = 0; shell < DockingShells.Size(); ++shell)
   {
-    DockingShell& dockingShell = DockingShells[DockingShells.Size() - shell -1];
+    DockingShell& dockingShell =
+        DockingShells[DockingShells.Size() - shell - 1];
 
-    for(uint i = 0; i < DockArea::Count; ++i)
+    for (uint i = 0; i < DockArea::Count; ++i)
     {
       DockingArea& dockArea = dockingShell.DockAreas[i];
-      switch(i)
+      switch (i)
       {
-        case DockArea::Center:
+      case DockArea::Center:
+      {
+        // Center area uses remaining area
+        if (dockArea.Widgets.Size() != 0)
         {
-          // Center area uses remaining area
-          if(dockArea.Widgets.Size() != 0)
-          {
-            LayoutResult& layoutResult = results.PushBack();
-            layoutResult.Translation = layoutArea.Offset;
-            layoutResult.Size = layoutArea.Size;
-            layoutResult.PlacedWidget = dockArea.Widgets[0];
-            dockArea.DockSize = layoutArea.Size;
-          }
+          LayoutResult& layoutResult = results.PushBack();
+          layoutResult.Translation = layoutArea.Offset;
+          layoutResult.Size = layoutArea.Size;
+          layoutResult.PlacedWidget = dockArea.Widgets[0];
+          dockArea.DockSize = layoutArea.Size;
         }
+      }
+      break;
+      default:
+      {
+        LayoutDockingArea(
+            this, dockArea, (DockArea::Enum)i, results, layoutArea);
         break;
-        default:
-        {
-          LayoutDockingArea(this, dockArea, (DockArea::Enum)i, results, layoutArea);
-          break;
-        }
+      }
       }
     }
   }
@@ -1236,12 +1267,12 @@ void MultiDock::ComputeLayout(Array<LayoutResult>& results)
 
 void MultiDock::ComputeAndApplyLayout(bool animate)
 {
-  if(GetTransformUpdateState() == TransformUpdateState::ChildUpdate)
+  if (GetTransformUpdateState() == TransformUpdateState::ChildUpdate)
   {
     Composite::UpdateTransform();
     return;
   }
-  
+
   Array<LayoutResult> results;
   ComputeLayout(results);
 
@@ -1249,21 +1280,23 @@ void MultiDock::ComputeAndApplyLayout(bool animate)
 
   // Apply layout
 
-  forRange(LayoutResult& result, results.All())
+  forRange(LayoutResult & result, results.All())
   {
-    if(mExploded || mZoomed)
+    if (mExploded || mZoomed)
       MoveToSide(this, result);
 
     const float minChange = Pixels(1);
-    float distanceMoved = (result.PlacedWidget->GetTranslation() - result.Translation).Length();
+    float distanceMoved =
+        (result.PlacedWidget->GetTranslation() - result.Translation).Length();
     float sizeChanged = (result.PlacedWidget->GetSize() - result.Size).Length();
-    if(animate &&  (distanceMoved > minChange || sizeChanged > minChange))
+    if (animate && (distanceMoved > minChange || sizeChanged > minChange))
     {
       AnimateTo(result.PlacedWidget, result.Translation, result.Size, 0.3f);
     }
     else
     {
-      result.PlacedWidget->SetTranslationAndSize(result.Translation, result.Size);
+      result.PlacedWidget->SetTranslationAndSize(result.Translation,
+                                                 result.Size);
       result.PlacedWidget->UpdateTransformExternal();
     }
   }
@@ -1271,4 +1304,4 @@ void MultiDock::ComputeAndApplyLayout(bool animate)
   Composite::UpdateTransform();
 }
 
-}//namespace Zero
+} // namespace Zero

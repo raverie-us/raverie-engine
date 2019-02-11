@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -10,7 +9,7 @@ DeclareEnum3(UniqueCompositeOp, Add, Remove, Modify);
 
 namespace Events
 {
-  DeclareEvent(ShaderInputsModified);
+DeclareEvent(ShaderInputsModified);
 }
 
 class ShaderInputsEvent : public Event
@@ -41,8 +40,14 @@ public:
 class TextureToFile
 {
 public:
-  TextureToFile() {}
-  TextureToFile(HandleOf<Texture> texture, StringParam filename) : mTexture(texture), mFilename(filename) {}
+  TextureToFile()
+  {
+  }
+  TextureToFile(HandleOf<Texture> texture, StringParam filename) :
+      mTexture(texture),
+      mFilename(filename)
+  {
+  }
   HandleOf<Texture> mTexture;
   String mFilename;
 };
@@ -91,7 +96,10 @@ public:
   void DestroyRenderer();
   void AddMaterial(Material* material);
   void AddMesh(Mesh* mesh);
-  void AddTexture(Texture* texture, bool subImage = false, uint xOffset = 0, uint yOffset = 0);
+  void AddTexture(Texture* texture,
+                  bool subImage = false,
+                  uint xOffset = 0,
+                  uint yOffset = 0);
   void RemoveMaterial(Material* material);
   void RemoveMesh(Mesh* mesh);
   void RemoveTexture(Texture* texture);
@@ -123,13 +131,25 @@ public:
   void AddComposite(Material* material);
   void RemoveComposite(StringParam compositeName);
 
-  Shader* GetOrCreateShader(StringParam coreVertex, StringParam composite, StringParam renderPass, ShaderMap& shaderMap);
-  void FindShadersToCompile(Array<String>& coreVertexRange, Array<String>& compositeRange, Array<String>& renderPassRange, ShaderSetMap& testMap, uint index, ShaderSet& shaders);
-  void FindShadersToRemove(Array<String>& elementRange, ShaderSetMap& testMap, ShaderSet& shaders);
+  Shader* GetOrCreateShader(StringParam coreVertex,
+                            StringParam composite,
+                            StringParam renderPass,
+                            ShaderMap& shaderMap);
+  void FindShadersToCompile(Array<String>& coreVertexRange,
+                            Array<String>& compositeRange,
+                            Array<String>& renderPassRange,
+                            ShaderSetMap& testMap,
+                            uint index,
+                            ShaderSet& shaders);
+  void FindShadersToRemove(Array<String>& elementRange,
+                           ShaderSetMap& testMap,
+                           ShaderSet& shaders);
 
   void AddToShaderMaps(ShaderSet& shaders);
   void RemoveFromShaderMaps(ShaderSet& shaders);
-  void RemoveFromShaderMap(ShaderSetMap& shaderMap, StringParam elementName, Shader* shader);
+  void RemoveFromShaderMap(ShaderSetMap& shaderMap,
+                           StringParam elementName,
+                           Shader* shader);
 
   void ForceCompileAllShaders();
 
@@ -137,7 +157,11 @@ public:
 
   ZilchFragmentType::Enum GetFragmentType(MaterialBlock* materialBlock);
 
-  HandleOf<RenderTarget> GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings = SamplerSettings());
+  HandleOf<RenderTarget>
+  GetRenderTarget(uint width,
+                  uint height,
+                  TextureFormat::Enum format,
+                  SamplerSettings samplerSettings = SamplerSettings());
   HandleOf<RenderTarget> GetRenderTarget(HandleOf<Texture> texture);
   void ClearRenderTargets();
 
@@ -146,14 +170,16 @@ public:
   void ModifiedFragment(ZilchFragmentType::Enum type, StringParam name);
   void RemovedFragment(ZilchFragmentType::Enum type, StringParam name);
 
-  // ResourceLibraries don't know how to compile fragment libraries, so we do it here.
+  // ResourceLibraries don't know how to compile fragment libraries, so we do it
+  // here.
   void OnCompileZilchFragments(ZilchCompileFragmentEvent* event);
   void OnScriptsCompiledPrePatch(ZilchCompileEvent* event);
   void OnScriptsCompiledCommit(ZilchCompileEvent* event);
   void OnScriptsCompiledPostPatch(ZilchCompileEvent* event);
   void OnScriptCompilationFailed(Event* event);
-  
-  void UpdateUniqueComposites(Material* material, UniqueCompositeOp::Enum uniqueCompositeOp);
+
+  void UpdateUniqueComposites(Material* material,
+                              UniqueCompositeOp::Enum uniqueCompositeOp);
 
   void CompileShaders();
 
@@ -223,7 +249,7 @@ public:
   Array<String> mRemovedPostProcess;
 
   // Map of meta properties with the ShaderInput attribute
-  HashMap< String, Array<ShaderMetaProperty> > mComponentShaderProperties;
+  HashMap<String, Array<ShaderMetaProperty>> mComponentShaderProperties;
 
   Array<TextureToFile> mDelayedTextureToFile;
 };

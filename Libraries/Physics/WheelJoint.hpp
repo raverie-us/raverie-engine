@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -38,7 +33,7 @@ struct WheelJoint : public Joint
   DeclareAngleAccessors(WheelJoint, mReferenceAngle);
 
   WheelJoint();
-  
+
   // Component Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -80,8 +75,8 @@ struct WheelJoint : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::WheelJoint WheelJoint;
 
-}//namespace Zero
+} // namespace Zero

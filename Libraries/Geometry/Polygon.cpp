@@ -1,44 +1,32 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Polygon.cpp
-/// Implementation of the Polygon class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------- Polygon
-//Constructor.
+// Constructor.
 Polygon::Polygon()
 {
-  
 }
 
-//Copy constructor.
+// Copy constructor.
 Polygon::Polygon(const Polygon& rhs) : mData(rhs.mData)
 {
-
 }
 
 Polygon::Polygon(const Array<Vec2>& rhs) : mData(rhs)
 {
-
 }
 
 Polygon::Polygon(const Vec2* verts, uint size)
 {
   mData.Resize(size);
 
-  for(uint i = 0; i < size; ++i)
+  for (uint i = 0; i < size; ++i)
     mData[i] = verts[i];
 }
 
-//Indexing operators.
+// Indexing operators.
 Vec2& Polygon::operator[](uint index)
 {
   return mData[index];
@@ -49,7 +37,7 @@ const Vec2& Polygon::operator[](uint index) const
   return mData[index];
 }
 
-//Adds the given vertex to the polygon.
+// Adds the given vertex to the polygon.
 void Polygon::AddVertex(Vec2Param vert)
 {
   mData.PushBack(vert);
@@ -57,51 +45,50 @@ void Polygon::AddVertex(Vec2Param vert)
 
 float PolygonQuantizeFloat(float value)
 {
-//   const float precision = 0.001f;
-//   const float inversePrecision = 1.0f / precision;
-//   float result = Math::Floor(value * inversePrecision) * precision;
+  //   const float precision = 0.001f;
+  //   const float inversePrecision = 1.0f / precision;
+  //   float result = Math::Floor(value * inversePrecision) * precision;
   const float cPlaces = 3.0f;
   const float cScale = Math::Pow(10.0f, cPlaces);
   return Math::Floor(value * cScale + 0.5f) / cScale;
 }
 
-//Quantizes the shape to a constant precision.
+// Quantizes the shape to a constant precision.
 void Polygon::Quantize()
 {
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
   {
     mData[i].x = PolygonQuantizeFloat(mData[i].x);
     mData[i].y = PolygonQuantizeFloat(mData[i].y);
   }
 }
 
-//--------------------------------------------------------------- Modification
-//Clears all vertices in the polygon.
+// Clears all vertices in the polygon.
 void Polygon::Clear()
 {
   mData.Clear();
 }
 
-//Translates the polygon by the given translation.
+// Translates the polygon by the given translation.
 void Polygon::Translate(Vec2Param translation)
 {
   // Translate each vertex
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
     mData[i] += translation;
 }
 
-//Scales the polygon from its centroid by the given scalar.
+// Scales the polygon from its centroid by the given scalar.
 void Polygon::Scale(Vec2Param scalar)
 {
   Vec2 center = GetBarycenter();
   Scale(scalar, center);
 }
 
-//Scales the polygon from the given center by the given scalar.
+// Scales the polygon from the given center by the given scalar.
 void Polygon::Scale(Vec2Param scalar, Vec2Param center)
 {
   // Scale each vertex
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
   {
     // Bring the coordinates into the local space of the center
     mData[i] -= center;
@@ -112,14 +99,14 @@ void Polygon::Scale(Vec2Param scalar, Vec2Param center)
   }
 }
 
-//Rotates the polygon around its centroid by the given rotation.
+// Rotates the polygon around its centroid by the given rotation.
 void Polygon::Rotate(real radians)
 {
   Vec2 center = GetBarycenter();
   Rotate(radians, center);
 }
 
-//Rotates the polygon around the given center by the given rotation.
+// Rotates the polygon around the given center by the given rotation.
 void Polygon::Rotate(real radians, Vec2Param center)
 {
   // Build the rotation matrix
@@ -128,9 +115,9 @@ void Polygon::Rotate(real radians, Vec2Param center)
   rotationMtx.m01 = -Math::Sin(radians);
   rotationMtx.m10 = Math::Sin(radians);
   rotationMtx.m11 = Math::Cos(radians);
-  
+
   // Rotate each vertex
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
   {
     // Bring the coordinates into the local space of the center
     mData[i] -= center;
@@ -141,28 +128,28 @@ void Polygon::Rotate(real radians, Vec2Param center)
   }
 }
 
-//Grows the polygon by the given distance and stores the result in
-//the given output polygon.
+// Grows the polygon by the given distance and stores the result in
+// the given output polygon.
 void Polygon::Grow(real distance, bool beaking, Polygon* output)
 {
   // We need at least 3 vertices to do anything
-  if(mData.Size() < 3)
+  if (mData.Size() < 3)
     return;
 
-   output->mData.Assign(mData.All());
-   for(uint i = 0; i < mData.Size(); ++i)
-   {
-     Vec2 prev = mData[PrevIndex(i)];
-     Vec2 curr = mData[i];
-     Vec2 next = mData[NextIndex(i)];
- 
-     Vec2 dir = GetBisector(curr - prev, next - curr);
- 
-     output->mData[i] += Normalized(dir) * distance;
-   }
+  output->mData.Assign(mData.All());
+  for (uint i = 0; i < mData.Size(); ++i)
+  {
+    Vec2 prev = mData[PrevIndex(i)];
+    Vec2 curr = mData[i];
+    Vec2 next = mData[NextIndex(i)];
+
+    Vec2 dir = GetBisector(curr - prev, next - curr);
+
+    output->mData[i] += Normalized(dir) * distance;
+  }
 }
 
-//Grows the polygon by the given distance.
+// Grows the polygon by the given distance.
 void Polygon::Grow(real distance, bool beaking)
 {
   Polygon p;
@@ -172,32 +159,32 @@ void Polygon::Grow(real distance, bool beaking)
 
 bool Collinear(Vec2Param p0, Vec2Param p1, Vec2Param p2, real tolerance)
 {
-  //real dot = Dot(Normalized(p1 - p0), Normalized(p2 - p1));
-  //return dot > (real(1.0) - 0.001f/*tolerance*/);
+  // real dot = Dot(Normalized(p1 - p0), Normalized(p2 - p1));
+  // return dot > (real(1.0) - 0.001f/*tolerance*/);
   real area = Geometry::Signed2DTriArea(p0, p1, p2);
   return Math::InRange(area, -tolerance, tolerance);
 }
 
-//Removes all collinear points in the polygon based on the given tolerance.
+// Removes all collinear points in the polygon based on the given tolerance.
 void Polygon::RemoveCollinearPoints(real tolerance)
 {
-  if(mData.Size() < 3)
+  if (mData.Size() < 3)
     return;
 
-  for(uint i = 0; i < mData.Size();)
+  for (uint i = 0; i < mData.Size();)
   {
     Vec2 prev = mData[PrevIndex(i)];
     Vec2 curr = mData[i];
     Vec2 next = mData[NextIndex(i)];
 
-    if(Collinear(prev, curr, next, tolerance))
+    if (Collinear(prev, curr, next, tolerance))
       mData.EraseAt(i);
-    else if(Length(curr - next) < 0.01f)
+    else if (Length(curr - next) < 0.01f)
       mData.EraseAt(i);
     else
       ++i;
 
-    if(mData.Size() < 3)
+    if (mData.Size() < 3)
     {
       mData.Clear();
       return;
@@ -205,27 +192,27 @@ void Polygon::RemoveCollinearPoints(real tolerance)
   }
 }
 
-//Removes all duplicate points in the shape.
+// Removes all duplicate points in the shape.
 void Polygon::RemoveDuplicatePoints()
 {
-  for(uint i = 0; i < mData.Size();)
+  for (uint i = 0; i < mData.Size();)
   {
-    if(mData[i] == mData[NextIndex(i)])
+    if (mData[i] == mData[NextIndex(i)])
       mData.EraseAt(i);
     else
       ++i;
   }
 }
 
-//Removes all self intersections.
+// Removes all self intersections.
 void Polygon::RemoveSelfIntersections()
 {
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
   {
     Vec2 p0 = mData[i];
     Vec2 p1 = mData[NextIndex(i)];
 
-    for(uint j = i + 1; j < mData.Size(); ++j)
+    for (uint j = i + 1; j < mData.Size(); ++j)
     {
       Vec2 p2 = mData[j];
       Vec2 p3 = mData[NextIndex(j)];
@@ -233,9 +220,9 @@ void Polygon::RemoveSelfIntersections()
       using namespace Intersection;
       IntersectionPoint2D point;
       Intersection::Type result = SegmentSegment(p0, p1, p2, p3, &point);
-      if(result == Intersection::Point)
+      if (result == Intersection::Point)
       {
-        if(i == 0)
+        if (i == 0)
         {
           mData.PopBack();
           p0 = point.Points[0];
@@ -244,7 +231,7 @@ void Polygon::RemoveSelfIntersections()
         else
         {
           // Erase all vertices
-          for(uint k = j; k > i; --k)
+          for (uint k = j; k > i; --k)
             mData.EraseAt(k);
 
           // Add the point
@@ -257,50 +244,49 @@ void Polygon::RemoveSelfIntersections()
   }
 }
 
-//Forces the polygon to be counter clockwise.
+// Forces the polygon to be counter clockwise.
 void Polygon::MakeCounterClockwise()
 {
   // If it's clockwise, make it counter clockwise
-  if(IsClockwise())
+  if (IsClockwise())
     Reverse(mData.Begin(), mData.End());
 }
 
-//Forces the polygon to be clockwise.
+// Forces the polygon to be clockwise.
 void Polygon::MakeClockwise()
 {
   // If it's counter clockwise, make it clockwise
-  if(!IsClockwise())
+  if (!IsClockwise())
     Reverse(mData.Begin(), mData.End());
 }
 
-//------------------------------------------------------------------------- Info
-//Returns the amount of vertices in the polygon.
+// Returns the amount of vertices in the polygon.
 uint Polygon::Size() const
 {
   return mData.Size();
 }
 
-//Returns whether or not the polygon has any vertices.
+// Returns whether or not the polygon has any vertices.
 bool Polygon::Empty()
 {
   return mData.Empty();
 }
 
-//Returns the next index (wraps around).
+// Returns the next index (wraps around).
 uint Polygon::NextIndex(uint index) const
 {
   return (index + 1) % Size();
 }
 
-//Returns the previous index (wraps around).
+// Returns the previous index (wraps around).
 uint Polygon::PrevIndex(uint index)
 {
-  if(index == 0)
+  if (index == 0)
     return mData.Size() - 1;
   return index - 1;
 }
 
-//Returns a range of all the allEdges.
+// Returns a range of all the allEdges.
 Polygon::range Polygon::GetEdges()
 {
   return range(this);
@@ -310,7 +296,7 @@ real Polygon::GetPerimeterLength()
 {
   real length = 0.0f;
 
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
   {
     Vec2 curr = mData[i];
     Vec2 next = mData[NextIndex(i)];
@@ -321,21 +307,21 @@ real Polygon::GetPerimeterLength()
   return length;
 }
 
-//Calculates the barycenter (point average) of the polygon.
+// Calculates the barycenter (point average) of the polygon.
 Vec2 Polygon::GetBarycenter()
 {
-  if(mData.Size() < 1)
+  if (mData.Size() < 1)
     return Vec2();
 
   Vec2 center = mData[0];
-  for(uint i = 1; i < mData.Size(); ++i)
+  for (uint i = 1; i < mData.Size(); ++i)
     center += mData[i];
 
   center /= float(mData.Size());
   return center;
 }
 
-//Calculates the centroid (center of mass) of the polygon.
+// Calculates the centroid (center of mass) of the polygon.
 Vec2 Polygon::GetCentroid()
 {
   Vec2 centroid;
@@ -343,7 +329,7 @@ Vec2 Polygon::GetCentroid()
   return centroid;
 }
 
-//Constructs the axis-aligned bounding box of the polygon.
+// Constructs the axis-aligned bounding box of the polygon.
 Aabb Polygon::GetBoundingBox()
 {
   Vec2 min, max;
@@ -366,7 +352,7 @@ Vec2 Polygon::GetBisector(Vec2Param v0, Vec2Param v1)
   return Math::Normalized(dir);
 }
 
-//Returns whether or not the given point is inside the polygon.
+// Returns whether or not the given point is inside the polygon.
 bool Polygon::ContainsPoint(Vec2Param point)
 {
   int winding = 0;
@@ -381,28 +367,28 @@ bool Polygon::ContainsPoint(Vec2Param point)
     // Test if a point is directly on the edge
     Vec2 edge = p1 - p0;
     float area = Geometry::Signed2DTriArea(p0, p1, point);
-    if(area == real(0.0) && Dot((point - p0), edge) >= real(0.0) 
-                         && Dot((point - p1), edge) <= real(0.0))
+    if (area == real(0.0) && Dot((point - p0), edge) >= real(0.0) &&
+        Dot((point - p1), edge) <= real(0.0))
     {
       return false;
     }
     // Test edge for intersection with ray from point
-    if(p0.y <= point.y)
+    if (p0.y <= point.y)
     {
-      if(p1.y > point.y && area > real(0.0))
+      if (p1.y > point.y && area > real(0.0))
         ++winding;
     }
-    else if(p1.y <= point.y && area < real(0.0))
+    else if (p1.y <= point.y && area < real(0.0))
     {
       --winding;
     }
   }
-  if(winding == 0)
+  if (winding == 0)
     return false;
   return true;
 }
 
-//Returns whether or not the given polygon overlaps with this polygon.
+// Returns whether or not the given polygon overlaps with this polygon.
 ShapeSegResult::Enum Polygon::Intersects(Polygon* rhs)
 {
   forRange(Edge e0, this->GetEdges())
@@ -410,19 +396,21 @@ ShapeSegResult::Enum Polygon::Intersects(Polygon* rhs)
     forRange(Edge e1, rhs->GetEdges())
     {
       Vec2 points[2];
-      ShapeSegResult::Enum result = ShapeSegmentSegment(e0.p0, e0.p1, e1.p0, e1.p1, points);
-      // If any edges are intersecting, 
-      if(result != ShapeSegResult::None)
+      ShapeSegResult::Enum result =
+          ShapeSegmentSegment(e0.p0, e0.p1, e1.p0, e1.p1, points);
+      // If any edges are intersecting,
+      if (result != ShapeSegResult::None)
         return result;
     }
   }
   return ShapeSegResult::None;
 }
 
-//Returns whether or not the points in the polygon are in clockwise order.
+// Returns whether or not the points in the polygon are in clockwise order.
 bool Polygon::IsClockwise()
 {
-  return Geometry::DetermineWindingOrder(mData.Data(), mData.Size()) < real(0.0);
+  return Geometry::DetermineWindingOrder(mData.Data(), mData.Size()) <
+         real(0.0);
 }
 
 bool Polygon::Validate() const
@@ -431,73 +419,82 @@ bool Polygon::Validate() const
   return Validate(errors);
 }
 
-//Makes sure the polygon is not self intersecting.
+// Makes sure the polygon is not self intersecting.
 bool Polygon::Validate(Array<String>& errors) const
 {
-  //No need to validate polygons with no points.
-  if(mData.Size() < 3)
+  // No need to validate polygons with no points.
+  if (mData.Size() < 3)
   {
     errors.PushBack("Polygons must have more than 3 vertices.");
     return false;
   }
 
   // Check for duplicate points
-  for(uint i = 0; i < mData.Size(); ++i)
+  for (uint i = 0; i < mData.Size(); ++i)
   {
-    if(mData[i] == mData[NextIndex(i)])
+    if (mData[i] == mData[NextIndex(i)])
     {
-     // errors.PushBack("Polygons cannot have duplicate points.");
+      // errors.PushBack("Polygons cannot have duplicate points.");
       return false;
     }
   }
 
-  // Go through all of the segments in the polygon and test to see if any are 
+  // Go through all of the segments in the polygon and test to see if any are
   // intersecting
   uint pointCount = uint(mData.Size());
-  for(uint i = 0; i < (pointCount - 2); ++i)
+  for (uint i = 0; i < (pointCount - 2); ++i)
   {
-    //Test the current edge against all non-neighboring edges
-    //(there's no way to intersect neighboring edges unless overlapping linearly)
-    uint edgeI[2] = { i, i + 1 };
-    for(uint j = i + 2; j < pointCount; ++j)
+    // Test the current edge against all non-neighboring edges
+    //(there's no way to intersect neighboring edges unless overlapping
+    //linearly)
+    uint edgeI[2] = {i, i + 1};
+    for (uint j = i + 2; j < pointCount; ++j)
     {
-      if(i == 0 && j == (pointCount - 1))
+      if (i == 0 && j == (pointCount - 1))
       {
         continue;
       }
 
-      uint edgeJ[2] = { j, NextIndex(j)};
+      uint edgeJ[2] = {j, NextIndex(j)};
       Vec2 points[2];
-      ShapeSegResult::Enum result = ShapeSegmentSegment(mData[edgeI[0]], mData[edgeI[1]],
-                                                        mData[edgeJ[0]], mData[edgeJ[1]], points);
-      if(result == ShapeSegResult::Point)
+      ShapeSegResult::Enum result = ShapeSegmentSegment(mData[edgeI[0]],
+                                                        mData[edgeI[1]],
+                                                        mData[edgeJ[0]],
+                                                        mData[edgeJ[1]],
+                                                        points);
+      if (result == ShapeSegResult::Point)
         errors.PushBack("Polygons cannot be self-intersecting.");
     }
   }
 
-  // Go through all of the segments and check for intersection with their neighbors
-  for(uint i = 0; i < (pointCount - 1); ++i)
+  // Go through all of the segments and check for intersection with their
+  // neighbors
+  for (uint i = 0; i < (pointCount - 1); ++i)
   {
-    uint thisEdge[2] = { i, i + 1 };
-    uint nextEdge[2] = { i + 1, (i + 2) % pointCount };
+    uint thisEdge[2] = {i, i + 1};
+    uint nextEdge[2] = {i + 1, (i + 2) % pointCount};
     Vec2 points[2];
-    ShapeSegResult::Enum result = ShapeSegmentSegment(mData[thisEdge[0]], mData[thisEdge[1]],
-                                                      mData[nextEdge[0]], mData[nextEdge[1]],
+    ShapeSegResult::Enum result = ShapeSegmentSegment(mData[thisEdge[0]],
+                                                      mData[thisEdge[1]],
+                                                      mData[nextEdge[0]],
+                                                      mData[nextEdge[1]],
                                                       points);
-    if(result == ShapeSegResult::Segment)
+    if (result == ShapeSegResult::Segment)
       errors.PushBack("Polygons cannot be self-intersecting.");
   }
 
   return errors.Empty();
 }
 
-//Debug draw.
+// Debug draw.
 void Polygon::DebugDraw(ByteColor color, bool windingOrder, float depth)
 {
   DebugDraw(color, Mat4::cIdentity, windingOrder, depth);
 }
 
-void Polygon::DebugDraw(ByteColor color, Mat4Param transform, bool windingOrder, 
+void Polygon::DebugDraw(ByteColor color,
+                        Mat4Param transform,
+                        bool windingOrder,
                         float depth)
 {
   forRange(Edge edge, GetEdges())
@@ -505,13 +502,14 @@ void Polygon::DebugDraw(ByteColor color, Mat4Param transform, bool windingOrder,
     using namespace Zero;
     Vec3 p0 = Math::ToVector3(edge.p0, depth);
     Vec3 p1 = Math::ToVector3(edge.p1, depth);
-    
+
     // Transform the points
     p0 = Math::TransformPoint(transform, p0);
     p1 = Math::TransformPoint(transform, p1);
 
-    if(windingOrder)
-      gDebugDraw->Add(Debug::Line(p0, p1).OnTop(true).HeadSize(0.18f).Color(color));
+    if (windingOrder)
+      gDebugDraw->Add(
+          Debug::Line(p0, p1).OnTop(true).HeadSize(0.18f).Color(color));
     else
       gDebugDraw->Add(Debug::Line(p0, p1).OnTop(true).Color(color));
   }
@@ -521,25 +519,23 @@ void Polygon::DebugDrawFilled(ByteColor color, Mat4Param transform) const
 {
   Polygon copy = *this;
 
-
   copy.RemoveSelfIntersections();
   copy.RemoveDuplicatePoints();
 
-  for(size_t i = 0; i < copy.Size(); ++i)
+  for (size_t i = 0; i < copy.Size(); ++i)
   {
 
     for (size_t j = i + 1; j < copy.Size(); ++j)
     {
-      if(copy.mData[i] == copy.mData[j])
+      if (copy.mData[i] == copy.mData[j])
       {
 
         return;
       }
-
     }
   }
-  
-  if(copy.mData.Size() < 3 || copy.IsClockwise())
+
+  if (copy.mData.Size() < 3 || copy.IsClockwise())
   {
     return;
   }
@@ -550,9 +546,9 @@ void Polygon::DebugDrawFilled(ByteColor color, Mat4Param transform) const
   bool result = Geometry::Triangulate(copy.mData, contours, &indices);
 
   uint triangleCount = indices.Size() / 3;
-  if(result == true && triangleCount > 0)
+  if (result == true && triangleCount > 0)
   {
-    for(size_t i = 0; i < triangleCount * 3; i += 3)
+    for (size_t i = 0; i < triangleCount * 3; i += 3)
     {
       Vec3 a = Math::ToVector3(copy[indices[i]]);
       Vec3 b = Math::ToVector3(copy[indices[i + 1]]);
@@ -562,22 +558,16 @@ void Polygon::DebugDrawFilled(ByteColor color, Mat4Param transform) const
       b = Math::TransformPoint(transform, b);
       c = Math::TransformPoint(transform, c);
 
-      gDebugDraw->Add(Debug::Triangle(a, b, c)
-        .Color(color)
-        );
+      gDebugDraw->Add(Debug::Triangle(a, b, c).Color(color));
     }
   }
 }
 
-//------------------------------------------------------------------- Edge Range
-Polygon::Edge::Edge(Vec2Ref a, Vec2Ref b)
-  : p0(a), p1(b)
+Polygon::Edge::Edge(Vec2Ref a, Vec2Ref b) : p0(a), p1(b)
 {
-
 }
 
-Polygon::range::range(Polygon* polygon)
-  : mPolygon(*polygon)
+Polygon::range::range(Polygon* polygon) : mPolygon(*polygon)
 {
   mCurrIndex = 0;
 }
@@ -599,10 +589,11 @@ bool Polygon::range::Empty()
   return mCurrIndex >= mPolygon.Size();
 }
 
-//---------------------------------------------------------------------- Helpers
-ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segmentEndA,
-                                        Vec2Param segmentStartB, Vec2Param segmentEndB, 
-                                        Vec2 intersectionPoints[2])
+ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA,
+                                         Vec2Param segmentEndA,
+                                         Vec2Param segmentStartB,
+                                         Vec2Param segmentEndB,
+                                         Vec2 intersectionPoints[2])
 {
   const real cAreaEpsilon = real(0.00000);
   const Vec2& a = segmentStartA;
@@ -610,29 +601,29 @@ ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segm
   const Vec2& c = segmentStartB;
   const Vec2& d = segmentEndB;
 
-  //Sign of areas correspond to which side of ab points c and d are.
-  //Compute winding of abd (+/-)
+  // Sign of areas correspond to which side of ab points c and d are.
+  // Compute winding of abd (+/-)
   real area1 = Geometry::Signed2DTriArea(a, b, d);
-  //To intersect, must have sign opposite of area1
+  // To intersect, must have sign opposite of area1
   real area2 = Geometry::Signed2DTriArea(a, b, c);
 
-  //If c and d are on different sides of ab, areas have different signs.
-  if(area1 * area2 <= cAreaEpsilon)
+  // If c and d are on different sides of ab, areas have different signs.
+  if (area1 * area2 <= cAreaEpsilon)
   {
-    //Compute signs for a and b with respect to segment cd.
-    //Compute winding of cda (+/-)
+    // Compute signs for a and b with respect to segment cd.
+    // Compute winding of cda (+/-)
     real area3 = Geometry::Signed2DTriArea(c, d, a);
 
-    //Since area is constant area1 - area2 = area3 - area4, 
-    //or area4 = area3 + area2 - area1
+    // Since area is constant area1 - area2 = area3 - area4,
+    // or area4 = area3 + area2 - area1
     real area4 = area3 + area2 - area1;
 
-    //Points a and b on different sides of cd if areas have different signs.
-    if(area3 * area4 <= cAreaEpsilon)
+    // Points a and b on different sides of cd if areas have different signs.
+    if (area3 * area4 <= cAreaEpsilon)
     {
-      //If the lines are collinear.
-      if(Math::InRange(area1, -cAreaEpsilon, cAreaEpsilon) &&
-         Math::InRange(area2, -cAreaEpsilon, cAreaEpsilon))
+      // If the lines are collinear.
+      if (Math::InRange(area1, -cAreaEpsilon, cAreaEpsilon) &&
+          Math::InRange(area2, -cAreaEpsilon, cAreaEpsilon))
       {
         Vec2 points[4] = {a, b, c, d};
         Vec2 lineDir = Normalized(b - a);
@@ -643,25 +634,25 @@ ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segm
         extents[3] = Dot(lineDir, d);
 
         // Sort the points
-        uint indices[4] = {0,1,2,3};
+        uint indices[4] = {0, 1, 2, 3};
 
         // Bubble sort
-        for(uint i = 0; i < 3; ++i)
+        for (uint i = 0; i < 3; ++i)
         {
-          for(uint j = 0; j < 3 - i; ++j)
+          for (uint j = 0; j < 3 - i; ++j)
           {
-            if(extents[indices[j]] < extents[indices[j + 1]])
+            if (extents[indices[j]] < extents[indices[j + 1]])
               Math::Swap(indices[j], indices[j + 1]);
           }
         }
 
-        //Check to see if the neighboring points are on the same line segment.
-        if((points[indices[0]] == a && points[indices[1]] == b) || 
-           (points[indices[0]] == b && points[indices[1]] == a) || 
-           (points[indices[0]] == c && points[indices[1]] == d) || 
-           (points[indices[0]] == d && points[indices[1]] == c))
+        // Check to see if the neighboring points are on the same line segment.
+        if ((points[indices[0]] == a && points[indices[1]] == b) ||
+            (points[indices[0]] == b && points[indices[1]] == a) ||
+            (points[indices[0]] == c && points[indices[1]] == d) ||
+            (points[indices[0]] == d && points[indices[1]] == c))
         {
-          //If so, the two lines cannot be overlapping collinearly.
+          // If so, the two lines cannot be overlapping collinearly.
           return ShapeSegResult::None;
         }
 
@@ -672,11 +663,11 @@ ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segm
         return ShapeSegResult::Segment;
       }
 
-      //Segments intersect. Find intersection point along L(t) = a + t * (b-a)
-      //Given height h1 of a over cd and height h2 of b over cd,
-      //t = h1 / (h1 - h2) = (b * h1 / 2) / (b * h1 / 2 - b * h2 / h3) 
+      // Segments intersect. Find intersection point along L(t) = a + t * (b-a)
+      // Given height h1 of a over cd and height h2 of b over cd,
+      // t = h1 / (h1 - h2) = (b * h1 / 2) / (b * h1 / 2 - b * h2 / h3)
       //                   = area3 / (area3 - area4), where b (the base of the
-      //triangles cda cdb, i.e., the length of cd) cancels out.
+      // triangles cda cdb, i.e., the length of cd) cancels out.
       real time = area3 / (area3 - area4);
       intersectionPoints[0] = a + time * (b - a);
 
@@ -684,7 +675,7 @@ ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segm
     }
   }
 
-  //Segments not intersecting
+  // Segments not intersecting
   return ShapeSegResult::None;
 }
 
@@ -693,7 +684,7 @@ void TransformPolygon(Mat3Param matrix, Polygon* polygon)
 {
   uint size = polygon->Size();
   // Transform each point
-  for(uint i = 0; i < size; ++i)
+  for (uint i = 0; i < size; ++i)
     polygon->mData[i] = Math::TransformPoint(matrix, polygon->mData[i]);
 }
 
@@ -701,8 +692,9 @@ void TransformPolygon(Mat4Param matrix, Polygon* polygon)
 {
   uint size = polygon->Size();
   // Transform each point
-  for(uint i = 0; i < size; ++i)
-    polygon->mData[i] = Math::ToVector2(Math::TransformPoint(matrix, Math::ToVector3(polygon->mData[i])));
+  for (uint i = 0; i < size; ++i)
+    polygon->mData[i] = Math::ToVector2(
+        Math::TransformPoint(matrix, Math::ToVector3(polygon->mData[i])));
 }
 
-}//namespace Geometry
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Graph.hpp
-/// Declaration of the Memory Graph.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Memory.hpp"
 #include "InList.hpp"
@@ -22,13 +14,13 @@ struct ZeroShared Stats
 {
   enum StatFlags
   {
-    ShowActive     = 1,
-    ShowDedicated  = 2,
-    ShowPeak       = 4,
-    ShowBytes      = 8,
-    ShowTotal      = 16,
-    ShowLocal      = 32,
-    ShowCount      = 64
+    ShowActive = 1,
+    ShowDedicated = 2,
+    ShowPeak = 4,
+    ShowBytes = 8,
+    ShowTotal = 16,
+    ShowLocal = 32,
+    ShowCount = 64
   };
 
   MemCounterType Allocations;
@@ -39,20 +31,24 @@ struct ZeroShared Stats
 
   Stats();
 
-  template<typename Vistor>
+  template <typename Vistor>
   void Visit(Vistor& vistor, size_t flags);
   void Accumulate(const Stats& right);
 };
 
-///Base Memory graph node. All allocators are derived from this class for
-///runtime memory statics collection and debugging. Class provides a graph
-///structure for hierarchical grouping of memory and the ability to name allocators.
+/// Base Memory graph node. All allocators are derived from this class for
+/// runtime memory statics collection and debugging. Class provides a graph
+/// structure for hierarchical grouping of memory and the ability to name
+/// allocators.
 class ZeroShared Graph : public LinkBase
 {
 public:
   UseStaticMemory();
 
-  cstr GetName(){return Name.c_str();}
+  cstr GetName()
+  {
+    return Name.c_str();
+  }
   FixedString<32> Name;
   Graph* mParent;
   Stats mData;
@@ -61,26 +57,29 @@ public:
 
   void DeltaDedicated(MemCounterType bytes)
   {
-    mData.BytesDedicated+=bytes;
+    mData.BytesDedicated += bytes;
   }
 
   void AddAllocation(MemCounterType bytes)
   {
     ++mData.Active;
     ++mData.Allocations;
-    mData.BytesAllocated+=bytes;
-    if(mData.BytesAllocated > mData.PeakAllocated)
+    mData.BytesAllocated += bytes;
+    if (mData.BytesAllocated > mData.PeakAllocated)
       mData.PeakAllocated = mData.BytesAllocated;
   }
 
   void RemoveAllocation(MemCounterType bytes)
   {
     --mData.Active;
-    mData.BytesAllocated-=bytes;
+    mData.BytesAllocated -= bytes;
   }
 
   typedef InListBaseLink<Graph>::range RangeType;
-  RangeType GetChildren(){return Children.All();}
+  RangeType GetChildren()
+  {
+    return Children.All();
+  }
 
   InListBaseLink<Graph> Children;
   void PrintHelper(size_t tabs, size_t flags, cstr name);
@@ -91,19 +90,18 @@ public:
 
   virtual void CleanUp();
   virtual ~Graph();
+
 private:
-  //Can not copy memory managers.
+  // Can not copy memory managers.
   Graph(const Graph&);
   void operator=(const Graph&);
 };
 
-
 class Heap;
-class Root: public Graph
+class Root : public Graph
 {
 public:
-  Root(cstr name, Graph* parent)
-    :Graph(name, parent)
+  Root(cstr name, Graph* parent) : Graph(name, parent)
   {
   }
 
@@ -126,9 +124,15 @@ void DumpMemoryDebuggerStats(cstr projectName);
 class ZeroShared StandardMemory
 {
 public:
-  static inline void MemCopy(void* dest, void* source, size_t numberOfBytes){memcpy(dest, source, numberOfBytes);}
-  static inline void MemMove(void* dest, void* source, size_t numberOfBytes){memmove(dest, source, numberOfBytes);}
+  static inline void MemCopy(void* dest, void* source, size_t numberOfBytes)
+  {
+    memcpy(dest, source, numberOfBytes);
+  }
+  static inline void MemMove(void* dest, void* source, size_t numberOfBytes)
+  {
+    memmove(dest, source, numberOfBytes);
+  }
 };
 
-}//namespace Memory
-}//namespace Zero
+} // namespace Memory
+} // namespace Zero

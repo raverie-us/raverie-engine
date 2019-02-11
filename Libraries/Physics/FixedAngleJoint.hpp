@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,14 +12,14 @@ namespace Physics
 {
 
 /// Locks the orientation of two objects together. Used when two objects should
-/// always rotate in unison. Typically not used by itself, but useful as a proof of
-/// concept for joints that use this functionality internally.
-/// Limits, motors, and springs should most likely not be used on this.
-/// Add on definitions:
-/// Limit: A limit will provide a min/max angle on every
+/// always rotate in unison. Typically not used by itself, but useful as a proof
+/// of concept for joints that use this functionality internally. Limits,
+/// motors, and springs should most likely not be used on this. Add on
+/// definitions: Limit: A limit will provide a min/max angle on every
 ///   axis that the objects must be between.
 /// Motor: A motor will attempt to drive the rotation on every axis forward.
-/// Spring: A spring will make the rotations on every axis at the bounds springy.
+/// Spring: A spring will make the rotations on every axis at the bounds
+/// springy.
 struct FixedAngleJoint : public Joint
 {
   DeclareJointType(FixedAngleJoint);
@@ -64,8 +59,8 @@ struct FixedAngleJoint : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::FixedAngleJoint FixedAngleJoint;
 
-}//namespace Zero
+} // namespace Zero

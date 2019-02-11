@@ -1,21 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Rune.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Rune
-Rune::Rune()
-  : value(Invalid)
+Rune::Rune() : value(Invalid)
 {
 }
 
-Rune::Rune(uint runeCode)
-  : value(runeCode)
+Rune::Rune(uint runeCode) : value(runeCode)
 {
 }
 
@@ -84,4 +78,4 @@ size_t Rune::Hash() const
   return HashUint(value);
 }
 
-}// namespace Zero
+} // namespace Zero

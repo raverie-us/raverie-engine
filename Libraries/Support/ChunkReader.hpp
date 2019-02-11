@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ChunkReader.hpp
-/// Declaration of the ChunkReader file reading class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Standard.hpp"
 #include "File.hpp"
@@ -17,21 +9,21 @@ namespace Zero
 #pragma pack(push, 4)
 struct FileChunk
 {
-  //Header
+  // Header
   u32 Type;
   u32 Size;
 
-  //Computed Values
+  // Computed Values
   u32 StartPos;
   u32 EndPos;
 };
 #pragma pack(pop)
 
-template<typename streamType>
+template <typename streamType>
 class ChunkReader
 {
 public:
-  static const uint HeaderSize = sizeof(u32)*2;
+  static const uint HeaderSize = sizeof(u32) * 2;
   typedef unsigned short StringLengthType;
 
   ChunkReader(){};
@@ -68,11 +60,11 @@ public:
     chunk.Type = 0;
     chunk.Size = 0;
 
-    if((size_t)file.Tell() + HeaderSize <= file.Size())
+    if ((size_t)file.Tell() + HeaderSize <= file.Size())
     {
       file.Read(status, (byte*)&chunk.Type, HeaderSize);
 
-      //Compute offsets
+      // Compute offsets
       chunk.StartPos = (uint)file.Tell();
       chunk.EndPos = chunk.StartPos + chunk.Size;
     }
@@ -84,7 +76,7 @@ public:
   FileChunk ReadUntilChunk(uint chunktype)
   {
     FileChunk Chunk = ReadChunkHeader();
-    while(Chunk.Type != chunktype && Chunk.Type!=0)
+    while (Chunk.Type != chunktype && Chunk.Type != 0)
     {
       SkipChunk(Chunk);
       Chunk = ReadChunkHeader();
@@ -104,34 +96,34 @@ public:
     file.Seek(chunk.StartPos, SeekOrigin::Begin);
   }
 
-  template<typename type>
+  template <typename type>
   void Read(type& data)
   {
     Status status;
-    file.Read(status, (byte*)&data , sizeof(type));
+    file.Read(status, (byte*)&data, sizeof(type));
   }
 
-  template<typename type>
+  template <typename type>
   void ReadArray(type* data, uint count)
   {
     Status status;
     file.Read(status, (byte*)data, sizeof(type) * count);
   }
 
-  template<typename type>
+  template <typename type>
   void ReadArraySize(type* data, uint size)
   {
     Status status;
     file.Read(status, (byte*)data, size);
   }
 
-  template<typename StringType>
+  template <typename StringType>
   void ReadString(StringType& stringValue)
   {
     StringLengthType strSize = 0;
     Read(strSize);
-    byte* data = (byte*)alloca(strSize+1);
-    ReadArray(data , strSize);
+    byte* data = (byte*)alloca(strSize + 1);
+    ReadArray(data, strSize);
     data[strSize] = '\0';
     stringValue = (char*)data;
   }
@@ -142,5 +134,4 @@ public:
 typedef ChunkReader<File> ChunkFileReader;
 typedef ChunkReader<ByteBufferBlock> ChunkBufferReader;
 
-
-}//namespace Zero
+} // namespace Zero

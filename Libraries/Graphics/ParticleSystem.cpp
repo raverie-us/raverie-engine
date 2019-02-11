@@ -1,19 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleSystem.cpp
-///
-/// Authors: Chris Peters, Joshua Claeys, Nathan Carlson
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
-int EmitParticles(ParticleSystem* main, ParticleEmitter* emitter,
-                  ParticleList* particleList, float dt, Mat4Ref parentTransform, float timeAlive)
+int EmitParticles(ParticleSystem* main,
+                  ParticleEmitter* emitter,
+                  ParticleList* particleList,
+                  float dt,
+                  Mat4Ref parentTransform,
+                  float timeAlive)
 {
   int particlesEmitted = 0;
 
@@ -24,7 +20,8 @@ int EmitParticles(ParticleSystem* main, ParticleEmitter* emitter,
     Vec3 newPosition = GetTranslationFrom(transform);
     Vec3 emitterVelocity = newPosition - emitter->mLastFramePosition;
 
-    particlesEmitted = emitter->EmitParticles(particleList, dt, transform, emitterVelocity, timeAlive);
+    particlesEmitted = emitter->EmitParticles(
+        particleList, dt, transform, emitterVelocity, timeAlive);
     emitter->mLastFramePosition = newPosition;
   }
   else
@@ -32,55 +29,54 @@ int EmitParticles(ParticleSystem* main, ParticleEmitter* emitter,
     Vec3 newPosition = GetTranslationFrom(parentTransform);
     Vec3 emitterVelocity = newPosition - emitter->mLastFramePosition;
 
-    particlesEmitted = emitter->EmitParticles(particleList, dt, parentTransform, emitterVelocity, timeAlive);
+    particlesEmitted = emitter->EmitParticles(
+        particleList, dt, parentTransform, emitterVelocity, timeAlive);
     emitter->mLastFramePosition = newPosition;
   }
 
   return particlesEmitted;
 }
 
-//******************************************************************************
-void RunAnimator(ParticleSystem* main, ParticleAnimator* animator,
-                 ParticleList* particleList, float dt, Mat4Ref parentTransform)
+void RunAnimator(ParticleSystem* main,
+                 ParticleAnimator* animator,
+                 ParticleList* particleList,
+                 float dt,
+                 Mat4Ref parentTransform)
 {
-  // Could not find anywhere that ParticleAnimator::mTransform was being initialized, so I removed it
-  //if(animator->GetOwner() != main->GetOwner())
+  // Could not find anywhere that ParticleAnimator::mTransform was being
+  // initialized, so I removed it
+  // if(animator->GetOwner() != main->GetOwner())
   //{
   //  Mat4 transform = parentTransform * animator->mTransform->GetLocalMatrix();
   //  animator->Animate(particleList, dt, transform);
   //}
-  //else
+  // else
   {
     animator->Animate(particleList, dt, parentTransform);
   }
 }
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DefineEvent(ParticlesSpawned);
+DefineEvent(ParticlesSpawned);
 }
 
-//--------------------------------------------------------------- Particle Event
 ZilchDefineType(ParticleEvent, builder, type)
 {
   ZilchBindGetterProperty(NewParticles);
   ZilchBindGetterProperty(NewParticleCount);
 }
 
-//******************************************************************************
 uint ParticleEvent::GetNewParticleCount()
 {
   return mNewParticleCount;
 }
 
-//******************************************************************************
 ParticleListRange ParticleEvent::GetNewParticles()
 {
   return mNewParticles;
 }
 
-//-------------------------------------------------------------- Particle System
 ZilchDefineType(ParticleSystem, builder, type)
 {
   ZeroBindDocumented();
@@ -100,7 +96,6 @@ ZilchDefineType(ParticleSystem, builder, type)
   ZeroBindEvent(Events::ParticlesSpawned, ParticleEvent);
 }
 
-//******************************************************************************
 void ParticleSystem::Serialize(Serializer& stream)
 {
   Graphical::Serialize(stream);
@@ -111,7 +106,6 @@ void ParticleSystem::Serialize(Serializer& stream)
   SerializeNameDefault(mPreviewInEditor, false);
 }
 
-//******************************************************************************
 void ParticleSystem::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
@@ -129,7 +123,9 @@ void ParticleSystem::Initialize(CogInitializer& initializer)
   if (Z::gRuntimeEditor)
   {
     Z::gRuntimeEditor->Visualize(this, "SpriteParticleSystem");
-    ConnectThisTo(Z::gRuntimeEditor->GetActiveSelection(), Events::SelectionFinal, OnSelectionFinal);
+    ConnectThisTo(Z::gRuntimeEditor->GetActiveSelection(),
+                  Events::SelectionFinal,
+                  OnSelectionFinal);
   }
 
   if (mPreviewInEditor && GetSpace()->IsEditorMode())
@@ -138,15 +134,15 @@ void ParticleSystem::Initialize(CogInitializer& initializer)
     ConnectThisTo(GetSpace(), Events::LogicUpdate, OnUpdate);
 }
 
-//******************************************************************************
 void ParticleSystem::ScriptInitialize(CogInitializer& initializer)
 {
   // We're warming up the particle system on ScriptInitialize to accommodate for
-  // the SplineParticleEmitter. SplineParticleEmitter resolves its serialized CogPath
-  // target to the spline in OnAllObjectsCreated. It has a dependency on us, which means
-  // its OnAllObjectsCreated will be called after ours. Because of this, we have to
-  // warm up the particle system at a later point, hence the use of ScriptInitialize
-  
+  // the SplineParticleEmitter. SplineParticleEmitter resolves its serialized
+  // CogPath target to the spline in OnAllObjectsCreated. It has a dependency on
+  // us, which means its OnAllObjectsCreated will be called after ours. Because
+  // of this, we have to warm up the particle system at a later point, hence the
+  // use of ScriptInitialize
+
   // Use the engines dt for simulating the warm up
   float timeStep = Z::gEngine->has(TimeSystem)->GetTargetDt();
 
@@ -162,7 +158,6 @@ void ParticleSystem::ScriptInitialize(CogInitializer& initializer)
   }
 }
 
-//******************************************************************************
 void ParticleSystem::AttachTo(AttachmentInfo& info)
 {
   if (mChildSystem && info.Child == GetOwner())
@@ -174,7 +169,6 @@ void ParticleSystem::AttachTo(AttachmentInfo& info)
   Graphical::AttachTo(info);
 }
 
-//******************************************************************************
 void ParticleSystem::Detached(AttachmentInfo& info)
 {
   if (mChildSystem)
@@ -186,7 +180,6 @@ void ParticleSystem::Detached(AttachmentInfo& info)
   Graphical::Detached(info);
 }
 
-//******************************************************************************
 void ParticleSystem::OnDestroy(uint flags)
 {
   if (mChildSystem)
@@ -200,7 +193,6 @@ void ParticleSystem::OnDestroy(uint flags)
   Graphical::OnDestroy(flags);
 }
 
-//******************************************************************************
 void ParticleSystem::DebugDraw()
 {
   bool editorMode = GetSpace()->IsEditorMode();
@@ -218,32 +210,27 @@ void ParticleSystem::DebugDraw()
   SystemUpdate(timeSpace->mScaledClampedDt);
 }
 
-//******************************************************************************
 Aabb ParticleSystem::GetLocalAabb()
 {
   return Aabb(Vec3::cZero, Vec3(mBoundingBoxSize * 0.5f));
 }
 
-//******************************************************************************
 float ParticleSystem::GetBoundingBoxSize()
 {
   return mBoundingBoxSize;
 }
 
-//******************************************************************************
 void ParticleSystem::SetBoundingBoxSize(float size)
 {
   mBoundingBoxSize = Math::Max(size, 0.2f);
   UpdateBroadPhaseAabb();
 }
 
-//******************************************************************************
 bool ParticleSystem::GetChildSystem()
 {
   return mChildSystem;
 }
 
-//******************************************************************************
 void ParticleSystem::SetChildSystem(bool state)
 {
   if (ParticleSystem* parentSystem = GetParentSystem())
@@ -257,32 +244,29 @@ void ParticleSystem::SetChildSystem(bool state)
   mChildSystem = state;
 }
 
-//******************************************************************************
 float ParticleSystem::GetWarmUpTime()
 {
   return mWarmUpTime;
 }
 
-//******************************************************************************
 void ParticleSystem::SetWarmUpTime(float time)
 {
   const float cMaxWarmUpTime = 20.0f;
   if (time > cMaxWarmUpTime)
   {
-    DoNotifyWarning("WarmUpTime too high", "Max warm up time is 20 seconds. "
+    DoNotifyWarning("WarmUpTime too high",
+                    "Max warm up time is 20 seconds. "
                     "Setting this too high can cause large stalls.");
     return;
   }
   mWarmUpTime = time;
 }
 
-//******************************************************************************
 bool ParticleSystem::GetPreviewInEditor()
 {
   return mPreviewInEditor;
 }
 
-//******************************************************************************
 void ParticleSystem::SetPreviewInEditor(bool previewInEditor)
 {
   if (previewInEditor == mPreviewInEditor)
@@ -305,38 +289,35 @@ void ParticleSystem::SetPreviewInEditor(bool previewInEditor)
     ConnectThisTo(GetSpace(), Events::LogicUpdate, OnUpdate);
     GetSpace()->GetDispatcher()->DisconnectEvent(Events::FrameUpdate, this);
 
-    // If we're selected in the editor, it's being updated by DebugDraw(), so don't clear the particles
+    // If we're selected in the editor, it's being updated by DebugDraw(), so
+    // don't clear the particles
     if (!IsSelectedInEditor())
       Clear();
   }
 }
 
-//******************************************************************************
 ParticleListRange ParticleSystem::AllParticles()
 {
   return mParticleList.All();
 }
 
-//******************************************************************************
 void ParticleSystem::Clear()
 {
   mParticleList.ClearDestroyed();
   mParticleList.FreeParticles();
 
-  forRange (ParticleEmitter& emitter, mEmitters.All())
-    emitter.ResetCount();
+  forRange(ParticleEmitter & emitter, mEmitters.All()) emitter.ResetCount();
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
+       r.PopFront())
     r.Front().Clear();
 }
 
-//******************************************************************************
 void ParticleSystem::OnUpdate(UpdateEvent* event)
 {
   SystemUpdate(event->Dt);
 }
 
-//******************************************************************************
 void ParticleSystem::SystemUpdate(float dt)
 {
   // Our parent will update us if we're a child system
@@ -348,7 +329,6 @@ void ParticleSystem::SystemUpdate(float dt)
   mParticleList.ClearDestroyed();
 }
 
-//******************************************************************************
 uint ParticleSystem::BaseUpdate(float dt)
 {
   if (mAnimators.Empty())
@@ -364,14 +344,16 @@ uint ParticleSystem::BaseUpdate(float dt)
   int emitCount = 0;
   Particle* oldFront = mParticleList.Particles;
   for (EmitterList::range r = mEmitters.All(); !r.Empty(); r.PopFront())
-    emitCount += EmitParticles(this, &r.Front(), &mParticleList, dt, worldTransform, mTimeAlive);
+    emitCount += EmitParticles(
+        this, &r.Front(), &mParticleList, dt, worldTransform, mTimeAlive);
 
   // Send out an event if particles were spawned
   if (emitCount > 0)
   {
     ParticleEvent eventToSend;
     eventToSend.mNewParticleCount = (uint)emitCount;
-    eventToSend.mNewParticles = ParticleList::range(mParticleList.Particles, oldFront);
+    eventToSend.mNewParticles =
+        ParticleList::range(mParticleList.Particles, oldFront);
     GetOwner()->DispatchEvent(Events::ParticlesSpawned, &eventToSend);
   }
 
@@ -379,14 +361,16 @@ uint ParticleSystem::BaseUpdate(float dt)
   for (AnimatorList::range r = mAnimators.All(); !r.Empty(); r.PopFront())
     RunAnimator(this, &r.Front(), &mParticleList, dt, worldTransform);
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
+       r.PopFront())
     r.Front().ChildUpdate(dt, &mParticleList, emitCount);
 
   return emitCount;
 }
 
-//******************************************************************************
-void ParticleSystem::ChildUpdate(float dt, ParticleList* parentList, uint parentEmitCount)
+void ParticleSystem::ChildUpdate(float dt,
+                                 ParticleList* parentList,
+                                 uint parentEmitCount)
 {
   uint emitCount = 0;
   Mat4 worldTransform = mTransform->GetWorldMatrix();
@@ -398,7 +382,11 @@ void ParticleSystem::ChildUpdate(float dt, ParticleList* parentList, uint parent
     SetTranslationOn(&worldTransform, particle->Position);
 
     for (EmitterList::range r = mEmitters.All(); !r.Empty(); r.PopFront())
-      emitCount += r.Front().EmitParticles(&mParticleList, dt, worldTransform, particle->Velocity, particle->Time);
+      emitCount += r.Front().EmitParticles(&mParticleList,
+                                           dt,
+                                           worldTransform,
+                                           particle->Velocity,
+                                           particle->Time);
 
     particle = particle->Next;
   }
@@ -406,13 +394,13 @@ void ParticleSystem::ChildUpdate(float dt, ParticleList* parentList, uint parent
   for (AnimatorList::range r = mAnimators.All(); !r.Empty(); r.PopFront())
     RunAnimator(this, &r.Front(), &mParticleList, dt, worldTransform);
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
+       r.PopFront())
     r.Front().ChildUpdate(dt, &mParticleList, emitCount);
 
   mParticleList.ClearDestroyed();
 }
 
-//******************************************************************************
 void ParticleSystem::UpdateLifetimes(float dt)
 {
   // Begin particle update pass removing dead particles
@@ -451,35 +439,31 @@ void ParticleSystem::UpdateLifetimes(float dt)
     }
   }
 
-  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty(); r.PopFront())
+  for (ParticleSystemList::range r = mChildSystems.All(); !r.Empty();
+       r.PopFront())
     r.Front().UpdateLifetimes(dt);
 }
 
-//******************************************************************************
 void ParticleSystem::AddEmitter(ParticleEmitter* emitter)
 {
   mEmitters.PushBack(emitter);
 }
 
-//******************************************************************************
 void ParticleSystem::AddAnimator(ParticleAnimator* animator)
 {
   mAnimators.PushBack(animator);
 }
 
-//******************************************************************************
 void ParticleSystem::AddChildSystem(ParticleSystem* child)
 {
   mChildSystems.PushBack(child);
 }
 
-//******************************************************************************
 void ParticleSystem::RemoveChildSystem(ParticleSystem* child)
 {
   mChildSystems.Erase(child);
 }
 
-//******************************************************************************
 ParticleSystem* ParticleSystem::GetParentSystem()
 {
   if (Cog* parent = GetOwner()->GetParent())
@@ -487,7 +471,6 @@ ParticleSystem* ParticleSystem::GetParentSystem()
   return nullptr;
 }
 
-//******************************************************************************
 void ParticleSystem::OnSelectionFinal(SelectionChangedEvent* selectionEvent)
 {
   if (mDebugDrawing && !IsSelectedInEditor())
@@ -497,7 +480,6 @@ void ParticleSystem::OnSelectionFinal(SelectionChangedEvent* selectionEvent)
   }
 }
 
-//******************************************************************************
 bool ParticleSystem::IsSelectedInEditor()
 {
   return Z::gRuntimeEditor->GetActiveSelection()->Contains(GetOwner());

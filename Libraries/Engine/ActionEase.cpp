@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Doug Zwick
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -17,4 +12,4 @@ namespace Zero
 // fifty thousand for the InOut ease
 const float Ease::Warp::MinDifferenceFromAsymptote = 7.9579e-12f;
 
-}
+} // namespace Zero

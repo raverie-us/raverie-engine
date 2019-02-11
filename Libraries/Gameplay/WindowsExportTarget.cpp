@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,18 +15,21 @@ HashSet<String>& WindowsExportTarget::GetAdditionalExcludedFiles()
   return files;
 }
 
-WindowsExportTarget::WindowsExportTarget(Exporter* exporter, String targetName)
-  : ExportTarget(exporter, targetName)
+WindowsExportTarget::WindowsExportTarget(Exporter* exporter,
+                                         String targetName) :
+    ExportTarget(exporter, targetName)
 {
 }
 
 void WindowsExportTarget::ExportApplication()
 {
-  String applicationOutputPath = FilePath::CombineWithExtension(mExporter->mOutputDirectory, mExporter->mApplicationName, ".exe");
+  String applicationOutputPath = FilePath::CombineWithExtension(
+      mExporter->mOutputDirectory, mExporter->mApplicationName, ".exe");
   {
     TimerBlock block("Exported Project");
     ProjectSettings* project = mExporter->mProjectCog->has(ProjectSettings);
-    String outputPath = FilePath::Combine(GetTemporaryDirectory(), "Windows", "ZeroExport");
+    String outputPath =
+        FilePath::Combine(GetTemporaryDirectory(), "Windows", "ZeroExport");
     String appDirectory = GetApplicationDirectory();
     Cog* configCog = Z::gEngine->GetConfigCog();
     MainConfig* mainConfig = configCog->has(MainConfig);
@@ -42,7 +42,7 @@ void WindowsExportTarget::ExportApplication()
 
     String contentOutput = Z::gContentSystem->ContentOutputPath;
 
-    //archive all core resources
+    // archive all core resources
     Archive engineArchive(ArchiveMode::Compressing);
     ArchiveLibraryOutput(engineArchive, "FragmentCore");
     ArchiveLibraryOutput(engineArchive, "Loading");
@@ -55,53 +55,62 @@ void WindowsExportTarget::ExportApplication()
     HashSet<String>& additionalExcludes = GetAdditionalExcludedFiles();
 
     // Add all dlls (and other files next to the exe)
-    AddFiles(appDirectory, additionalExcludes, ArchiveFileCallback, &engineArchive);
+    AddFiles(
+        appDirectory, additionalExcludes, ArchiveFileCallback, &engineArchive);
 
     engineArchive.AddFile(projectFile, "Project.zeroproj");
 
     // Add files from project data directory into archive data directory
     String dataDirectory = mainConfig->DataDirectory;
-    AddFilesHelper(dataDirectory, "Data", additionalExcludes, ArchiveFileCallback, &engineArchive);
+    AddFilesHelper(dataDirectory,
+                   "Data",
+                   additionalExcludes,
+                   ArchiveFileCallback,
+                   &engineArchive);
 
     SetWorkingDirectory(appDirectory);
 
-    //Copy in ZeroCrashHandler
+    // Copy in ZeroCrashHandler
     String crashHandler = FilePath::Combine("Tools", "ZeroCrashHandler.exe");
     if (FileExists(crashHandler))
       engineArchive.AddFileRelative(appDirectory, crashHandler);
 
     Archive projectArchive(ArchiveMode::Compressing);
-    if (SharedContent* sharedConent = mExporter->mProjectCog->has(SharedContent))
+    if (SharedContent* sharedConent =
+            mExporter->mProjectCog->has(SharedContent))
     {
-      forRange(ContentLibraryReference libraryRef, sharedConent->ExtraContentLibraries.All())
+      forRange(ContentLibraryReference libraryRef,
+               sharedConent->ExtraContentLibraries.All())
       {
         String libraryName = libraryRef.mContentLibraryName;
         ArchiveLibraryOutput(projectArchive, libraryName);
       }
     }
 
-    //archive project resources
+    // archive project resources
     ArchiveLibraryOutput(projectArchive, project->ProjectContentLibrary);
 
     String tempName = BuildString(project->ProjectName, "Temp.exe");
     String tempFile = FilePath::Combine(GetTemporaryDirectory(), tempName);
 
-    //Alright time to create the exe
+    // Alright time to create the exe
     CopyFile(tempFile, FilePath::Combine(appDirectory, "ZeroEditor.exe"));
 
-    //Embed package as resource section. This is generally more windows friendly than appending
-    //the data on the End() of the exe since opening the exe for reading is unreliable. 
-    //The resource data section IDR_PACK is already in the exe and will be updated from empty
-    //to a package containing all resources.
+    // Embed package as resource section. This is generally more windows
+    // friendly than appending the data on the End() of the exe since opening the
+    // exe for reading is unreliable. The resource data section IDR_PACK is
+    // already in the exe and will be updated from empty to a package containing
+    // all resources.
 
-    //Each export generates a new export id so that files do not conflict
+    // Each export generates a new export id so that files do not conflict
     u64 exportId = GenerateUniqueId64();
 
     String uniqueName = BuildString(project->ProjectName, ToString(exportId));
 
     uint sizeOfEnginePacked = engineArchive.ComputeZipSize();
     uint sizeOfProjectPacked = projectArchive.ComputeZipSize();
-    uint totalSizePacked = sizeOfEnginePacked + sizeOfProjectPacked + sizeof(u32) + uniqueName.SizeInBytes();
+    uint totalSizePacked = sizeOfEnginePacked + sizeOfProjectPacked +
+                           sizeof(u32) + uniqueName.SizeInBytes();
 
     ByteBufferBlock final(totalSizePacked);
     u32 size = (u32)uniqueName.SizeInBytes();
@@ -129,16 +138,17 @@ void WindowsExportTarget::ExportApplication()
       ExecutableResourceUpdater updater(status, tempFile.c_str());
       if (status.Succeeded())
       {
-        // Update the PACK resource section with the project's resources. 
+        // Update the PACK resource section with the project's resources.
         updater.Update(gPackName, gPackType, final.GetBegin(), final.Size());
       }
       else
       {
-        DoNotifyWarning("Export Failed", "Failed to acquire handle to exported exe.");
+        DoNotifyWarning("Export Failed",
+                        "Failed to acquire handle to exported exe.");
         return;
       }
 
-      //Update the icon
+      // Update the icon
       mExporter->UpdateIcon(project, updater);
     }
 
@@ -149,7 +159,7 @@ void WindowsExportTarget::ExportApplication()
 
   if (mExporter->mPlay)
   {
-    //Wait for file system finish writing the file
+    // Wait for file system finish writing the file
     Os::SystemOpenFile(applicationOutputPath.c_str());
   }
 }
@@ -157,7 +167,8 @@ void WindowsExportTarget::ExportApplication()
 void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
 {
   ProjectSettings* project = projectCog->has(ProjectSettings);
-  String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Windows", project->ProjectName);
+  String outputDirectory = FilePath::Combine(
+      GetTemporaryDirectory(), "Windows", project->ProjectName);
 
   Status copyStatus;
   mExporter->CopyContent(copyStatus, outputDirectory, this);
@@ -168,7 +179,7 @@ void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
     return;
   }
 
-  //Copy the executable
+  // Copy the executable
   String outputExe = FilePath::Combine(outputDirectory, "ZeroEditor.exe");
   CopyFile(outputExe, GetApplication());
 
@@ -183,12 +194,17 @@ void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
   Os::SystemOpenFile(outputDirectory.c_str());
 }
 
-void WindowsExportTarget::CopyInstallerSetupFile(StringParam dest, StringParam source, StringParam projectName, Guid guid)
+void WindowsExportTarget::CopyInstallerSetupFile(StringParam dest,
+                                                 StringParam source,
+                                                 StringParam projectName,
+                                                 Guid guid)
 {
   // Open our installer setup template file
   String setupFilename = "InnoSetupTemplate.txt";
   File setup;
-  setup.Open(FilePath::Combine(source, setupFilename), FileMode::Read, FileAccessPattern::Sequential);
+  setup.Open(FilePath::Combine(source, setupFilename),
+             FileMode::Read,
+             FileAccessPattern::Sequential);
 
   // Make a buffer to hold the template data
   size_t filesize = setup.Size();
@@ -201,7 +217,9 @@ void WindowsExportTarget::CopyInstallerSetupFile(StringParam dest, StringParam s
 
   if (status.Failed())
   {
-    DoNotifyWarning("File Read Error", "Failed to read template setup file, aborting installer file setup");
+    DoNotifyWarning(
+        "File Read Error",
+        "Failed to read template setup file, aborting installer file setup");
     // cleanup the buffer
     delete[] buffer;
     return;
@@ -213,13 +231,18 @@ void WindowsExportTarget::CopyInstallerSetupFile(StringParam dest, StringParam s
 
   // Replace the template values with the project name and generate a guid
   String outputFileContent = fileContent.Replace("%PROJECTNAME%", projectName);
-  outputFileContent = outputFileContent.Replace("%GUID%", ToString(guid.mValue));
+  outputFileContent =
+      outputFileContent.Replace("%GUID%", ToString(guid.mValue));
 
   // Open our output file and write out the updated data
   File outputFile;
-  outputFile.Open(FilePath::CombineWithExtension(dest, BuildString(projectName, "InstallerSetup"), ".iss"), FileMode::Write, FileAccessPattern::Sequential);
-  outputFile.Write((byte*)outputFileContent.Data(), outputFileContent.SizeInBytes());
+  outputFile.Open(FilePath::CombineWithExtension(
+                      dest, BuildString(projectName, "InstallerSetup"), ".iss"),
+                  FileMode::Write,
+                  FileAccessPattern::Sequential);
+  outputFile.Write((byte*)outputFileContent.Data(),
+                   outputFileContent.SizeInBytes());
   outputFile.Close();
 }
 
-}// namespace Zero
+} // namespace Zero

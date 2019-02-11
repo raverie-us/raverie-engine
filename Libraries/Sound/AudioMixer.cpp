@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -12,74 +7,62 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//--------------------------------------------------------------------------------------- Audio Task
+//Audio Task
 
-//**************************************************************************************************
-AudioTask::AudioTask() :
-  mFunction(nullptr),
-  mObject(nullptr)
+AudioTask::AudioTask() : mFunction(nullptr), mObject(nullptr)
 {
-
 }
 
-//**************************************************************************************************
 AudioTask::AudioTask(Functor* function, HandleOf<SoundNode> node) :
-  mFunction(function),
-  mObject(node)
+    mFunction(function),
+    mObject(node)
 {
-
 }
 
-//**************************************************************************************************
-AudioTask::AudioTask(const AudioTask& other) : 
-  mFunction(other.mFunction),
-  mObject(other.mObject)
+AudioTask::AudioTask(const AudioTask& other) :
+    mFunction(other.mFunction),
+    mObject(other.mObject)
 {
   const_cast<AudioTask&>(other).mFunction = nullptr;
 }
 
-//**************************************************************************************************
 AudioTask::~AudioTask()
 {
-  if (mFunction) 
+  if (mFunction)
     delete mFunction;
 }
 
-//-------------------------------------------------------------------------------------- Audio Mixer
+//Audio Mixer
 
-//**************************************************************************************************
 AudioMixer::AudioMixer() :
-  mSystemChannels(2),
-  mMixVersionThreaded(0),
-  mMinimumVolumeThresholdThreaded(0.015f),
-  mSendMicrophoneInputData(cFalse),
-  FinalOutputNode(nullptr),
-  mMixThreadTaskWriteIndex(0),
-  mGameThreadTaskWriteIndex(0),
-  mShuttingDown(cFalse),
-  mVolume(1.0f),
-  mPeakVolumeLastMix(0.0f),
-  mRmsVolumeLastMix(0.0f),
-  mPreviousPeakVolumeThreaded(0.0f),
-  mPreviousRMSVolumeThreaded(0),
-  mResamplingThreaded(false),
-  mMuted(cFalse),
-  mMutingThreaded(false),
-  mPeakInputVolume(0.0f),
-  mSendMicrophoneInputCompressed(false),
-  mSendMicrophoneInputUncompressed(false)
+    mSystemChannels(2),
+    mMixVersionThreaded(0),
+    mMinimumVolumeThresholdThreaded(0.015f),
+    mSendMicrophoneInputData(cFalse),
+    FinalOutputNode(nullptr),
+    mMixThreadTaskWriteIndex(0),
+    mGameThreadTaskWriteIndex(0),
+    mShuttingDown(cFalse),
+    mVolume(1.0f),
+    mPeakVolumeLastMix(0.0f),
+    mRmsVolumeLastMix(0.0f),
+    mPreviousPeakVolumeThreaded(0.0f),
+    mPreviousRMSVolumeThreaded(0),
+    mResamplingThreaded(false),
+    mMuted(cFalse),
+    mMutingThreaded(false),
+    mPeakInputVolume(0.0f),
+    mSendMicrophoneInputCompressed(false),
+    mSendMicrophoneInputUncompressed(false)
 {
-
 }
 
-//**************************************************************************************************
 OsInt StartMix(void* mixer)
 {
   ((AudioMixer*)mixer)->MixLoopThreaded();
   return 0;
 }
 
-//**************************************************************************************************
 void AudioMixer::StartMixing(Status& status)
 {
   // Initialize the audio API and the input & output streams
@@ -123,7 +106,6 @@ void AudioMixer::StartMixing(Status& status)
   ZPrint("Audio initialization completed\n");
 }
 
-//**************************************************************************************************
 void AudioMixer::ShutDown()
 {
   TimerBlock block("Stopping Audio System.");
@@ -148,13 +130,13 @@ void AudioMixer::ShutDown()
     delete LowPass;
 }
 
-//**************************************************************************************************
 void AudioMixer::Update()
 {
   // If not threaded, run decoding tasks and mix loop
   if (!Zero::ThreadingEnabled)
   {
-    for (unsigned i = 0; i < MaxDecodingTasksToRun && !DecodingTasks.Empty(); ++i)
+    for (unsigned i = 0; i < MaxDecodingTasksToRun && !DecodingTasks.Empty();
+         ++i)
     {
       DecodingTasks.Front()->RunDecodingTask();
       DecodingTasks.PopFront();
@@ -171,14 +153,13 @@ void AudioMixer::Update()
     DispatchMicrophoneInput();
 }
 
-//**************************************************************************************************
 void AudioMixer::MixLoopThreaded()
 {
-#ifdef TRACK_TIME 
-  double maxTime = ??
+#ifdef TRACK_TIME
+  double maxTime = ? ?
 #endif
 
-  bool running = true;
+                     bool running = true;
   do
   {
 #ifdef TRACK_TIME
@@ -196,8 +177,11 @@ void AudioMixer::MixLoopThreaded()
     double timeDiff = (double)(clock() - time) / CLOCKS_PER_SEC;
     if (timeDiff > maxTime)
     {
-      AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError,
-        ExternalInterface, Zero::String("Mix took too long (informational message, not an error)")));
+      AddTaskThreaded(Zero::CreateFunctor(
+          &ExternalSystemInterface::SendAudioError,
+          ExternalInterface,
+          Zero::String(
+              "Mix took too long (informational message, not an error)")));
     }
 #endif
 
@@ -208,7 +192,6 @@ void AudioMixer::MixLoopThreaded()
   } while (running && Zero::ThreadingEnabled);
 }
 
-//**************************************************************************************************
 void AudioMixer::AddTask(Functor* task, HandleOf<SoundNode> node)
 {
   MixThreadTasksLock.Lock();
@@ -216,7 +199,6 @@ void AudioMixer::AddTask(Functor* task, HandleOf<SoundNode> node)
   MixThreadTasksLock.Unlock();
 }
 
-//**************************************************************************************************
 void AudioMixer::AddTaskThreaded(Functor* task, HandleOf<SoundNode> node)
 {
   GameThreadTasksLock.Lock();
@@ -224,13 +206,13 @@ void AudioMixer::AddTaskThreaded(Functor* task, HandleOf<SoundNode> node)
   GameThreadTasksLock.Unlock();
 }
 
-//**************************************************************************************************
 void AudioMixer::SetLatency(AudioLatency::Enum latency)
 {
-  AddTask(CreateFunctor(&AudioIOInterface::SetOutputLatencyThreaded, &AudioIO, latency), nullptr);
+  AddTask(CreateFunctor(
+              &AudioIOInterface::SetOutputLatencyThreaded, &AudioIO, latency),
+          nullptr);
 }
 
-//**************************************************************************************************
 bool AudioMixer::StartInput()
 {
   if (AudioIO.GetStreamStatus(StreamTypes::Input) == StreamStatus::Started)
@@ -242,13 +224,11 @@ bool AudioMixer::StartInput()
   return AudioIO.StartStreams(false, true);
 }
 
-//**************************************************************************************************
 float AudioMixer::GetVolume()
 {
   return mVolume.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void AudioMixer::SetVolume(const float volume)
 {
   // TODO this should probably be interpolated
@@ -256,55 +236,51 @@ void AudioMixer::SetVolume(const float volume)
   mVolume.Set(volume, AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 bool AudioMixer::GetMuteAllAudio()
 {
   return mMuted.Get() == cTrue;
 }
 
-//**************************************************************************************************
 void AudioMixer::SetMuteAllAudio(const bool muteAudio)
 {
-  AddTask(CreateFunctor(&AudioMixer::SetMutedThreaded, this, muteAudio), nullptr);
+  AddTask(CreateFunctor(&AudioMixer::SetMutedThreaded, this, muteAudio),
+          nullptr);
 }
 
-//**************************************************************************************************
 unsigned AudioMixer::GetOutputChannels()
 {
   return mSystemChannels.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void AudioMixer::SetOutputChannels(const unsigned channels)
 {
   if (channels == mSystemChannels.Get(AudioThreads::MainThread) || channels > 8)
     return;
 
   if (channels == 0)
-    mSystemChannels.Set(AudioIO.GetStreamChannels(StreamTypes::Output), AudioThreads::MainThread);
+    mSystemChannels.Set(AudioIO.GetStreamChannels(StreamTypes::Output),
+                        AudioThreads::MainThread);
   else
     mSystemChannels.Set(channels, AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 float AudioMixer::GetPeakOutputVolume()
 {
   return mPeakVolumeLastMix.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 float AudioMixer::GetRMSOutputVolume()
 {
   return mRmsVolumeLastMix.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void AudioMixer::SetMinimumVolumeThreshold(const float volume)
 {
-  AddTask(CreateFunctor(&AudioMixer::mMinimumVolumeThresholdThreaded, this, volume), nullptr);
+  AddTask(
+      CreateFunctor(&AudioMixer::mMinimumVolumeThresholdThreaded, this, volume),
+      nullptr);
 }
 
-//**************************************************************************************************
 void AudioMixer::SetSendUncompressedMicInput(const bool sendInput)
 {
   if (sendInput == mSendMicrophoneInputUncompressed)
@@ -320,7 +296,6 @@ void AudioMixer::SetSendUncompressedMicInput(const bool sendInput)
   mSendMicrophoneInputUncompressed = sendInput;
 }
 
-//**************************************************************************************************
 void AudioMixer::SetSendCompressedMicInput(const bool sendInput)
 {
   if (sendInput == mSendMicrophoneInputCompressed)
@@ -340,26 +315,25 @@ void AudioMixer::SetSendCompressedMicInput(const bool sendInput)
   mSendMicrophoneInputCompressed = sendInput;
 }
 
-//**************************************************************************************************
 float AudioMixer::GetPeakInputVolume()
 {
   if (mSendMicrophoneInputUncompressed || mSendMicrophoneInputCompressed)
     return mPeakInputVolume;
   else
   {
-    DoNotifyWarning("Audio Warning", "To get PeakInputVolume turn on sending microphone data, either uncompressed or compressed");
+    DoNotifyWarning("Audio Warning",
+                    "To get PeakInputVolume turn on sending microphone data, "
+                    "either uncompressed or compressed");
     return 0.0f;
   }
 }
 
-//**************************************************************************************************
 void AudioMixer::SendListenerRemovedEvent(ListenerNode* listener)
 {
   SoundEvent event(listener);
   DispatchEvent(Events::SoundListenerRemoved, &event);
 }
 
-//**************************************************************************************************
 bool AudioMixer::MixCurrentInstancesThreaded()
 {
   if (!FinalOutputNode)
@@ -391,7 +365,8 @@ bool AudioMixer::MixCurrentInstancesThreaded()
   // Get the audio input data
   GetAudioInputDataThreaded(samplesNeeded);
 
-  // If sending microphone input to the external system, add the input buffer to the queue
+  // If sending microphone input to the external system, add the input buffer to
+  // the queue
   if (mSendMicrophoneInputData.Get() != 0)
     InputDataBuffer.Write(InputBuffer.Data(), InputBuffer.Size());
 
@@ -399,7 +374,8 @@ bool AudioMixer::MixCurrentInstancesThreaded()
   BufferForOutput.Resize(mixFrames * mixChannels);
 
   // Get samples from output node
-  bool isThereData = FinalOutputNode->GetOutputSamples(&BufferForOutput, mixChannels, nullptr, true);
+  bool isThereData = FinalOutputNode->GetOutputSamples(
+      &BufferForOutput, mixChannels, nullptr, true);
 
   ++mMixVersionThreaded;
 
@@ -418,14 +394,17 @@ bool AudioMixer::MixCurrentInstancesThreaded()
     AudioFrame frame;
 
     if (mResamplingThreaded)
-      OutputResampler.SetInputBuffer(BufferForOutput.Data(), mixFrames, mixChannels);
+      OutputResampler.SetInputBuffer(
+          BufferForOutput.Data(), mixFrames, mixChannels);
 
     // Step through each frame in the output buffer
     for (unsigned frameIndex = 0; frameIndex < outputFrames; ++frameIndex)
     {
-      // If not resampling, set the samples on the frame object from this frame in the mix
+      // If not resampling, set the samples on the frame object from this frame
+      // in the mix
       if (!mResamplingThreaded)
-        frame.SetSamples(BufferForOutput.Data() + (frameIndex * mixChannels), mixChannels);
+        frame.SetSamples(BufferForOutput.Data() + (frameIndex * mixChannels),
+                         mixChannels);
       // Otherwise, interpolate between two mix frames
       else
       {
@@ -445,7 +424,8 @@ bool AudioMixer::MixCurrentInstancesThreaded()
         peakVolume = framePeak;
 
       // Use 16 bit int for RMS volume
-      unsigned value = (unsigned)(Math::Abs(frame.GetMonoValue()) * ((1 << 15) - 1));
+      unsigned value =
+          (unsigned)(Math::Abs(frame.GetMonoValue()) * ((1 << 15) - 1));
       rmsVolume += value * value;
 
       float* frameSamples = frame.GetSamples(outputChannels);
@@ -458,19 +438,22 @@ bool AudioMixer::MixCurrentInstancesThreaded()
       }
 
       // Copy this frame of samples to the output buffer
-      memcpy(MixedOutput.Data() + (frameIndex * outputChannels), frameSamples,
-        sizeof(float) * outputChannels);
+      memcpy(MixedOutput.Data() + (frameIndex * outputChannels),
+             frameSamples,
+             sizeof(float) * outputChannels);
     }
   }
 
   // Update the output volumes
-  if (peakVolume != mPreviousPeakVolumeThreaded || rmsVolume != mPreviousRMSVolumeThreaded)
+  if (peakVolume != mPreviousPeakVolumeThreaded ||
+      rmsVolume != mPreviousRMSVolumeThreaded)
   {
     mPreviousPeakVolumeThreaded = peakVolume;
     mPreviousRMSVolumeThreaded = rmsVolume;
     rmsVolume /= outputFrames;
     mPeakVolumeLastMix.Set(peakVolume, AudioThreads::MixThread);
-    mRmsVolumeLastMix.Set(Math::Sqrt((float)rmsVolume) / (float)((1 << 15) - 1), AudioThreads::MixThread);
+    mRmsVolumeLastMix.Set(Math::Sqrt((float)rmsVolume) / (float)((1 << 15) - 1),
+                          AudioThreads::MixThread);
   }
 
   // Check if there is a volume adjustment to apply
@@ -523,7 +506,6 @@ bool AudioMixer::MixCurrentInstancesThreaded()
   return true;
 }
 
-//**************************************************************************************************
 int SwapBufferIndexes(int* index)
 {
   int current = *index;
@@ -531,14 +513,14 @@ int SwapBufferIndexes(int* index)
   return current;
 }
 
-//**************************************************************************************************
 void AudioMixer::HandleTasksThreaded()
 {
   MixThreadTasksLock.Lock();
-  TaskListType& list = TasksForMixThread[SwapBufferIndexes(&mMixThreadTaskWriteIndex)];
+  TaskListType& list =
+      TasksForMixThread[SwapBufferIndexes(&mMixThreadTaskWriteIndex)];
   MixThreadTasksLock.Unlock();
 
-  forRange(AudioTask& task, list.All())
+  forRange(AudioTask & task, list.All())
   {
     ErrorIf(!task.mFunction, "Functor pointer is null");
     task.mFunction->Execute();
@@ -547,14 +529,14 @@ void AudioMixer::HandleTasksThreaded()
   list.Clear();
 }
 
-//**************************************************************************************************
 void AudioMixer::HandleTasks()
 {
   GameThreadTasksLock.Lock();
-  TaskListType& list = TasksForGameThread[SwapBufferIndexes(&mGameThreadTaskWriteIndex)];
+  TaskListType& list =
+      TasksForGameThread[SwapBufferIndexes(&mGameThreadTaskWriteIndex)];
   GameThreadTasksLock.Unlock();
 
-  forRange(AudioTask& task, list.All())
+  forRange(AudioTask & task, list.All())
   {
     ErrorIf(!task.mFunction, "Functor pointer is null");
     task.mFunction->Execute();
@@ -563,7 +545,6 @@ void AudioMixer::HandleTasks()
   list.Clear();
 }
 
-//**************************************************************************************************
 void AudioMixer::CheckForResamplingThreaded()
 {
   unsigned outputSampleRate = AudioIO.GetStreamSampleRate(StreamTypes::Output);
@@ -571,15 +552,15 @@ void AudioMixer::CheckForResamplingThreaded()
   if (cSystemSampleRate != outputSampleRate)
   {
     mResamplingThreaded = true;
-    OutputResampler.SetFactor((double)cSystemSampleRate / (double)outputSampleRate);
+    OutputResampler.SetFactor((double)cSystemSampleRate /
+                              (double)outputSampleRate);
   }
-  else 
+  else
   {
     mResamplingThreaded = false;
   }
 }
 
-//**************************************************************************************************
 void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
 {
   unsigned inputChannels = AudioIO.GetStreamChannels(StreamTypes::Input);
@@ -597,10 +578,12 @@ void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
   }
   else
   {
-    // Save the number of frames of input to get, adjusting for resampling if necessary
+    // Save the number of frames of input to get, adjusting for resampling if
+    // necessary
     unsigned inputFrames = howManySamples / mixChannels;
     if (inputRate != cSystemSampleRate)
-      inputFrames = (unsigned)(inputFrames * (float)inputRate / (float)cSystemSampleRate);
+      inputFrames =
+          (unsigned)(inputFrames * (float)inputRate / (float)cSystemSampleRate);
 
     // Need to adjust channels
     if (inputChannels != mixChannels)
@@ -612,7 +595,8 @@ void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
       // Reset the InputBuffer
       InputBuffer.Clear();
 
-      // Translate the channels for each audio frame and add samples to InputBuffer
+      // Translate the channels for each audio frame and add samples to
+      // InputBuffer
       for (unsigned i = 0; i < inputSamples.Size(); i += inputChannels)
       {
         AudioFrame frame(inputSamples.Data() + i, inputChannels);
@@ -633,7 +617,8 @@ void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
       // Set the resampling factor on the resampler object
       InputResampler.SetFactor((double)inputRate / (double)cSystemSampleRate);
       // Set the buffer on the resampler
-      InputResampler.SetInputBuffer(InputBuffer.Data(), InputBuffer.Size() / mixChannels, mixChannels);
+      InputResampler.SetInputBuffer(
+          InputBuffer.Data(), InputBuffer.Size() / mixChannels, mixChannels);
       // Array to get a frame of samples from the resampler
       Zero::Array<float> frame(mixChannels);
 
@@ -652,7 +637,6 @@ void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
   }
 }
 
-//**************************************************************************************************
 void AudioMixer::SetMutedThreaded(bool muteAudio)
 {
   if (muteAudio && mMuted.Get() == cFalse && !mMutingThreaded)
@@ -667,7 +651,6 @@ void AudioMixer::SetMutedThreaded(bool muteAudio)
   }
 }
 
-//**************************************************************************************************
 void AudioMixer::DispatchMicrophoneInput()
 {
   unsigned available = InputDataBuffer.GetReadAvailable();
@@ -676,7 +659,7 @@ void AudioMixer::DispatchMicrophoneInput()
 
   Array<float> inputData(available);
   InputDataBuffer.Read(inputData.Data(), available);
-  
+
   // Save the peak volume from the input samples
   mPeakInputVolume = 0.0f;
   forRange(float sample, inputData.All())
@@ -713,7 +696,8 @@ void AudioMixer::DispatchMicrophoneInput()
 
       // If the system is in mono, just add samples
       if (channels == 1)
-        monoSamples.Append(PreviousInputSamples.SubRange(0, AudioFileEncoder::cPacketFrames));
+        monoSamples.Append(
+            PreviousInputSamples.SubRange(0, AudioFileEncoder::cPacketFrames));
       else
       {
         // Translate samples to mono
@@ -729,11 +713,13 @@ void AudioMixer::DispatchMicrophoneInput()
       }
 
       // Remove the samples from the array
-      PreviousInputSamples.Erase(PreviousInputSamples.SubRange(0, totalPacketSamples));
+      PreviousInputSamples.Erase(
+          PreviousInputSamples.SubRange(0, totalPacketSamples));
 
       // Encode the packet
       Zero::Array<byte> dataArray;
-      Encoder.EncodePacket(monoSamples.Data(), AudioFileEncoder::cPacketFrames, dataArray);
+      Encoder.EncodePacket(
+          monoSamples.Data(), AudioFileEncoder::cPacketFrames, dataArray);
 
       // Send the event with the encoded data
       AudioByteDataEvent event;
@@ -744,7 +730,6 @@ void AudioMixer::DispatchMicrophoneInput()
   }
 }
 
-//**************************************************************************************************
 void AudioMixer::SetSendMicInput(bool turnOn)
 {
   if (turnOn)
@@ -759,86 +744,75 @@ void AudioMixer::SetSendMicInput(bool turnOn)
     mSendMicrophoneInputData.Set(0);
 }
 
-//-------------------------------------------------------------------------------------- Audio Frame
+//Audio Frame
 
 namespace AudioChannelTranslation
 {
 
-// Matrix columns are FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight
+// Matrix columns are FrontLeft, FrontRight, Center, LowFreq, SideLeft,
+// SideRight, BackLeft, BackRight
 
 const float cSqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
-const float ChannelMatrix1[cMaxChannels] =
-{
-  cSqrt2Inv, cSqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
-};
+const float ChannelMatrix1[cMaxChannels] = {
+    cSqrt2Inv, cSqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f};
 
-const float ChannelMatrix2[cMaxChannels * 2] =
-{
-  1.0f, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f,
-  0.0f, 1.0f, cSqrt2Inv, 0.0f, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv
-};
+const float ChannelMatrix2[cMaxChannels * 2] = {1.0f,
+                                                0.0f,
+                                                cSqrt2Inv,
+                                                0.0f,
+                                                cSqrt2Inv,
+                                                0.0f,
+                                                cSqrt2Inv,
+                                                0.0f,
+                                                0.0f,
+                                                1.0f,
+                                                cSqrt2Inv,
+                                                0.0f,
+                                                0.0f,
+                                                cSqrt2Inv,
+                                                0.0f,
+                                                cSqrt2Inv};
 
-const float ChannelMatrix3[cMaxChannels * 3] =
-{
-  1.0f, 0.0f, 0.0f, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f,
-  0.0f, 1.0f, 0.0f, 0.0f, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv,
-  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
-};
+const float ChannelMatrix3[cMaxChannels * 3] = {
+    1.0f, 0.0f, 0.0f, 0.0f, cSqrt2Inv, 0.0f,      cSqrt2Inv, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f,      cSqrt2Inv, 0.0f,      cSqrt2Inv,
+    0.0f, 0.0f, 1.0f, 0.0f, 0.0f,      0.0f,      0.0f,      0.0f};
 
-const float ChannelMatrix4[cMaxChannels * 4] =
-{
-  1.0f, 0.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 1.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
-};
+const float ChannelMatrix4[cMaxChannels * 4] = {
+    1.0f, 0.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, cSqrt2Inv,
+    0.0f, 0.0f, 0.0f,      0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    1.0f, 0.0f, 0.0f,      0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix5[cMaxChannels * 5] =
-{
-  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
-};
+const float ChannelMatrix5[cMaxChannels * 5] = {
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix6[cMaxChannels * 6] =
-{
-  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
-};
+const float ChannelMatrix6[cMaxChannels * 6] = {
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix7[cMaxChannels * 7] =
-{
-  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-};
+const float ChannelMatrix7[cMaxChannels * 7] = {
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix8[cMaxChannels * 8] =
-{
-  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
-};
+const float ChannelMatrix8[cMaxChannels * 8] = {
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
 } // namespace AudioChannelTranslation
 
-//**************************************************************************************************
 AudioFrame::AudioFrame(float* samples, unsigned channels)
 {
   SetSamples(samples, channels);
@@ -854,9 +828,7 @@ AudioFrame::AudioFrame(float* samples, unsigned channels)
   Matrices[8] = AudioChannelTranslation::ChannelMatrix8;
 }
 
-//**************************************************************************************************
-AudioFrame::AudioFrame() :
-  mStoredChannels(1)
+AudioFrame::AudioFrame() : mStoredChannels(1)
 {
   memset(mSamples, 0, sizeof(float) * cMaxChannels);
 
@@ -871,9 +843,8 @@ AudioFrame::AudioFrame() :
   Matrices[8] = AudioChannelTranslation::ChannelMatrix8;
 }
 
-//**************************************************************************************************
 AudioFrame::AudioFrame(const AudioFrame& copy) :
-  mStoredChannels(copy.mStoredChannels)
+    mStoredChannels(copy.mStoredChannels)
 {
   memcpy(mSamples, copy.mSamples, sizeof(float) * cMaxChannels);
 
@@ -888,12 +859,11 @@ AudioFrame::AudioFrame(const AudioFrame& copy) :
   Matrices[8] = AudioChannelTranslation::ChannelMatrix8;
 }
 
-//**************************************************************************************************
 float* AudioFrame::GetSamples(const unsigned outputChannels)
 {
   if (outputChannels != mStoredChannels)
   {
-    float output[cMaxChannels] = { 0 };
+    float output[cMaxChannels] = {0};
 
     // Down-mixing
     if (outputChannels < mStoredChannels)
@@ -902,7 +872,9 @@ float* AudioFrame::GetSamples(const unsigned outputChannels)
       {
         for (unsigned i = 0; i < cMaxChannels; ++i)
         {
-          output[outChannel] += mSamples[i] * Matrices[outputChannels][i + (outChannel * cMaxChannels)];
+          output[outChannel] +=
+              mSamples[i] *
+              Matrices[outputChannels][i + (outChannel * cMaxChannels)];
         }
       }
     }
@@ -926,10 +898,12 @@ float* AudioFrame::GetSamples(const unsigned outputChannels)
           if (mStoredChannels == 3)
             output[Center] = mSamples[Center];
           else
-            output[Center] = (mSamples[0] + mSamples[1]) * AudioChannelTranslation::cSqrt2Inv;
+            output[Center] = (mSamples[0] + mSamples[1]) *
+                             AudioChannelTranslation::cSqrt2Inv;
 
-          output[BackLeft] = output[BackRight] = output[SideLeft] = output[SideRight] 
-            = (mSamples[0] - mSamples[1]) * AudioChannelTranslation::cSqrt2Inv;
+          output[BackLeft] = output[BackRight] = output[SideLeft] =
+              output[SideRight] = (mSamples[0] - mSamples[1]) *
+                                  AudioChannelTranslation::cSqrt2Inv;
         }
         else
         {
@@ -947,7 +921,6 @@ float* AudioFrame::GetSamples(const unsigned outputChannels)
   return mCopiedSamples;
 }
 
-//**************************************************************************************************
 void AudioFrame::SetSamples(const float* samples, unsigned channels)
 {
   mStoredChannels = Math::Max(channels, 1u);
@@ -988,14 +961,12 @@ void AudioFrame::SetSamples(const float* samples, unsigned channels)
   }
 }
 
-//**************************************************************************************************
 void AudioFrame::Clamp()
 {
   for (unsigned i = 0; i < cMaxChannels; ++i)
     mSamples[i] = Math::Clamp(mSamples[i], -1.0f, 1.0f);
 }
 
-//**************************************************************************************************
 float AudioFrame::GetMaxValue()
 {
   float value = Math::Abs(mSamples[0]);
@@ -1010,7 +981,6 @@ float AudioFrame::GetMaxValue()
   return value;
 }
 
-//**************************************************************************************************
 float AudioFrame::GetMonoValue()
 {
   if (mStoredChannels == 1)
@@ -1026,22 +996,21 @@ float AudioFrame::GetMonoValue()
   return value;
 }
 
-//**************************************************************************************************
 void AudioFrame::operator*=(float multiplier)
 {
   for (unsigned i = 0; i < cMaxChannels; ++i)
     mSamples[i] *= multiplier;
 }
 
-//**************************************************************************************************
 void AudioFrame::operator=(const AudioFrame& copy)
 {
   mStoredChannels = copy.mStoredChannels;
   memcpy(mSamples, copy.mSamples, sizeof(float) * cMaxChannels);
 }
 
-//**************************************************************************************************
-void AudioFrame::CopySamples(const float* source, float* destination, const unsigned channels)
+void AudioFrame::CopySamples(const float* source,
+                             float* destination,
+                             const unsigned channels)
 {
   switch (channels)
   {

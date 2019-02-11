@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -41,7 +36,7 @@ public:
   void OnMouseDoubleClick(MouseEvent* event);
   void OnMouseUp(MouseEvent* event);
   void OnMouseScroll(MouseEvent* event);
-  
+
   void UpdateTransform() override;
 
   void OnEngineUpdate(UpdateEvent* event);

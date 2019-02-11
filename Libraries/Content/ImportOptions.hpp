@@ -1,24 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ImportOptions.hpp
-/// 
-/// 
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Engine\EngineEvents.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------------------- Import Support Functions
+//Support Functions
 
-// Sanitizes the name of the content file to be compatible with cog, archetype, and resource names
+// Sanitizes the name of the content file to be compatible with cog, archetype,
+// and resource names
 String SanitizeContentFilename(StringParam filename);
 
-//----------------------------------------------------------------- ImageOptions
 DeclareEnum2(ImageImport, Textures, Sprites);
 
 class ImageOptions : public Object
@@ -32,14 +24,23 @@ public:
   ImageImport::Enum mImportImages;
 };
 
-//-------------------------------------------------------------- GeometryOptions
 DeclareEnum3(MeshImport, NoMesh, SingleMesh, MultiMesh);
 DeclareEnum3(PhysicsImport, NoMesh, StaticMesh, ConvexMesh);
-DeclareEnum7(ScaleConversion, Custom, CentimeterToInches, CentimeterToMeter,
-                                      InchesToCentimenters, InchesToMeters,
-                                      MetersToCentimeters, MetersToInches);
-DeclareEnum6(BasisType, PositiveX, PositiveY, PositiveZ,
-                        NegativeX, NegativeY, NegativeZ);
+DeclareEnum7(ScaleConversion,
+             Custom,
+             CentimeterToInches,
+             CentimeterToMeter,
+             InchesToCentimenters,
+             InchesToMeters,
+             MetersToCentimeters,
+             MetersToInches);
+DeclareEnum6(BasisType,
+             PositiveX,
+             PositiveY,
+             PositiveZ,
+             NegativeX,
+             NegativeY,
+             NegativeZ);
 
 const float cCentimetersToInchesScaleFactor = 0.3937f;
 const float cCentimetersToMetersScaleFactor = 0.01f;
@@ -48,7 +49,6 @@ const float cInchesToMetersScaleFactor = 0.0254f;
 const float cMetersToCentimetersScaleFactor = 100.f;
 const float cMetersToInchesScaleFactor = 39.37f;
 
-//-------------------------------------------------------------- GeometryOptions
 class GeometryOptions : public Object
 {
 public:
@@ -59,20 +59,23 @@ public:
 
   bool mImportMeshes;
   // sub mesh import options only visible if importing a mesh
-    bool mCombineMeshes;
-    // overwrites imported normals with generated ones, generates normals if none are present either way
-    bool mGenerateSmoothNormals;
-    // the angle at or under which two normals are averaged together
-    float mSmoothingAngleDegreesThreshold;
-    // overwrites imported tangents and bitangents with generated ones, generates tangents and bitangents if none are present either way
-    bool mGenerateTangentSpace;
-    // flips the y-axis and adjusts tangent space as needed
-    bool mInvertUvYAxis;
-    bool mFlipWindingOrder;
-    PhysicsImport::Enum mPhysicsImport;
+  bool mCombineMeshes;
+  // overwrites imported normals with generated ones, generates normals if none
+  // are present either way
+  bool mGenerateSmoothNormals;
+  // the angle at or under which two normals are averaged together
+  float mSmoothingAngleDegreesThreshold;
+  // overwrites imported tangents and bitangents with generated ones, generates
+  // tangents and bitangents if none are present either way
+  bool mGenerateTangentSpace;
+  // flips the y-axis and adjusts tangent space as needed
+  bool mInvertUvYAxis;
+  bool mFlipWindingOrder;
+  PhysicsImport::Enum mPhysicsImport;
   // end sub mesh import options
-  
-  /// Warning: When collapsing pivots on models non-embedded animations may not remain compatible
+
+  /// Warning: When collapsing pivots on models non-embedded animations may not
+  /// remain compatible
   bool mCollapsePivots;
   bool mImportAnimations;
   bool mCreateArchetype;
@@ -89,15 +92,15 @@ public:
   BasisType::Enum mZBasisTo;
 };
 
-//-------------------------------------------------------------- ShowNormalGenerationOptionsFilter
+//ShowNormalGenerationOptionsFilter
 class ShowNormalGenerationOptionsFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(ShowNormalGenerationOptionsFilter, TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShowNormalGenerationOptionsFilter,
+                   TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
-//----------------------------------------------------------------- AudioOptions
 DeclareEnum3(AudioCueImport, None, PerSound, Grouped);
 class AudioOptions : public Object
 {
@@ -112,7 +115,6 @@ public:
   ImportOptions* mOwner;
 };
 
-//-------------------------------------------------------------- ConflictOptions
 DeclareEnum2(ConflictAction, Skip, Replace);
 class ConflictOptions : public Object
 {
@@ -128,10 +130,9 @@ public:
   ImportOptions* mOwner;
 };
 
-//---------------------------------------------------------------- ImportOptions
 namespace Events
 {
-  DeclareEvent(ImportOptionsModified);
+DeclareEvent(ImportOptionsModified);
 }
 
 class ImportOptions : public EventObject
@@ -151,12 +152,12 @@ public:
   AudioOptions* mAudioOptions;
   ConflictOptions* mConflictOptions;
 
-  //Destination Library
+  // Destination Library
   ContentLibrary* mLibrary;
 
-  //File to be imported
+  // File to be imported
   Array<String> mFiles;
   Array<String> mConflictedFiles;
 };
 
-} //namespace Zero
+} // namespace Zero

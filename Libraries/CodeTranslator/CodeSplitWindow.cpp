@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CodeSplitWindow.cpp
-///  Implement the CodeSplitWindow and CodeSplitWindow.
-///
-/// Authors: Joshua Davis
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 void CodeTranslator::Translate(HashMap<String, String>& files)
 {
-  
 }
 
 uint CodeTranslator::GetSourceLexer()
@@ -27,8 +18,7 @@ uint CodeTranslator::GetDestinationLexer()
   return Lexer::Python;
 }
 
-CodeSplitWindow::CodeSplitWindow(Composite* parent)
-  : Composite(parent)
+CodeSplitWindow::CodeSplitWindow(Composite* parent) : Composite(parent)
 {
   SetLayout(CreateRowLayout());
   mSourceText = new ScriptEditor(this);
@@ -37,22 +27,22 @@ CodeSplitWindow::CodeSplitWindow(Composite* parent)
 
   mSourceText->SetSizing(SizeAxis::X, SizePolicy::Flex, 200);
   mTranslatedText->SetSizing(SizeAxis::X, SizePolicy::Flex, 200);
-  
-  mSplitter->SetSize(Pixels(10,10));
 
-  ConnectThisTo(this,Events::KeyDown,OnKeyDown);
+  mSplitter->SetSize(Pixels(10, 10));
+
+  ConnectThisTo(this, Events::KeyDown, OnKeyDown);
 }
 
 void CodeSplitWindow::OnKeyDown(KeyboardEvent* event)
 {
-  if(event->Key == 'S' && event->CtrlPressed)
+  if (event->Key == 'S' && event->CtrlPressed)
   {
     mSourceResource->SetAndSaveData(mSourceText->GetAllText());
 
     CommandManager* commands = CommandManager::GetInstance();
-    
+
     Command* command = commands->GetCommand(mCommandToRunOnSave);
-    if(command)
+    if (command)
       command->ExecuteCommand();
   }
 }
@@ -63,4 +53,4 @@ void CodeSplitWindow::SetLexers(CodeTranslator* translator)
   mTranslatedText->SetLexer(translator->GetDestinationLexer());
 }
 
-}//namespace Zero
+} // namespace Zero

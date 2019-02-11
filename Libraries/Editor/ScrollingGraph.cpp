@@ -1,32 +1,22 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ScrollingGraph.hpp
-/// Declaration of ScrollingGraph helper class.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
 ScrollingGraph::ScrollingGraph(Vec2Param hashSize)
 {
   mPixelsPerUnit = hashSize;
-  Zoom = Vec2(1,1);
-  Translation = Vec2(0,0);
+  Zoom = Vec2(1, 1);
+  Translation = Vec2(0, 0);
   mActions = NULL;
-  mGridScale = Vec2(1,1);
+  mGridScale = Vec2(1, 1);
 
   const float cDefaultZoomBounds = 10000.0f;
   ZoomMin = Vec2(1, 1) * 1.0f / cDefaultZoomBounds;
   ZoomMax = Vec2(1, 1) * cDefaultZoomBounds;
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::ToGraphSpace(Vec2Param pixelPos)
 {
   Vec2 hashSize = mPixelsPerUnit * Zoom;
@@ -36,7 +26,6 @@ Vec2 ScrollingGraph::ToGraphSpace(Vec2Param pixelPos)
   return graphPos;
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::ToPixels(Vec2Param graphPos)
 {
   Vec2 hashSize = mPixelsPerUnit * Zoom;
@@ -46,7 +35,6 @@ Vec2 ScrollingGraph::ToPixels(Vec2Param graphPos)
   return pixelPos;
 }
 
-//******************************************************************************
 float ScrollingGraph::GetDisplayInterval(float clientArea, uint axis)
 {
   // The range of units in pixels we're displaying
@@ -56,7 +44,6 @@ float ScrollingGraph::GetDisplayInterval(float clientArea, uint axis)
   return GetIntervalSize(displayRange, clientArea);
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::GetDisplayInterval(Vec2 clientArea)
 {
   float intervalX = GetDisplayInterval(clientArea.x, 0);
@@ -64,17 +51,17 @@ Vec2 ScrollingGraph::GetDisplayInterval(Vec2 clientArea)
   return Vec2(intervalX, intervalY);
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::SnapGraphPos(Vec2Param graphPos, Vec2Param clientArea)
 {
   Vec2 displayInterval = GetDisplayInterval(clientArea);
-  float x = Math::Round(graphPos.x * mGridScale.x / displayInterval.x) / mGridScale.x * displayInterval.x;
-  float y = Math::Round(graphPos.y * mGridScale.y / displayInterval.y) / mGridScale.y * displayInterval.y;
+  float x = Math::Round(graphPos.x * mGridScale.x / displayInterval.x) /
+            mGridScale.x * displayInterval.x;
+  float y = Math::Round(graphPos.y * mGridScale.y / displayInterval.y) /
+            mGridScale.y * displayInterval.y;
 
   return Vec2(x, y);
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::SnapPixelPos(Vec2Param pixelPos, Vec2Param clientArea)
 {
   // Convert to graph space
@@ -89,27 +76,24 @@ Vec2 ScrollingGraph::SnapPixelPos(Vec2Param pixelPos, Vec2Param clientArea)
   return snappedPixels;
 }
 
-//******************************************************************************
 void ScrollingGraph::ScrollGraph(Vec2Param graphSpaceScrollDirection)
 {
   // Origin is already in graph space, so just add to it
   Translation += graphSpaceScrollDirection;
 }
 
-//******************************************************************************
 void ScrollingGraph::ScrollPixels(Vec2Param pixelScrollDirection)
 {
   // Convert to graph space and scroll
   Vec2 hashSize = mPixelsPerUnit * Zoom;
   Vec2 graphSpaceScrollDirection = pixelScrollDirection / hashSize;
-  
+
   ScrollGraph(graphSpaceScrollDirection);
 }
 
-//******************************************************************************
 void ScrollingGraph::PanToTranslation(Vec2Param graphPos, float animTime)
 {
-  if(mActions)
+  if (mActions)
   {
     // Clear anything that was happening before
     mActions->Cancel();
@@ -118,8 +102,8 @@ void ScrollingGraph::PanToTranslation(Vec2Param graphPos, float animTime)
     ActionGroup* group = new ActionGroup();
 
     // Animate the Translation
-    Action* origin = AnimatePropertyGetSet(ScrollingGraph, Translation, 
-                                       Ease::Quad::Out, this, animTime, graphPos);
+    Action* origin = AnimatePropertyGetSet(
+        ScrollingGraph, Translation, Ease::Quad::Out, this, animTime, graphPos);
     group->Add(origin);
 
     // Add the action group
@@ -131,10 +115,12 @@ void ScrollingGraph::PanToTranslation(Vec2Param graphPos, float animTime)
   }
 }
 
-//******************************************************************************
-void ScrollingGraph::Frame(Vec2Param min, Vec2Param max,
-                           Vec2Param clientSize, IntVec2 axes, 
-                           Vec2 pixelPadding, float animTime)
+void ScrollingGraph::Frame(Vec2Param min,
+                           Vec2Param max,
+                           Vec2Param clientSize,
+                           IntVec2 axes,
+                           Vec2 pixelPadding,
+                           float animTime)
 {
   // Calculate the zoom without the padding
   Vec2 targetZoom = Zoom;
@@ -146,22 +132,23 @@ void ScrollingGraph::Frame(Vec2Param min, Vec2Param max,
 
   Vec2 targetOrigin = Translation;
   targetOrigin = -min + graphPadding;
-  targetZoom = (clientSize / mPixelsPerUnit) / (graphPadding * 2.0f + max - min);
+  targetZoom =
+      (clientSize / mPixelsPerUnit) / (graphPadding * 2.0f + max - min);
 
   targetOrigin.x = Math::Min(targetOrigin.x, 0.0f);
-  
-  if(axes.x == 0)
+
+  if (axes.x == 0)
   {
     targetOrigin.x = Translation.x;
     targetZoom.x = Zoom.x;
   }
-  if(axes.y == 0)
+  if (axes.y == 0)
   {
     targetOrigin.y = Translation.y;
     targetZoom.y = Zoom.y;
   }
 
-  if(mActions)
+  if (mActions)
   {
     // Clear anything that was happening before
     mActions->Cancel();
@@ -170,13 +157,17 @@ void ScrollingGraph::Frame(Vec2Param min, Vec2Param max,
     ActionGroup* group = new ActionGroup();
 
     // Animate the Origin
-    Action* origin = AnimatePropertyGetSet(ScrollingGraph, Translation, 
-                                 Ease::Quad::Out, this, animTime, targetOrigin);
+    Action* origin = AnimatePropertyGetSet(ScrollingGraph,
+                                           Translation,
+                                           Ease::Quad::Out,
+                                           this,
+                                           animTime,
+                                           targetOrigin);
     group->Add(origin);
 
     // Animate the Zoom
-    Action* zoom = AnimatePropertyGetSet(ScrollingGraph, Zoom, Ease::Quad::Out,
-                                         this, animTime, targetZoom);
+    Action* zoom = AnimatePropertyGetSet(
+        ScrollingGraph, Zoom, Ease::Quad::Out, this, animTime, targetZoom);
     group->Add(zoom);
 
     // Add the action group
@@ -189,7 +180,6 @@ void ScrollingGraph::Frame(Vec2Param min, Vec2Param max,
   }
 }
 
-//******************************************************************************
 ScrollingGraph::range ScrollingGraph::GetWidthHashes(float clientWidth,
                                                      bool halfHashes)
 {
@@ -201,7 +191,6 @@ ScrollingGraph::range ScrollingGraph::GetWidthHashes(float clientWidth,
   return range(Translation.x, displayRange, spacing, halfHashes, mGridScale.x);
 }
 
-//******************************************************************************
 ScrollingGraph::range ScrollingGraph::GetHeightHashes(float clientHeight,
                                                       bool halfHashes)
 {
@@ -213,7 +202,6 @@ ScrollingGraph::range ScrollingGraph::GetHeightHashes(float clientHeight,
   return range(Translation.y, displayRange, spacing, halfHashes, mGridScale.y);
 }
 
-//******************************************************************************
 String ScrollingGraph::GetWidthFormat(float clientWidth)
 {
   // The range of units in local space we're displaying
@@ -224,7 +212,6 @@ String ScrollingGraph::GetWidthFormat(float clientWidth)
   return GetLabelFormat(spacing);
 }
 
-//******************************************************************************
 String ScrollingGraph::GetHeightFormat(float clientHeight)
 {
   // The range of units in local space we're displaying
@@ -235,32 +222,27 @@ String ScrollingGraph::GetHeightFormat(float clientHeight)
   return GetLabelFormat(spacing);
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::GetTranslation()
 {
   return Translation;
 }
 
-//******************************************************************************
 void ScrollingGraph::SetTranslation(Vec2Param translation)
 {
   Translation = translation;
 }
 
-//******************************************************************************
 Vec2 ScrollingGraph::GetZoom()
 {
   return Zoom;
 }
 
-//******************************************************************************
 void ScrollingGraph::SetZoom(Vec2Param zoom)
 {
   Zoom.x = Math::Clamp(zoom.x, ZoomMin.x, ZoomMax.x);
   Zoom.y = Math::Clamp(zoom.y, ZoomMin.y, ZoomMax.y);
 }
 
-//******************************************************************************
 void ScrollingGraph::ZoomAtPosition(Vec2Param pixelPos, Vec2Param zoom)
 {
   // To zoom at a given position, we want to calculate the position on the
@@ -280,17 +262,16 @@ void ScrollingGraph::ZoomAtPosition(Vec2Param pixelPos, Vec2Param zoom)
   Translation += (newGraphPos - graphPos);
 }
 
-//******************************************************************************
 String ScrollingGraph::GetLabelFormat(float spacing)
 {
   uint decimals;
-  if(spacing > 0.9f)
+  if (spacing > 0.9f)
     decimals = 0;
-  else if(spacing > 0.09f)
+  else if (spacing > 0.09f)
     decimals = 1;
-  else if(spacing > 0.009)
+  else if (spacing > 0.009)
     decimals = 2;
-  else if(spacing > 0.0009)
+  else if (spacing > 0.0009)
     decimals = 3;
   else
     decimals = 4;
@@ -298,7 +279,6 @@ String ScrollingGraph::GetLabelFormat(float spacing)
   return String::Format("%%0.%if", decimals);
 }
 
-//******************************************************************************
 float ScrollingGraph::GetNextStep(int index)
 {
   // If it is even
@@ -314,7 +294,6 @@ float ScrollingGraph::GetNextStep(int index)
   }
 }
 
-//******************************************************************************
 float ScrollingGraph::GetIntervalSize(float range, float clientSpace)
 {
   const float cMinDistance = Pixels(35);
@@ -323,24 +302,24 @@ float ScrollingGraph::GetIntervalSize(float range, float clientSpace)
   uint hashCount;
   float dist;
 
-  // At index = -2, the step is 0.1 (which by default we want to 
+  // At index = -2, the step is 0.1 (which by default we want to
   // start searching from)
   int index = -2;
   float step = GetNextStep(index);
-  while(true)
+  while (true)
   {
     // Get the amount of hash marks that will fit
     hashCount = (uint)(range / step);
 
-    if(hashCount == 0)
+    if (hashCount == 0)
       return range;
 
     // Get the distance between each hash
     dist = clientSpace / hashCount;
 
-    if(dist > cMaxDistance)
+    if (dist > cMaxDistance)
       step = GetNextStep(--index);
-    else if(dist < cMinDistance)
+    else if (dist < cMinDistance)
       step = GetNextStep(++index);
     else
       break;
@@ -349,10 +328,8 @@ float ScrollingGraph::GetIntervalSize(float range, float clientSpace)
   return step;
 }
 
-//------------------------------------------------------------------------ range
-//******************************************************************************
-ScrollingGraph::range::range(float origin, float range, float spacing,
-                             bool halfHash, float gridScale)
+ScrollingGraph::range::range(
+    float origin, float range, float spacing, bool halfHash, float gridScale)
 {
   mOrigin = origin * gridScale;
   mOffset = Math::FMod(mOrigin, spacing);
@@ -363,13 +340,12 @@ ScrollingGraph::range::range(float origin, float range, float spacing,
   mGridScale = gridScale;
 }
 
-//******************************************************************************
 ScrollingGraph::HashMark ScrollingGraph::range::Front()
 {
   String format = GetLabelFormat(mSpacing);
   float graphPosition = -mOrigin + mSpacing * float(mCurrentHash) + mOffset;
 
-  if(mHalfHash)
+  if (mHalfHash)
     graphPosition += mSpacing * 0.5f;
 
   HashMark entry;
@@ -379,18 +355,16 @@ ScrollingGraph::HashMark ScrollingGraph::range::Front()
   return entry;
 }
 
-//******************************************************************************
 void ScrollingGraph::range::PopFront()
 {
   ++mCurrentHash;
 }
 
-//******************************************************************************
 bool ScrollingGraph::range::Empty()
 {
-  if(mHalfHash)
+  if (mHalfHash)
     return mCurrentHash == mHashCount;
   return mCurrentHash == (mHashCount + 1);
 }
 
-}//namespace Zero
+} // namespace Zero

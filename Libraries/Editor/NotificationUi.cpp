@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Notification.cpp
-/// Implementation of the NotificationPopup class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,13 +7,12 @@ namespace Zero
 namespace NotificationUi
 {
 const cstr cLocation = "EditorUi/Notification";
-Tweakable(Vec4, BackgroundColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, BorderColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace NotificationUi
 
 static NotificationPopup* mNotifcationWindow = NULL;
 
-//----------------------------------------------------------- Notification Popup
 
 NotificationPopup::NotifyData::NotifyData(NotifyEvent* event)
 {
@@ -31,8 +22,8 @@ NotificationPopup::NotifyData::NotifyData(NotifyEvent* event)
   Icon = event->Icon;
 }
 
-NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event)
-  : Composite(composite)
+NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event) :
+    Composite(composite)
 {
   mMouseOver = false;
   mNotifyData.PushBack(NotifyData(event));
@@ -45,9 +36,9 @@ NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event)
   mText = new Text(this, cText);
   mText->SetMultiLine(true);
   mTitleText = new Label(this, cTitleText);
-  
+
   mIcon = CreateAttached<Element>(event->Icon);
-  if(mIcon==NULL)
+  if (mIcon == NULL)
     mIcon = CreateAttached<Element>("LargeEmpty");
 
   mNotInLayout = true;
@@ -55,10 +46,11 @@ NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event)
   mText->SetText(event->Message);
   mTitleText->SetText(event->Name);
 
-  mClose =  CreateAttached<Element>("Close");
+  mClose = CreateAttached<Element>("Close");
 
   mBottomBar = new ColoredComposite(this, FloatColorRGBA(8, 8, 8, 255));
-  mBottomBar->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(1, 1, 12, 0)));
+  mBottomBar->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(1, 1, 12, 0)));
   {
     IconButton* leftButton = new IconButton(mBottomBar);
     leftButton->SetIcon("PreviousObject");
@@ -77,7 +69,6 @@ NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event)
     new Spacer(mBottomBar, SizePolicy::Flex, Vec2(1));
 
     mNumberOfNotificationsText = new Label(mBottomBar, cText);
-
   }
   mCurrentNotifyIndex = 0;
 
@@ -91,8 +82,8 @@ NotificationPopup::NotificationPopup(Composite* composite, NotifyEvent* event)
 
 NotificationPopup::~NotificationPopup()
 {
-  //there's only 1 notification window at a time,
-  //so clear the static variable if we get destroyed
+  // there's only 1 notification window at a time,
+  // so clear the static variable if we get destroyed
   mNotifcationWindow = NULL;
 }
 
@@ -109,39 +100,40 @@ void NotificationPopup::AddNotifyEvent(NotifyEvent* event)
   NotifyType::Enum currErrType = mNotifyData[mCurrentNotifyIndex].Type;
   NotifyType::Enum newErrType = mNotifyData[newIndex].Type;
 
-  //sort errors to take priority over warnings over general,
-  //but if we are already on the same type don't change our index
-  //also, if the mouse is not over the window, new items of the same priority will take over
-  if(newErrType == NotifyType::Error)
+  // sort errors to take priority over warnings over general,
+  // but if we are already on the same type don't change our index
+  // also, if the mouse is not over the window, new items of the same priority
+  // will take over
+  if (newErrType == NotifyType::Error)
   {
-    if(currErrType != NotifyType::Error || mMouseOver == false)
+    if (currErrType != NotifyType::Error || mMouseOver == false)
     {
       mCurrentNotifyIndex = newIndex;
       ReadCurrentNotifyData();
     }
   }
-  else if(newErrType == NotifyType::Warning)
+  else if (newErrType == NotifyType::Warning)
   {
-    if(currErrType == NotifyType::General || 
-      (currErrType == NotifyType::Warning && mMouseOver == false))
+    if (currErrType == NotifyType::General ||
+        (currErrType == NotifyType::Warning && mMouseOver == false))
     {
       mCurrentNotifyIndex = newIndex;
       ReadCurrentNotifyData();
     }
   }
-  else if(currErrType == NotifyType::General && mMouseOver == false)
+  else if (currErrType == NotifyType::General && mMouseOver == false)
   {
     mCurrentNotifyIndex = newIndex;
     ReadCurrentNotifyData();
   }
 
-  //a new notify happened, re-open the window
+  // a new notify happened, re-open the window
   AnimateToOpenThenClose();
 }
 
 void NotificationPopup::UpdateTransform()
 {
-  Vec2 sizeIcon = Vec2(0,0);
+  Vec2 sizeIcon = Vec2(0, 0);
   mIcon->SetTranslation(Vec3(Pixels(10), Pixels(10), 0));
   sizeIcon = mIcon->GetSize();
 
@@ -151,7 +143,8 @@ void NotificationPopup::UpdateTransform()
   mBottomBar->SetTranslation(Vec3(0, mSize.y - barHeight, 0));
   mBottomBar->SetSize(Vec2(mSize.x, barHeight));
 
-  mNumberOfNotificationsText->SetText(String::Format("(%d of %d)",mCurrentNotifyIndex + 1,mNotifyData.Size()));
+  mNumberOfNotificationsText->SetText(String::Format(
+      "(%d of %d)", mCurrentNotifyIndex + 1, mNotifyData.Size()));
 
   float xStart = sizeIcon.y + Pixels(10) + Pixels(10);
   mTitleText->SetTranslation(Vec3(xStart, Pixels(10), 0));
@@ -193,19 +186,19 @@ void NotificationPopup::GetPositionAndSize(Vec2Ref pos, Vec2Ref size)
 void NotificationPopup::GetStartAndEndPositions(Vec3Ref start, Vec3Ref end)
 {
   Vec2 pos, size;
-  GetPositionAndSize(pos,size);
+  GetPositionAndSize(pos, size);
   start = Vec3(pos.x, size.y, 0);
   end = Vec3(pos.x, pos.y, 0);
 }
 
 void NotificationPopup::AnimateToOpen()
 {
-  //clear out our old list then animate to an open position
+  // clear out our old list then animate to an open position
   mActions->Cancel();
 
   Vec2 popUpSize = GetPopupSize();
   Vec3 start, end;
-  GetStartAndEndPositions(start,end);
+  GetStartAndEndPositions(start, end);
 
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(MoveAndSizeWidgetAction(this, end, popUpSize, 0.3f));
@@ -213,10 +206,10 @@ void NotificationPopup::AnimateToOpen()
 
 void NotificationPopup::AnimateToClose()
 {
-  //add a delay, then animate to being closed
+  // add a delay, then animate to being closed
   Vec2 popUpSize = GetPopupSize();
   Vec3 start, end;
-  GetStartAndEndPositions(start,end);
+  GetStartAndEndPositions(start, end);
 
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(new ActionDelay(5.0f));
@@ -226,13 +219,13 @@ void NotificationPopup::AnimateToClose()
 
 void NotificationPopup::AnimateToOpenThenClose()
 {
-  //clear out our old list then animate to an open position
-  if(mActions)
+  // clear out our old list then animate to an open position
+  if (mActions)
     mActions->Cancel();
 
   Vec2 popUpSize = GetPopupSize();
   Vec3 start, end;
-  GetStartAndEndPositions(start,end);
+  GetStartAndEndPositions(start, end);
   //
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(MoveAndSizeWidgetAction(this, end, popUpSize, 0.3f));
@@ -260,7 +253,7 @@ void NotificationPopup::OnCloseButton(MouseEvent* event)
 
 void NotificationPopup::OnPreviousButton(MouseEvent* event)
 {
-  if(mCurrentNotifyIndex != 0)
+  if (mCurrentNotifyIndex != 0)
   {
     --mCurrentNotifyIndex;
     ReadCurrentNotifyData();
@@ -270,7 +263,7 @@ void NotificationPopup::OnPreviousButton(MouseEvent* event)
 
 void NotificationPopup::OnNextButton(MouseEvent* event)
 {
-  if(mCurrentNotifyIndex < mNotifyData.Size() - 1)
+  if (mCurrentNotifyIndex < mNotifyData.Size() - 1)
   {
     ++mCurrentNotifyIndex;
     ReadCurrentNotifyData();
@@ -280,22 +273,22 @@ void NotificationPopup::OnNextButton(MouseEvent* event)
 
 void DoNotifyPopup(Composite* root, NotifyEvent* event)
 {
-  //if we already have a window, add to it
-  if(mNotifcationWindow != NULL)
+  // if we already have a window, add to it
+  if (mNotifcationWindow != NULL)
   {
     mNotifcationWindow->AddNotifyEvent(event);
     return;
   }
 
-  //otherwise create a new window and add to it that way
+  // otherwise create a new window and add to it that way
   mNotifcationWindow = new NotificationPopup(root, event);
 
   Vec2 popUpSize = mNotifcationWindow->GetPopupSize();
   Vec3 start, end;
-  mNotifcationWindow->GetStartAndEndPositions(start,end);
+  mNotifcationWindow->GetStartAndEndPositions(start, end);
   mNotifcationWindow->SetTranslationAndSize(start, popUpSize);
 
   mNotifcationWindow->AnimateToOpenThenClose();
 }
 
-}//namespace Zero
+} // namespace Zero

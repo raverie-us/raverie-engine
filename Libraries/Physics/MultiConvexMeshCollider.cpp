@@ -1,29 +1,26 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2014-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------MultiConvexMeshRange::ConvexMeshObject
-void MultiConvexMeshRange::ConvexMeshObject::Support(Vec3Param direction, Vec3Ptr support) const
+void MultiConvexMeshRange::ConvexMeshObject::Support(Vec3Param direction,
+                                                     Vec3Ptr support) const
 {
   MultiConvexMesh* mesh = mCollider->mMesh;
   SubConvexMesh* subMesh = mesh->mMeshes[Index];
 
   // Bring the support direction into local space (normalize for safety),
-  // call the local-space support function then transform the result back into world space
+  // call the local-space support function then transform the result back into
+  // world space
   Vec3 localSpaceDir = mCollider->TransformSupportDirectionToLocal(direction);
   localSpaceDir.Normalize();
   subMesh->Support(mesh->mVertices, localSpaceDir, support);
   *support = mCollider->TransformSupportPointToWorld(*support);
 }
 
-void MultiConvexMeshRange::ConvexMeshObject::GetCenter(Vec3Ref worldCenter) const
+void MultiConvexMeshRange::ConvexMeshObject::GetCenter(
+    Vec3Ref worldCenter) const
 {
   // Get the local-space center of the current sub-mesh
   SubConvexMesh* subMesh = mCollider->mMesh->mMeshes[Index];
@@ -34,8 +31,8 @@ void MultiConvexMeshRange::ConvexMeshObject::GetCenter(Vec3Ref worldCenter) cons
   worldCenter = transform->TransformPoint(localCenter);
 }
 
-//-------------------------------------------------------------------MultiConvexMeshRange
-MultiConvexMeshRange::MultiConvexMeshRange(MultiConvexMeshCollider* collider, const Aabb& worldAabb)
+MultiConvexMeshRange::MultiConvexMeshRange(MultiConvexMeshCollider* collider,
+                                           const Aabb& worldAabb)
 {
   mIndex = 0;
   mCollider = collider;
@@ -77,17 +74,16 @@ void MultiConvexMeshRange::SkipDead()
 {
   // Find the next shape index that is hit by the local space query aabb
   MultiConvexMesh* mesh = mCollider->mMesh;
-  while(!Empty())
+  while (!Empty())
   {
     SubConvexMesh* subMesh = mesh->mMeshes[mIndex];
-    if(subMesh->mAabb.Overlap(mLocalAabb) == true)
+    if (subMesh->mAabb.Overlap(mLocalAabb) == true)
       return;
 
     ++mIndex;
   }
 }
 
-//-------------------------------------------------------------------MultiConvexMeshCollider
 ZilchDefineType(MultiConvexMeshCollider, builder, type)
 {
   ZeroBindComponent();
@@ -124,7 +120,7 @@ void MultiConvexMeshCollider::DebugDraw()
   Collider::DebugDraw();
 
   MultiConvexMesh* mesh = GetMesh();
-  if(mesh == nullptr)
+  if (mesh == nullptr)
     return;
 
   Mat4 worldMat = GetWorldTransform()->GetWorldMatrix();
@@ -135,7 +131,7 @@ void MultiConvexMeshCollider::ComputeWorldAabbInternal()
 {
   mAabb.Zero();
   MultiConvexMesh* mesh = mMesh;
-  if(mesh->mMeshes.Size() == 0)
+  if (mesh->mMeshes.Size() == 0)
     return;
 
   // Transform the mesh's aabb to world space
@@ -152,7 +148,8 @@ real MultiConvexMeshCollider::ComputeWorldVolumeInternal()
   return worldVolume;
 }
 
-void MultiConvexMeshCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
+void MultiConvexMeshCollider::ComputeLocalInverseInertiaTensor(
+    real mass, Mat3Ref localInvInertia)
 {
   Vec3 worldScale = GetWorldScale();
   localInvInertia = mMesh->ComputeInvInertiaTensor(worldScale, mass);
@@ -176,16 +173,17 @@ MultiConvexMesh* MultiConvexMeshCollider::GetMesh()
 
 void MultiConvexMeshCollider::SetMesh(MultiConvexMesh* mesh)
 {
-  if(mesh == nullptr)
+  if (mesh == nullptr)
     return;
 
-  // Disconnect from events on the old mesh and connect on the new mesh (if they're different)
+  // Disconnect from events on the old mesh and connect on the new mesh (if
+  // they're different)
   MultiConvexMesh* oldMesh = mMesh;
-  if(oldMesh != mesh)
+  if (oldMesh != mesh)
   {
-    if(oldMesh != nullptr)
+    if (oldMesh != nullptr)
       DisconnectAll(oldMesh, this);
-    if(mesh != nullptr)
+    if (mesh != nullptr)
       ConnectThisTo(mesh, Events::ResourceModified, OnMeshModified);
   }
 
@@ -198,12 +196,15 @@ void MultiConvexMeshCollider::OnMeshModified(Event* e)
   InternalSizeChanged();
 }
 
-MultiConvexMeshCollider::RangeType MultiConvexMeshCollider::GetOverlapRange(Aabb& worldAabb)
+MultiConvexMeshCollider::RangeType
+MultiConvexMeshCollider::GetOverlapRange(Aabb& worldAabb)
 {
   return RangeType(this, worldAabb);
 }
 
-bool MultiConvexMeshCollider::Cast(const Ray& worldRay, ProxyResult& result, BaseCastFilter& filter)
+bool MultiConvexMeshCollider::Cast(const Ray& worldRay,
+                                   ProxyResult& result,
+                                   BaseCastFilter& filter)
 {
   WorldTransformation* transform = GetWorldTransform();
   Ray localRay = worldRay.TransformInverse(transform->GetWorldMatrix());
@@ -211,7 +212,7 @@ bool MultiConvexMeshCollider::Cast(const Ray& worldRay, ProxyResult& result, Bas
   bool meshWasHit = mMesh->CastRay(localRay, result, filter);
   // If the mesh was hit then transform the local space data into world-space
   //(do this only once instead of per hit triangle)
-  if(meshWasHit)
+  if (meshWasHit)
   {
     result.mPoints[0] = transform->TransformPoint(result.mPoints[0]);
     result.mPoints[1] = transform->TransformPoint(result.mPoints[1]);
@@ -222,4 +223,4 @@ bool MultiConvexMeshCollider::Cast(const Ray& worldRay, ProxyResult& result, Bas
   return meshWasHit;
 }
 
-}//namespace Zero
+} // namespace Zero

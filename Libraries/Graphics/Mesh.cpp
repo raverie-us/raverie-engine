@@ -1,45 +1,41 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace
 {
-  const float cMinMeshThickness = 0.025f;
+const float cMinMeshThickness = 0.025f;
 }
 
 namespace Zero
 {
 
-//**************************************************************************************************
-VertexSemanticRange::VertexSemanticRange(const FixedVertexDescription& fixedDesc)
-  : mFixedDesc(fixedDesc)
-  , mCurrentIndex(0)
+VertexSemanticRange::VertexSemanticRange(
+    const FixedVertexDescription& fixedDesc) :
+    mFixedDesc(fixedDesc),
+    mCurrentIndex(0)
 {
 }
 
-//**************************************************************************************************
 bool VertexSemanticRange::Empty()
 {
   if (mCurrentIndex >= mFixedDesc.sMaxElements)
     return true;
   else
-    return mFixedDesc.mAttributes[mCurrentIndex].mSemantic == VertexSemantic::None;
+    return mFixedDesc.mAttributes[mCurrentIndex].mSemantic ==
+           VertexSemantic::None;
 }
 
-//**************************************************************************************************
 VertexSemantic::Enum VertexSemanticRange::Front()
 {
   return mFixedDesc.mAttributes[mCurrentIndex].mSemantic;
 }
 
-//**************************************************************************************************
 void VertexSemanticRange::PopFront()
 {
   ++mCurrentIndex;
 }
 
-//**************************************************************************************************
 ZilchDefineType(VertexBuffer, builder, type)
 {
   ZeroBindDocumented();
@@ -47,20 +43,24 @@ ZilchDefineType(VertexBuffer, builder, type)
   ZilchBindMethod(AddAttribute);
   ZilchBindMethod(GetAttributes);
 
-  ZilchBindOverloadedMethod(AddByte,  ZilchInstanceOverload(void, int));
-  ZilchBindOverloadedMethod(AddByte,  ZilchInstanceOverload(void, IntVec2));
-  ZilchBindOverloadedMethod(AddByte,  ZilchInstanceOverload(void, IntVec3));
-  ZilchBindOverloadedMethod(AddByte,  ZilchInstanceOverload(void, IntVec4));
+  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, int));
+  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, IntVec2));
+  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, IntVec3));
+  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, IntVec4));
   ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, int));
   ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, IntVec2));
   ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, IntVec3));
   ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, IntVec4));
-  ZilchBindOverloadedMethod(AddReal,  ZilchInstanceOverload(void, real));
-  ZilchBindOverloadedMethod(AddReal,  ZilchInstanceOverload(void, Vec2));
-  ZilchBindOverloadedMethod(AddReal,  ZilchInstanceOverload(void, Vec3));
-  ZilchBindOverloadedMethod(AddReal,  ZilchInstanceOverload(void, Vec4));
-  ZilchBindOverloadedMethod(GetVertexData, ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum));
-  ZilchBindOverloadedMethod(GetVertexData, ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
+  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, real));
+  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec2));
+  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec3));
+  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec4));
+  ZilchBindOverloadedMethod(
+      GetVertexData, ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum));
+  ZilchBindOverloadedMethod(
+      GetVertexData,
+      ZilchInstanceOverload(
+          Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
   ZilchBindMethod(IsValidVertexData);
 
   ZilchBindMethod(ClearAttributes);
@@ -71,7 +71,6 @@ ZilchDefineType(VertexBuffer, builder, type)
   ZilchBindGetterProperty(VertexCount);
 }
 
-//**************************************************************************************************
 VertexBuffer::VertexBuffer()
 {
   mFixedDesc.mVertexSize = 0;
@@ -81,48 +80,51 @@ VertexBuffer::VertexBuffer()
   mDataSize = 0;
 }
 
-//**************************************************************************************************
 VertexBuffer::~VertexBuffer()
 {
   delete[] mData;
 }
 
-//**************************************************************************************************
-void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum elementType, uint elementCount)
+void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic,
+                                VertexElementType::Enum elementType,
+                                uint elementCount)
 {
   if (elementCount < 1 || elementCount > 4)
-    DoNotifyException("Invalid Element Count", "Vertex attributes must be between 1 and 4 total elements.");
+    DoNotifyException(
+        "Invalid Element Count",
+        "Vertex attributes must be between 1 and 4 total elements.");
 
   for (uint i = 0; i < mFixedDesc.sMaxElements; ++i)
   {
     VertexAttribute& attr = mFixedDesc.mAttributes[i];
     if (attr.mSemantic == semantic)
     {
-      DoNotifyException("Invalid Semantic", "Semantic given has already been specified.");
+      DoNotifyException("Invalid Semantic",
+                        "Semantic given has already been specified.");
     }
     else if (attr.mSemantic == VertexSemantic::None)
     {
       uint elementSize = 1;
       switch (elementType)
       {
-        case VertexElementType::Byte:
-        case VertexElementType::NormByte:
-          elementSize = 1;
+      case VertexElementType::Byte:
+      case VertexElementType::NormByte:
+        elementSize = 1;
         break;
 
-        case VertexElementType::Short:
-        case VertexElementType::NormShort:
-          elementSize = 2;
+      case VertexElementType::Short:
+      case VertexElementType::NormShort:
+        elementSize = 2;
         break;
 
-        case VertexElementType::Real:
-          elementSize = 4;
+      case VertexElementType::Real:
+        elementSize = 4;
         break;
 
-        case VertexElementType::Half:
-        default:
-          DoNotifyException("Invalid Element Type", "Unsupported.");
-          return;
+      case VertexElementType::Half:
+      default:
+        DoNotifyException("Invalid Element Type", "Unsupported.");
+        return;
         break;
       }
 
@@ -142,26 +144,22 @@ void VertexBuffer::AddAttribute(VertexSemantic::Enum semantic, VertexElementType
   }
 }
 
-//**************************************************************************************************
 VertexSemanticRange VertexBuffer::GetAttributes()
 {
   return VertexSemanticRange(mFixedDesc);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddByte(int value)
 {
   WriteData((byte)value);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddByte(IntVec2 value)
 {
   WriteData((byte)value.x);
   WriteData((byte)value.y);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddByte(IntVec3 value)
 {
   WriteData((byte)value.x);
@@ -169,7 +167,6 @@ void VertexBuffer::AddByte(IntVec3 value)
   WriteData((byte)value.z);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddByte(IntVec4 value)
 {
   WriteData((byte)value.x);
@@ -178,20 +175,17 @@ void VertexBuffer::AddByte(IntVec4 value)
   WriteData((byte)value.w);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddShort(int value)
 {
   WriteData((u16)value);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddShort(IntVec2 value)
 {
   WriteData((u16)value.x);
   WriteData((u16)value.y);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddShort(IntVec3 value)
 {
   WriteData((u16)value.x);
@@ -199,7 +193,6 @@ void VertexBuffer::AddShort(IntVec3 value)
   WriteData((u16)value.z);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddShort(IntVec4 value)
 {
   WriteData((u16)value.x);
@@ -208,32 +201,28 @@ void VertexBuffer::AddShort(IntVec4 value)
   WriteData((u16)value.w);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddReal(real value)
 {
   WriteData(value);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddReal(Vec2 value)
 {
   WriteData(value);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddReal(Vec3 value)
 {
   WriteData(value);
 }
 
-//**************************************************************************************************
 void VertexBuffer::AddReal(Vec4 value)
 {
   WriteData(value);
 }
 
-//**************************************************************************************************
-Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic)
+Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
+                                 VertexSemantic::Enum semantic)
 {
   Vec4 value = Vec4::cZero;
 
@@ -242,7 +231,8 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
     return value;
 
   uint elementSize = GetElementSize(attribute.mType);
-  uint vertexOffset = (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
+  uint vertexOffset =
+      (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
   if (vertexOffset + elementSize * attribute.mCount > mDataSize)
     return value;
 
@@ -252,8 +242,10 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
   return value;
 }
 
-//**************************************************************************************************
-Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count)
+Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
+                                 VertexSemantic::Enum semantic,
+                                 VertexElementType::Enum type,
+                                 uint count)
 {
   Vec4 value = Vec4::cZero;
 
@@ -277,7 +269,8 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
   }
 
   uint elementSize = GetElementSize(attribute.mType);
-  uint vertexOffset = (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
+  uint vertexOffset =
+      (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
   if (vertexOffset + elementSize * attribute.mCount > mDataSize)
   {
     DoNotifyException("Invalid Read", "No vertex data at index.");
@@ -290,8 +283,10 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
   return value;
 }
 
-//**************************************************************************************************
-bool VertexBuffer::IsValidVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count)
+bool VertexBuffer::IsValidVertexData(uint vertexIndex,
+                                     VertexSemantic::Enum semantic,
+                                     VertexElementType::Enum type,
+                                     uint count)
 {
   VertexAttribute attribute = GetAttribute(semantic);
   if (attribute.mSemantic == VertexSemantic::None)
@@ -304,28 +299,27 @@ bool VertexBuffer::IsValidVertexData(uint vertexIndex, VertexSemantic::Enum sema
     return false;
 
   uint elementSize = GetElementSize(attribute.mType);
-  uint vertexOffset = (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
+  uint vertexOffset =
+      (mFixedDesc.mVertexSize * vertexIndex) + attribute.mOffset;
   if (vertexOffset + elementSize * attribute.mCount > mDataSize)
     return false;
 
   return true;
 }
 
-//**************************************************************************************************
 void VertexBuffer::ClearAttributes()
 {
   mFixedDesc.mVertexSize = 0;
   mFixedDesc.mAttributes[0].mSemantic = VertexSemantic::None;
 }
 
-//**************************************************************************************************
 void VertexBuffer::ClearData()
 {
   mDataSize = 0;
 }
 
-//**************************************************************************************************
-VertexElementType::Enum VertexBuffer::GetElementType(VertexSemantic::Enum semantic)
+VertexElementType::Enum
+VertexBuffer::GetElementType(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute = GetAttribute(semantic);
   if (attribute.mSemantic == VertexSemantic::None)
@@ -333,7 +327,6 @@ VertexElementType::Enum VertexBuffer::GetElementType(VertexSemantic::Enum semant
   return attribute.mType;
 }
 
-//**************************************************************************************************
 uint VertexBuffer::GetElementCount(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute = GetAttribute(semantic);
@@ -342,7 +335,6 @@ uint VertexBuffer::GetElementCount(VertexSemantic::Enum semantic)
   return attribute.mCount;
 }
 
-//**************************************************************************************************
 uint VertexBuffer::GetVertexCount()
 {
   if (mFixedDesc.mVertexSize == 0)
@@ -350,7 +342,6 @@ uint VertexBuffer::GetVertexCount()
   return mDataSize / mFixedDesc.mVertexSize;
 }
 
-//**************************************************************************************************
 void VertexBuffer::Grow(uint minExtra)
 {
   uint newCapacity = mDataCapacity == 0 ? 128 : mDataCapacity * 2;
@@ -364,7 +355,6 @@ void VertexBuffer::Grow(uint minExtra)
   mDataCapacity = newCapacity;
 }
 
-//**************************************************************************************************
 VertexAttribute VertexBuffer::GetAttribute(VertexSemantic::Enum semantic)
 {
   VertexAttribute attribute;
@@ -382,39 +372,57 @@ VertexAttribute VertexBuffer::GetAttribute(VertexSemantic::Enum semantic)
   return attribute;
 }
 
-//**************************************************************************************************
 uint VertexBuffer::GetElementSize(VertexElementType::Enum type)
 {
   switch (type)
   {
-    case VertexElementType::Byte:      return 1;
-    case VertexElementType::Short:     return 2;
-    case VertexElementType::Half:      return 2;
-    case VertexElementType::Real:      return 4;
-    case VertexElementType::NormByte:  return 1;
-    case VertexElementType::NormShort: return 2;
-    default: return 0;
+  case VertexElementType::Byte:
+    return 1;
+  case VertexElementType::Short:
+    return 2;
+  case VertexElementType::Half:
+    return 2;
+  case VertexElementType::Real:
+    return 4;
+  case VertexElementType::NormByte:
+    return 1;
+  case VertexElementType::NormShort:
+    return 2;
+  default:
+    return 0;
   }
 }
 
-//**************************************************************************************************
-void VertexBuffer::ReadVertexData(byte* vertexData, VertexAttribute& attribute, Vec4& output)
+void VertexBuffer::ReadVertexData(byte* vertexData,
+                                  VertexAttribute& attribute,
+                                  Vec4& output)
 {
   for (uint i = 0; i < attribute.mCount; ++i)
   {
     switch (attribute.mType)
     {
-      case VertexElementType::Byte:      output[i] =   ((u8*)vertexData)[i]; break;
-      case VertexElementType::Short:     output[i] =  ((u16*)vertexData)[i]; break;
-      case VertexElementType::Real:      output[i] = ((real*)vertexData)[i]; break;
-      case VertexElementType::NormByte:  output[i] =   ((u8*)vertexData)[i] / 255.0f;   break;
-      case VertexElementType::NormShort: output[i] =  ((u16*)vertexData)[i] / 65535.0f; break;
-      case VertexElementType::Half:      output[i] = HalfFloatConverter::ToFloat(((u16*)vertexData)[i]); break;
+    case VertexElementType::Byte:
+      output[i] = ((u8*)vertexData)[i];
+      break;
+    case VertexElementType::Short:
+      output[i] = ((u16*)vertexData)[i];
+      break;
+    case VertexElementType::Real:
+      output[i] = ((real*)vertexData)[i];
+      break;
+    case VertexElementType::NormByte:
+      output[i] = ((u8*)vertexData)[i] / 255.0f;
+      break;
+    case VertexElementType::NormShort:
+      output[i] = ((u16*)vertexData)[i] / 65535.0f;
+      break;
+    case VertexElementType::Half:
+      output[i] = HalfFloatConverter::ToFloat(((u16*)vertexData)[i]);
+      break;
     }
   }
 }
 
-//**************************************************************************************************
 void VertexBuffer::CopyTo(VertexBuffer& target)
 {
   target.Grow(mDataSize);
@@ -423,7 +431,6 @@ void VertexBuffer::CopyTo(VertexBuffer& target)
   memcpy(target.mData, mData, mDataSize);
 }
 
-//**************************************************************************************************
 ZilchDefineType(IndexBuffer, builder, type)
 {
   ZeroBindDocumented();
@@ -435,7 +442,6 @@ ZilchDefineType(IndexBuffer, builder, type)
   ZilchBindMethod(Clear);
 }
 
-//**************************************************************************************************
 IndexBuffer::IndexBuffer()
 {
   mIndexSize = 4;
@@ -443,18 +449,15 @@ IndexBuffer::IndexBuffer()
   mGenerated = true;
 }
 
-//**************************************************************************************************
 IndexBuffer::~IndexBuffer()
 {
 }
 
-//**************************************************************************************************
 uint IndexBuffer::GetCount()
 {
   return mIndexCount;
 }
 
-//**************************************************************************************************
 void IndexBuffer::SetCount(uint count)
 {
   mData.Clear();
@@ -462,7 +465,6 @@ void IndexBuffer::SetCount(uint count)
   mGenerated = false;
 }
 
-//**************************************************************************************************
 void IndexBuffer::Add(uint value)
 {
   mData.PushBack(value);
@@ -470,7 +472,6 @@ void IndexBuffer::Add(uint value)
   mGenerated = false;
 }
 
-//**************************************************************************************************
 uint IndexBuffer::Get(uint index)
 {
   if (index >= mIndexCount)
@@ -485,7 +486,6 @@ uint IndexBuffer::Get(uint index)
     return mData[index];
 }
 
-//**************************************************************************************************
 void IndexBuffer::Clear()
 {
   mData.Clear();
@@ -493,13 +493,11 @@ void IndexBuffer::Clear()
   mGenerated = true;
 }
 
-//**************************************************************************************************
 void IndexBuffer::CopyTo(IndexBuffer& target)
 {
   target = *this;
 }
 
-//**************************************************************************************************
 ZilchDefineType(Mesh, builder, type)
 {
   ZeroBindDocumented();
@@ -516,7 +514,6 @@ ZilchDefineType(Mesh, builder, type)
   ZilchBindMethod(UploadNoRayCastInfoOrAabb);
 }
 
-//**************************************************************************************************
 HandleOf<Mesh> Mesh::CreateRuntime()
 {
   Mesh* mesh = MeshManager::CreateRuntime();
@@ -526,7 +523,6 @@ HandleOf<Mesh> Mesh::CreateRuntime()
   return mesh;
 }
 
-//**************************************************************************************************
 HandleOf<Mesh> Mesh::RuntimeClone()
 {
   Mesh* clone = MeshManager::CreateRuntime();
@@ -541,14 +537,12 @@ HandleOf<Mesh> Mesh::RuntimeClone()
   return clone;
 }
 
-//**************************************************************************************************
 Mesh::Mesh()
 {
   mRenderData = nullptr;
   mPrimitiveType = PrimitiveType::Triangles;
 }
 
-//**************************************************************************************************
 void Mesh::Unload()
 {
   mAabb.SetCenterAndHalfExtents(Vec3::cZero, Vec3(0.5f));
@@ -558,32 +552,28 @@ void Mesh::Unload()
   mIndices.Clear();
 }
 
-//**************************************************************************************************
 void Mesh::Upload()
 {
   UploadInternal(true, true);
 }
 
-//**************************************************************************************************
 void Mesh::UploadNoRayCastInfo()
 {
   UploadInternal(true, false);
 }
 
-//**************************************************************************************************
 void Mesh::UploadNoRayCastInfoOrAabb()
 {
   UploadInternal(false, false);
 }
 
-//**************************************************************************************************
 void Mesh::UploadInternal(bool updateAabb, bool updateTree)
 {
-  if(!IsRuntime())
+  if (!IsRuntime())
     DoNotifyException("Invalid Upload", "Cannot upload to a non-runtime Mesh.");
-  
+
   uint vertexSize = mVertices.mFixedDesc.mVertexSize;
-  
+
   // Generate index data if none given
   if (mIndices.mGenerated && vertexSize != 0)
   {
@@ -604,24 +594,21 @@ void Mesh::UploadInternal(bool updateAabb, bool updateTree)
   SendModified();
 }
 
-//**************************************************************************************************
 uint Mesh::GetPrimitiveCount()
 {
   uint verticesPerPrimitve = GetVerticesPerPrimitive();
   return mIndices.mIndexCount / verticesPerPrimitve;
 }
 
-//**************************************************************************************************
 uint Mesh::GetVerticesPerPrimitive()
 {
   return mPrimitiveType + 1;
 }
 
-//**************************************************************************************************
 template <bool BuildTree>
 void Mesh::BuildAabbAndTree()
 {
-  if(BuildTree)
+  if (BuildTree)
     mTree.Clear();
 
   uint verticesPerPrimitive = GetVerticesPerPrimitive();
@@ -633,7 +620,8 @@ void Mesh::BuildAabbAndTree()
   for (uint i = 0; i < primitiveCount; ++i)
   {
     Vec3 points[3];
-    bool hasPositions = GetPrimitiveData(i, VertexSemantic::Position, VertexElementType::Real, 3, points);
+    bool hasPositions = GetPrimitiveData(
+        i, VertexSemantic::Position, VertexElementType::Real, 3, points);
     if (hasPositions == false)
       continue;
 
@@ -667,7 +655,6 @@ void Mesh::BuildAabbAndTree()
   mAabb = boundingBox;
 }
 
-//**************************************************************************************************
 bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
 {
   Ray localRay = raycast.mRay.TransformInverse(worldTransform);
@@ -676,12 +663,16 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   closestPoint.T = Math::PositiveMax();
   uint closestPrimitive = (uint)-1;
 
-  forRangeBroadphaseTree (AvlDynamicAabbTree<uint>, mTree, Ray, localRay)
+  forRangeBroadphaseTree(AvlDynamicAabbTree<uint>, mTree, Ray, localRay)
   {
     uint primitiveIndex = range.Front();
 
     Vec3 points[3];
-    bool hasPositions = GetPrimitiveData(primitiveIndex, VertexSemantic::Position, VertexElementType::Real, 3, points);
+    bool hasPositions = GetPrimitiveData(primitiveIndex,
+                                         VertexSemantic::Position,
+                                         VertexElementType::Real,
+                                         3,
+                                         points);
     if (hasPositions == false)
       continue;
 
@@ -690,17 +681,31 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
 
     switch (mPrimitiveType)
     {
-      case Zero::PrimitiveType::Triangles:
-        result = Intersection::RayTriangle(localRay.Start, localRay.Direction, points[0], points[1], points[2], &point);
+    case Zero::PrimitiveType::Triangles:
+      result = Intersection::RayTriangle(localRay.Start,
+                                         localRay.Direction,
+                                         points[0],
+                                         points[1],
+                                         points[2],
+                                         &point);
       break;
-      case Zero::PrimitiveType::Lines:
-        result = Intersection::RayCapsule(localRay.Start, localRay.Direction, points[0], points[1], cMinMeshThickness, &point);
+    case Zero::PrimitiveType::Lines:
+      result = Intersection::RayCapsule(localRay.Start,
+                                        localRay.Direction,
+                                        points[0],
+                                        points[1],
+                                        cMinMeshThickness,
+                                        &point);
       break;
-      case Zero::PrimitiveType::Points:
-        result = Intersection::RaySphere(localRay.Start, localRay.Direction, points[0], cMinMeshThickness, &point);
+    case Zero::PrimitiveType::Points:
+      result = Intersection::RaySphere(localRay.Start,
+                                       localRay.Direction,
+                                       points[0],
+                                       cMinMeshThickness,
+                                       &point);
       break;
     }
-    
+
     if (result == Intersection::None)
       continue;
 
@@ -719,41 +724,52 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   raycast.mT = closestPoint.T;
 
   Vec3 points[3];
-  GetPrimitiveData(closestPrimitive, VertexSemantic::Position, VertexElementType::Real, 3, points);
+  GetPrimitiveData(closestPrimitive,
+                   VertexSemantic::Position,
+                   VertexElementType::Real,
+                   3,
+                   points);
 
   // Compute weights to get interpolated normal and uv at point of intersection
   Vec3 weights = Vec3::cZero;
   switch (mPrimitiveType)
   {
-    case Zero::PrimitiveType::Triangles:
-      Geometry::BarycentricTriangle(point, points[0], points[1], points[2], &weights);
+  case Zero::PrimitiveType::Triangles:
+    Geometry::BarycentricTriangle(
+        point, points[0], points[1], points[2], &weights);
     break;
-    case Zero::PrimitiveType::Lines:
-    {
-      float length0 = (point - points[0]).Length();
-      float length1 = (points[1] - points[0]).Length();
-      if (length1 < Math::Epsilon())
-        weights.y = 0.0f;
-      else
-        weights.y = length0 / length1;
-      weights.x = 1.0f - weights.y;
-    }
-    break;
-    case Zero::PrimitiveType::Points:
-      weights.x = 1.0f;
+  case Zero::PrimitiveType::Lines:
+  {
+    float length0 = (point - points[0]).Length();
+    float length1 = (points[1] - points[0]).Length();
+    if (length1 < Math::Epsilon())
+      weights.y = 0.0f;
+    else
+      weights.y = length0 / length1;
+    weights.x = 1.0f - weights.y;
+  }
+  break;
+  case Zero::PrimitiveType::Points:
+    weights.x = 1.0f;
     break;
   }
 
   Vec3 normals[3];
-  bool hasNormals = GetPrimitiveData(closestPrimitive, VertexSemantic::Normal, VertexElementType::Real, 3, normals);
+  bool hasNormals = GetPrimitiveData(closestPrimitive,
+                                     VertexSemantic::Normal,
+                                     VertexElementType::Real,
+                                     3,
+                                     normals);
   if (hasNormals)
   {
-    raycast.mNormal = normals[0] * weights.x + normals[1] * weights.y + normals[2] * weights.z;
+    raycast.mNormal = normals[0] * weights.x + normals[1] * weights.y +
+                      normals[2] * weights.z;
     Math::AttemptNormalize(raycast.mNormal);
   }
   else if (mPrimitiveType == PrimitiveType::Triangles)
   {
-    // If mesh doesn't have normals, one will be calculated facing outward for CCW triangles
+    // If mesh doesn't have normals, one will be calculated facing outward for
+    // CCW triangles
     raycast.mNormal = Math::Cross(points[1] - points[0], points[2] - points[0]);
     Math::AttemptNormalize(raycast.mNormal);
   }
@@ -761,7 +777,8 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
     raycast.mNormal = Vec3::cZero;
 
   Vec2 uvs[3];
-  bool hasUvs = GetPrimitiveData(closestPrimitive, VertexSemantic::Uv, VertexElementType::Real, 2, uvs);
+  bool hasUvs = GetPrimitiveData(
+      closestPrimitive, VertexSemantic::Uv, VertexElementType::Real, 2, uvs);
   if (hasUvs)
     raycast.mUv = uvs[0] * weights.x + uvs[1] * weights.y + uvs[2] * weights.z;
   else
@@ -770,28 +787,34 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   return true;
 }
 
-//**************************************************************************************************
 bool Mesh::TestFrustum(const Frustum& frustum)
 {
-  forRangeBroadphaseTree (AvlDynamicAabbTree<uint>, mTree, Frustum, frustum)
+  forRangeBroadphaseTree(AvlDynamicAabbTree<uint>, mTree, Frustum, frustum)
   {
     uint primitiveIndex = range.Front();
 
     Vec3 points[3];
-    bool hasPositions = GetPrimitiveData(primitiveIndex, VertexSemantic::Position, VertexElementType::Real, 3, points);
+    bool hasPositions = GetPrimitiveData(primitiveIndex,
+                                         VertexSemantic::Position,
+                                         VertexElementType::Real,
+                                         3,
+                                         points);
     if (hasPositions == false)
       continue;
 
     switch (mPrimitiveType)
     {
-      case Zero::PrimitiveType::Triangles:
-        if (Overlap(frustum, Triangle(points[0], points[1], points[2]))) return true;
+    case Zero::PrimitiveType::Triangles:
+      if (Overlap(frustum, Triangle(points[0], points[1], points[2])))
+        return true;
       break;
-      case Zero::PrimitiveType::Lines:
-        if (Overlap(frustum, Capsule(points[0], points[1], cMinMeshThickness))) return true;
+    case Zero::PrimitiveType::Lines:
+      if (Overlap(frustum, Capsule(points[0], points[1], cMinMeshThickness)))
+        return true;
       break;
-      case Zero::PrimitiveType::Points:
-        if (Overlap(frustum, Sphere(points[0], cMinMeshThickness))) return true;
+    case Zero::PrimitiveType::Points:
+      if (Overlap(frustum, Sphere(points[0], cMinMeshThickness)))
+        return true;
       break;
     }
   }
@@ -799,40 +822,39 @@ bool Mesh::TestFrustum(const Frustum& frustum)
   return false;
 }
 
-//**************************************************************************************************
 uint GetIndexSize(IndexElementType::Enum indexType)
 {
   switch (indexType)
   {
-   case IndexElementType::Byte:
+  case IndexElementType::Byte:
     return 1;
-   case IndexElementType::Ushort:
+  case IndexElementType::Ushort:
     return 2;
-   case IndexElementType::Uint:
+  case IndexElementType::Uint:
     return 4;
   }
   return 0;
 }
 
-//**************************************************************************************************
-template<typename T>
-void FillIndexBuffer(IndexBuffer* indexBuffer, byte* indexBufferData, uint indexCount)
+template <typename T>
+void FillIndexBuffer(IndexBuffer* indexBuffer,
+                     byte* indexBufferData,
+                     uint indexCount)
 {
   T* indexData = (T*)indexBufferData;
   for (uint i = 0; i < indexCount; ++i)
     indexBuffer->Add(indexData[i]);
 }
 
-//**************************************************************************************************
 // vertex buffer chunk : ('vert')
 // fixed vertex description, vertex count, vertex data
-template<typename streamType>
+template <typename streamType>
 void LoadVertexChunk(Mesh& mesh, streamType& file)
 {
   VertexBuffer* vertexBuffer = &mesh.mVertices;
 
   file.Read(vertexBuffer->mFixedDesc);
-  
+
   uint numVertices;
   file.Read(numVertices);
 
@@ -846,10 +868,9 @@ void LoadVertexChunk(Mesh& mesh, streamType& file)
   vertexBuffer->mDataSize = vertexBufferSize;
 }
 
-//**************************************************************************************************
 // index buffer chunk : ('indx')
 // index type, index count, index data
-template<typename streamType>
+template <typename streamType>
 void LoadIndexChunk(Mesh& mesh, streamType& file)
 {
   IndexBuffer* indexBuffer = &mesh.mIndices;
@@ -866,28 +887,30 @@ void LoadIndexChunk(Mesh& mesh, streamType& file)
 
   indexBuffer->mIndexSize = 4;
   indexBuffer->mGenerated = false;
-  
+
   switch (indexType)
   {
-  case Zero::IndexElementType::Byte:   FillIndexBuffer<byte>(indexBuffer, indexBufferData, numIndicies);
+  case Zero::IndexElementType::Byte:
+    FillIndexBuffer<byte>(indexBuffer, indexBufferData, numIndicies);
     break;
-  case Zero::IndexElementType::Ushort: FillIndexBuffer<ushort>(indexBuffer, indexBufferData, numIndicies);
+  case Zero::IndexElementType::Ushort:
+    FillIndexBuffer<ushort>(indexBuffer, indexBufferData, numIndicies);
     break;
-  case Zero::IndexElementType::Uint:   FillIndexBuffer<uint>(indexBuffer, indexBufferData, numIndicies);
+  case Zero::IndexElementType::Uint:
+    FillIndexBuffer<uint>(indexBuffer, indexBufferData, numIndicies);
     break;
   }
-  delete [] indexBufferData;
+  delete[] indexBufferData;
 }
 
-//**************************************************************************************************
-template<typename streamType>
+template <typename streamType>
 void LoadSkeletonChunk(Mesh& mesh, streamType& file)
 {
   uint count;
   file.Read(count);
 
   mesh.mBones.Resize(count);
-  forRange (MeshBone& bone, mesh.mBones.All())
+  forRange(MeshBone & bone, mesh.mBones.All())
   {
     file.ReadString(bone.mName);
     file.Read(bone.mBindTransform);
@@ -908,7 +931,7 @@ void LoadSkeletonChunk(Mesh& mesh, streamType& file)
 // --------------------
 struct MeshLoadPattern
 {
-  template<typename readerType>
+  template <typename readerType>
   static void Load(Mesh* mesh, readerType& reader)
   {
     MeshHeader header;
@@ -926,21 +949,21 @@ struct MeshLoadPattern
       FileChunk chunk = reader.ReadChunkHeader();
       switch (chunk.Type)
       {
-        case 0:
-          mesh->BuildAabbAndTree<true>();
-          return;
-        case VertexChunk:
-          LoadVertexChunk(*mesh, reader);
-          break;
-        case IndexChunk:
-          LoadIndexChunk(*mesh, reader);
-          break;
-        case SkeletonChunk:
-          LoadSkeletonChunk(*mesh, reader);
-          break;
-        default:
-          ErrorIf(true, "Incorrect mesh data format\n");
-          break;
+      case 0:
+        mesh->BuildAabbAndTree<true>();
+        return;
+      case VertexChunk:
+        LoadVertexChunk(*mesh, reader);
+        break;
+      case IndexChunk:
+        LoadIndexChunk(*mesh, reader);
+        break;
+      case SkeletonChunk:
+        LoadSkeletonChunk(*mesh, reader);
+        break;
+      default:
+        ErrorIf(true, "Incorrect mesh data format\n");
+        break;
       }
     }
   }
@@ -948,9 +971,8 @@ struct MeshLoadPattern
 
 ImplementResourceManager(MeshManager, Mesh);
 
-//**************************************************************************************************
-MeshManager::MeshManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+MeshManager::MeshManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("Mesh", new ChunkFileLoader<MeshManager, MeshLoadPattern>());
   mCategory = "Graphics";

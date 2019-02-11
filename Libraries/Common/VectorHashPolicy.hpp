@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: 
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 /// Hashing for an integer vector2
-template<>
+template <>
 struct ZeroShared HashPolicy<Math::IntVec2>
 {
   inline size_t operator()(Math::IntVec2Param value) const
@@ -25,7 +20,7 @@ struct ZeroShared HashPolicy<Math::IntVec2>
   }
 };
 
-template<>
+template <>
 struct HashPolicy<Math::IntVec3>
 {
   inline size_t operator()(Math::IntVec3Param value) const

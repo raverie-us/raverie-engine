@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file FpControl.hpp
-/// Declaration of the ScopeFpuExceptionsEnabler, ScopeFpuExceptionsDisabler
-/// and FpuControlSystem classes.
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -43,31 +34,43 @@ struct ZeroShared FpuControlSystem
   static bool Active;
 };
 
-}//namespace Zero
+} // namespace Zero
 
 #define ZFpExceptions 1
 
 #ifdef ZFpExceptions
 
-#define FpuExceptionsEnabler() \
-  ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
-
-#define FpuExceptionsDisabler() \
-  ScopeFpuExceptionsDisabler __LocalScopedFpuExceptionsDisabler;
-
-#ifdef ZeroDebug
-  #define FpuExceptionsEnablerDebug() \
+#  define FpuExceptionsEnabler()                                               \
     ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
-#else
-    #define FpuExceptionsEnablerDebug() do {} while (0)
-#endif
+
+#  define FpuExceptionsDisabler()                                              \
+    ScopeFpuExceptionsDisabler __LocalScopedFpuExceptionsDisabler;
+
+#  ifdef ZeroDebug
+#    define FpuExceptionsEnablerDebug()                                        \
+      ScopeFpuExceptionsEnabler __LocalScopedFpuExceptionsEnabler;
+#  else
+#    define FpuExceptionsEnablerDebug()                                        \
+      do                                                                       \
+      {                                                                        \
+      } while (0)
+#  endif
 
 #else
 
-#define FpuExceptionsEnabler() do {} while (0)
+#  define FpuExceptionsEnabler()                                               \
+    do                                                                         \
+    {                                                                          \
+    } while (0)
 
-#define FpuExceptionsDisabler() do {} while (0)
+#  define FpuExceptionsDisabler()                                              \
+    do                                                                         \
+    {                                                                          \
+    } while (0)
 
-#define FpuExceptionsEnablerDebug() do {} while (0)
+#  define FpuExceptionsEnablerDebug()                                          \
+    do                                                                         \
+    {                                                                          \
+    } while (0)
 
 #endif

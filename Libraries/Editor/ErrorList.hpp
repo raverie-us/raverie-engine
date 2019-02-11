@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ErrorList.hpp
-/// 
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -22,14 +14,14 @@ class ErrorList : public Composite
 {
 public:
   typedef ErrorList ZilchSelf;
-  
+
   ErrorList(Composite* parent);
   ~ErrorList();
 
   void ClearErrors();
   void OnScriptError(Event* event);
 
-  //Widget Interface
+  // Widget Interface
   void UpdateTransform() override;
   void OnDataActivated(DataEvent* event);
 
@@ -40,4 +32,4 @@ private:
   ErrorListSource* mSource;
 };
 
-}// Namespace Zero
+} // Namespace Zero

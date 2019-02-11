@@ -1,10 +1,9 @@
+// MIT Licensed (see LICENSE.md).
 
-///////////////////////////////////////////////////////////////////////////////
 ///
 /// Authors: Trevor Sundberg
 /// Copyright 2017, DigiPen Institute of Technology
 ///
-///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -27,7 +26,6 @@ ZilchDefineEnum(GranularSynthWindows);
 ZeroDefineArrayType(Array<SoundEntry>);
 ZeroDefineArrayType(Array<SoundTagEntry>);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(SoundLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -44,7 +42,7 @@ ZilchDefineStaticLibrary(SoundLibrary)
   ZilchInitializeEnum(AudioMixTypes);
   ZilchInitializeEnum(AudioLatency);
   ZilchInitializeEnum(GranularSynthWindows);
-  
+
   // Arrays
   ZeroInitializeArrayTypeAs(Array<SoundEntry>, "Sounds");
   ZeroInitializeArrayTypeAs(Array<SoundTagEntry>, "SoundTags");
@@ -121,17 +119,15 @@ ZilchDefineStaticLibrary(SoundLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void SoundLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 }
 
-//**************************************************************************************************
 void SoundLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zilch
@@ -23,4 +18,4 @@ class ZilchShaderSpirVSettings;
 typedef Zilch::Ref<ZilchShaderSettings> ZilchShaderSettingsRef;
 typedef Zilch::Ref<ZilchShaderSpirVSettings> ZilchShaderSpirVSettingsRef;
 
-}//namespace Zero
+} // namespace Zero

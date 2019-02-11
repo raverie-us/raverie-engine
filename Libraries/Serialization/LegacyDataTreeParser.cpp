@@ -1,3 +1,4 @@
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "LegacyDataTreeParser.hpp"
 #include "DataTreeNode.hpp"
@@ -6,12 +7,17 @@
 namespace Zero
 {
 
-DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, DataNode* parent);
-DataNode* ReadValue(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, DataNode* parent);
+DataNode* ReadField(DataTreeContext& c,
+                    Tokenizer& tokenizer,
+                    TempToken token,
+                    DataNode* parent);
+DataNode* ReadValue(DataTreeContext& c,
+                    Tokenizer& tokenizer,
+                    TempToken token,
+                    DataNode* parent);
 
-//------------------------------------------------------------ Data Tree Builder
-//******************************************************************************
-DataNode* LegacyDataTreeParser::BuildTree(DataTreeContext& context, StringRange data)
+DataNode* LegacyDataTreeParser::BuildTree(DataTreeContext& context,
+                                          StringRange data)
 {
   Tokenizer tokenizer;
   tokenizer.Load(data);
@@ -22,91 +28,94 @@ DataNode* LegacyDataTreeParser::BuildTree(DataTreeContext& context, StringRange 
   return ReadField(context, tokenizer, token, nullptr);
 }
 
-//******************************************************************************
 DataNode* RaiseParseError(DataTreeContext& c, Tokenizer& t, cstr parseError)
 {
   c.Error = true;
   c.Message = String::Format("Error parsing file '%s' on line %u. Error: %s",
-    c.Filename.c_str(), t.CurrentLine(), parseError);
+                             c.Filename.c_str(),
+                             t.CurrentLine(),
+                             parseError);
   Error("%s", c.Message.c_str());
   return NULL;
 }
 
-//******************************************************************************
 DataNode* ReadObject(DataTreeContext& c, Tokenizer& tokenizer, DataNode* parent)
 {
   DataNode* object = new DataNode(DataNodeType::Object, parent);
   TempToken token;
-  //keep reading until the ending }
-  for(;;)
+  // keep reading until the ending }
+  for (;;)
   {
     tokenizer.ReadToken(token);
 
-    if(token.Type == TempToken::Symbol)
+    if (token.Type == TempToken::Symbol)
     {
-      if(token.Text == '}')
-        return object;//done
+      if (token.Text == '}')
+        return object; // done
 
-      if(token.Text == ',')
+      if (token.Text == ',')
         continue;
     }
-    //if we ever get an invalid token, bail
-    else if(token.Type == TempToken::None)
+    // if we ever get an invalid token, bail
+    else if (token.Type == TempToken::None)
     {
-      return RaiseParseError(c, tokenizer, "End of file found trying to read object.");
+      return RaiseParseError(
+          c, tokenizer, "End of file found trying to read object.");
     }
 
-    //read the next field (may be a property or even another object)
+    // read the next field (may be a property or even another object)
     DataNode* node = ReadField(c, tokenizer, token, object);
 
-    //If there was an error return, what was parsed.
-    if(node == NULL)
+    // If there was an error return, what was parsed.
+    if (node == NULL)
       return object;
   }
 }
 
-//******************************************************************************
 DataNode* ReadArray(DataTreeContext& c, Tokenizer& tokenizer, DataNode* parent)
 {
   DataNode* dataArray = new DataNode(DataNodeType::Object, parent);
   dataArray->mFlags.SetFlag(DataNodeFlags::Array);
 
   TempToken token;
-  //read until the ending ]
-  for(;;)
+  // read until the ending ]
+  for (;;)
   {
-    //Read the next value
+    // Read the next value
     tokenizer.ReadToken(token);
 
-    if(token.Type == TempToken::Symbol)
+    if (token.Type == TempToken::Symbol)
     {
-      if(token.Text == ']')
-        return dataArray;//done
+      if (token.Text == ']')
+        return dataArray; // done
 
-                         //move to next token
-      if(token.Text == ',')
+      // move to next token
+      if (token.Text == ',')
         continue;
     }
-    else if(token.Type == TempToken::None)
+    else if (token.Type == TempToken::None)
     {
-      return RaiseParseError(c, tokenizer, "End of file found trying to read array.");
+      return RaiseParseError(
+          c, tokenizer, "End of file found trying to read array.");
     }
 
-    //Should be a value to read in the array Try to read it
+    // Should be a value to read in the array Try to read it
     DataNode* node = ReadValue(c, tokenizer, token, dataArray);
-    if(node == NULL)
+    if (node == NULL)
       return NULL;
   }
 }
 
-//******************************************************************************
-DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, DataNode* parent)
+DataNode* ReadField(DataTreeContext& c,
+                    Tokenizer& tokenizer,
+                    TempToken token,
+                    DataNode* parent)
 {
   // A '-' before the type name means that we should remove the node
   bool removeNode = false;
   bool addedNode = false;
 
-  if(token.Text == '-')
+  if (token.Text == '-')
   {
     removeNode = true;
     c.PatchRequired = true;
@@ -115,26 +124,29 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
 
   // A '+' before the type name means that the object should be added to
   // the inherited data
-  else if(token.Text == '+')
+  else if (token.Text == '+')
   {
     addedNode = true;
     c.PatchRequired = true;
     tokenizer.ReadToken(token);
   }
 
-  if(!(token.Type == TempToken::Word || token.Type == TempToken::String))
+  if (!(token.Type == TempToken::Word || token.Type == TempToken::String))
   {
-    return RaiseParseError(c, tokenizer, "Objects can only contain name-value pairs. "
-      "Name is not a string.");
+    return RaiseParseError(c,
+                           tokenizer,
+                           "Objects can only contain name-value pairs. "
+                           "Name is not a string.");
   }
 
   // Read type name if available
   StringRange typeName = token.Text;
-  if(token.Type != TempToken::Word)
-    return RaiseParseError(c, tokenizer, "Bad token while reading object. Expected type name.");
+  if (token.Type != TempToken::Word)
+    return RaiseParseError(
+        c, tokenizer, "Bad token while reading object. Expected type name.");
 
   // Convert to new type names "Real2, Real3, ..."
-  if(typeName == "float")
+  if (typeName == "float")
     typeName = ZilchTypeId(float)->Name;
   else if (typeName == "bool")
     typeName = ZilchTypeId(bool)->Name;
@@ -152,12 +164,13 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   // Check for a child id next to the type name
   Guid childId = PolymorphicNode::cInvalidUniqueNodeId;
   tokenizer.ReadToken(token);
-  if(token.Text == ':')
+  if (token.Text == ':')
   {
     tokenizer.ReadToken(token);
 
-    if(token.Type != TempToken::Number)
-      return RaiseParseError(c, tokenizer, "Bad child id while reading object. Expected u64.");
+    if (token.Type != TempToken::Number)
+      return RaiseParseError(
+          c, tokenizer, "Bad child id while reading object. Expected u64.");
 
     childId = ReadHexString(String(token.Text));
     tokenizer.ReadToken(token);
@@ -165,7 +178,7 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
 
   // Read the field name text
   StringRange valuename;
-  if(token.Type == TempToken::Word || token.Type == TempToken::String)
+  if (token.Type == TempToken::Word || token.Type == TempToken::String)
   {
     valuename = token.Text;
     tokenizer.ReadToken(token);
@@ -173,10 +186,11 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
 
   // If it wasn't a subtractive node, look for a data inheritance id
   String inheritedId;
-  if(token.Text == '(')
+  if (token.Text == '(')
   {
     tokenizer.ReadToken(token);
-    ErrorIf(token.Type != TempToken::String, "Inheritance id's must be strings");
+    ErrorIf(token.Type != TempToken::String,
+            "Inheritance id's must be strings");
     inheritedId = token.Text;
 
     // Read the closing ')'
@@ -185,19 +199,18 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
     // Read next
     tokenizer.ReadToken(token);
 
-
-    //inheritedId = tokenizer.ReadUntil(')');
+    // inheritedId = tokenizer.ReadUntil(')');
     c.PatchRequired = true;
 
-    //while(token.Text != ')')
+    // while(token.Text != ')')
     //  tokenizer.ReadToken(token);
     //
-    //tokenizer.ReadToken(token);
+    // tokenizer.ReadToken(token);
   }
 
   // If it wasn't a subtractive node, look for a data inheritance id
-  //String inheritedId;
-  //if(token.Type == Token::String)
+  // String inheritedId;
+  // if(token.Type == Token::String)
   //{
   //  inheritedId = token.Text;
   //  tokenizer.ReadToken(token);
@@ -207,12 +220,14 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
 
   // If the node is being removed, we'll just create an empty node for it
   // so that patching knows to remove it
-  if(removeNode)
+  if (removeNode)
   {
-    if(token.Text != ',')
+    if (token.Text != ',')
     {
-      return RaiseParseError(c, tokenizer, "The node was being marked for removal "
-        "must be immediately closed with a comma.");
+      return RaiseParseError(c,
+                             tokenizer,
+                             "The node was being marked for removal "
+                             "must be immediately closed with a comma.");
     }
 
     newValue = new DataNode(DataNodeType::Object, parent);
@@ -222,10 +237,12 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   {
 
     // There has to be an = or : since the field is being assigned to
-    if(!(token.Text == '=' || token.Text == ':'))
+    if (!(token.Text == '=' || token.Text == ':'))
     {
-      return RaiseParseError(c, tokenizer, "Bad token after name in field on object. "
-        "Needed '=' or ':'");
+      return RaiseParseError(c,
+                             tokenizer,
+                             "Bad token after name in field on object. "
+                             "Needed '=' or ':'");
     }
 
     // Read the value to assign the field to
@@ -234,13 +251,13 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   }
 
   // Failed to read value pass parse error up
-  if(!newValue)
+  if (!newValue)
     return nullptr;
 
   newValue->mPropertyName = valuename;
   newValue->mTypeName = typeName;
   newValue->mFlags.SetState(DataNodeFlags::LocallyAdded, addedNode);
-  if(newValue->mNodeType == DataNodeType::Object)
+  if (newValue->mNodeType == DataNodeType::Object)
   {
     newValue->mInheritedFromId = inheritedId;
     newValue->mUniqueNodeId = childId;
@@ -249,24 +266,29 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   return newValue;
 }
 
-//******************************************************************************
-DataNode* ReadValue(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, DataNode* parent)
+DataNode* ReadValue(DataTreeContext& c,
+                    Tokenizer& tokenizer,
+                    TempToken token,
+                    DataNode* parent)
 {
   // Deal with invalid case
-  if(token.Type == TempToken::None)
+  if (token.Type == TempToken::None)
   {
-    return RaiseParseError(c, tokenizer, "End of file found trying to read value.");
+    return RaiseParseError(
+        c, tokenizer, "End of file found trying to read value.");
   }
 
-  // If this is a single character symbol type, check which kind of bracket it is
-  if(token.Type == TempToken::Symbol)
+  // If this is a single character symbol type, check which kind of bracket it
+  // is
+  if (token.Type == TempToken::Symbol)
   {
-    if(token.Text == '[')
+    if (token.Text == '[')
       return ReadArray(c, tokenizer, parent);
-    else if(token.Text == '{')
+    else if (token.Text == '{')
       return ReadObject(c, tokenizer, parent);
     else
-      return RaiseParseError(c, tokenizer, "Read symbol while trying to read value.");
+      return RaiseParseError(
+          c, tokenizer, "Read symbol while trying to read value.");
   }
   else
   {
@@ -276,4 +298,4 @@ DataNode* ReadValue(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   }
 }
 
-}//namespace Zero
+} // namespace Zero

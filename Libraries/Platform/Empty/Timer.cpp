@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Utilties.cpp
-/// Declaration of the Os High precision Timer class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Common/Timer.hpp"
 
@@ -86,4 +78,4 @@ double Timer::TicksToSeconds(TickType ticks) const
   return (double)ticks;
 }
 
-}//namespace Zero
+} // namespace Zero

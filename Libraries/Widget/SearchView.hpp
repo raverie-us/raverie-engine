@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SearchView.hpp
-///  Search View provides generic search functionality.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -25,11 +17,11 @@ class TagChainTextBox;
 
 namespace Events
 {
-  DeclareEvent(SearchCanceled);
-  DeclareEvent(SearchPreview);
-  DeclareEvent(SearchCompleted);
-  DeclareEvent(AlternateSearchCompleted);
-}
+DeclareEvent(SearchCanceled);
+DeclareEvent(SearchPreview);
+DeclareEvent(SearchCompleted);
+DeclareEvent(AlternateSearchCompleted);
+} // namespace Events
 
 /// Event Sent by the search view..
 class SearchViewEvent : public Event
@@ -50,8 +42,8 @@ public:
   String mSearchText;
 };
 
-// Boost priority to make differing result types appear above other result types.
-// The higher the range boost value, the higher the sort priority order.
+// Boost priority to make differing result types appear above other result
+// types. The higher the range boost value, the higher the sort priority order.
 namespace SearchViewResultPriority
 {
 
@@ -68,10 +60,8 @@ enum PriorityRange
 struct SearchViewResult
 {
 public:
-  SearchViewResult()
-    : Data(nullptr)
+  SearchViewResult() : Data(nullptr)
   {
-
   }
   // Provider that added this result
   SearchProvider* Interface;
@@ -97,10 +87,8 @@ template <typename T, bool (T::*Func)(SearchViewResult& result)>
 class SearchProviderFilterMethod : public SearchProviderFilter
 {
 public:
-  SearchProviderFilterMethod(T* instance)
-    : mInstance(instance)
+  SearchProviderFilterMethod(T* instance) : mInstance(instance)
   {
-
   }
 
   bool FilterResult(SearchViewResult& result) override
@@ -115,35 +103,66 @@ public:
 class SearchProvider : public EventObject
 {
 public:
-  SearchProvider(StringParam providerType = "TypeInvalid") : mFilter(nullptr), mProviderType(providerType) {}
+  SearchProvider(StringParam providerType = "TypeInvalid") :
+      mFilter(nullptr),
+      mProviderType(providerType)
+  {
+  }
 
-  //Virtual Destructor for cleanup 
-  virtual ~SearchProvider(){}
-  //Collect Search Results
-  virtual void Search(SearchData& search){}
-  //Get an element's display type
-  virtual String GetElementType(SearchViewResult& element){return String();}
-  //Get an element's display name
-  virtual String GetElementName(SearchViewResult& element) { return element.Name; }
-  //Get a small icon to display
-  virtual String GetIcon(SearchViewResult& element){return String();}
-  //Used for tags element does not end search
-  virtual bool OnMatch(SearchView* searchView, SearchViewResult& element){return true;}
-  //Run auto completed command
+  // Virtual Destructor for cleanup
+  virtual ~SearchProvider()
+  {
+  }
+  // Collect Search Results
+  virtual void Search(SearchData& search)
+  {
+  }
+  // Get an element's display type
+  virtual String GetElementType(SearchViewResult& element)
+  {
+    return String();
+  }
+  // Get an element's display name
+  virtual String GetElementName(SearchViewResult& element)
+  {
+    return element.Name;
+  }
+  // Get a small icon to display
+  virtual String GetIcon(SearchViewResult& element)
+  {
+    return String();
+  }
+  // Used for tags element does not end search
+  virtual bool OnMatch(SearchView* searchView, SearchViewResult& element)
+  {
+    return true;
+  }
+  // Run auto completed command
   virtual void RunCommand(SearchView* searchView, SearchViewResult& element){};
-  //Create a preview widget
-  virtual Composite* CreatePreview(Composite* parent, SearchViewResult& element){return nullptr;}
-  //Add a widget to the SearchView's TextBox preview widget stack.
-  virtual bool AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget) { return false; }
-  //Execute functionality hinted at the by the SearchPreview ToolTip.
-  virtual void AttemptAlternateSearchCompleted() {}
+  // Create a preview widget
+  virtual Composite* CreatePreview(Composite* parent, SearchViewResult& element)
+  {
+    return nullptr;
+  }
+  // Add a widget to the SearchView's TextBox preview widget stack.
+  virtual bool AddToAlternatePreview(SearchData* search,
+                                     Composite* searchPreviewWidget)
+  {
+    return false;
+  }
+  // Execute functionality hinted at the by the SearchPreview ToolTip.
+  virtual void AttemptAlternateSearchCompleted()
+  {
+  }
 
   virtual bool FilterResult(SearchViewResult& result);
 
-  //Get an element's display name with its provider's display type
+  // Get an element's display name with its provider's display type
   String GetElementNameAndSearchType(SearchViewResult& element)
   {
-    ReturnIf(mProviderType == "TypeInvalid", mProviderType, "Provider type must be specified.");
+    ReturnIf(mProviderType == "TypeInvalid",
+             mProviderType,
+             "Provider type must be specified.");
     return BuildString(GetElementName(element), "(", mProviderType, ")");
   }
 
@@ -156,12 +175,12 @@ public:
   // Helps differentiate name-collisions on list items.
   String mProviderType;
 
-  // This allows for an extra step that filters what a search provider would normally return.
+  // This allows for an extra step that filters what a search provider would
+  // normally return.
   SearchProviderFilter* mFilter;
 };
 
-//--------------------------------------------------------------- Search Data
-/// All data needed to preform a search 
+/// All data needed to preform a search
 struct SearchData
 {
   ~SearchData();
@@ -189,7 +208,6 @@ struct SearchData
   Array<SearchViewResult> Results;
 };
 
-//------------------------------------------------------- Search View Element
 class SearchViewElement : public Composite
 {
 public:
@@ -198,7 +216,8 @@ public:
   SearchViewElement(Composite* parent);
   void OnMouseUp(MouseEvent* event);
   void OnMouseMove(MouseEvent* event);
-  void Setup(SearchView* view, uint index, bool selected, SearchViewResult& element);
+  void
+  Setup(SearchView* view, uint index, bool selected, SearchViewResult& element);
   void UpdateTransform() override;
 
   SearchView* mView;
@@ -213,7 +232,7 @@ class SearchView : public Composite
 {
 public:
   ZilchDeclareType(SearchView, TypeCopyMode::ReferenceType);
-  
+
   SearchView(Composite* parent);
   ~SearchView();
 
@@ -221,7 +240,7 @@ public:
   void Search(StringParam text);
   void OnDestroy() override;
 
-  //Add a tag to the search and clear text.
+  // Add a tag to the search and clear text.
   void AddTag(StringParam tag, bool removeable = true);
   void AddHiddenTag(StringParam tag);
 
@@ -254,9 +273,9 @@ private:
   void OnSearchTipCommand(KeyboardEvent* event);
   void OnScrollUpdated(Event* e);
 
-  //Active Elements
+  // Active Elements
   Array<SearchViewElement*> mElements;
-  //Current Preview Object
+  // Current Preview Object
   HandleOf<ToolTip> mToolTip;
   HandleOf<ToolTip> mAlternateToolTip;
   uint mSelectedIndex;
@@ -282,28 +301,28 @@ bool CheckAndAddTags(SearchData& search, BoundType* type);
 /// are no active tags add the tag and return true.
 bool CheckAndAddSingleTag(SearchData& search, StringParam tag);
 
-//Create a simple text box preview.
+// Create a simple text box preview.
 Composite* CreateTextPreview(Composite* parent, StringParam text);
 
 /// Returns true if there are any tags that would reject this entry.
 template <typename StringContainer>
 bool CheckTags(HashSet<String>& testTags, StringContainer& tags)
 {
-  //No tags always accept
-  if(testTags.Empty())
+  // No tags always accept
+  if (testTags.Empty())
     return true;
 
-  //Tags and no tags on this always false
-  if(!testTags.Empty() && tags.Empty())
+  // Tags and no tags on this always false
+  if (!testTags.Empty() && tags.Empty())
     return false;
 
-  //There must be no tag that rejects
-  //this object
+  // There must be no tag that rejects
+  // this object
   uint foundTags = 0;
 
   forRange(String str, tags.All())
   {
-    if(testTags.Contains(str))
+    if (testTags.Contains(str))
       ++foundTags;
   }
 
@@ -314,14 +333,13 @@ bool CheckTags(HashSet<String>& testTags, StringContainer& tags)
 template <typename StringContainer>
 bool CheckAndAddTags(SearchData& search, StringContainer& tags)
 {
-  if(CheckTags<StringContainer>(search.ActiveTags, tags))
+  if (CheckTags<StringContainer>(search.ActiveTags, tags))
   {
-    forRange(String& tag, tags.All())
-      search.AvailableTags.Insert(tag);
+    forRange(String & tag, tags.All()) search.AvailableTags.Insert(tag);
     return true;
   }
   else
     return false;
 }
 
-}
+} // namespace Zero

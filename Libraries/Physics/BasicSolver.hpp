@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,10 +9,10 @@ namespace Physics
 
 struct Manifold;
 
-///A solver that allows each object to solve itself. This allows joints and 
-///contacts to change each iteration (such as contacts changing friction bounds).
-///The basic solver stores all joints in one list and must therefore call virtual
-///functions on each joint.
+/// A solver that allows each object to solve itself. This allows joints and
+/// contacts to change each iteration (such as contacts changing friction
+/// bounds). The basic solver stores all joints in one list and must therefore
+/// call virtual functions on each joint.
 class BasicSolver : public IConstraintSolver
 {
 public:
@@ -45,8 +40,8 @@ public:
   void DrawJoints(uint debugFlags);
 
 private:
-  typedef InList<Joint,&Joint::SolverLink> JointList;
-  typedef InList<Contact,&Contact::SolverLink> ContactList;
+  typedef InList<Joint, &Joint::SolverLink> JointList;
+  typedef InList<Contact, &Contact::SolverLink> ContactList;
   typedef Array<ConstraintMolecule> MoleculeList;
 
   JointList mJoints;
@@ -55,7 +50,6 @@ private:
   MoleculeList mMolecules;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
-
+} // namespace Zero

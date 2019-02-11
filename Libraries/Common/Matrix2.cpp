@@ -1,28 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
 
-const Matrix2 Matrix2::cIdentity(real(1.0), real(0.0),
-                                 real(0.0), real(1.0));
+const Matrix2 Matrix2::cIdentity(real(1.0), real(0.0), real(0.0), real(1.0));
 
-Matrix2::Matrix2(real p00, real p01,
-                 real p10, real p11)
+Matrix2::Matrix2(real p00, real p01, real p10, real p11)
 {
-  m00 = p00; m01 = p01;
-  m10 = p10; m11 = p11;
+  m00 = p00;
+  m01 = p01;
+  m10 = p10;
+  m11 = p11;
 }
 
 Matrix2::Matrix2(ConstRealPointer data_)
 {
-  m00 = data_[0]; m01 = data_[1];
-  m10 = data_[2]; m11 = data_[3];
+  m00 = data_[0];
+  m01 = data_[1];
+  m10 = data_[2];
+  m11 = data_[3];
 }
 
 Vec2Ref Matrix2::operator[](uint index)
@@ -109,8 +106,7 @@ Matrix2 Matrix2::operator*(Mat2Param rhs) const
 bool Matrix2::operator==(Mat2Param rhs) const
 {
   Mat2Param self = *this;
-  return self[0] == rhs[0] &&
-         self[1] == rhs[1];
+  return self[0] == rhs[0] && self[1] == rhs[1];
 }
 
 bool Matrix2::operator!=(Mat2Param rhs) const
@@ -136,25 +132,25 @@ Mat2Ref Matrix2::SetIdentity()
 
 Vector2 Matrix2::GetBasis(uint index) const
 {
-  //Could be optimized but I don't want to rely on the order of the elements in 
-  //the matrix
-  switch(index)
+  // Could be optimized but I don't want to rely on the order of the elements in
+  // the matrix
+  switch (index)
   {
   case 0:
     return Vector2(m00, m10);
   case 1:
     return Vector2(m01, m11);
   default:
-    //ErrorIf(index > 2, "Invalid index given, matrix dimension is too low.");
+    // ErrorIf(index > 2, "Invalid index given, matrix dimension is too low.");
     return Vector2(real(0.0), real(0.0));
   }
 }
 
 void Matrix2::SetBasis(uint index, Vec2Param basis)
 {
-  //Could be optimized but I don't want to rely on the order of the elements in 
-  //the matrix
-  switch(index)
+  // Could be optimized but I don't want to rely on the order of the elements in
+  // the matrix
+  switch (index)
   {
   case 0:
     m00 = basis.x;
@@ -169,21 +165,21 @@ void Matrix2::SetBasis(uint index, Vec2Param basis)
 
 Vector2 Matrix2::GetCross(uint index) const
 {
-  switch(index)
+  switch (index)
   {
   case 0:
     return Vector2(m00, m01);
   case 1:
     return Vector2(m10, m11);
   default:
-    //ErrorIf(index > 2, "Invalid index given, matrix dimension is too low.");
+    // ErrorIf(index > 2, "Invalid index given, matrix dimension is too low.");
     return Vector2(real(0.0), real(0.0));
   }
 }
 
 void Matrix2::SetCross(uint index, Vec2Param cross)
 {
-  switch(index)
+  switch (index)
   {
   case 0:
     m00 = cross.x;
@@ -257,7 +253,7 @@ bool Matrix2::SafeInvert(Mat2Ref mat)
 
   real determinant = mat.Determinant();
   real invDeterminant;
-  if(Math::Abs(determinant) < Math::PositiveMin())
+  if (Math::Abs(determinant) < Math::PositiveMin())
   {
     invDeterminant = Math::PositiveMin();
     success = false;
@@ -326,10 +322,8 @@ Matrix2 Matrix2::GenerateTransform(real radians, Vec2Param scale)
 
 void Matrix2::Decompose(Mat2Param transform, real& radians, Vec2Ref scale)
 {
-
 }
 
-//-------------------------------------------------------------------Legacy
 Matrix2 Matrix2::Transposed() const
 {
   return Matrix2::Transposed(*this);
@@ -360,7 +354,6 @@ Vector2 Matrix2::Transform(Vec2Param vector) const
   return Matrix2::Multiply(*this, vector);
 }
 
-//-------------------------------------------------------------------Globals
 Matrix2 operator*(real lhs, Mat2Param rhs)
 {
   return rhs * lhs;
@@ -376,4 +369,4 @@ Vector2 Multiply(Mat2Param lhs, Vec2Param rhs)
   return Matrix2::Multiply(lhs, rhs);
 }
 
-}// namespace Math
+} // namespace Math

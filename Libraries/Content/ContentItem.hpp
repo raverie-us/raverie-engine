@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentItem.hpp
-/// Declaration of ContentItem.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,10 +6,14 @@ namespace Zero
 class ContentItemHandleManager : public HandleManager
 {
 public:
-  ContentItemHandleManager(ExecutableState* state) : HandleManager(state) {}
+  ContentItemHandleManager(ExecutableState* state) : HandleManager(state)
+  {
+  }
 
   // HandleManager Interface
-  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object,
+                      BoundType* type,
+                      Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
 };
 
@@ -39,13 +35,13 @@ public:
   // Core Content Item
   ContentItemId Id;
 
-  //The library this content item is contained within.
+  // The library this content item is contained within.
   ContentLibrary* mLibrary;
 
-  //Short File name of this content item relative to the library
+  // Short File name of this content item relative to the library
   String Filename;
 
-  //Unique Id of the file
+  // Unique Id of the file
   String UniqueFileId;
 
   // Is this content item edited by the editor
@@ -65,7 +61,7 @@ public:
 
   bool ShowInEditor;
 
-  virtual void AddComponent(ContentComponent* cc)=0;
+  virtual void AddComponent(ContentComponent* cc) = 0;
 
   // Save the content object meta file data.
   void SaveMetaFile();
@@ -73,7 +69,7 @@ public:
   String GetMetaFilePath();
   // Get the full path to the content file.
   String GetFullPath();
-  
+
   /// Adds all tags of this content item to the given array.
   void GetTags(Array<String>& tags);
   void GetTags(HashSet<String>& tags);
@@ -97,7 +93,8 @@ public:
   // Build the content item
   virtual void BuildContent(BuildOptions& buildOptions) = 0;
 
-  // Helper that builds the content item using build options from the content libarary.
+  // Helper that builds the content item using build options from the content
+  // libarary.
   void BuildContent();
 
   // Build the resource listing that this content item makes
@@ -111,9 +108,9 @@ public:
 
   // Get a content component
   virtual ContentComponent* QueryComponentId(BoundType* typeId);
-  
-  //Typed based interface for accessing components.
-  template<typename type>
+
+  // Typed based interface for accessing components.
+  template <typename type>
   type* Has()
   {
     return static_cast<type*>(QueryComponentId(ZilchTypeId(type)));
@@ -121,10 +118,11 @@ public:
 
   // Called when content item is initialized for derived classes.
   virtual void OnInitialize();
+
 private:
 };
 
-//------------------------------------------------------------------------- Resource Meta Operations
+//Resource Meta Operations
 class ContentItemMetaOperations : public MetaOperations
 {
 public:
@@ -134,4 +132,4 @@ public:
   void ObjectModified(HandleParam object, bool intermediateChange) override;
 };
 
-}//namespace Zero
+} // namespace Zero

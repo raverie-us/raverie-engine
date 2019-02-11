@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GraphView.hpp
-/// Declaration of the GraphView.
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,8 +13,13 @@ struct RangeData
 
 struct EntryLabel
 {
-  bool PointContains(Vec2 point){return false;}
-  void DrawSelection(DisplayRender* render){}
+  bool PointContains(Vec2 point)
+  {
+    return false;
+  }
+  void DrawSelection(DisplayRender* render)
+  {
+  }
 
   String Name;
   Vec3 Translation;
@@ -34,7 +31,7 @@ class DataSampler : public EventObject
 public:
   typedef DataSampler ZilchSelf;
 
-  virtual float Sample()=0;
+  virtual float Sample() = 0;
   virtual void Setup(RangeData& data, EntryLabel& label){};
   virtual ~DataSampler(){};
 };
@@ -42,7 +39,6 @@ public:
 class MetaObjectSample : public DataSampler
 {
 public:
-
   MetaObjectSample(Object* object, StringParam propertyName)
   {
     mObject = object;
@@ -63,10 +59,10 @@ public:
 
   float Sample() override
   {
-    if(!mObject.IsNull())
+    if (!mObject.IsNull())
     {
       Any variant = mProperty->GetValue(mObject);
-      if(variant.Is<float>())
+      if (variant.Is<float>())
         return variant.Get<float>();
       else
         return float(variant.Get<int>());
@@ -113,7 +109,11 @@ public:
   void OnSetKeyPressed(ObjectEvent* event);
   void OnClose(ObjectEvent* event);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
 private:
   //--------------------------------------------------------Mouse Event Response
@@ -125,11 +125,21 @@ private:
   Vec3 GetLabelPosition(uint labelNumber);
 
   /// Draw the label for each graph entry.
-  void DrawLabels(RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawLabels(RenderFont* font,
+                  ViewBlock& viewBlock,
+                  FrameBlock& frameBlock,
+                  WidgetRect clipRect);
 
   /// Draw the line graph
-  void DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
-  void DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
+  void DrawLineGraph(Vec2Param size,
+                     ViewBlock& viewBlock,
+                     FrameBlock& frameBlock,
+                     WidgetRect clipRect);
+  void DrawGrid(Vec2Param size,
+                RenderFont* font,
+                ViewBlock& viewBlock,
+                FrameBlock& frameBlock,
+                WidgetRect clipRect);
 
   /// Draw the pie graph
   void DrawPieGraph();
@@ -144,4 +154,4 @@ private:
   RenderFont* mFont;
 };
 
-}//namespace Zero
+} // namespace Zero

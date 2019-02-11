@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +12,9 @@ public:
   ZilchDeclareType(ImageWidget, TypeCopyMode::ReferenceType);
 
   SlicedDefinition* mDef;
-  ImageWidget(Composite* parent, StringParam style, AttachType::Enum attachType = AttachType::Normal);
+  ImageWidget(Composite* parent,
+              StringParam style,
+              AttachType::Enum attachType = AttachType::Normal);
 
   Thickness GetBorderThickness() override;
   Vec2 GetMinSize() override;
@@ -26,9 +23,13 @@ public:
   DisplayOrigin::Type GetDisplayOrigin();
   void SetDisplayOrigin(DisplayOrigin::Type displayOrigin);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
   String GetDebugName() override;
 };
 
-}
+} // namespace Zero

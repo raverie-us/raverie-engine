@@ -1,15 +1,7 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file IndexPool.hpp
-/// Interface for the index pool
-/// 
-/// Authors: Killian Koenig
-/// Copyright 2013, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
-template <typename T, typename index_t= s32>
+template <typename T, typename index_t = s32>
 class IndexPool
 {
 public:
@@ -30,12 +22,11 @@ public:
   index_t GetSize() const;
 
 private:
-  union Node
-  {
+  union Node {
     T Element;
     index_t Next;
   };
-  
+
   void Grow();
 
   Node* mData;
@@ -45,32 +36,29 @@ private:
 };
 
 template <typename T, typename index_t>
-IndexPool<T, index_t>::IndexPool()
-  : mFreeList(-1)
-  , mCapacity(8)
-  , mSize(0)
+IndexPool<T, index_t>::IndexPool() : mFreeList(-1), mCapacity(8), mSize(0)
 {
   mData = new Node[mCapacity];
-  for(index_t i = mCapacity - 1; i >= 0; --i)
+  for (index_t i = mCapacity - 1; i >= 0; --i)
   {
     Node* node = mData + i;
     node->Next = mFreeList;
-    mFreeList = i;   
+    mFreeList = i;
   }
 }
 
 template <typename T, typename index_t>
-IndexPool<T, index_t>::IndexPool(index_t capacity)
-  : mCapacity(capacity)
-  , mSize(0)
-  , mFreeList(-1)
+IndexPool<T, index_t>::IndexPool(index_t capacity) :
+    mCapacity(capacity),
+    mSize(0),
+    mFreeList(-1)
 {
   mData = new Node[mCapacity];
-  for(index_t i = mCapacity - 1; i >= 0; --i)
+  for (index_t i = mCapacity - 1; i >= 0; --i)
   {
     Node* node = mData + i;
     node->Next = mFreeList;
-    mFreeList = i;   
+    mFreeList = i;
   }
 }
 
@@ -83,7 +71,7 @@ IndexPool<T, index_t>::~IndexPool()
 template <typename T, typename index_t>
 index_t IndexPool<T, index_t>::Allocate()
 {
-  if(mFreeList == -1)
+  if (mFreeList == -1)
   {
     Grow();
   }
@@ -122,12 +110,12 @@ void IndexPool<T, index_t>::Grow()
 
   index_t newCapacity = mCapacity << 1;
   mData = new Node[newCapacity];
-  for(index_t i = 0; i < mCapacity; ++i)
+  for (index_t i = 0; i < mCapacity; ++i)
   {
     *(mData + i) = *(old + i);
   }
 
-  for(index_t i = newCapacity - 1; i >= mCapacity; --i)
+  for (index_t i = newCapacity - 1; i >= mCapacity; --i)
   {
     Node* node = mData + i;
     node->Next = mFreeList;

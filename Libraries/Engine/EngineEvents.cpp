@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EngineEvents.cpp
-/// Implementation of the basic event classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,8 +6,8 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ScriptInitialize);
-}//namespace Events
+DefineEvent(ScriptInitialize);
+} // namespace Events
 
 ZilchDefineType(TextEvent, builder, type)
 {
@@ -34,11 +26,10 @@ ZilchDefineType(BlockingTaskEvent, builder, type)
 {
 }
 
-//--------------------------------------------------------------- Progress Event
 ProgressEvent::ProgressEvent()
 {
   ProgressType = ProgressType::Normal;
   Percentage = 0.0f;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GridDraw.cpp
-/// Declaration of the GridDraw class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -61,13 +53,14 @@ void GridDraw::Initialize(CogInitializer& initializer)
 // Occurs when the frame is updated on the space
 void GridDraw::OnFrameUpdate(UpdateEvent* e)
 {
-  // If we want to draw this in editor mode, and we're currently in editor mode...
-  if(this->GetSpace()->IsEditorMode())
+  // If we want to draw this in editor mode, and we're currently in editor
+  // mode...
+  if (this->GetSpace()->IsEditorMode())
   {
     if (this->mAlwaysDrawInEditor)
       this->Draw();
   }
-  else if(mDrawInGame)
+  else if (mDrawInGame)
   {
     this->Draw();
   }
@@ -80,7 +73,7 @@ void GridDraw::SetAxis(AxisDirection::Enum axis)
 
 void GridDraw::DebugDraw()
 {
-  if(!this->mAlwaysDrawInEditor)
+  if (!this->mAlwaysDrawInEditor)
   {
     this->Draw();
   }
@@ -88,30 +81,30 @@ void GridDraw::DebugDraw()
 
 void GetCustomGridColor(Vec3Param start, Vec3Param end, ByteColor* color)
 {
-  if(start.y == 0.0f && end.y == 0.0f && start.z == 0.0f && end.z == 0.0f)
-    *color = ToByteColor(Vec4(1,0,0,0.7f));
-  else if(start.x == 0.0f && end.x == 0.0f && start.z == 0.0f && end.z == 0.0f)
-    *color = ToByteColor(Vec4(0,1,0,0.7f));
-  else if(start.x == 0.0f && end.x == 0.0f && start.y == 0.0f && end.y == 0.0f)
-    *color = ToByteColor(Vec4(0,0,1,0.7f));
+  if (start.y == 0.0f && end.y == 0.0f && start.z == 0.0f && end.z == 0.0f)
+    *color = ToByteColor(Vec4(1, 0, 0, 0.7f));
+  else if (start.x == 0.0f && end.x == 0.0f && start.z == 0.0f && end.z == 0.0f)
+    *color = ToByteColor(Vec4(0, 1, 0, 0.7f));
+  else if (start.x == 0.0f && end.x == 0.0f && start.y == 0.0f && end.y == 0.0f)
+    *color = ToByteColor(Vec4(0, 0, 1, 0.7f));
 }
 
 // Draw the grid
 void GridDraw::Draw()
 {
-  if(!mActive)
+  if (!mActive)
     return;
 
-  size_t  lineToDraw = mLines;
+  size_t lineToDraw = mLines;
   // Don't let them have too many lines, otherwise this will run forever
   lineToDraw = Math::Min(lineToDraw, size_t(1000));
- ++lineToDraw;
+  ++lineToDraw;
 
- if(mCellSize <= 0.0f)
-   mCellSize = 1.0f;
+  if (mCellSize <= 0.0f)
+    mCellSize = 1.0f;
 
- if(mHighlightInterval == 0)
-   mHighlightInterval = 10;
+  if (mHighlightInterval == 0)
+    mHighlightInterval = 10;
 
   float intervalCount = (float)mLines;
 
@@ -121,24 +114,25 @@ void GridDraw::Draw()
   // Get the transform component
   Transform* tx = this->GetOwner()->has(Transform);
   Mat4 transformMatrix = Mat4::cIdentity;
-  if(tx)
+  if (tx)
   {
     transformMatrix = tx->GetWorldMatrix();
   }
 
-  Vec3 translation = Vec3(0,0,0);
-  int highlightOffsets[] = {0,0,0};
+  Vec3 translation = Vec3(0, 0, 0);
+  int highlightOffsets[] = {0, 0, 0};
 
-  Cog* camera = this->GetSpace()->FindObjectByName(SpecialCogNames::EditorCamera);
-  if(camera && mFollowEditorCamera)
+  Cog* camera =
+      this->GetSpace()->FindObjectByName(SpecialCogNames::EditorCamera);
+  if (camera && mFollowEditorCamera)
   {
     tx = nullptr;
     EditorCameraController* controller = camera->has(EditorCameraController);
-    if(controller)
+    if (controller)
       translation = controller->GetLookTarget();
-    for(uint i=0;i<NumAxes;++i)
+    for (uint i = 0; i < NumAxes; ++i)
     {
-      if(i != mAxis)
+      if (i != mAxis)
       {
         translation[i] = Snap(translation[i], mCellSize);
         highlightOffsets[i] = (int)Math::Round(translation[i] / mCellSize);
@@ -156,8 +150,9 @@ void GridDraw::Draw()
     translation -= splatCells * 0.5f;
   }
 
-  // The offset is used in multiple ways, but primarily it is the distance out that the lines are
-  // drawn along two different axes that aren't the current axes
+  // The offset is used in multiple ways, but primarily it is the distance out
+  // that the lines are drawn along two different axes that aren't the current
+  // axes
   Vec3 size = splatCells * intervalCount * 0.5f;
 
   // Loop through all the axes
@@ -168,7 +163,8 @@ void GridDraw::Draw()
     for (size_t currentLine = 0; currentLine < lineToDraw; ++currentLine)
     {
       Vec3 offset = size;
-      // For the current axis, the offset is the distance along it where we want to draw the lines
+      // For the current axis, the offset is the distance along it where we want
+      // to draw the lines
       offset[currentAxis] = (currentLine - intervalCount * 0.5f) * mCellSize;
 
       // Loop through all the other axes
@@ -178,14 +174,17 @@ void GridDraw::Draw()
         if (otherAxis == currentAxis)
           continue;
 
-        // Compute which face we're doing (essentially the plane made by the current axis as a normal)
+        // Compute which face we're doing (essentially the plane made by the
+        // current axis as a normal)
         size_t facePlaneIndex = NumAxes - (otherAxis ^ currentAxis);
-        if(!(facePlaneIndex == mAxis))
+        if (!(facePlaneIndex == mAxis))
           continue;
 
         ByteColor color = gridColor;
-        if((currentLine + highlightOffsets[currentAxis]) % mHighlightInterval == 0)
-         color = gridHighlight;
+        if ((currentLine + highlightOffsets[currentAxis]) %
+                mHighlightInterval ==
+            0)
+          color = gridHighlight;
 
         // Put the start and end points of the line right at the center
         Vec3 start = Vec3::cZero;
@@ -193,26 +192,27 @@ void GridDraw::Draw()
 
         // Offset the start and end along the current axes
         start[currentAxis] += offset[currentAxis];
-        end  [currentAxis] += offset[currentAxis];
+        end[currentAxis] += offset[currentAxis];
 
-        // Offset the start and end so that, on the other axes, they are from positive to negative
+        // Offset the start and end so that, on the other axes, they are from
+        // positive to negative
         start[otherAxis] += offset[otherAxis];
-        end  [otherAxis] -= offset[otherAxis];
+        end[otherAxis] -= offset[otherAxis];
 
-        if(mDrawAxisOrigins && !mFollowEditorCamera)
+        if (mDrawAxisOrigins && !mFollowEditorCamera)
           GetCustomGridColor(start, end, &color);
 
         // Transform the start and end points
-        if(tx)
+        if (tx)
         {
           start = Math::TransformPoint(transformMatrix, start);
-          end   = Math::TransformPoint(transformMatrix, end);
+          end = Math::TransformPoint(transformMatrix, end);
         }
 
         start += translation;
         end += translation;
 
-        if(mDrawAxisOrigins && mFollowEditorCamera)
+        if (mDrawAxisOrigins && mFollowEditorCamera)
           GetCustomGridColor(start, end, &color);
 
         // Draw the line
@@ -222,4 +222,4 @@ void GridDraw::Draw()
   }
 }
 
-}
+} // namespace Zero

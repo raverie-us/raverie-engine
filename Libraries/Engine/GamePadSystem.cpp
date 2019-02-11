@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GamePadSystem.cpp
-/// Implementation of the GamePadSystem classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,19 +6,18 @@ namespace Zero
 
 namespace Z
 {
-  Gamepads * gGamepads = NULL;
+Gamepads* gGamepads = NULL;
 }
 
 namespace Events
 {
-  DefineEvent(ButtonDown);
-  DefineEvent(ButtonUp);
-  DefineEvent(GamepadStickFlicked);
-  DefineEvent(GamepadsUpdated);
-  DefineEvent(GamepadUpdated);
-}
+DefineEvent(ButtonDown);
+DefineEvent(ButtonUp);
+DefineEvent(GamepadStickFlicked);
+DefineEvent(GamepadsUpdated);
+DefineEvent(GamepadUpdated);
+} // namespace Events
 
-//----------------------------------------------------------------- GamepadEvent
 ZilchDefineType(GamepadEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -45,7 +36,6 @@ GamepadEvent::GamepadEvent(Gamepad* gamepad, int buttonIndex)
   mFlickedStick = FlickedStick::None;
 }
 
-//----------------------------------------------------------------------- Button
 void Button::Clear()
 {
   State = Released;
@@ -54,32 +44,35 @@ void Button::Clear()
 
 void Button::Update(Gamepad* pad, uint value, float elasped, bool& anyDown)
 {
-  bool buttonIsDown = value!=0;
-  if(buttonIsDown)
+  bool buttonIsDown = value != 0;
+  if (buttonIsDown)
   {
-    switch(State)
+    switch (State)
     {
-    case Pressed:State = Held; break;
-    case Released: 
-    case NotHeld:
-      {
-        State = Pressed; 
-        GamepadEvent e(pad, ButtonIndex);
-        pad->DispatchEvent(Events::ButtonDown, &e);
-      }
+    case Pressed:
+      State = Held;
       break;
-    case Held: break;
+    case Released:
+    case NotHeld:
+    {
+      State = Pressed;
+      GamepadEvent e(pad, ButtonIndex);
+      pad->DispatchEvent(Events::ButtonDown, &e);
+    }
+    break;
+    case Held:
+      break;
     }
     TimePressed += elasped;
     anyDown = true;
   }
   else
   {
-    if(State == Released)
+    if (State == Released)
     {
       State = NotHeld;
     }
-    else if(State != NotHeld)
+    else if (State != NotHeld)
     {
       GamepadEvent e(pad, ButtonIndex);
       pad->DispatchEvent(Events::ButtonUp, &e);
@@ -89,8 +82,6 @@ void Button::Update(Gamepad* pad, uint value, float elasped, bool& anyDown)
   }
 }
 
-
-//--------------------------------------------------------------------- Gamepads
 ZilchDefineType(Gamepad, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -126,7 +117,7 @@ Gamepad::Gamepad()
 
 Gamepads::~Gamepads()
 {
-  for(uint i = 0; i < cMaxUsers; ++i)
+  for (uint i = 0; i < cMaxUsers; ++i)
   {
     SetGamepadVibration(i, 0, 0);
     delete mGamePads[i];
@@ -138,7 +129,7 @@ void Gamepad::Initialize(Gamepads* gamepads, uint index)
   mGamePads = gamepads;
 
   mGamepadIndex = index;
-  //Start as active to first update will check all game pads
+  // Start as active to first update will check all game pads
   mIsActive = true;
 
   Clear();
@@ -146,14 +137,14 @@ void Gamepad::Initialize(Gamepads* gamepads, uint index)
 
 void Gamepad::Clear()
 {
-  //Clear all buttons
-  for(uint i=0;i<Buttons::Size;++i)
+  // Clear all buttons
+  for (uint i = 0; i < Buttons::Size; ++i)
   {
     Buttons[i].ButtonIndex = i;
     Buttons[i].Clear();
   }
 
-  //Clear sticks
+  // Clear sticks
   mLeftStick = Vec2(0, 0);
   mLeftStickDelta = Vec2(0, 0);
   mRightStick = Vec2(0, 0);
@@ -165,7 +156,7 @@ void Gamepad::Clear()
   mLeftTrigger = 0;
   mRightTrigger = 0;
 
-  //Clear vibration
+  // Clear vibration
   mVibrationTime = 0.0f;
   mIsVibrating = false;
   mLeftSpeed = 0.0f;
@@ -185,7 +176,7 @@ float Gamepad::GetRightTrigger()
 
 bool Gamepad::IsButtonPressed(int index)
 {
-  if(index < 0 || index > Buttons::Size)
+  if (index < 0 || index > Buttons::Size)
     return false;
 
   return Buttons[index].State == Button::Pressed;
@@ -193,7 +184,7 @@ bool Gamepad::IsButtonPressed(int index)
 
 bool Gamepad::IsButtonHeld(int index)
 {
-  if(index < 0 || index > Buttons::Size)
+  if (index < 0 || index > Buttons::Size)
     return false;
 
   return Buttons[index].State == Button::Held;
@@ -201,7 +192,7 @@ bool Gamepad::IsButtonHeld(int index)
 
 bool Gamepad::IsButtonReleased(int index)
 {
-  if(index < 0 || index > Buttons::Size)
+  if (index < 0 || index > Buttons::Size)
     return false;
 
   return Buttons[index].State == Button::Released;
@@ -209,7 +200,7 @@ bool Gamepad::IsButtonReleased(int index)
 
 float Gamepad::TimeButtonHeld(int index)
 {
-  if(index < 0 || index > Buttons::Size)
+  if (index < 0 || index > Buttons::Size)
     return 0;
 
   return Buttons[index].TimePressed;
@@ -226,11 +217,11 @@ void Gamepad::Vibrate(float time, float leftSpeed, float rightSpeed)
 
 void Gamepad::Update(float elasped)
 {
-  if(!mIsActive)
+  if (!mIsActive)
     return;
 
   // If XInputModule did not load disable the gamepad
-  if(!AreGamepadsEnabled())
+  if (!AreGamepadsEnabled())
   {
     mIsActive = false;
     return;
@@ -239,7 +230,7 @@ void Gamepad::Update(float elasped)
   GamepadState inputState;
   bool result = GetGamepadState((size_t)mGamepadIndex, &inputState);
 
-  if(!result)
+  if (!result)
   {
     Clear();
     mIsActive = false;
@@ -249,27 +240,45 @@ void Gamepad::Update(float elasped)
     mIsActive = true;
     bool anyDown = false;
 
-    //Face Buttons
-    Buttons[Buttons::A].Update(this, GamepadButtonFlag::A & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::B].Update(this, GamepadButtonFlag::B & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::X].Update(this, GamepadButtonFlag::X & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::Y].Update(this, GamepadButtonFlag::Y & inputState.mButtons, elasped, anyDown);
+    // Face Buttons
+    Buttons[Buttons::A].Update(
+        this, GamepadButtonFlag::A & inputState.mButtons, elasped, anyDown);
+    Buttons[Buttons::B].Update(
+        this, GamepadButtonFlag::B & inputState.mButtons, elasped, anyDown);
+    Buttons[Buttons::X].Update(
+        this, GamepadButtonFlag::X & inputState.mButtons, elasped, anyDown);
+    Buttons[Buttons::Y].Update(
+        this, GamepadButtonFlag::Y & inputState.mButtons, elasped, anyDown);
 
-    //Dpad Buttons
-    Buttons[Buttons::DpadUp].Update(this, GamepadButtonFlag::DpadUp & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::DpadDown].Update(this, GamepadButtonFlag::DpadDown & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::DpadLeft].Update(this, GamepadButtonFlag::DpadLeft & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::DpadRight].Update(this, GamepadButtonFlag::DpadRight & inputState.mButtons, elasped, anyDown);
+    // Dpad Buttons
+    Buttons[Buttons::DpadUp].Update(this,
+                                    GamepadButtonFlag::DpadUp &
+                                        inputState.mButtons,
+                                    elasped,
+                                    anyDown);
+    Buttons[Buttons::DpadDown].Update(this,
+                                      GamepadButtonFlag::DpadDown &
+                                          inputState.mButtons,
+                                      elasped,
+                                      anyDown);
+    Buttons[Buttons::DpadLeft].Update(this,
+                                      GamepadButtonFlag::DpadLeft &
+                                          inputState.mButtons,
+                                      elasped,
+                                      anyDown);
+    Buttons[Buttons::DpadRight].Update(this,
+                                       GamepadButtonFlag::DpadRight &
+                                           inputState.mButtons,
+                                       elasped,
+                                       anyDown);
 
-    bool anyDpadDown = 
-      IsButtonHeld(Buttons::DpadUp)       ||
-      IsButtonHeld(Buttons::DpadDown)     ||
-      IsButtonHeld(Buttons::DpadLeft)     ||
-      IsButtonHeld(Buttons::DpadRight)    ||
-      IsButtonPressed(Buttons::DpadUp)    ||
-      IsButtonPressed(Buttons::DpadDown)  ||
-      IsButtonPressed(Buttons::DpadLeft)  ||
-      IsButtonPressed(Buttons::DpadRight);
+    bool anyDpadDown =
+        IsButtonHeld(Buttons::DpadUp) || IsButtonHeld(Buttons::DpadDown) ||
+        IsButtonHeld(Buttons::DpadLeft) || IsButtonHeld(Buttons::DpadRight) ||
+        IsButtonPressed(Buttons::DpadUp) ||
+        IsButtonPressed(Buttons::DpadDown) ||
+        IsButtonPressed(Buttons::DpadLeft) ||
+        IsButtonPressed(Buttons::DpadRight);
 
     if (anyDpadDown)
     {
@@ -277,19 +286,38 @@ void Gamepad::Update(float elasped)
       {
         if (IsButtonHeld(Buttons::DpadUp) || IsButtonPressed(Buttons::DpadUp))
           Buttons[Buttons::DpadUpFiltered].Update(this, 1, elasped, anyDown);
-        if (IsButtonHeld(Buttons::DpadDown) || IsButtonPressed(Buttons::DpadDown))
+        if (IsButtonHeld(Buttons::DpadDown) ||
+            IsButtonPressed(Buttons::DpadDown))
           Buttons[Buttons::DpadDownFiltered].Update(this, 1, elasped, anyDown);
-        if (IsButtonHeld(Buttons::DpadLeft) || IsButtonPressed(Buttons::DpadLeft))
+        if (IsButtonHeld(Buttons::DpadLeft) ||
+            IsButtonPressed(Buttons::DpadLeft))
           Buttons[Buttons::DpadLeftFiltered].Update(this, 1, elasped, anyDown);
-        if (IsButtonHeld(Buttons::DpadRight) || IsButtonPressed(Buttons::DpadRight))
+        if (IsButtonHeld(Buttons::DpadRight) ||
+            IsButtonPressed(Buttons::DpadRight))
           Buttons[Buttons::DpadRightFiltered].Update(this, 1, elasped, anyDown);
       }
       else
       {
-        Buttons[Buttons::DpadUpFiltered].Update(this, Buttons[Buttons::DpadUpFiltered].State != Button::Released, elasped, anyDown);
-        Buttons[Buttons::DpadDownFiltered].Update(this, Buttons[Buttons::DpadDownFiltered].State != Button::Released, elasped, anyDown);
-        Buttons[Buttons::DpadLeftFiltered].Update(this, Buttons[Buttons::DpadLeftFiltered].State != Button::Released, elasped, anyDown);
-        Buttons[Buttons::DpadRightFiltered].Update(this, Buttons[Buttons::DpadRightFiltered].State != Button::Released, elasped, anyDown);
+        Buttons[Buttons::DpadUpFiltered].Update(
+            this,
+            Buttons[Buttons::DpadUpFiltered].State != Button::Released,
+            elasped,
+            anyDown);
+        Buttons[Buttons::DpadDownFiltered].Update(
+            this,
+            Buttons[Buttons::DpadDownFiltered].State != Button::Released,
+            elasped,
+            anyDown);
+        Buttons[Buttons::DpadLeftFiltered].Update(
+            this,
+            Buttons[Buttons::DpadLeftFiltered].State != Button::Released,
+            elasped,
+            anyDown);
+        Buttons[Buttons::DpadRightFiltered].Update(
+            this,
+            Buttons[Buttons::DpadRightFiltered].State != Button::Released,
+            elasped,
+            anyDown);
       }
     }
     else
@@ -302,22 +330,40 @@ void Gamepad::Update(float elasped)
 
     mWasAnyDpadDown = anyDpadDown;
 
-    //Special Buttons
-    Buttons[Buttons::Start].Update(this, GamepadButtonFlag::Start & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::Back].Update(this, GamepadButtonFlag::Back & inputState.mButtons, elasped, anyDown);
+    // Special Buttons
+    Buttons[Buttons::Start].Update(
+        this, GamepadButtonFlag::Start & inputState.mButtons, elasped, anyDown);
+    Buttons[Buttons::Back].Update(
+        this, GamepadButtonFlag::Back & inputState.mButtons, elasped, anyDown);
 
-    //Thumbstick Buttons
-    Buttons[Buttons::LeftThumb].Update(this, GamepadButtonFlag::LThumb & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::RightThumb].Update(this, GamepadButtonFlag::RThumb & inputState.mButtons, elasped, anyDown);
+    // Thumbstick Buttons
+    Buttons[Buttons::LeftThumb].Update(this,
+                                       GamepadButtonFlag::LThumb &
+                                           inputState.mButtons,
+                                       elasped,
+                                       anyDown);
+    Buttons[Buttons::RightThumb].Update(this,
+                                        GamepadButtonFlag::RThumb &
+                                            inputState.mButtons,
+                                        elasped,
+                                        anyDown);
 
-    //Shoulder Buttons
-    Buttons[Buttons::LeftShoulder].Update(this, GamepadButtonFlag::LShoulder & inputState.mButtons, elasped, anyDown);
-    Buttons[Buttons::RightShoulder].Update(this, GamepadButtonFlag::RShoulder & inputState.mButtons, elasped, anyDown);
-    
-    //The any button
+    // Shoulder Buttons
+    Buttons[Buttons::LeftShoulder].Update(this,
+                                          GamepadButtonFlag::LShoulder &
+                                              inputState.mButtons,
+                                          elasped,
+                                          anyDown);
+    Buttons[Buttons::RightShoulder].Update(this,
+                                           GamepadButtonFlag::RShoulder &
+                                               inputState.mButtons,
+                                           elasped,
+                                           anyDown);
+
+    // The any button
     Buttons[Buttons::AnyButton].Update(this, anyDown, elasped, anyDown);
 
-    //Divide by the max value of short
+    // Divide by the max value of short
     const float fshortmax = (float)SHRT_MAX;
 
     float LX = inputState.mThumbLX;
@@ -325,21 +371,21 @@ void Gamepad::Update(float elasped)
     float RX = inputState.mThumbRX;
     float RY = inputState.mThumbRY;
 
-    //Update stick buttons
-    Buttons[Buttons::StickUp].Update(this, LY > 0 , elasped, anyDown);
-    Buttons[Buttons::StickDown].Update(this, LY < 0 , elasped, anyDown);
-    Buttons[Buttons::StickLeft].Update(this, LX < 0 , elasped, anyDown);
-    Buttons[Buttons::StickRight].Update(this, LX > 0 , elasped, anyDown);
+    // Update stick buttons
+    Buttons[Buttons::StickUp].Update(this, LY > 0, elasped, anyDown);
+    Buttons[Buttons::StickDown].Update(this, LY < 0, elasped, anyDown);
+    Buttons[Buttons::StickLeft].Update(this, LX < 0, elasped, anyDown);
+    Buttons[Buttons::StickRight].Update(this, LX > 0, elasped, anyDown);
 
-    //Normalize stick values
-    //There is 1 more negative value in a unsigned short
-    //than positive so clamp to -1 to 1
+    // Normalize stick values
+    // There is 1 more negative value in a unsigned short
+    // than positive so clamp to -1 to 1
     float lx = Math::Clamp(LX / fshortmax, -1.0f, 1.0f);
     float ly = Math::Clamp(LY / fshortmax, -1.0f, 1.0f);
     float rx = Math::Clamp(RX / fshortmax, -1.0f, 1.0f);
     float ry = Math::Clamp(RY / fshortmax, -1.0f, 1.0f);
 
-    //Update values
+    // Update values
     mLeftStickDelta = Vec2(lx - mLeftStick.x, ly - mLeftStick.y);
     mRightStickDelta = Vec2(rx - mRightStick.x, ry - mRightStick.y);
     mLeftStick = Vec2(lx, ly);
@@ -347,19 +393,19 @@ void Gamepad::Update(float elasped)
 
     const float cFlickMagnitude = 0.8f;
 
-    //Stick flicking
+    // Stick flicking
     bool leftStickFlicked = (Math::Length(mLeftStick) >= cFlickMagnitude);
     bool rightStickFlicked = (Math::Length(mRightStick) >= cFlickMagnitude);
-    
-    if(leftStickFlicked && !mLeftStickFlicked)
+
+    if (leftStickFlicked && !mLeftStickFlicked)
     {
       GamepadEvent toSend(this);
       toSend.mFlickedStick = FlickedStick::Left;
       toSend.mFlickDirection = Math::Normalized(mLeftStick);
       DispatchEvent(Events::GamepadStickFlicked, &toSend);
     }
-    
-    if(rightStickFlicked && !mRightStickFlicked)
+
+    if (rightStickFlicked && !mRightStickFlicked)
     {
       GamepadEvent toSend(this);
       toSend.mFlickedStick = FlickedStick::Right;
@@ -370,15 +416,15 @@ void Gamepad::Update(float elasped)
     mLeftStickFlicked = leftStickFlicked;
     mRightStickFlicked = rightStickFlicked;
 
-    //Update Triggers
+    // Update Triggers
     mLeftTrigger = inputState.mLTrigger / 255.0f;
     mRightTrigger = inputState.mRTrigger / 255.0f;
 
-    //Animate vibration.
-    if(mIsVibrating)
+    // Animate vibration.
+    if (mIsVibrating)
     {
       mVibrationTime -= elasped;
-      if(mVibrationTime < 0.0f)
+      if (mVibrationTime < 0.0f)
       {
         mVibrationTime = 0.0f;
         mIsVibrating = false;
@@ -388,8 +434,6 @@ void Gamepad::Update(float elasped)
   }
 }
 
-
-//------------------------------------------------------------ Gamepads
 ZilchDefineType(Gamepads, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -409,7 +453,7 @@ Gamepads::Gamepads()
 void Gamepads::PauseVibration()
 {
   mVibrationIsPaused = true;
-  for(uint i = 0; i < cMaxUsers; ++i)
+  for (uint i = 0; i < cMaxUsers; ++i)
   {
     SetGamepadVibration(i, 0, 0);
     mGamePads[i]->mIsVibrating = false;
@@ -419,7 +463,7 @@ void Gamepads::PauseVibration()
 void Gamepads::ResumeVibration()
 {
   mVibrationIsPaused = false;
-  for(uint i = 0; i < cMaxUsers; ++i)
+  for (uint i = 0; i < cMaxUsers; ++i)
   {
     SetGamepadVibration(i, mGamePads[i]->mLeftSpeed, mGamePads[i]->mRightSpeed);
     mGamePads[i]->mIsVibrating = true;
@@ -428,12 +472,12 @@ void Gamepads::ResumeVibration()
 
 void Gamepads::UpdateGamepadsActiveState()
 {
-  //Set mIsActive next update will test and reset value
+  // Set mIsActive next update will test and reset value
   for (uint i = 0; i < cMaxUsers; ++i)
   {
     GamepadState inputState;
     bool result = GetGamepadState(i, &inputState);
-    
+
     if (!result)
     {
       mGamePads[i]->Clear();
@@ -450,7 +494,11 @@ Gamepad* Gamepads::GetGamePad(uint i)
 {
   if (i >= cMaxUsers)
   {
-    DoNotifyError("Invalid Controller", String::Format("A controller with index '%d' was requested, but does not exist!", i));
+    DoNotifyError(
+        "Invalid Controller",
+        String::Format(
+            "A controller with index '%d' was requested, but does not exist!",
+            i));
     i = 0;
   }
   Gamepad* gamepad = mGamePads[i];
@@ -468,7 +516,7 @@ void Gamepads::Startup()
 
   mVibrationIsPaused = false;
 
-  for(uint i = 0; i < cMaxUsers; ++i)
+  for (uint i = 0; i < cMaxUsers; ++i)
   {
     mGamePads[i] = new Gamepad();
     mGamePads[i]->Initialize(this, i);
@@ -482,11 +530,11 @@ void Gamepads::Startup()
 
 void Gamepads::OnUpdate(UpdateEvent* event)
 {
-  for(uint i = 0; i < cMaxUsers; ++i)
+  for (uint i = 0; i < cMaxUsers; ++i)
   {
     Gamepad* gamepad = mGamePads[i];
     gamepad->Update(event->Dt);
-    
+
     ObjectEvent toSend;
     gamepad->GetDispatcher()->Dispatch(Events::GamepadUpdated, &toSend);
   }
@@ -497,13 +545,13 @@ void Gamepads::OnUpdate(UpdateEvent* event)
 
 void Gamepads::OnDeviceChanged(Event* event)
 {
-	UpdateGamepadsActiveState();
+  UpdateGamepadsActiveState();
 }
 
 void Gamepads::Update()
 {
-  for(uint i = 0; i < cMaxUsers; ++i)
+  for (uint i = 0; i < cMaxUsers; ++i)
     mGamePads[i]->Update(0.0f);
 }
 
-}
+} // namespace Zero

@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ConvexMeshShape.cpp
-/// Implementation of the ConvexMeshShape which is a wrapper
-/// shape around a SupportShape.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,8 +9,8 @@ ConvexMeshShape::ConvexMeshShape()
   mWorldAabb.Zero();
 }
 
-ConvexMeshShape::ConvexMeshShape(const Intersection::SupportShape& support)
-  : mSupport(support)
+ConvexMeshShape::ConvexMeshShape(const Intersection::SupportShape& support) :
+    mSupport(support)
 {
   mWorldAabb.Zero();
 }
@@ -39,4 +30,4 @@ Obb ConvexMeshShape::Transform(Mat4Param transformation) const
   return mWorldAabb.Transform(transformation);
 }
 
-}//namespace Zero
+} // namespace Zero

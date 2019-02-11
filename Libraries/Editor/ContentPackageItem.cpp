@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentPackage.cpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,11 +6,9 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(TextureLoaded);
+DefineEvent(TextureLoaded);
 }
 
-//------------------------------------------------------------- Content Package
-//******************************************************************************
 ZilchDefineType(ContentPackage, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -28,7 +18,6 @@ ZilchDefineType(ContentPackage, builder, type)
   ZilchBindFieldProperty(mDescription);
 }
 
-//******************************************************************************
 ContentPackage::ContentPackage()
 {
   mSize = 0;
@@ -38,13 +27,11 @@ ContentPackage::ContentPackage()
   mRequest = AsyncWebRequest::Create();
 }
 
-//******************************************************************************
 ContentPackage::~ContentPackage()
 {
   mRequest->Cancel();
 }
 
-//******************************************************************************
 void ContentPackage::operator=(const ContentPackage& rhs)
 {
   mName = rhs.mName;
@@ -56,7 +43,6 @@ void ContentPackage::operator=(const ContentPackage& rhs)
   mVersionBuilt = rhs.mVersionBuilt;
 }
 
-//******************************************************************************
 void ContentPackage::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mName, String());
@@ -68,7 +54,6 @@ void ContentPackage::Serialize(Serializer& stream)
   SerializeNameDefault(mVersionBuilt, (uint)9147);
 }
 
-//******************************************************************************
 void ContentPackage::LoadStreamedTexture(StringParam url)
 {
   // Start the web request
@@ -78,27 +63,26 @@ void ContentPackage::LoadStreamedTexture(StringParam url)
   request->Run();
 }
 
-//******************************************************************************
 void ContentPackage::LoadLocalTexture(StringParam location)
 {
   Image image;
   Status status;
   LoadImage(status, location, &image);
 
-  if(status.Failed())
+  if (status.Failed())
     return;
 
   mPreview = Texture::CreateRuntime();
   mPreview->Upload(image);
 }
 
-//******************************************************************************
 void ContentPackage::OnWebResponse(WebResponseEvent* e)
 {
-  if(e->mResponseCode != WebResponseCode::OK)
+  if (e->mResponseCode != WebResponseCode::OK)
     return;
 
-  String location = FilePath::Combine(GetTemporaryDirectory(), "StreamedImage.png");
+  String location =
+      FilePath::Combine(GetTemporaryDirectory(), "StreamedImage.png");
   WriteStringRangeToFile(location, e->mData);
 
   LoadLocalTexture(location);
@@ -107,4 +91,4 @@ void ContentPackage::OnWebResponse(WebResponseEvent* e)
   GetDispatcher()->Dispatch(Events::TextureLoaded, &eventToSend);
 }
 
-}//namespace Zero
+} // namespace Zero

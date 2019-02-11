@@ -1,23 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Downloads.hpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------- Download Task
 class DownloadTaskJob : public BackgroundTaskJob
 {
 public:
   static BackgroundTask* DownloadToBuffer(StringParam url);
-  static BackgroundTask* DownloadToBuffer(StringParam url, StringParam fileName);
+  static BackgroundTask* DownloadToBuffer(StringParam url,
+                                          StringParam fileName);
 
   typedef DownloadTaskJob ZilchSelf;
   DownloadTaskJob(StringParam url, u64 forceCacheSeconds = 0);
@@ -41,4 +33,4 @@ protected:
   HandleOf<AsyncWebRequest> mRequest;
 };
 
-}//namespace Zero
+} // namespace Zero

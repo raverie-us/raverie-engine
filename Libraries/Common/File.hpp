@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file File.hpp
-/// Declaration of the Os file class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,14 +8,14 @@ DeclareEnum4(FileMode,
              // Open file for reading, reading starts at beginning of file
              // If the file does not exist opening will fail
              Read,
-             // Open file for writing, if the file exists it be truncated to zero
-             // If the file does not exist it will be created
+             // Open file for writing, if the file exists it be truncated to
+             // zero If the file does not exist it will be created
              Write,
              // Open file for writing, writing starts at the end of the file
              // If the file does not exist it will be created
              Append,
-             // Open for reading and writing, reading/writing starts at the beginning of file
-             // If the file does not exist it will be created
+             // Open for reading and writing, reading/writing starts at the
+             // beginning of file If the file does not exist it will be created
              ReadWrite);
 
 // Hint on how the file will be accessed
@@ -35,14 +27,22 @@ DeclareBitField4(FileShare, Read, Write, Delete, Unspecified);
 // Position in file
 typedef u64 FilePosition;
 
-ZeroShared byte* ReadFileIntoMemory(cstr path, size_t& fileSize, size_t extra = 0);
+ZeroShared byte* ReadFileIntoMemory(cstr path,
+                                    size_t& fileSize,
+                                    size_t extra = 0);
 ZeroShared DataBlock ReadFileIntoDataBlock(cstr path);
 ZeroShared String ReadFileIntoString(StringParam path);
-ZeroShared size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize);
+ZeroShared size_t WriteToFile(cstr filePath,
+                              const byte* data,
+                              size_t bufferSize);
 
 // Auxiliary functions defined once for every platform
-ZeroShared bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2);
-ZeroShared bool CompareFileAndString(Status& status, StringParam filePath, StringParam string);
+ZeroShared bool CompareFile(Status& status,
+                            StringParam filePath1,
+                            StringParam filePath2);
+ZeroShared bool CompareFileAndString(Status& status,
+                                     StringParam filePath,
+                                     StringParam string);
 
 /// Os file class
 class ZeroShared File
@@ -55,10 +55,16 @@ public:
   ~File();
 
   /// Open the file
-  /// We take an optional status (this should eventually be refactored, but we wanted to keep current asserting functionality)
-  bool Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share = FileShare::Unspecified, Status* status = nullptr);
+  /// We take an optional status (this should eventually be refactored, but we
+  /// wanted to keep current asserting functionality)
+  bool Open(StringParam filePath,
+            FileMode::Enum mode,
+            FileAccessPattern::Enum accessPattern,
+            FileShare::Enum share = FileShare::Unspecified,
+            Status* status = nullptr);
 
-  /// Creates a file from an OsHandle (cannot fail, assumes the OS handle is valid)
+  /// Creates a file from an OsHandle (cannot fail, assumes the OS handle is
+  /// valid)
   void Open(OsHandle handle, FileMode::Enum mode);
 
   /// Creates a file from a standard C FILE pointer
@@ -72,7 +78,8 @@ public:
   FilePosition Tell();
 
   /// Move the read write position to a new filePosition relative to origin
-  bool Seek(FilePosition filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin);
+  bool Seek(FilePosition filePosition,
+            SeekOrigin::Enum origin = SeekOrigin::Begin);
 
   /// Write data to the file
   size_t Write(byte* data, size_t sizeInBytes);
@@ -80,7 +87,8 @@ public:
   /// Read data from the file
   size_t Read(Status& status, byte* data, size_t sizeInBytes);
 
-  /// Is there data left to read from this file. Primarily for use when the file is a pipe.
+  /// Is there data left to read from this file. Primarily for use when the file
+  /// is a pipe.
   bool HasData(Status& status);
 
   /// Force all reads / write to the disk
@@ -97,9 +105,11 @@ public:
   /// Is the file currently open?
   bool IsOpen();
 
-  /// Duplicates this file into the destination file. Assumes that this file handle is valid.
-  /// Also assumes both files were created in this application's process.
+  /// Duplicates this file into the destination file. Assumes that this file
+  /// handle is valid. Also assumes both files were created in this
+  /// application's process.
   void Duplicate(Status& status, File& destinationFile);
+
 private:
   ZeroDeclarePrivateData(File, 50);
 
@@ -113,7 +123,8 @@ public:
   FileStream(File& file);
 
   u64 Size() override;
-  bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) override;
+  bool Seek(u64 filePosition,
+            SeekOrigin::Enum origin = SeekOrigin::Begin) override;
   u64 Tell() override;
   size_t Write(byte* data, size_t sizeInBytes) override;
   size_t Read(byte* data, size_t sizeInBytes) override;
@@ -125,4 +136,4 @@ private:
   File* mFile;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,7 +9,6 @@ System* CreatePhysicsSystem()
   return new PhysicsEngine();
 }
 
-//-------------------------------------------------------------------PhysicsEngine
 ZilchDefineType(PhysicsEngine, builder, type)
 {
 }
@@ -41,10 +35,14 @@ void PhysicsEngine::Initialize(SystemInitializer& initializer)
 
   // Initialize broad phase static callbacks.
   IBroadPhase::SetCastRayCallBack(&Physics::CollisionManager::TestRayVsObject);
-  IBroadPhase::SetCastSegmentCallBack(&Physics::CollisionManager::TestSegmentVsObject);
-  IBroadPhase::SetCastAabbCallBack(&Physics::CollisionManager::TestAabbVsObject);
-  IBroadPhase::SetCastSphereCallBack(&Physics::CollisionManager::TestSphereVsObject);
-  IBroadPhase::SetCastFrustumCallBack(&Physics::CollisionManager::TestFrustumVsObject);
+  IBroadPhase::SetCastSegmentCallBack(
+      &Physics::CollisionManager::TestSegmentVsObject);
+  IBroadPhase::SetCastAabbCallBack(
+      &Physics::CollisionManager::TestAabbVsObject);
+  IBroadPhase::SetCastSphereCallBack(
+      &Physics::CollisionManager::TestSphereVsObject);
+  IBroadPhase::SetCastFrustumCallBack(
+      &Physics::CollisionManager::TestFrustumVsObject);
 }
 
 void PhysicsEngine::Update(bool debugger)
@@ -56,7 +54,7 @@ void PhysicsEngine::Update(bool debugger)
 
   // Update each physics space
   SpaceList::range r = mSpaces.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     PhysicsSpace& physicsSpace = r.Front();
     physicsSpace.FrameUpdate();
@@ -72,7 +70,7 @@ PhysicsEngine::SpaceList::range PhysicsEngine::GetSpaces()
 void PhysicsEngine::Publish()
 {
   SpaceList::iterator it = mSpaces.Begin();
-  for(; it != mSpaces.End(); ++it)
+  for (; it != mSpaces.End(); ++it)
     it->Publish();
 }
 
@@ -86,4 +84,4 @@ void PhysicsEngine::RemoveSpace(PhysicsSpace* space)
   mSpaces.Erase(space);
 }
 
-}//namespace Zero
+} // namespace Zero

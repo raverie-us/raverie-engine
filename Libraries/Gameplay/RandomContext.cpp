@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file RandomContext.cpp
-///
-/// Authors: Joshua Davis
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -60,8 +53,9 @@ void RandomContext::Serialize(Serializer& stream)
   uint Seed = mRandom.GetSeed();
   SerializeNameDefault(Seed, 0u);
 
-  // If we're loading and we don't use a random seed then set the seed we just loaded
-  if(stream.GetMode() == SerializerMode::Loading && mRandomSeed == false)
+  // If we're loading and we don't use a random seed then set the seed we just
+  // loaded
+  if (stream.GetMode() == SerializerMode::Loading && mRandomSeed == false)
     mRandom.SetSeed(Seed);
 }
 
@@ -152,9 +146,12 @@ Quat RandomContext::Quaternion()
 
 int RandomContext::RangeInclusiveMax(int min, int max)
 {
-  if(min > max)
+  if (min > max)
   {
-    String msg = String::Format("The min value '%d' must be less than or equal to the max value '%d'", min, max);
+    String msg = String::Format(
+        "The min value '%d' must be less than or equal to the max value '%d'",
+        min,
+        max);
     DoNotifyException("Invalid range", msg);
     return min;
   }
@@ -163,9 +160,10 @@ int RandomContext::RangeInclusiveMax(int min, int max)
 
 int RandomContext::RangeExclusiveMax(int min, int max)
 {
-  if(min >= max)
+  if (min >= max)
   {
-    String msg = String::Format("The min value '%d' must be less than the max value '%d'", min, max);
+    String msg = String::Format(
+        "The min value '%d' must be less than the max value '%d'", min, max);
     DoNotifyException("Invalid range", msg);
     return min;
   }
@@ -174,9 +172,10 @@ int RandomContext::RangeExclusiveMax(int min, int max)
 
 int RandomContext::IntVariance(int base, int variance)
 {
-  if(variance < 0)
+  if (variance < 0)
   {
-    String msg = String::Format("The variance value '%d' cannot be negative.", variance);
+    String msg =
+        String::Format("The variance value '%d' cannot be negative.", variance);
     DoNotifyException("Invalid variance", msg);
     return base;
   }
@@ -210,7 +209,7 @@ double RandomContext::DoubleRealVariance(double base, double variance)
 
 uint RandomContext::DieRoll(uint sides)
 {
-  if(sides == 0)
+  if (sides == 0)
   {
     DoNotifyException("Invalid die roll", "Cannot roll a zero sided die");
     return 0;
@@ -244,7 +243,9 @@ float RandomContext::BellCurveRange(float center, float range)
   return mRandom.BellCurve(center, range, 1.0f);
 }
 
-float RandomContext::BellCurveDistribution(float center, float range, float standardDeviation)
+float RandomContext::BellCurveDistribution(float center,
+                                           float range,
+                                           float standardDeviation)
 {
   return mRandom.BellCurve(center, range, standardDeviation);
 }

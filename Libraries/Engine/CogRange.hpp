@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,9 +7,7 @@ namespace Zero
 /// Typedefs
 typedef HashSet<CogId> CogHashSet;
 
-//---------------------------------------------------------------------------------//
-//                               CogHashSetRange                                   //
-//---------------------------------------------------------------------------------//
+//                               CogHashSetRange //
 
 /// CogId HashSet Range
 struct CogHashSetRange : public CogHashSet::range

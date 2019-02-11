@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Constants.hpp
-/// Declaration of the Widget Ui Constants.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 namespace Zero
 {
@@ -26,4 +18,4 @@ extern const String cDragBox;
 extern const String Divider;
 extern const String DefaultTextStyle;
 
-}//namespace Zero
+} // namespace Zero

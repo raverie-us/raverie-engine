@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Time.cpp
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -65,4 +58,4 @@ TimeType Time::ClocksPerSecond()
   return CLOCKS_PER_SEC;
 }
 
-}//namespace Zero
+} // namespace Zero

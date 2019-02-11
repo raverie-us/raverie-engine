@@ -1,14 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
 // AtomicStore
-void AtomicStore(volatile s8*  target, s8 value)
+void AtomicStore(volatile s8* target, s8 value)
 {
   *target = value;
 }
@@ -30,7 +27,7 @@ void AtomicStore(void* volatile* target, void* value)
 }
 
 // AtomicLoad
-s8 AtomicLoad(volatile s8*  target)
+s8 AtomicLoad(volatile s8* target)
 {
   return *target;
 }
@@ -52,7 +49,7 @@ void* AtomicLoad(void* volatile* target)
 }
 
 // AtomicExchange
-s8  AtomicExchange(volatile s8*  target, s8  value)
+s8 AtomicExchange(volatile s8* target, s8 value)
 {
   s8 previous = *target;
   *target = value;
@@ -88,7 +85,7 @@ void* AtomicExchange(void* volatile* target, void* value)
 }
 
 // AtomicCompareExchange
-bool AtomicCompareExchange(volatile s8*  target, s8  value, s8 comparison)
+bool AtomicCompareExchange(volatile s8* target, s8 value, s8 comparison)
 {
   if (*target == comparison)
   {
@@ -128,7 +125,9 @@ bool AtomicCompareExchange(volatile s64* target, s64 value, s64 comparison)
   return false;
 }
 
-bool AtomicCompareExchange(void* volatile* target, void* value, void* comparison)
+bool AtomicCompareExchange(void* volatile* target,
+                           void* value,
+                           void* comparison)
 {
   if (*target == comparison)
   {
@@ -139,7 +138,7 @@ bool AtomicCompareExchange(void* volatile* target, void* value, void* comparison
 }
 
 // AtomicFetchAdd
-s8  AtomicFetchAdd(volatile s8*  target, s8  value)
+s8 AtomicFetchAdd(volatile s8* target, s8 value)
 {
   s8 previous = *target;
   *target += value;
@@ -168,7 +167,7 @@ s64 AtomicFetchAdd(volatile s64* target, s64 value)
 }
 
 // AtomicFetchSubtract
-s8  AtomicFetchSubtract(volatile s8*  target, s8  value)
+s8 AtomicFetchSubtract(volatile s8* target, s8 value)
 {
   s8 previous = *target;
   *target -= value;
@@ -197,7 +196,7 @@ s64 AtomicFetchSubtract(volatile s64* target, s64 value)
 }
 
 // AtomicPreIncrement
-s8  AtomicPreIncrement(volatile s8*  target)
+s8 AtomicPreIncrement(volatile s8* target)
 {
   return ++(*target);
 }
@@ -218,7 +217,7 @@ s64 AtomicPreIncrement(volatile s64* target)
 }
 
 // AtomicPostIncrement
-s8  AtomicPostIncrement(volatile s8*  target)
+s8 AtomicPostIncrement(volatile s8* target)
 {
   return (*target)++;
 }
@@ -236,7 +235,7 @@ s64 AtomicPostIncrement(volatile s64* target)
 }
 
 // AtomicPreDecrement
-s8  AtomicPreDecrement(volatile s8*  target)
+s8 AtomicPreDecrement(volatile s8* target)
 {
   return --(*target);
 }
@@ -257,7 +256,7 @@ s64 AtomicPreDecrement(volatile s64* target)
 }
 
 // AtomicPostDecrement
-s8  AtomicPostDecrement(volatile s8*  target)
+s8 AtomicPostDecrement(volatile s8* target)
 {
   return (*target)++;
 }
@@ -274,4 +273,4 @@ s64 AtomicPostDecrement(volatile s64* target)
   return (*target)++;
 }
 
-}// namespace Zero
+} // namespace Zero

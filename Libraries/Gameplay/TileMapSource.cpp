@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file TileMapSource.cpp
-///  Implementation of the TileMap resource.
-///
-///  Authors: Nathan Carlson
-///  Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -39,12 +31,14 @@ void TileMapSource::Unload()
 }
 
 ImplementResourceManager(TileMapSourceManager, TileMapSource);
-TileMapSourceManager::TileMapSourceManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+TileMapSourceManager::TileMapSourceManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   this->mNoFallbackNeeded = true;
   mExtension = "bin";
-  AddLoader("TileMapSource", new ChunkFileLoader<TileMapSourceManager, TileMapSourceLoadPattern>());
+  AddLoader(
+      "TileMapSource",
+      new ChunkFileLoader<TileMapSourceManager, TileMapSourceLoadPattern>());
 }
 
 } // namespace Zero

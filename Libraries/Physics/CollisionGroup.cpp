@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------CollisionGroup
 ZilchDefineType(CollisionGroup, builder, type)
 {
   ZeroBindDocumented();
@@ -22,12 +16,10 @@ ZilchDefineType(CollisionGroup, builder, type)
 
 CollisionGroup::CollisionGroup()
 {
-
 }
 
 CollisionGroup::~CollisionGroup()
 {
-
 }
 
 HandleOf<CollisionGroup> CollisionGroup::CreateRuntime()
@@ -56,7 +48,6 @@ CollisionGroupInstance* CollisionGroup::GetNewInstance()
   return instance;
 }
 
-//-------------------------------------------------------------------CollisionGroupInstance
 CollisionGroupInstance::CollisionGroupInstance()
 {
   mGroupId = 0;
@@ -65,14 +56,17 @@ CollisionGroupInstance::CollisionGroupInstance()
   mTable = nullptr;
 }
 
-bool CollisionGroupInstance::SkipDetection(const CollisionGroupInstance& rhs) const
+bool CollisionGroupInstance::SkipDetection(
+    const CollisionGroupInstance& rhs) const
 {
   return !((mGroupId & rhs.mDetectionMask) || (rhs.mGroupId & mDetectionMask));
 }
 
-bool CollisionGroupInstance::SkipResolution(const CollisionGroupInstance& rhs) const
+bool CollisionGroupInstance::SkipResolution(
+    const CollisionGroupInstance& rhs) const
 {
-  return !((mGroupId & rhs.mResolutionMask) || (rhs.mGroupId & mResolutionMask));
+  return !((mGroupId & rhs.mResolutionMask) ||
+           (rhs.mGroupId & mResolutionMask));
 }
 
 String CollisionGroupInstance::GetGroupName() const
@@ -80,11 +74,10 @@ String CollisionGroupInstance::GetGroupName() const
   return mResource->Name;
 }
 
-//-------------------------------------------------------------------CollisionGroupManager
 ImplementResourceManager(CollisionGroupManager, CollisionGroup);
 
-CollisionGroupManager::CollisionGroupManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+CollisionGroupManager::CollisionGroupManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("CollisionGroup", new TextDataFileLoader<CollisionGroupManager>());
   mCategory = "Physics";
@@ -96,4 +89,4 @@ CollisionGroupManager::CollisionGroupManager(BoundType* resourceType)
   mExtension = DataResourceExtension;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ToolControl.hpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -27,13 +19,13 @@ DeclareEnum2(ShowToolProperties, Show, Auto);
 
 namespace Events
 {
-  DeclareEvent(GetToolInfo);
-  DeclareEvent(SelectTool);
-  DeclareEvent(ShortcutInfoEnter);
-}
+DeclareEvent(GetToolInfo);
+DeclareEvent(SelectTool);
+DeclareEvent(ShortcutInfoEnter);
+} // namespace Events
 
-//---------------------------------------------------------------- Tool Ui Event
-/// Allows Ui customization for Tools. This will be sent on the Tool every time it is activated.
+/// Allows Ui customization for Tools. This will be sent on the Tool every time
+/// it is activated.
 class ToolUiEvent : public Event
 {
 public:
@@ -52,16 +44,18 @@ public:
   bool mNeedsPropertyGrid;
   Composite* mParent;
   Composite* mCustomUi;
-  /// Easy access to the Select Tool. It's commonly used in other Tools (such as ray casting).
+  /// Easy access to the Select Tool. It's commonly used in other Tools (such as
+  /// ray casting).
   Cog* mSelectTool;
 };
 
-//-------------------------------------------------------------------- Tool Data
 class ToolData
 {
 public:
   /// Constructors.
-  ToolData(){}
+  ToolData()
+  {
+  }
   ToolData(Archetype* archetype);
   ToolData(BoundType* componentMeta);
 
@@ -83,7 +77,6 @@ public:
   HandleOf<Cog> mCog;
 };
 
-//---------------------------------------------------------- Tool Object Manager
 class ToolObjectManager : public EditorScriptObjects<ToolData>
 {
 public:
@@ -107,7 +100,6 @@ public:
   ToolControl* mToolControl;
 };
 
-//----------------------------------------------------------------- Tool Control
 class ToolControl : public Composite
 {
 public:
@@ -134,14 +126,17 @@ public:
   PropertyView* GetPropertyGrid() const;
 
   /// Tool Selection.
-  void SelectToolIndex(uint index, ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
-  void SelectToolName(StringParam toolName, ShowToolProperties::Enum showTool  = ShowToolProperties::Auto);
+  void SelectToolIndex(
+      uint index, ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
+  void
+  SelectToolName(StringParam toolName,
+                 ShowToolProperties::Enum showTool = ShowToolProperties::Auto);
 
   /// Whether or not the default selection tool is currently selected.
   bool IsSelectToolActive();
 
   /// Update the shortcut tool when hovering of info icon and tool is changed.
-  void UpdateShortcutsTip( );
+  void UpdateShortcutsTip();
 
   SelectTool* mSelectTool;
   CreationTool* mCreationTool;
@@ -160,7 +155,8 @@ private:
   /// Change the tool when selected in the dropdown.
   void OnToolPulldownSelect(ObjectEvent*);
 
-  /// We want to forward keyboard input to the last viewport to execute shortcuts.
+  /// We want to forward keyboard input to the last viewport to execute
+  /// shortcuts.
   void OnKeyDown(KeyboardEvent* e);
 
   /// When scripts are compiled, re-select the active tool to refresh any
@@ -171,8 +167,6 @@ private:
 
   void BuildShortcutsToolTip(const ShortcutSet* entries);
   void BuildShorcutsFormat(TreeFormatting* formatting);
-
-  
 
   PropertyInterface* mPropertyInterface;
   Editor* mEditor;
@@ -190,4 +184,4 @@ private:
   ShortcutSource mShortcutSource;
 };
 
-}//namespace Zero
+} // namespace Zero

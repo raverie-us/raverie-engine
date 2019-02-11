@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2016, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -11,26 +10,29 @@ class ResourceListOperation : public Operation
 {
 public:
   UndoHandle mObjectHandle;
-  // Storing a pointer to this is safe because it only ever points to native types, which never
-  // get destructed
+  // Storing a pointer to this is safe because it only ever points to native
+  // types, which never get destructed
   BoundTypeHandle mMeta;
   String mResourceIdName;
   uint mIndex;
   bool mAddOp;
 
-  ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true)
-    : mResourceIdName(resourceIdName)
-    , mIndex(index)
-    , mAddOp(addOp)
-    , mObjectHandle(object)
+  ResourceListOperation(HandleParam object,
+                        StringParam resourceIdName,
+                        uint index = -1,
+                        bool addOp = true) :
+      mResourceIdName(resourceIdName),
+      mIndex(index),
+      mAddOp(addOp),
+      mObjectHandle(object)
   {
     mName = "Removed resource";
-    if(mAddOp)
+    if (mAddOp)
       mName = "Added resource";
 
-    if(Resource* resource = GetResourceList( )->mOwner)
+    if (Resource* resource = GetResourceList()->mOwner)
       BuildString(mName, ": ", resource->Name);
-    
+
     mMeta = object.StoredType;
   }
 

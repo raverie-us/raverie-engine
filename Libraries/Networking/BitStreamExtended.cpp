@@ -1,20 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean.
-/// Copyright 2015, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                              BitStreamExtended                                  //
-//---------------------------------------------------------------------------------//
+//                              BitStreamExtended //
 
 // Default Quantum Values
-const int   BitStreamExtended::DefaultIntegralQuantum      = 1;
+const int BitStreamExtended::DefaultIntegralQuantum = 1;
 const float BitStreamExtended::DefaultFloatingPointQuantum = 0.0001;
 
 ZilchDefineType(BitStreamExtended, builder, type)
@@ -45,7 +38,8 @@ ZilchDefineType(BitStreamExtended, builder, type)
   ZilchBindMethod(MeasureQuaternion);
 
   ZilchBindOverloadedMethod(MeasureString, ZilchStaticOverload(Bits));
-  ZilchBindOverloadedMethod(MeasureString, ZilchStaticOverload(Bits, StringParam));
+  ZilchBindOverloadedMethod(MeasureString,
+                            ZilchStaticOverload(Bits, StringParam));
 
   // Bind measure half operations
   ZilchBindMethod(MeasureRealHalf);
@@ -54,35 +48,82 @@ ZilchDefineType(BitStreamExtended, builder, type)
   ZilchBindMethod(MeasureReal4Half);
 
   // Bind measure quantized operations
-  ZilchBindOverloadedMethod(MeasureIntegerQuantized, ZilchStaticOverload(Bits, int, int));
-  ZilchBindOverloadedMethod(MeasureIntegerQuantized, ZilchStaticOverload(Bits, int, int, int));
+  ZilchBindOverloadedMethod(MeasureIntegerQuantized,
+                            ZilchStaticOverload(Bits, int, int));
+  ZilchBindOverloadedMethod(MeasureIntegerQuantized,
+                            ZilchStaticOverload(Bits, int, int, int));
 
-  ZilchBindOverloadedMethod(MeasureDoubleIntegerQuantized, ZilchStaticOverload(Bits, s64, s64));
-  ZilchBindOverloadedMethod(MeasureDoubleIntegerQuantized, ZilchStaticOverload(Bits, s64, s64, s64));
+  ZilchBindOverloadedMethod(MeasureDoubleIntegerQuantized,
+                            ZilchStaticOverload(Bits, s64, s64));
+  ZilchBindOverloadedMethod(MeasureDoubleIntegerQuantized,
+                            ZilchStaticOverload(Bits, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(MeasureInteger2Quantized, ZilchStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(MeasureInteger2Quantized, ZilchStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  ZilchBindOverloadedMethod(MeasureInteger2Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::IntVector2&,
+                                                const Math::IntVector2&));
+  ZilchBindOverloadedMethod(MeasureInteger2Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::IntVector2&,
+                                                const Math::IntVector2&,
+                                                const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(MeasureInteger3Quantized, ZilchStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(MeasureInteger3Quantized, ZilchStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  ZilchBindOverloadedMethod(MeasureInteger3Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::IntVector3&,
+                                                const Math::IntVector3&));
+  ZilchBindOverloadedMethod(MeasureInteger3Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::IntVector3&,
+                                                const Math::IntVector3&,
+                                                const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(MeasureInteger4Quantized, ZilchStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(MeasureInteger4Quantized, ZilchStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  ZilchBindOverloadedMethod(MeasureInteger4Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::IntVector4&,
+                                                const Math::IntVector4&));
+  ZilchBindOverloadedMethod(MeasureInteger4Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::IntVector4&,
+                                                const Math::IntVector4&,
+                                                const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(MeasureRealQuantized, ZilchStaticOverload(Bits, float, float));
-  ZilchBindOverloadedMethod(MeasureRealQuantized, ZilchStaticOverload(Bits, float, float, float));
+  ZilchBindOverloadedMethod(MeasureRealQuantized,
+                            ZilchStaticOverload(Bits, float, float));
+  ZilchBindOverloadedMethod(MeasureRealQuantized,
+                            ZilchStaticOverload(Bits, float, float, float));
 
-  ZilchBindOverloadedMethod(MeasureDoubleRealQuantized, ZilchStaticOverload(Bits, double, double));
-  ZilchBindOverloadedMethod(MeasureDoubleRealQuantized, ZilchStaticOverload(Bits, double, double, double));
+  ZilchBindOverloadedMethod(MeasureDoubleRealQuantized,
+                            ZilchStaticOverload(Bits, double, double));
+  ZilchBindOverloadedMethod(MeasureDoubleRealQuantized,
+                            ZilchStaticOverload(Bits, double, double, double));
 
-  ZilchBindOverloadedMethod(MeasureReal2Quantized, ZilchStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(MeasureReal2Quantized, ZilchStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  ZilchBindOverloadedMethod(
+      MeasureReal2Quantized,
+      ZilchStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&));
+  ZilchBindOverloadedMethod(MeasureReal2Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::Vector2&,
+                                                const Math::Vector2&,
+                                                const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(MeasureReal3Quantized, ZilchStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(MeasureReal3Quantized, ZilchStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  ZilchBindOverloadedMethod(
+      MeasureReal3Quantized,
+      ZilchStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&));
+  ZilchBindOverloadedMethod(MeasureReal3Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::Vector3&,
+                                                const Math::Vector3&,
+                                                const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(MeasureReal4Quantized, ZilchStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(MeasureReal4Quantized, ZilchStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  ZilchBindOverloadedMethod(
+      MeasureReal4Quantized,
+      ZilchStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&));
+  ZilchBindOverloadedMethod(MeasureReal4Quantized,
+                            ZilchStaticOverload(Bits,
+                                                const Math::Vector4&,
+                                                const Math::Vector4&,
+                                                const Math::Vector4&));
 
   // Bind write operations
   ZilchBindMethod(WriteBoolean);
@@ -109,35 +150,100 @@ ZilchDefineType(BitStreamExtended, builder, type)
   ZilchBindMethod(WriteReal4Half);
 
   // Bind write quantized operations
-  ZilchBindOverloadedMethod(WriteIntegerQuantized, ZilchInstanceOverload(void, int, int, int));
-  ZilchBindOverloadedMethod(WriteIntegerQuantized, ZilchInstanceOverload(void, int, int, int, int));
+  ZilchBindOverloadedMethod(WriteIntegerQuantized,
+                            ZilchInstanceOverload(void, int, int, int));
+  ZilchBindOverloadedMethod(WriteIntegerQuantized,
+                            ZilchInstanceOverload(void, int, int, int, int));
 
-  ZilchBindOverloadedMethod(WriteDoubleIntegerQuantized, ZilchInstanceOverload(void, s64, s64, s64));
-  ZilchBindOverloadedMethod(WriteDoubleIntegerQuantized, ZilchInstanceOverload(void, s64, s64, s64, s64));
+  ZilchBindOverloadedMethod(WriteDoubleIntegerQuantized,
+                            ZilchInstanceOverload(void, s64, s64, s64));
+  ZilchBindOverloadedMethod(WriteDoubleIntegerQuantized,
+                            ZilchInstanceOverload(void, s64, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(WriteInteger2Quantized, ZilchInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(WriteInteger2Quantized, ZilchInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  ZilchBindOverloadedMethod(WriteInteger2Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::IntVector2&,
+                                                  const Math::IntVector2&,
+                                                  const Math::IntVector2&));
+  ZilchBindOverloadedMethod(WriteInteger2Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::IntVector2&,
+                                                  const Math::IntVector2&,
+                                                  const Math::IntVector2&,
+                                                  const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(WriteInteger3Quantized, ZilchInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(WriteInteger3Quantized, ZilchInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  ZilchBindOverloadedMethod(WriteInteger3Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::IntVector3&,
+                                                  const Math::IntVector3&,
+                                                  const Math::IntVector3&));
+  ZilchBindOverloadedMethod(WriteInteger3Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::IntVector3&,
+                                                  const Math::IntVector3&,
+                                                  const Math::IntVector3&,
+                                                  const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(WriteInteger4Quantized, ZilchInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(WriteInteger4Quantized, ZilchInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  ZilchBindOverloadedMethod(WriteInteger4Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::IntVector4&,
+                                                  const Math::IntVector4&,
+                                                  const Math::IntVector4&));
+  ZilchBindOverloadedMethod(WriteInteger4Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::IntVector4&,
+                                                  const Math::IntVector4&,
+                                                  const Math::IntVector4&,
+                                                  const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(WriteRealQuantized, ZilchInstanceOverload(void, float, float, float));
-  ZilchBindOverloadedMethod(WriteRealQuantized, ZilchInstanceOverload(void, float, float, float, float));
+  ZilchBindOverloadedMethod(WriteRealQuantized,
+                            ZilchInstanceOverload(void, float, float, float));
+  ZilchBindOverloadedMethod(
+      WriteRealQuantized,
+      ZilchInstanceOverload(void, float, float, float, float));
 
-  ZilchBindOverloadedMethod(WriteDoubleRealQuantized, ZilchInstanceOverload(void, double, double, double));
-  ZilchBindOverloadedMethod(WriteDoubleRealQuantized, ZilchInstanceOverload(void, double, double, double, double));
+  ZilchBindOverloadedMethod(
+      WriteDoubleRealQuantized,
+      ZilchInstanceOverload(void, double, double, double));
+  ZilchBindOverloadedMethod(
+      WriteDoubleRealQuantized,
+      ZilchInstanceOverload(void, double, double, double, double));
 
-  ZilchBindOverloadedMethod(WriteReal2Quantized, ZilchInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(WriteReal2Quantized, ZilchInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  ZilchBindOverloadedMethod(WriteReal2Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::Vector2&,
+                                                  const Math::Vector2&,
+                                                  const Math::Vector2&));
+  ZilchBindOverloadedMethod(WriteReal2Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::Vector2&,
+                                                  const Math::Vector2&,
+                                                  const Math::Vector2&,
+                                                  const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(WriteReal3Quantized, ZilchInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(WriteReal3Quantized, ZilchInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  ZilchBindOverloadedMethod(WriteReal3Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::Vector3&,
+                                                  const Math::Vector3&,
+                                                  const Math::Vector3&));
+  ZilchBindOverloadedMethod(WriteReal3Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::Vector3&,
+                                                  const Math::Vector3&,
+                                                  const Math::Vector3&,
+                                                  const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(WriteReal4Quantized, ZilchInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(WriteReal4Quantized, ZilchInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  ZilchBindOverloadedMethod(WriteReal4Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::Vector4&,
+                                                  const Math::Vector4&,
+                                                  const Math::Vector4&));
+  ZilchBindOverloadedMethod(WriteReal4Quantized,
+                            ZilchInstanceOverload(void,
+                                                  const Math::Vector4&,
+                                                  const Math::Vector4&,
+                                                  const Math::Vector4&,
+                                                  const Math::Vector4&));
 
   // Bind can-read operations
   ZilchBindMethod(CanReadBoolean);
@@ -164,35 +270,90 @@ ZilchDefineType(BitStreamExtended, builder, type)
   ZilchBindMethod(CanReadReal4Half);
 
   // Bind can-read quantized operations
-  ZilchBindOverloadedMethod(CanReadIntegerQuantized, ZilchConstInstanceOverload(bool, int, int));
-  ZilchBindOverloadedMethod(CanReadIntegerQuantized, ZilchConstInstanceOverload(bool, int, int, int));
+  ZilchBindOverloadedMethod(CanReadIntegerQuantized,
+                            ZilchConstInstanceOverload(bool, int, int));
+  ZilchBindOverloadedMethod(CanReadIntegerQuantized,
+                            ZilchConstInstanceOverload(bool, int, int, int));
 
-  ZilchBindOverloadedMethod(CanReadDoubleIntegerQuantized, ZilchConstInstanceOverload(bool, s64, s64));
-  ZilchBindOverloadedMethod(CanReadDoubleIntegerQuantized, ZilchConstInstanceOverload(bool, s64, s64, s64));
+  ZilchBindOverloadedMethod(CanReadDoubleIntegerQuantized,
+                            ZilchConstInstanceOverload(bool, s64, s64));
+  ZilchBindOverloadedMethod(CanReadDoubleIntegerQuantized,
+                            ZilchConstInstanceOverload(bool, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(CanReadInteger2Quantized, ZilchConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(CanReadInteger2Quantized, ZilchConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  ZilchBindOverloadedMethod(
+      CanReadInteger2Quantized,
+      ZilchConstInstanceOverload(
+          bool, const Math::IntVector2&, const Math::IntVector2&));
+  ZilchBindOverloadedMethod(
+      CanReadInteger2Quantized,
+      ZilchConstInstanceOverload(bool,
+                                 const Math::IntVector2&,
+                                 const Math::IntVector2&,
+                                 const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(CanReadInteger3Quantized, ZilchConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(CanReadInteger3Quantized, ZilchConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  ZilchBindOverloadedMethod(
+      CanReadInteger3Quantized,
+      ZilchConstInstanceOverload(
+          bool, const Math::IntVector3&, const Math::IntVector3&));
+  ZilchBindOverloadedMethod(
+      CanReadInteger3Quantized,
+      ZilchConstInstanceOverload(bool,
+                                 const Math::IntVector3&,
+                                 const Math::IntVector3&,
+                                 const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(CanReadInteger4Quantized, ZilchConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(CanReadInteger4Quantized, ZilchConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  ZilchBindOverloadedMethod(
+      CanReadInteger4Quantized,
+      ZilchConstInstanceOverload(
+          bool, const Math::IntVector4&, const Math::IntVector4&));
+  ZilchBindOverloadedMethod(
+      CanReadInteger4Quantized,
+      ZilchConstInstanceOverload(bool,
+                                 const Math::IntVector4&,
+                                 const Math::IntVector4&,
+                                 const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(CanReadRealQuantized, ZilchConstInstanceOverload(bool, float, float));
-  ZilchBindOverloadedMethod(CanReadRealQuantized, ZilchConstInstanceOverload(bool, float, float, float));
+  ZilchBindOverloadedMethod(CanReadRealQuantized,
+                            ZilchConstInstanceOverload(bool, float, float));
+  ZilchBindOverloadedMethod(
+      CanReadRealQuantized,
+      ZilchConstInstanceOverload(bool, float, float, float));
 
-  ZilchBindOverloadedMethod(CanReadDoubleRealQuantized, ZilchConstInstanceOverload(bool, double, double));
-  ZilchBindOverloadedMethod(CanReadDoubleRealQuantized, ZilchConstInstanceOverload(bool, double, double, double));
+  ZilchBindOverloadedMethod(CanReadDoubleRealQuantized,
+                            ZilchConstInstanceOverload(bool, double, double));
+  ZilchBindOverloadedMethod(
+      CanReadDoubleRealQuantized,
+      ZilchConstInstanceOverload(bool, double, double, double));
 
-  ZilchBindOverloadedMethod(CanReadReal2Quantized, ZilchConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(CanReadReal2Quantized, ZilchConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  ZilchBindOverloadedMethod(CanReadReal2Quantized,
+                            ZilchConstInstanceOverload(bool,
+                                                       const Math::Vector2&,
+                                                       const Math::Vector2&));
+  ZilchBindOverloadedMethod(CanReadReal2Quantized,
+                            ZilchConstInstanceOverload(bool,
+                                                       const Math::Vector2&,
+                                                       const Math::Vector2&,
+                                                       const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(CanReadReal3Quantized, ZilchConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(CanReadReal3Quantized, ZilchConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  ZilchBindOverloadedMethod(CanReadReal3Quantized,
+                            ZilchConstInstanceOverload(bool,
+                                                       const Math::Vector3&,
+                                                       const Math::Vector3&));
+  ZilchBindOverloadedMethod(CanReadReal3Quantized,
+                            ZilchConstInstanceOverload(bool,
+                                                       const Math::Vector3&,
+                                                       const Math::Vector3&,
+                                                       const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(CanReadReal4Quantized, ZilchConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(CanReadReal4Quantized, ZilchConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  ZilchBindOverloadedMethod(CanReadReal4Quantized,
+                            ZilchConstInstanceOverload(bool,
+                                                       const Math::Vector4&,
+                                                       const Math::Vector4&));
+  ZilchBindOverloadedMethod(CanReadReal4Quantized,
+                            ZilchConstInstanceOverload(bool,
+                                                       const Math::Vector4&,
+                                                       const Math::Vector4&,
+                                                       const Math::Vector4&));
 
   // Bind read operations
   ZilchBindMethod(ReadBoolean);
@@ -219,35 +380,90 @@ ZilchDefineType(BitStreamExtended, builder, type)
   ZilchBindMethod(ReadReal4Half);
 
   // Bind read quantized operations
-  ZilchBindOverloadedMethod(ReadIntegerQuantized, ZilchConstInstanceOverload(int, int, int));
-  ZilchBindOverloadedMethod(ReadIntegerQuantized, ZilchConstInstanceOverload(int, int, int, int));
+  ZilchBindOverloadedMethod(ReadIntegerQuantized,
+                            ZilchConstInstanceOverload(int, int, int));
+  ZilchBindOverloadedMethod(ReadIntegerQuantized,
+                            ZilchConstInstanceOverload(int, int, int, int));
 
-  ZilchBindOverloadedMethod(ReadDoubleIntegerQuantized, ZilchConstInstanceOverload(s64, s64, s64));
-  ZilchBindOverloadedMethod(ReadDoubleIntegerQuantized, ZilchConstInstanceOverload(s64, s64, s64, s64));
+  ZilchBindOverloadedMethod(ReadDoubleIntegerQuantized,
+                            ZilchConstInstanceOverload(s64, s64, s64));
+  ZilchBindOverloadedMethod(ReadDoubleIntegerQuantized,
+                            ZilchConstInstanceOverload(s64, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(ReadInteger2Quantized, ZilchConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(ReadInteger2Quantized, ZilchConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  ZilchBindOverloadedMethod(
+      ReadInteger2Quantized,
+      ZilchConstInstanceOverload(
+          Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&));
+  ZilchBindOverloadedMethod(
+      ReadInteger2Quantized,
+      ZilchConstInstanceOverload(Math::IntVector2,
+                                 const Math::IntVector2&,
+                                 const Math::IntVector2&,
+                                 const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(ReadInteger3Quantized, ZilchConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(ReadInteger3Quantized, ZilchConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  ZilchBindOverloadedMethod(
+      ReadInteger3Quantized,
+      ZilchConstInstanceOverload(
+          Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&));
+  ZilchBindOverloadedMethod(
+      ReadInteger3Quantized,
+      ZilchConstInstanceOverload(Math::IntVector3,
+                                 const Math::IntVector3&,
+                                 const Math::IntVector3&,
+                                 const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(ReadInteger4Quantized, ZilchConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(ReadInteger4Quantized, ZilchConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  ZilchBindOverloadedMethod(
+      ReadInteger4Quantized,
+      ZilchConstInstanceOverload(
+          Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&));
+  ZilchBindOverloadedMethod(
+      ReadInteger4Quantized,
+      ZilchConstInstanceOverload(Math::IntVector4,
+                                 const Math::IntVector4&,
+                                 const Math::IntVector4&,
+                                 const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(ReadRealQuantized, ZilchConstInstanceOverload(float, float, float));
-  ZilchBindOverloadedMethod(ReadRealQuantized, ZilchConstInstanceOverload(float, float, float, float));
+  ZilchBindOverloadedMethod(ReadRealQuantized,
+                            ZilchConstInstanceOverload(float, float, float));
+  ZilchBindOverloadedMethod(
+      ReadRealQuantized,
+      ZilchConstInstanceOverload(float, float, float, float));
 
-  ZilchBindOverloadedMethod(ReadDoubleRealQuantized, ZilchConstInstanceOverload(double, double, double));
-  ZilchBindOverloadedMethod(ReadDoubleRealQuantized, ZilchConstInstanceOverload(double, double, double, double));
+  ZilchBindOverloadedMethod(ReadDoubleRealQuantized,
+                            ZilchConstInstanceOverload(double, double, double));
+  ZilchBindOverloadedMethod(
+      ReadDoubleRealQuantized,
+      ZilchConstInstanceOverload(double, double, double, double));
 
-  ZilchBindOverloadedMethod(ReadReal2Quantized, ZilchConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(ReadReal2Quantized, ZilchConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  ZilchBindOverloadedMethod(ReadReal2Quantized,
+                            ZilchConstInstanceOverload(Math::Vector2,
+                                                       const Math::Vector2&,
+                                                       const Math::Vector2&));
+  ZilchBindOverloadedMethod(ReadReal2Quantized,
+                            ZilchConstInstanceOverload(Math::Vector2,
+                                                       const Math::Vector2&,
+                                                       const Math::Vector2&,
+                                                       const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(ReadReal3Quantized, ZilchConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(ReadReal3Quantized, ZilchConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  ZilchBindOverloadedMethod(ReadReal3Quantized,
+                            ZilchConstInstanceOverload(Math::Vector3,
+                                                       const Math::Vector3&,
+                                                       const Math::Vector3&));
+  ZilchBindOverloadedMethod(ReadReal3Quantized,
+                            ZilchConstInstanceOverload(Math::Vector3,
+                                                       const Math::Vector3&,
+                                                       const Math::Vector3&,
+                                                       const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(ReadReal4Quantized, ZilchConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(ReadReal4Quantized, ZilchConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  ZilchBindOverloadedMethod(ReadReal4Quantized,
+                            ZilchConstInstanceOverload(Math::Vector4,
+                                                       const Math::Vector4&,
+                                                       const Math::Vector4&));
+  ZilchBindOverloadedMethod(ReadReal4Quantized,
+                            ZilchConstInstanceOverload(Math::Vector4,
+                                                       const Math::Vector4&,
+                                                       const Math::Vector4&,
+                                                       const Math::Vector4&));
 
   // Bind bitstream methods
   ZilchBindMethod(GetBitCapacity);
@@ -269,7 +485,7 @@ ZilchDefineType(BitStreamExtended, builder, type)
   ZilchBindMethod(Reserve);
   ZilchBindMethod(Clear);
 
-  //ZilchBindMethod(Unwrite);
+  // ZilchBindMethod(Unwrite);
   ZilchBindMethod(SetBitsWritten);
   ZilchBindMethod(SetBytesWritten);
   ZilchBindMethod(ClearBitsWritten);
@@ -283,12 +499,10 @@ ZilchDefineType(BitStreamExtended, builder, type)
   type->CreatableInScript = true;
 }
 
-BitStreamExtended::BitStreamExtended()
-  : BitStream()
+BitStreamExtended::BitStreamExtended() : BitStream()
 {
 }
-BitStreamExtended::BitStreamExtended(const BitStream& rhs)
-  : BitStream(rhs)
+BitStreamExtended::BitStreamExtended(const BitStream& rhs) : BitStream(rhs)
 {
 }
 
@@ -296,7 +510,7 @@ BitStreamExtended::~BitStreamExtended()
 {
 }
 
-BitStreamExtended& BitStreamExtended::operator =(const BitStream& rhs)
+BitStreamExtended& BitStreamExtended::operator=(const BitStream& rhs)
 {
   BitStream::operator=(rhs);
   return *this;
@@ -395,102 +609,150 @@ Bits BitStreamExtended::MeasureIntegerQuantized(int minValue, int maxValue)
 {
   return MeasureIntegerQuantized(minValue, maxValue, DefaultIntegralQuantum);
 }
-Bits BitStreamExtended::MeasureIntegerQuantized(int minValue, int maxValue, int quantum)
+Bits BitStreamExtended::MeasureIntegerQuantized(int minValue,
+                                                int maxValue,
+                                                int quantum)
 {
   return BitStream::MeasureQuantized(minValue, maxValue, quantum);
 }
 
-Bits BitStreamExtended::MeasureDoubleIntegerQuantized(s64 minValue, s64 maxValue)
+Bits BitStreamExtended::MeasureDoubleIntegerQuantized(s64 minValue,
+                                                      s64 maxValue)
 {
-  return MeasureDoubleIntegerQuantized(minValue, maxValue, DefaultIntegralQuantum);
+  return MeasureDoubleIntegerQuantized(
+      minValue, maxValue, DefaultIntegralQuantum);
 }
-Bits BitStreamExtended::MeasureDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum)
+Bits BitStreamExtended::MeasureDoubleIntegerQuantized(s64 minValue,
+                                                      s64 maxValue,
+                                                      s64 quantum)
 {
   return BitStream::MeasureQuantized(minValue, maxValue, quantum);
 }
 
-Bits BitStreamExtended::MeasureInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue)
+Bits BitStreamExtended::MeasureInteger2Quantized(
+    const Math::IntVector2& minValue, const Math::IntVector2& maxValue)
 {
-  return MeasureInteger2Quantized(minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return MeasureInteger2Quantized(
+      minValue,
+      maxValue,
+      Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Bits BitStreamExtended::MeasureInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum)
+Bits BitStreamExtended::MeasureInteger2Quantized(
+    const Math::IntVector2& minValue,
+    const Math::IntVector2& maxValue,
+    const Math::IntVector2& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x)
-       + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
-}
-
-Bits BitStreamExtended::MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue)
-{
-  return MeasureInteger3Quantized(minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
-}
-Bits BitStreamExtended::MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum)
-{
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x)
-       + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y)
-       + BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
+         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
 }
 
-Bits BitStreamExtended::MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue)
+Bits BitStreamExtended::MeasureInteger3Quantized(
+    const Math::IntVector3& minValue, const Math::IntVector3& maxValue)
 {
-  return MeasureInteger4Quantized(minValue, maxValue, Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return MeasureInteger3Quantized(minValue,
+                                  maxValue,
+                                  Math::IntVector3(DefaultIntegralQuantum,
+                                                   DefaultIntegralQuantum,
+                                                   DefaultIntegralQuantum));
 }
-Bits BitStreamExtended::MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum)
+Bits BitStreamExtended::MeasureInteger3Quantized(
+    const Math::IntVector3& minValue,
+    const Math::IntVector3& maxValue,
+    const Math::IntVector3& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x)
-       + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y)
-       + BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z)
-       + BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
+         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z);
+}
+
+Bits BitStreamExtended::MeasureInteger4Quantized(
+    const Math::IntVector4& minValue, const Math::IntVector4& maxValue)
+{
+  return MeasureInteger4Quantized(minValue,
+                                  maxValue,
+                                  Math::IntVector4(DefaultIntegralQuantum,
+                                                   DefaultIntegralQuantum,
+                                                   DefaultIntegralQuantum,
+                                                   DefaultIntegralQuantum));
+}
+Bits BitStreamExtended::MeasureInteger4Quantized(
+    const Math::IntVector4& minValue,
+    const Math::IntVector4& maxValue,
+    const Math::IntVector4& quantum)
+{
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
+         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z) +
+         BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
 }
 
 Bits BitStreamExtended::MeasureRealQuantized(float minValue, float maxValue)
 {
   return MeasureRealQuantized(minValue, maxValue, DefaultFloatingPointQuantum);
 }
-Bits BitStreamExtended::MeasureRealQuantized(float minValue, float maxValue, float quantum)
+Bits BitStreamExtended::MeasureRealQuantized(float minValue,
+                                             float maxValue,
+                                             float quantum)
 {
   return BitStream::MeasureQuantized(minValue, maxValue, quantum);
 }
 
-Bits BitStreamExtended::MeasureDoubleRealQuantized(double minValue, double maxValue)
+Bits BitStreamExtended::MeasureDoubleRealQuantized(double minValue,
+                                                   double maxValue)
 {
-  return MeasureDoubleRealQuantized(minValue, maxValue, DefaultFloatingPointQuantum);
+  return MeasureDoubleRealQuantized(
+      minValue, maxValue, DefaultFloatingPointQuantum);
 }
-Bits BitStreamExtended::MeasureDoubleRealQuantized(double minValue, double maxValue, double quantum)
+Bits BitStreamExtended::MeasureDoubleRealQuantized(double minValue,
+                                                   double maxValue,
+                                                   double quantum)
 {
   return BitStream::MeasureQuantized(minValue, maxValue, quantum);
 }
 
-Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue)
+Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue,
+                                              const Math::Vector2& maxValue)
 {
-  return MeasureReal2Quantized(minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
+  return MeasureReal2Quantized(
+      minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
 }
-Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum)
+Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue,
+                                              const Math::Vector2& maxValue,
+                                              const Math::Vector2& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x)
-       + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
-}
-
-Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue)
-{
-  return MeasureReal3Quantized(minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
-}
-Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum)
-{
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x)
-       + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y)
-       + BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
+         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
 }
 
-Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue)
+Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue,
+                                              const Math::Vector3& maxValue)
 {
-  return MeasureReal4Quantized(minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
+  return MeasureReal3Quantized(
+      minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
 }
-Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum)
+Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue,
+                                              const Math::Vector3& maxValue,
+                                              const Math::Vector3& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x)
-       + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y)
-       + BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z)
-       + BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
+         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z);
+}
+
+Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue,
+                                              const Math::Vector4& maxValue)
+{
+  return MeasureReal4Quantized(
+      minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
+}
+Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue,
+                                              const Math::Vector4& maxValue,
+                                              const Math::Vector4& quantum)
+{
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
+         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z) +
+         BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
 }
 
 //
@@ -626,121 +888,217 @@ void BitStreamExtended::WriteReal4Half(const Math::Vector4& value)
 // Write Quantized Operations
 //
 
-void BitStreamExtended::WriteIntegerQuantized(int value, int minValue, int maxValue)
+void BitStreamExtended::WriteIntegerQuantized(int value,
+                                              int minValue,
+                                              int maxValue)
 {
-  return WriteIntegerQuantized(value, minValue, maxValue, DefaultIntegralQuantum);
+  return WriteIntegerQuantized(
+      value, minValue, maxValue, DefaultIntegralQuantum);
 }
-void BitStreamExtended::WriteIntegerQuantized(int value, int minValue, int maxValue, int quantum)
+void BitStreamExtended::WriteIntegerQuantized(int value,
+                                              int minValue,
+                                              int maxValue,
+                                              int quantum)
 {
-  Bits bitsWritten = BitStream::WriteQuantized(value, minValue, maxValue, quantum);
+  Bits bitsWritten =
+      BitStream::WriteQuantized(value, minValue, maxValue, quantum);
   Assert(bitsWritten == MeasureIntegerQuantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64 maxValue)
+void BitStreamExtended::WriteDoubleIntegerQuantized(s64 value,
+                                                    s64 minValue,
+                                                    s64 maxValue)
 {
-  return WriteDoubleIntegerQuantized(value, minValue, maxValue, DefaultIntegralQuantum);
+  return WriteDoubleIntegerQuantized(
+      value, minValue, maxValue, DefaultIntegralQuantum);
 }
-void BitStreamExtended::WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64 maxValue, s64 quantum)
+void BitStreamExtended::WriteDoubleIntegerQuantized(s64 value,
+                                                    s64 minValue,
+                                                    s64 maxValue,
+                                                    s64 quantum)
 {
-  Bits bitsWritten = BitStream::WriteQuantized(value, minValue, maxValue, quantum);
-  Assert(bitsWritten == MeasureDoubleIntegerQuantized(minValue, maxValue, quantum));
+  Bits bitsWritten =
+      BitStream::WriteQuantized(value, minValue, maxValue, quantum);
+  Assert(bitsWritten ==
+         MeasureDoubleIntegerQuantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value, const Math::IntVector2& minValue, const Math::IntVector2& maxValue)
+void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value,
+                                               const Math::IntVector2& minValue,
+                                               const Math::IntVector2& maxValue)
 {
-  return WriteInteger2Quantized(value, minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return WriteInteger2Quantized(
+      value,
+      minValue,
+      maxValue,
+      Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value, const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum)
+void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value,
+                                               const Math::IntVector2& minValue,
+                                               const Math::IntVector2& maxValue,
+                                               const Math::IntVector2& quantum)
 {
   Bits bitsWritten = 0;
-  bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsWritten += BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
   Assert(bitsWritten == MeasureInteger2Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value, const Math::IntVector3& minValue, const Math::IntVector3& maxValue)
+void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value,
+                                               const Math::IntVector3& minValue,
+                                               const Math::IntVector3& maxValue)
 {
-  return WriteInteger3Quantized(value, minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return WriteInteger3Quantized(value,
+                                minValue,
+                                maxValue,
+                                Math::IntVector3(DefaultIntegralQuantum,
+                                                 DefaultIntegralQuantum,
+                                                 DefaultIntegralQuantum));
 }
-void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value, const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum)
+void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value,
+                                               const Math::IntVector3& minValue,
+                                               const Math::IntVector3& maxValue,
+                                               const Math::IntVector3& quantum)
 {
   Bits bitsWritten = 0;
-  bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsWritten += BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsWritten += BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
   Assert(bitsWritten == MeasureInteger3Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value, const Math::IntVector4& minValue, const Math::IntVector4& maxValue)
+void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value,
+                                               const Math::IntVector4& minValue,
+                                               const Math::IntVector4& maxValue)
 {
-  return WriteInteger4Quantized(value, minValue, maxValue, Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return WriteInteger4Quantized(value,
+                                minValue,
+                                maxValue,
+                                Math::IntVector4(DefaultIntegralQuantum,
+                                                 DefaultIntegralQuantum,
+                                                 DefaultIntegralQuantum,
+                                                 DefaultIntegralQuantum));
 }
-void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value, const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum)
+void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value,
+                                               const Math::IntVector4& minValue,
+                                               const Math::IntVector4& maxValue,
+                                               const Math::IntVector4& quantum)
 {
   Bits bitsWritten = 0;
-  bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsWritten += BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsWritten += BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
-  bitsWritten += BitStream::WriteQuantized(value.w, minValue.w, maxValue.w, quantum.w);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.w, minValue.w, maxValue.w, quantum.w);
   Assert(bitsWritten == MeasureInteger4Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteRealQuantized(float value, float minValue, float maxValue)
+void BitStreamExtended::WriteRealQuantized(float value,
+                                           float minValue,
+                                           float maxValue)
 {
-  return WriteRealQuantized(value, minValue, maxValue, DefaultFloatingPointQuantum);
+  return WriteRealQuantized(
+      value, minValue, maxValue, DefaultFloatingPointQuantum);
 }
-void BitStreamExtended::WriteRealQuantized(float value, float minValue, float maxValue, float quantum)
+void BitStreamExtended::WriteRealQuantized(float value,
+                                           float minValue,
+                                           float maxValue,
+                                           float quantum)
 {
-  Bits bitsWritten = BitStream::WriteQuantized(value, minValue, maxValue, quantum);
+  Bits bitsWritten =
+      BitStream::WriteQuantized(value, minValue, maxValue, quantum);
   Assert(bitsWritten == MeasureRealQuantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteDoubleRealQuantized(double value, double minValue, double maxValue)
+void BitStreamExtended::WriteDoubleRealQuantized(double value,
+                                                 double minValue,
+                                                 double maxValue)
 {
-  return WriteDoubleRealQuantized(value, minValue, maxValue, DefaultFloatingPointQuantum);
+  return WriteDoubleRealQuantized(
+      value, minValue, maxValue, DefaultFloatingPointQuantum);
 }
-void BitStreamExtended::WriteDoubleRealQuantized(double value, double minValue, double maxValue, double quantum)
+void BitStreamExtended::WriteDoubleRealQuantized(double value,
+                                                 double minValue,
+                                                 double maxValue,
+                                                 double quantum)
 {
-  Bits bitsWritten = BitStream::WriteQuantized(value, minValue, maxValue, quantum);
-  Assert(bitsWritten == MeasureDoubleRealQuantized(minValue, maxValue, quantum));
+  Bits bitsWritten =
+      BitStream::WriteQuantized(value, minValue, maxValue, quantum);
+  Assert(bitsWritten ==
+         MeasureDoubleRealQuantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue)
+void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value,
+                                            const Math::Vector2& minValue,
+                                            const Math::Vector2& maxValue)
 {
-  return WriteReal2Quantized(value, minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
+  return WriteReal2Quantized(
+      value, minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
 }
-void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum)
+void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value,
+                                            const Math::Vector2& minValue,
+                                            const Math::Vector2& maxValue,
+                                            const Math::Vector2& quantum)
 {
   Bits bitsWritten = 0;
-  bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsWritten += BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
   Assert(bitsWritten == MeasureReal2Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue)
+void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value,
+                                            const Math::Vector3& minValue,
+                                            const Math::Vector3& maxValue)
 {
-  return WriteReal3Quantized(value, minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
+  return WriteReal3Quantized(
+      value, minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
 }
-void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum)
+void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value,
+                                            const Math::Vector3& minValue,
+                                            const Math::Vector3& maxValue,
+                                            const Math::Vector3& quantum)
 {
   Bits bitsWritten = 0;
-  bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsWritten += BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsWritten += BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
   Assert(bitsWritten == MeasureReal3Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue)
+void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value,
+                                            const Math::Vector4& minValue,
+                                            const Math::Vector4& maxValue)
 {
-  return WriteReal4Quantized(value, minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
+  return WriteReal4Quantized(
+      value, minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
 }
-void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum)
+void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value,
+                                            const Math::Vector4& minValue,
+                                            const Math::Vector4& maxValue,
+                                            const Math::Vector4& quantum)
 {
   Bits bitsWritten = 0;
-  bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsWritten += BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsWritten += BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
-  bitsWritten += BitStream::WriteQuantized(value.w, minValue.w, maxValue.w, quantum.w);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsWritten +=
+      BitStream::WriteQuantized(value.w, minValue.w, maxValue.w, quantum.w);
   Assert(bitsWritten == MeasureReal4Quantized(minValue, maxValue, quantum));
 }
 
@@ -829,94 +1187,149 @@ bool BitStreamExtended::CanReadReal4Half() const
 // Can-Read Quantized Operations
 //
 
-bool BitStreamExtended::CanReadIntegerQuantized(int minValue, int maxValue) const
+bool BitStreamExtended::CanReadIntegerQuantized(int minValue,
+                                                int maxValue) const
 {
-  return BitStream::GetBitsUnread() >= MeasureIntegerQuantized(minValue, maxValue);
+  return BitStream::GetBitsUnread() >=
+         MeasureIntegerQuantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadIntegerQuantized(int minValue, int maxValue, int quantum) const
+bool BitStreamExtended::CanReadIntegerQuantized(int minValue,
+                                                int maxValue,
+                                                int quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureIntegerQuantized(minValue, maxValue, quantum);
-}
-
-bool BitStreamExtended::CanReadDoubleIntegerQuantized(s64 minValue, s64 maxValue) const
-{
-  return BitStream::GetBitsUnread() >= MeasureDoubleIntegerQuantized(minValue, maxValue);
-}
-bool BitStreamExtended::CanReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum) const
-{
-  return BitStream::GetBitsUnread() >= MeasureDoubleIntegerQuantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureIntegerQuantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const
+bool BitStreamExtended::CanReadDoubleIntegerQuantized(s64 minValue,
+                                                      s64 maxValue) const
 {
-  return BitStream::GetBitsUnread() >= MeasureInteger2Quantized(minValue, maxValue);
+  return BitStream::GetBitsUnread() >=
+         MeasureDoubleIntegerQuantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum) const
+bool BitStreamExtended::CanReadDoubleIntegerQuantized(s64 minValue,
+                                                      s64 maxValue,
+                                                      s64 quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureInteger2Quantized(minValue, maxValue, quantum);
-}
-
-bool BitStreamExtended::CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const
-{
-  return BitStream::GetBitsUnread() >= MeasureInteger3Quantized(minValue, maxValue);
-}
-bool BitStreamExtended::CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum) const
-{
-  return BitStream::GetBitsUnread() >= MeasureInteger3Quantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureDoubleIntegerQuantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const
+bool BitStreamExtended::CanReadInteger2Quantized(
+    const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const
 {
-  return BitStream::GetBitsUnread() >= MeasureInteger4Quantized(minValue, maxValue);
+  return BitStream::GetBitsUnread() >=
+         MeasureInteger2Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum) const
+bool BitStreamExtended::CanReadInteger2Quantized(
+    const Math::IntVector2& minValue,
+    const Math::IntVector2& maxValue,
+    const Math::IntVector2& quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureInteger4Quantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureInteger2Quantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadRealQuantized(float minValue, float maxValue) const
+bool BitStreamExtended::CanReadInteger3Quantized(
+    const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const
+{
+  return BitStream::GetBitsUnread() >=
+         MeasureInteger3Quantized(minValue, maxValue);
+}
+bool BitStreamExtended::CanReadInteger3Quantized(
+    const Math::IntVector3& minValue,
+    const Math::IntVector3& maxValue,
+    const Math::IntVector3& quantum) const
+{
+  return BitStream::GetBitsUnread() >=
+         MeasureInteger3Quantized(minValue, maxValue, quantum);
+}
+
+bool BitStreamExtended::CanReadInteger4Quantized(
+    const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const
+{
+  return BitStream::GetBitsUnread() >=
+         MeasureInteger4Quantized(minValue, maxValue);
+}
+bool BitStreamExtended::CanReadInteger4Quantized(
+    const Math::IntVector4& minValue,
+    const Math::IntVector4& maxValue,
+    const Math::IntVector4& quantum) const
+{
+  return BitStream::GetBitsUnread() >=
+         MeasureInteger4Quantized(minValue, maxValue, quantum);
+}
+
+bool BitStreamExtended::CanReadRealQuantized(float minValue,
+                                             float maxValue) const
 {
   return BitStream::GetBitsUnread() >= MeasureRealQuantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadRealQuantized(float minValue, float maxValue, float quantum) const
+bool BitStreamExtended::CanReadRealQuantized(float minValue,
+                                             float maxValue,
+                                             float quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureRealQuantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureRealQuantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadDoubleRealQuantized(double minValue, double maxValue) const
+bool BitStreamExtended::CanReadDoubleRealQuantized(double minValue,
+                                                   double maxValue) const
 {
-  return BitStream::GetBitsUnread() >= MeasureDoubleRealQuantized(minValue, maxValue);
+  return BitStream::GetBitsUnread() >=
+         MeasureDoubleRealQuantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadDoubleRealQuantized(double minValue, double maxValue, double quantum) const
+bool BitStreamExtended::CanReadDoubleRealQuantized(double minValue,
+                                                   double maxValue,
+                                                   double quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureDoubleRealQuantized(minValue, maxValue, quantum);
-}
-
-bool BitStreamExtended::CanReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue) const
-{
-  return BitStream::GetBitsUnread() >= MeasureReal2Quantized(minValue, maxValue);
-}
-bool BitStreamExtended::CanReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum) const
-{
-  return BitStream::GetBitsUnread() >= MeasureReal2Quantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureDoubleRealQuantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue) const
+bool BitStreamExtended::CanReadReal2Quantized(
+    const Math::Vector2& minValue, const Math::Vector2& maxValue) const
 {
-  return BitStream::GetBitsUnread() >= MeasureReal3Quantized(minValue, maxValue);
+  return BitStream::GetBitsUnread() >=
+         MeasureReal2Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum) const
+bool BitStreamExtended::CanReadReal2Quantized(
+    const Math::Vector2& minValue,
+    const Math::Vector2& maxValue,
+    const Math::Vector2& quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureReal3Quantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureReal2Quantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue) const
+bool BitStreamExtended::CanReadReal3Quantized(
+    const Math::Vector3& minValue, const Math::Vector3& maxValue) const
 {
-  return BitStream::GetBitsUnread() >= MeasureReal4Quantized(minValue, maxValue);
+  return BitStream::GetBitsUnread() >=
+         MeasureReal3Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum) const
+bool BitStreamExtended::CanReadReal3Quantized(
+    const Math::Vector3& minValue,
+    const Math::Vector3& maxValue,
+    const Math::Vector3& quantum) const
 {
-  return BitStream::GetBitsUnread() >= MeasureReal4Quantized(minValue, maxValue, quantum);
+  return BitStream::GetBitsUnread() >=
+         MeasureReal3Quantized(minValue, maxValue, quantum);
+}
+
+bool BitStreamExtended::CanReadReal4Quantized(
+    const Math::Vector4& minValue, const Math::Vector4& maxValue) const
+{
+  return BitStream::GetBitsUnread() >=
+         MeasureReal4Quantized(minValue, maxValue);
+}
+bool BitStreamExtended::CanReadReal4Quantized(
+    const Math::Vector4& minValue,
+    const Math::Vector4& maxValue,
+    const Math::Vector4& quantum) const
+{
+  return BitStream::GetBitsUnread() >=
+         MeasureReal4Quantized(minValue, maxValue, quantum);
 }
 
 //
@@ -931,11 +1344,15 @@ bool BitStreamExtended::ReadBoolean() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureBoolean());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Boolean value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureBoolean(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Boolean value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureBoolean(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -949,11 +1366,15 @@ int BitStreamExtended::ReadInteger() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureInteger());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureInteger(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -966,11 +1387,15 @@ s64 BitStreamExtended::ReadDoubleInteger() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureDoubleInteger());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read DoubleInteger value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureDoubleInteger(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read DoubleInteger value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureDoubleInteger(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -985,11 +1410,15 @@ Math::IntVector2 BitStreamExtended::ReadInteger2() const
   bitsRead += BitStream::Read(value.y);
   Assert(bitsRead == MeasureInteger2());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer2 value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger2(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer2 value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureInteger2(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1005,11 +1434,15 @@ Math::IntVector3 BitStreamExtended::ReadInteger3() const
   bitsRead += BitStream::Read(value.z);
   Assert(bitsRead == MeasureInteger3());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer3 value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger3(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer3 value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureInteger3(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1026,11 +1459,15 @@ Math::IntVector4 BitStreamExtended::ReadInteger4() const
   bitsRead += BitStream::Read(value.w);
   Assert(bitsRead == MeasureInteger4());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer4 value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger4(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer4 value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureInteger4(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1044,11 +1481,14 @@ float BitStreamExtended::ReadReal() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureReal());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
     DoNotifyException("BitStream",
-                      String::Format("Unable to read Real value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+                      String::Format("Unable to read Real value (%u bits) from "
+                                     "BitStream (%u / %u bits read/written)",
+                                     MeasureReal(),
+                                     BitStream::GetBitsRead(),
+                                     BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1061,11 +1501,15 @@ double BitStreamExtended::ReadDoubleReal() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureDoubleReal());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read DoubleReal value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureDoubleReal(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read DoubleReal value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureDoubleReal(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1080,11 +1524,15 @@ Math::Vector2 BitStreamExtended::ReadReal2() const
   bitsRead += BitStream::Read(value.y);
   Assert(bitsRead == MeasureReal2());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real2 value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal2(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real2 value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureReal2(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1100,11 +1548,15 @@ Math::Vector3 BitStreamExtended::ReadReal3() const
   bitsRead += BitStream::Read(value.z);
   Assert(bitsRead == MeasureReal3());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real3 value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal3(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real3 value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureReal3(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1121,11 +1573,15 @@ Math::Vector4 BitStreamExtended::ReadReal4() const
   bitsRead += BitStream::Read(value.w);
   Assert(bitsRead == MeasureReal4());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real4 value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal4(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real4 value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureReal4(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1142,11 +1598,15 @@ Math::Quaternion BitStreamExtended::ReadQuaternion() const
   bitsRead += BitStream::Read(value.w);
   Assert(bitsRead == MeasureQuaternion());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Quaternion value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureQuaternion(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Quaternion value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureQuaternion(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1160,11 +1620,15 @@ String BitStreamExtended::ReadString() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureString());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read String value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureString(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read String value (%u bits) from BitStream "
+                       "(%u / %u bits read/written)",
+                       MeasureString(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1182,11 +1646,15 @@ float BitStreamExtended::ReadRealHalf() const
   Bits bitsRead = BitStream::Read(value);
   Assert(bitsRead == MeasureRealHalf());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real half value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureRealHalf(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real half value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureRealHalf(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return HalfFloatConverter::ToFloat(value);
@@ -1201,11 +1669,15 @@ Math::Vector2 BitStreamExtended::ReadReal2Half() const
   bitsRead += BitStream::Read(value[1]);
   Assert(bitsRead == MeasureReal2Half());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real2 half value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal2Half(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real2 half value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureReal2Half(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return Math::Vector2(HalfFloatConverter::ToFloat(value[0]),
@@ -1222,11 +1694,15 @@ Math::Vector3 BitStreamExtended::ReadReal3Half() const
   bitsRead += BitStream::Read(value[2]);
   Assert(bitsRead == MeasureReal3Half());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real3 half value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal3Half(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real3 half value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureReal3Half(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return Math::Vector3(HalfFloatConverter::ToFloat(value[0]),
@@ -1245,11 +1721,15 @@ Math::Vector4 BitStreamExtended::ReadReal4Half() const
   bitsRead += BitStream::Read(value[3]);
   Assert(bitsRead == MeasureReal4Half());
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real4 half value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal4Half(), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real4 half value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureReal4Half(),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return Math::Vector4(HalfFloatConverter::ToFloat(value[0]),
@@ -1266,7 +1746,9 @@ int BitStreamExtended::ReadIntegerQuantized(int minValue, int maxValue) const
 {
   return ReadIntegerQuantized(minValue, maxValue, DefaultIntegralQuantum);
 }
-int BitStreamExtended::ReadIntegerQuantized(int minValue, int maxValue, int quantum) const
+int BitStreamExtended::ReadIntegerQuantized(int minValue,
+                                            int maxValue,
+                                            int quantum) const
 {
   Assert(CanReadIntegerQuantized(minValue, maxValue, quantum));
 
@@ -1274,108 +1756,166 @@ int BitStreamExtended::ReadIntegerQuantized(int minValue, int maxValue, int quan
   Bits bitsRead = BitStream::ReadQuantized(value, minValue, maxValue, quantum);
   Assert(bitsRead == MeasureIntegerQuantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureIntegerQuantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureIntegerQuantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-s64 BitStreamExtended::ReadDoubleIntegerQuantized(s64 minValue, s64 maxValue) const
+s64 BitStreamExtended::ReadDoubleIntegerQuantized(s64 minValue,
+                                                  s64 maxValue) const
 {
   return ReadDoubleIntegerQuantized(minValue, maxValue, DefaultIntegralQuantum);
 }
-s64 BitStreamExtended::ReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum) const
+s64 BitStreamExtended::ReadDoubleIntegerQuantized(s64 minValue,
+                                                  s64 maxValue,
+                                                  s64 quantum) const
 {
   Assert(CanReadDoubleIntegerQuantized(minValue, maxValue, quantum));
 
   s64 value = 0;
   Bits bitsRead = BitStream::ReadQuantized(value, minValue, maxValue, quantum);
-  Assert(bitsRead == MeasureDoubleIntegerQuantized(minValue, maxValue, quantum));
+  Assert(bitsRead ==
+         MeasureDoubleIntegerQuantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read DoubleInteger quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureDoubleIntegerQuantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format(
+            "Unable to read DoubleInteger quantized value (%u bits) from "
+            "BitStream (%u / %u bits read/written)",
+            MeasureDoubleIntegerQuantized(minValue, maxValue, quantum),
+            BitStream::GetBitsRead(),
+            BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const
+Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(
+    const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const
 {
-  return ReadInteger2Quantized(minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return ReadInteger2Quantized(
+      minValue,
+      maxValue,
+      Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum) const
+Math::IntVector2
+BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue,
+                                         const Math::IntVector2& maxValue,
+                                         const Math::IntVector2& quantum) const
 {
   Assert(CanReadInteger2Quantized(minValue, maxValue, quantum));
 
   Math::IntVector2 value;
   Bits bitsRead = 0;
-  bitsRead += BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsRead += BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsRead +=
+      BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsRead +=
+      BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
   Assert(bitsRead == MeasureInteger2Quantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer2 quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger2Quantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer2 quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureInteger2Quantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const
+Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(
+    const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const
 {
-  return ReadInteger3Quantized(minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return ReadInteger3Quantized(minValue,
+                               maxValue,
+                               Math::IntVector3(DefaultIntegralQuantum,
+                                                DefaultIntegralQuantum,
+                                                DefaultIntegralQuantum));
 }
-Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum) const
+Math::IntVector3
+BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue,
+                                         const Math::IntVector3& maxValue,
+                                         const Math::IntVector3& quantum) const
 {
   Assert(CanReadInteger3Quantized(minValue, maxValue, quantum));
 
   Math::IntVector3 value;
   Bits bitsRead = 0;
-  bitsRead += BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsRead += BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsRead += BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsRead +=
+      BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsRead +=
+      BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsRead +=
+      BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
   Assert(bitsRead == MeasureInteger3Quantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer3 quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger3Quantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer3 quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureInteger3Quantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const
+Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(
+    const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const
 {
-  return ReadInteger4Quantized(minValue, maxValue, Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return ReadInteger4Quantized(minValue,
+                               maxValue,
+                               Math::IntVector4(DefaultIntegralQuantum,
+                                                DefaultIntegralQuantum,
+                                                DefaultIntegralQuantum,
+                                                DefaultIntegralQuantum));
 }
-Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum) const
+Math::IntVector4
+BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue,
+                                         const Math::IntVector4& maxValue,
+                                         const Math::IntVector4& quantum) const
 {
   Assert(CanReadInteger4Quantized(minValue, maxValue, quantum));
 
   Math::IntVector4 value;
   Bits bitsRead = 0;
-  bitsRead += BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsRead += BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsRead += BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
-  bitsRead += BitStream::ReadQuantized(value.w, minValue.w, maxValue.w, quantum.w);
+  bitsRead +=
+      BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsRead +=
+      BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsRead +=
+      BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsRead +=
+      BitStream::ReadQuantized(value.w, minValue.w, maxValue.w, quantum.w);
   Assert(bitsRead == MeasureInteger4Quantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Integer4 quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureInteger4Quantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Integer4 quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureInteger4Quantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1385,7 +1925,9 @@ float BitStreamExtended::ReadRealQuantized(float minValue, float maxValue) const
 {
   return ReadRealQuantized(minValue, maxValue, DefaultFloatingPointQuantum);
 }
-float BitStreamExtended::ReadRealQuantized(float minValue, float maxValue, float quantum) const
+float BitStreamExtended::ReadRealQuantized(float minValue,
+                                           float maxValue,
+                                           float quantum) const
 {
   Assert(CanReadRealQuantized(minValue, maxValue, quantum));
 
@@ -1393,21 +1935,29 @@ float BitStreamExtended::ReadRealQuantized(float minValue, float maxValue, float
   Bits bitsRead = BitStream::ReadQuantized(value, minValue, maxValue, quantum);
   Assert(bitsRead == MeasureRealQuantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureRealQuantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureRealQuantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-double BitStreamExtended::ReadDoubleRealQuantized(double minValue, double maxValue) const
+double BitStreamExtended::ReadDoubleRealQuantized(double minValue,
+                                                  double maxValue) const
 {
-  return ReadDoubleRealQuantized(minValue, maxValue, DefaultFloatingPointQuantum);
+  return ReadDoubleRealQuantized(
+      minValue, maxValue, DefaultFloatingPointQuantum);
 }
-double BitStreamExtended::ReadDoubleRealQuantized(double minValue, double maxValue, double quantum) const
+double BitStreamExtended::ReadDoubleRealQuantized(double minValue,
+                                                  double maxValue,
+                                                  double quantum) const
 {
   Assert(CanReadDoubleRealQuantized(minValue, maxValue, quantum));
 
@@ -1415,86 +1965,126 @@ double BitStreamExtended::ReadDoubleRealQuantized(double minValue, double maxVal
   Bits bitsRead = BitStream::ReadQuantized(value, minValue, maxValue, quantum);
   Assert(bitsRead == MeasureDoubleRealQuantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read DoubleReal quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureDoubleRealQuantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read DoubleReal quantized value (%u bits) "
+                       "from BitStream (%u / %u bits read/written)",
+                       MeasureDoubleRealQuantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-Math::Vector2 BitStreamExtended::ReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue) const
+Math::Vector2 BitStreamExtended::ReadReal2Quantized(
+    const Math::Vector2& minValue, const Math::Vector2& maxValue) const
 {
-  return ReadReal2Quantized(minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
+  return ReadReal2Quantized(
+      minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
 }
-Math::Vector2 BitStreamExtended::ReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum) const
+Math::Vector2
+BitStreamExtended::ReadReal2Quantized(const Math::Vector2& minValue,
+                                      const Math::Vector2& maxValue,
+                                      const Math::Vector2& quantum) const
 {
   Assert(CanReadReal2Quantized(minValue, maxValue, quantum));
 
   Math::Vector2 value;
   Bits bitsRead = 0;
-  bitsRead += BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsRead += BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsRead +=
+      BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsRead +=
+      BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
   Assert(bitsRead == MeasureReal2Quantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real2 quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal2Quantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real2 quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureReal2Quantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-Math::Vector3 BitStreamExtended::ReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue) const
+Math::Vector3 BitStreamExtended::ReadReal3Quantized(
+    const Math::Vector3& minValue, const Math::Vector3& maxValue) const
 {
-  return ReadReal3Quantized(minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
+  return ReadReal3Quantized(
+      minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
 }
-Math::Vector3 BitStreamExtended::ReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum) const
+Math::Vector3
+BitStreamExtended::ReadReal3Quantized(const Math::Vector3& minValue,
+                                      const Math::Vector3& maxValue,
+                                      const Math::Vector3& quantum) const
 {
   Assert(CanReadReal3Quantized(minValue, maxValue, quantum));
 
   Math::Vector3 value;
   Bits bitsRead = 0;
-  bitsRead += BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsRead += BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsRead += BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsRead +=
+      BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsRead +=
+      BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsRead +=
+      BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
   Assert(bitsRead == MeasureReal3Quantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real3 quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal3Quantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real3 quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureReal3Quantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
 }
 
-Math::Vector4 BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue) const
+Math::Vector4 BitStreamExtended::ReadReal4Quantized(
+    const Math::Vector4& minValue, const Math::Vector4& maxValue) const
 {
-  return ReadReal4Quantized(minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
+  return ReadReal4Quantized(
+      minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
 }
-Math::Vector4 BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum) const
+Math::Vector4
+BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValue,
+                                      const Math::Vector4& maxValue,
+                                      const Math::Vector4& quantum) const
 {
   Assert(CanReadReal4Quantized(minValue, maxValue, quantum));
 
   Math::Vector4 value;
   Bits bitsRead = 0;
-  bitsRead += BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
-  bitsRead += BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
-  bitsRead += BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
-  bitsRead += BitStream::ReadQuantized(value.w, minValue.w, maxValue.w, quantum.w);
+  bitsRead +=
+      BitStream::ReadQuantized(value.x, minValue.x, maxValue.x, quantum.x);
+  bitsRead +=
+      BitStream::ReadQuantized(value.y, minValue.y, maxValue.y, quantum.y);
+  bitsRead +=
+      BitStream::ReadQuantized(value.z, minValue.z, maxValue.z, quantum.z);
+  bitsRead +=
+      BitStream::ReadQuantized(value.w, minValue.w, maxValue.w, quantum.w);
   Assert(bitsRead == MeasureReal4Quantized(minValue, maxValue, quantum));
 
-  if(!bitsRead)
+  if (!bitsRead)
   {
-    DoNotifyException("BitStream",
-                      String::Format("Unable to read Real4 quantized value (%u bits) from BitStream (%u / %u bits read/written)",
-                                     MeasureReal4Quantized(minValue, maxValue, quantum), BitStream::GetBitsRead(), BitStream::GetBitsWritten()));
+    DoNotifyException(
+        "BitStream",
+        String::Format("Unable to read Real4 quantized value (%u bits) from "
+                       "BitStream (%u / %u bits read/written)",
+                       MeasureReal4Quantized(minValue, maxValue, quantum),
+                       BitStream::GetBitsRead(),
+                       BitStream::GetBitsWritten()));
   }
 
   return value;
@@ -1507,7 +2097,7 @@ Math::Vector4 BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValu
 bool BitStreamExtended::WriteEvent(Event* event)
 {
   // Null event?
-  if(!event)
+  if (!event)
   {
     Assert(false);
     return false;
@@ -1515,15 +2105,16 @@ bool BitStreamExtended::WriteEvent(Event* event)
 
   // Get event type
   BoundType* eventType = ZilchVirtualTypeId(event);
-  if(!eventType)
+  if (!eventType)
   {
     Assert(false);
     return false;
   }
 
   // Write meta type ID
-  // (TODO: This may need to change to work cross-platform since compile time type IDs rely on template instantiation order)
-  // (Safest way is to send strings of the type name, and use a lookup table to optimize)
+  // (TODO: This may need to change to work cross-platform since compile time
+  // type IDs rely on template instantiation order) (Safest way is to send
+  // strings of the type name, and use a lookup table to optimize)
   BitStream::Write(eventType->Name); // TODO: Refactor this to use ItemCache
 
   // Write event ID
@@ -1535,29 +2126,31 @@ bool BitStreamExtended::WriteEvent(Event* event)
   //
 
   // For all properties
-  MemberRange<Property> properties = eventType->GetProperties(Members::InheritedInstanceExtension);
-  forRange(Property* property, properties)
+  MemberRange<Property> properties =
+      eventType->GetProperties(Members::InheritedInstanceExtension);
+  forRange(Property * property, properties)
   {
     // Is the script source property?
-    if(property->Name == cScriptSource)
+    if (property->Name == cScriptSource)
       continue; // Skip property (we don't need to serialize this)
 
     // Is the event ID property?
-    if(property->Name == cEventId)
+    if (property->Name == cEventId)
       continue; // Skip property (we manually serialize this above)
 
     // Is a net peer ID property?
-    if(property->HasAttribute(PropertyAttributes::cNetPeerId))
-      continue; // Skip property (will be set automatically by NetPeer after receiving the event)
+    if (property->HasAttribute(PropertyAttributes::cNetPeerId))
+      continue; // Skip property (will be set automatically by NetPeer after
+                // receiving the event)
 
     // Is a net property?
-    if(property->HasAttribute(PropertyAttributes::cNetProperty))
+    if (property->HasAttribute(PropertyAttributes::cNetProperty))
     {
       // (Should be a valid net property type)
       Assert(IsValidNetPropertyType(property->PropertyType));
 
       // Is Cog type?
-      if(property->PropertyType == ZilchTypeId(Cog))
+      if (property->PropertyType == ZilchTypeId(Cog))
       {
         // Get cog as net object ID
         // (Using ReplicaId to take advantage of WriteQuantized)
@@ -1567,12 +2160,14 @@ bool BitStreamExtended::WriteEvent(Event* event)
         BitStream::Write(netObjectId);
       }
       // Is CogPath type?
-      else if(property->PropertyType == ZilchTypeId(CogPath))
+      else if (property->PropertyType == ZilchTypeId(CogPath))
       {
         // Get cog path value
         Any cogPathAny = property->GetValue(event);
-        if(!cogPathAny.IsHoldingValue()) // Unable?
-          DoNotifyError("BitStream", "Error getting CogPath NetProperty - Unable to get property instance value");
+        if (!cogPathAny.IsHoldingValue()) // Unable?
+          DoNotifyError("BitStream",
+                        "Error getting CogPath NetProperty - Unable to get "
+                        "property instance value");
         CogPath* cogPath = cogPathAny.Get<CogPath*>();
 
         // Get cog path string
@@ -1589,21 +2184,25 @@ bool BitStreamExtended::WriteEvent(Event* event)
 
         // Attempt to convert basic any value to variant value
         Variant variantValue = ConvertBasicAnyToVariant(anyValue);
-        if(variantValue.IsEmpty())// Unable? (The any's stored type is not a basic native type?)
+        if (variantValue.IsEmpty()) // Unable? (The any's stored type is not a
+                                    // basic native type?)
         {
           // Assign the any value itself to the variant value
-          // (Some property types like enums, resources, and bitstream are expected to be wrapped in an any this way)
+          // (Some property types like enums, resources, and bitstream are
+          // expected to be wrapped in an any this way)
           variantValue = anyValue;
         }
 
         // Is serialization supported for the underlying type?
-        if(BitStreamCanSerializeType(anyValue.StoredType))
+        if (BitStreamCanSerializeType(anyValue.StoredType))
         {
           // Write variant
           BitStream::Write(variantValue);
         }
         else
-          DoNotifyError("BitStream", "Unable to serialize property - Serialization is not supported by the property type");
+          DoNotifyError("BitStream",
+                        "Unable to serialize property - Serialization is not "
+                        "supported by the property type");
       }
     }
   }
@@ -1618,7 +2217,7 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
 
   // Read event type name
   String eventTypeName;
-  if(!BitStream::Read(eventTypeName)) // Unable?
+  if (!BitStream::Read(eventTypeName)) // Unable?
   {
     Assert(false);
     return nullptr;
@@ -1626,23 +2225,25 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
 
   // Get event type
   BoundType* eventType = MetaDatabase::GetInstance()->FindType(eventTypeName);
-  if(!eventType)
+  if (!eventType)
   {
     Assert(false);
     return nullptr;
   }
 
   // Create event
-  HandleOf<Event> eventHandle = ExecutableState::CallingState->AllocateDefaultConstructed<Event>(eventType);
+  HandleOf<Event> eventHandle =
+      ExecutableState::CallingState->AllocateDefaultConstructed<Event>(
+          eventType);
   Event* event = eventHandle;
-  if(!event) // Unable?
+  if (!event) // Unable?
   {
     Assert(false);
     return nullptr;
   }
 
   // Read event ID
-  if(!BitStream::Read(event->EventId)) // Unable?
+  if (!BitStream::Read(event->EventId)) // Unable?
   {
     Assert(false);
     return nullptr;
@@ -1653,68 +2254,75 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
   //
 
   // For all properties
-  MemberRange<Property> properties = eventType->GetProperties(Members::InheritedInstanceExtension);
-  forRange(Property* property, properties)
+  MemberRange<Property> properties =
+      eventType->GetProperties(Members::InheritedInstanceExtension);
+  forRange(Property * property, properties)
   {
     // Is the script source property?
-    if(property->Name == cScriptSource)
+    if (property->Name == cScriptSource)
       continue; // Skip property (we don't need to serialize this)
 
     // Is the event ID property?
-    if(property->Name == cEventId)
+    if (property->Name == cEventId)
       continue; // Skip property (we manually serialize this above)
 
     // Is a net peer ID property?
-    if(property->HasAttribute(PropertyAttributes::cNetPeerId))
-      continue; // Skip property (will be set automatically by NetPeer after receiving the event)
+    if (property->HasAttribute(PropertyAttributes::cNetPeerId))
+      continue; // Skip property (will be set automatically by NetPeer after
+                // receiving the event)
 
     // Is a net property?
-    if(property->HasAttribute(PropertyAttributes::cNetProperty))
+    if (property->HasAttribute(PropertyAttributes::cNetProperty))
     {
       // (Should be a valid net property type)
       Assert(IsValidNetPropertyType(property->PropertyType));
 
       // Is Cog type?
-      if(property->PropertyType == ZilchTypeId(Cog))
+      if (property->PropertyType == ZilchTypeId(Cog))
       {
         // NetPeer not provided?
-        if(!netPeer)
+        if (!netPeer)
         {
-          DoNotifyError("BitStream", "Unable to serialize [NetProperty] Cog property - GameSession must have a NetPeer component");
+          DoNotifyError("BitStream",
+                        "Unable to serialize [NetProperty] Cog property - "
+                        "GameSession must have a NetPeer component");
           return nullptr;
         }
 
         // Read net object ID
         // (Using ReplicaId to take advantage of ReadQuantized)
         ReplicaId netObjectId;
-        if(!BitStream::Read(netObjectId)) // Unable?
+        if (!BitStream::Read(netObjectId)) // Unable?
         {
           Assert(false);
           return nullptr;
         }
 
         // Set cog as net object ID
-        SetNetPropertyCogAsNetObjectId(property, event, netPeer, netObjectId.value());
+        SetNetPropertyCogAsNetObjectId(
+            property, event, netPeer, netObjectId.value());
       }
       // Is CogPath type?
-      else if(property->PropertyType == ZilchTypeId(CogPath))
+      else if (property->PropertyType == ZilchTypeId(CogPath))
       {
         // Get cog path value
         Any cogPathAny = property->GetValue(event);
-        if(!cogPathAny.IsHoldingValue()) // Unable?
-          DoNotifyError("BitStream", "Error getting CogPath NetProperty - Unable to get property instance value");
+        if (!cogPathAny.IsHoldingValue()) // Unable?
+          DoNotifyError("BitStream",
+                        "Error getting CogPath NetProperty - Unable to get "
+                        "property instance value");
         CogPath* cogPath = cogPathAny.Get<CogPath*>();
 
         // Read cog path string
         String cogPathString;
-        if(!BitStream::Read(cogPathString)) // Unable?
+        if (!BitStream::Read(cogPathString)) // Unable?
         {
           Assert(false);
           return nullptr;
         }
 
         // Set cog path string
-        if(cogPath)
+        if (cogPath)
           cogPath->SetPath(cogPathString);
       }
       // Is any other type?
@@ -1725,18 +2333,20 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
 
         // Attempt to convert basic any value to variant value
         Variant variantValue = ConvertBasicAnyToVariant(anyValue);
-        if(variantValue.IsEmpty())// Unable? (The any's stored type is not a basic native type?)
+        if (variantValue.IsEmpty()) // Unable? (The any's stored type is not a
+                                    // basic native type?)
         {
           // Assign the any value itself to the variant value
-          // (Some property types like enums, resources, and bitstream are expected to be wrapped in an any this way)
+          // (Some property types like enums, resources, and bitstream are
+          // expected to be wrapped in an any this way)
           variantValue = anyValue;
         }
 
         // Is serialization supported for the underlying type?
-        if(BitStreamCanSerializeType(anyValue.StoredType))
+        if (BitStreamCanSerializeType(anyValue.StoredType))
         {
           // Read variant
-          if(!BitStream::Read(variantValue)) // Unable?
+          if (!BitStream::Read(variantValue)) // Unable?
           {
             Assert(false);
             return nullptr;
@@ -1744,10 +2354,12 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
 
           // Attempt to convert basic variant value to any value
           Any anyValue = ConvertBasicVariantToAny(variantValue);
-          if(!anyValue.IsHoldingValue())// Unable? (The variant's stored type is not a basic native type?)
+          if (!anyValue.IsHoldingValue()) // Unable? (The variant's stored type
+                                          // is not a basic native type?)
           {
             // Get the any value itself from the variant value
-            // (Some property types like enums, resources, and bitstream are expected to be wrapped in an any this way)
+            // (Some property types like enums, resources, and bitstream are
+            // expected to be wrapped in an any this way)
             anyValue = variantValue.GetOrError<Any>();
           }
 
@@ -1755,7 +2367,9 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
           property->SetValue(event, anyValue);
         }
         else
-          DoNotifyError("BitStream", "Unable to serialize property - Serialization is not supported by the property type");
+          DoNotifyError("BitStream",
+                        "Unable to serialize property - Serialization is not "
+                        "supported by the property type");
       }
     }
   }
@@ -1771,17 +2385,22 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
 /// Serializes a Variant.
 /// Returns the number of bits serialized if successful, else 0.
 template <>
-Bits Serialize<Variant>(SerializeDirection::Enum direction, BitStream& bitStream, Variant& value)
+Bits Serialize<Variant>(SerializeDirection::Enum direction,
+                        BitStream& bitStream,
+                        Variant& value)
 {
-  // Variants serialized through the standard BitStream Read/Write/Serialize functions, etc.
-  // must contain known types that we support (which can be queried via BitStreamCanSerializeAnyType)
+  // Variants serialized through the standard BitStream Read/Write/Serialize
+  // functions, etc. must contain known types that we support (which can be
+  // queried via BitStreamCanSerializeAnyType)
   return SerializeKnownExtendedVariant(direction, bitStream, value);
 }
 
 /// Serializes a BitStreamExtended.
 /// Returns the number of bits serialized if successful, else 0.
 template <>
-Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream& bitStream, BitStreamExtended& value)
+Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction,
+                                  BitStream& bitStream,
+                                  BitStreamExtended& value)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -1794,7 +2413,12 @@ Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream&
     // Bitstream extended is too large to write?
     if (valueBits > BitStreamExtendedLargeSizeBitsMax)
     {
-      DoNotifyError("BitStream", String::Format("BitStream is too large to write at %u bytes. BitStreams must be less than %u bytes", BITS_TO_BYTES(valueBits), BITS_TO_BYTES(POW2(BitStreamExtendedLargeSizeBits))));
+      DoNotifyError(
+          "BitStream",
+          String::Format("BitStream is too large to write at %u bytes. "
+                         "BitStreams must be less than %u bytes",
+                         BITS_TO_BYTES(valueBits),
+                         BITS_TO_BYTES(POW2(BitStreamExtendedLargeSizeBits))));
       return 0;
     }
 
@@ -1802,17 +2426,23 @@ Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream&
     if (valueBits < BitStreamExtendedSmallSizeIsLargeValue)
     {
       // Write small bitstream extended size
-      bitStream.WriteQuantized(valueBits, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax);
+      bitStream.WriteQuantized(valueBits,
+                               BitStreamExtendedSmallSizeBitsMin,
+                               BitStreamExtendedSmallSizeBitsMax);
     }
     // Is a large bitstream?
     else
     {
       // Write small bitstream extended size
       // But instead write the 'Is Large' Value
-      bitStream.WriteQuantized(BitStreamExtendedSmallSizeIsLargeValue, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax);
+      bitStream.WriteQuantized(BitStreamExtendedSmallSizeIsLargeValue,
+                               BitStreamExtendedSmallSizeBitsMin,
+                               BitStreamExtendedSmallSizeBitsMax);
 
       // Write large bitstream extended size
-      bitStream.WriteQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax);
+      bitStream.WriteQuantized(valueBits,
+                               BitStreamExtendedLargeSizeBitsMin,
+                               BitStreamExtendedLargeSizeBitsMax);
     }
 
     // Write bitstream extended data
@@ -1828,13 +2458,21 @@ Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream&
 
     // Read small bitstream extended size
     Bits valueBits = 0;
-    ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax), 0, "");
+    ReturnIf(!bitStream.ReadQuantized(valueBits,
+                                      BitStreamExtendedSmallSizeBitsMin,
+                                      BitStreamExtendedSmallSizeBitsMax),
+             0,
+             "");
 
     // 'Is Large' Value?
     if (valueBits == BitStreamExtendedSmallSizeIsLargeValue)
     {
       // Read large bitstream extended size
-      ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax), 0, "");
+      ReturnIf(!bitStream.ReadQuantized(valueBits,
+                                        BitStreamExtendedLargeSizeBitsMin,
+                                        BitStreamExtendedLargeSizeBitsMax),
+               0,
+               "");
     }
 
     // (There should be enough bits available to be read)

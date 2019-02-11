@@ -1,24 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Forward Declarations
 namespace Zero
 {
-  class NetPropertyInfo;
-  class SearchViewEvent;
-}
+class NetPropertyInfo;
+class SearchViewEvent;
+} // namespace Zero
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                               NetPropertyIcon                                   //
-//---------------------------------------------------------------------------------//
+//                               NetPropertyIcon //
 
 /// Network Property Icon
 /// Used to toggle network replication for any supported property
@@ -29,7 +22,8 @@ public:
   typedef NetPropertyIcon ZilchSelf;
 
   /// Constructor
-  NetPropertyIcon(Composite* parent, HandleParam object,
+  NetPropertyIcon(Composite* parent,
+                  HandleParam object,
                   Property* metaProperty);
 
   //
@@ -52,10 +46,12 @@ public:
   // Icon Interface
   //
 
-  /// Returns true if the property is enabled for network replication, else false
+  /// Returns true if the property is enabled for network replication, else
+  /// false
   bool IsEnabled();
 
-  /// Returns the net property info associated with the property (if enabled), else nullptr
+  /// Returns the net property info associated with the property (if enabled),
+  /// else nullptr
   NetPropertyInfo* GetNetPropertyInfo();
 
   //
@@ -63,24 +59,27 @@ public:
   //
 
   /// Currently mousing over the icon?
-  bool                         mMouseOver;
+  bool mMouseOver;
   /// Icon element
-  Element*                     mIcon;
+  Element* mIcon;
   /// Component where the property is defined
-  Handle                       mComponentHandle;
+  Handle mComponentHandle;
   /// Property specified
-  Property*                    mProperty;
+  Property* mProperty;
   /// Active search view
   HandleOf<FloatingSearchView> mActiveSearch;
   /// Description tooltip
-  HandleOf<ToolTip>            mTooltip;
+  HandleOf<ToolTip> mTooltip;
 };
 
-/// Returns true if the selected object(s) should display net property icons next to all supported properties in the property grid
+/// Returns true if the selected object(s) should display net property icons
+/// next to all supported properties in the property grid
 bool ShouldDisplayNetPropertyIcon(HandleParam selection);
 
 /// Callback for adding custom icons to the property grid
-Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object,
-                              Property* metaProperty, void* clientData);
+Widget* CreateNetPropertyIcon(Composite* parent,
+                              HandleParam object,
+                              Property* metaProperty,
+                              void* clientData);
 
-}//namespace Zero
+} // namespace Zero

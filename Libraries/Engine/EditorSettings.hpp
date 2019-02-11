@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorSettings.hpp
-/// Declaration of the EditorSettings classes.
-/// 
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 class ContentLibrary;
 
-//--------------------------------------------------------------- EditorSettings
 class EditorSettings : public Component
 {
 public:
@@ -37,5 +28,4 @@ public:
   bool mAutoUpdateContentChanges;
 };
 
-
-}//namespace Zero
+} // namespace Zero

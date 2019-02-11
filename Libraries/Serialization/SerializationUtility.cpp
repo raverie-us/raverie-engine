@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Serialization.cpp
-/// Implementation of the serialization utility functions.
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -25,12 +17,12 @@ bool IsFinite<double>(double value)
 {
   return isfinite(value);
 }
-  
+
 // Correct floats that are NAN/IND/INF to zero
 template <>
 bool CorrectNonFiniteValues<float>(float& value)
 {
-  if(!IsFinite(value))
+  if (!IsFinite(value))
   {
     value = 0.0f;
     return false;
@@ -41,12 +33,12 @@ bool CorrectNonFiniteValues<float>(float& value)
     value = 0.0f;
   return true;
 }
-  
+
 // Correct doubles that are NAN/IND/INF to zero
 template <>
 bool CorrectNonFiniteValues<double>(double& value)
 {
-  if(!IsFinite(value))
+  if (!IsFinite(value))
   {
     value = 0.0;
     return false;
@@ -58,4 +50,4 @@ bool CorrectNonFiniteValues<double>(double& value)
   return true;
 }
 
-}//namespace Zero
+} // namespace Zero

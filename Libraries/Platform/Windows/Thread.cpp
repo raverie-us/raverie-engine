@@ -1,16 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Thread.cpp
-/// Implementation of the Thread class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-///Used to set the thread name in Visual Studio. This raises an exception that 
-//Visual Studio catches and then sets the thread name.
+/// Used to set the thread name in Visual Studio. This raises an exception that
+// Visual Studio catches and then sets the thread name.
 typedef struct tagTHREADNAME_INFO
 {
   DWORD dwType;     // must be 0x1000
@@ -27,16 +19,18 @@ inline void SetThreadDebugName(DWORD dwThreadID, LPCSTR szThreadName)
   info.dwThreadID = dwThreadID;
   info.dwFlags = 0;
 
-  // Windows API never exposed a way to set the name of a thread, so instead they posted
-  // this bit of specialized code that exposes internal details about how they set thread names
-  // This trick uses the above defined structure, as well as raising an exception to set the name
-  // The exception is caught by Windows/Visual Studio which then sets the thread name
+  // Windows API never exposed a way to set the name of a thread, so instead
+  // they posted this bit of specialized code that exposes internal details
+  // about how they set thread names This trick uses the above defined
+  // structure, as well as raising an exception to set the name The exception is
+  // caught by Windows/Visual Studio which then sets the thread name
   __try
   {
     // If you hit a breakpoint/exception here, CONTINUE past it
-    RaiseException(0x406D1388, 0, sizeof(info) / sizeof(DWORD), (CONST ULONG_PTR*)&info);
+    RaiseException(
+        0x406D1388, 0, sizeof(info) / sizeof(DWORD), (CONST ULONG_PTR*)&info);
   }
-  __except(EXCEPTION_CONTINUE_EXECUTION)
+  __except (EXCEPTION_CONTINUE_EXECUTION)
   {
   }
 }
@@ -82,24 +76,27 @@ size_t Thread::GetCurrentThreadId()
   return ::GetCurrentThreadId();
 }
 
-bool Thread::Initialize(EntryFunction entry, void* instance, StringParam threadName)
+bool Thread::Initialize(EntryFunction entry,
+                        void* instance,
+                        StringParam threadName)
 {
   ZeroGetPrivateData(ThreadPrivateData);
 
   mThreadName = threadName;
 
   const int cStackSize = 65536;
-  self->mHandle = ::CreateThread( NULL, //No Security
-                           cStackSize,
-                           (LPTHREAD_START_ROUTINE)entry,
-                           (LPVOID)instance, 
-                           0,
-                           &self->mThreadId);
+  self->mHandle = ::CreateThread(NULL, // No Security
+                                 cStackSize,
+                                 (LPTHREAD_START_ROUTINE)entry,
+                                 (LPVOID)instance,
+                                 0,
+                                 &self->mThreadId);
 
-  CheckWin(self->mHandle != INVALID_HANDLE_VALUE, 
-          "Failed to create thread named %s", threadName.c_str());
+  CheckWin(self->mHandle != INVALID_HANDLE_VALUE,
+           "Failed to create thread named %s",
+           threadName.c_str());
 
-  if(self->mHandle != INVALID_HANDLE_VALUE)
+  if (self->mHandle != INVALID_HANDLE_VALUE)
   {
     SetThreadDebugName(self->mThreadId, threadName.c_str());
     return true;
@@ -117,13 +114,14 @@ bool Thread::IsValid()
   return self->mHandle != NULL;
 }
 
-//Close the thread handle. 
+// Close the thread handle.
 void Thread::Close()
 {
   ZeroGetPrivateData(ThreadPrivateData);
-  if(IsValid())
+  if (IsValid())
     VerifyWin(CloseHandle(self->mHandle),
-              "Failed to close thread handle. Thread name: %", mThreadName.c_str());
+              "Failed to close thread handle. Thread name: %",
+              mThreadName.c_str());
   self->mHandle = NULL;
 }
 
@@ -143,13 +141,14 @@ OsInt Thread::WaitForCompletion()
 OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 {
   ZeroGetPrivateData(ThreadPrivateData);
-  if(!IsValid())
+  if (!IsValid())
     return (OsInt)-1;
 
   DWORD result = WaitForSingleObject(self->mHandle, milliseconds);
-  if(result != WAIT_OBJECT_0)
+  if (result != WAIT_OBJECT_0)
   {
-    DebugPrint("Failed to wait on thread. Thread name: %s", mThreadName.c_str());
+    DebugPrint("Failed to wait on thread. Thread name: %s",
+               mThreadName.c_str());
     return (OsInt)-1;
   }
   else
@@ -163,7 +162,7 @@ OsInt Thread::WaitForCompletion(unsigned long milliseconds)
 bool Thread::IsCompleted()
 {
   ZeroGetPrivateData(ThreadPrivateData);
-  if(!IsValid())
+  if (!IsValid())
     return true;
 
   OsInt returnCode = 0;
@@ -172,4 +171,4 @@ bool Thread::IsCompleted()
   return !threadActive;
 }
 
-}//namespace Zero
+} // namespace Zero

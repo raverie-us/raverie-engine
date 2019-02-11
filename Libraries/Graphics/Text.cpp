@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Text.cpp
-/// Implementation of the display object text class.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -17,7 +9,8 @@ ZilchDefineType(TextDefinition, builder, type)
 
 void TextDefinition::Initialize()
 {
-  mFont = FontManager::GetInstance()->GetRenderFont(FontName, (uint)FontSize, 0);
+  mFont =
+      FontManager::GetInstance()->GetRenderFont(FontName, (uint)FontSize, 0);
 }
 
 void TextDefinition::Serialize(Serializer& stream)
@@ -27,4 +20,4 @@ void TextDefinition::Serialize(Serializer& stream)
   SerializeName(FontColor);
 }
 
-}//namespace Zero
+} // namespace Zero

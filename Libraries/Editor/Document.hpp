@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Document.hpp
-/// Declaration of Document class. 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,13 +11,14 @@ namespace Events
 DeclareEvent(DocumentRemoved);
 DeclareEvent(DocumentReload);
 
-}
+} // namespace Events
 
 class DocumentEditor;
 class ResourceEvent;
 class ICodeInspector;
 
-/// Document interface for managing the editing of text, script, and other files.
+/// Document interface for managing the editing of text, script, and other
+/// files.
 class Document : public EventObject
 {
 public:
@@ -35,30 +28,43 @@ public:
   Document();
   virtual ~Document();
 
-  //Get the readable simple name of the document.
+  // Get the readable simple name of the document.
   virtual String GetDisplayName() = 0;
 
-  //Save the new data.
+  // Save the new data.
   virtual void Save(StringRange data) = 0;
 
-  //Get the entire document as a string
+  // Get the entire document as a string
   virtual StringRange GetTextData() = 0;
 
-  //File type of syntax to use for highlighting.
+  // File type of syntax to use for highlighting.
   virtual String FileType() = 0;
 
-  //Get the resource for this document.
-  virtual DocumentResource* GetResource() { return nullptr; }
-  virtual String GetPath() { return String(); }
+  // Get the resource for this document.
+  virtual DocumentResource* GetResource()
+  {
+    return nullptr;
+  }
+  virtual String GetPath()
+  {
+    return String();
+  }
 
-  //Get the document state.
-  DocumentState::Type GetState(){return mState;}
+  // Get the document state.
+  DocumentState::Type GetState()
+  {
+    return mState;
+  }
 
   /// This will signal a refresh on any open text editors.
   void ReloadEditor();
 
-  /// Gets a code inspector which is used for code completion and other code editing features
-  virtual ICodeInspector* GetCodeInspector() { return nullptr; }
+  /// Gets a code inspector which is used for code completion and other code
+  /// editing features
+  virtual ICodeInspector* GetCodeInspector()
+  {
+    return nullptr;
+  }
 
   int mEditCounter;
   DocumentEditor* mEditor;
@@ -95,7 +101,7 @@ class StringDocument : public Document
 public:
   StringDocument();
 
-  //Document Interface
+  // Document Interface
   StringRange GetTextData() override;
   String GetDisplayName() override;
   String FileType() override;
@@ -113,7 +119,7 @@ class ResourceDocument : public Document
 public:
   ResourceDocument(DocumentResource* resource);
 
-  //Document Interface
+  // Document Interface
   StringRange GetTextData() override;
   String GetDisplayName() override;
   String FileType() override;
@@ -131,7 +137,7 @@ class FileDocument : public Document
 public:
   FileDocument(StringParam name, StringParam fullPath);
 
-  //Document Interface
+  // Document Interface
   StringRange GetTextData() override;
   String GetDisplayName() override;
   String FileType() override;
@@ -144,5 +150,4 @@ public:
   String mPath;
 };
 
-
-}//namespace Zero
+} // namespace Zero

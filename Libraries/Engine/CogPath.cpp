@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CogPath.cpp
-/// Implementation of CogPath class.
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Operation.hpp"
 
@@ -16,18 +8,18 @@ namespace Zero
 {
 namespace Events
 {
-  DefineEvent(CogPathCogChanged);
+DefineEvent(CogPathCogChanged);
 }
 
-static const char* cRootSpecifier   = ":";
-static const char* cPathSeparator   = "/";
-static const char* cSelfSpecifier   = ".";
+static const char* cRootSpecifier = ":";
+static const char* cPathSeparator = "/";
+static const char* cSelfSpecifier = ".";
 static const char* cParentSpecifier = "..";
 
-static const char cRootSpecifierChar    = cRootSpecifier[0];
-static const char cPathSeparatorChar    = cPathSeparator[0];
-static const char cSelfSpecifierChar    = cSelfSpecifier[0];
-static const char cParentSpecifierChar  = cParentSpecifier[0];
+static const char cRootSpecifierChar = cRootSpecifier[0];
+static const char cPathSeparatorChar = cPathSeparator[0];
+static const char cSelfSpecifierChar = cSelfSpecifier[0];
+static const char cParentSpecifierChar = cParentSpecifier[0];
 
 ZilchDefineType(CogPathMetaSerialization, builder, type)
 {
@@ -35,7 +27,7 @@ ZilchDefineType(CogPathMetaSerialization, builder, type)
 
 DeclareEnum2(CogPathErrorCode, DidNotFind, ParseError)
 
-bool IsValidCogPathNameCharacters(Rune r)
+    bool IsValidCogPathNameCharacters(Rune r)
 {
   return IsAlphaNumeric(r) || r == '_' || r == ' ';
 }
@@ -70,8 +62,9 @@ ZilchDefineType(CogPath, builder, type)
 
   ZeroBindEvent(Events::CogPathCogChanged, CogPathEvent);
 
-  ZilchBindOverloadedMethod(Resolve, (Cog* (*)(Cog*, StringParam)));
-  ZilchBindOverloadedMethod(ComputePath, (String(*)(Cog*, Cog*, CogPathPreference::Enum)));
+  ZilchBindOverloadedMethod(Resolve, (Cog * (*)(Cog*, StringParam)));
+  ZilchBindOverloadedMethod(ComputePath,
+                            (String(*)(Cog*, Cog*, CogPathPreference::Enum)));
 
   ZilchBindGetterSetterProperty(PathPreference0);
   ZilchBindGetterSetterProperty(PathPreference1);
@@ -85,11 +78,13 @@ bool ValidateMetaIsCog(Cog* cog, Status& status)
 
   // This must be directly equal to, not IsA!
   BoundType* meta = ZilchVirtualTypeId(cog);
-  if(meta != ZilchTypeId(Cog))
+  if (meta != ZilchTypeId(Cog))
   {
     status.State = StatusState::Failure;
     status.Context = StatusCodeCogPath::OnlySupportsCogTypes;
-    status.Message = String::Format("Cog paths can only point at true Cog types (attempted to point at a '%s')", meta->Name.c_str());
+    status.Message = String::Format("Cog paths can only point at true Cog "
+                                    "types (attempted to point at a '%s')",
+                                    meta->Name.c_str());
     return false;
   }
   return true;
@@ -100,7 +95,7 @@ bool ValidateMetaIsCog(Cog* cog, Status& status)
 bool hitFirst = false;
 void AppendSeparatorIfNeeded(bool& hitFirst, StringBuilder& builder)
 {
-  if(hitFirst)
+  if (hitFirst)
   {
     builder.Append(cPathSeparator);
   }
@@ -118,21 +113,24 @@ void DetectAmbiguity(Status& status, Cog* cog)
   // Check if this is a space.
   if (cog == cogSpace)
   {
-    size_t sameNamedSpaces = RangeCount(cogSpace->GetGameSession()->FindAllSpacesByName(name));
+    size_t sameNamedSpaces =
+        RangeCount(cogSpace->GetGameSession()->FindAllSpacesByName(name));
     success = sameNamedSpaces < 2;
   }
   // If we have no parent, it means we're a root cog.
   else if (!cogParent)
   {
     // Root cogs need to check other roots in the space.
-    size_t sameNamedCogs = RangeCount(cog->GetSpace()->FindAllRootObjectsByName(name));
+    size_t sameNamedCogs =
+        RangeCount(cog->GetSpace()->FindAllRootObjectsByName(name));
     success = sameNamedCogs < 2;
   }
   // Otherwise we're a child cog.
   else
   {
     // Child cogs need to check their parent's siblings.
-    size_t sameNamedCogs = RangeCount(cogParent->FindAllDirectChildrenByName(name));
+    size_t sameNamedCogs =
+        RangeCount(cogParent->FindAllDirectChildrenByName(name));
     success = sameNamedCogs < 2;
   }
 
@@ -142,10 +140,11 @@ void DetectAmbiguity(Status& status, Cog* cog)
   status.State = StatusState::Failure;
   if (!status.IgnoreMessage)
   {
-    status.Message = String::Format(
-      "Two or more siblings had the name '%s' which results in an ambiguous path (see %s)",
-      name.c_str(),
-      cog->GetDescription().c_str());
+    status.Message =
+        String::Format("Two or more siblings had the name '%s' which results "
+                       "in an ambiguous path (see %s)",
+                       name.c_str(),
+                       cog->GetDescription().c_str());
   }
 }
 
@@ -155,30 +154,39 @@ void DetectAmbiguityOptionally(Status& status, Cog* cog, bool ambiguityIsError)
     DetectAmbiguity(status, cog);
 }
 
-String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref, bool ambiguityIsError)
+String CogPath::ComputePath(Status& status,
+                            Cog* from,
+                            Cog* to,
+                            CogPathPreference::Enum pref,
+                            bool ambiguityIsError)
 {
-  if(pref == CogPathPreference::CogRelative)
+  if (pref == CogPathPreference::CogRelative)
   {
-    // If we don't have an object that we're attempting to compute the path from, then it has to be absolute
-    if(from == nullptr)
+    // If we don't have an object that we're attempting to compute the path
+    // from, then it has to be absolute
+    if (from == nullptr)
     {
       status.State = StatusState::Failure;
       status.Context = StatusCodeCogPath::RelativeToNotSet;
-      static const String message = "The cog path's 'RelativeTo' field was not set, so a relative path could not be computed (generally 'RelativeTo' is set to the owning Cog)";
+      static const String message =
+          "The cog path's 'RelativeTo' field was not set, so a relative path "
+          "could not be computed (generally 'RelativeTo' is set to the owning "
+          "Cog)";
       status.Message = message;
       return String();
     }
 
     // The empty string can represent a null cog
-    if(to == nullptr)
+    if (to == nullptr)
       return String();
 
     // We only support true cog types, not spaces, viewports, game sessions, etc
-    if(!(ValidateMetaIsCog(from, status) && ValidateMetaIsCog(to, status)))
+    if (!(ValidateMetaIsCog(from, status) && ValidateMetaIsCog(to, status)))
       return String();
 
-    // If the objects are the same, we emit a special character that means ourself
-    if(from == to)
+    // If the objects are the same, we emit a special character that means
+    // ourself
+    if (from == to)
     {
       return cSelfSpecifier;
     }
@@ -186,12 +194,14 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
     Space* fromSpace = from->GetSpace();
     Space* toSpace = to->GetSpace();
 
-    // If the objects lie in different spaces, there's nothing we can do to specify relative (it must be absolute)
-    if(fromSpace != toSpace)
+    // If the objects lie in different spaces, there's nothing we can do to
+    // specify relative (it must be absolute)
+    if (fromSpace != toSpace)
     {
       status.State = StatusState::Failure;
       status.Context = StatusCodeCogPath::CogsInDifferentSpaces;
-      static const String message = "The two cogs were in different spaces so a relative path could not be computed";
+      static const String message = "The two cogs were in different spaces so "
+                                    "a relative path could not be computed";
       status.Message = message;
       return String();
     }
@@ -201,86 +211,95 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
 
     // If the cogs don't share a relative root path (other than the space)
     // then the path just has to be relative to the space
-    if(fromRoot != toRoot)
+    if (fromRoot != toRoot)
     {
       status.State = StatusState::Failure;
       status.Context = StatusCodeCogPath::CogsDoNotShareRoots;
-      static const String message = "The cogs do not share a root cog so a relative path could not be computed";
+      static const String message = "The cogs do not share a root cog so a "
+                                    "relative path could not be computed";
       status.Message = message;
       return String();
     }
-  
-    // We now know they are in the same space and have common ancestry, lets figure out the relative path!
+
+    // We now know they are in the same space and have common ancestry, lets
+    // figure out the relative path!
     Array<Cog*> reversePathFrom;
     Array<Cog*> reversePathTo;
 
-    while(from != nullptr)
+    while (from != nullptr)
     {
       reversePathFrom.PushBack(from);
       from = from->GetParent();
     }
 
-    while(to != nullptr)
+    while (to != nullptr)
     {
       reversePathTo.PushBack(to);
       to = to->GetParent();
     }
 
-    // Reverse the array in place to save memory, just rename the variable and don't use the old ones
+    // Reverse the array in place to save memory, just rename the variable and
+    // don't use the old ones
     Reverse(reversePathFrom.Begin(), reversePathFrom.End());
     Reverse(reversePathTo.Begin(), reversePathTo.End());
     Array<Cog*>& pathFrom = reversePathFrom;
     Array<Cog*>& pathTo = reversePathTo;
 
-    // Get the minimum size between the two relative paths (the shortest of both branches)
+    // Get the minimum size between the two relative paths (the shortest of both
+    // branches)
     size_t minSize = Math::Min(pathFrom.Size(), pathTo.Size());
 
-    // Assume we diverge at the end of the from or to path (may be a directly up or down)
-    // If this ever diverges anywhere else, then 
+    // Assume we diverge at the end of the from or to path (may be a directly up
+    // or down) If this ever diverges anywhere else, then
     size_t divergePoint = minSize;
 
     // Traverse the path from the root down
-    for(size_t i = 0; i < minSize; ++i)
+    for (size_t i = 0; i < minSize; ++i)
     {
       Cog* pathCogFrom = pathFrom[i];
       Cog* pathCogTo = pathTo[i];
 
-      // If the paths ever diverge, this is where we start the relative path from!
-      if(pathCogFrom != pathCogTo)
+      // If the paths ever diverge, this is where we start the relative path
+      // from!
+      if (pathCogFrom != pathCogTo)
       {
         divergePoint = i;
         break;
       }
     }
-  
+
     StringBuilder builder;
 
     // Because we're starting a relative path, we want to specify the
     // separator \ only if we've already written our first value
     bool hitFirst = false;
 
-    // We need to add 'up one' or '..' for every child in the 'from path' past the diverge point
-    for(size_t i = divergePoint; i < pathFrom.Size(); ++i)
+    // We need to add 'up one' or '..' for every child in the 'from path' past
+    // the diverge point
+    for (size_t i = divergePoint; i < pathFrom.Size(); ++i)
     {
       AppendSeparatorIfNeeded(hitFirst, builder);
       builder.Append(cParentSpecifier);
     }
 
-    // We need to add children references from the diverge point down in the 'to path'
-    for(size_t i = divergePoint; i < pathTo.Size(); ++i)
+    // We need to add children references from the diverge point down in the 'to
+    // path'
+    for (size_t i = divergePoint; i < pathTo.Size(); ++i)
     {
       Cog* pathCogTo = pathTo[i];
 
       AppendSeparatorIfNeeded(hitFirst, builder);
 
       String cogName = pathCogTo->GetName();
-      if(cogName.Empty())
+      if (cogName.Empty())
       {
         status.State = StatusState::Failure;
         status.Context = StatusCodeCogPath::CogNotNamed;
         String cogDescription = pathCogTo->GetDescription();
         if (!status.IgnoreMessage)
-          status.Message = String::Format("%s was not named and therefore a path could not be created with it", cogDescription.c_str());
+          status.Message = String::Format("%s was not named and therefore a "
+                                          "path could not be created with it",
+                                          cogDescription.c_str());
         return String();
       }
 
@@ -294,24 +313,24 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
   else
   {
     // The empty string can represent a null cog
-    if(to == nullptr)
+    if (to == nullptr)
       return String();
 
     StringBuilder builder;
 
     // We only support true cog types, not spaces, viewports, game sessions, etc
-    if(!(ValidateMetaIsCog(from, status) && ValidateMetaIsCog(to, status)))
+    if (!(ValidateMetaIsCog(from, status) && ValidateMetaIsCog(to, status)))
       return String();
-  
+
     Space* space = to->GetSpace();
 
     // We only Append the name of the space if we want a true absolute path
     // Otherwise we can get the path relative to the current space
-    if(pref == CogPathPreference::Absolute)
+    if (pref == CogPathPreference::Absolute)
     {
       String spaceName = space->GetName();
-  
-      if(!spaceName.Empty())
+
+      if (!spaceName.Empty())
       {
         DetectAmbiguityOptionally(status, space, ambiguityIsError);
         builder.Append(spaceName);
@@ -320,7 +339,8 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
       {
         status.State = StatusState::Failure;
         status.Context = StatusCodeCogPath::SpaceNotNamed;
-        static const String message = "The space was not named, so we could not get an absolute path";
+        static const String message =
+            "The space was not named, so we could not get an absolute path";
         status.Message = message;
         return String();
       }
@@ -329,7 +349,8 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
     {
       status.State = StatusState::Failure;
       status.Context = StatusCodeCogPath::CogsInDifferentSpaces;
-      static const String message = "The two cogs were in different spaces so a relative path could not be computed";
+      static const String message = "The two cogs were in different spaces so "
+                                    "a relative path could not be computed";
       status.Message = message;
       return String();
     }
@@ -338,26 +359,28 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
     Array<Cog*> reversePath;
     reversePath.Reserve(5);
 
-    while(to != nullptr)
+    while (to != nullptr)
     {
       reversePath.PushBack(to);
       to = to->GetParent();
     }
 
     // Traverse the path from the root down
-    for(int i = reversePath.Size() - 1; i >= 0; --i)
+    for (int i = reversePath.Size() - 1; i >= 0; --i)
     {
       Cog* pathCog = reversePath[i];
 
       builder.Append(cPathSeparator);
-    
+
       String cogName = pathCog->GetName();
-      if(cogName.Empty())
+      if (cogName.Empty())
       {
         status.State = StatusState::Failure;
         status.Context = StatusCodeCogPath::CogNotNamed;
         String cogDescription = pathCog->GetDescription();
-        status.Message = String::Format("%s was not named and therefore a path could not be created with it", cogDescription.c_str());
+        status.Message = String::Format("%s was not named and therefore a path "
+                                        "could not be created with it",
+                                        cogDescription.c_str());
         return String();
       }
 
@@ -369,26 +392,20 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
   }
 }
 
-String CogPath::ComputePath(
-  Status& status,
-  Cog* from,
-  Cog* to,
-  CogPathPreference::Enum pref0,
-  CogPathPreference::Enum pref1,
-  CogPathPreference::Enum pref2,
-  bool ambiguityIsError)
+String CogPath::ComputePath(Status& status,
+                            Cog* from,
+                            Cog* to,
+                            CogPathPreference::Enum pref0,
+                            CogPathPreference::Enum pref1,
+                            CogPathPreference::Enum pref2,
+                            bool ambiguityIsError)
 {
   String newPath;
   String errorMessage;
 
-  CogPathPreference::Enum preferences[] =
-  {
-    pref0,
-    pref1,
-    pref2
-  };
+  CogPathPreference::Enum preferences[] = {pref0, pref1, pref2};
   size_t preferenceCount = sizeof(preferences) / sizeof(preferences[0]);
-  
+
   for (size_t i = 0; i < preferenceCount; ++i)
   {
     status.SetSucceeded();
@@ -402,63 +419,64 @@ String CogPath::ComputePath(
     if (!status.IgnoreMessage)
     {
       if (errorMessage.Empty())
-        errorMessage = BuildString(CogPathPreference::Names[i], ": ", status.Message);
+        errorMessage =
+            BuildString(CogPathPreference::Names[i], ": ", status.Message);
       else
-        errorMessage = BuildString(errorMessage, "\n", CogPathPreference::Names[i], ": ", status.Message);
+        errorMessage = BuildString(errorMessage,
+                                   "\n",
+                                   CogPathPreference::Names[i],
+                                   ": ",
+                                   status.Message);
     }
   }
 
-  if(status.Failed())
+  if (status.Failed())
     status.Message = errorMessage;
   return newPath;
 }
 
 cstr CogPathToken::GetFixedTokenText(CogPathTokenType::Enum fixedToken)
 {
-  switch(fixedToken)
+  switch (fixedToken)
   {
-    case CogPathTokenType::Eof:
-      return "<Eof>";
-    case CogPathTokenType::Separator:
-      return "/";
-    case CogPathTokenType::Self:
-      return ".";
-    case CogPathTokenType::Parent:
-      return "..";
-    case CogPathTokenType::CurrentSpace:
-      return ":";
-    case CogPathTokenType::NamedCog:
-      return "<NamedCog>";
-    case CogPathTokenType::NamedSpace:
-      return "<NamedSpace>:";
-    default:
-      return "<Invalid>";
+  case CogPathTokenType::Eof:
+    return "<Eof>";
+  case CogPathTokenType::Separator:
+    return "/";
+  case CogPathTokenType::Self:
+    return ".";
+  case CogPathTokenType::Parent:
+    return "..";
+  case CogPathTokenType::CurrentSpace:
+    return ":";
+  case CogPathTokenType::NamedCog:
+    return "<NamedCog>";
+  case CogPathTokenType::NamedSpace:
+    return "<NamedSpace>:";
+  default:
+    return "<Invalid>";
   }
 }
 
-CogPathToken::CogPathToken() :
-  mType(CogPathTokenType::Invalid)
+CogPathToken::CogPathToken() : mType(CogPathTokenType::Invalid)
 {
 }
 
-CogPathTokenizer::CogPathTokenizer() :
-  mPosition(0)
+CogPathTokenizer::CogPathTokenizer() : mPosition(0)
 {
 }
 
-CogPathElement::CogPathElement() :
-  mType(CogPathElementType::NamedCog)
+CogPathElement::CogPathElement() : mType(CogPathElementType::NamedCog)
 {
 }
 
-CogPathCompiled::CogPathCompiled() :
-  mRootType(CogPathRootType::Null)
+CogPathCompiled::CogPathCompiled() : mRootType(CogPathRootType::Null)
 {
 }
 
 bool CogPathParser::Accept(CogPathTokenType::Enum type, String* output)
 {
-  if(mToken.mType == type)
+  if (mToken.mType == type)
   {
     if (output != nullptr)
       *output = mToken.mText;
@@ -469,9 +487,12 @@ bool CogPathParser::Accept(CogPathTokenType::Enum type, String* output)
   return false;
 }
 
-bool CogPathParser::Expect(CogPathTokenType::Enum type, String* output, Status& status, StringParam error)
+bool CogPathParser::Expect(CogPathTokenType::Enum type,
+                           String* output,
+                           Status& status,
+                           StringParam error)
 {
-  if(Accept(type, output))
+  if (Accept(type, output))
     return true;
 
   status.State = StatusState::Failure;
@@ -479,9 +500,10 @@ bool CogPathParser::Expect(CogPathTokenType::Enum type, String* output, Status& 
   return false;
 }
 
-bool CogPathParser::ParseSeparatedElement(Status& status, CogPathCompiled& output)
+bool CogPathParser::ParseSeparatedElement(Status& status,
+                                          CogPathCompiled& output)
 {
-  if(this->Accept(CogPathTokenType::Separator, nullptr))
+  if (this->Accept(CogPathTokenType::Separator, nullptr))
   {
     return this->ParseElement(status, output);
   }
@@ -492,27 +514,33 @@ bool CogPathParser::ParseElement(Status& status, CogPathCompiled& output)
 {
   String cogName;
 
-  if(this->Accept(CogPathTokenType::NamedCog, &cogName))
+  if (this->Accept(CogPathTokenType::NamedCog, &cogName))
   {
     CogPathElement& element = output.mElements.PushBack();
     element.mType = CogPathElementType::NamedCog;
     element.mValue = cogName;
   }
-  else if(this->Accept(CogPathTokenType::Parent, nullptr))
+  else if (this->Accept(CogPathTokenType::Parent, nullptr))
   {
-    // If we have no elements yet, and the output type is not 'relative', then it is not legal to traverse a parent!
-    if(output.mElements.Empty() && output.mRootType != CogPathRootType::Relative)
+    // If we have no elements yet, and the output type is not 'relative', then
+    // it is not legal to traverse a parent!
+    if (output.mElements.Empty() &&
+        output.mRootType != CogPathRootType::Relative)
     {
       status.State = StatusState::Failure;
-      static const String message = "The '..' was used too many times and attempted to traverse above the space itself";
+      static const String message =
+          "The '..' was used too many times and attempted to traverse above "
+          "the space itself";
       status.Message = message;
       return false;
     }
 
     // This is an optimization / normalization of paths
-    // If we're running the parent operator, and the element above us is a named cog,
-    // we can just remove the element above instead of inserting another parent after it
-    if(!output.mElements.Empty() && output.mElements.Back().mType == CogPathElementType::NamedCog)
+    // If we're running the parent operator, and the element above us is a named
+    // cog, we can just remove the element above instead of inserting another
+    // parent after it
+    if (!output.mElements.Empty() &&
+        output.mElements.Back().mType == CogPathElementType::NamedCog)
     {
       output.mElements.PopBack();
     }
@@ -522,12 +550,14 @@ bool CogPathParser::ParseElement(Status& status, CogPathCompiled& output)
       element.mType = CogPathElementType::Parent;
     }
   }
-  // Otherwise, the last thing we can parse is the self '.' (which does nothing!)
-  else if(this->Accept(CogPathTokenType::Self, nullptr) == false)
+  // Otherwise, the last thing we can parse is the self '.' (which does
+  // nothing!)
+  else if (this->Accept(CogPathTokenType::Self, nullptr) == false)
   {
     // We didn't parse the self '.', so this is an error
     status.State = StatusState::Failure;
-    static const String message = "Expected a Cog name, a parent '..', or a self '.'";
+    static const String message =
+        "Expected a Cog name, a parent '..', or a self '.'";
     status.Message = message;
     return false;
   }
@@ -537,41 +567,45 @@ bool CogPathParser::ParseElement(Status& status, CogPathCompiled& output)
 
 bool CogPathParser::ParsePath(Status& status, CogPathCompiled& output)
 {
-  // If our only token is an eof (nothing in our string) this is a special case that means null
-  if(Accept(CogPathTokenType::Eof, nullptr))
+  // If our only token is an eof (nothing in our string) this is a special case
+  // that means null
+  if (Accept(CogPathTokenType::Eof, nullptr))
   {
     output.mRootType = CogPathRootType::Null;
     return true;
   }
 
   // We can be a named space
-  if(Accept(CogPathTokenType::NamedSpace, &output.mSpaceName))
+  if (Accept(CogPathTokenType::NamedSpace, &output.mSpaceName))
   {
     output.mRootType = CogPathRootType::NamedSpace;
   }
-  else if(Accept(CogPathTokenType::CurrentSpace, nullptr))
+  else if (Accept(CogPathTokenType::CurrentSpace, nullptr))
   {
     output.mRootType = CogPathRootType::CurrentSpace;
   }
   else
   {
     output.mRootType = CogPathRootType::Relative;
-    if(this->ParseElement(status, output) == false)
+    if (this->ParseElement(status, output) == false)
     {
       return false;
     }
   }
 
   // Parse the rest of the elements
-  while(this->ParseSeparatedElement(status, output)) {};
+  while (this->ParseSeparatedElement(status, output))
+  {
+  };
 
   // If we end up with no elements, and we're not relative, then things are bad!
   // Relative with no is OK because it means 'self'
-  if(output.mElements.Empty() && output.mRootType != CogPathRootType::Relative)
+  if (output.mElements.Empty() && output.mRootType != CogPathRootType::Relative)
   {
     status.State = StatusState::Failure;
-    static const String message = "A space ':' or 'Name:' must be followed by a '/' and at least one "
-                                  "Cog name (cannot be reversed by a following parent '..' operator!)";
+    static const String message =
+        "A space ':' or 'Name:' must be followed by a '/' and at least one "
+        "Cog name (cannot be reversed by a following parent '..' operator!)";
     status.Message = message;
     return false;
   }
@@ -584,25 +618,30 @@ void CogPathParser::Parse(Status& status, CogPathCompiled& output)
   // Read a single token so we can start deciding what to do
   mTokenizer.ReadToken(mToken);
   ParsePath(status, output);
-  
-  // We MUST see an Eof here (note that even after reading an Eof, our tokenizer is defined to keep returning Eof)
-  if(Accept(CogPathTokenType::Eof, nullptr) == false)
+
+  // We MUST see an Eof here (note that even after reading an Eof, our tokenizer
+  // is defined to keep returning Eof)
+  if (Accept(CogPathTokenType::Eof, nullptr) == false)
   {
     status.State = StatusState::Failure;
 
-    bool tokenHasName = mToken.mType == CogPathTokenType::NamedCog   ||
+    bool tokenHasName = mToken.mType == CogPathTokenType::NamedCog ||
                         mToken.mType == CogPathTokenType::NamedSpace ||
                         mToken.mType == CogPathTokenType::Invalid;
 
-    if(tokenHasName)
+    if (tokenHasName)
     {
-      status.Message = String::Format("The path was malformed (hit an unexpected '%s' '%s' token)",
-        CogPathTokenType::Names[mToken.mType], mToken.mText.c_str());
+      status.Message = String::Format(
+          "The path was malformed (hit an unexpected '%s' '%s' token)",
+          CogPathTokenType::Names[mToken.mType],
+          mToken.mText.c_str());
     }
     else
     {
-      status.Message = String::Format("The path was malformed (hit an unexpected '%s' '%s' token)",
-        CogPathTokenType::Names[mToken.mType], CogPathToken::GetFixedTokenText(mToken.mType));
+      status.Message = String::Format(
+          "The path was malformed (hit an unexpected '%s' '%s' token)",
+          CogPathTokenType::Names[mToken.mType],
+          CogPathToken::GetFixedTokenText(mToken.mType));
     }
   }
 }
@@ -611,29 +650,30 @@ void CogPathTokenizer::ReadToken(CogPathToken& tokenOut)
 {
   tokenOut.mText.Clear();
   tokenOut.mType = CogPathTokenType::Invalid;
-  
+
   StringIterator start = mPath.Begin() + mPosition;
   StringIterator it = start;
   Rune r = it.ReadCurrentRune();
 
-  if(r == '\0')
+  if (r == '\0')
   {
-    // In this one case, we don't bother to advance the token position (keeps the tokenizer safe!)
+    // In this one case, we don't bother to advance the token position (keeps
+    // the tokenizer safe!)
     tokenOut.mType = CogPathTokenType::Eof;
   }
-  else if(r == '/')
+  else if (r == '/')
   {
     mPosition += UTF8::EncodedCodepointLength(mPath.Data()[mPosition]);
     tokenOut.mType = CogPathTokenType::Separator;
   }
-  else if(r == '.')
+  else if (r == '.')
   {
     mPosition += UTF8::EncodedCodepointLength(mPath.Data()[mPosition]);
     ++it;
     tokenOut.mType = CogPathTokenType::Self;
 
     r = it.ReadCurrentRune();
-    
+
     // We need to keep looking to see if it's a parent
     if (r == '.')
     {
@@ -641,28 +681,28 @@ void CogPathTokenizer::ReadToken(CogPathToken& tokenOut)
       tokenOut.mType = CogPathTokenType::Parent;
     }
   }
-  else if(r == ':')
+  else if (r == ':')
   {
     mPosition += UTF8::EncodedCodepointLength(mPath.Data()[mPosition]);
     tokenOut.mType = CogPathTokenType::CurrentSpace;
   }
-  else if(IsValidCogPathNameCharacters(r))
+  else if (IsValidCogPathNameCharacters(r))
   {
     mPosition += UTF8::EncodedCodepointLength(mPath.Data()[mPosition]);
     ++it;
     tokenOut.mType = CogPathTokenType::NamedCog;
 
-    for(;;)
+    for (;;)
     {
       r = it.ReadCurrentRune();
 
-      if(IsValidCogPathNameCharacters(r))
+      if (IsValidCogPathNameCharacters(r))
       {
         // Still a cog!
         mPosition += UTF8::EncodedCodepointLength(mPath.Data()[mPosition]);
         ++it;
       }
-      else if(r == ':')
+      else if (r == ':')
       {
         mPosition += UTF8::EncodedCodepointLength(mPath.Data()[mPosition]);
         ++it;
@@ -677,7 +717,7 @@ void CogPathTokenizer::ReadToken(CogPathToken& tokenOut)
     }
 
     // Store the string on the token
-    if(tokenOut.mType == CogPathTokenType::NamedSpace)
+    if (tokenOut.mType == CogPathTokenType::NamedSpace)
     {
       // We strip out the : at the end of the space name
       tokenOut.mText = mPath.SubString(start, --it);
@@ -693,16 +733,20 @@ void CogPathTokenizer::ReadToken(CogPathToken& tokenOut)
   }
 }
 
-Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path, bool ambiguityIsError)
+Cog* CogPath::Resolve(Status& status,
+                      Cog* startFrom,
+                      const CogPathCompiled& path,
+                      bool ambiguityIsError)
 {
-  if(path.mRootType == CogPathRootType::Null)
+  if (path.mRootType == CogPathRootType::Null)
     return nullptr;
 
   // We cannot resolve a relative path unless we have a starting cog
-  if(startFrom == nullptr && path.mRootType != CogPathRootType::NamedSpace)
+  if (startFrom == nullptr && path.mRootType != CogPathRootType::NamedSpace)
   {
     status.State = StatusState::Failure;
-    static const String message = "Attempting to resolve a relative path without a starting cog/space";
+    static const String message =
+        "Attempting to resolve a relative path without a starting cog/space";
     if (!status.IgnoreMessage)
       status.Message = message;
     return nullptr;
@@ -710,20 +754,22 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
 
   Space* startSpace = nullptr;
 
-  if(path.mRootType == CogPathRootType::CurrentSpace)
+  if (path.mRootType == CogPathRootType::CurrentSpace)
   {
     startSpace = startFrom->GetSpace();
   }
-  else if(path.mRootType == CogPathRootType::NamedSpace)
+  else if (path.mRootType == CogPathRootType::NamedSpace)
   {
     GameSession* game = nullptr;
-    if(startFrom)
+    if (startFrom)
       game = startFrom->GetGameSession();
 
-    if(!game)
+    if (!game)
     {
       status.State = StatusState::Failure;
-      static const String message = "The path used a named space, but there was no GameSession active to lookup spaces by name";
+      static const String message =
+          "The path used a named space, but there was no GameSession active to "
+          "lookup spaces by name";
       if (!status.IgnoreMessage)
         status.Message = message;
       return nullptr;
@@ -731,11 +777,13 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
 
     startSpace = game->FindSpaceByName(path.mSpaceName);
 
-    if(!startSpace)
+    if (!startSpace)
     {
       status.State = StatusState::Failure;
       if (!status.IgnoreMessage)
-        status.Message = String::Format("A space by the name of '%s' could not be found", path.mSpaceName.c_str());
+        status.Message =
+            String::Format("A space by the name of '%s' could not be found",
+                           path.mSpaceName.c_str());
       return nullptr;
     }
 
@@ -747,13 +795,17 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
 
   size_t elementIndex = 0;
 
-  if(startSpace)
+  if (startSpace)
   {
     // Accessing the front element should always be valid here, since
     // a path that starts from a space MUST have at least one element
-    ErrorIf(path.mElements.Empty(), "The path is invalid if the elements are empty and it starts from a space");
+    ErrorIf(path.mElements.Empty(),
+            "The path is invalid if the elements are empty and it starts from "
+            "a space");
     const CogPathElement& root = path.mElements.Front();
-    ErrorIf(root.mType != CogPathElementType::NamedCog, "The first element in a path that starts from a space MUST be a named cog");
+    ErrorIf(root.mType != CogPathElementType::NamedCog,
+            "The first element in a path that starts from a space MUST be a "
+            "named cog");
 
     // Attempt to resolve the cog
     resolvedCog = startSpace->FindLastRootObjectByName(root.mValue);
@@ -761,11 +813,13 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
     // Set the element index to 1 since we just read/processed the front element
     elementIndex = 1;
 
-    if(!resolvedCog)
+    if (!resolvedCog)
     {
       status.State = StatusState::Failure;
       if (!status.IgnoreMessage)
-        status.Message = String::Format("The root cog by the name of '%s' could not be found in the space", root.mValue.c_str());
+        status.Message = String::Format(
+            "The root cog by the name of '%s' could not be found in the space",
+            root.mValue.c_str());
       return nullptr;
     }
 
@@ -776,56 +830,65 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
   {
     // Since we're relative, start with the given cog
     resolvedCog = startFrom;
-    ErrorIf(path.mRootType != CogPathRootType::Relative, "If we don't have a space here, we must be looking relative");
+    ErrorIf(path.mRootType != CogPathRootType::Relative,
+            "If we don't have a space here, we must be looking relative");
   }
 
-  while(elementIndex < path.mElements.Size())
+  while (elementIndex < path.mElements.Size())
   {
     const CogPathElement& element = path.mElements[elementIndex];
     Cog* previousCog = resolvedCog;
 
-    switch(element.mType)
+    switch (element.mType)
     {
-      case CogPathElementType::NamedCog:
-        resolvedCog = resolvedCog->FindDirectChildByName(element.mValue);
-        if(!resolvedCog)
-        {
-          status.State = StatusState::Failure;
-          if (!status.IgnoreMessage)
-            status.Message = String::Format("The cog '%s' had no child named '%s'",
-              previousCog->GetDescription().c_str(), element.mValue.c_str());
-          return nullptr;
-        }
+    case CogPathElementType::NamedCog:
+      resolvedCog = resolvedCog->FindDirectChildByName(element.mValue);
+      if (!resolvedCog)
+      {
+        status.State = StatusState::Failure;
+        if (!status.IgnoreMessage)
+          status.Message =
+              String::Format("The cog '%s' had no child named '%s'",
+                             previousCog->GetDescription().c_str(),
+                             element.mValue.c_str());
+        return nullptr;
+      }
 
-        // Validate that there aren't any other direct child cogs of the same name.
-        DetectAmbiguityOptionally(status, resolvedCog, ambiguityIsError);
-        break;
+      // Validate that there aren't any other direct child cogs of the same
+      // name.
+      DetectAmbiguityOptionally(status, resolvedCog, ambiguityIsError);
+      break;
 
-      case CogPathElementType::Parent:
-        resolvedCog = resolvedCog->GetParent();
-        if(!resolvedCog)
-        {
-          status.State = StatusState::Failure;
-          if (!status.IgnoreMessage)
-            status.Message = String::Format("The cog '%s' has no parent",
-              previousCog->GetDescription().c_str());
-          return nullptr;
-        }
-        break;
+    case CogPathElementType::Parent:
+      resolvedCog = resolvedCog->GetParent();
+      if (!resolvedCog)
+      {
+        status.State = StatusState::Failure;
+        if (!status.IgnoreMessage)
+          status.Message =
+              String::Format("The cog '%s' has no parent",
+                             previousCog->GetDescription().c_str());
+        return nullptr;
+      }
+      break;
 
-      default:
-        Error("Unhandled case in traversing a cog path");
-        break;
+    default:
+      Error("Unhandled case in traversing a cog path");
+      break;
     }
 
-    ErrorIf(!resolvedCog, "We should have exited out earlier if we failed to find a cog");
+    ErrorIf(!resolvedCog,
+            "We should have exited out earlier if we failed to find a cog");
     ++elementIndex;
   }
 
   return resolvedCog;
 }
 
-Cog* CogPath::Resolve(Status& status, Cog* startFrom, StringParam path, bool ambiguityIsError)
+Cog* CogPath::Resolve(Status& status,
+                      Cog* startFrom,
+                      StringParam path,
+                      bool ambiguityIsError)
 {
   CogPathParser parser;
   parser.mTokenizer.mPath = path;
@@ -834,14 +897,15 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, StringParam path, bool amb
   parser.Parse(status, finalPath);
 
   // If we ever failed during tokenizing or parsing...
-  if(status.Failed())
+  if (status.Failed())
   {
     status.Context = CogPathErrorCode::ParseError;
     return nullptr;
   }
 
-  // We set the error code assuming that if an error occurs below, it will be this kind
-  // Technically the status could still return success, even with this error code set (which is what we want)
+  // We set the error code assuming that if an error occurs below, it will be
+  // this kind Technically the status could still return success, even with this
+  // error code set (which is what we want)
   status.Context = CogPathErrorCode::DidNotFind;
   return Resolve(status, startFrom, finalPath, ambiguityIsError);
 }
@@ -857,13 +921,11 @@ CogPathNode::CogPathNode()
   mPathPreference2 = CogPathPreference::Absolute;
 }
 
-CogPath::CogPath() :
-  mSharedNode(new CogPathNode())
+CogPath::CogPath() : mSharedNode(new CogPathNode())
 {
 }
 
-CogPath::CogPath(StringParam path) :
-  mSharedNode(new CogPathNode())
+CogPath::CogPath(StringParam path) : mSharedNode(new CogPathNode())
 {
   mSharedNode->mPath = path;
 }
@@ -871,7 +933,7 @@ CogPath::CogPath(StringParam path) :
 Component* CogPath::QueryComponentId(BoundType* typeId)
 {
   Cog* cog = GetCog();
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   return cog->QueryComponentType(typeId);
@@ -884,34 +946,48 @@ CogPath CogPath::Clone()
   CogPathNode& ourNode = this->mSharedNode;
 
   clonedNode.mFlags = ourNode.mFlags;
-  
+
   clonedNode.mPathPreference0 = ourNode.mPathPreference0;
   clonedNode.mPathPreference1 = ourNode.mPathPreference1;
   clonedNode.mPathPreference2 = ourNode.mPathPreference2;
-  
+
   clonedNode.mResolvedCog = ourNode.mResolvedCog;
   clonedNode.mPath = ourNode.mPath;
   clonedNode.mRelativeTo = ourNode.mRelativeTo;
   return newPath;
 }
 
-Cog* CogPath::RestoreLink(CogInitializer& initializer, Component* component, StringParam propertyName)
+Cog* CogPath::RestoreLink(CogInitializer& initializer,
+                          Component* component,
+                          StringParam propertyName)
 {
-  return RestoreLink(initializer, component->GetOwner(), component, propertyName);
+  return RestoreLink(
+      initializer, component->GetOwner(), component, propertyName);
 }
 
-Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, StringParam propertyName)
+Cog* CogPath::RestoreLink(CogInitializer& initializer,
+                          Cog* owner,
+                          StringParam propertyName)
 {
   return RestoreLink(initializer, owner, nullptr, propertyName);
 }
 
-Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, Component* component, StringParam propertyName)
+Cog* CogPath::RestoreLink(CogInitializer& initializer,
+                          Cog* owner,
+                          Component* component,
+                          StringParam propertyName)
 {
-  ErrorIf(owner == nullptr, "Invalid owner given to CogPath's RestoreLink (needed for relative paths)");
+  ErrorIf(owner == nullptr,
+          "Invalid owner given to CogPath's RestoreLink (needed for relative "
+          "paths)");
   if (owner != nullptr)
     mSharedNode->mRelativeTo = owner;
 
-  Zero::RestoreLink(&mSharedNode->mResolvedCog, initializer.Context, component, propertyName, GetErrorOnDirectLinkFail());
+  Zero::RestoreLink(&mSharedNode->mResolvedCog,
+                    initializer.Context,
+                    component,
+                    propertyName,
+                    GetErrorOnDirectLinkFail());
   Cog* newCog = mSharedNode->mResolvedCog;
   if (newCog)
   {
@@ -931,7 +1007,13 @@ Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, Component* co
     {
       Status status;
       status.IgnoreMessage = true;
-      mSharedNode->mPath = ComputePath(status, mSharedNode->mRelativeTo, cog, mSharedNode->mPathPreference0, mSharedNode->mPathPreference1, mSharedNode->mPathPreference2, false);
+      mSharedNode->mPath = ComputePath(status,
+                                       mSharedNode->mRelativeTo,
+                                       cog,
+                                       mSharedNode->mPathPreference0,
+                                       mSharedNode->mPathPreference1,
+                                       mSharedNode->mPathPreference2,
+                                       false);
     }
   }
 
@@ -955,7 +1037,7 @@ void CogPath::DispatchEvent(StringParam eventId, Event* event)
 
 Cog* CogPath::GetCogOrNull(CogPath* path)
 {
-  if(path == nullptr)
+  if (path == nullptr)
     return nullptr;
 
   return path->GetCog();
@@ -977,18 +1059,25 @@ void CogPath::SetCog(Cog* to)
   CogPathNode* node = mSharedNode;
   node->mResolvedCog = to;
 
-  if(GetUpdatePathOnCogChange())
+  if (GetUpdatePathOnCogChange())
   {
     Cog* from = node->mRelativeTo;
-  
+
     Status status;
     status.IgnoreMessage = (GetErrorOnPathCantCompute() == false);
-    String newPath = ComputePath(status, from, to, node->mPathPreference0, node->mPathPreference1, node->mPathPreference2, false);
+    String newPath = ComputePath(status,
+                                 from,
+                                 to,
+                                 node->mPathPreference0,
+                                 node->mPathPreference1,
+                                 node->mPathPreference2,
+                                 false);
 
-    if(OperationQueue::IsListeningForSideEffects() && !OperationQueue::sSideEffectContextStack.Empty())
+    if (OperationQueue::IsListeningForSideEffects() &&
+        !OperationQueue::sSideEffectContextStack.Empty())
       OperationQueue::RegisterSideEffect(this, "Path", node->mPath);
 
-    if(status.Succeeded())
+    if (status.Succeeded())
     {
       node->mPath = newPath;
     }
@@ -999,13 +1088,14 @@ void CogPath::SetCog(Cog* to)
         DoNotifyException("Cog Path", status.Message);
     }
 
-    // Before dispatching an event and allowing other modifications to happen, we need to pop our
-    // local context to allow for properties outside of the context of this CogPath to be made
+    // Before dispatching an event and allowing other modifications to happen,
+    // we need to pop our local context to allow for properties outside of the
+    // context of this CogPath to be made
     if (OperationQueue::IsListeningForSideEffects())
       OperationQueue::PopSubPropertyContext();
   }
 
-  if(previousCog != to)
+  if (previousCog != to)
   {
     CogPathEvent toSend(*this);
     DispatchEvent(Events::CogPathCogChanged, &toSend);
@@ -1015,7 +1105,7 @@ void CogPath::SetCog(Cog* to)
 Cog* CogPath::GetCog()
 {
   Cog* cog = mSharedNode->mResolvedCog;
-  if(cog)
+  if (cog)
     return cog;
 
   Refresh();
@@ -1026,8 +1116,8 @@ void CogPath::SetPath(StringParam path)
 {
   CogPathNode* node = mSharedNode;
 
-  // Don't do anything if the path is already set. If you have duplicate names, this could cause
-  // the cog path to resolve to the wrong object
+  // Don't do anything if the path is already set. If you have duplicate names,
+  // this could cause the cog path to resolve to the wrong object
   if (node->mPath == path)
     return;
 
@@ -1148,9 +1238,10 @@ bool CogPath::Refresh()
   Status status;
 
   Cog* previousCog = mSharedNode->mResolvedCog;
-  mSharedNode->mResolvedCog = CogPath::Resolve(status, relativeTo, mSharedNode->mPath, false);
+  mSharedNode->mResolvedCog =
+      CogPath::Resolve(status, relativeTo, mSharedNode->mPath, false);
 
-  if(status.Failed())
+  if (status.Failed())
   {
     // If there was a parse error with the path...
     if (status.Context == CogPathErrorCode::ParseError)
@@ -1158,10 +1249,14 @@ bool CogPath::Refresh()
       DoNotifyException("Cog Path", status.Message);
     }
     // Otherwise, if the object could not be resolved...
-    else if (GetErrorOnResolveToNull() && !mSharedNode->mFlags.IsSet(CogPathFlags::ResolvedNullErrorOccurred))
+    else if (GetErrorOnResolveToNull() &&
+             !mSharedNode->mFlags.IsSet(
+                 CogPathFlags::ResolvedNullErrorOccurred))
     {
       mSharedNode->mFlags.SetFlag(CogPathFlags::ResolvedNullErrorOccurred);
-      String message = BuildString(status.Message, "\nYou can disable 'ErrorOnResolveToNull' to stop this message from occurring");
+      String message = BuildString(status.Message,
+                                   "\nYou can disable 'ErrorOnResolveToNull' "
+                                   "to stop this message from occurring");
       DoNotifyException("Cog Path", message);
     }
   }
@@ -1170,7 +1265,7 @@ bool CogPath::Refresh()
     mSharedNode->mFlags.ClearFlag(CogPathFlags::ResolvedNullErrorOccurred);
   }
 
-  if(previousCog != mSharedNode->mResolvedCog)
+  if (previousCog != mSharedNode->mResolvedCog)
   {
     CogPathEvent toSend(*this);
     DispatchEvent(Events::CogPathCogChanged, &toSend);
@@ -1217,85 +1312,107 @@ CogPathEvent::CogPathEvent(CogPath& path)
 
 namespace Serialization
 {
-  bool Policy<CogPath>::Serialize(Serializer& stream, cstr fieldName, CogPath& path)
+bool Policy<CogPath>::Serialize(Serializer& stream,
+                                cstr fieldName,
+                                CogPath& path)
+{
+  CogPathNode& value = path.mSharedNode;
+
+  // Support for the old version of CogPaths, which just used strings (only for
+  // loading) We also support changing CogIds into CogPaths
+  if (stream.GetMode() == SerializerMode::Loading &&
+      stream.GetClass() == SerializerClass::DataTreeLoader)
   {
-    CogPathNode& value = path.mSharedNode;
+    DataTreeLoader& loader = (DataTreeLoader&)stream;
+    DataNode* parent = loader.GetCurrent();
+    DataNode* node = parent->FindChildWithName(fieldName);
 
-    // Support for the old version of CogPaths, which just used strings (only for loading)
-    // We also support changing CogIds into CogPaths
-    if(stream.GetMode() == SerializerMode::Loading && stream.GetClass() == SerializerClass::DataTreeLoader)
+    if (node != nullptr && node->mNodeType == DataNodeType::Value)
     {
-      DataTreeLoader& loader = (DataTreeLoader&)stream;
-      DataNode* parent = loader.GetCurrent();
-      DataNode* node = parent->FindChildWithName(fieldName);
-
-      if (node != nullptr && node->mNodeType == DataNodeType::Value)
+      // If the old type name was 'CogPath', then the string portion was just
+      // the path
+      if (node->mTypeName == "CogPath" || node->mTypeName == "string")
       {
-        // If the old type name was 'CogPath', then the string portion was just the path
-        if(node->mTypeName == "CogPath" || node->mTypeName == "string")
-        {
-          value.mPath = node->mTextValue;
+        value.mPath = node->mTextValue;
+        return true;
+      }
+      // If this is a cog-id then use the policy to de-serialize it
+      else if (node->mTypeName == "uint")
+      {
+        // Also see if this is just a cog-id being upgraded
+        if (Policy<CogId>::Serialize(stream, fieldName, value.mResolvedCog))
           return true;
-        }
-        // If this is a cog-id then use the policy to de-serialize it
-        else if (node->mTypeName == "uint")
-        {
-          // Also see if this is just a cog-id being upgraded
-          if (Policy<CogId>::Serialize(stream, fieldName, value.mResolvedCog))
-            return true;
-        }
       }
     }
-
-    // Cog paths save full objects which include the path, any flags we set, and the actual cog we resolved to
-    // It may or may not be possible to resolve the cog, but we attempt to save it anyways
-    // Note that this means we must have OnAllObjectsCreated call on the CogPath, just like a serialized CogId
-    if (stream.Start("CogPath", fieldName, StructureType::Object))
-    {
-      stream.SerializeFieldDefault("Path", value.mPath, String());
-      SerializeBits(stream, value.mFlags, CogPathFlags::Names, 0,
-        CogPathFlags::UpdateCogOnPathChange | CogPathFlags::UpdatePathOnCogChange | CogPathFlags::UpdateCogOnInitialize);
-      stream.SerializeFieldDefault("Cog", value.mResolvedCog, CogId(), "ResolvedCog");
-      if (!stream.EnumField("CogPathPreference", "PathPreference0", (uint&)value.mPathPreference0, ZilchTypeId(CogPathPreference::Enum)))
-        value.mPathPreference0 = CogPathPreference::CogRelative;
-      if (!stream.EnumField("CogPathPreference", "PathPreference1", (uint&)value.mPathPreference1, ZilchTypeId(CogPathPreference::Enum)))
-        value.mPathPreference1 = CogPathPreference::SpaceRelative;
-      if (!stream.EnumField("CogPathPreference", "PathPreference2", (uint&)value.mPathPreference2, ZilchTypeId(CogPathPreference::Enum)))
-        value.mPathPreference2 = CogPathPreference::Absolute;
-      stream.End("CogPath", StructureType::Object);
-      
-      // Never load the 'error already occurred' flag, as we just use that so we don't spam the user with exceptions
-      if(stream.GetMode() == SerializerMode::Loading)
-        value.mFlags.ClearFlag(CogPathFlags::ResolvedNullErrorOccurred);
-      return true;
-    }
-    return false;
   }
+
+  // Cog paths save full objects which include the path, any flags we set, and
+  // the actual cog we resolved to It may or may not be possible to resolve the
+  // cog, but we attempt to save it anyways Note that this means we must have
+  // OnAllObjectsCreated call on the CogPath, just like a serialized CogId
+  if (stream.Start("CogPath", fieldName, StructureType::Object))
+  {
+    stream.SerializeFieldDefault("Path", value.mPath, String());
+    SerializeBits(stream,
+                  value.mFlags,
+                  CogPathFlags::Names,
+                  0,
+                  CogPathFlags::UpdateCogOnPathChange |
+                      CogPathFlags::UpdatePathOnCogChange |
+                      CogPathFlags::UpdateCogOnInitialize);
+    stream.SerializeFieldDefault(
+        "Cog", value.mResolvedCog, CogId(), "ResolvedCog");
+    if (!stream.EnumField("CogPathPreference",
+                          "PathPreference0",
+                          (uint&)value.mPathPreference0,
+                          ZilchTypeId(CogPathPreference::Enum)))
+      value.mPathPreference0 = CogPathPreference::CogRelative;
+    if (!stream.EnumField("CogPathPreference",
+                          "PathPreference1",
+                          (uint&)value.mPathPreference1,
+                          ZilchTypeId(CogPathPreference::Enum)))
+      value.mPathPreference1 = CogPathPreference::SpaceRelative;
+    if (!stream.EnumField("CogPathPreference",
+                          "PathPreference2",
+                          (uint&)value.mPathPreference2,
+                          ZilchTypeId(CogPathPreference::Enum)))
+      value.mPathPreference2 = CogPathPreference::Absolute;
+    stream.End("CogPath", StructureType::Object);
+
+    // Never load the 'error already occurred' flag, as we just use that so we
+    // don't spam the user with exceptions
+    if (stream.GetMode() == SerializerMode::Loading)
+      value.mFlags.ClearFlag(CogPathFlags::ResolvedNullErrorOccurred);
+    return true;
+  }
+  return false;
 }
+} // namespace Serialization
 
 ZilchDefineType(CogPathMetaComposition, builder, type)
 {
-
 }
 
-CogPathMetaComposition::CogPathMetaComposition()
-  : MetaComposition(ZilchTypeId(Component))
+CogPathMetaComposition::CogPathMetaComposition() :
+    MetaComposition(ZilchTypeId(Component))
 {
   mSupportsComponentAddition = false;
 }
 
-Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
+Handle CogPathMetaComposition::GetComponent(HandleParam owner,
+                                            BoundType* componentType)
 {
   CogPath* cogPath = owner.Get<CogPath*>();
   if (Cog* cog = cogPath->GetCog())
   {
     Handle component = cog->QueryComponentType(componentType);
 
-    // If the component is null, the constructed Handle will be of type 'Component' instead of
-    // the actual type we were querying. This can cause a problem when building a Zilch::Call.
-    // Don't do this if the component is valid though otherwise component interfaces won't
-    // work (the base class type will be set over the derived class type).
-    if(component.IsNull())
+    // If the component is null, the constructed Handle will be of type
+    // 'Component' instead of the actual type we were querying. This can cause a
+    // problem when building a Zilch::Call. Don't do this if the component is
+    // valid though otherwise component interfaces won't work (the base class
+    // type will be set over the derived class type).
+    if (component.IsNull())
       component.StoredType = componentType;
     return component;
   }
@@ -1303,48 +1420,56 @@ Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* compon
   return nullptr;
 }
 
-bool CogPathMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
+bool CogPathMetaComposition::CanAddComponent(HandleParam owner,
+                                             BoundType* typeToAdd,
+                                             AddInfo* info)
 {
   return false;
 }
 
-bool CogPathMetaSerialization::SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
+bool CogPathMetaSerialization::SerializeReferenceProperty(
+    BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
 {
   // If we are saving a cog path
   if (serializer.GetMode() == SerializerMode::Saving)
   {
     CogPath* pathInVariant = value.Get<CogPath*>();
 
-    // If the cog path is not valid inside the variant we got, that either means we didn't yet have the variant, or it was of another type
+    // If the cog path is not valid inside the variant we got, that either means
+    // we didn't yet have the variant, or it was of another type
     if (pathInVariant == nullptr)
       value = CogPath();
 
     // Save out the cog path
     pathInVariant = value.Get<CogPath*>();
-    Serialization::Policy<CogPath>::Serialize(serializer, fieldName, *pathInVariant);
+    Serialization::Policy<CogPath>::Serialize(
+        serializer, fieldName, *pathInVariant);
     return true;
   }
   // Otherwise, we are loading up a cog path!
   else
   {
-    // If we already have the cog path, then we really just want to directly serialize into that one
-    // This should even work if its on a script object since the internals are reference counted/shared
+    // If we already have the cog path, then we really just want to directly
+    // serialize into that one This should even work if its on a script object
+    // since the internals are reference counted/shared
     CogPath* pathInVariant = value.Get<CogPath*>();
-    if(pathInVariant == nullptr)
+    if (pathInVariant == nullptr)
     {
       // Allocate the CogPath for them if they don't have it already.
-      pathInVariant = new CogPath( );
+      pathInVariant = new CogPath();
       value = pathInVariant;
     }
     else
     {
-      // For now, we always clone the path when loading to make sure we never share instances of a path
-      value = pathInVariant->Clone( );
-      pathInVariant = value.Get<CogPath*>( );
+      // For now, we always clone the path when loading to make sure we never
+      // share instances of a path
+      value = pathInVariant->Clone();
+      pathInVariant = value.Get<CogPath*>();
     }
 
     // Now run our serialization on the path
-    Serialization::Policy<CogPath>::Serialize(serializer, fieldName, *pathInVariant);
+    Serialization::Policy<CogPath>::Serialize(
+        serializer, fieldName, *pathInVariant);
 
     return true;
   }
@@ -1361,4 +1486,4 @@ bool CogPathMetaSerialization::ConvertFromString(StringParam input, Any& output)
   return true;
 }
 
-}
+} // namespace Zero

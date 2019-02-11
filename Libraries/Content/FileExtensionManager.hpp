@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -24,14 +19,17 @@ public:
   /// Assumes the given extension does not start with '.'
   bool IsValidExtensionNoDot(StringParam extension) const;
 
-  /// All available extensions for this type. The types are assumed to not start with a '.'
-  /// and the first one in the list is assumed to be the default value.
+  /// All available extensions for this type. The types are assumed to not start
+  /// with a '.' and the first one in the list is assumed to be the default
+  /// value.
   Array<String> mExtensions;
 };
 
-/// Helper singleton to manage default and legacy type extension for given "file types".
-/// The TypeExtensionEntries are not safe to store as they're pointers into a container. Maybe fix later?
-class FileExtensionManager : public LazySingleton<FileExtensionManager, EventObject>
+/// Helper singleton to manage default and legacy type extension for given "file
+/// types". The TypeExtensionEntries are not safe to store as they're pointers
+/// into a container. Maybe fix later?
+class FileExtensionManager
+    : public LazySingleton<FileExtensionManager, EventObject>
 {
 public:
   FileExtensionManager();
@@ -42,4 +40,4 @@ public:
   HashMap<String, TypeExtensionEntry> mTypeExtensionEntries;
 };
 
-}//namespace Zero
+} // namespace Zero

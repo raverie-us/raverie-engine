@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Manipulator.hpp
-/// Declaration of the MouseManipulation and Gripper.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------- Mouse Manipulation
 
 // Helper class for implementing Drag, and other mouse manipulations.
 // Provides relative supports functions and a basic interface.
@@ -34,31 +25,35 @@ public:
 
   /// Generic Mouse Events.
   virtual void OnMouseUp(MouseEvent* event);
-  virtual void OnMouseDown(MouseEvent* event){}
-  virtual void OnMouseMove(MouseEvent* event){}
+  virtual void OnMouseDown(MouseEvent* event)
+  {
+  }
+  virtual void OnMouseMove(MouseEvent* event)
+  {
+  }
 
   /// Named MouseUp Events.
-  virtual void OnLeftMouseUp(MouseEvent* event) {};
+  virtual void OnLeftMouseUp(MouseEvent* event){};
   virtual void OnRightMouseUp(MouseEvent* event){};
   virtual void OnMiddleMouseUp(MouseEvent* event){};
 
   /// Named MouseDownEvents
-  virtual void OnLeftMouseDown(MouseEvent* event) {};
-  virtual void OnRightMouseDown(MouseEvent* event) {};
-  virtual void OnMiddleMouseDown(MouseEvent* event) {};
+  virtual void OnLeftMouseDown(MouseEvent* event){};
+  virtual void OnRightMouseDown(MouseEvent* event){};
+  virtual void OnMiddleMouseDown(MouseEvent* event){};
 
   virtual void OnMouseUpdate(MouseEvent* event){};
-  virtual void OnMouseScroll(MouseEvent* event) {};
-  
+  virtual void OnMouseScroll(MouseEvent* event){};
+
   /// Keyboard Events.
   virtual void OnKeyDown(KeyboardEvent* event){};
   virtual void OnKeyUp(KeyboardEvent* event){};
-  virtual void OnKeyRepeated(KeyboardEvent* event) {};
+  virtual void OnKeyRepeated(KeyboardEvent* event){};
 
   virtual void OnTargetDestroy(MouseEvent* event){};
   virtual void OnUpdate(UpdateEvent* event){};
 
-protected: 
+protected:
   /// For relative positions and focus will be
   /// returned to this widget.
   HandleOf<Composite> mRelative;
@@ -67,7 +62,6 @@ protected:
   MouseButtons::Enum mButton;
 };
 
-//---------------------------------------------------------- Sizing Manipulation
 class SizingManipulation : public MouseManipulation
 {
 public:
@@ -82,7 +76,6 @@ public:
   void OnMouseUp(MouseEvent* event) override;
 };
 
-//---------------------------------------------------------------------- Gripper
 class Gripper : public Widget
 {
 public:
@@ -90,7 +83,10 @@ public:
   Gripper(Composite* parent, Widget* sizeTarget, DockMode::Enum gripDirection);
   ~Gripper();
 
-  Vec2 Measure(LayoutArea& data) override { return mSize; }
+  Vec2 Measure(LayoutArea& data) override
+  {
+    return mSize;
+  }
 
   Widget* mTarget;
   DockMode::Enum mGripDirection;
@@ -117,4 +113,4 @@ public:
   void UpdateTransform() override;
 };
 
-}//namespace Zero
+} // namespace Zero

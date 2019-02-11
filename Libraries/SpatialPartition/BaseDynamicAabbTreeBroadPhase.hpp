@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DynamicAabbTreeBroadPhase.hpp
-/// Declaration of the DynamicAabbTreeBroadPhase class.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,9 +6,9 @@ namespace Zero
 
 DeclareEnum3(BaseDAabbTreeSelfQuery, SingleObject, FullTree, PartialTree);
 
-///The base code for any DynamicAabbTreeBroadPhase class.
-///Used to reduce code duplication since the core functionality
-///only differs by the internal tree type.
+/// The base code for any DynamicAabbTreeBroadPhase class.
+/// Used to reduce code duplication since the core functionality
+/// only differs by the internal tree type.
 template <typename TreeType>
 class BaseDynamicAabbTreeBroadPhase : public IBroadPhase
 {
@@ -43,7 +35,7 @@ public:
   virtual void Query(BroadPhaseData& data, ClientPairArray& results);
   virtual void BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results);
 
-  virtual void Construct() {};
+  virtual void Construct(){};
 
   virtual void CastRay(CastDataParam data, ProxyCastResults& results);
   virtual void CastSegment(CastDataParam data, ProxyCastResults& results);
@@ -53,40 +45,41 @@ public:
 
   virtual void RegisterCollisions();
 
-  virtual void Cleanup() {};
+  virtual void Cleanup(){};
 
 public:
   void QueryCallback(void* thisProxy, void* otherProxy);
-protected:
 
+protected:
   void SingleObjectQuery();
   void PartialTreeQuery();
   void FullTreeQuery();
 
-  ///Converts the internal HashSet into the array.
+  /// Converts the internal HashSet into the array.
   void FillOutResults(ClientPairArray& results);
 
   void AddQueryResult(Aabb& aabb);
 
   TreeType mTree;
-  ///The proxy currently being queried. Used to avoid self pairs.
+  /// The proxy currently being queried. Used to avoid self pairs.
   NodeType* mQueryNode;
 
-  // Temporarily Disabled: Leaks in the editor because nothing cleans up mNodesToQuery
-  ///The proxies that have been inserted/updated since the last query.
-  ///We only need to return pairs where at least 1 object is moving.
-  //Array<NodeType*> mNodesToQuery;
+  // Temporarily Disabled: Leaks in the editor because nothing cleans up
+  // mNodesToQuery
+  /// The proxies that have been inserted/updated since the last query.
+  /// We only need to return pairs where at least 1 object is moving.
+  // Array<NodeType*> mNodesToQuery;
 
   typedef HashSet<NodePointerPair> PairSet;
   PairSet mPairs;
 
   BaseDAabbTreeSelfQuery::Enum mSelfQueryPolicy;
 
-  //remove later or something...
+  // remove later or something...
   uint mSingleObjectCountQuery;
   uint mBuildTreeObjectCountQuery;
 };
 
-}//namespace Zero
+} // namespace Zero
 
 #include "SpatialPartition/BaseDynamicAabbTreeBroadPhase.inl"

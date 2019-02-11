@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AddRemoveListBox.hpp
-/// Declaration of the AddRemoveListBox Widget.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,11 +6,11 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(AddPressed);
-  DeclareEvent(RemovePressed);
-  DeclareEvent(MoveUpPressed);
-  DeclareEvent(MoveDownPressed);
-}
+DeclareEvent(AddPressed);
+DeclareEvent(RemovePressed);
+DeclareEvent(MoveUpPressed);
+DeclareEvent(MoveDownPressed);
+} // namespace Events
 
 class ListSource;
 class ListBox;
@@ -64,4 +56,4 @@ private:
   IconButton* mMoveDownButton;
 };
 
-}//namespace Zero
+} // namespace Zero

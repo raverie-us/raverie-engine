@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceSystem.hpp
-/// Declaration of the Resource System.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,23 +9,22 @@ class ResourceEvent;
 
 namespace Events
 {
-  DeclareEvent(ResourcesLoaded);
-  DeclareEvent(ResourcesUnloaded);
-  DeclareEvent(PackagedStarted);
-  DeclareEvent(PackagedFinished);
-}
+DeclareEvent(ResourcesLoaded);
+DeclareEvent(ResourcesUnloaded);
+DeclareEvent(PackagedStarted);
+DeclareEvent(PackagedFinished);
+} // namespace Events
 
 // How the content item is edited in the editor
-DeclareEnum3(ContentEditMode, 
-   // Can not be edited.
-   NoEdit,
-   // Edit the resource directly (usually a DataResource)
-   // The content item has a one to one relationship with a resource
-   ResourceObject,
-   // Edit the content item (usually multiple resources or binary)
-   ContentItem);
+DeclareEnum3(ContentEditMode,
+             // Can not be edited.
+             NoEdit,
+             // Edit the resource directly (usually a DataResource)
+             // The content item has a one to one relationship with a resource
+             ResourceObject,
+             // Edit the content item (usually multiple resources or binary)
+             ContentItem);
 
-//-------------------------------------------------------- Resource System
 
 /// ResourceSystem Contains all resource managers.
 class ResourceSystem : public EventObject
@@ -43,7 +34,7 @@ public:
 
   ResourceSystem();
   static void Initialize();
-  
+
   // Add a resource manager
   void RegisterManager(ResourceManager* manager);
 
@@ -55,12 +46,13 @@ public:
 
   // Load a resource package from a file.
   ResourceLibrary* LoadPackageFile(StringParam fileName);
-  
+
   // Load a resource package
   ResourceLibrary* LoadPackage(Status& status, ResourcePackage* package);
 
   // Reload all resource in package into resource library.
-  void ReloadPackage(ResourceLibrary* resourceLibrary, ResourcePackage* package);
+  void ReloadPackage(ResourceLibrary* resourceLibrary,
+                     ResourcePackage* package);
 
   // Unload all resource libraries
   void UnloadAll();
@@ -70,11 +62,15 @@ public:
   // Find resource with their name or name and id string
   Resource* GetResourceByName(StringParam resourceIdAndName);
   // Find a resource with a given type and name
-  Resource* GetResourceByTypeAndName(StringParam resourceType, StringParam resourceName);
+  Resource* GetResourceByTypeAndName(StringParam resourceType,
+                                     StringParam resourceName);
   // Find a resource library
   ResourceLibrary* GetResourceLibrary(StringParam name);
 
-  void LoadIntoLibrary(Status& status, ResourceLibrary* resourceLibrary, ResourcePackage* resourcePackage, bool isNew);
+  void LoadIntoLibrary(Status& status,
+                       ResourceLibrary* resourceLibrary,
+                       ResourcePackage* resourcePackage,
+                       bool isNew);
 
   void OnResourcesLoaded(ResourceEvent* event);
 
@@ -83,31 +79,31 @@ public:
   // Resources that were modified in the editor.
   HashSet<ResourceId> mModifiedResources;
 
-  //Map of resource library names to resource libraries
+  // Map of resource library names to resource libraries
   typedef OrderedHashMap<String, ResourceLibrary*> LoadedSetMap;
   LoadedSetMap LoadedResourceLibraries;
 
-  //Map of resource type names to managers
+  // Map of resource type names to managers
   typedef HashMap<String, ResourceManager*> ManagerMapType;
   ManagerMapType Managers;
 
-  //Map of ResourceId to loaded resources
+  // Map of ResourceId to loaded resources
   typedef HashMap<ResourceId, Resource*> ResourceIdMapType;
   ResourceIdMapType ResourceIdMap;
 
-  //Map of document names to document resources. The text resources are a
-  //separate resource list for editing a text files and find/replace.
+  // Map of document names to document resources. The text resources are a
+  // separate resource list for editing a text files and find/replace.
   typedef HashMap<String, ResourceId> TextResourceMap;
   TextResourceMap TextResources;
 
-//private:
+  // private:
   HandleOf<Resource> LoadEntry(Status& status, ResourceEntry& entry);
   void ReloadEntry(Resource* resource, ResourceEntry& entry);
 
-  //Whether or not to print every resource that is loaded
-  bool mDetailedResources; 
+  // Whether or not to print every resource that is loaded
+  bool mDetailedResources;
 
-  //Map of resource type names to loaders
+  // Map of resource type names to loaders
   typedef HashMap<String, ResourceLoader*> LoaderMapType;
   typedef LoaderMapType::range LoaderRange;
   LoaderMapType mLoaderMap;
@@ -117,7 +113,7 @@ public:
 
 namespace Z
 {
-  extern ResourceSystem* gResources;
+extern ResourceSystem* gResources;
 }
 
-}//namespace Zero
+} // namespace Zero

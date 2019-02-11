@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentItem.cpp
-///
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -19,7 +11,9 @@ ZilchDefineType(ContentItem, builder, type)
   ZilchBindGetterProperty(Name);
 }
 
-void ContentItemHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
+void ContentItemHandleManager::ObjectToHandle(const byte* object,
+                                              BoundType* type,
+                                              Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;
@@ -30,7 +24,8 @@ void ContentItemHandleManager::ObjectToHandle(const byte* object, BoundType* typ
 
 byte* ContentItemHandleManager::HandleToObject(const Handle& handle)
 {
-  return (byte*)Z::gContentSystem->LoadedItems.FindValue(handle.HandleU32, nullptr);
+  return (byte*)Z::gContentSystem->LoadedItems.FindValue(handle.HandleU32,
+                                                         nullptr);
 }
 
 ContentItem::ContentItem()
@@ -64,15 +59,17 @@ void ContentItem::SaveContent()
 {
   ErrorIf(EditMode == ContentEditMode::NoEdit, "Can not save. No edit type.");
 
-  if(EditMode == ContentEditMode::ResourceObject)
+  if (EditMode == ContentEditMode::ResourceObject)
   {
-    //Ask the resource to save itself
+    // Ask the resource to save itself
     Resource* resource = Z::gResources->GetResource(mRuntimeResource);
-    ErrorIf(resource == nullptr, "Resource has been removed but this content item still refers to it.");
+    ErrorIf(
+        resource == nullptr,
+        "Resource has been removed but this content item still refers to it.");
 
-    if(resource)
+    if (resource)
     {
-      if(Z::gContentSystem->mHistoryEnabled)
+      if (Z::gContentSystem->mHistoryEnabled)
       {
         String backUpPath = Z::gContentSystem->GetHistoryPath(mLibrary);
         BackUpFile(backUpPath, GetFullPath());
@@ -81,17 +78,15 @@ void ContentItem::SaveContent()
     }
   }
 
-  //Save the meta file
+  // Save the meta file
   SaveMetaFile();
 }
-
 
 void ContentItem::SaveMetaFile()
 {
   String metaFilePath = GetMetaFilePath();
   SaveToDataFile(*this, metaFilePath);
 }
-
 
 String ContentItem::GetMetaFilePath()
 {
@@ -130,7 +125,7 @@ void ContentItem::GetTags(HashSet<String>& tags)
 void ContentItem::SetTag(StringParam tag)
 {
   ContentTags* contentTags = this->has(ContentTags);
-  if(contentTags == nullptr)
+  if (contentTags == nullptr)
   {
     contentTags = new ContentTags();
     AddComponent(contentTags);
@@ -142,11 +137,11 @@ void ContentItem::SetTag(StringParam tag)
 
 void ContentItem::SetTags(HashSet<String>& tags)
 {
-  if(tags.Empty())
+  if (tags.Empty())
     return;
 
   ContentTags* contentTags = this->has(ContentTags);
-  if(contentTags == nullptr)
+  if (contentTags == nullptr)
   {
     contentTags = new ContentTags();
     AddComponent(contentTags);
@@ -162,10 +157,10 @@ void ContentItem::SetTags(HashSet<String>& tags)
 void ContentItem::RemoveTags(HashSet<String>& tags)
 {
   ContentTags* contentTags = this->has(ContentTags);
-  if(contentTags == nullptr)
+  if (contentTags == nullptr)
     return;
 
-  forRange(String& tag, tags.All())
+  forRange(String & tag, tags.All())
   {
     contentTags->mTags.Erase(tag);
   }
@@ -174,7 +169,7 @@ void ContentItem::RemoveTags(HashSet<String>& tags)
 bool ContentItem::HasTag(StringParam tag)
 {
   ContentTags* contentTags = this->has(ContentTags);
-  if(contentTags)
+  if (contentTags)
     return contentTags->mTags.Contains(tag);
   return false;
 }
@@ -182,14 +177,14 @@ bool ContentItem::HasTag(StringParam tag)
 Object* ContentItem::GetEditingObject(Resource* resource)
 {
   ErrorIf(EditMode == ContentEditMode::NoEdit, "Can not edit. No edit type.");
-  if(EditMode == ContentEditMode::ResourceObject)
+  if (EditMode == ContentEditMode::ResourceObject)
   {
     if (resource == nullptr)
       return Z::gResources->GetResource(mRuntimeResource);
 
     BoundType* resourceType = ZilchVirtualTypeId(resource);
-    
-    forRange(Property* prop, resourceType->GetProperties())
+
+    forRange(Property * prop, resourceType->GetProperties())
     {
       if (prop->HasAttribute(PropertyAttributes::cProperty))
         return resource;
@@ -212,18 +207,16 @@ void ContentItem::BuildContent()
 
 void ContentItem::BuildListing(ResourceListing& listing)
 {
-
 }
 
 void ContentItem::Serialize(Serializer& stream)
 {
-
 }
 
 void ContentItem::Initialize(ContentLibrary* library)
 {
   mLibrary = library;
-  if(library)
+  if (library)
     library->AddContentItem(this);
   OnInitialize();
 }
@@ -235,26 +228,24 @@ ContentComponent* ContentItem::QueryComponentId(BoundType* typeId)
 
 void ContentItem::OnInitialize()
 {
-
 }
 
-//------------------------------------------------------------------------- Resource Meta Operations
-//**************************************************************************************************
+//Resource Meta Operations
 ZilchDefineType(ContentItemMetaOperations, builder, type)
 {
-
 }
 
-//**************************************************************************************************
-void ContentItemMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
+void ContentItemMetaOperations::ObjectModified(HandleParam object,
+                                               bool intermediateChange)
 {
   MetaOperations::ObjectModified(object, intermediateChange);
 
-  if(!intermediateChange)
+  if (!intermediateChange)
   {
-    ContentItem* contentItem = object.Get<ContentItem*>(GetOptions::AssertOnNull);
+    ContentItem* contentItem =
+        object.Get<ContentItem*>(GetOptions::AssertOnNull);
     Z::gContentSystem->mModifiedContentItems.Insert(contentItem->Id);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

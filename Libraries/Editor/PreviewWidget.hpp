@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TileView.hpp
-/// Declaration of the TileView and supporting classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,18 +6,17 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(PreviewObjectChanged);
+DeclareEvent(PreviewObjectChanged);
 }
 
 DeclareEnum3(PreviewImportance,
-             None,    // No useful way to display element
-             Simple,  // Decorative or just a icon not very useful
-             High);   // Needed to be able to edit object
+             None,   // No useful way to display element
+             Simple, // Decorative or just a icon not very useful
+             High);  // Needed to be able to edit object
 
-//--------------------------------------------------- Preview Widget Initializer
 struct PreviewWidgetInitializer
 {
-  PreviewWidgetInitializer() : Area(nullptr), Interactive(false) {};
+  PreviewWidgetInitializer() : Area(nullptr), Interactive(false){};
   Composite* Area;
   String Name;
   Handle Object;
@@ -34,7 +25,6 @@ struct PreviewWidgetInitializer
 
 DeclareEnum3(PreviewAnimate, None, MouseOver, Always);
 
-//--------------------------------------------------------------- Preview Widget
 class PreviewWidget : public Composite
 {
 public:
@@ -43,9 +33,17 @@ public:
   PreviewWidget(Composite* parent);
   PreviewWidget(PreviewWidgetInitializer& initializer);
 
-  virtual void AnimatePreview(PreviewAnimate::Enum value) {}
-  virtual Handle GetEditObject() { return Handle(); }
-  virtual void SetInteractive(bool interactive) { mInteractive = interactive; };
+  virtual void AnimatePreview(PreviewAnimate::Enum value)
+  {
+  }
+  virtual Handle GetEditObject()
+  {
+    return Handle();
+  }
+  virtual void SetInteractive(bool interactive)
+  {
+    mInteractive = interactive;
+  };
 
   /// Widget Interface.
   void UpdateTransform() override;
@@ -57,15 +55,16 @@ public:
   bool mInteractive;
 };
 
-//--------------------------------------------------------- Preview Widget Group
 class PreviewWidgetGroup : public PreviewWidget
 {
 public:
   PreviewWidgetGroup(Composite* parent);
   PreviewWidgetGroup(Composite* parent, StringParam name);
 
-  PreviewWidget* AddPreviewWidget(StringParam name, HandleParam instance,
-                                  PreviewImportance::Enum minImportance = PreviewImportance::None);
+  PreviewWidget* AddPreviewWidget(
+      StringParam name,
+      HandleParam instance,
+      PreviewImportance::Enum minImportance = PreviewImportance::None);
   void AnimatePreview(PreviewAnimate::Enum value) override;
 
   /// Widget Interface.
@@ -77,29 +76,34 @@ public:
   Array<PreviewWidget*> mPreviewWidgets;
 };
 
-template<typename type>
+template <typename type>
 PreviewWidget* CreatePreviewWidgetT(PreviewWidgetInitializer& initializer)
 {
   return new type(initializer);
 }
 
-typedef PreviewWidget* (*CreatePreviewWidget)(PreviewWidgetInitializer& initializer);
+typedef PreviewWidget* (*CreatePreviewWidget)(
+    PreviewWidgetInitializer& initializer);
 
-//-------------------------------------------------------- Preview Widget Creator
+//Creator
 struct PreviewWidgetCreator
 {
-  PreviewWidgetCreator()
-    :Importance(PreviewImportance::None), Creator(nullptr) {}
-  PreviewWidgetCreator(PreviewImportance::Enum importance, CreatePreviewWidget creator)
-    :Importance(importance), Creator(creator)
-  {}
+  PreviewWidgetCreator() : Importance(PreviewImportance::None), Creator(nullptr)
+  {
+  }
+  PreviewWidgetCreator(PreviewImportance::Enum importance,
+                       CreatePreviewWidget creator) :
+      Importance(importance),
+      Creator(creator)
+  {
+  }
   PreviewImportance::Enum Importance;
   CreatePreviewWidget Creator;
 };
 
-//------------------------------------------------------- Preview Widget Factory
 /// PreviewWidgetFactory can make preview widgets
-class PreviewWidgetFactory : public ExplicitSingleton<PreviewWidgetFactory, Object>
+class PreviewWidgetFactory
+    : public ExplicitSingleton<PreviewWidgetFactory, Object>
 {
 public:
   ZilchDeclareType(PreviewWidgetFactory, TypeCopyMode::ReferenceType);
@@ -112,15 +116,16 @@ public:
   }
 };
 
-//------------------------------------------------------- Resource Preview
 class ResourcePreview
 {
 public:
-  static PreviewWidget* CreatePreviewWidget(Composite* parent, StringParam name,
-                                            HandleParam instance,
-                                            PreviewImportance::Enum minImportance = PreviewImportance::None);
+  static PreviewWidget* CreatePreviewWidget(
+      Composite* parent,
+      StringParam name,
+      HandleParam instance,
+      PreviewImportance::Enum minImportance = PreviewImportance::None);
 
   static PreviewImportance::Enum GetPreviewImportance(BoundType* resourceType);
 };
 
-}//namespace Zero
+} // namespace Zero

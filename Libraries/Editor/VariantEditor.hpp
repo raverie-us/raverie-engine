@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file VariantEditor.hpp
-/// Defines value editors used by the columns in the tree view.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,19 +6,19 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(TextUpdated);
+DeclareEvent(TextUpdated);
 } // namespace Events
 
-///Simple event for general signals.
+/// Simple event for general signals.
 class TextUpdatedEvent : public Event
 {
 public:
   ZilchDeclareType(TextUpdatedEvent, TypeCopyMode::ReferenceType);
 
-  TextUpdatedEvent(Object* source) : mSource(source), mChangeAccepted(false) {};
-  
+  TextUpdatedEvent(Object* source) : mSource(source), mChangeAccepted(false){};
+
   Object* GetSource();
-  
+
   Object* mSource;
   bool mChangeAccepted;
 };
@@ -54,26 +46,28 @@ public:
   Array<String> mCustomIcons;
 };
 
-//--------------------------------------------------------------- Variant Editor
 class ValueEditor : public Composite
 {
 public:
-  ValueEditor(Composite* parent, bool editable = false) 
-    : Composite(parent), Editable(editable)
-  {};
-  
-  virtual void Edit(){}
-  virtual void SetVariant(AnyParam variant)=0;
-  virtual void GetVariant(Any& variant)=0;
+  ValueEditor(Composite* parent, bool editable = false) :
+      Composite(parent),
+      Editable(editable){};
+
+  virtual void Edit()
+  {
+  }
+  virtual void SetVariant(AnyParam variant) = 0;
+  virtual void GetVariant(Any& variant) = 0;
 
   /// The object to connect to for dragging the row (such as the name text).
-  virtual void GetDragWidgets(Array<Widget*>& widgets) { }
+  virtual void GetDragWidgets(Array<Widget*>& widgets)
+  {
+  }
 
   String Name;
   bool Editable;
 };
 
-//------------------------------------------------------------------ Text Editor
 class InPlaceTextEditor : public ValueEditor
 {
 public:
@@ -108,7 +102,6 @@ public:
   Array<Element*> mCustomIcons;
 };
 
-//--------------------------------------------------------- Value Editor Factory
 const String cDefaultValueEditor = "TextEditor";
 const String cDefaultResourceEditor = "ResourceEditor";
 const String cDefaultIconEditor = "IconEditor";
@@ -118,7 +111,9 @@ class ValueEditorFactory : public ExplicitSingleton<ValueEditorFactory, Object>
 {
 public:
   /// Typedefs
-  typedef ValueEditor* (*ValueEditorCreator)(Composite* parent, AnyParam data, u32 flags);
+  typedef ValueEditor* (*ValueEditorCreator)(Composite* parent,
+                                             AnyParam data,
+                                             u32 flags);
 
   /// Meta Initialization.
   ZilchDeclareType(ValueEditorFactory, TypeCopyMode::ReferenceType);
@@ -130,11 +125,12 @@ public:
   void RegisterEditor(StringParam type, ValueEditorCreator creator);
 
   /// Gets an editor based on the given type.
-  ValueEditor* GetEditor(StringParam type, Composite* parent, AnyParam data, u32 flags);
+  ValueEditor*
+  GetEditor(StringParam type, Composite* parent, AnyParam data, u32 flags);
 
 private:
   /// Stores all creators.
   HashMap<String, ValueEditorCreator> mRegisteredEditors;
 };
 
-}//namespace Zero
+} // namespace Zero

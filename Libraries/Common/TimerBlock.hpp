@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TimerBlock.hpp
-/// Simple timer block used for profiling.
-///
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 namespace Zero
 {
@@ -15,11 +7,10 @@ class TimerBlock
 {
 public:
   String Name;
-  TimerBlock(StringParam name)
-    :Name(name)
+  TimerBlock(StringParam name) : Name(name)
   {
   }
-  
+
   ~TimerBlock()
   {
     float time = (float)timer.UpdateAndGetTime();
@@ -32,8 +23,7 @@ class PreciseTimerBlock
 {
 public:
   String Name;
-  PreciseTimerBlock(StringParam name)
-    :Name(name)
+  PreciseTimerBlock(StringParam name) : Name(name)
   {
   }
 
@@ -50,7 +40,6 @@ public:
 class HitchDetector
 {
 public:
-
   HitchDetector(float maxTime) : mMaxTime(maxTime)
   {
   }
@@ -69,4 +58,4 @@ private:
   Timer mTimer;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Startup/StartupStandard.hpp"
@@ -23,7 +18,7 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} // namespace Zero
 
 #include "ForwardDeclarations.hpp"
 
@@ -38,7 +33,6 @@ public:
 #include "LauncherWindow.hpp"
 #include "ProjectCache.hpp"
 #include "TagFiltering.hpp"
-
 
 // Widgets
 #include "BuildStatus.hpp"
@@ -55,4 +49,3 @@ public:
 
 #include "LauncherStartup.hpp"
 #include "LauncherCrashCallbacks.hpp"
-

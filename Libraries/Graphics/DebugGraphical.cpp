@@ -1,19 +1,16 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 ZilchDefineType(DebugGraphical, builder, type)
 {
   ZeroBindInterface(Graphical);
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-//**************************************************************************************************
 void DebugGraphical::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
@@ -21,15 +18,14 @@ void DebugGraphical::Initialize(CogInitializer& initializer)
   GetReceiver()->Disconnect(Events::ShaderInputsModified);
 }
 
-//**************************************************************************************************
 Aabb DebugGraphical::GetLocalAabb()
 {
   // stub
   return Aabb();
 }
 
-//**************************************************************************************************
-void DebugGraphical::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
+void DebugGraphical::ExtractFrameData(FrameNode& frameNode,
+                                      FrameBlock& frameBlock)
 {
   frameNode.mRenderingType = RenderingType::Streamed;
   frameNode.mCoreVertexType = CoreVertexType::Streamed;
@@ -49,24 +45,24 @@ void DebugGraphical::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlo
   frameNode.mBlendSettingsOverride = false;
 }
 
-//**************************************************************************************************
 void DebugGraphical::AddToSpace()
 {
   mGraphicsSpace->AddDebugGraphical(this);
 }
 
-//**************************************************************************************************
 ZilchDefineType(DebugGraphicalPrimitive, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-//**************************************************************************************************
-void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
+void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode,
+                                              ViewBlock& viewBlock,
+                                              FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
-  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices =
+      frameBlock.mRenderQueues->mStreamedVertices;
 
   viewNode.mLocalToView = Mat4::cIdentity;
   viewNode.mLocalToViewNormal = Mat3::cIdentity;
@@ -77,58 +73,59 @@ void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& vie
   viewNode.mStreamedVertexCount = 0;
 
   Debug::DebugVertexArray vertices;
-  Debug::DebugViewData viewData =
-  {
-    viewBlock.mEyePosition,
-    viewBlock.mEyeDirection,
-    viewBlock.mEyeUp,
-    viewBlock.mFieldOfView,
-    viewBlock.mOrthographicSize,
-    viewBlock.mOrthographic,
+  Debug::DebugViewData viewData = {
+      viewBlock.mEyePosition,
+      viewBlock.mEyeDirection,
+      viewBlock.mEyeUp,
+      viewBlock.mFieldOfView,
+      viewBlock.mOrthographicSize,
+      viewBlock.mOrthographic,
   };
 
-  forRange (Debug::DebugDrawObjectAny& debugObject, mDebugObjects.All())
+  forRange(Debug::DebugDrawObjectAny & debugObject, mDebugObjects.All())
   {
     debugObject->GetVertices(viewData, vertices);
   }
 
-  forRange (Debug::Vertex& vertex, vertices.All())
+  forRange(Debug::Vertex & vertex, vertices.All())
   {
     StreamedVertex streamed;
-    streamed.mPosition = Math::TransformPoint(viewBlock.mWorldToView, vertex.mPosition);
+    streamed.mPosition =
+        Math::TransformPoint(viewBlock.mWorldToView, vertex.mPosition);
     streamed.mColor = vertex.mColor;
     streamedVertices.PushBack(streamed);
   }
 
-  viewNode.mStreamedVertexCount = streamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount =
+      streamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
-//**************************************************************************************************
 ZilchDefineType(DebugGraphicalThickLine, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-//**************************************************************************************************
-void DebugGraphicalThickLine::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
+void DebugGraphicalThickLine::ExtractFrameData(FrameNode& frameNode,
+                                               FrameBlock& frameBlock)
 {
   DebugGraphicalPrimitive::ExtractFrameData(frameNode, frameBlock);
   frameNode.mBorderThickness = 2.0f;
 }
 
-//**************************************************************************************************
 ZilchDefineType(DebugGraphicalText, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-//**************************************************************************************************
-void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
+void DebugGraphicalText::ExtractViewData(ViewNode& viewNode,
+                                         ViewBlock& viewBlock,
+                                         FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
-  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices =
+      frameBlock.mRenderQueues->mStreamedVertices;
 
   viewNode.mStreamedVertexType = mPrimitiveType;
   viewNode.mStreamedVertexStart = streamedVertices.Size();
@@ -141,7 +138,7 @@ void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBloc
   RenderFont* font = FontManager::GetDefault()->GetRenderFont(64);
   frameNode.mTextureRenderData = font->mTexture->mRenderData;
 
-  forRange (Debug::DebugDrawObjectAny& debugObject, mDebugObjects.All())
+  forRange(Debug::DebugDrawObjectAny & debugObject, mDebugObjects.All())
   {
     Debug::Text* debugText = (Debug::Text*)&*debugObject;
     TextAlign::Enum align = TextAlign::Left;
@@ -157,8 +154,15 @@ void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBloc
 
     uint debugTextStart = streamedVertices.Size();
 
-    FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, debugText->mColor);
-    ProcessTextRange(fontProcessor, font, debugText->mText, startLocation, align, Vec2(1, -1) * pixelScale, widths * 2.0f);
+    FontProcessor fontProcessor(
+        frameBlock.mRenderQueues, &viewNode, debugText->mColor);
+    ProcessTextRange(fontProcessor,
+                     font,
+                     debugText->mText,
+                     startLocation,
+                     align,
+                     Vec2(1, -1) * pixelScale,
+                     widths * 2.0f);
 
     uint debugTextEnd = streamedVertices.Size();
 
@@ -168,12 +172,18 @@ void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBloc
 
     float viewScale = 1.0f;
     if (debugText->GetViewScaled())
-      viewScale = (debugText->mPosition - viewBlock.mEyePosition).Length() * Debug::cViewScale;
+      viewScale = (debugText->mPosition - viewBlock.mEyePosition).Length() *
+                  Debug::cViewScale;
 
     // Local to View transform is different for each debug text object
-    Mat4 localToView = viewBlock.mWorldToView * Math::BuildTransform(debugText->mPosition, rotation, Vec3(1, 1, 1) * viewScale);
+    Mat4 localToView = viewBlock.mWorldToView *
+                       Math::BuildTransform(debugText->mPosition,
+                                            rotation,
+                                            Vec3(1, 1, 1) * viewScale);
     for (uint i = debugTextStart; i < debugTextEnd; ++i)
-      streamedVertices[i].mPosition = Math::TransformPoint(localToView, streamedVertices[i].mPosition + debugText->mViewScaleOffset);
+      streamedVertices[i].mPosition = Math::TransformPoint(
+          localToView,
+          streamedVertices[i].mPosition + debugText->mViewScaleOffset);
   }
 }
 

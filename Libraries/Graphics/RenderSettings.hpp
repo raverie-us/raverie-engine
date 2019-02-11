@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -44,14 +43,18 @@ public:
   void Clear();
 
   // Internally used by all the overloads.
-  void Add(String fragmentName, String inputName, ShaderInputType::Enum type, AnyParam value);
+  void Add(String fragmentName,
+           String inputName,
+           ShaderInputType::Enum type,
+           AnyParam value);
 
   // Map of fragmentName and inputName to inputs.
   typedef Pair<String, String> StringPair;
   HashMap<StringPair, ShaderInput> mShaderInputs;
 };
 
-/// Settings for how pixel shader outputs are combined with the RenderTarget's current values.
+/// Settings for how pixel shader outputs are combined with the RenderTarget's
+/// current values.
 class GraphicsBlendSettings : public BlendSettings
 {
 public:
@@ -85,7 +88,8 @@ public:
 
   GraphicsRenderSettings();
 
-  /// Settings to use when blending shader output with the ColorTarget, implicitly BlendSettings0.
+  /// Settings to use when blending shader output with the ColorTarget,
+  /// implicitly BlendSettings0.
   GraphicsBlendSettings* GetBlendSettings();
   void SetBlendSettings(GraphicsBlendSettings* blendSettings);
 
@@ -99,7 +103,8 @@ public:
   /// The RenderTarget of a color format to output to, implicitly RenderTarget0.
   void SetColorTarget(RenderTarget* target);
 
-  /// The RenderTarget of a depth format to use as a depth buffer for depth/stencil testing.
+  /// The RenderTarget of a depth format to use as a depth buffer for
+  /// depth/stencil testing.
   void SetDepthTarget(RenderTarget* target);
 
   /// Shader input values to be globally overridden for all objects/shaders.
@@ -118,7 +123,8 @@ public:
   void ClearAll();
 };
 
-// MultiRenderTarget classes are just for providing an uncluttered script interface for RenderSettings
+// MultiRenderTarget classes are just for providing an uncluttered script
+// interface for RenderSettings
 
 /// Indexable interface for settings ColorTargets.
 class ColorTargetMrt : public ThreadSafeReferenceCounted
@@ -126,7 +132,10 @@ class ColorTargetMrt : public ThreadSafeReferenceCounted
 public:
   ZilchDeclareType(ColorTargetMrt, TypeCopyMode::ReferenceType);
 
-  ColorTargetMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings) {}
+  ColorTargetMrt(HandleOf<GraphicsRenderSettings> renderSettings) :
+      mRenderSettings(renderSettings)
+  {
+  }
 
   /// Set the RenderTarget to use for the given index.
   void Set(uint index, RenderTarget* colorTarget);
@@ -140,7 +149,10 @@ class BlendSettingsMrt : public ThreadSafeReferenceCounted
 public:
   ZilchDeclareType(BlendSettingsMrt, TypeCopyMode::ReferenceType);
 
-  BlendSettingsMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings) {}
+  BlendSettingsMrt(HandleOf<GraphicsRenderSettings> renderSettings) :
+      mRenderSettings(renderSettings)
+  {
+  }
 
   /// Get the current BlendSettings for a color target at the given index.
   GraphicsBlendSettings* Get(uint index);
@@ -159,24 +171,34 @@ public:
   MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings);
 
   /// Indexable interface for settings ColorTargets.
-  ColorTargetMrt* GetColorTargetMrt() { return &mColorTargetMrt; }
+  ColorTargetMrt* GetColorTargetMrt()
+  {
+    return &mColorTargetMrt;
+  }
   /// Indexable interface for settings BlendSettings.
-  BlendSettingsMrt* GetBlendSettingsMrt() { return &mBlendSettingsMrt; }
-
-#define Getter(type, name, index)                                                              \
-  type* Get##name##index()                                                                     \
-  {                                                                                            \
-    if (mRenderSettings.IsNull())                                                              \
-    { DoNotifyException("Error", "Attempting to call member on null object."); return nullptr; }\
-    return mRenderSettings->Get##name##Mrt(index);                                             \
+  BlendSettingsMrt* GetBlendSettingsMrt()
+  {
+    return &mBlendSettingsMrt;
   }
 
-#define Setter(type, name, index)                                                     \
-  void Set##name##index(type* value)                                                  \
-  {                                                                                   \
-    if (mRenderSettings.IsNull())                                                     \
-      return DoNotifyException("Error", "Attempting to call member on null object."); \
-    mRenderSettings->Set##name##Mrt(value, index);                                    \
+#define Getter(type, name, index)                                              \
+  type* Get##name##index()                                                     \
+  {                                                                            \
+    if (mRenderSettings.IsNull())                                              \
+    {                                                                          \
+      DoNotifyException("Error", "Attempting to call member on null object."); \
+      return nullptr;                                                          \
+    }                                                                          \
+    return mRenderSettings->Get##name##Mrt(index);                             \
+  }
+
+#define Setter(type, name, index)                                              \
+  void Set##name##index(type* value)                                           \
+  {                                                                            \
+    if (mRenderSettings.IsNull())                                              \
+      return DoNotifyException("Error",                                        \
+                               "Attempting to call member on null object.");   \
+    mRenderSettings->Set##name##Mrt(value, index);                             \
   }
 
   // TODO: Macro comments for auto-doc
@@ -198,28 +220,36 @@ public:
   Setter(RenderTarget, ColorTarget, 7);
 
   // TODO: Macro comments for auto-doc
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 0);
   Setter(GraphicsBlendSettings, BlendSettings, 0);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 1);
   Setter(GraphicsBlendSettings, BlendSettings, 1);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 2);
   Setter(GraphicsBlendSettings, BlendSettings, 2);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 3);
   Setter(GraphicsBlendSettings, BlendSettings, 3);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 4);
   Setter(GraphicsBlendSettings, BlendSettings, 4);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 5);
   Setter(GraphicsBlendSettings, BlendSettings, 5);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 6);
   Setter(GraphicsBlendSettings, BlendSettings, 6);
-  /// GraphicsBlendSettings for a RenderTarget at a specific index for configuring multiple render targets.
+  /// GraphicsBlendSettings for a RenderTarget at a specific index for
+  /// configuring multiple render targets.
   Getter(GraphicsBlendSettings, BlendSettings, 7);
   Setter(GraphicsBlendSettings, BlendSettings, 7);
 

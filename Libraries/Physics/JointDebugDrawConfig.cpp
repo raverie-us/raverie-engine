@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2012-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -28,12 +23,10 @@ ZilchDefineType(JointDebugDrawConfig, builder, type)
 
 JointDebugDrawConfig::JointDebugDrawConfig()
 {
-
 }
 
 JointDebugDrawConfig::~JointDebugDrawConfig()
 {
-
 }
 
 void JointDebugDrawConfig::Serialize(Serializer& stream)
@@ -72,4 +65,4 @@ void JointDebugDrawConfig::SetObjectBPerspective(bool state)
   mPerspective.SetState(JointDebugDrawConfigFlags::ObjectBPerspective, state);
 }
 
-}//namespace Zero
+} // namespace Zero

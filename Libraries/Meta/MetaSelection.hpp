@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MetaSelection.hpp
-/// Declaration of the MetaSelection class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,15 +6,17 @@ namespace Zero
 /// Events
 namespace Events
 {
-  DeclareEvent(SelectionChanged);
-  DeclareEvent(SelectionFinal);
-}
+DeclareEvent(SelectionChanged);
+DeclareEvent(SelectionFinal);
+} // namespace Events
 
 /// Sent with the SelectionChanged event
 struct SelectionChangedEvent : public Event
 {
   ZilchDeclareType(SelectionChangedEvent, TypeCopyMode::ReferenceType);
-  SelectionChangedEvent() : Updated(false) {}
+  SelectionChangedEvent() : Updated(false)
+  {
+  }
   MetaSelection* Selection;
 
   /// The two most common ways the selection changes is when the user
@@ -37,7 +31,6 @@ struct SelectionChangedEvent : public Event
 
 DeclareEnum2(SendsEvents, False, True);
 
-//---------------------------------------------------------------- MetaSelection
 class MetaSelection : public ReferenceCountedEventObject
 {
 public:
@@ -104,7 +97,7 @@ public:
   /// Should be called when all modifications are made to the selection.
   void FinalSelectionChanged();
   /// Should be called when the instances in the selection were updated
-  /// (when Archetypes are rebuilt). See the 'Updated' comment on the 
+  /// (when Archetypes are rebuilt). See the 'Updated' comment on the
   /// 'SelectionChangedEvent' class.
   void FinalSelectionUpdated();
 
@@ -122,7 +115,10 @@ public:
     const Handle& Front();
     void PopFront();
     bool Empty();
-    range& All() { return *this; }
+    range& All()
+    {
+      return *this;
+    }
 
   private:
     /// Finds the next valid object in the range and updates mCurrent.
@@ -146,7 +142,10 @@ public:
     type*& Front();
     void PopFront();
     bool Empty();
-    rangeType& All() { return *this; }
+    rangeType& All()
+    {
+      return *this;
+    }
 
     /// Finds the next valid object in the range and updates mCurrent.
     void FindNextValidObject();
@@ -154,7 +153,8 @@ public:
     SetRange mRange;
     type* mCurrent;
   };
-  ///Finds the first object in the selection that Contains the given component type.
+  /// Finds the first object in the selection that Contains the given component
+  /// type.
   template <typename CompositionType, typename ComponentType>
   ComponentType* FindInSelection()
   {
@@ -168,7 +168,8 @@ public:
       // If the object is valid...
       if (selected != nullptr)
       {
-        // If this object has the component type we're looking for then return it
+        // If this object has the component type we're looking for then return
+        // it
         ComponentType* component = selected->template has(ComponentType);
         if (component != nullptr)
           return component;
@@ -202,8 +203,7 @@ public:
 
 typedef MetaSelection::rangeType<Handle> MetaRangeType;
 
-//******************************************************************************
-template<typename type>
+template <typename type>
 void MetaSelection::FilterComponentType(Array<type*>& destination)
 {
   // The maximum amount of object we could have
@@ -216,22 +216,23 @@ void MetaSelection::FilterComponentType(Array<type*>& destination)
   forRange(Handle object, All())
   {
     // Look up the component on the object
-    MetaComposition* composition = object.StoredType->HasInherited<MetaComposition>();
+    MetaComposition* composition =
+        object.StoredType->HasInherited<MetaComposition>();
 
     // The selection can include things in the library view
     // (such as archetypes) which don't have a valid composition
-    if(composition == NULL)
+    if (composition == NULL)
       continue;
 
-    Handle component = composition->GetComponent(object.Get<Object>(), componentType);
+    Handle component =
+        composition->GetComponent(object.Get<Object>(), componentType);
 
     // Add it if it's valid
-    if(component.IsNotNull())
+    if (component.IsNotNull())
       destination.PushBack(component.Get<type*>());
   }
 }
 
-//******************************************************************************
 template <typename type>
 bool MetaSelection::ContainsType()
 {
@@ -239,50 +240,42 @@ bool MetaSelection::ContainsType()
   return !r.Empty();
 }
 
-//******************************************************************************
-template<typename type>
+template <typename type>
 type* MetaSelection::GetPrimaryAs()
 {
   return GetPrimary().Get<type*>();
 }
 
-//----------------------------------------------------------- SelectionRangeType
-//******************************************************************************
 template <typename type>
-MetaSelection::rangeType<type>::rangeType(SetRange range)
-  : mRange(range)
+MetaSelection::rangeType<type>::rangeType(SetRange range) : mRange(range)
 {
   FindNextValidObject();
 }
 
-//******************************************************************************
 template <typename type>
 type*& MetaSelection::rangeType<type>::Front()
 {
   return mCurrent;
 }
 
-//******************************************************************************
 template <typename type>
 void MetaSelection::rangeType<type>::PopFront()
 {
   FindNextValidObject();
 }
 
-//******************************************************************************
 template <typename type>
 bool MetaSelection::rangeType<type>::Empty()
 {
   return mCurrent == nullptr;
 }
 
-//******************************************************************************
 template <typename type>
 void MetaSelection::rangeType<type>::FindNextValidObject()
 {
   mCurrent = nullptr;
 
-  while(!mRange.Empty())
+  while (!mRange.Empty())
   {
     // Attempt to resolve the handle
     Handle& instance = mRange.Front();
@@ -296,11 +289,10 @@ void MetaSelection::rangeType<type>::FindNextValidObject()
   }
 }
 
-//******************************************************************************
 template <typename type>
 MetaSelection::rangeType<type> MetaSelection::AllOfType()
 {
   return rangeType<type>(mSelectedObjects.All());
 }
 
-}//namespace Zero
+} // namespace Zero

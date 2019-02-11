@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ColorScheme.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -29,7 +21,10 @@ public:
   String GetActiveScheme();
   void SetActiveScheme(StringParam name);
 
-  String GetSaveName() {return mSaveName;}
+  String GetSaveName()
+  {
+    return mSaveName;
+  }
   void SetSaveName(StringParam newName);
 
   void LoadSchemes();
@@ -71,7 +66,7 @@ public:
   float TextMatchOutlineAlpha;
 };
 
-//Get the global color scheme object
+// Get the global color scheme object
 ColorScheme* GetColorScheme();
 
-}//namespace Zero
+} // namespace Zero

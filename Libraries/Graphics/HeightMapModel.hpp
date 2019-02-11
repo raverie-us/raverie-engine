@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -18,7 +17,9 @@ public:
 class GraphicalHeightPatch
 {
 public:
-  GraphicalHeightPatch() : mWeightTexture(nullptr) {}
+  GraphicalHeightPatch() : mWeightTexture(nullptr)
+  {
+  }
 
   Aabb mLocalAabb;
   HandleOf<Mesh> mMesh;
@@ -30,7 +31,8 @@ public:
   PixelBuffer* mWeightTexture;
 };
 
-/// Generates a graphical mesh from every patch of height data in the HeightMap component.
+/// Generates a graphical mesh from every patch of height data in the HeightMap
+/// component.
 class HeightMapModel : public Graphical
 {
 public:
@@ -46,14 +48,20 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
-  void MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
+  void MidPhaseQuery(Array<GraphicalEntry>& entries,
+                     Camera& camera,
+                     Frustum* frustum) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
   String GetDefaultMaterialName() override;
 
   // Internal
 
-  void AddGraphicalPatchEntry(Array<GraphicalEntry>& entries, GraphicalHeightPatch& graphicalPatch, PatchIndex index);
+  void AddGraphicalPatchEntry(Array<GraphicalEntry>& entries,
+                              GraphicalHeightPatch& graphicalPatch,
+                              PatchIndex index);
 
   void OnPatchAdded(HeightMapEvent* event);
   void OnPatchRemoved(HeightMapEvent* event);

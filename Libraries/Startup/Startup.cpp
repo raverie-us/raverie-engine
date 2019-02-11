@@ -1,29 +1,22 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------------------------ Startup
-//**************************************************************************************************
+//Startup
 Engine* ZeroStartup::Initialize(ZeroStartupSettings& settings)
 {
   InitializeLibraries(settings);
   return InitializeEngine();
 }
 
-//**************************************************************************************************
 void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
 {
   CommonLibrary::Initialize();
 
   // Temporary location for registering handle managers
-  //ZilchRegisterSharedHandleManager(ReferenceCountedHandleManager);
+  // ZilchRegisterSharedHandleManager(ReferenceCountedHandleManager);
   ZilchRegisterSharedHandleManager(CogHandleManager);
   ZilchRegisterSharedHandleManager(ComponentHandleManager);
   ZilchRegisterSharedHandleManager(ResourceHandleManager);
@@ -35,17 +28,19 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   ZeroRegisterHandleManager(ContentComposition);
 
   // Graphics specific
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(ThreadSafeReferenceCounted);
+  ZeroRegisterThreadSafeReferenceCountedHandleManager(
+      ThreadSafeReferenceCounted);
   ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsBlendSettings);
   ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsDepthSettings);
 
   // Setup the core Zilch library
   mZilchSetup = new ZilchSetup(SetupFlags::DoNotShutdownMemory);
 
-  // We need the calling state to be set so we can create Handles for Meta Components
+  // We need the calling state to be set so we can create Handles for Meta
+  // Components
   Zilch::Module module;
   mState = module.Link();
-  
+
 #if !defined(ZeroDebug) && !defined(PLATFORM_EMSCRIPTEN)
   mState->SetTimeout(5);
 #endif
@@ -55,12 +50,14 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   MetaDatabase::Initialize();
 
   // Add the core library to the meta database
-  MetaDatabase::GetInstance()->AddNativeLibrary(Core::GetInstance().GetLibrary());
+  MetaDatabase::GetInstance()->AddNativeLibrary(
+      Core::GetInstance().GetLibrary());
 
   // Initialize Zero Libraries
   PlatformLibrary::Initialize();
   GeometryLibrary::Initialize();
-  // Geometry doesn't know about the Meta Library, so it cannot add itself to the MetaDatabase
+  // Geometry doesn't know about the Meta Library, so it cannot add itself to
+  // the MetaDatabase
   MetaDatabase::GetInstance()->AddNativeLibrary(GeometryLibrary::GetLibrary());
   MetaLibrary::Initialize();
   SerializationLibrary::Initialize();
@@ -83,18 +80,18 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   NativeBindingList::ValidateTypes();
 
   // Load documentation for all native libraries
-  DocumentationLibrary::GetInstance()->LoadDocumentation(FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
+  DocumentationLibrary::GetInstance()->LoadDocumentation(FilePath::Combine(
+      Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
+      "Documentation.data"));
 
   ZPrint("Os: %s\n", Os::GetVersionString().c_str());
 }
 
-//**************************************************************************************************
 Engine* ZeroStartup::InitializeEngine()
 {
   return Z::gEngine;
 }
 
-//**************************************************************************************************
 void ZeroStartup::Shutdown()
 {
   Zero::TimerBlock block("Shutting down Libraries.");
@@ -121,7 +118,7 @@ void ZeroStartup::Shutdown()
   MetaLibrary::Shutdown();
   GeometryLibrary::Shutdown();
   PlatformLibrary::Shutdown();
-  
+
   // ClearLibrary
   ZilchScriptLibrary::GetInstance().ClearLibrary();
 
@@ -164,11 +161,11 @@ void ZeroStartup::Shutdown()
 
   ZilchManager::Destroy();
   MetaDatabase::Destroy();
-  
+
   delete mState;
   delete mZilchSetup;
 
   CommonLibrary::Shutdown();
 }
 
-}//namespace Zero
+} // namespace Zero

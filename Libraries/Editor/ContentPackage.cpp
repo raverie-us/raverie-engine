@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentPackage.cpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -22,16 +15,17 @@ void ContentPackageListing::AddEntry(ContentPackageEntry* entry)
   SortedEntries.PushBack(entry);
 }
 
-void BuildContentPackageListingFromLibrary(ContentPackageListing& listing, ContentLibrary* library)
+void BuildContentPackageListingFromLibrary(ContentPackageListing& listing,
+                                           ContentLibrary* library)
 {
   // Set location to library folder
   listing.Location = library->SourcePath;
 
   // Add a content items in library
-  forRange(ContentItem* item, library->GetContentItems())
+  forRange(ContentItem * item, library->GetContentItems())
   {
     String filename = item->GetFullPath();
-    
+
     ContentPackageEntry* entry = new ContentPackageEntry();
     entry->Active = false;
     entry->File = item->Filename;
@@ -43,20 +37,22 @@ void BuildContentPackageListingFromLibrary(ContentPackageListing& listing, Conte
 
 const String metaExt = "meta";
 
-void LoadContentPackageListing(ContentPackageListing& listing, StringParam filename)
+void LoadContentPackageListing(ContentPackageListing& listing,
+                               StringParam filename)
 {
   // Open up the read only the header information
   Archive archive(ArchiveMode::Decompressing);
   archive.ReadZipFile(ArchiveReadFlags::Entries, filename);
 
   // For every file in the archive
-  forRange(ArchiveEntry& archiveEntry, archive.GetEntries())
+  forRange(ArchiveEntry & archiveEntry, archive.GetEntries())
   {
     StringRange entryName = archiveEntry.Name;
     // Meta files are in the library but not content items
-    if(!(FilePath::GetExtension(entryName) == metaExt))
+    if (!(FilePath::GetExtension(entryName) == metaExt))
     {
-      bool conflicted = Z::gContentSystem->FindContentItemByFileName(entryName) != nullptr;
+      bool conflicted =
+          Z::gContentSystem->FindContentItemByFileName(entryName) != nullptr;
 
       // Only active by default if it's not conflicted
       bool active = !conflicted;
@@ -72,14 +68,15 @@ void LoadContentPackageListing(ContentPackageListing& listing, StringParam filen
   }
 }
 
-void ExportContentPackageListing(ContentPackageListing& listing, StringParam filename)
+void ExportContentPackageListing(ContentPackageListing& listing,
+                                 StringParam filename)
 {
   // Start compressing files to an archive
   Archive archive(ArchiveMode::Compressing);
 
-  forRange(ContentPackageEntry* entry, listing.Entries.Values())
+  forRange(ContentPackageEntry * entry, listing.Entries.Values())
   {
-    if(entry->Active)
+    if (entry->Active)
     {
       String filename = entry->File;
       String metaFilename = BuildString(filename, ".meta");
@@ -98,11 +95,14 @@ void ExportContentPackageListing(ContentPackageListing& listing, StringParam fil
   archive.WriteZipFile(filename);
 }
 
-void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary* library, StringParam filename)
+void ImportContentPackageListing(ContentPackageListing& listing,
+                                 ContentLibrary* library,
+                                 StringParam filename)
 {
   // Reopen file so we can read entries
   File archiveFile;
-  archiveFile.Open(filename.c_str(), FileMode::Read, FileAccessPattern::Sequential);
+  archiveFile.Open(
+      filename.c_str(), FileMode::Read, FileAccessPattern::Sequential);
 
   // Open the archive and read entries
   Archive archive(ArchiveMode::Decompressing);
@@ -112,14 +112,15 @@ void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary*
   String destFolder = library->SourcePath;
   Array<ContentItem*> newContent;
 
-  forRange(ArchiveEntry& archiveEntry, archive.GetEntries())
+  forRange(ArchiveEntry & archiveEntry, archive.GetEntries())
   {
-    ContentPackageEntry* entry = listing.Entries.FindValue(archiveEntry.Name, nullptr);
+    ContentPackageEntry* entry =
+        listing.Entries.FindValue(archiveEntry.Name, nullptr);
 
-    if(entry == nullptr || !entry->Active)
+    if (entry == nullptr || !entry->Active)
       continue;
 
-    // Extract file and meta file 
+    // Extract file and meta file
     String fileName = entry->File;
     String metaFileName = BuildString(fileName, ".meta");
 
@@ -138,18 +139,20 @@ void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary*
     addContent.OnContentFileConflict = ContentFileConflict::Replace;
 
     Status status;
-    ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(status, addContent);
+    ContentItem* newContentItem =
+        Z::gContentSystem->AddContentItemToLibrary(status, addContent);
     DoNotifyStatus(status);
 
     // If the add succeeded store for loading
-    if(status.Succeeded())
+    if (status.Succeeded())
       newContent.PushBack(newContentItem);
     else
-      DoNotifyStatus(status); 
+      DoNotifyStatus(status);
   }
 
   // Build all new content items
-  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(library->Name);
+  ResourceLibrary* resourceLibrary =
+      Z::gResources->GetResourceLibrary(library->Name);
 
   ResourcePackage package;
   Status status;
@@ -158,7 +161,6 @@ void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary*
 
   // Load all resource generated into the active resource library
   Z::gResources->ReloadPackage(resourceLibrary, &package);
-
 }
 
-}//namespace Zero
+} // namespace Zero

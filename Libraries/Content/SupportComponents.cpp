@@ -1,11 +1,5 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-
 
 namespace Zero
 {
@@ -26,11 +20,11 @@ void ContentCopyright::Serialize(Serializer& stream)
 
 ZilchDefineType(ContentHistory, builder, type)
 {
-  //ZilchBindFieldProperty(mRevisions); // METAREFACTOR array
+  // ZilchBindFieldProperty(mRevisions); // METAREFACTOR array
 
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::CallSetDefaults);
-  
+
   ZilchBindFieldProperty(mRevisions);
 }
 
@@ -38,9 +32,10 @@ void ContentHistory::Initialize(ContentComposition* item)
 {
   mOwner = item;
 
-  SourceControl* sourceControl = GetSourceControl(mOwner->mLibrary->SourceControlType);
+  SourceControl* sourceControl =
+      GetSourceControl(mOwner->mLibrary->SourceControlType);
 
-  //get the path to the meta file
+  // get the path to the meta file
   String path = mOwner->GetMetaFilePath();
 
   Status status;
@@ -100,7 +95,6 @@ void ResourceTemplate::Serialize(Serializer& stream)
   SerializeNameDefault(mCategorySortWeight, 100u);
 }
 
-//------------------------------------------------------------------------------
 void CreateSupportContent(ContentSystem* system)
 {
   AddContentComponent<ContentCopyright>(system);
@@ -110,4 +104,4 @@ void CreateSupportContent(ContentSystem* system)
   AddContentComponent<ResourceTemplate>(system);
 }
 
-}// namespace Zero
+} // namespace Zero

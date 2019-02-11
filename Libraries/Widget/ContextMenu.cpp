@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContextMenu.cpp
-/// Implementation of the PopUp.
-///
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,93 +6,82 @@ namespace Zero
 
 namespace MenuUi
 {
-  const cstr cLocation = "EditorUi/Controls/Menu";
-  Tweakable(Vec4, BackgroundColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec2, BorderPadding, Vec2(1,1), cLocation);
+const cstr cLocation = "EditorUi/Controls/Menu";
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec2, BorderPadding, Vec2(1, 1), cLocation);
 
-  Tweakable(Vec4, ItemTextColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ItemBackgroundColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ItemBorderColor, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ItemTextColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ItemBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ItemBorderColor, Vec4(1, 1, 1, 1), cLocation);
 
-  Tweakable(Vec4, ItemSelectedTextColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ItemSelectedBorderColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ItemSelectedBackgroundColor, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ItemSelectedTextColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ItemSelectedBorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ItemSelectedBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
 
-  Tweakable(Vec4, ItemDisabledTextColor, Vec4(1,1,1,1), cLocation);
+Tweakable(Vec4, ItemDisabledTextColor, Vec4(1, 1, 1, 1), cLocation);
 
-  Tweakable(Vec4, MenuBarItemPadding, Vec4(4,4,4,4), cLocation);
-  Tweakable(Vec4, GutterColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, MenuBarItemPadding, Vec4(4, 4, 4, 4), cLocation);
+Tweakable(Vec4, GutterColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace MenuUi
 
 namespace Events
 {
-  DefineEvent(MenuDestroy);
-  DefineEvent(MenuItemSelected);
-  DefineEvent(MenuItemHover);
-  DefineEvent(MouseHoverSibling);
-  DefineEvent(MenuEntryModified);
-  DefineEvent(ContextMenuCreated);
-}
+DefineEvent(MenuDestroy);
+DefineEvent(MenuItemSelected);
+DefineEvent(MenuItemHover);
+DefineEvent(MouseHoverSibling);
+DefineEvent(MenuEntryModified);
+DefineEvent(ContextMenuCreated);
+} // namespace Events
 
-
-//------------------------------------------------------------------------------------------ Context
-//**************************************************************************************************
+//Context
 void Context::Add(HandleParam object)
 {
   mContextMap[object.StoredType->Name] = object;
 }
 
-//**************************************************************************************************
 void Context::Add(HandleParam object, BoundType* overrideType)
 {
   Add(object, overrideType->Name);
 }
 
-//**************************************************************************************************
 void Context::Add(HandleParam object, StringParam overrideName)
 {
   mContextMap[overrideName] = object;
 }
 
-//**************************************************************************************************
 void Context::Add(const Context& context)
 {
   forRange(ContextMap::value_type entry, context.mContextMap.All())
-    Add(entry.second, entry.first);
+      Add(entry.second, entry.first);
 }
 
-//**************************************************************************************************
 void Context::Remove(BoundType* boundType)
 {
   Remove(boundType->Name);
 }
 
-//**************************************************************************************************
 void Context::Remove(StringParam typeName)
 {
   mContextMap.Erase(typeName);
 }
 
-//**************************************************************************************************
 Handle Context::Get(BoundType* boundType)
 {
   return Get(boundType->Name);
 }
 
-//**************************************************************************************************
 Handle Context::Get(StringParam typeName)
 {
   return mContextMap.FindValue(typeName, Handle());
 }
 
-//**************************************************************************************************
 void Context::Clear()
 {
   mContextMap.Clear();
 }
 
-//------------------------------------------------------------ ContextMenuEvent
 ZilchDefineType(ContextMenuEvent, builder, type)
 {
 }
@@ -116,16 +97,19 @@ ContextMenuEvent::ContextMenuEvent(ContextMenuEntry* rootEntry, Handle source)
   Source = source;
 }
 
-//------------------------------------------------------------ ContextMenuEntry
 ZilchDefineType(ContextMenuEntry, builder, type)
 {
   ZeroBindDocumented();
   ZilchBindConstructor();
 
-  ZilchBindOverloadedMethodAs(AddEntry, ZilchInstanceOverload(ContextMenuEntry*, StringParam, bool), "AddEntry");
+  ZilchBindOverloadedMethodAs(
+      AddEntry,
+      ZilchInstanceOverload(ContextMenuEntry*, StringParam, bool),
+      "AddEntry");
   ZilchBindMethod(AddDivider);
   ZilchBindMethod(AddCommandByName);
-  ZilchBindOverloadedMethodAs(RemoveEntry, ZilchInstanceOverload(void, StringParam), "RemoveEntry");
+  ZilchBindOverloadedMethodAs(
+      RemoveEntry, ZilchInstanceOverload(void, StringParam), "RemoveEntry");
 
   ZilchBindMethod(GetEntry);
   ZilchBindMethodAs(GetEntries, "Entries");
@@ -136,12 +120,14 @@ ZilchDefineType(ContextMenuEntry, builder, type)
   ZeroBindEvent(Events::ContextMenuCreated, ContextMenuEvent);
 }
 
-ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon, bool readOnly)
-  : mName(name)
-  , mIcon(icon)
-  , mEnabled(true)
-  , mParent(nullptr)
-  , mReadOnly(readOnly)
+ContextMenuEntry::ContextMenuEntry(StringParam name,
+                                   StringParam icon,
+                                   bool readOnly) :
+    mName(name),
+    mIcon(icon),
+    mEnabled(true),
+    mParent(nullptr),
+    mReadOnly(readOnly)
 {
   ConnectThisTo(this, Events::MenuItemSelected, OnItemSelected);
   ConnectThisTo(this, Events::MenuItemHover, OnItemHover);
@@ -170,7 +156,8 @@ void ContextMenuEntry::OnItemHover(ObjectEvent* e)
 
 void ContextMenuEntry::OnChildMenuClose(ObjectEvent* e)
 {
-  // A sub menu has closed so re-enable closing the parent menu based on mouse distance
+  // A sub menu has closed so re-enable closing the parent menu based on mouse
+  // distance
   ContextMenu* menuClosed = (ContextMenu*)e->Source;
   // If the menu being closed has any children menu close them also
   if (menuClosed->mSubMenu)
@@ -238,7 +225,7 @@ void ContextMenuEntry::RemoveEntry(StringParam name)
 
 void ContextMenuEntry::RemoveEntry(ContextMenuEntry* entry)
 {
-  if(mChildren.EraseValue(entry))
+  if (mChildren.EraseValue(entry))
     delete entry;
 }
 
@@ -253,7 +240,7 @@ void ContextMenuEntry::Clear()
 
 ContextMenuEntry* ContextMenuEntry::GetEntry(StringParam name)
 {
-  forRange(ContextMenuEntry* entry, mChildren)
+  forRange(ContextMenuEntry * entry, mChildren)
   {
     if (entry->mName == name)
       return entry;
@@ -283,7 +270,7 @@ void ContextMenuEntry::CreateSubMenu(ContextMenuItem* menuItem)
 {
   if (!menuItem)
     return;
-  
+
   ContextMenu* parent = (ContextMenu*)menuItem->GetParentMenu();
   if (parent->mSubMenu)
   {
@@ -300,21 +287,23 @@ void ContextMenuEntry::CreateSubMenu(ContextMenuItem* menuItem)
   // When creating a sub menu get the local offset of the item that spawned it
   menu->mSubMenuOffset = menuItem->GetTranslation();
   ConnectThisTo(menu, Events::PopUpClosed, OnChildMenuClose);
-  // Set the new sub menu and parent menu as each others parent and child menu respectively
+  // Set the new sub menu and parent menu as each others parent and child menu
+  // respectively
   parent->mSubMenu = menu;
   menu->mParentMenu = parent;
   menu->mDirty = true;
 
-  // When opening a sub menu disable the parent from closing based on mouse distance
-  // so the sub menu doesn't close when we stray too far from the parent menu
+  // When opening a sub menu disable the parent from closing based on mouse
+  // distance so the sub menu doesn't close when we stray too far from the
+  // parent menu
   parent->mCloseMode = PopUpCloseMode::DisableClose;
 
-  // After creating the sub menu update the parent immediately to properly position and display
-  // the new sub menu
+  // After creating the sub menu update the parent immediately to properly
+  // position and display the new sub menu
   parent->UpdateTransform();
 }
 
-//------------------------------------------------------------ ContextMenuEntryDivider
+//ContextMenuEntryDivider
 ZilchDefineType(ContextMenuEntryDivider, builder, type)
 {
   ZilchBindConstructor();
@@ -327,20 +316,21 @@ Widget* ContextMenuEntryDivider::Create(ContextMenu* parent)
   return item;
 }
 
-//------------------------------------------------------------ ContextMenuEntryCommand
+//ContextMenuEntryCommand
 ZilchDefineType(ContextMenuEntryCommand, builder, type)
 {
-  ZilchFullBindConstructor(builder, type, ContextMenuEntryCommand, "commandName", StringParam);
+  ZilchFullBindConstructor(
+      builder, type, ContextMenuEntryCommand, "commandName", StringParam);
   ZilchBindFieldProperty(mCommandName);
 }
 
-ContextMenuEntryCommand::ContextMenuEntryCommand(Command* command)
-  : mCommand(command)
+ContextMenuEntryCommand::ContextMenuEntryCommand(Command* command) :
+    mCommand(command)
 {
 }
 
-ContextMenuEntryCommand::ContextMenuEntryCommand(StringParam commandName)
-  : mCommand(nullptr),
+ContextMenuEntryCommand::ContextMenuEntryCommand(StringParam commandName) :
+    mCommand(nullptr),
     mCommandName(commandName)
 {
 }
@@ -364,15 +354,16 @@ Widget* ContextMenuEntryCommand::Create(ContextMenu* parent)
   return item;
 }
 
-//------------------------------------------------------------ ContextMenuEntryMenu
+//ContextMenuEntryMenu
 ZilchDefineType(ContextMenuEntryMenu, builder, type)
 {
-  ZilchFullBindConstructor(builder, type, ContextMenuEntryMenu, "menuName", StringParam);
+  ZilchFullBindConstructor(
+      builder, type, ContextMenuEntryMenu, "menuName", StringParam);
   ZilchBindFieldProperty(mMenuName);
 }
 
-ContextMenuEntryMenu::ContextMenuEntryMenu(StringParam menuName)
-  : mMenuName(menuName)
+ContextMenuEntryMenu::ContextMenuEntryMenu(StringParam menuName) :
+    mMenuName(menuName)
 {
 }
 
@@ -380,21 +371,25 @@ Widget* ContextMenuEntryMenu::Create(ContextMenu* parent)
 {
   DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
   CommandManager* commandManager = CommandManager::GetInstance();
-  MenuDefinition* menuDef = commandManager->mMenus.FindValue(mMenuName, nullptr);
-  ReturnIf(menuDef == nullptr, nullptr, "Could not find menu definition '%s'", mMenuName.c_str());
+  MenuDefinition* menuDef =
+      commandManager->mMenus.FindValue(mMenuName, nullptr);
+  ReturnIf(menuDef == nullptr,
+           nullptr,
+           "Could not find menu definition '%s'",
+           mMenuName.c_str());
 
-  forRange(String& name, menuDef->Entries.All())
+  forRange(String & name, menuDef->Entries.All())
   {
     // Divider
     if (name == Divider)
     {
-      //create the divider UI
+      // create the divider UI
       Widget* item = new ContextMenuDivider(parent, MenuUi::GutterColor);
       parent->mItems.PushBack(item);
       continue;
     }
 
-    // Command 
+    // Command
     Command* command = commandManager->GetCommand(name);
     if (command)
     {
@@ -422,30 +417,30 @@ Widget* ContextMenuEntryMenu::Create(ContextMenu* parent)
   return nullptr;
 }
 
-//------------------------------------------------------------ ContextMenuItem
-ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry)
-  : Composite(parent),
+ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry) :
+    Composite(parent),
     mEntry(entry)
 {
   mName = entry->mName;
   mParentMenu = (ContextMenu*)parent;
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquare);
-  
+
   Thickness thickness(MenuUi::BorderPadding);
   thickness.Right = Pixels(2);
-  SetLayout( CreateStackLayout(LayoutDirection::LeftToRight, Vec2(0,0), thickness));
-  
+  SetLayout(
+      CreateStackLayout(LayoutDirection::LeftToRight, Vec2(0, 0), thickness));
+
   mCheck = CreateAttached<Element>("CheckIcon");
-  
+
   mText = new Text(this, cText);
   mText->SetSizing(SizeAxis::X, SizePolicy::Flex, 20);
   mText->SetText(entry->mName);
   mText->SizeToContents();
-  
+
   Spacer* spacer = new Spacer(this);
   spacer->SetSize(Vec2(20, 10));
-  
+
   mShortcut = new Text(this, cText);
   mIcon = nullptr;
 
@@ -453,13 +448,13 @@ ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry)
   mEnabled = mEntry->mEnabled;
   mReadOnly = mEntry->mReadOnly;
   mActive = false;
-  
+
   ConnectThisTo(this, Events::LeftClick, OnLeftClick);
   ConnectThisTo(this, Events::MouseEnter, OnMouseEnter);
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
   ConnectThisTo(this, Events::MouseHover, OnMouseHover);
   ConnectThisTo(this, Events::MouseHoverSibling, OnSiblingHover);
-  
+
   parent->SizeToContents();
 }
 
@@ -513,26 +508,27 @@ void ContextMenuItem::UpdateTransform()
 
   mBackground->SetColor(MenuUi::ItemBackgroundColor);
   mBorder->SetColor(MenuUi::ItemBackgroundColor);
-  
-  if(!mEnabled)
+
+  if (!mEnabled)
   {
     mText->SetColor(MenuUi::ItemDisabledTextColor);
     mShortcut->SetColor(MenuUi::ItemDisabledTextColor);
 
-    // If a reason was provided for why this item was disabled create a tooltip displaying it
+    // If a reason was provided for why this item was disabled create a tooltip
+    // displaying it
     if (mToolTip.IsNull() && !mEntry->mDisabledText.Empty())
     {
       ToolTip* toolTip = new ToolTip(this);
       toolTip->SetTextAndPlace(mEntry->mDisabledText, GetScreenRect());
     }
   }
-  else if(IsMouseOver())
+  else if (IsMouseOver())
   {
     mBackground->SetColor(MenuUi::ItemSelectedBackgroundColor);
     mBorder->SetColor(MenuUi::ItemSelectedBackgroundColor);
   }
 
-  if(mIcon)
+  if (mIcon)
   {
     Vec3 rightSide = Vec3(mSize.x, 0, 0);
     rightSide.x -= mIcon->GetSize().x;
@@ -575,7 +571,10 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
 {
   if (Z::gEngine->IsReadOnly() && !mReadOnly)
   {
-    DoNotifyWarning("Context Menu", BuildString("Cannot execute menu item ", mName, " because we are in read-only mode"));
+    DoNotifyWarning("Context Menu",
+                    BuildString("Cannot execute menu item ",
+                                mName,
+                                " because we are in read-only mode"));
     return;
   }
 
@@ -609,10 +608,9 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
     this->GetParent()->Destroy();
 }
 
-//------------------------------------------------------------ ContextMenu
-ContextMenu::ContextMenu(Widget* target, ContextMenuEntry* rootEntry)
-  : PopUp(target, PopUpCloseMode::MouseDistance, cPopUpNormal),
-    mParentMenu(nullptr), 
+ContextMenu::ContextMenu(Widget* target, ContextMenuEntry* rootEntry) :
+    PopUp(target, PopUpCloseMode::MouseDistance, cPopUpNormal),
+    mParentMenu(nullptr),
     mSubMenu(nullptr),
     mSubMenuOffset(Vec3::cZero)
 {
@@ -627,8 +625,9 @@ ContextMenu::ContextMenu(Widget* target, ContextMenuEntry* rootEntry)
   mDirty = false;
 
   ConnectThisTo(mRootEntry, Events::MenuEntryModified, OnMenuEntriesModified);
-  Thickness thickness(Pixels(2,2));
-  SetLayout( CreateStackLayout(LayoutDirection::TopToBottom, Vec2(0,0), thickness));
+  Thickness thickness(Pixels(2, 2));
+  SetLayout(
+      CreateStackLayout(LayoutDirection::TopToBottom, Vec2(0, 0), thickness));
   SizeToContents();
 }
 
@@ -637,7 +636,7 @@ ContextMenu::~ContextMenu()
   // when the context menu loses focus and deletes itself we need
   // to clear the currently open menu references so returning the menu bar
   // requires you to click an item to open it again
-  if(Widget* target = mTarget.Get<Widget*>())
+  if (Widget* target = mTarget.Get<Widget*>())
   {
     FocusEvent event(nullptr, target);
     target->DispatchEvent(Events::FocusLost, &event);
@@ -656,7 +655,9 @@ void ContextMenu::UpdateTransform()
 
   mGutter->SetColor(MenuUi::GutterColor);
   mGutter->SetSize(Vec2(Pixels(1), mSize.y - Pixels(3)));
-  mGutter->SetTranslation(Vec3(Vec2(MenuUi::BorderPadding).x - Pixels(4), Vec2(MenuUi::BorderPadding).y, 0));
+  mGutter->SetTranslation(Vec3(Vec2(MenuUi::BorderPadding).x - Pixels(4),
+                               Vec2(MenuUi::BorderPadding).y,
+                               0));
 
   if (mSubMenu)
   {
@@ -691,15 +692,16 @@ void ContextMenu::OnDestroy()
 
 void ContextMenu::RebuildUi()
 {
-  // Destroy any ContentMenuItems currently on the ContextMenu and rebuild the UI
-  forRange(Widget* widget, mItems.All())
+  // Destroy any ContentMenuItems currently on the ContextMenu and rebuild the
+  // UI
+  forRange(Widget * widget, mItems.All())
   {
     widget->Destroy();
   }
   mItems.Clear();
 
   // Create the menu UI from our entry list
-  forRange(ContextMenuEntry* entry, mRootEntry->mChildren.All())
+  forRange(ContextMenuEntry * entry, mRootEntry->mChildren.All())
   {
     entry->Create(this);
   }
@@ -719,22 +721,23 @@ void ContextMenu::CloseContextMenu()
   FadeOut(0.05f);
 }
 
-// Similar to shift onto screen, but takes the ContextMenuItem's position and the
-// hierarchy's size and position into account to shift the menu to an appropriate
-// position if there is not enough space
+// Similar to shift onto screen, but takes the ContextMenuItem's position and
+// the hierarchy's size and position into account to shift the menu to an
+// appropriate position if there is not enough space
 void ContextMenu::FitSubMenuOnScreen(Vec3 position, Vec2 parentSize)
 {
   Vec2 screenSize = this->GetParent()->GetSize();
   Vec2 thisSize = this->GetSize();
-  
+
   position += mSubMenuOffset;
 
   if (position.y + thisSize.y > screenSize.y)
     position.y -= (position.y + thisSize.y) - screenSize.y;
-  
+
   if (position.x + thisSize.x > screenSize.x)
   {
-    // Adding 1 pixel shifts the menu so the submenu doesn't overlap the parent menu
+    // Adding 1 pixel shifts the menu so the submenu doesn't overlap the parent
+    // menu
     position.x -= (parentSize.x + thisSize.x) + Pixels(1);
     // When a sub menu is placed on the left side of a parent menu
     // the drop shadow overlaps the parents so just make it clear
@@ -746,7 +749,8 @@ void ContextMenu::FitSubMenuOnScreen(Vec3 position, Vec2 parentSize)
     position.x -= Pixels(3);
   }
 
-  // This is a sub menu and needs to calculate its local position for placement relative to its parent
+  // This is a sub menu and needs to calculate its local position for placement
+  // relative to its parent
   this->SetTranslation(position);
 }
 
@@ -806,7 +810,8 @@ void ContextMenu::OnMouseDown(MouseEvent* event)
   if (!mSubMenu && !mParentMenu && !this->Contains(event->Position))
     FadeOut();
 
-  // If this menu has a child context menu they need to be taken into account for closing this menu
+  // If this menu has a child context menu they need to be taken into account
+  // for closing this menu
   if (!IsPositionInHierarchy(event->Position))
     FadeOut();
 }
@@ -869,16 +874,16 @@ bool ContextMenu::IsFocusInSubMenuRecursive(Widget* focusObject)
   return false;
 }
 
-//------------------------------------------------------------ MenuBarItem
 ZilchDefineType(MenuBarItem, builder, type)
 {
 }
 
-MenuBarItem::MenuBarItem(Composite* parent)
-  :Composite(parent), mContextMenu(nullptr)
+MenuBarItem::MenuBarItem(Composite* parent) :
+    Composite(parent),
+    mContextMenu(nullptr)
 {
   mMenuBar = (MenuBar*)parent;
-  mBackground =  CreateAttached<Element>(cHighlight);
+  mBackground = CreateAttached<Element>(cHighlight);
   mBackground->SetVisible(false);
   mText = new Text(this, cText);
   ConnectThisTo(this, Events::LeftMouseDown, OnLeftMouseDown);
@@ -890,14 +895,16 @@ void MenuBarItem::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   mText->SetSize(mSize);
-  WidgetRect rect = RemoveThicknessRect( Thickness(MenuUi::MenuBarItemPadding), mSize);
+  WidgetRect rect =
+      RemoveThicknessRect(Thickness(MenuUi::MenuBarItemPadding), mSize);
   PlaceWithRect(rect, mText);
   Composite::UpdateTransform();
 }
 
 Vec2 MenuBarItem::GetMinSize()
 {
-  return ExpandSizeByThickness( Thickness(MenuUi::MenuBarItemPadding), mText->GetMinSize());
+  return ExpandSizeByThickness(Thickness(MenuUi::MenuBarItemPadding),
+                               mText->GetMinSize());
 }
 
 void MenuBarItem::OnLeftMouseDown(MouseEvent* mouseEvent)
@@ -921,7 +928,8 @@ void MenuBarItem::OnMouseEnter(MouseEvent* mouseEvent)
 void MenuBarItem::OpenContextMenu()
 {
   ContextMenu* contextMenu = new ContextMenu(this);
-  contextMenu->SetTranslation(this->GetScreenPosition() + Pixels(0, mSize.y, 0));
+  contextMenu->SetTranslation(this->GetScreenPosition() +
+                              Pixels(0, mSize.y, 0));
   contextMenu->AddZeroContextMenu(mName);
   contextMenu->SizeToContents();
   mContextMenu = contextMenu;
@@ -949,7 +957,7 @@ void MenuBarItem::ClearOpenMenu(FocusEvent* event)
     return;
 
   MenuBarItem* openMenuBar = menuBar->mOpenMenuBarItem;
-  if((MenuBarItem*)GetMenuBar()->mOpenMenuBarItem == this)
+  if ((MenuBarItem*)GetMenuBar()->mOpenMenuBarItem == this)
   {
     // null out handles for closed items
     mContextMenu = nullptr;
@@ -957,28 +965,35 @@ void MenuBarItem::ClearOpenMenu(FocusEvent* event)
   }
 }
 
-//------------------------------------------------------------  MenuBar
 ZilchDefineType(MenuBar, builder, type)
 {
 }
 
-MenuBar::MenuBar(Composite* parent)
-  : Composite(parent), mOpenMenuBarItem(nullptr)
+MenuBar::MenuBar(Composite* parent) :
+    Composite(parent),
+    mOpenMenuBarItem(nullptr)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2(9.0f, 0), Thickness(0,0)));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2(9.0f, 0), Thickness(0, 0)));
 }
 
 void MenuBar::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
   MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, nullptr);
-  ReturnIf(menuDef == nullptr,, "Could not find menu definition '%s'", menuName.c_str());
+  ReturnIf(menuDef == nullptr,
+           ,
+           "Could not find menu definition '%s'",
+           menuName.c_str());
 
-  forRange(String& menuName, menuDef->Entries.All())
+  forRange(String & menuName, menuDef->Entries.All())
   {
-    MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, nullptr);
-    ErrorIf(menuDef == nullptr, "Could not find menu definition '%s'", menuName.c_str());
-    if(menuDef)
+    MenuDefinition* menuDef =
+        commandManager->mMenus.FindValue(menuName, nullptr);
+    ErrorIf(menuDef == nullptr,
+            "Could not find menu definition '%s'",
+            menuName.c_str());
+    if (menuDef)
     {
       MenuBarItem* entry = new MenuBarItem(this);
       entry->mText->SetText(menuName);
@@ -992,4 +1007,4 @@ MenuBarItem* MenuBar::GetOpenMenuBarItem()
   return mOpenMenuBarItem;
 }
 
-}
+} // namespace Zero

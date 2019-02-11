@@ -1,21 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ShaderIRAttributeParameter
 ShaderIRAttributeParameter::ShaderIRAttributeParameter()
 {
   mNode = nullptr;
 }
 
-ShaderIRAttributeParameter::ShaderIRAttributeParameter(Zilch::AttributeParameter& param, Zilch::SyntaxNode* node)
+ShaderIRAttributeParameter::ShaderIRAttributeParameter(
+    Zilch::AttributeParameter& param, Zilch::SyntaxNode* node)
 {
   mParameter = param;
   mNode = node;
@@ -82,7 +77,7 @@ void ShaderIRAttributeParameter::SetTypeValue(Zilch::Type* typeValue)
 
 Zilch::CodeLocation* ShaderIRAttributeParameter::GetLocation()
 {
-  if(mNode == nullptr)
+  if (mNode == nullptr)
     return nullptr;
   return &mNode->Location;
 }
@@ -92,30 +87,32 @@ void ShaderIRAttributeParameter::SetLocationNode(Zilch::SyntaxNode* node)
   mNode = node;
 }
 
-Zilch::AttributeParameter& ShaderIRAttributeParameter::GetZilchAttributeParameter()
+Zilch::AttributeParameter&
+ShaderIRAttributeParameter::GetZilchAttributeParameter()
 {
   return mParameter;
 }
 
-//-------------------------------------------------------------------ShaderIRAttribute
 ShaderIRAttribute::ShaderIRAttribute()
 {
   mNode = nullptr;
   mImplicitAttribute = false;
 }
 
-ShaderIRAttribute::ShaderIRAttribute(StringParam attributeName, Zilch::SyntaxNode* locationNode)
+ShaderIRAttribute::ShaderIRAttribute(StringParam attributeName,
+                                     Zilch::SyntaxNode* locationNode)
 {
   mNode = locationNode;
   mAttributeName = attributeName;
   mImplicitAttribute = false;
 }
 
-ShaderIRAttributeParameter* ShaderIRAttribute::FindFirstParameter(StringParam name)
+ShaderIRAttributeParameter*
+ShaderIRAttribute::FindFirstParameter(StringParam name)
 {
-  for(size_t i = 0; i < mParameters.Size(); ++i)
+  for (size_t i = 0; i < mParameters.Size(); ++i)
   {
-    if(mParameters[i].GetName() == name)
+    if (mParameters[i].GetName() == name)
       return &mParameters[i];
   }
   return nullptr;
@@ -123,18 +120,17 @@ ShaderIRAttributeParameter* ShaderIRAttribute::FindFirstParameter(StringParam na
 
 Zilch::CodeLocation* ShaderIRAttribute::GetLocation()
 {
-  if(mNode == nullptr)
+  if (mNode == nullptr)
     return nullptr;
   return &mNode->Location;
 }
 
-//-------------------------------------------------------------------ShaderIRAttributeList
 ShaderIRAttributeList::NamedRange::NamedRange()
 {
-
 }
 
-ShaderIRAttributeList::NamedRange::NamedRange(StringParam attributeToFind, const Range& range)
+ShaderIRAttributeList::NamedRange::NamedRange(StringParam attributeToFind,
+                                              const Range& range)
 {
   mRange = range;
   mAttributeToFind = attributeToFind;
@@ -159,15 +155,16 @@ void ShaderIRAttributeList::NamedRange::PopFront()
 
 void ShaderIRAttributeList::NamedRange::SkipAttributes()
 {
-  while(!mRange.Empty())
+  while (!mRange.Empty())
   {
-    if(mRange.Front().mAttributeName == mAttributeToFind)
+    if (mRange.Front().mAttributeName == mAttributeToFind)
       break;
     mRange.PopFront();
   }
 }
 
-ShaderIRAttribute* ShaderIRAttributeList::AddAttribute(StringParam attributeName, Zilch::AttributeNode* node)
+ShaderIRAttribute* ShaderIRAttributeList::AddAttribute(
+    StringParam attributeName, Zilch::AttributeNode* node)
 {
   ShaderIRAttribute* attribute = &mAttributes.PushBack();
   attribute->mAttributeName = attributeName;
@@ -175,15 +172,17 @@ ShaderIRAttribute* ShaderIRAttributeList::AddAttribute(StringParam attributeName
   return attribute;
 }
 
-ShaderIRAttributeList::NamedRange ShaderIRAttributeList::FindAttributes(StringParam attributeName)
+ShaderIRAttributeList::NamedRange
+ShaderIRAttributeList::FindAttributes(StringParam attributeName)
 {
   return NamedRange(attributeName, mAttributes.All());
 }
 
-ShaderIRAttribute* ShaderIRAttributeList::FindFirstAttribute(StringParam attributeName)
+ShaderIRAttribute*
+ShaderIRAttributeList::FindFirstAttribute(StringParam attributeName)
 {
   NamedRange range = FindAttributes(attributeName);
-  if(!range.Empty())
+  if (!range.Empty())
     return range.Front();
   return nullptr;
 }
@@ -208,5 +207,4 @@ ShaderIRAttribute* ShaderIRAttributeList::operator[](int index)
   return GetAtIndex(index);
 }
 
-}//namespace Zero
-
+} // namespace Zero

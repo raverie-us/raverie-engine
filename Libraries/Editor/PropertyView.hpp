@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyView.hpp
-/// Declaration of PropertyView and supporting classes.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,18 +12,18 @@ class PropertyWidgetObject;
 class UpdateEvent;
 class ContextMenu;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DeclareEvent(NameActivated);
-  DeclareEvent(OpenAdd);
-}//namespace Events
+DeclareEvent(NameActivated);
+DeclareEvent(OpenAdd);
+} // namespace Events
 
-//---------------------------------------------------------------- Property Grid
-typedef Widget* (*CustomIconCreatorFunction)(Composite* parent, HandleParam object,
-                                             Property* metaProperty, void* clientData);
+typedef Widget* (*CustomIconCreatorFunction)(Composite* parent,
+                                             HandleParam object,
+                                             Property* metaProperty,
+                                             void* clientData);
 
-///Property Grid allow the editing of properties on objects.
+/// Property Grid allow the editing of properties on objects.
 class PropertyView : public Composite
 {
 public:
@@ -45,7 +37,8 @@ public:
   /// Set the object to be edited. If no property interface is given,
   /// the current interface (default if none was ever set) will be used.
   /// If it's a multi selection, the instance should be the Selection object.
-  void SetObject(HandleParam instance,  PropertyInterface* newInterface = nullptr);
+  void SetObject(HandleParam instance,
+                 PropertyInterface* newInterface = nullptr);
   void SetObject(Object* object);
 
   /// The object being edited.
@@ -116,7 +109,7 @@ protected:
 
   /// The default property interface used if none is specified.
   PropertyInterface mDefaultPropertyInterface;
-  
+
   /// The current property interface. Could point to the default interface.
   PropertyInterface* mPropertyInterface;
 
@@ -128,7 +121,7 @@ public:
   typedef Array<CustomIconCreatorFunction> CustomPropertyIconArray;
   CustomPropertyIconArray mCustomIconCallbacks;
 
-  /// Client data given in the custom icon callback. The key is the callback 
+  /// Client data given in the custom icon callback. The key is the callback
   /// casted to a void*.
   HashMap<void*, void*> mCallbackClientData;
 };
@@ -140,6 +133,6 @@ DeclareTweakable(float, ObjectSize);
 DeclareTweakable(float, PropertySize);
 DeclareTweakable(float, PropertySpacing);
 DeclareTweakable(float, IndentSize);
-}//namespace PropertyViewUi
+} // namespace PropertyViewUi
 
-}//namespace Zero
+} // namespace Zero

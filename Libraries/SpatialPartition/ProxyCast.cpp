@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ProxyCast.cpp
-/// Implementation of the classes for Ray Casting.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,8 +16,10 @@ ZilchDefineType(BaseCastFilter, builder, type)
 
 BaseCastFilter::BaseCastFilter()
 {
-  mFlags.SetFlag(BaseCastFilterFlags::Refine | BaseCastFilterFlags::GetContactNormal | 
-                 BaseCastFilterFlags::IgnoreInternalCasts | BaseCastFilterFlags::IgnoreGhost);
+  mFlags.SetFlag(BaseCastFilterFlags::Refine |
+                 BaseCastFilterFlags::GetContactNormal |
+                 BaseCastFilterFlags::IgnoreInternalCasts |
+                 BaseCastFilterFlags::IgnoreGhost);
   mIgnoredCog = nullptr;
 }
 
@@ -115,11 +109,10 @@ void BaseCastFilter::ValidateFlags()
 {
   bool refineSet = IsSet(BaseCastFilterFlags::Refine);
   bool normalSet = IsSet(BaseCastFilterFlags::GetContactNormal);
-  ErrorIf(!refineSet && normalSet, 
+  ErrorIf(!refineSet && normalSet,
           "Cannot get contact normals without the refine flag set.");
 }
 
-//-------------------------------------------------------------------CastData
 CastData::CastData(Vec3Param start, Vec3Param vec)
 {
   GetSegment().Start = start;
@@ -205,9 +198,8 @@ const Frustum& CastData::GetFrustum() const
   return *(Frustum*)bytes;
 }
 
-//-------------------------------------------------------------------ProxyResult
-ProxyResult::ProxyResult(void* proxy, Vec3Param p1, Vec3Param p2,
-                         Vec3Param contactNormal, real time)
+ProxyResult::ProxyResult(
+    void* proxy, Vec3Param p1, Vec3Param p2, Vec3Param contactNormal, real time)
 {
   mObjectHit = proxy;
   mPoints[0] = p1;
@@ -227,10 +219,8 @@ void ProxyResult::operator=(const ProxyResult& rhs)
 
 bool ProxyResult::operator==(const ProxyResult& rhs)
 {
-  return (mObjectHit == rhs.mObjectHit && 
-          mPoints[0] == rhs.mPoints[0] &&
-          mPoints[1] == rhs.mPoints[1] &&
-          mTime == rhs.mTime &&
+  return (mObjectHit == rhs.mObjectHit && mPoints[0] == rhs.mPoints[0] &&
+          mPoints[1] == rhs.mPoints[1] && mTime == rhs.mTime &&
           mContactNormal == rhs.mContactNormal);
 }
 
@@ -239,8 +229,10 @@ bool ProxyResult::operator!=(const ProxyResult& rhs)
   return !(*this == rhs);
 }
 
-void ProxyResult::Set(void* proxy, Vec3 points[2], 
-                      Vec3Param contactNormal, real time)
+void ProxyResult::Set(void* proxy,
+                      Vec3 points[2],
+                      Vec3Param contactNormal,
+                      real time)
 {
   mObjectHit = proxy;
   mPoints[0] = points[0];
@@ -249,20 +241,20 @@ void ProxyResult::Set(void* proxy, Vec3 points[2],
   mTime = time;
 }
 
-//-------------------------------------------------------------------ProxyCastResults
-ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array, 
-                                         BaseCastFilter& filter) 
- : CurrSize(0)
- , Filter(filter)
- , Results(array)
+ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array,
+                                   BaseCastFilter& filter) :
+    CurrSize(0),
+    Filter(filter),
+    Results(array)
 {
-
 }
 
 bool ProxyCastResults::Insert(ProxyResult& proxyResult)
 {
-  return Insert(proxyResult.mObjectHit, proxyResult.mPoints, 
-                proxyResult.mContactNormal, proxyResult.mTime);
+  return Insert(proxyResult.mObjectHit,
+                proxyResult.mPoints,
+                proxyResult.mContactNormal,
+                proxyResult.mTime);
 }
 
 bool ProxyCastResults::Insert(void* mObjectHit, real distance)
@@ -270,25 +262,27 @@ bool ProxyCastResults::Insert(void* mObjectHit, real distance)
   Vec3 points[2];
   points[0].ZeroOut();
   points[1].ZeroOut();
-  Vec3 normal(0,0,0);
+  Vec3 normal(0, 0, 0);
   return Insert(mObjectHit, points, normal, distance);
 }
 
-bool ProxyCastResults::Insert(void* mObjectHit, 
-                                 Vec3 points[2], Vec3Param normal, real time)
+bool ProxyCastResults::Insert(void* mObjectHit,
+                              Vec3 points[2],
+                              Vec3Param normal,
+                              real time)
 {
-  if(!IsValid(mObjectHit))
+  if (!IsValid(mObjectHit))
     return false;
 
   // Base case
-  if(CurrSize == 0)
+  if (CurrSize == 0)
   {
     Results[CurrSize++].Set(mObjectHit, points, normal, time);
     return true;
   }
 
   // If there is room in the back of the array
-  if(CurrSize < Results.Size())
+  if (CurrSize < Results.Size())
   {
     // Store the proxy and increment the current size.
     Results[CurrSize++].Set(mObjectHit, points, normal, time);
@@ -296,20 +290,21 @@ bool ProxyCastResults::Insert(void* mObjectHit,
   else
   {
     // Check if the time of collision was sooner than the back of the results.
-    if(time < Results[CurrSize - 1].mTime)
+    if (time < Results[CurrSize - 1].mTime)
       Results[CurrSize - 1].Set(mObjectHit, points, normal, time);
     // The object collision wasn't soon enough, so return.
-    else 
+    else
       return false;
   }
 
   // Walk from the current slot to the front.
-  for(uint i = CurrSize - 1; i > 0; --i)
+  for (uint i = CurrSize - 1; i > 0; --i)
   {
     // Swap the two in place.
-    if(Results[i].mTime < Results[i - 1].mTime)
+    if (Results[i].mTime < Results[i - 1].mTime)
       Swap(Results[i], Results[i - 1]);
-    // Break out if the current collision was later (objects are in the correct order).
+    // Break out if the current collision was later (objects are in the correct
+    // order).
     else
       break;
   }
@@ -321,9 +316,9 @@ void ProxyCastResults::Merge(ProxyCastResults& rhs)
 {
   range r = rhs.All();
 
-  while(!r.Empty())
+  while (!r.Empty())
   {
-    if(!Insert(r.Front()))
+    if (!Insert(r.Front()))
       break;
 
     r.PopFront();
@@ -333,14 +328,14 @@ void ProxyCastResults::Merge(ProxyCastResults& rhs)
 bool ProxyCastResults::Match(ProxyCastResults& rhs)
 {
   // If the sizes are different, they are not a match
-  if(CurrSize != rhs.CurrSize)
+  if (CurrSize != rhs.CurrSize)
     return false;
 
   // Check each proxy result
-  for(uint i = 0; i < CurrSize; ++i)
+  for (uint i = 0; i < CurrSize; ++i)
   {
-    // If any are different, they are not a match 
-    if(Results[i] != rhs.Results[i])
+    // If any are different, they are not a match
+    if (Results[i] != rhs.Results[i])
       return false;
   }
 
@@ -362,4 +357,4 @@ bool ProxyCastResults::IsValid(void* mObjectHit)
   return Filter.IsValid(mObjectHit);
 }
 
-}//namespace Zero
+} // namespace Zero

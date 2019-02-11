@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,21 +8,21 @@ template <typename Function>
 bool TryFileOperation(StringParam dest, StringParam source, Function fileOp)
 {
   bool result = false;
-  // Keep trying to copy the file until we succeed up to some max number of times.
-  // This is attempting to deal with random file locks (from anti-virus or something).
-  for(size_t i = 0; i < 10; ++i)
+  // Keep trying to copy the file until we succeed up to some max number of
+  // times. This is attempting to deal with random file locks (from anti-virus
+  // or something).
+  for (size_t i = 0; i < 10; ++i)
   {
     result = fileOp(dest, source);
-    if(result == true)
+    if (result == true)
       break;
 
     Os::Sleep(1);
   }
 
   // Maybe log some extra error messages here?
-  if(result == false)
+  if (result == false)
   {
-
   }
 
   return result;
@@ -55,12 +50,13 @@ bool DeleteFile(StringParam dest)
 
   FileModifiedState::BeginFileModified(dest);
 
-  // Keep trying to copy the file until we succeed up to some max number of times.
-  // This is attempting to deal with random file locks (from anti-virus or something).
-  for(size_t i = 0; i < 10; ++i)
+  // Keep trying to copy the file until we succeed up to some max number of
+  // times. This is attempting to deal with random file locks (from anti-virus
+  // or something).
+  for (size_t i = 0; i < 10; ++i)
   {
     result = DeleteFileInternal(dest);
-    if(result == true)
+    if (result == true)
       break;
 
     Os::Sleep(1);
@@ -69,9 +65,8 @@ bool DeleteFile(StringParam dest)
   FileModifiedState::EndFileModified(dest);
 
   // Maybe log some extra error messages here?
-  if(result == false)
+  if (result == false)
   {
-
   }
 
   return result;
@@ -84,7 +79,8 @@ bool DeleteDirectoryContents(StringParam directory)
 
   bool success = true;
 
-  // RemoveDirectoryW requires the directory to be empty, so we must delete everything in it
+  // RemoveDirectoryW requires the directory to be empty, so we must delete
+  // everything in it
   FileRange range(directory);
   for (; !range.Empty(); range.PopFront())
   {
@@ -140,8 +136,9 @@ bool GetFileDateTime(StringParam filePath, CalendarDateTime& result)
 
 String FindFirstMissingDirectory(StringParam directory)
 {
-  // Keep iterating over the parent directories until we find one that does exist.
-  // When we do return the previous path as this was the first one to not exist.
+  // Keep iterating over the parent directories until we find one that does
+  // exist. When we do return the previous path as this was the first one to not
+  // exist.
   String subPath = directory;
   do
   {
@@ -151,8 +148,9 @@ String FindFirstMissingDirectory(StringParam directory)
     subPath = sourceDirPath;
   } while (!subPath.Empty());
 
-  // Otherwise all of the parent directories don't exist so return an empty string
+  // Otherwise all of the parent directories don't exist so return an empty
+  // string
   return subPath;
 }
 
-}//namespace Zero
+} // namespace Zero

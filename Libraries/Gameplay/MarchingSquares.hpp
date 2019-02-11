@@ -1,17 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MarchingSquares.hpp
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-/// Computes edges/contours from a density field. This class could be greatly optimized!
+/// Computes edges/contours from a density field. This class could be greatly
+/// optimized!
 class MarchingSquares
 {
 public:
@@ -26,19 +20,29 @@ public:
   MarchingSquares();
 
   /// Sample using traditional marching squares
-  void Sample(Vec2Param startCoords, Vec2Param endCoords, Vec2Param sampleFrequency, void* userData);
+  void Sample(Vec2Param startCoords,
+              Vec2Param endCoords,
+              Vec2Param sampleFrequency,
+              void* userData);
   /// Sample using a modified marching squares that samples on
   /// the exact pixel boundaries (doesn't round corners)
-  void SamplePixels(Vec2Param startCoords, Vec2Param endCoords, Vec2Param sampleFrequency, void* userData);
+  void SamplePixels(Vec2Param startCoords,
+                    Vec2Param endCoords,
+                    Vec2Param sampleFrequency,
+                    void* userData);
 
   /// Builds contours from the results of marching squares and simplifies them.
-  /// The threshold is used to remove a point if the area of the triangle defined by [p_i-1, p_i, p_i+1] is below the threshold.
-  /// This is most likely the only function that you should call for simplification (as it calls the below functions).
+  /// The threshold is used to remove a point if the area of the triangle
+  /// defined by [p_i-1, p_i, p_i+1] is below the threshold. This is most likely
+  /// the only function that you should call for simplification (as it calls the
+  /// below functions).
   void BuildAndSimplifyContours(real simplificationThreshold);
 
-  /// The SamplePixels method can create duplicate segments so we first need to strip them.
+  /// The SamplePixels method can create duplicate segments so we first need to
+  /// strip them.
   void RemoveRedundantSegments();
-  /// Turn the edges into contours (by traversing edges to determine what segments are connected).
+  /// Turn the edges into contours (by traversing edges to determine what
+  /// segments are connected).
   void CreateContours();
   /// Make sure the contours are clockwise.
   void FixWindingOrder();
@@ -51,10 +55,23 @@ public:
 private:
   Vec2 GetPositionOfZero(real val0, real val1, Vec2Param pos0, Vec2Param pos1);
 
-  void SolveSingleEdge(real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments);
+  void SolveSingleEdge(real valC,
+                       real valX,
+                       real valY,
+                       Vec2Param posC,
+                       Vec2Param posX,
+                       Vec2Param posY,
+                       Array<Segment2d>& segments);
 
-  void SolveDoubleEdge(real val0Edge0, real val1Edge0, real val0Edge1, real val1Edge1,
-    Vec2Param pos0Edge0, Vec2Param pos1Edge0, Vec2Param pos0Edge1, Vec2Param pos1Edge1, Array<Segment2d>& segments);
+  void SolveDoubleEdge(real val0Edge0,
+                       real val1Edge0,
+                       real val0Edge1,
+                       real val1Edge1,
+                       Vec2Param pos0Edge0,
+                       Vec2Param pos1Edge0,
+                       Vec2Param pos0Edge1,
+                       Vec2Param pos1Edge1,
+                       Array<Segment2d>& segments);
 
 public:
   DensitySamplerFunction mDensitySampler;

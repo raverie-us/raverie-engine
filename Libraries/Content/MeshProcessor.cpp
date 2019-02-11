@@ -1,21 +1,18 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder, MeshDataMap& meshDataMap)
-  : mBuilder(meshBuilder),
+MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder,
+                             MeshDataMap& meshDataMap) :
+    mBuilder(meshBuilder),
     mMeshDataMap(meshDataMap)
 {
 }
 
 MeshProcessor::~MeshProcessor()
 {
-
 }
 
 void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
@@ -25,15 +22,16 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
   Mat3 normalTransform = geoImport->mNormalTransform;
   Mat3 changeOfBasis = geoImport->mChangeOfBasis;
 
-  // if the winding order is being flipped our normal transform needs to account for this
-  if(mBuilder->mFlipWindingOrder)
+  // if the winding order is being flipped our normal transform needs to account
+  // for this
+  if (mBuilder->mFlipWindingOrder)
     normalTransform *= -1;
   // this is an in editor only exposed option to fixed messed up normals
-  if(mBuilder->mFlipNormals)
+  if (mBuilder->mFlipNormals)
     normalTransform *= -1;
 
   aiMesh** meshes = scene->mMeshes;
-  //size_t numMeshes = scene->mNumMeshes;
+  // size_t numMeshes = scene->mNumMeshes;
   size_t numMeshes = mMeshDataMap.Size();
 
   // process and collect each meshes information
@@ -43,7 +41,8 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
     MeshData& meshData = mMeshDataMap[meshIndex];
 
     VertexDescriptionBuilder vertexDescriptionBuilder;
-    meshData.mVertexDescription = vertexDescriptionBuilder.SetupDescriptionFromMesh(mesh);
+    meshData.mVertexDescription =
+        vertexDescriptionBuilder.SetupDescriptionFromMesh(mesh);
 
     // write out the vertex count
     uint numVertices = mesh->mNumVertices;
@@ -61,7 +60,8 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
       {
         aiVector3D position = mesh->mVertices[i];
         vertexBuffer[i].mPosition = Vec3(position.x, position.y, position.z);
-        vertexBuffer[i].mPosition = Math::TransformPoint(transform, vertexBuffer[i].mPosition);
+        vertexBuffer[i].mPosition =
+            Math::TransformPoint(transform, vertexBuffer[i].mPosition);
         // we are generating the aabb as we go
         meshData.mAabb.Expand(vertexBuffer[i].mPosition);
       }
@@ -74,7 +74,8 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
       {
         aiVector3D normal = mesh->mNormals[i];
         vertexBuffer[i].mNormal = Vec3(normal.x, normal.y, normal.z);
-        vertexBuffer[i].mNormal = Math::Transform(normalTransform, vertexBuffer[i].mNormal);
+        vertexBuffer[i].mNormal =
+            Math::Transform(normalTransform, vertexBuffer[i].mNormal);
       }
     }
 
@@ -86,9 +87,12 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
         aiVector3D tangent = mesh->mTangents[i];
         aiVector3D biTangent = mesh->mBitangents[i];
         vertexBuffer[i].mTangent = Vec3(tangent.x, tangent.y, tangent.z);
-        vertexBuffer[i].mBitangent = Vec3(biTangent.x, biTangent.y, biTangent.z);
-        vertexBuffer[i].mTangent = Math::Transform(normalTransform, vertexBuffer[i].mTangent);
-        vertexBuffer[i].mBitangent = Math::Transform(normalTransform, vertexBuffer[i].mBitangent);
+        vertexBuffer[i].mBitangent =
+            Vec3(biTangent.x, biTangent.y, biTangent.z);
+        vertexBuffer[i].mTangent =
+            Math::Transform(normalTransform, vertexBuffer[i].mTangent);
+        vertexBuffer[i].mBitangent =
+            Math::Transform(normalTransform, vertexBuffer[i].mBitangent);
       }
     }
 
@@ -135,7 +139,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
     if (mesh->HasBones())
     {
       meshData.mHasBones = true;
-      
+
       aiBone** bones = mesh->mBones;
       size_t numBones = mesh->mNumBones;
 
@@ -147,7 +151,9 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
 
         Mat4 bind = AiMat4ToZeroMat4(bone->mOffsetMatrix);
 
-        Vec3 scale; Mat3 rotate; Vec3 translate;
+        Vec3 scale;
+        Mat3 rotate;
+        Vec3 translate;
         bind.Decompose(&scale, &rotate, &translate);
 
         // Apply import transformations
@@ -160,7 +166,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
         meshBone.mName = CleanAssetName(bone->mName.C_Str());
         meshBone.mBindTransform = bind;
         meshData.mBones.PushBack(meshBone);
-        
+
         size_t numWeights = bone->mNumWeights;
         for (size_t weightIndex = 0; weightIndex < numWeights; ++weightIndex)
         {
@@ -172,7 +178,8 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
         }
       }
 
-      // go over our data and make sure no vertex has more than 4 bones affecting it
+      // go over our data and make sure no vertex has more than 4 bones
+      // affecting it
       for (size_t i = 0; i < numVertices; ++i)
       {
         Array<BoneData>* weightDataPointer = boneWeightData.FindPointer(i);
@@ -198,7 +205,7 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
             weightData.EraseAt(indexOfSmallest);
           }
           // if we removed any weights we need to normalize their influence
-          if(weightsRemoved)
+          if (weightsRemoved)
           {
             // Normalize the weights
             float sum = 0.f;
@@ -210,14 +217,16 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
         }
       }
 
-      // now that we have collected all the weights we need to go to assign each to their corresponding vertices
+      // now that we have collected all the weights we need to go to assign each
+      // to their corresponding vertices
       for (size_t i = 0; i < numVertices; ++i)
       {
         Array<BoneData>* weightDataPointer = boneWeightData.FindPointer(i);
-        if(weightDataPointer)
+        if (weightDataPointer)
         {
-          // the memzero'ed vertex buffer at the start makes sure that bone data is at least 
-          // weight 0 index 0 so we only assign the data we collected from the bones
+          // the memzero'ed vertex buffer at the start makes sure that bone data
+          // is at least weight 0 index 0 so we only assign the data we
+          // collected from the bones
           Array<BoneData>& weightData = *weightDataPointer;
           for (size_t j = 0; j < weightData.Size(); ++j)
           {
@@ -227,7 +236,9 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
         }
       }
 
-      Vec3 scale; Mat3 rotate; Vec3 translate;
+      Vec3 scale;
+      Mat3 rotate;
+      Vec3 translate;
       meshData.mMeshTransform.Decompose(&scale, &rotate, &translate);
 
       // Apply import transformations
@@ -250,8 +261,8 @@ void MeshProcessor::ExtractAndProcessMeshData(const aiScene* scene)
 
       uint* indices = faces->mIndices;
       uint numIndices = faces->mNumIndices;
-      // this only works for now assuming all faces are triangles as we force triangulate models
-      // determine the index size needed based on index count
+      // this only works for now assuming all faces are triangles as we force
+      // triangulate models determine the index size needed based on index count
 
       uint totalIndicies = numFaces * numIndices;
       meshData.mIndexBuffer.Reserve(totalIndicies);
@@ -280,7 +291,8 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
     // setup the chunk writer
     ChunkFileWriter writer;
 
-    String meshFile = FilePath::CombineWithExtension(outputPath, entry.mName, ".mesh");
+    String meshFile =
+        FilePath::CombineWithExtension(outputPath, entry.mName, ".mesh");
     writer.Open(meshFile);
 
     // write out the the header first
@@ -326,7 +338,7 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
 
       if (meshData.mHasColor1)
         writer.Write(vertexData.mColor1);
-      
+
       if (meshData.mHasBones)
       {
         writer.Write(vertexData.mBoneWeights);
@@ -347,11 +359,14 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
 
       switch (indexType)
       {
-      case IndexElementType::Byte:   WriteIndexData<byte>(meshData.mIndexBuffer, writer);
+      case IndexElementType::Byte:
+        WriteIndexData<byte>(meshData.mIndexBuffer, writer);
         break;
-      case IndexElementType::Ushort: WriteIndexData<ushort>(meshData.mIndexBuffer, writer);
+      case IndexElementType::Ushort:
+        WriteIndexData<ushort>(meshData.mIndexBuffer, writer);
         break;
-      case IndexElementType::Uint:   WriteIndexData<uint>(meshData.mIndexBuffer, writer);
+      case IndexElementType::Uint:
+        WriteIndexData<uint>(meshData.mIndexBuffer, writer);
         break;
       }
       writer.EndChunk(indexStart);
@@ -364,7 +379,7 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
       uint count = meshData.mBones.Size();
       writer.Write(count);
 
-      forRange (MeshBone& bone, meshData.mBones.All())
+      forRange(MeshBone & bone, meshData.mBones.All())
       {
         writer.Write(bone.mName);
         writer.Write(bone.mBindTransform);
@@ -377,7 +392,6 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
 
 void MeshProcessor::WriteCombinedMesh(String outputPath)
 {
-
 }
 
-}// namespace Zero
+} // namespace Zero

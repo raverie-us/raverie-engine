@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MainWindow.cpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,18 +6,18 @@ namespace Zero
 
 namespace MainWindowUi
 {
-  const cstr cLocation = "EditorUi/MainWindow";
-  Tweakable(Vec4, TitleBarColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec2, BorderPadding, Vec2(1,1), cLocation);
+const cstr cLocation = "EditorUi/MainWindow";
+Tweakable(Vec4, TitleBarColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec2, BorderPadding, Vec2(1, 1), cLocation);
 
-  Tweakable(Vec4, ButtonColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ButtonHover, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ButtonClick, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, CloseColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, CloseHover, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, CloseClick, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, ButtonColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ButtonHover, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ButtonClick, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, CloseColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, CloseHover, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, CloseClick, Vec4(1, 1, 1, 1), cLocation);
+} // namespace MainWindowUi
 
 namespace Events
 {
@@ -41,11 +34,15 @@ ZilchDefineType(MainWindowTransformEvent, builder, type)
 }
 
 MainWindowTransformEvent::MainWindowTransformEvent(OsWindow* window,
-  Vec2Param oldScreenPosition, Vec2Param newScreenPosition,
-  Vec2Param oldScreenSize, Vec2Param newScreenSize)
-  : mTargetWindow(window),
-    mOldScreenPosition(oldScreenPosition), mNewScreenPosition(newScreenPosition),
-    mOldScreenSize(oldScreenSize), mNewScreenSize(newScreenSize)
+                                                   Vec2Param oldScreenPosition,
+                                                   Vec2Param newScreenPosition,
+                                                   Vec2Param oldScreenSize,
+                                                   Vec2Param newScreenSize) :
+    mTargetWindow(window),
+    mOldScreenPosition(oldScreenPosition),
+    mNewScreenPosition(newScreenPosition),
+    mOldScreenSize(oldScreenSize),
+    mNewScreenSize(newScreenSize)
 {
 }
 
@@ -54,8 +51,7 @@ ZilchDefineType(MainWindow, builder, type)
   ZeroBindEvent(Events::MainWindowTransformUpdated, MainWindowTransformEvent);
 }
 
-MainWindow::MainWindow(OsWindow* window)
-  :RootWidget(window)
+MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
 {
   static const String className = "Window";
   mDefSet = mDefSet->GetDefinitionSet(className);
@@ -83,19 +79,21 @@ MainWindow::MainWindow(OsWindow* window)
 
   Composite* menuArea = new Composite(mTitleBar);
   mMenuArea = menuArea;
-  menuArea->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(0,0,0,0)));
+  menuArea->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(0, 0, 0, 0)));
 
   Composite* mainMenu = new Composite(menuArea);
-  mainMenu->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(2,2,2,2)));
+  mainMenu->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(2, 2, 2, 2)));
   Label* zeroLabel = new Label(mainMenu);
   zeroLabel->SetText("Zero");
-  zeroLabel->mText->ChangeDefinition( mDefSet->GetDefinition("TitleText") );
+  zeroLabel->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
   Spacer* spacer = new Spacer(mainMenu);
-  spacer->SetSize(Vec2(4,0));
+  spacer->SetSize(Vec2(4, 0));
   Element* arrow = mainMenu->CreateAttached<Element>("TitleDown");
-  arrow->mNotInLayout = false; 
+  arrow->mNotInLayout = false;
   Spacer* spacer2 = new Spacer(mainMenu);
-  spacer2->SetSize(Vec2(4,0));
+  spacer2->SetSize(Vec2(4, 0));
   mMainMenu = mainMenu;
   mMainMenu->SetActive(false);
 
@@ -111,7 +109,7 @@ MainWindow::MainWindow(OsWindow* window)
   mTitleText = new Label(mTitleBar, DefaultTextStyle, "Title");
   mTitleText->SetInteractive(false);
   mTitleText->SetNotInLayout(true);
-  mTitleText->mText->ChangeDefinition( mDefSet->GetDefinition("TitleText") );
+  mTitleText->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
 
   mMin = new IconButton(mTitleBar);
   mMin->SetToolTip("Minimize Window");
@@ -145,7 +143,7 @@ MainWindow::MainWindow(OsWindow* window)
   mClose->MarkAsNeedsUpdate();
   ConnectThisTo(mClose, Events::ButtonPressed, OnClickClose);
 
-  mLayoutSize = Vec2(0,0);
+  mLayoutSize = Vec2(0, 0);
 }
 
 void MainWindow::LoadMenu(StringParam menuName)
@@ -164,11 +162,11 @@ void MainWindow::SetTitle(StringParam title)
 
 void MainWindow::AttachChildWidget(Widget* child, AttachType::Enum attachType)
 {
-  if(attachType == AttachType::Direct)
+  if (attachType == AttachType::Direct)
     Composite::AttachChildWidget(child);
   else
     mClientWidget->AttachChildWidget(child);
-  mLayoutSize = Vec2(0,0);
+  mLayoutSize = Vec2(0, 0);
 }
 
 void MainWindow::OnDoubleClickTitle(MouseEvent* event)
@@ -214,20 +212,22 @@ void MainWindow::UpdateTransform()
 
   WindowState::Type windowState = osWindow->GetState();
 
-  // Has to be set outside of resize because maximize and fullscreen could be same size.
+  // Has to be set outside of resize because maximize and fullscreen could be
+  // same size.
   mSizeGrips->SetActive(windowState == WindowState::Windowed);
   mTitleGrip->SetActive(windowState != WindowState::Fullscreen);
 
   bool sizeUpdated = false;
-  MainWindowTransformEvent eventToSend(osWindow, position, position, size, size);
+  MainWindowTransformEvent eventToSend(
+      osWindow, position, position, size, size);
 
   // Do not resize all child widgets unless
   // a child has been added or the size of the OS window
   // has changed this prevents animation issues
-  if(size != mLayoutSize)
+  if (size != mLayoutSize)
   {
     // Skip resizing if Minimized
-    if(windowState == WindowState::Minimized)
+    if (windowState == WindowState::Minimized)
       return;
 
     // Can't be set outside of resize or the event connection is lost.
@@ -244,7 +244,7 @@ void MainWindow::UpdateTransform()
     mSizeGrips->SetSize(size);
     mPopUp->SetSize(mSize);
 
-    mTitleGrip->SetTranslation(Vec3(0,0,0));
+    mTitleGrip->SetTranslation(Vec3(0, 0, 0));
 
     Thickness border = Thickness(MainWindowUi::BorderPadding);
 
@@ -266,40 +266,41 @@ void MainWindow::UpdateTransform()
 
     // Center the tile text on the title bar
     mTitleText->SizeToContents();
-    PlaceCenterToRect(titleRect, mTitleText, Vec2(0,-3));
+    PlaceCenterToRect(titleRect, mTitleText, Vec2(0, -3));
 
     // Hide if it overlaps the menu
     WidgetRect menuRect = mMenu->GetScreenRect();
-    WidgetRect titleTextRect =  mTitleText->GetScreenRect();
+    WidgetRect titleTextRect = mTitleText->GetScreenRect();
     mTitleText->SetVisible(!menuRect.Overlap(titleTextRect));
 
     // Remove title bar
-    currentRect.RemoveThickness(Thickness(0,titleBarSize.y,0,0));
+    currentRect.RemoveThickness(Thickness(0, titleBarSize.y, 0, 0));
 
     PlaceWithRect(currentRect, mClientWidget);
-    
+
     WidgetListRange children = mClientWidget->GetChildren();
-    if(!children.Empty())
+    if (!children.Empty())
       children.Front().SetSize(currentRect.GetSize());
 
     float diffX = Math::Abs(previousSize.x - mSize.x);
     float diffY = Math::Abs(previousSize.y - mSize.y);
 
     // Size must change by at least one pixel.
-    if(diffX > 1.0f || diffY > 1.0f)
+    if (diffX > 1.0f || diffY > 1.0f)
     {
       sizeUpdated = true;
 
       eventToSend.mOldScreenSize = previousSize;
       eventToSend.mNewScreenSize = mSize;
-  }
+    }
   }
 
   RootWidget::UpdateTransform();
 
-  // First check if the window position changed, must change by at least one pixel.
+  // First check if the window position changed, must change by at least one
+  // pixel.
   float distanceSq = (position - mPreviousPosition).LengthSq();
-  if(distanceSq > 1.0f)
+  if (distanceSq > 1.0f)
   {
     eventToSend.mOldScreenPosition = mPreviousPosition;
     eventToSend.mNewScreenPosition = position;
@@ -309,36 +310,37 @@ void MainWindow::UpdateTransform()
     osWindow->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
 
     mPreviousPosition = position;
-}
+  }
   // If the position didn't change, did the size?
-  else if(sizeUpdated)
+  else if (sizeUpdated)
   {
     Z::gEngine->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
     osWindow->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
   }
 }
 
-WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::Enum direction)
+WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget,
+                                                     DockMode::Enum direction)
 {
   RootWidget* rootWidget = widget->GetRootWidget();
   OsWindow* window = rootWidget->GetOsWindow();
-  if(direction ==  DockMode::DockFill)
+  if (direction == DockMode::DockFill)
     return WindowBorderArea::Title;
-  else if(direction ==  DockMode::DockTop)
+  else if (direction == DockMode::DockTop)
     return WindowBorderArea::Top;
-  else if(direction ==  DockMode::DockLeft)
+  else if (direction == DockMode::DockLeft)
     return WindowBorderArea::Left;
-  else if(direction ==  DockMode::DockRight)
+  else if (direction == DockMode::DockRight)
     return WindowBorderArea::Right;
-  else if(direction ==  DockMode::DockBottom)
+  else if (direction == DockMode::DockBottom)
     return WindowBorderArea::Bottom;
-  else if(direction == (DockMode::DockBottom | DockMode::DockRight))
+  else if (direction == (DockMode::DockBottom | DockMode::DockRight))
     return WindowBorderArea::BottomRight;
-  else if(direction == (DockMode::DockBottom | DockMode::DockLeft))
+  else if (direction == (DockMode::DockBottom | DockMode::DockLeft))
     return WindowBorderArea::BottomLeft;
-  else if(direction == (DockMode::DockTop | DockMode::DockRight))
+  else if (direction == (DockMode::DockTop | DockMode::DockRight))
     return WindowBorderArea::TopRight;
-  else if(direction == (DockMode::DockTop | DockMode::DockLeft))
+  else if (direction == (DockMode::DockTop | DockMode::DockLeft))
     return WindowBorderArea::TopLeft;
   return WindowBorderArea::None;
 }
@@ -355,4 +357,4 @@ void OsDocker::WidgetDestroyed(Widget* widget)
   root->Destroy();
 }
 
-}
+} // namespace Zero

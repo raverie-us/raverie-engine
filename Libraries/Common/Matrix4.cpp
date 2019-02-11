@@ -1,44 +1,90 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
 
-const Matrix4 Matrix4::cIdentity(real(1.0), real(0.0), real(0.0), real(0.0),
-                                 real(0.0), real(1.0), real(0.0), real(0.0),
-                                 real(0.0), real(0.0), real(1.0), real(0.0),
-                                 real(0.0), real(0.0), real(0.0), real(1.0));
+const Matrix4 Matrix4::cIdentity(real(1.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(1.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(1.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(0.0),
+                                 real(1.0));
 
-Matrix4::Matrix4(real p00, real p01, real p02, real p03, real p10, real p11, 
-                 real p12, real p13, real p20, real p21, real p22, real p23,
-                 real p30, real p31, real p32, real p33)
+Matrix4::Matrix4(real p00,
+                 real p01,
+                 real p02,
+                 real p03,
+                 real p10,
+                 real p11,
+                 real p12,
+                 real p13,
+                 real p20,
+                 real p21,
+                 real p22,
+                 real p23,
+                 real p30,
+                 real p31,
+                 real p32,
+                 real p33)
 {
-  m00 = p00;  m01 = p01;  m02 = p02;  m03 = p03; 
-  m10 = p10;  m11 = p11;  m12 = p12;  m13 = p13; 
-  m20 = p20;  m21 = p21;  m22 = p22;  m23 = p23;
-  m30 = p30;  m31 = p31;  m32 = p32;  m33 = p33;
+  m00 = p00;
+  m01 = p01;
+  m02 = p02;
+  m03 = p03;
+  m10 = p10;
+  m11 = p11;
+  m12 = p12;
+  m13 = p13;
+  m20 = p20;
+  m21 = p21;
+  m22 = p22;
+  m23 = p23;
+  m30 = p30;
+  m31 = p31;
+  m32 = p32;
+  m33 = p33;
 }
 
-Matrix4::Matrix4(Vec4Param basisX, Vec4Param basisY,
-  Vec4Param basisZ, Vec4Param basisW)
+Matrix4::Matrix4(Vec4Param basisX,
+                 Vec4Param basisY,
+                 Vec4Param basisZ,
+                 Vec4Param basisW)
 {
-  SetBasis(0,basisX);
-  SetBasis(1,basisY);
-  SetBasis(2,basisZ);
-  SetBasis(3,basisW);
+  SetBasis(0, basisX);
+  SetBasis(1, basisY);
+  SetBasis(2, basisZ);
+  SetBasis(3, basisW);
 }
 
 Matrix4::Matrix4(ConstRealPointer data_)
 {
-  m00 = data_[0];  m01 = data_[1];  m02 = data_[2];  m03 = data_[3];
-  m10 = data_[4];  m11 = data_[5];  m12 = data_[6];  m13 = data_[7];
-  m20 = data_[8];  m21 = data_[9];  m22 = data_[10];  m23 = data_[11];
-  m30 = data_[12];  m31 = data_[13];  m32 = data_[14];  m33 = data_[15];
+  m00 = data_[0];
+  m01 = data_[1];
+  m02 = data_[2];
+  m03 = data_[3];
+  m10 = data_[4];
+  m11 = data_[5];
+  m12 = data_[6];
+  m13 = data_[7];
+  m20 = data_[8];
+  m21 = data_[9];
+  m22 = data_[10];
+  m23 = data_[11];
+  m30 = data_[12];
+  m31 = data_[13];
+  m32 = data_[14];
+  m33 = data_[15];
 }
 
 const Vector4& Matrix4::operator[](uint index) const
@@ -149,9 +195,7 @@ Matrix4 Matrix4::operator*(Mat4Param rhs) const
 bool Matrix4::operator==(Mat4Param rhs) const
 {
   const Matrix4& self = *this;
-  return self[0] == rhs[0] &&
-         self[1] == rhs[1] &&
-         self[2] == rhs[2] &&
+  return self[0] == rhs[0] && self[1] == rhs[1] && self[2] == rhs[2] &&
          self[3] == rhs[3];
 }
 
@@ -184,8 +228,8 @@ Matrix4::BasisVector Matrix4::GetBasis(uint index) const
 {
   ErrorIf(index > 3, "Matrix4 - Index out of range.");
 #if ColumnBasis == 1
-  return Vector4(array[index], array[4 + index],
-    array[8 + index], array[12 + index]);
+  return Vector4(
+      array[index], array[4 + index], array[8 + index], array[12 + index]);
 #else
   Mat4Param self = *this;
   return self[index];
@@ -196,9 +240,9 @@ void Matrix4::SetBasis(uint index, Vec4Param basis)
 {
   ErrorIf(index > 3, "Matrix4 - Index out of range.");
 #if ColumnBasis == 1
-  array[index +  0] = basis.x;
-  array[index +  4] = basis.y;
-  array[index +  8] = basis.z;
+  array[index + 0] = basis.x;
+  array[index + 4] = basis.y;
+  array[index + 8] = basis.z;
   array[index + 12] = basis.w;
 #else
   Mat4Param self = *this;
@@ -224,8 +268,8 @@ Matrix4::CrossVector Matrix4::GetCross(uint index) const
   Mat4Param self = *this;
   return self[index];
 #else
-  return Vector4(array[index], array[4 + index],
-    array[8 + index], array[12 + index]);
+  return Vector4(
+      array[index], array[4 + index], array[8 + index], array[12 + index]);
 #endif
 }
 
@@ -236,9 +280,9 @@ void Matrix4::SetCross(uint index, Vec4Param cross)
   Mat4Ref self = *this;
   self[index].Set(cross.x, cross.y, cross.z, cross.w);
 #else
-  array[index +  0] = cross.x;
-  array[index +  4] = cross.y;
-  array[index +  8] = cross.z;
+  array[index + 0] = cross.x;
+  array[index + 4] = cross.y;
+  array[index + 8] = cross.z;
   array[index + 12] = cross.w;
 #endif
 }
@@ -246,25 +290,25 @@ void Matrix4::SetCross(uint index, Vec4Param cross)
 bool Matrix4::Valid() const
 {
   const Matrix4& self = *this;
-  return self[0].Valid() && self[1].Valid() && 
-         self[2].Valid() && self[3].Valid();
+  return self[0].Valid() && self[1].Valid() && self[2].Valid() &&
+         self[3].Valid();
 }
 
 real Matrix4::Determinant() const
 {
-  real det  = m03 * m12 * m21 * m30 - m02 * m13 * m21 * m30;
-       det += m01 * m13 * m22 * m30 - m03 * m11 * m22 * m30;
-       det += m02 * m11 * m23 * m30 - m01 * m12 * m23 * m30;
-       det += m02 * m13 * m20 * m31 - m03 * m12 * m20 * m31;
-       det += m03 * m10 * m22 * m31 - m00 * m13 * m22 * m31;
-       det += m00 * m12 * m23 * m31 - m02 * m10 * m23 * m31;
-       det += m03 * m11 * m20 * m32 - m01 * m13 * m20 * m32;
-       det += m00 * m13 * m21 * m32 - m03 * m10 * m21 * m32;
-       det += m01 * m10 * m23 * m32 - m00 * m11 * m23 * m32;
-       det += m01 * m12 * m20 * m33 - m02 * m11 * m20 * m33;
-       det += m02 * m10 * m21 * m33 - m00 * m12 * m21 * m33;
-       det += m00 * m11 * m22 * m33 - m01 * m10 * m22 * m33;
-   return det;
+  real det = m03 * m12 * m21 * m30 - m02 * m13 * m21 * m30;
+  det += m01 * m13 * m22 * m30 - m03 * m11 * m22 * m30;
+  det += m02 * m11 * m23 * m30 - m01 * m12 * m23 * m30;
+  det += m02 * m13 * m20 * m31 - m03 * m12 * m20 * m31;
+  det += m03 * m10 * m22 * m31 - m00 * m13 * m22 * m31;
+  det += m00 * m12 * m23 * m31 - m02 * m10 * m23 * m31;
+  det += m03 * m11 * m20 * m32 - m01 * m13 * m20 * m32;
+  det += m00 * m13 * m21 * m32 - m03 * m10 * m21 * m32;
+  det += m01 * m10 * m23 * m32 - m00 * m11 * m23 * m32;
+  det += m01 * m12 * m20 * m33 - m02 * m11 * m20 * m33;
+  det += m02 * m10 * m21 * m33 - m00 * m12 * m21 * m33;
+  det += m00 * m11 * m22 * m33 - m01 * m10 * m22 * m33;
+  return det;
 }
 
 void Matrix4::InvertInternal(real invDeterminant)
@@ -365,10 +409,22 @@ void Matrix4::InvertInternal(real invDeterminant)
   t33 += m00 * m11 * m22 - m01 * m10 * m22;
   t33 *= invDeterminant;
 
-  m00 = t00; m01 = t01; m02 = t02; m03 = t03;
-  m10 = t10; m11 = t11; m12 = t12; m13 = t13;
-  m20 = t20; m21 = t21; m22 = t22; m23 = t23;
-  m30 = t30; m31 = t31; m32 = t32; m33 = t33;
+  m00 = t00;
+  m01 = t01;
+  m02 = t02;
+  m03 = t03;
+  m10 = t10;
+  m11 = t11;
+  m12 = t12;
+  m13 = t13;
+  m20 = t20;
+  m21 = t21;
+  m22 = t22;
+  m23 = t23;
+  m30 = t30;
+  m31 = t31;
+  m32 = t32;
+  m33 = t33;
 }
 
 void Matrix4::Transpose(Mat4Ref mat)
@@ -397,7 +453,7 @@ void Matrix4::Invert(Mat4Ref mat)
 {
   real determinant = mat.Determinant();
   ErrorIf(Math::IsZero(determinant), "Matrix4 - Uninvertible matrix.");
-  
+
   real invDeterminant = real(1.0) / determinant;
   mat.InvertInternal(invDeterminant);
 }
@@ -415,7 +471,7 @@ bool Matrix4::SafeInvert(Mat4Ref mat)
 
   real determinant = mat.Determinant();
   real invDeterminant;
-  if(Math::Abs(determinant) < Math::PositiveMin())
+  if (Math::Abs(determinant) < Math::PositiveMin())
   {
     invDeterminant = Math::PositiveMin();
     success = false;
@@ -503,9 +559,21 @@ Matrix4 Matrix4::GenerateRotation(Vec3Param axis, real rotationRadians)
   real x = nAxis.x;
   real y = nAxis.y;
   real z = nAxis.z;
-  result.SetCross(cX, x * x * n1C0 + c0, x * y * n1C0 - z * s0, x * z * n1C0 + y * s0, real(0.0));
-  result.SetCross(cY, x * y * n1C0 + z * s0, y * y * n1C0 + c0, y * z * n1C0 - x * s0, real(0.0));
-  result.SetCross(cZ, x * z * n1C0 - y * s0, y * z * n1C0 + x * s0, z * z * n1C0 + c0, real(0.0));
+  result.SetCross(cX,
+                  x * x * n1C0 + c0,
+                  x * y * n1C0 - z * s0,
+                  x * z * n1C0 + y * s0,
+                  real(0.0));
+  result.SetCross(cY,
+                  x * y * n1C0 + z * s0,
+                  y * y * n1C0 + c0,
+                  y * z * n1C0 - x * s0,
+                  real(0.0));
+  result.SetCross(cZ,
+                  x * z * n1C0 - y * s0,
+                  y * z * n1C0 + x * s0,
+                  z * z * n1C0 + c0,
+                  real(0.0));
   result.SetCross(cW, real(0.0), real(0.0), real(0.0), real(1.0));
   return result;
 }
@@ -519,16 +587,18 @@ Matrix4 Matrix4::GenerateTranslation(Vec3Param translation)
   return result;
 }
 
-Matrix4 Matrix4::GenerateTransform(Vec3Param translation, QuatParam rotatation, Vec3Param scale)
+Matrix4 Matrix4::GenerateTransform(Vec3Param translation,
+                                   QuatParam rotatation,
+                                   Vec3Param scale)
 {
   Matrix4 result;
-  //Translation component
+  // Translation component
   result.m03 = translation.x;
   result.m13 = translation.y;
   result.m23 = translation.z;
   result.m33 = real(1.0);
 
-  //Rotational component
+  // Rotational component
   real xx = rotatation.x * rotatation.x;
   real xy = rotatation.x * rotatation.y;
   real xz = rotatation.x * rotatation.z;
@@ -551,7 +621,7 @@ Matrix4 Matrix4::GenerateTransform(Vec3Param translation, QuatParam rotatation, 
   result.m21 = real(2.0) * (yz + xw);
   result.m22 = real(1.0) - real(2.0) * (xx + yy);
 
-  //Scale component
+  // Scale component
   result.m00 *= scale.x;
   result.m10 *= scale.x;
   result.m20 *= scale.x;
@@ -568,16 +638,18 @@ Matrix4 Matrix4::GenerateTransform(Vec3Param translation, QuatParam rotatation, 
   return result;
 }
 
-Matrix4 Matrix4::GenerateTransform(Vec3Param translation, Mat3Param rotatation, Vec3Param scale)
+Matrix4 Matrix4::GenerateTransform(Vec3Param translation,
+                                   Mat3Param rotatation,
+                                   Vec3Param scale)
 {
   Matrix4 result;
-  //Translation component
+  // Translation component
   result.m03 = translation.x;
   result.m13 = translation.y;
   result.m23 = translation.z;
   result.m33 = real(1.0);
 
-  //Rotational component
+  // Rotational component
   result.m00 = rotatation.m00;
   result.m01 = rotatation.m01;
   result.m02 = rotatation.m02;
@@ -590,7 +662,7 @@ Matrix4 Matrix4::GenerateTransform(Vec3Param translation, Mat3Param rotatation, 
   result.m21 = rotatation.m21;
   result.m22 = rotatation.m22;
 
-  //Scale component
+  // Scale component
   result.m00 *= scale.x;
   result.m10 *= scale.x;
   result.m20 *= scale.x;
@@ -607,97 +679,111 @@ Matrix4 Matrix4::GenerateTransform(Vec3Param translation, Mat3Param rotatation, 
   return result;
 }
 
-void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref scale)
+void Matrix4::Decompose(Mat4Param transform,
+                        Vec3Ref translation,
+                        Mat3Ref rotation,
+                        Vec3Ref scale)
 {
   Vector3 shear;
   Matrix4::Decompose(transform, translation, rotation, shear, scale);
 }
 
-void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotation, Vec3Ref shear, Vec3Ref scale)
+void Matrix4::Decompose(Mat4Param transform,
+                        Vec3Ref translation,
+                        Mat3Ref rotation,
+                        Vec3Ref shear,
+                        Vec3Ref scale)
 {
-  //Translation is the last basis vector
+  // Translation is the last basis vector
   translation.x = transform.m03;
   translation.y = transform.m13;
   translation.z = transform.m23;
 
-  //X' == first basis vector
-  //Y' == second basis vector
-  //Z' == third basis vector
+  // X' == first basis vector
+  // Y' == second basis vector
+  // Z' == third basis vector
 
-  //                         X'                             Y'                             Z'
-  rotation.m00 = transform.m00;  rotation.m01 = transform.m01;  rotation.m02 = transform.m02;
-  rotation.m10 = transform.m10;  rotation.m11 = transform.m11;  rotation.m12 = transform.m12;
-  rotation.m20 = transform.m20;  rotation.m21 = transform.m21;  rotation.m22 = transform.m22;
+  //                         X'                             Y' Z'
+  rotation.m00 = transform.m00;
+  rotation.m01 = transform.m01;
+  rotation.m02 = transform.m02;
+  rotation.m10 = transform.m10;
+  rotation.m11 = transform.m11;
+  rotation.m12 = transform.m12;
+  rotation.m20 = transform.m20;
+  rotation.m21 = transform.m21;
+  rotation.m22 = transform.m22;
 
-  //ScaleX is the magnitude of X'
-  scale.x = Math::Sqrt(Math::Sq(transform.m00) + Math::Sq(transform.m10) + Math::Sq(transform.m20));
+  // ScaleX is the magnitude of X'
+  scale.x = Math::Sqrt(Math::Sq(transform.m00) + Math::Sq(transform.m10) +
+                       Math::Sq(transform.m20));
 
-  //X' is normalized
+  // X' is normalized
   rotation.m00 /= scale.x;
   rotation.m10 /= scale.x;
   rotation.m20 /= scale.x;
 
-  //ShearXY is the dot product of X' and Y'
-  shear.z = rotation.m00 * rotation.m01 +
-            rotation.m10 * rotation.m11 +
+  // ShearXY is the dot product of X' and Y'
+  shear.z = rotation.m00 * rotation.m01 + rotation.m10 * rotation.m11 +
             rotation.m20 * rotation.m21;
 
-  //Make Y' orthogonal to X' by " Y' = Y' - (ShearXY * X') "
+  // Make Y' orthogonal to X' by " Y' = Y' - (ShearXY * X') "
   rotation.m01 -= shear.z * rotation.m00;
   rotation.m11 -= shear.z * rotation.m10;
   rotation.m21 -= shear.z * rotation.m20;
 
-  //ScaleY is the magnitude of the modified Y'
-  scale.y = Math::Sqrt(Math::Sq(transform.m01) + Math::Sq(transform.m11) + Math::Sq(transform.m21));
+  // ScaleY is the magnitude of the modified Y'
+  scale.y = Math::Sqrt(Math::Sq(transform.m01) + Math::Sq(transform.m11) +
+                       Math::Sq(transform.m21));
 
-  //Y' is normalized
+  // Y' is normalized
   rotation.m01 /= scale.y;
   rotation.m11 /= scale.y;
   rotation.m21 /= scale.y;
 
-  //ShearXY is divided by ScaleY to get it's final value
+  // ShearXY is divided by ScaleY to get it's final value
   shear.z /= scale.y;
 
-  //ShearXZ is the dot product of X' and Z'
-  shear.y = rotation.m00 * rotation.m02 +
-            rotation.m10 * rotation.m12 +
+  // ShearXZ is the dot product of X' and Z'
+  shear.y = rotation.m00 * rotation.m02 + rotation.m10 * rotation.m12 +
             rotation.m20 * rotation.m22;
 
-  //ShearYZ is the dot product of Y' and Z'
-  shear.x = rotation.m01 * rotation.m02 +
-            rotation.m11 * rotation.m12 +
+  // ShearYZ is the dot product of Y' and Z'
+  shear.x = rotation.m01 * rotation.m02 + rotation.m11 * rotation.m12 +
             rotation.m21 * rotation.m22;
 
-  //Make Z' orthogonal to X' by " Z' = Z' - (ShearXZ * X') "
+  // Make Z' orthogonal to X' by " Z' = Z' - (ShearXZ * X') "
   rotation.m02 -= shear.y * rotation.m00;
   rotation.m12 -= shear.y * rotation.m10;
   rotation.m22 -= shear.y * rotation.m20;
 
-  //Make Z' orthogonal to Y' by " Z' = Z' - (ShearYZ * Y') "
+  // Make Z' orthogonal to Y' by " Z' = Z' - (ShearYZ * Y') "
   rotation.m02 -= shear.x * rotation.m01;
   rotation.m12 -= shear.x * rotation.m11;
   rotation.m22 -= shear.x * rotation.m21;
 
-  //ScaleZ is the magnitude of the modified Z'
-  scale.z = Math::Sqrt(Math::Sq(transform.m02) + Math::Sq(transform.m12) + Math::Sq(transform.m22));
+  // ScaleZ is the magnitude of the modified Z'
+  scale.z = Math::Sqrt(Math::Sq(transform.m02) + Math::Sq(transform.m12) +
+                       Math::Sq(transform.m22));
 
-  //Z' is normalized
+  // Z' is normalized
   rotation.m02 /= scale.z;
   rotation.m12 /= scale.z;
   rotation.m22 /= scale.z;
 
-  //ShearXZ is divided by ScaleZ to get it's final value
+  // ShearXZ is divided by ScaleZ to get it's final value
   shear.y /= scale.z;
 
-  //ShearYZ is divided by ScaleZ to get it's final value
+  // ShearYZ is divided by ScaleZ to get it's final value
   shear.x /= scale.z;
 
-  //If the determinant is negative, then the rotation and scale contain a flip
-  Vector3 v = Vector3(rotation.m11 * rotation.m22 - rotation.m21 * rotation.m12,
+  // If the determinant is negative, then the rotation and scale contain a flip
+  Vector3 v =
+      Vector3(rotation.m11 * rotation.m22 - rotation.m21 * rotation.m12,
               rotation.m21 * rotation.m02 - rotation.m01 * rotation.m22,
               rotation.m01 * rotation.m12 - rotation.m11 * rotation.m02);
   real dot = v.x * rotation.m00 + v.y * rotation.m10 + v.z * rotation.m20;
-  if(dot < real(0.0))
+  if (dot < real(0.0))
   {
     rotation *= real(-1.0);
     scale *= real(-1.0);
@@ -705,7 +791,7 @@ void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotati
 
   // Sometimes sheer can cause the rotation matrix to not be normalized.
   // As a temp fix just force it to be normalized here.
-  for(size_t i = 0; i < 3; ++i)
+  for (size_t i = 0; i < 3; ++i)
   {
     Vector3 basis = rotation.GetBasis(i);
     basis.AttemptNormalize();
@@ -713,7 +799,6 @@ void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotati
   }
 }
 
-//-------------------------------------------------------------------Legacy
 
 Mat4Ref Matrix4::Transpose()
 {
@@ -782,13 +867,15 @@ void Matrix4::Translate(Vec3Param axis)
   *this = Matrix4::GenerateTranslation(axis);
 }
 
-void Matrix4::BuildTransform(Vec3Param translate, QuatParam rotate, 
+void Matrix4::BuildTransform(Vec3Param translate,
+                             QuatParam rotate,
                              Vec3Param scale)
 {
   *this = Matrix4::GenerateTransform(translate, rotate, scale);
 }
 
-void Matrix4::BuildTransform(Vec3Param translate, Mat3Param rotate, 
+void Matrix4::BuildTransform(Vec3Param translate,
+                             Mat3Param rotate,
                              Vec3Param scale)
 {
   *this = Matrix4::GenerateTransform(translate, rotate, scale);
@@ -798,19 +885,23 @@ void Matrix4::Decompose(Vec3Ptr scale, Mat3Ptr rotate, Vec3Ptr translate) const
 {
   ErrorIf(scale == nullptr, "Matrix4 - Null pointer passed for scale.");
   ErrorIf(rotate == nullptr, "Matrix4 - Null pointer passed for rotation.");
-  ErrorIf(translate == nullptr, "Matrix4 - Null pointer passed for translation.");
+  ErrorIf(translate == nullptr,
+          "Matrix4 - Null pointer passed for translation.");
   Matrix4::Decompose(*this, *translate, *rotate, *scale);
 }
 
-//Shear values that are calculated are XY, XZ, and YZ. They are stored as the 
-//element their name does not contain, so shear->x would have YZ in it
-void Matrix4::Decompose(Vec3Ptr scale, Vec3Ptr shear, Mat3Ptr rotate, 
+// Shear values that are calculated are XY, XZ, and YZ. They are stored as the
+// element their name does not contain, so shear->x would have YZ in it
+void Matrix4::Decompose(Vec3Ptr scale,
+                        Vec3Ptr shear,
+                        Mat3Ptr rotate,
                         Vec3Ptr translate) const
 {
   ErrorIf(scale == nullptr, "Matrix4 - Null pointer passed for scale.");
   ErrorIf(shear == nullptr, "Matrix4 - Null pointer passed for shear.");
   ErrorIf(rotate == nullptr, "Matrix4 - Null pointer passed for rotation.");
-  ErrorIf(translate == nullptr, "Matrix4 - Null pointer passed for translation.");
+  ErrorIf(translate == nullptr,
+          "Matrix4 - Null pointer passed for translation.");
 
   Matrix4::Decompose(*this, *translate, *rotate, *shear, *scale);
 }
@@ -880,7 +971,7 @@ void Matrix4::SetCross(uint index, real x, real y, real z, real w)
   SetCross(index, Vector4(x, y, z, w));
 }
 
-//-------------------------------------------------------------------Global Functions
+//Functions
 Matrix4 operator*(real lhs, Mat4Param rhs)
 {
   return rhs * lhs;
@@ -906,7 +997,6 @@ Vector3 MultiplyNormal(Mat4Param lhs, Vec3Param rhs)
   return Matrix4::MultiplyNormal(lhs, rhs);
 }
 
-//-------------------------------------------------------------------Legacy
 Vector4 Transform(Mat4Param mat, Vec4Param vector)
 {
   return Matrix4::Multiply(mat, vector);
@@ -949,27 +1039,40 @@ Vector3 TransformNormalCol(Mat4Param matrix, Vec3Param normal)
 
 Vector3 TransformPointCol(Mat4Param matrix, Vec3Param point)
 {
-  real x = Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
-  real y = Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
-  real z = Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
+  real x =
+      Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
+  real y =
+      Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
+  real z =
+      Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
   return Vector3(x, y, z);
 }
 
 Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point)
 {
-  real x = Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
-  real y = Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
-  real z = Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
-  real w = Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
+  real x =
+      Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
+  real y =
+      Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
+  real z =
+      Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
+  real w =
+      Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
   return Vector3(x / w, y / w, z / w);
 }
 
-Vector3 TransformPointProjectedCol(Mat4Param matrix, Vec3Param point, real* wOut)
+Vector3 TransformPointProjectedCol(Mat4Param matrix,
+                                   Vec3Param point,
+                                   real* wOut)
 {
-  real x = Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
-  real y = Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
-  real z = Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
-  real w = Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
+  real x =
+      Dot(Vector3(matrix.m00, matrix.m10, matrix.m20), point) + matrix[3][0];
+  real y =
+      Dot(Vector3(matrix.m01, matrix.m11, matrix.m21), point) + matrix[3][1];
+  real z =
+      Dot(Vector3(matrix.m02, matrix.m12, matrix.m22), point) + matrix[3][2];
+  real w =
+      Dot(Vector3(matrix.m03, matrix.m13, matrix.m23), point) + matrix[3][3];
   *wOut = w;
   return Vector3(x / w, y / w, z / w);
 }
@@ -989,5 +1092,4 @@ real Trace(Mat4Param matrix)
   return matrix.m00 + matrix.m11 + matrix.m22 + matrix.m33;
 }
 
-}// namespace Math
-
+} // namespace Math

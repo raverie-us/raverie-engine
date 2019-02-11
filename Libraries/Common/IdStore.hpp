@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Includes
@@ -29,16 +24,16 @@ public:
   }
 
   /// Move Constructor
-  IdStore(MoveReference<IdStore> rhs)
-    : mNewId(rhs->mNewId),
+  IdStore(MoveReference<IdStore> rhs) :
+      mNewId(rhs->mNewId),
       mFreeIds(ZeroMove(rhs->mFreeIds))
   {
   }
 
   /// Move Assignment Operator
-  IdStore& operator =(MoveReference<IdStore> rhs)
+  IdStore& operator=(MoveReference<IdStore> rhs)
   {
-    mNewId   = rhs->mNewId;
+    mNewId = rhs->mNewId;
     mFreeIds = ZeroMove(rhs->mFreeIds);
 
     return *this;
@@ -56,7 +51,7 @@ public:
   Id AcquireId()
   {
     // Free ID available?
-    if(!mFreeIds.Empty())
+    if (!mFreeIds.Empty())
     {
       Id result = mFreeIds.Front();
       mFreeIds.PopFront();
@@ -64,7 +59,7 @@ public:
     }
 
     // New ID available?
-    else if(mNewId != 0)
+    else if (mNewId != 0)
       return mNewId++;
 
     // No ID available
@@ -77,11 +72,11 @@ public:
   bool FreeId(Id id)
   {
     // Invalid ID?
-    if(id == 0)
+    if (id == 0)
       return false;
 
     // Never issued?
-    if(mNewId != 0 && id >= mNewId)
+    if (mNewId != 0 && id >= mNewId)
       return false;
 
     // Attempt to put back into free IDs
@@ -92,11 +87,11 @@ public:
   Id GetNextId() const
   {
     // Free ID available?
-    if(!mFreeIds.Empty())
+    if (!mFreeIds.Empty())
       return mFreeIds.Front();
 
     // New ID available?
-    else if(mNewId != 0)
+    else if (mNewId != 0)
       return mNewId;
 
     // No ID available
@@ -112,7 +107,8 @@ public:
   /// Returns the number of free IDs available
   size_t GetFreeIdCount() const
   {
-    return size_t((mNewId != 0 ? (Id(Id::max) - mNewId) + 1 : 0).value()) + mFreeIds.Size();
+    return size_t((mNewId != 0 ? (Id(Id::max) - mNewId) + 1 : 0).value()) +
+           mFreeIds.Size();
   }
 
   /// Returns true if there are acquired IDs in use, else false
@@ -134,17 +130,18 @@ public:
 
 private:
   /// Data
-  Id           mNewId;
+  Id mNewId;
   ArraySet<Id> mFreeIds;
 };
 
 /// IdStore Move-Without-Destruction Operator
 template <typename Id>
-struct MoveWithoutDestructionOperator< IdStore<Id> >
+struct MoveWithoutDestructionOperator<IdStore<Id>>
 {
-  static inline void MoveWithoutDestruction(IdStore<Id>* dest, IdStore<Id>* source)
+  static inline void MoveWithoutDestruction(IdStore<Id>* dest,
+                                            IdStore<Id>* source)
   {
-    new(dest) IdStore<Id>(ZeroMove(*source));
+    new (dest) IdStore<Id>(ZeroMove(*source));
   }
 };
 

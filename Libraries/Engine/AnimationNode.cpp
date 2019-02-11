@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2011-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,17 +8,19 @@ const uint cInvalidFrameId = uint(-1);
 
 void PrintTabs(uint tabs)
 {
-  for(uint i = 0; i < tabs; ++i)
+  for (uint i = 0; i < tabs; ++i)
     DebugPrint("|   ");
 }
 
-void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t, 
+void LerpFrame(AnimationFrame& a,
+               AnimationFrame& b,
+               float t,
                AnimationFrame& result)
 {
   uint numberOfTracks = a.Tracks.Size();
   result.Tracks.Resize(numberOfTracks);
 
-  for(uint i=0;i<numberOfTracks;++i)
+  for (uint i = 0; i < numberOfTracks; ++i)
   {
     bool aActive = a.Tracks[i].Active;
     bool bActive = b.Tracks[i].Active;
@@ -31,16 +28,16 @@ void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t,
     Any& valB = b.Tracks[i].Value;
     Any& dest = result.Tracks[i].Value;
     result.Tracks[i].Active = true;
-    if(aActive & bActive)
+    if (aActive & bActive)
     {
-      if(valA.StoredType == ZilchTypeId(Vec3))
+      if (valA.StoredType == ZilchTypeId(Vec3))
         dest = Math::Lerp(valA.Get<Vec3>(), valB.Get<Vec3>(), t);
       else if (valA.StoredType == ZilchTypeId(Quat))
         dest = Quat::SlerpUnnormalized(valA.Get<Quat>(), valB.Get<Quat>(), t);
       else
         dest = valA;
     }
-    else if(aActive)
+    else if (aActive)
     {
       dest = valA;
     }
@@ -51,8 +48,6 @@ void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t,
   }
 }
 
-//--------------------------------------------------------------- Animation Node
-//******************************************************************************
 AnimationNode::AnimationNode()
 {
   mTime = 0.0f;
@@ -63,7 +58,6 @@ AnimationNode::AnimationNode()
   mUpdatedFrameId = cInvalidFrameId;
 }
 
-//******************************************************************************
 ZilchDefineType(AnimationNode, builder, type)
 {
   ZeroBindDocumented();
@@ -80,102 +74,88 @@ ZilchDefineType(AnimationNode, builder, type)
   ZilchBindFieldProperty(mTimeScale);
 }
 
-//******************************************************************************
 String AnimationNode::GetDisplayName()
 {
   return ZilchVirtualTypeId(this)->Name;
 }
 
-//******************************************************************************
 void AnimationNode::CollapseToPose()
 {
   mCollapseToPose = true;
 }
 
-//******************************************************************************
 void AnimationNode::SetDuration(float duration)
 {
   mDuration = duration;
 }
 
-//******************************************************************************
 float AnimationNode::GetDuration()
 {
   return mDuration;
 }
 
-//******************************************************************************
 void AnimationNode::SetTime(float time)
 {
   mTime = Math::Clamp(time, 0.0f, mDuration);
 }
 
-//******************************************************************************
 float AnimationNode::GetTime()
 {
   return mTime;
 }
 
-//******************************************************************************
 void AnimationNode::SetNormalizedTime(float normalizedTime)
 {
   normalizedTime = Math::Clamp(normalizedTime, 0.0f, 1.0f);
   mTime = normalizedTime * mDuration;
 }
 
-//******************************************************************************
 float AnimationNode::GetNormalizedTime()
 {
-  if(mDuration == 0.0f)
+  if (mDuration == 0.0f)
     return 0.0f;
   return mTime / mDuration;
 }
 
-//******************************************************************************
 bool AnimationNode::HasUpdatedThisFrame(uint frameId)
 {
   return mUpdatedFrameId == frameId;
 }
 
-//******************************************************************************
 bool AnimationNode::HasUpdatedAtLeastOnce()
 {
   return mUpdatedFrameId != cInvalidFrameId;
 }
 
-//-------------------------------------------------------------------- Pose Node
 ZilchDefineType(PoseNode, builder, type)
 {
 }
 
-//******************************************************************************
 PoseNode::PoseNode(AnimationFrame& pose)
 {
   mFrameData.Tracks.Assign(pose.Tracks.All());
 }
 
-//******************************************************************************
-AnimationNode* PoseNode::Update(AnimationGraph* animGraph, float dt,
-                                uint frameId, EventList eventsToSend)
+AnimationNode* PoseNode::Update(AnimationGraph* animGraph,
+                                float dt,
+                                uint frameId,
+                                EventList eventsToSend)
 {
   return this;
 }
 
-//******************************************************************************
 void PoseNode::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
   DebugPrint("Pose");
 }
 
-//-------------------------------------------------------------- Basic Animation
 ZilchDefineType(BasicAnimation, builder, type)
 {
   ZilchBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
   ZilchBindFieldProperty(mPlayMode);
 }
 
-//******************************************************************************
 BasicAnimation::BasicAnimation()
 {
   mDirection = 1.0f;
@@ -183,7 +163,6 @@ BasicAnimation::BasicAnimation()
   mLoopCount = 0;
 }
 
-//******************************************************************************
 BasicAnimation::BasicAnimation(AnimationGraph* animGraph)
 {
   mDirection = 1.0f;
@@ -192,9 +171,10 @@ BasicAnimation::BasicAnimation(AnimationGraph* animGraph)
   mAnimGraph = animGraph;
 }
 
-//******************************************************************************
-BasicAnimation::BasicAnimation(AnimationGraph* animGraph, Animation* animation, 
-                               float t, AnimationPlayMode::Enum playMode)
+BasicAnimation::BasicAnimation(AnimationGraph* animGraph,
+                               Animation* animation,
+                               float t,
+                               AnimationPlayMode::Enum playMode)
 {
   mDirection = 1.0f;
   mTime = t;
@@ -204,7 +184,6 @@ BasicAnimation::BasicAnimation(AnimationGraph* animGraph, Animation* animation,
   SetAnimation(animation);
 }
 
-//******************************************************************************
 void BasicAnimation::ReLinkAnimations()
 {
   mPlayData.Clear();
@@ -217,19 +196,20 @@ void BasicAnimation::ReLinkAnimations()
   }
 }
 
-//******************************************************************************
-AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt,
-                                      uint frameId, EventList eventsToSend)
+AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph,
+                                      float dt,
+                                      uint frameId,
+                                      EventList eventsToSend)
 {
   // Return early if we've already been updated
-  if(HasUpdatedThisFrame(frameId))
+  if (HasUpdatedThisFrame(frameId))
     return this;
 
-  if(mCollapseToPose)
+  if (mCollapseToPose)
   {
     // If we haven't been updated yet, we need to pull the frame data from
     // the animation. Otherwise, we're just using last frames data
-    if(HasUpdatedAtLeastOnce())
+    if (HasUpdatedAtLeastOnce())
       UpdateFrame(animGraph);
     return new PoseNode(mFrameData);
   }
@@ -238,12 +218,12 @@ AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt,
   mUpdatedFrameId = frameId;
 
   Animation* animation = mAnimation;
-  if(animation == nullptr)
+  if (animation == nullptr)
     return this;
 
   mTime += dt * animGraph->GetTimeScale() * mDirection * mTimeScale;
 
-  while((mTime > mDuration && mDuration > 0.0f) || mTime < 0.0f)
+  while ((mTime > mDuration && mDuration > 0.0f) || mTime < 0.0f)
   {
     AnimationGraphEvent e;
     e.mAnimation = mAnimation;
@@ -251,7 +231,7 @@ AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt,
     e.mNode = this;
 
     // If we're playing once, we're done and can delete ourselves
-    if(mPlayMode == AnimationPlayMode::PlayOnce)
+    if (mPlayMode == AnimationPlayMode::PlayOnce)
     {
       // Queue an animation ended event
       e.EventId = Events::AnimationEnded;
@@ -272,7 +252,7 @@ AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt,
     }
     else
     {
-      if(mPlayMode == AnimationPlayMode::Pingpong)
+      if (mPlayMode == AnimationPlayMode::Pingpong)
       {
         // Don't go outside the range of the animation
         mTime = Math::Clamp(mTime, 0.0f, mDuration);
@@ -283,7 +263,7 @@ AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt,
       else
       {
         // Send animation looped event
-        if(mTime > mDuration)
+        if (mTime > mDuration)
           mTime -= mDuration;
         else
           mTime += mDuration;
@@ -301,7 +281,6 @@ AnimationNode* BasicAnimation::Update(AnimationGraph* animGraph, float dt,
   return this;
 }
 
-//******************************************************************************
 void BasicAnimation::UpdateFrame(AnimationGraph* animGraph)
 {
   TrackParams params;
@@ -313,7 +292,6 @@ void BasicAnimation::UpdateFrame(AnimationGraph* animGraph)
   mAnimation->UpdateFrame(mPlayData, params, mFrameData);
 }
 
-//******************************************************************************
 AnimationNode* BasicAnimation::Clone()
 {
   BasicAnimation* clone = new BasicAnimation(mAnimGraph);
@@ -325,36 +303,33 @@ AnimationNode* BasicAnimation::Clone()
   return clone;
 }
 
-//******************************************************************************
 bool BasicAnimation::IsPlayingInNode(StringParam animName)
 {
   return animName == mAnimation->Name;
 }
 
-//******************************************************************************
 void BasicAnimation::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
   String animName = mAnimation->Name;
-  DebugPrint("BasicAnimation: %s, at: %.2gs of %.2gs\n", 
-              animName.c_str(), mTime, mDuration);
+  DebugPrint("BasicAnimation: %s, at: %.2gs of %.2gs\n",
+             animName.c_str(),
+             mTime,
+             mDuration);
 }
 
-//******************************************************************************
 String BasicAnimation::GetDisplayName()
 {
-  if(Animation* animation = mAnimation)
+  if (Animation* animation = mAnimation)
     return animation->Name;
   return AnimationNode::GetDisplayName();
 }
 
-//******************************************************************************
 Animation* BasicAnimation::GetAnimation()
 {
   return mAnimation;
 }
 
-//******************************************************************************
 void BasicAnimation::SetAnimation(Animation* animation)
 {
   if (animation == mAnimation)
@@ -365,38 +340,36 @@ void BasicAnimation::SetAnimation(Animation* animation)
   ReLinkAnimations();
 }
 
-//******************************************************************************
-AnimationNode* BuildBasic(AnimationGraph* animGraph, Animation* animation, float t, 
+AnimationNode* BuildBasic(AnimationGraph* animGraph,
+                          Animation* animation,
+                          float t,
                           AnimationPlayMode::Enum playMode)
 {
   return new BasicAnimation(animGraph, animation, t, playMode);
 }
 
-//----------------------------------------------------------------- Direct Blend
 ZilchDefineType(DirectBlend, builder, type)
 {
 }
 
-//******************************************************************************
 DirectBlend::DirectBlend()
 {
-
 }
 
-//******************************************************************************
 String DirectBlend::GetName()
 {
   return String("DirectBlend");
 }
 
-//******************************************************************************
-AnimationNode* DirectBlend::Update(AnimationGraph* animGraph, float dt,
-                                   uint frameId, EventList eventsToSend)
+AnimationNode* DirectBlend::Update(AnimationGraph* animGraph,
+                                   float dt,
+                                   uint frameId,
+                                   EventList eventsToSend)
 {
   // Return early if we've already been updated
-  if(HasUpdatedThisFrame(frameId))
+  if (HasUpdatedThisFrame(frameId))
   {
-    if(AnimationNode* lastReturned = mLastReturned)
+    if (AnimationNode* lastReturned = mLastReturned)
       return lastReturned;
     return this;
   }
@@ -404,11 +377,11 @@ AnimationNode* DirectBlend::Update(AnimationGraph* animGraph, float dt,
   // Update the frame id
   mUpdatedFrameId = frameId;
 
-  if(mCollapseToPose)
+  if (mCollapseToPose)
   {
     // Use the last frames data for the pose. If we haven't been updated yet,
     // we need to update with a dt of 0.0, then create the pose node
-    if(HasUpdatedAtLeastOnce())
+    if (HasUpdatedAtLeastOnce())
       return new PoseNode(mFrameData);
 
     // If we're collapsing to pose, we want to pull all animation data without
@@ -419,17 +392,17 @@ AnimationNode* DirectBlend::Update(AnimationGraph* animGraph, float dt,
   mTime += dt * animGraph->GetTimeScale() * mTimeScale;
 
   // If the blend is done, return the right branch
-  if(mTime > mDuration)
+  if (mTime > mDuration)
   {
     mLastReturned = mB;
     return CollapseToB(animGraph, frameId, eventsToSend);
   }
 
-  float t = mTime/mDuration;
+  float t = mTime / mDuration;
 
   // Update the left branch
   mA = mA->Update(animGraph, 0, frameId, eventsToSend);
-  if(mA.IsNull())
+  if (mA.IsNull())
   {
     mLastReturned = mB;
     return CollapseToB(animGraph, frameId, eventsToSend);
@@ -437,7 +410,7 @@ AnimationNode* DirectBlend::Update(AnimationGraph* animGraph, float dt,
 
   // Update the right branch
   mB = mB->Update(animGraph, 0, frameId, eventsToSend);
-  if(mB.IsNull())
+  if (mB.IsNull())
   {
     mLastReturned = mA;
     return CollapseToA(animGraph, frameId, eventsToSend);
@@ -447,13 +420,12 @@ AnimationNode* DirectBlend::Update(AnimationGraph* animGraph, float dt,
   LerpFrame(mA->mFrameData, mB->mFrameData, t, mFrameData);
 
   // Now that we've updated our frame data, we can create the pose node
-  if(mCollapseToPose)
+  if (mCollapseToPose)
     return new PoseNode(mFrameData);
 
   return this;
 }
 
-//******************************************************************************
 void DirectBlend::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
@@ -462,8 +434,9 @@ void DirectBlend::PrintNode(uint tabs)
   mB->PrintNode(tabs + 1);
 }
 
-//******************************************************************************
-AnimationNode* BuildDirectBlend(AnimationGraph* t, AnimationNode* a, AnimationNode* b,
+AnimationNode* BuildDirectBlend(AnimationGraph* t,
+                                AnimationNode* a,
+                                AnimationNode* b,
                                 float transitionTime)
 {
   DirectBlend* direct = new DirectBlend();
@@ -474,7 +447,6 @@ AnimationNode* BuildDirectBlend(AnimationGraph* t, AnimationNode* a, AnimationNo
   return direct;
 }
 
-//------------------------------------------------------------------ Cross Blend
 ZilchDefineType(CrossBlend, builder, type)
 {
   ZilchBindFieldProperty(mTimeScaleFrom);
@@ -485,7 +457,6 @@ ZilchDefineType(CrossBlend, builder, type)
   ZilchBindMethod(SetNormalizedTimeScale);
 }
 
-//******************************************************************************
 CrossBlend::CrossBlend()
 {
   mTimeScaleFrom = 1.0f;
@@ -494,29 +465,29 @@ CrossBlend::CrossBlend()
   mMode = AnimationBlendMode::Auto;
 }
 
-//******************************************************************************
 String CrossBlend::GetName()
 {
   return String("CrossBlend");
 }
 
-//******************************************************************************
-AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt,
-                                  uint frameId, EventList eventsToSend)
+AnimationNode* CrossBlend::Update(AnimationGraph* animGraph,
+                                  float dt,
+                                  uint frameId,
+                                  EventList eventsToSend)
 {
   // Return early if we've already been updated
-  if(HasUpdatedThisFrame(frameId))
+  if (HasUpdatedThisFrame(frameId))
   {
-    if(AnimationNode* lastReturned = mLastReturned)
+    if (AnimationNode* lastReturned = mLastReturned)
       return lastReturned;
     return this;
   }
 
-  if(mCollapseToPose)
+  if (mCollapseToPose)
   {
     // Use the last frames data for the pose. If we haven't been updated yet,
     // we need to update with a dt of 0.0, then create the pose node
-    if(HasUpdatedAtLeastOnce())
+    if (HasUpdatedAtLeastOnce())
       return new PoseNode(mFrameData);
 
     // If we're collapsing to pose, we want to pull all animation data without
@@ -528,7 +499,7 @@ AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt,
   mUpdatedFrameId = frameId;
 
   // Step forward if we're in auto mode
-  if(mMode == AnimationBlendMode::Auto)
+  if (mMode == AnimationBlendMode::Auto)
   {
     float timeScale = animGraph->GetTimeScale() * mTimeScale;
     mTime += dt * timeScale;
@@ -536,28 +507,28 @@ AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt,
 
   // The normalized time for this blend
   float blendT = 0.0f;
-  if(mDuration != 0.0f)
+  if (mDuration != 0.0f)
     blendT = mTime / mDuration;
 
   // Cross blend will also cross blend the animation speed
-  if(mMode == AnimationBlendMode::Auto)
+  if (mMode == AnimationBlendMode::Auto)
   {
     // If the blend is done, return the right branch
-    if(mTime > mDuration)
+    if (mTime > mDuration)
     {
       mLastReturned = mB;
       return CollapseToB(animGraph, frameId, eventsToSend);
     }
   }
 
-  if(mType == AnimationBlendType::Normalized)
+  if (mType == AnimationBlendType::Normalized)
   {
     float rateA = 0.0f;
-    if(mA->GetDuration() > 0.0f)
+    if (mA->GetDuration() > 0.0f)
       rateA = 1.0f / mA->GetDuration();
 
     float rateB = 0.0f;
-    if(mB->GetDuration() > 0.0f)
+    if (mB->GetDuration() > 0.0f)
       rateB = 1.0f / mB->GetDuration();
 
     float percentagePassed = Math::Lerp(rateA, rateB, blendT);
@@ -568,7 +539,7 @@ AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt,
 
   // Update the left branch
   mA = mA->Update(animGraph, dt * mTimeScaleFrom, frameId, eventsToSend);
-  if(!mA)
+  if (!mA)
   {
     mLastReturned = mB;
     return CollapseToB(animGraph, frameId, eventsToSend);
@@ -576,7 +547,7 @@ AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt,
 
   // Update the right branch
   mB = mB->Update(animGraph, dt * mTimeScaleTo, frameId, eventsToSend);
-  if(!mB)
+  if (!mB)
   {
     mLastReturned = mA;
     return CollapseToA(animGraph, frameId, eventsToSend);
@@ -586,13 +557,12 @@ AnimationNode* CrossBlend::Update(AnimationGraph* animGraph, float dt,
   LerpFrame(mA->mFrameData, mB->mFrameData, blendT, mFrameData);
 
   // Now that we've updated our frame data, we can create the pose node
-  if(mCollapseToPose)
+  if (mCollapseToPose)
     return new PoseNode(mFrameData);
 
   return this;
 }
 
-//******************************************************************************
 void CrossBlend::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
@@ -601,26 +571,24 @@ void CrossBlend::PrintNode(uint tabs)
   mB->PrintNode(tabs + 1);
 }
 
-//******************************************************************************
 void CrossBlend::SyncCadence()
 {
   float normalizedT = 0.0f;
-  if(mA->GetDuration() > 0.0f)
+  if (mA->GetDuration() > 0.0f)
     normalizedT = mA->GetTime() / mA->GetDuration();
   mB->SetTime(normalizedT * mB->GetDuration());
 }
 
-//******************************************************************************
 void CrossBlend::SetNormalizedTimeScale(float min, float max, float current)
 {
   mType = AnimationBlendType::Standard;
 
   float rateA = 0.0f;
-  if(mA->GetDuration() > 0.0f)
+  if (mA->GetDuration() > 0.0f)
     rateA = 1.0f / mA->GetDuration();
 
   float rateB = 0.0f;
-  if(mB->GetDuration() > 0.0f)
+  if (mB->GetDuration() > 0.0f)
     rateB = 1.0f / mB->GetDuration();
 
   float blendTime = (current - min) / (max - min);
@@ -645,8 +613,9 @@ void CrossBlend::SetNormalizedTimeScale(float min, float max, float current)
   SetNormalizedTime(Math::Clamp(blendTime, 0.0f, 1.0f));
 }
 
-//******************************************************************************
-AnimationNode* BuildCrossBlend(AnimationGraph* t, AnimationNode* a, AnimationNode* b,
+AnimationNode* BuildCrossBlend(AnimationGraph* t,
+                               AnimationNode* a,
+                               AnimationNode* b,
                                float transitionTime)
 {
   CrossBlend* blend = new CrossBlend();
@@ -662,32 +631,29 @@ AnimationNode* BuildCrossBlend(AnimationGraph* t, AnimationNode* a, AnimationNod
   return blend;
 }
 
-//--------------------------------------------------------------- Selective Node
 ZilchDefineType(SelectiveNode, builder, type)
 {
   ZilchBindGetterSetterProperty(Root);
 }
 
-//******************************************************************************
 SelectiveNode::SelectiveNode()
 {
-
 }
 
-//******************************************************************************
 String SelectiveNode::GetName()
 {
   return String("SelectiveNode");
 }
 
-//******************************************************************************
-AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt,
-                                     uint frameId, EventList eventsToSend)
+AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph,
+                                     float dt,
+                                     uint frameId,
+                                     EventList eventsToSend)
 {
   // Return early if we've already been updated
-  if(HasUpdatedThisFrame(frameId))
+  if (HasUpdatedThisFrame(frameId))
   {
-    if(AnimationNode* lastReturned = mLastReturned)
+    if (AnimationNode* lastReturned = mLastReturned)
       return lastReturned;
     return this;
   }
@@ -695,11 +661,11 @@ AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt,
   // Update the frame id
   mUpdatedFrameId = frameId;
 
-  if(mCollapseToPose)
+  if (mCollapseToPose)
   {
     // Use the last frames data for the pose. If we haven't been updated yet,
     // we need to update with a dt of 0.0, then create the pose node
-    if(HasUpdatedAtLeastOnce())
+    if (HasUpdatedAtLeastOnce())
       return new PoseNode(mFrameData);
 
     // If we're collapsing to pose, we want to pull all animation data without
@@ -708,12 +674,12 @@ AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt,
   }
 
   // Update the left branch
-  if(mA)
+  if (mA)
     mA = mA->Update(animGraph, dt * mTimeScale, frameId, eventsToSend);
 
   // Update the right branch
   mB = mB->Update(animGraph, dt * mTimeScale, frameId, eventsToSend);
-  if(!mB)
+  if (!mB)
   {
     mLastReturned = mA;
     return CollapseToA(animGraph, frameId, eventsToSend);
@@ -725,17 +691,17 @@ AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt,
 
   uint trackCount = frameA.Tracks.Size();
   mFrameData.Tracks.Resize(trackCount);
-  for(uint i = 0; i < trackCount; ++i)
+  for (uint i = 0; i < trackCount; ++i)
   {
     Any& dest = mFrameData.Tracks[i].Value;
     mFrameData.Tracks[i].Active = true;
 
-    if(mSelectiveBones.FindValue((int)i, uint(-1)) != uint(-1))
+    if (mSelectiveBones.FindValue((int)i, uint(-1)) != uint(-1))
     {
       Any& valB = frameB.Tracks[i].Value;
       dest = valB;
     }
-    else if(mA)
+    else if (mA)
     {
       Any& valA = frameA.Tracks[i].Value;
       dest = valA;
@@ -743,13 +709,12 @@ AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt,
   }
 
   // Now that we've updated our frame data, we can create the pose node
-  if(mCollapseToPose)
+  if (mCollapseToPose)
     return new PoseNode(mFrameData);
 
   return this;
 }
 
-//******************************************************************************
 AnimationNode* SelectiveNode::Clone()
 {
   SelectiveNode* clone = new SelectiveNode();
@@ -761,7 +726,6 @@ AnimationNode* SelectiveNode::Clone()
   return clone;
 }
 
-//******************************************************************************
 void SelectiveNode::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
@@ -770,42 +734,39 @@ void SelectiveNode::PrintNode(uint tabs)
   mB->PrintNode(tabs + 1);
 }
 
-//******************************************************************************
 void GetChildIndices(Cog* object, AnimationGraph* t, HashSet<uint>& indices)
 {
   // Walk through the blend tracks and find anything with this object
   BlendTracks::range r = t->mBlendTracks.All();
-  for(; !r.Empty(); r.PopFront())
+  for (; !r.Empty(); r.PopFront())
   {
     BlendTrack* track = r.Front().second;
     Transform* currObject = track->Object.Get<Transform*>();
-    if(currObject == nullptr)
+    if (currObject == nullptr)
       continue;
-    if(currObject->GetOwner() == object)
+    if (currObject->GetOwner() == object)
       indices.Insert(track->Index);
   }
 
   // Recursively call each child of the object
   Hierarchy* hierarchy = object->has(Hierarchy);
-  if(hierarchy)
+  if (hierarchy)
   {
     HierarchyList::range range = hierarchy->GetChildren();
-    for(; !range.Empty(); range.PopFront())
+    for (; !range.Empty(); range.PopFront())
       GetChildIndices(&range.Front(), t, indices);
   }
 }
 
-//******************************************************************************
 AnimationGraph* GetAnimationGraph(Cog* object)
 {
-  if(object == nullptr)
+  if (object == nullptr)
     return nullptr;
-  if(AnimationGraph* animGraph = object->has(AnimationGraph))
+  if (AnimationGraph* animGraph = object->has(AnimationGraph))
     return animGraph;
   return GetAnimationGraph(object->GetParent());
 }
 
-//******************************************************************************
 void SelectiveNode::SetRoot(Cog* root)
 {
   mRoot = root;
@@ -813,15 +774,15 @@ void SelectiveNode::SetRoot(Cog* root)
   GetChildIndices(root, animGraph, mSelectiveBones);
 }
 
-//******************************************************************************
 Cog* SelectiveNode::GetRoot()
 {
   return mRoot;
 }
 
-//******************************************************************************
-AnimationNode* BuildSelectiveNode(AnimationGraph* t, AnimationNode* a, 
-                                  AnimationNode* b, Cog* rootBone)
+AnimationNode* BuildSelectiveNode(AnimationGraph* t,
+                                  AnimationNode* a,
+                                  AnimationNode* b,
+                                  Cog* rootBone)
 {
   SelectiveNode* selective = new SelectiveNode();
 
@@ -832,40 +793,37 @@ AnimationNode* BuildSelectiveNode(AnimationGraph* t, AnimationNode* a,
   return selective;
 }
 
-//------------------------------------------------------------------- Chain Node
 ZilchDefineType(ChainNode, builder, type)
 {
 }
 
-//******************************************************************************
 ChainNode::ChainNode()
 {
-
 }
 
-//******************************************************************************
 String ChainNode::GetName()
 {
   return String("ChainNode");
 }
 
-//******************************************************************************
-AnimationNode* ChainNode::Update(AnimationGraph* animGraph, float dt,
-                                 uint frameId, EventList eventsToSend)
+AnimationNode* ChainNode::Update(AnimationGraph* animGraph,
+                                 float dt,
+                                 uint frameId,
+                                 EventList eventsToSend)
 {
   // Return early if we've already been updated
-  if(HasUpdatedThisFrame(frameId))
+  if (HasUpdatedThisFrame(frameId))
   {
-    if(AnimationNode* lastReturned = mLastReturned)
+    if (AnimationNode* lastReturned = mLastReturned)
       return lastReturned;
     return this;
   }
 
-  if(mCollapseToPose)
+  if (mCollapseToPose)
   {
     // Use the last frames data for the pose. If we haven't been updated yet,
     // we need to update with a dt of 0.0, then create the pose node
-    if(HasUpdatedAtLeastOnce())
+    if (HasUpdatedAtLeastOnce())
       return new PoseNode(mFrameData);
 
     // If we're collapsing to pose, we want to pull all animation data without
@@ -882,7 +840,7 @@ AnimationNode* ChainNode::Update(AnimationGraph* animGraph, float dt,
   // Keep around a reference so that it cannot be deleted in the update
   HandleOf<AnimationNode> tempRefA = mA;
   mA = mA->Update(animGraph, dt, frameId, eventsToSend);
-  if(!mA)
+  if (!mA)
   {
     mLastReturned = mB;
     return CollapseToB(animGraph, frameId, eventsToSend);
@@ -892,19 +850,17 @@ AnimationNode* ChainNode::Update(AnimationGraph* animGraph, float dt,
   mFrameData.Tracks.Assign(mA->mFrameData.Tracks.All());
 
   // Now that we've updated our frame data, we can create the pose node
-  if(mCollapseToPose)
+  if (mCollapseToPose)
     return new PoseNode(mFrameData);
 
   return this;
 }
 
-//******************************************************************************
 bool ChainNode::IsPlayingInNode(StringParam animName)
 {
   return mA->IsPlayingInNode(animName) || mB->IsPlayingInNode(animName);
 }
 
-//******************************************************************************
 void ChainNode::PrintNode(uint tabs)
 {
   PrintTabs(tabs);
@@ -913,8 +869,9 @@ void ChainNode::PrintNode(uint tabs)
   mB->PrintNode(tabs + 2);
 }
 
-//******************************************************************************
-AnimationNode* BuildChainNode(AnimationGraph* t, AnimationNode* a, AnimationNode* b)
+AnimationNode* BuildChainNode(AnimationGraph* t,
+                              AnimationNode* a,
+                              AnimationNode* b)
 {
   ChainNode* chain = new ChainNode();
   chain->mA = a;
@@ -922,4 +879,4 @@ AnimationNode* BuildChainNode(AnimationGraph* t, AnimationNode* a, AnimationNode
   return chain;
 }
 
-}//namespace Zero
+} // namespace Zero

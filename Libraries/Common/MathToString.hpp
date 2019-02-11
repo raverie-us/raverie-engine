@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -21,4 +16,4 @@ String ToString(Math::Mat2Param value, bool shortFormat = false);
 String ToString(Math::Mat3Param value, bool shortFormat = false);
 String ToString(Math::Mat4Param value, bool shortFormat = false);
 
-}//namespace Zero
+} // namespace Zero

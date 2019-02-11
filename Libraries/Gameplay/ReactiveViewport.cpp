@@ -1,13 +1,10 @@
-/// Authors: Nathan Carlson, Chris Peters
-/// Copyright 2010-2016, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Viewport Mouse Event
 
-//******************************************************************************
 ZilchDefineType(ViewportMouseEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -27,84 +24,77 @@ ZilchDefineType(ViewportMouseEvent, builder, type)
   ZilchBindMethod(ToWorldPlane);
 }
 
-//******************************************************************************
 ViewportMouseEvent::ViewportMouseEvent() :
-  mRayStart(Vec3::cZero),
-  mRayDirection(Vec3::cZero),
-  mHitPosition(Vec3::cZero),
-  mHitNormal(Vec3::cZero),
-  mHitUv(Vec2::cZero),
-  mHitDistance(0.0f)
+    mRayStart(Vec3::cZero),
+    mRayDirection(Vec3::cZero),
+    mHitPosition(Vec3::cZero),
+    mHitNormal(Vec3::cZero),
+    mHitUv(Vec2::cZero),
+    mHitDistance(0.0f)
 {
 }
 
-//******************************************************************************
 ViewportMouseEvent::ViewportMouseEvent(MouseEvent* event) :
-  mRayStart(Vec3::cZero),
-  mRayDirection(Vec3::cZero),
-  mHitPosition(Vec3::cZero),
-  mHitNormal(Vec3::cZero),
-  mHitUv(Vec2::cZero),
-  mHitDistance(0.0f)
+    mRayStart(Vec3::cZero),
+    mRayDirection(Vec3::cZero),
+    mHitPosition(Vec3::cZero),
+    mHitNormal(Vec3::cZero),
+    mHitUv(Vec2::cZero),
+    mHitDistance(0.0f)
 {
   // Copy the event into ourselves
   *(MouseEvent*)this = *event;
 }
 
-//******************************************************************************
 Cog* ViewportMouseEvent::GetHitObject()
 {
   return mHitObject;
 }
 
-//******************************************************************************
 CameraViewport* ViewportMouseEvent::GetCameraViewport()
 {
   return mCameraViewportCog.has(CameraViewport);
 }
 
-//******************************************************************************
 Vec3 ViewportMouseEvent::ToWorldZPlane(float worldDepth)
 {
   Viewport* viewport = mViewport;
-  if(viewport == nullptr)
+  if (viewport == nullptr)
     return Vec3::cZero;
 
   return viewport->ScreenToWorldZPlane(Position, worldDepth);
 }
 
-//******************************************************************************
 Vec3 ViewportMouseEvent::ToWorldViewPlane(float viewDepth)
 {
   Viewport* viewport = mViewport;
-  if(viewport == nullptr)
+  if (viewport == nullptr)
     return Vec3::cZero;
 
   return viewport->ScreenToWorldViewPlane(Position, viewDepth);
 }
 
-//******************************************************************************
 Vec3 ViewportMouseEvent::ToWorldPlane(Vec3Param worldPlaneNormal,
                                       Vec3Param worldPlanePosition)
 {
   Viewport* viewport = mViewport;
-  if(viewport == nullptr)
+  if (viewport == nullptr)
     return Vec3::cZero;
 
-  return viewport->ScreenToWorldPlane(Position, worldPlaneNormal, worldPlanePosition);
+  return viewport->ScreenToWorldPlane(
+      Position, worldPlaneNormal, worldPlanePosition);
 }
 
-//------------------------------------------------------------ Reactive Viewport
 
-//******************************************************************************
 ZilchDefineType(ReactiveViewport, builder, type)
 {
 }
 
-//******************************************************************************
-ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* camera,
-                                   CameraViewport* cameraViewport)
-  : Viewport(parent, space, camera)
+ReactiveViewport::ReactiveViewport(Composite* parent,
+                                   Space* space,
+                                   Camera* camera,
+                                   CameraViewport* cameraViewport) :
+    Viewport(parent, space, camera)
 {
   mReactiveRay = Ray(Vec3::cZero, Vec3::cZAxis);
   mReactiveHitPosition = Vec3::cZero;
@@ -121,7 +111,7 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   ConnectThisTo(this, Events::MouseExit, OnMouseExit);
   ConnectThisTo(this, Events::MouseUpdate, OnMouseGeneric);
 
-  //Forwarded Mouse Events
+  // Forwarded Mouse Events
   ConnectThisTo(this, Events::MouseScroll, OnMouseGeneric);
   ConnectThisTo(this, Events::MouseMove, OnMouseGeneric);
 
@@ -141,7 +131,6 @@ ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* came
   ConnectThisTo(this, Events::MiddleMouseUp, OnMouseGeneric);
 }
 
-//******************************************************************************
 void ReactiveViewport::UpdateTransform()
 {
   Composite::UpdateTransform();
@@ -150,11 +139,10 @@ void ReactiveViewport::UpdateTransform()
     SetMouseTrapPosition(true);
 }
 
-//******************************************************************************
 ReactiveSpace* ReactiveViewport::GetReactiveSpace()
 {
   // Get the target space
-  Space* space = mTargetSpace;//mRenderView->GetTargetSpace();
+  Space* space = mTargetSpace; // mRenderView->GetTargetSpace();
 
   if (space == nullptr)
     return nullptr;
@@ -164,26 +152,28 @@ ReactiveSpace* ReactiveViewport::GetReactiveSpace()
   if (Z::gEngine->mIsDebugging)
     return nullptr;
 
-  // Grab the reactive space component, which stores who we're hovering over per space
+  // Grab the reactive space component, which stores who we're hovering over per
+  // space
   ReactiveSpace* reactiveSpace = space->has(ReactiveSpace);
   if (reactiveSpace == nullptr)
   {
     space->AddComponentByName("ReactiveSpace");
     reactiveSpace = space->has(ReactiveSpace);
-    ReturnIf(reactiveSpace == nullptr, nullptr, "Unable to add ReactiveSpace component");
+    ReturnIf(reactiveSpace == nullptr,
+             nullptr,
+             "Unable to add ReactiveSpace component");
   }
 
   return reactiveSpace;
 }
 
-//******************************************************************************
 void ReactiveViewport::OnMouseEnter(MouseEvent* e)
 {
   SetMouseTrapPosition(true);
   mMouseOver = true;
 
   ReactiveSpace* reactiveSpace = GetReactiveSpace();
-  if(!reactiveSpace)
+  if (!reactiveSpace)
     return;
 
   UpdateOverObject(e);
@@ -191,10 +181,10 @@ void ReactiveViewport::OnMouseEnter(MouseEvent* e)
   ViewportMouseEvent viewportEvent(e);
   InitViewportEvent(viewportEvent);
 
-  mCamera->GetOwner()->GetDispatcher()->Dispatch(Events::MouseEnter, &viewportEvent);
+  mCamera->GetOwner()->GetDispatcher()->Dispatch(Events::MouseEnter,
+                                                 &viewportEvent);
 }
 
-//******************************************************************************
 void ReactiveViewport::OnMouseExit(MouseEvent* e)
 {
   SetMouseTrapPosition(false);
@@ -206,26 +196,26 @@ void ReactiveViewport::OnMouseExit(MouseEvent* e)
 
   Cog* overObject = mOverObject;
 
-  if(overObject)
+  if (overObject)
   {
     Reactive* reactive = overObject->has(Reactive);
 
-    if(reactive)
+    if (reactive)
     {
       ViewportMouseEvent viewportEvent(e);
       InitViewportEvent(viewportEvent);
 
       EventDispatcher* dispatcher = overObject->GetDispatcher();
 
-      // Always make sure that, before we dispatch mouse exit, we release the 'over' object
-      // so that any script checking for the hover object will not think its this
+      // Always make sure that, before we dispatch mouse exit, we release the
+      // 'over' object so that any script checking for the hover object will not
+      // think its this
       mOverObject = CogId();
       dispatcher->Dispatch(Events::MouseExit, &viewportEvent);
     }
   }
 }
 
-//******************************************************************************
 void ReactiveViewport::OnMouseUpdate(MouseEvent* e)
 {
   UpdateOverObject(e);
@@ -233,20 +223,17 @@ void ReactiveViewport::OnMouseUpdate(MouseEvent* e)
   ForwardReactiveEvent(Events::MouseUpdate, e);
 }
 
-//******************************************************************************
 void ReactiveViewport::OnMouseGeneric(MouseEvent* e)
 {
   ForwardReactiveEvent(e->EventId, e);
 }
 
-//******************************************************************************
 void ReactiveViewport::OnMouseGenericDown(MouseEvent* e)
 {
   mDownObject = mOverObject;
   ForwardReactiveEvent(e->EventId, e);
 }
 
-//******************************************************************************
 void ReactiveViewport::OnMouseGenericClick(MouseEvent* e)
 {
   // If the mouse is still over the same object as the initial button down press
@@ -255,15 +242,14 @@ void ReactiveViewport::OnMouseGenericClick(MouseEvent* e)
     ForwardReactiveEvent(e->EventId, e);
 }
 
-//******************************************************************************
 bool CanClearOldReactive(Handle objectHit)
 {
-  if(Cog* cog = objectHit.Get<Cog*>())
+  if (Cog* cog = objectHit.Get<Cog*>())
   {
     Reactive* reactive = cog->has(Reactive);
-    if(reactive && !reactive->mActive)
+    if (reactive && !reactive->mActive)
       return true;
-    else if(!reactive)
+    else if (!reactive)
       return true;
 
     return false;
@@ -272,12 +258,11 @@ bool CanClearOldReactive(Handle objectHit)
   return true;
 }
 
-//******************************************************************************
 void ReactiveViewport::UpdateOverObject(MouseEvent* e)
 {
   // If we have no space then don't do anything
   Space* space = mTargetSpace;
-  if(!space)
+  if (!space)
     return;
 
   Vec2 mousePosition = e->Position;
@@ -288,40 +273,42 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
   CastFilter filter;
   filter.Set(BaseCastFilterFlags::GetContactNormal);
 
-  // Grab the reactive space component, which stores who we're hovering over per space
+  // Grab the reactive space component, which stores who we're hovering over per
+  // space
   ReactiveSpace* reactiveSpace = GetReactiveSpace();
-  if(!reactiveSpace)
+  if (!reactiveSpace)
     return;
 
   // Keep track of the current hit object and the last hit object
   Handle objectHit;
   Cog* oldOverObject = mOverObject.ToCog();
 
-  // As long as someone else didn't handle this mouse event (blocked by another reactive in a different viewport)
-  // We need to still update, but act as if we just lost any reactive object
-  if(!e->Handled)
+  // As long as someone else didn't handle this mouse event (blocked by another
+  // reactive in a different viewport) We need to still update, but act as if we
+  // just lost any reactive object
+  if (!e->Handled)
   {
     RaycastResultList results(256);
     CastInfo info(space, mViewportInterface->GetCameraCog(), mousePosition);
     reactiveSpace->mRaycaster.RayCast(ray, info, results);
 
-    // We want to find the first object we hit, but we may hit objects without reactive
-    // components, therefore we loop over a larger set of objects from raycasting and stop
-    // when we hit the first one with a reactive component.
-    for(size_t i = 0; i < results.mSize; ++i)
+    // We want to find the first object we hit, but we may hit objects without
+    // reactive components, therefore we loop over a larger set of objects from
+    // raycasting and stop when we hit the first one with a reactive component.
+    for (size_t i = 0; i < results.mSize; ++i)
     {
       RayCastEntry& result = results.mEntries[i];
       Cog* newCog = result.HitCog;
       Handle newObject(newCog);
-      //DebugPrint("Hit: %s\n", newObject->GetName().c_str());
+      // DebugPrint("Hit: %s\n", newObject->GetName().c_str());
 
       objectHit = newObject;
 
-      //we only care about this object if it is an active reactive object.
+      // we only care about this object if it is an active reactive object.
       Reactive* reactive = newCog != nullptr ? newCog->has(Reactive) : nullptr;
-      if(reactive && reactive->mActive)
+      if (reactive && reactive->mActive)
       {
-        //store the mouse position info on the reactive component
+        // store the mouse position info on the reactive component
         this->mReactiveHitPosition = result.HitWorldPosition;
         this->mReactiveHitNormal = result.HitWorldNormal;
         this->mReactiveHitUv = result.HitUv;
@@ -334,10 +321,11 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
         // If we hit a new object and we were hitting an old object,
         // we need to send a mouse enter to the new object and
         // a mouse exit to the old object
-        if(oldOverObject != newCog)
+        if (oldOverObject != newCog)
         {
-          // Always make sure that, before we dispatch mouse exit, we release the 'over' object
-          // so that any script checking for the hover object will not think its this
+          // Always make sure that, before we dispatch mouse exit, we release
+          // the 'over' object so that any script checking for the hover object
+          // will not think its this
           mOverObject = newCog;
 
           // Create the event to send out what cog has been entered
@@ -346,7 +334,7 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
 
           newCog->DispatchEvent(Events::MouseEnterPreview, &viewportEvent);
 
-          if(oldOverObject != nullptr)
+          if (oldOverObject != nullptr)
             oldOverObject->DispatchEvent(Events::MouseExit, &viewportEvent);
 
           newCog->DispatchEvent(Events::MouseEnter, &viewportEvent);
@@ -361,15 +349,17 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
   }
 
   // If we were hitting an old object and we don't have a new object,
-  // or if the object we hit doesn't have a reactive component, or it has an inactive reactive,
-  // then send a mouse exit to the old object and clear our current hover object.
-  if(CanClearOldReactive(objectHit))
+  // or if the object we hit doesn't have a reactive component, or it has an
+  // inactive reactive, then send a mouse exit to the old object and clear our
+  // current hover object.
+  if (CanClearOldReactive(objectHit))
   {
-    // Always make sure that, before we dispatch mouse exit, we release the 'over' object
-    // so that any script checking for the hover object will not think its this
+    // Always make sure that, before we dispatch mouse exit, we release the
+    // 'over' object so that any script checking for the hover object will not
+    // think its this
     mOverObject = CogId();
     reactiveSpace->mOver = mOverObject;
-    if(oldOverObject != nullptr)
+    if (oldOverObject != nullptr)
     {
       // Clear out all Reactive hit information.  If a new Reactive object was
       // hit: then code-control wouldn't reach this point.  If a non-Reactive
@@ -382,13 +372,14 @@ void ReactiveViewport::UpdateOverObject(MouseEvent* e)
       ViewportMouseEvent viewportEvent(e);
       InitViewportEvent(viewportEvent);
 
-      oldOverObject->GetDispatcher()->Dispatch(Events::MouseExit, &viewportEvent);
+      oldOverObject->GetDispatcher()->Dispatch(Events::MouseExit,
+                                               &viewportEvent);
     }
   }
 }
 
-//******************************************************************************
-void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e)
+void ReactiveViewport::ForwardReactiveEvent(StringParam eventName,
+                                            MouseEvent* e)
 {
   if (e->Handled)
     return;
@@ -437,7 +428,7 @@ void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e
   bool forwardToChildren = true;
   if (CameraViewport* camViewport = mCameraViewport)
     forwardToChildren = camViewport->mForwardViewportEvents;
-  
+
   if (mGameWidget && forwardToChildren && !e->Handled)
   {
     // Loop through all viewports until one has the mouse position over it
@@ -460,7 +451,6 @@ void ReactiveViewport::ForwardReactiveEvent(StringParam eventName, MouseEvent* e
   }
 }
 
-//******************************************************************************
 void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
 {
   this->mReactiveRay = ScreenToWorldRay(viewportEvent.Position);
@@ -479,11 +469,11 @@ void ReactiveViewport::InitViewportEvent(ViewportMouseEvent& viewportEvent)
   viewportEvent.mCameraViewportCog = mViewportInterface->GetOwner();
 }
 
-//******************************************************************************
 void ReactiveViewport::SetMouseTrapPosition(bool useMouseTrapPosition)
 {
   if (OsWindow* window = mRootWidget->GetOsWindow())
-    window->SetMouseTrapClientPosition(Math::ToIntVec2(GetClientCenterPosition()), useMouseTrapPosition);
+    window->SetMouseTrapClientPosition(
+        Math::ToIntVec2(GetClientCenterPosition()), useMouseTrapPosition);
 }
 
 Widget* ReactiveViewport::HitTest(Vec2 screenPoint, Widget* skip)
@@ -494,26 +484,20 @@ Widget* ReactiveViewport::HitTest(Vec2 screenPoint, Widget* skip)
   return hit;
 }
 
-//------------------------------------------------------------------ Game Widget
 ZilchDefineType(GameWidget, builder, type)
 {
 }
 
-//******************************************************************************
-GameWidget::GameWidget(Composite* composite)
-  : Composite(composite)
+GameWidget::GameWidget(Composite* composite) : Composite(composite)
 {
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
 }
 
-//******************************************************************************
 GameWidget::~GameWidget()
 {
-
 }
 
-//******************************************************************************
 void GameWidget::OnDestroy()
 {
   // Signal quit, handle will be null if GameWidget is not supposed to quit game
@@ -522,7 +506,6 @@ void GameWidget::OnDestroy()
   Composite::OnDestroy();
 }
 
-//******************************************************************************
 bool GameWidget::TakeFocusOverride()
 {
   CommandManager::GetInstance()->GetContext()->Remove(ZilchTypeId(Space));
@@ -531,7 +514,6 @@ bool GameWidget::TakeFocusOverride()
   return true;
 }
 
-//******************************************************************************
 void GameWidget::OnKeyDown(KeyboardEvent* event)
 {
   if (event->Handled)
@@ -564,16 +546,18 @@ void GameWidget::OnKeyDown(KeyboardEvent* event)
       gameSession->EditSpaces();
   }
 
-  // This is a temporary fix for events bubbling up that don't get handled in the game
-  // In general, pressing number keys in the game should NOT change tools, or Ctrl+S should not save
+  // This is a temporary fix for events bubbling up that don't get handled in
+  // the game In general, pressing number keys in the game should NOT change
+  // tools, or Ctrl+S should not save
   Keys::Enum key = event->Key;
-  if (!editorMode && key != Keys::Escape && !(key >= Keys::F5 && key <= Keys::F12) && !(event->CtrlPressed && event->ShiftPressed))
+  if (!editorMode && key != Keys::Escape &&
+      !(key >= Keys::F5 && key <= Keys::F12) &&
+      !(event->CtrlPressed && event->ShiftPressed))
     event->Handled = true;
   if (event->HandledEventScript)
     event->Handled = true;
 }
 
-//******************************************************************************
 ReactiveViewport* GameWidget::GetViewportUnder(ReactiveViewport* current)
 {
   // We use previous because widgets draw back to front
@@ -581,7 +565,8 @@ ReactiveViewport* GameWidget::GetViewportUnder(ReactiveViewport* current)
 
   while (currentWidget)
   {
-    ReactiveViewport* nextViewport = Type::DynamicCast<ReactiveViewport*>(currentWidget);
+    ReactiveViewport* nextViewport =
+        Type::DynamicCast<ReactiveViewport*>(currentWidget);
     if (nextViewport)
       return nextViewport;
 
@@ -591,27 +576,24 @@ ReactiveViewport* GameWidget::GetViewportUnder(ReactiveViewport* current)
   return nullptr;
 }
 
-//******************************************************************************
 void GameWidget::OnGameQuit(GameEvent* gameEvent)
 {
   CloseTabContaining(this);
 }
 
-//******************************************************************************
 void GameWidget::SetGameSession(GameSession* gameSession)
 {
   mGame = gameSession;
   ConnectThisTo(gameSession, Events::GameQuit, OnGameQuit);
 }
 
-//******************************************************************************
 void GameWidget::SaveScreenshot(StringParam filename)
 {
   mScreenshotFilename = filename;
-  ConnectThisTo(Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
+  ConnectThisTo(
+      Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
 }
 
-//******************************************************************************
 void GameWidget::OnUiRenderUpdate(Event* event)
 {
   // Update runs one time to add tasks for a screenshot and then disconnects
@@ -624,14 +606,19 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   frameBlock.mRenderQueues = &renderQueues;
 
   Vec2 size = GetSize();
-  Mat4 translation; translation.Translate(size.x * -0.5f, size.y * -0.5f, 0.0f);
-  Mat4 scale; scale.Scale(1.0f, -1.0f, 1.0f);
+  Mat4 translation;
+  translation.Translate(size.x * -0.5f, size.y * -0.5f, 0.0f);
+  Mat4 scale;
+  scale.Scale(1.0f, -1.0f, 1.0f);
   viewBlock.mWorldToView = scale * translation;
-  BuildOrthographicTransformZero(viewBlock.mViewToPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
+  BuildOrthographicTransformZero(
+      viewBlock.mViewToPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
 
   Mat4 apiPerspective;
-  Z::gRenderer->BuildOrthographicTransform(apiPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
-  viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
+  Z::gRenderer->BuildOrthographicTransform(
+      apiPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
+  viewBlock.mZeroPerspectiveToApiPerspective =
+      apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   ColorTransform colorTx = {Vec4(1.0f)};
   WidgetRect clipRect = {0, 0, size.x, size.y};
@@ -661,7 +648,8 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   renderSettings.mScissorMode = ScissorMode::Enabled;
 
   RenderTaskHelper helper(renderTasks.mRenderTaskBuffer);
-  helper.AddRenderTaskClearTarget(renderSettings, GetRootWidget()->mClearColor, 0, 0, 0);
+  helper.AddRenderTaskClearTarget(
+      renderSettings, GetRootWidget()->mClearColor, 0, 0, 0);
   helper.AddRenderTaskRenderPass(renderSettings, 0, "ColorOutput", 0);
   renderTaskRange.mTaskCount = 2;
 
@@ -670,7 +658,6 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   DisconnectAll(graphics, this);
 }
 
-//******************************************************************************
 // Sort the viewports for input forwarding
 struct ViewportSorter
 {
@@ -681,13 +668,16 @@ struct ViewportSorter
 
     if (leftViewport && rightViewport)
     {
-      CameraViewport* leftCameraViewport = (CameraViewport*)leftViewport->mViewportInterface;
-      CameraViewport* rightCameraViewport = (CameraViewport*)rightViewport->mViewportInterface;
+      CameraViewport* leftCameraViewport =
+          (CameraViewport*)leftViewport->mViewportInterface;
+      CameraViewport* rightCameraViewport =
+          (CameraViewport*)rightViewport->mViewportInterface;
 
       // Objects and Widgets are not delay destructed at the same time,
       // so make sure CameraViewports are still valid
       if (leftCameraViewport && rightCameraViewport)
-        return leftCameraViewport->mRenderOrder < rightCameraViewport->mRenderOrder;
+        return leftCameraViewport->mRenderOrder <
+               rightCameraViewport->mRenderOrder;
       else
         return (leftCameraViewport != nullptr);
     }
@@ -697,7 +687,6 @@ struct ViewportSorter
   }
 };
 
-//******************************************************************************
 void GameWidget::OnUpdate(UpdateEvent* event)
 {
   mChildren.Sort(ViewportSorter());

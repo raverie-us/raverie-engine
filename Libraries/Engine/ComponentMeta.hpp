@@ -1,15 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Component Meta Data Inheritance
+//Meta Data Inheritance
 class ComponentMetaDataInheritance : public MetaDataInheritance
 {
 public:
@@ -17,13 +12,17 @@ public:
 
   /// MetaDataInheritance Interface.
   void Revert(HandleParam object) override;
-  bool CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath) override;
-  void RevertProperty(HandleParam object, PropertyPathParam propertyPath) override;
-  void SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state) override;
+  bool CanPropertyBeReverted(HandleParam object,
+                             PropertyPathParam propertyPath) override;
+  void RevertProperty(HandleParam object,
+                      PropertyPathParam propertyPath) override;
+  void SetPropertyModified(HandleParam object,
+                           PropertyPathParam propertyPath,
+                           bool state) override;
   void RebuildObject(HandleParam object) override;
 };
 
-//------------------------------------------------------------------------ Component Meta Operations
+//Component Meta Operations
 class ComponentMetaOperations : public MetaOperations
 {
 public:
@@ -31,11 +30,12 @@ public:
 
   u64 GetUndoHandleId(HandleParam object) override;
 
-  // Used to restore the space modified state when any operations are done to the Component.
+  // Used to restore the space modified state when any operations are done to
+  // the Component.
   Any GetUndoData(HandleParam object) override;
   void ObjectModified(HandleParam object, bool intermediateChange) override;
   void RestoreUndoData(HandleParam object, AnyParam undoData) override;
   ObjectRestoreState* GetRestoreState(HandleParam object) override;
 };
 
-}//namespace Zero
+} // namespace Zero

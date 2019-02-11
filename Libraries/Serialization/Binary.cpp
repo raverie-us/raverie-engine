@@ -1,31 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Binary.cpp
-/// Definition of Binary Serializers.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------- Binary Buffer Saver
 BinaryBufferSaver::BinaryBufferSaver()
 {
-
 }
 
 BinaryBufferSaver::~BinaryBufferSaver()
 {
-
 }
 
 void BinaryBufferSaver::Open()
 {
-
 }
 
 void BinaryBufferSaver::Data(byte* data, uint sizeInBytes)
@@ -63,7 +51,6 @@ void BinaryBufferSaver::Deallocate()
   mBuffer.Deallocate();
 }
 
-//--------------------------------------------------------- Binary Buffer Loader
 void BinaryBufferLoader::SetBuffer(byte* data, uint size)
 {
   mBufferSize = size;
@@ -85,10 +72,10 @@ bool BinaryBufferLoader::TestForObjectEnd(BoundType** data)
   size_t bytesToRead = sizeof(u32);
   byte* endOfBuffer = mBuffer + mBufferSize;
   byte* ifMoved = mCurrentPosition + bytesToRead;
-  if(ifMoved < endOfBuffer)
+  if (ifMoved < endOfBuffer)
   {
     //*data = *(BoundType**)mCurrentPosition;
-    if(*(u32*)mCurrentPosition == BinaryEndSignature)
+    if (*(u32*)mCurrentPosition == BinaryEndSignature)
     {
       return false;
     }
@@ -100,37 +87,39 @@ bool BinaryBufferLoader::TestForObjectEnd(BoundType** data)
   }
   else
   {
-    //end of buffer
+    // end of buffer
     return false;
   }
 }
 
 void BinaryBufferLoader::Data(byte* data, uint sizeInBytes)
 {
-  const bool bufferOverrun = mCurrentPosition+sizeInBytes > mBuffer+mBufferSize;
+  const bool bufferOverrun =
+      mCurrentPosition + sizeInBytes > mBuffer + mBufferSize;
   ErrorIf(bufferOverrun, "Access buffer out of range.");
 
-  if(!bufferOverrun)
+  if (!bufferOverrun)
   {
     memcpy(data, mCurrentPosition, sizeInBytes);
     mCurrentPosition += sizeInBytes;
   }
 }
 
-bool BinaryBufferLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
+bool BinaryBufferLoader::StringField(cstr typeName,
+                                     cstr fieldName,
+                                     StringRange& stringRange)
 {
   u32 size = 0;
   Data((byte*)&size, sizeof(size));
 
   byte* start = mCurrentPosition;
-  mCurrentPosition+=size;
+  mCurrentPosition += size;
   byte* end = mCurrentPosition;
 
   stringRange = StringRange((char*)start, (char*)end);
   return true;
 }
 
-//----------------------------------------------------------- Binary File Loader
 bool BinaryFileLoader::OpenFile(Status& status, cstr filename)
 {
   return mFile.Open(filename, FileMode::Read, FileAccessPattern::Sequential);
@@ -147,14 +136,14 @@ bool BinaryFileLoader::TestForObjectEnd(BoundType** data)
 
   size_t bytesToRead = sizeof(u32);
   FilePosition fp = mFile.Tell();
-  if(fp + bytesToRead < mFile.Size())
+  if (fp + bytesToRead < mFile.Size())
   {
     u32 end = BinaryEndSignature;
     Data((byte*)&end, bytesToRead);
-    if(end == BinaryEndSignature)
+    if (end == BinaryEndSignature)
     {
-      //End of object
-      //Move back to prevent reading the end tag
+      // End of object
+      // Move back to prevent reading the end tag
       mFile.Seek(-(int)bytesToRead, SeekOrigin::Current);
       return false;
     }
@@ -162,7 +151,7 @@ bool BinaryFileLoader::TestForObjectEnd(BoundType** data)
   }
   else
   {
-    //End of file
+    // End of file
     return false;
   }
 }
@@ -173,13 +162,15 @@ void BinaryFileLoader::Data(byte* data, uint sizeInBytes)
   mFile.Read(status, data, sizeInBytes);
 }
 
-bool BinaryFileLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
+bool BinaryFileLoader::StringField(cstr typeName,
+                                   cstr fieldName,
+                                   StringRange& stringRange)
 {
   Status status;
   u32 size = 0;
   mFile.Read(status, (byte*)&size, sizeof(size));
 
-  if(size < 512)
+  if (size < 512)
   {
     mFile.Read(status, (byte*)mTempSpace, size);
     stringRange = StringRange(mTempSpace, mTempSpace, mTempSpace + size);
@@ -188,7 +179,6 @@ bool BinaryFileLoader::StringField(cstr typeName, cstr fieldName, StringRange& s
   return true;
 }
 
-//------------------------------------------------------------ Binary File Saver
 bool BinaryFileSaver::Open(Status& status, cstr filename)
 {
   return mFile.Open(filename, FileMode::Write, FileAccessPattern::Sequential);
@@ -204,4 +194,4 @@ void BinaryFileSaver::Data(byte* data, uint sizeInBytes)
   mFile.Write(data, sizeInBytes);
 }
 
-}//namespace Zero
+} // namespace Zero

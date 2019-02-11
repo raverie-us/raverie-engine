@@ -1,7 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -33,7 +30,6 @@ struct IsChar<signed char>
   typedef int Yes;
 };
 
-//------------------------------------------------------------------ Rune
 class Rune;
 typedef const Rune& RuneParam;
 
@@ -46,10 +42,7 @@ public:
   explicit Rune(uint runeCode);
 
   template <typename T>
-  Rune(T t, typename IsChar<T>::Yes = 0)
-    : value((char)t)
-  {
-  };
+  Rune(T t, typename IsChar<T>::Yes = 0) : value((char)t){};
 
   bool operator==(RuneParam rhs) const;
   bool operator!=(RuneParam rhs) const;
@@ -70,7 +63,7 @@ public:
   uint value;
 };
 
-//------------------------------------------------------------------ Global Comparison Operators
+//Comparison Operators
 inline bool operator==(uint left, RuneParam right)
 {
   return left == right.value;
@@ -101,4 +94,4 @@ inline bool operator<=(uint left, RuneParam right)
   return left <= right.value;
 }
 
-}// namespace Zero
+} // namespace Zero

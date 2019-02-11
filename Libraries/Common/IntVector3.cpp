@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file IntVector3.cpp
-///  Implementation of the IntVector3 structure.
-/// 
-///  Authors: Trevor Sundberg
-///  Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
@@ -16,7 +8,6 @@ const IntVector3 IntVector3::cZero(0, 0, 0);
 const IntVector3 IntVector3::cXAxis(1, 0, 0);
 const IntVector3 IntVector3::cYAxis(0, 1, 0);
 const IntVector3 IntVector3::cZAxis(0, 0, 1);
-
 
 IntVector3::IntVector3(int x_, int y_, int z_)
 {
@@ -37,14 +28,12 @@ int IntVector3::operator[](uint index) const
   return array[index];
 }
 
-
 ////////// Unary Operators /////////////////////////////////////////////////////
 
 IntVector3 IntVector3::operator-(void) const
 {
   return IntVector3(-x, -y, -z);
 }
-
 
 ////////// Binary Assignment Operators (reals) /////////////////////////////////
 
@@ -62,7 +51,6 @@ void IntVector3::operator/=(int rhs)
   y /= rhs;
   z /= rhs;
 }
-
 
 ////////// Binary Operators (reals) ////////////////////////////////////////////
 
@@ -124,13 +112,12 @@ void IntVector3::operator*=(IntVec3Param rhs)
 
 void IntVector3::operator/=(IntVec3Param rhs)
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0, 
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0,
           "Vector2 - Division by zero.");
   x /= rhs.x;
   y /= rhs.y;
   z /= rhs.z;
 }
-
 
 ////////// Binary Operators (Vectors) //////////////////////////////////////////
 
@@ -144,7 +131,6 @@ IntVector3 IntVector3::operator-(IntVec3Param rhs) const
   return IntVector3(x - rhs.x, y - rhs.y, z - rhs.z);
 }
 
-
 ////////// Binary Vector Comparisons ///////////////////////////////////////////
 
 bool IntVector3::operator==(IntVec3Param rhs) const
@@ -157,33 +143,24 @@ bool IntVector3::operator!=(IntVec3Param rhs) const
   return !(*this == rhs);
 }
 
-
-BoolVec3 IntVector3::operator< (IntVec3Param rhs) const
+BoolVec3 IntVector3::operator<(IntVec3Param rhs) const
 {
-  return BoolVec3(x < rhs.x,
-                  y < rhs.y,
-                  z < rhs.z);
+  return BoolVec3(x < rhs.x, y < rhs.y, z < rhs.z);
 }
 
 BoolVec3 IntVector3::operator<=(IntVec3Param rhs) const
 {
-  return BoolVec3(x <= rhs.x,
-                  y <= rhs.y,
-                  z <= rhs.z);
+  return BoolVec3(x <= rhs.x, y <= rhs.y, z <= rhs.z);
 }
 
-BoolVec3 IntVector3::operator> (IntVec3Param rhs) const
+BoolVec3 IntVector3::operator>(IntVec3Param rhs) const
 {
-  return BoolVec3(x > rhs.x,
-                  y > rhs.y,
-                  z > rhs.z);
+  return BoolVec3(x > rhs.x, y > rhs.y, z > rhs.z);
 }
 
 BoolVec3 IntVector3::operator>=(IntVec3Param rhs) const
 {
-  return BoolVec3(x >= rhs.x,
-                  y >= rhs.y,
-                  z >= rhs.z);
+  return BoolVec3(x >= rhs.x, y >= rhs.y, z >= rhs.z);
 }
 
 void IntVector3::Set(int x_, int y_, int z_)
@@ -200,10 +177,9 @@ void IntVector3::ZeroOut(void)
   z = 0;
 }
 
-
 IntVector3 IntVector3::operator/(IntVec3Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0, 
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0,
           "IntVector3 - Division by zero.");
   return IntVector3(x / rhs.x, y / rhs.y, z / rhs.z);
 }
@@ -215,8 +191,7 @@ IntVector3 IntVector3::operator*(IntVec3Param rhs) const
 
 IntVector3 IntVector3::operator%(IntVec3Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0, 
-          "IntVector3 - Mod by zero.");
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0, "IntVector3 - Mod by zero.");
   return IntVector3(x % rhs.x, y % rhs.y, z % rhs.z);
 }
 
@@ -249,46 +224,34 @@ int Dot(IntVec3Param lhs, IntVec3Param rhs)
   return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
-IntVector3  IntVector3::operator~() const
+IntVector3 IntVector3::operator~() const
 {
-  return IntVector3(~x,
-                    ~y,
-                    ~z);
+  return IntVector3(~x, ~y, ~z);
 }
 
-IntVector3  IntVector3::operator<< (IntVec3Param rhs) const
+IntVector3 IntVector3::operator<<(IntVec3Param rhs) const
 {
-  return IntVector3(x << rhs.x,
-                    y << rhs.y,
-                    z << rhs.z);
+  return IntVector3(x << rhs.x, y << rhs.y, z << rhs.z);
 }
 
-IntVector3  IntVector3::operator>> (IntVec3Param rhs) const
+IntVector3 IntVector3::operator>>(IntVec3Param rhs) const
 {
-  return IntVector3(x >> rhs.x,
-                    y >> rhs.y,
-                    z >> rhs.z);
+  return IntVector3(x >> rhs.x, y >> rhs.y, z >> rhs.z);
 }
 
-IntVector3  IntVector3::operator|  (IntVec3Param rhs) const
+IntVector3 IntVector3::operator|(IntVec3Param rhs) const
 {
-  return IntVector3(x | rhs.x,
-                    y | rhs.y,
-                    z | rhs.z);
+  return IntVector3(x | rhs.x, y | rhs.y, z | rhs.z);
 }
 
-IntVector3  IntVector3::operator^  (IntVec3Param rhs) const
+IntVector3 IntVector3::operator^(IntVec3Param rhs) const
 {
-  return IntVector3(x ^ rhs.x,
-                    y ^ rhs.y,
-                    z ^ rhs.z);
+  return IntVector3(x ^ rhs.x, y ^ rhs.y, z ^ rhs.z);
 }
 
-IntVector3  IntVector3::operator&  (IntVec3Param rhs) const
+IntVector3 IntVector3::operator&(IntVec3Param rhs) const
 {
-  return IntVector3(x & rhs.x,
-                    y & rhs.y,
-                    z & rhs.z);
+  return IntVector3(x & rhs.x, y & rhs.y, z & rhs.z);
 }
 
 IntVector3& IntVector3::operator<<=(IntVec3Param rhs)
@@ -307,7 +270,7 @@ IntVector3& IntVector3::operator>>=(IntVec3Param rhs)
   return *this;
 }
 
-IntVector3& IntVector3::operator|= (IntVec3Param rhs)
+IntVector3& IntVector3::operator|=(IntVec3Param rhs)
 {
   x |= rhs.x;
   y |= rhs.y;
@@ -315,7 +278,7 @@ IntVector3& IntVector3::operator|= (IntVec3Param rhs)
   return *this;
 }
 
-IntVector3& IntVector3::operator^= (IntVec3Param rhs)
+IntVector3& IntVector3::operator^=(IntVec3Param rhs)
 {
   x ^= rhs.x;
   y ^= rhs.y;
@@ -323,7 +286,7 @@ IntVector3& IntVector3::operator^= (IntVec3Param rhs)
   return *this;
 }
 
-IntVector3& IntVector3::operator&= (IntVec3Param rhs)
+IntVector3& IntVector3::operator&=(IntVec3Param rhs)
 {
   x &= rhs.x;
   y &= rhs.y;
@@ -331,4 +294,4 @@ IntVector3& IntVector3::operator&= (IntVec3Param rhs)
   return *this;
 }
 
-}// namespace Math
+} // namespace Math

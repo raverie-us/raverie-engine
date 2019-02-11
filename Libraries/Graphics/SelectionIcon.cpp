@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -8,12 +7,11 @@ namespace Zero
 
 const float SelectionIcon::cBaseScale = 0.45f;
 
-//**************************************************************************************************
 ZilchDefineType(SelectionIcon, builder, type)
 {
   // Not requiring a Transform component, but this means that
   // Graphical methods that use Transform cannot be called
-  //BindDependency(Transform);
+  // BindDependency(Transform);
 
   ZeroBindComponent();
   ZeroBindDocumented();
@@ -26,47 +24,46 @@ ZilchDefineType(SelectionIcon, builder, type)
   ZilchBindGetterSetter(ShaderInputs);
 
   // SelectionIcon data
-  ZilchBindGetterSetterProperty(SpriteSource)->Add(new MetaEditorResource(true, false, "SelectionIcon"));
+  ZilchBindGetterSetterProperty(SpriteSource)
+      ->Add(new MetaEditorResource(true, false, "SelectionIcon"));
   ZilchBindFieldProperty(mViewScale);
   ZilchBindGetterSetterProperty(OverrideSelections);
 }
 
-//**************************************************************************************************
 void SelectionIcon::Serialize(Serializer& stream)
 {
   // Graphical data
   SerializeNameDefault(mVisible, true);
   SerializeNameDefault(mVisibilityEvents, true);
-  SerializeResourceNameDefault(mMaterial, MaterialManager, GetDefaultMaterialName());
+  SerializeResourceNameDefault(
+      mMaterial, MaterialManager, GetDefaultMaterialName());
 
   // SelectionIcon data
-  SerializeResourceNameDefault(mSpriteSource, SpriteSourceManager, "SelectIcon");
+  SerializeResourceNameDefault(
+      mSpriteSource, SpriteSourceManager, "SelectIcon");
   SerializeNameDefault(mViewScale, 1.0f);
   SerializeNameDefault(mOverrideSelections, true);
 }
 
-//**************************************************************************************************
 void SelectionIcon::Initialize(CogInitializer& initializer)
 {
   Graphical::Initialize(initializer);
   SetSelectionFlag(mOverrideSelections);
 }
 
-//**************************************************************************************************
 void SelectionIcon::OnDestroy(uint flags)
 {
   Graphical::OnDestroy(flags);
   SetSelectionFlag(false);
 }
 
-//**************************************************************************************************
 Aabb SelectionIcon::GetLocalAabb()
 {
   return Aabb(Vec3(0.0f), Vec3(0.5f));
 }
 
-//**************************************************************************************************
-void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock)
+void SelectionIcon::ExtractFrameData(FrameNode& frameNode,
+                                     FrameBlock& frameBlock)
 {
   frameNode.mBorderThickness = 1.0f;
   frameNode.mBlendSettingsOverride = false;
@@ -85,12 +82,16 @@ void SelectionIcon::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBloc
   frameNode.mBoneMatrixRange = IndexRange(0, 0);
 }
 
-//**************************************************************************************************
-void SelectionIcon::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock)
+void SelectionIcon::ExtractViewData(ViewNode& viewNode,
+                                    ViewBlock& viewBlock,
+                                    FrameBlock& frameBlock)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes[viewNode.mFrameNodeIndex];
 
-  MakeLocalToViewAligned(viewNode.mLocalToView, frameNode.mLocalToWorld, viewBlock.mWorldToView, GetWorldTranslation());
+  MakeLocalToViewAligned(viewNode.mLocalToView,
+                         frameNode.mLocalToWorld,
+                         viewBlock.mWorldToView,
+                         GetWorldTranslation());
 
   float radius = GetRadius(viewBlock);
   Vec2 center = Vec2(0.0f);
@@ -108,14 +109,17 @@ void SelectionIcon::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, Fr
   Vec2 uvAux1 = Vec2(1, 1);
 
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart =
+      frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
-  frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, Vec4(1.0f), uvAux0, uvAux1);
+  frameBlock.mRenderQueues->AddStreamedQuad(
+      viewNode, pos0, pos1, uv0, uv1, Vec4(1.0f), uvAux0, uvAux1);
 }
 
-//**************************************************************************************************
-void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, Frustum* frustum)
+void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries,
+                                  Camera& camera,
+                                  Frustum* frustum)
 {
   mGraphicalEntryData.mGraphical = this;
   mGraphicalEntryData.mFrameNodeIndex = -1;
@@ -129,12 +133,15 @@ void SelectionIcon::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera
   entries.PushBack(entry);
 }
 
-//**************************************************************************************************
 bool SelectionIcon::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   float radius = GetRadius(castInfo.mCameraCog->has(Camera));
   Intersection::IntersectionPoint point;
-  Intersection::Type result = Intersection::RaySphere(rayCast.mRay.Start, rayCast.mRay.Direction, GetWorldTranslation(), radius, &point);
+  Intersection::Type result = Intersection::RaySphere(rayCast.mRay.Start,
+                                                      rayCast.mRay.Direction,
+                                                      GetWorldTranslation(),
+                                                      radius,
+                                                      &point);
   if (result == Intersection::None)
     return false;
 
@@ -143,7 +150,6 @@ bool SelectionIcon::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
   return true;
 }
 
-//**************************************************************************************************
 bool SelectionIcon::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
 {
   float radius = GetRadius(castInfo.mCameraCog->has(Camera));
@@ -151,7 +157,6 @@ bool SelectionIcon::TestFrustum(const Frustum& frustum, CastInfo& castInfo)
   return result;
 }
 
-//**************************************************************************************************
 void SelectionIcon::AddToSpace()
 {
   if (mVisible)
@@ -160,56 +165,55 @@ void SelectionIcon::AddToSpace()
     mGraphicsSpace->mGraphicalsAlwaysCulled.PushBack(this);
 }
 
-//**************************************************************************************************
 String SelectionIcon::GetDefaultMaterialName()
 {
   return "DebugDrawOnTop";
 }
 
-//**************************************************************************************************
 SpriteSource* SelectionIcon::GetSpriteSource()
 {
   return mSpriteSource;
 }
 
-//**************************************************************************************************
 void SelectionIcon::SetSpriteSource(SpriteSource* spriteSource)
 {
   if (spriteSource != nullptr)
     mSpriteSource = spriteSource;
 }
 
-//**************************************************************************************************
 bool SelectionIcon::GetOverrideSelections()
 {
   return mOverrideSelections;
 }
 
-//**************************************************************************************************
 void SelectionIcon::SetOverrideSelections(bool overrideSelections)
 {
   mOverrideSelections = overrideSelections;
   SetSelectionFlag(mOverrideSelections);
 }
 
-//**************************************************************************************************
 float SelectionIcon::GetRadius(Camera* camera)
 {
-  float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), camera->GetWorldTranslation(), camera->GetWorldDirection());
+  float viewDistance = Debug::GetViewDistance(GetWorldTranslation(),
+                                              camera->GetWorldTranslation(),
+                                              camera->GetWorldDirection());
   bool orthographic = camera->mPerspectiveMode == PerspectiveMode::Orthographic;
-  float viewScale = Debug::GetViewScale(viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
+  float viewScale = Debug::GetViewScale(
+      viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 
-//**************************************************************************************************
 float SelectionIcon::GetRadius(ViewBlock& viewBlock)
 {
-  float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), viewBlock.mEyePosition, viewBlock.mEyeDirection);
-  float viewScale = Debug::GetViewScale(viewDistance, viewBlock.mFieldOfView, viewBlock.mOrthographicSize, viewBlock.mOrthographic);
+  float viewDistance = Debug::GetViewDistance(
+      GetWorldTranslation(), viewBlock.mEyePosition, viewBlock.mEyeDirection);
+  float viewScale = Debug::GetViewScale(viewDistance,
+                                        viewBlock.mFieldOfView,
+                                        viewBlock.mOrthographicSize,
+                                        viewBlock.mOrthographic);
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 
-//**************************************************************************************************
 Vec3 SelectionIcon::GetWorldTranslation()
 {
   Vec3 worldTranslation = Vec3::cZero;
@@ -220,7 +224,6 @@ Vec3 SelectionIcon::GetWorldTranslation()
   return worldTranslation;
 }
 
-//**************************************************************************************************
 void SelectionIcon::SetSelectionFlag(bool selectionLimited)
 {
   if (selectionLimited)

@@ -1,3 +1,4 @@
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -10,7 +11,8 @@ void ForceCompileAllShaders(Editor* editor)
 
 void BindGraphicsCommands(Cog* config, CommandManager* commands)
 {
-  commands->AddCommand("ForceCompileAllShaders", BindCommandFunction(ForceCompileAllShaders));
+  commands->AddCommand("ForceCompileAllShaders",
+                       BindCommandFunction(ForceCompileAllShaders));
 }
 
 } // namespace Zero

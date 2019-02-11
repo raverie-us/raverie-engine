@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CogRestoreState.hpp
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Object Restore State
-/// This is responsible for 
+/// This is responsible for
 ///
 /// Operations that need to be done when saving / restoring an object
 /// - Place in the same spot in the hierarchy
@@ -73,4 +65,4 @@ public:
   Guid mChildId;
 };
 
-}//namespace Zero
+} // namespace Zero

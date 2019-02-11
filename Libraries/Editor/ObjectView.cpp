@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ObjectView.cpp
-/// 
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,18 +6,17 @@ namespace Zero
 
 namespace ObjectViewUi
 {
-  const cstr cLocation = "EditorUi/ObjectView";
-  Tweakable(Vec4, SearchIconColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, LocallyModifiedColor, Vec4(1, 1, 1, 1), cLocation);
-  Tweakable(Vec4, LocallyRemovedColor, Vec4(1, 1, 1, 1), cLocation);
-  Tweakable(Vec4, LocallyAddedColor, Vec4(1, 1, 1, 1), cLocation);
-  Tweakable(Vec4, ChildOrderOverrideColor, Vec4(1, 1, 1, 1), cLocation);
-}
+const cstr cLocation = "EditorUi/ObjectView";
+Tweakable(Vec4, SearchIconColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, LocallyModifiedColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, LocallyRemovedColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, LocallyAddedColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ChildOrderOverrideColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace ObjectViewUi
 
 const String cHiddenColumn = "Hidden";
 const String cLockedColumn = "Locked";
 
-//---------------------------------------------------------------------- Editors
 DeclareEnum3(FlagState, Disabled, Enabled, Hidden);
 
 class FlagEditor : public ValueEditor
@@ -35,11 +26,10 @@ public:
   Element* mIcon;
   bool mEnabled;
 
-  FlagEditor(Composite* parent, StringParam icon) 
-    : ValueEditor(parent)
+  FlagEditor(Composite* parent, StringParam icon) : ValueEditor(parent)
   {
     mIcon = CreateAttached<Element>(icon);
-    mIcon->SetTranslation(Pixels(2,1,0));
+    mIcon->SetTranslation(Pixels(2, 1, 0));
     ConnectThisTo(mIcon, Events::LeftClick, OnLeftClick);
     ConnectThisTo(mIcon, Events::DoubleClick, OnDoubleClick);
   }
@@ -73,8 +63,8 @@ public:
 
   void Update()
   {
-    if(mEnabled)
-      mIcon->SetColor(Vec4(1,1,1,1));
+    if (mEnabled)
+      mIcon->SetColor(Vec4(1, 1, 1, 1));
     else
       mIcon->SetColor(Vec4(0.1f, 0.1f, 0.1f, 0.2f));
   }
@@ -90,13 +80,12 @@ ValueEditor* CreateLockEditor(Composite* parent, AnyParam data, u32 flags)
   return new FlagEditor(parent, "Dot");
 }
 
-
 DeclareEnum5(FilterSearchMode,
-  BroadSearch,
-  ObjectName,
-  ComponentName,
-  ResourceName,
-  ArchetypeName);
+             BroadSearch,
+             ObjectName,
+             ComponentName,
+             ResourceName,
+             ArchetypeName);
 
 class ObjectViewFilter : public DataSourceFilter
 {
@@ -116,7 +105,7 @@ public:
     if (!mSource)
       return;
 
-    if(filterString.Empty())
+    if (filterString.Empty())
       return;
 
     DataEntry* root = mSource->GetRoot();
@@ -127,63 +116,69 @@ public:
 
     Rune rune = SubFilterString.Front();
 
-    if(rune == '#')
+    if (rune == '#')
     {
       SubFilterString.PopFront();
       searchMode = FilterSearchMode::ObjectName;
     }
-    else if(rune == '.')
+    else if (rune == '.')
     {
       SubFilterString.PopFront();
       searchMode = FilterSearchMode::ComponentName;
     }
-    else if(rune == '$')
+    else if (rune == '$')
     {
       SubFilterString.PopFront();
       searchMode = FilterSearchMode::ResourceName;
     }
-    else if(rune == '@')
+    else if (rune == '@')
     {
-      SubFilterString.PopFront( );
+      SubFilterString.PopFront();
       searchMode = FilterSearchMode::ArchetypeName;
     }
 
-    if(SubFilterString.Empty())
+    if (SubFilterString.Empty())
       return;
 
     // Perform the search
-    switch(searchMode)
+    switch (searchMode)
     {
-      case FilterSearchMode::BroadSearch:
-      {
-        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::BroadSearch> filter(this);
-        FilterNodes(filter, root);
-        return;
-      }
-      case FilterSearchMode::ObjectName:
-      {
-        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterNames> filter(this);
-        FilterNodes(filter, root);
-        return;
-      }
-      case FilterSearchMode::ComponentName:
-      {
-        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterComponentTypes> filter(this);
-        FilterNodes(filter, root);
-        return;
-      }
-      case FilterSearchMode::ResourceName:
-      {
-        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterResourceUsage> filter(this);
-        FilterNodes(filter, root);
-        return;
-      }
-      case FilterSearchMode::ArchetypeName:
-      {
-        BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterArchetypeHierarchy> filter(this);
-        FilterNodes(filter, root);
-        return;
-      }
+    case FilterSearchMode::BroadSearch:
+    {
+      BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::BroadSearch> filter(
+          this);
+      FilterNodes(filter, root);
+      return;
+    }
+    case FilterSearchMode::ObjectName:
+    {
+      BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterNames> filter(
+          this);
+      FilterNodes(filter, root);
+      return;
+    }
+    case FilterSearchMode::ComponentName:
+    {
+      BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterComponentTypes>
+          filter(this);
+      FilterNodes(filter, root);
+      return;
+    }
+    case FilterSearchMode::ResourceName:
+    {
+      BindMethodPtr<ObjectViewFilter, &ObjectViewFilter::FilterResourceUsage>
+          filter(this);
+      FilterNodes(filter, root);
+      return;
+    }
+    case FilterSearchMode::ArchetypeName:
+    {
+      BindMethodPtr<ObjectViewFilter,
+                    &ObjectViewFilter::FilterArchetypeHierarchy>
+          filter(this);
+      FilterNodes(filter, root);
+      return;
+    }
     }
   }
 
@@ -197,10 +192,11 @@ public:
     Object* object = (Object*)entry;
     Cog* cog = Type::DynamicCast<Cog*>(object);
 
-    if(cog == nullptr)
+    if (cog == nullptr)
       return false;
 
-    int priority = PartialMatch(SubFilterString, cog->GetName( ).All( ), CaseInsensitiveCompare);
+    int priority = PartialMatch(
+        SubFilterString, cog->GetName().All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
 
@@ -212,11 +208,13 @@ public:
     if (cog == nullptr)
       return false;
 
-    forRange(Component* component, cog->GetComponents())
+    forRange(Component * component, cog->GetComponents())
     {
-      int priority = PartialMatch(SubFilterString, ZilchVirtualTypeId(component)->Name.All(), CaseInsensitiveCompare);
+      int priority = PartialMatch(SubFilterString,
+                                  ZilchVirtualTypeId(component)->Name.All(),
+                                  CaseInsensitiveCompare);
 
-      if(priority != cNoMatch)
+      if (priority != cNoMatch)
         return true;
     }
 
@@ -231,25 +229,27 @@ public:
     if (cog == nullptr)
       return false;
 
-    forRange(Component* component, cog->GetComponents())
+    forRange(Component * component, cog->GetComponents())
     {
       BoundType* metaType = ZilchVirtualTypeId(component);
 
-      forRange(Property* property, metaType->GetProperties())
+      forRange(Property * property, metaType->GetProperties())
       {
-        if(property->PropertyType->IsA(ZilchTypeId(Resource)))
+        if (property->PropertyType->IsA(ZilchTypeId(Resource)))
         {
           Any var = property->GetValue(component);
 
           Resource* resource = var.Get<Resource*>();
 
-          //safeguard (seems to happen during project changes if the editor doesn't restart)
-          if(resource == nullptr)
+          // safeguard (seems to happen during project changes if the editor
+          // doesn't restart)
+          if (resource == nullptr)
             continue;
 
-          int priority = PartialMatch(SubFilterString, resource->Name.All(), CaseInsensitiveCompare);
+          int priority = PartialMatch(
+              SubFilterString, resource->Name.All(), CaseInsensitiveCompare);
 
-          if(priority != cNoMatch)
+          if (priority != cNoMatch)
             return true;
         }
       }
@@ -263,29 +263,30 @@ public:
     Cog* cog = Type::DynamicCast<Cog*>(object);
 
     Archetype* archetype;
-    if(cog == nullptr || (archetype = cog->GetArchetype()) == nullptr)
+    if (cog == nullptr || (archetype = cog->GetArchetype()) == nullptr)
       return false;
 
-    int priority = PartialMatch(SubFilterString, archetype->Name.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(
+        SubFilterString, archetype->Name.All(), CaseInsensitiveCompare);
     bool result = (priority != cNoMatch);
 
     // No need to walk through archetype inheritance if the object's
     // archetype already matches.
-    if(result)
+    if (result)
       return true;
 
-    forRange(Resource* baseResource, archetype->GetBaseResources())
+    forRange(Resource * baseResource, archetype->GetBaseResources())
     {
-      priority = PartialMatch(SubFilterString, baseResource->Name.All(), CaseInsensitiveCompare);
+      priority = PartialMatch(
+          SubFilterString, baseResource->Name.All(), CaseInsensitiveCompare);
       result |= (priority != cNoMatch);
 
-      if(result)
+      if (result)
         break;
     }
 
     return result;
   }
-
 };
 
 class TreeViewSearchObjectTree : public TreeViewSearch
@@ -294,8 +295,8 @@ public:
   typedef TreeViewSearchObjectTree ZilchSelf;
   ObjectViewFilter* mObjectFilter;
 
-  TreeViewSearchObjectTree(Composite* parent)
-    :TreeViewSearch(parent, nullptr, nullptr)
+  TreeViewSearchObjectTree(Composite* parent) :
+      TreeViewSearch(parent, nullptr, nullptr)
   {
     mObjectFilter = new ObjectViewFilter();
     mFiltered = mObjectFilter;
@@ -315,8 +316,8 @@ public:
   {
     ContextMenu* menu = new ContextMenu(this);
     Mouse* mouse = Z::gMouse;
-    menu->SetBelowMouse(mouse, Pixels(0,0) );
- 
+    menu->SetBelowMouse(mouse, Pixels(0, 0));
+
     ConnectMenu(menu, "Broad Search", OnBroadSearch, true);
     ConnectMenu(menu, "By Name (#)", OnName, true);
     ConnectMenu(menu, "By Component (.)", OnComponent, true);
@@ -360,16 +361,15 @@ public:
   }
 };
 
-//------------------------------------------------------------------------------------ Removed Entry
+//Removed Entry
 ZilchDefineType(RemovedEntry, builder, type)
 {
 }
 
 RemovedEntry::RemovedEntry(Cog* parent, Guid childId) :
-  mParent(parent),
-  mChildId(childId)
+    mParent(parent),
+    mChildId(childId)
 {
-
 }
 
 u64 RemovedEntry::ToId()
@@ -390,41 +390,46 @@ String RemovedEntry::GetRemovedChildName()
   DataNode* dataTree = archetype->GetDataTree();
 
   DataNode* removedNode = FindRemovedCogNode(dataTree, mParent, mChildId, root);
-  if(removedNode)
+  if (removedNode)
     return GetNameFromCogNode(removedNode);
   return "[Invalid]";
 }
 
-DataNode* RemovedEntry::FindRemovedCogNode(DataNode* dataTree, Cog* currParent, Guid childGuid,
-                              Cog* archetypeRoot)
+DataNode* RemovedEntry::FindRemovedCogNode(DataNode* dataTree,
+                                           Cog* currParent,
+                                           Guid childGuid,
+                                           Cog* archetypeRoot)
 {
-  if(currParent != archetypeRoot)
+  if (currParent != archetypeRoot)
   {
-    dataTree = FindRemovedCogNode(dataTree, currParent->GetParent(),
-                                  currParent->mChildId, archetypeRoot);
+    dataTree = FindRemovedCogNode(
+        dataTree, currParent->GetParent(), currParent->mChildId, archetypeRoot);
   }
 
   DataNode* hierarchyNode = dataTree->FindChildWithTypeName("Hierarchy");
-  if(hierarchyNode)
+  if (hierarchyNode)
     return hierarchyNode->FindChildWithUniqueNodeId(childGuid);
   return nullptr;
 }
 
 String RemovedEntry::GetNameFromCogNode(DataNode* cogNode)
 {
-  forRange(DataNode& childNode, cogNode->GetChildren())
+  forRange(DataNode & childNode, cogNode->GetChildren())
   {
-    if(childNode.mNodeType == DataNodeType::Value && childNode.mPropertyName == "Name")
+    if (childNode.mNodeType == DataNodeType::Value &&
+        childNode.mPropertyName == "Name")
     {
       // Show the Archetype name if it exists
       String archetypeName = cogNode->mInheritedFromId;
-      if(!archetypeName.Empty())
+      if (!archetypeName.Empty())
       {
         StringRange name = archetypeName.FindLastOf(':');
-        if(!name.Empty())
-          archetypeName = archetypeName.SubString(name.End(), archetypeName.End());
+        if (!name.Empty())
+          archetypeName =
+              archetypeName.SubString(name.End(), archetypeName.End());
 
-        return String::Format("%s [%s]", childNode.mTextValue.c_str(), archetypeName.c_str());
+        return String::Format(
+            "%s [%s]", childNode.mTextValue.c_str(), archetypeName.c_str());
       }
       return childNode.mTextValue;
     }
@@ -433,8 +438,7 @@ String RemovedEntry::GetNameFromCogNode(DataNode* cogNode)
   return "[Invalid]";
 }
 
-//-------------------------------------------------------------------------------------- Data Source
-//Adapter class to bind a space and objects to a DataBaseSource.
+//Data Source Adapter class to bind a space and objects to a DataBaseSource.
 class SpaceObjectSource : public DataSource
 {
 public:
@@ -449,7 +453,7 @@ public:
   SpaceObjectSource(Space* space)
   {
     mSpace = space;
-    
+
     ConnectThisTo(space, Events::CogReplaced, OnCogReplaced);
   }
 
@@ -460,34 +464,36 @@ public:
 
   bool ShowObject(Cog* cog)
   {
-    return !cog->mFlags.IsSet(CogFlags::ObjectViewHidden) && !cog->GetMarkedForDestruction();
+    return !cog->mFlags.IsSet(CogFlags::ObjectViewHidden) &&
+           !cog->GetMarkedForDestruction();
   }
 
   void ClearRemovedObjects()
   {
-    forRange(RemovedEntry* entry, mVisibleRemovedEntries.Values())
-      delete entry;
+    forRange(RemovedEntry * entry,
+             mVisibleRemovedEntries.Values()) delete entry;
     mVisibleRemovedEntries.Clear();
   }
 
-  //DataSource Interface
-  
-  //Data base Indexing
+  // DataSource Interface
+
+  // Data base Indexing
   DataEntry* GetRoot() override
   {
     return mSpace;
   }
 
-  //Safe Indexing
+  // Safe Indexing
   DataEntry* ToEntry(DataIndex index) override
   {
-    if(RemovedEntry* removed = mVisibleRemovedEntries.FindValue(index.Id, nullptr))
+    if (RemovedEntry* removed =
+            mVisibleRemovedEntries.FindValue(index.Id, nullptr))
       return removed;
 
     Cog* object = Z::gTracker->GetObjectWithId(index.Id);
     // Even if the object id valid check to see
     // to see if the object is in the same space
-    if(object && object->GetSpace() == mSpace)
+    if (object && object->GetSpace() == mSpace)
       return object;
     else
       return nullptr;
@@ -496,7 +502,7 @@ public:
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
     Object* object = (Object*)dataEntry;
-    if(Cog* cog = Type::DynamicCast<Cog*>(object))
+    if (Cog* cog = Type::DynamicCast<Cog*>(object))
     {
       CogId id = cog->GetId();
       return id.ToUint64();
@@ -504,7 +510,7 @@ public:
     else
     {
       RemovedEntry* removed = (RemovedEntry*)object;
-      if(removed)
+      if (removed)
         return removed->ToId();
       return DataIndex(-1);
     }
@@ -519,15 +525,15 @@ public:
   DataEntry* Parent(DataEntry* dataEntry) override
   {
     Object* object = (Object*)dataEntry;
-    if(Cog* cog = Type::DynamicCast<Cog*>(object))
+    if (Cog* cog = Type::DynamicCast<Cog*>(object))
     {
       // Space is the root object
-      if(cog == mSpace)
+      if (cog == mSpace)
         return nullptr;
 
       // Return parent of object
       Cog* parent = cog->GetParent();
-      if(parent == nullptr)
+      if (parent == nullptr)
         return cog->GetSpace();
       else
         return parent;
@@ -541,13 +547,13 @@ public:
 
   uint ChildCount(DataEntry* dataEntry) override
   {
-    if(dataEntry == mSpace)
+    if (dataEntry == mSpace)
     {
       // Count all non-transient roots
       uint count = 0;
-      forRange(Cog& cog, mSpace->mRoots.All())
+      forRange(Cog & cog, mSpace->mRoots.All())
       {
-        if(ShowObject(&cog))
+        if (ShowObject(&cog))
           ++count;
       }
       return count;
@@ -556,23 +562,23 @@ public:
     {
       // Count all non-transient objects
       Object* object = (Object*)dataEntry;
-      if(RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
+      if (RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
         return 0;
 
       Cog* cog = (Cog*)object;
 
-      if(Hierarchy* hierarchy = cog->has(Hierarchy))
+      if (Hierarchy* hierarchy = cog->has(Hierarchy))
       {
         uint i = 0;
-        forRange(Cog& child, hierarchy->GetChildren())
+        forRange(Cog & child, hierarchy->GetChildren())
         {
-          if(ShowObject(&child))
+          if (ShowObject(&child))
             ++i;
         }
 
         // Count locally removed children
         LocalModifications* modifications = LocalModifications::GetInstance();
-        if(ObjectState* state = modifications->GetObjectState(hierarchy))
+        if (ObjectState* state = modifications->GetObjectState(hierarchy))
           i += state->mRemovedChildren.Size();
 
         return i;
@@ -584,9 +590,9 @@ public:
   Cog* GetNextValidCog(Cog* cog)
   {
     // Skip over transient objects
-    while(cog && !ShowObject(cog))
+    while (cog && !ShowObject(cog))
       cog = cog->FindNextSibling();
-    
+
     return cog;
   }
 
@@ -595,7 +601,7 @@ public:
     u64 hashId = RemovedEntry::ToId(parent, childId.mId);
 
     RemovedEntry* entry = mVisibleRemovedEntries.FindValue(hashId, nullptr);
-    if(entry == nullptr)
+    if (entry == nullptr)
     {
       entry = new RemovedEntry(parent, childId.mId);
       mVisibleRemovedEntries[hashId] = entry;
@@ -607,7 +613,8 @@ public:
   RemovedEntry* GetFirstRemovedEntry(Cog* parentObject)
   {
     LocalModifications* modifications = LocalModifications::GetInstance();
-    if(ObjectState* state = modifications->GetObjectState(parentObject->has(Hierarchy)))
+    if (ObjectState* state =
+            modifications->GetObjectState(parentObject->has(Hierarchy)))
     {
       ObjectState::ChildId childId = state->mRemovedChildren.All().Front();
       return GetRemovedEntry(parentObject, childId);
@@ -616,20 +623,26 @@ public:
     return nullptr;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
     Object* parentObject = (Object*)dataEntry;
 
-    // Removed entries will never have children, so this should only ever be called for Cogs.
-    ReturnIf(Type::DynamicCast<Cog*>(parentObject) == nullptr, nullptr, "This should always be a Cog");
+    // Removed entries will never have children, so this should only ever be
+    // called for Cogs.
+    ReturnIf(Type::DynamicCast<Cog*>(parentObject) == nullptr,
+             nullptr,
+             "This should always be a Cog");
 
-    if(dataEntry == mSpace)
+    if (dataEntry == mSpace)
     {
       Cog* prevObject = (Cog*)prev;
-      Cog* child = prev ? (Cog*)prevObject->HierarchyLink.Next : &mSpace->mRoots.Begin().Front();
+      Cog* child = prev ? (Cog*)prevObject->HierarchyLink.Next
+                        : &mSpace->mRoots.Begin().Front();
 
       // Skip over hidden objects
-      while(child && !ShowObject(child))
+      while (child && !ShowObject(child))
         child = (Cog*)child->HierarchyLink.Next;
 
       return child;
@@ -638,21 +651,22 @@ public:
     {
       Cog* parentCog = (Cog*)parentObject;
 
-      if(prev == nullptr)
+      if (prev == nullptr)
       {
         // Find the first valid Cog
-        if(!parentCog->GetChildren().Empty())
+        if (!parentCog->GetChildren().Empty())
         {
           Cog* firstChild = &parentCog->GetChildren().Front();
-          if(Cog* firstValidChild = GetNextValidCog(firstChild))
+          if (Cog* firstValidChild = GetNextValidCog(firstChild))
             return firstValidChild;
         }
 
         // If there were no valid Cogs, get the first valid removed object
-        if(RemovedEntry* removedEntry = GetFirstRemovedEntry(parentCog))
+        if (RemovedEntry* removedEntry = GetFirstRemovedEntry(parentCog))
           return removedEntry;
 
-        Error("Should not get here - There should be a valid child if this function is called.");
+        Error("Should not get here - There should be a valid child if this "
+              "function is called.");
       }
       else
       {
@@ -660,33 +674,39 @@ public:
         Object* previousObject = (Object*)prev;
 
         // The previous could either be a Cog or a RemovedEntry
-        if(Cog* previousCog = Type::DynamicCast<Cog*>(previousObject))
+        if (Cog* previousCog = Type::DynamicCast<Cog*>(previousObject))
         {
-          if(Cog* nextValidSibling = GetNextValidCog(previousCog->FindNextSibling()))
+          if (Cog* nextValidSibling =
+                  GetNextValidCog(previousCog->FindNextSibling()))
             return nextValidSibling;
 
           // If it was the last Cog in the list, move on to locally removed Cogs
-          if(RemovedEntry* removedEntry = GetFirstRemovedEntry(parentCog))
+          if (RemovedEntry* removedEntry = GetFirstRemovedEntry(parentCog))
             return removedEntry;
 
-          Error("Should not get here - There should be a valid child if this function is called.");
+          Error("Should not get here - There should be a valid child if this "
+                "function is called.");
         }
 
         LocalModifications* modifications = LocalModifications::GetInstance();
 
         // If the previous object wasn't a Cog, it's a removed object
         RemovedEntry* previousRemovedEntry = (RemovedEntry*)prev;
-        ObjectState* state = modifications->GetObjectState(parentCog->has(Hierarchy));
-        ReturnIf(state == nullptr, nullptr, "We've already returned a removed child, the object "
-                                            "state should still be alive.");
+        ObjectState* state =
+            modifications->GetObjectState(parentCog->has(Hierarchy));
+        ReturnIf(state == nullptr,
+                 nullptr,
+                 "We've already returned a removed child, the object "
+                 "state should still be alive.");
 
-        ObjectState::ChildrenMap::range removedChildren = state->GetRemovedChildren();
-        while(!removedChildren.Empty())
+        ObjectState::ChildrenMap::range removedChildren =
+            state->GetRemovedChildren();
+        while (!removedChildren.Empty())
         {
           ObjectState::ChildId currRemovedChild = removedChildren.Front();
           removedChildren.PopFront();
 
-          if(currRemovedChild.mId == previousRemovedEntry->mChildId)
+          if (currRemovedChild.mId == previousRemovedEntry->mChildId)
             return GetRemovedEntry(parentCog, removedChildren.Front());
         }
       }
@@ -694,22 +714,22 @@ public:
     return nullptr;
   }
 
-  //Tree expanding
+  // Tree expanding
   bool IsExpandable(DataEntry* dataEntry) override
   {
-    if(dataEntry==mSpace)
+    if (dataEntry == mSpace)
     {
       return true;
     }
     else
     {
       Object* object = (Object*)dataEntry;
-      if(Cog* cog = Type::DynamicCast<Cog*>(object))
+      if (Cog* cog = Type::DynamicCast<Cog*>(object))
       {
-        if(!cog->GetChildren().Empty())
+        if (!cog->GetChildren().Empty())
           return true;
         LocalModifications* modifications = LocalModifications::GetInstance();
-        if(Hierarchy* hierarchy = cog->has(Hierarchy))
+        if (Hierarchy* hierarchy = cog->has(Hierarchy))
         {
           if (ObjectState* state = modifications->GetObjectState(hierarchy))
             return !state->GetRemovedChildren().Empty();
@@ -719,16 +739,16 @@ public:
     }
   }
 
-  //Data Base Cell Modification and Inspection
+  // Data Base Cell Modification and Inspection
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     static const String objectString("Object");
 
     Object* object = (Object*)dataEntry;
-    if(Cog* cog = Type::DynamicCast<Cog*>(object))
+    if (Cog* cog = Type::DynamicCast<Cog*>(object))
     {
       LocalModifications* modifications = LocalModifications::GetInstance();
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
       {
         FormattedInPlaceText formatting;
 
@@ -738,50 +758,51 @@ public:
 
         // Set the name of the cog
         formatting.mText = cog->GetName();
-        if(cog->IsModifiedFromArchetype())
+        if (cog->IsModifiedFromArchetype())
           formatting.mTextColor = ObjectViewUi::LocallyModifiedColor;
-        if(formatting.mText.Empty())
+        if (formatting.mText.Empty())
           formatting.mText = cNoNameDisplay;
 
         // Add an icon for locally added
-        if(modifications->IsObjectLocallyAdded(cog, false))
+        if (modifications->IsObjectLocallyAdded(cog, false))
         {
           formatting.mCustomIcons.PushBack("ObjectLocallyAdded");
-          //formatting.mTextColor = ObjectViewUi::LocallyAddedColor;// Vec4(1, 1, 1, 1);
-          //formatting.mCustomIcon = "ObjectLocallyAdded";
+          // formatting.mTextColor = ObjectViewUi::LocallyAddedColor;// Vec4(1,
+          // 1, 1, 1); formatting.mCustomIcon = "ObjectLocallyAdded";
         }
 
         // Add icon for child order modified
-        if(modifications->IsChildOrderModified(cog->has(Hierarchy)))
+        if (modifications->IsChildOrderModified(cog->has(Hierarchy)))
         {
           formatting.mCustomIcons.PushBack("ChildOrderOverride");
-          //formatting.mTextColor = ObjectViewUi::LocallyAddedColor;// Vec4(1, 1, 1, 1);
-          //formatting.mCustomIcon = "ObjectLocallyAdded";
+          // formatting.mTextColor = ObjectViewUi::LocallyAddedColor;// Vec4(1,
+          // 1, 1, 1); formatting.mCustomIcon = "ObjectLocallyAdded";
         }
 
         // If it has an Archetype, add the Archetype name at the end
-        if(Archetype* archetype = cog->GetArchetype())
+        if (Archetype* archetype = cog->GetArchetype())
         {
-          formatting.mAdditionalText = String::Format("[%s]", archetype->Name.c_str());
+          formatting.mAdditionalText =
+              String::Format("[%s]", archetype->Name.c_str());
           formatting.mAdditionalTextColor = Vec4(1, 1, 1, 0.35f);
         }
 
         variant = formatting;
       }
-      if(column == CommonColumns::Type)
+      if (column == CommonColumns::Type)
       {
         variant = objectString;
       }
-      if(column == cHiddenColumn)
+      if (column == cHiddenColumn)
       {
-        if(cog->mFlags.IsSet(CogFlags::EditorViewportHidden))
+        if (cog->mFlags.IsSet(CogFlags::EditorViewportHidden))
           variant = (uint)FlagState::Disabled;
         else
           variant = (uint)FlagState::Enabled;
       }
-      if(column == cLockedColumn)
+      if (column == cLockedColumn)
       {
-        if(cog->mFlags.IsSet(CogFlags::Locked))
+        if (cog->mFlags.IsSet(CogFlags::Locked))
           variant = (uint)FlagState::Enabled;
         else
           variant = (uint)FlagState::Disabled;
@@ -790,27 +811,30 @@ public:
     else
     {
       RemovedEntry* removedEntry = (RemovedEntry*)object;
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
       {
         String removedName = removedEntry->GetRemovedChildName();
-        if(removedName.Empty())
+        if (removedName.Empty())
           removedName = "(Unnamed)";
         FormattedInPlaceText formatting;
         formatting.mText = removedName;
-        //formatting.mTextColor = ObjectViewUi::LocallyRemovedColor; //Vec4(1, 1, 1, 0.4f);
+        // formatting.mTextColor = ObjectViewUi::LocallyRemovedColor; //Vec4(1,
+        // 1, 1, 0.4f);
         formatting.mTextColor = Vec4(1, 1, 1, 0.4f);
         formatting.mCustomIcons.PushBack("ObjectLocallyRemoved");
-        //formatting.mCustomIcon = "ObjectLocallyRemoved";
+        // formatting.mCustomIcon = "ObjectLocallyRemoved";
         variant = formatting;
       }
-      if(column == cHiddenColumn || column == cLockedColumn)
+      if (column == cHiddenColumn || column == cLockedColumn)
       {
         variant = (uint)FlagState::Hidden;
       }
     }
   }
 
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     if (Z::gEngine->IsReadOnly())
     {
@@ -820,23 +844,24 @@ public:
 
     Object* object = (Object*)dataEntry;
     Cog* cog = Type::DynamicCast<Cog*>(object);
-    if(cog == nullptr)
+    if (cog == nullptr)
       return false;
-    if(column == CommonColumns::Name)
+    if (column == CommonColumns::Name)
     {
       Property* property = ZilchTypeId(Cog)->GetProperty("Name");
-      ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), cog, property, variant);
+      ChangeAndQueueProperty(
+          Z::gEditor->GetOperationQueue(), cog, property, variant);
     }
-    else if(column == cHiddenColumn)
+    else if (column == cHiddenColumn)
     {
-      if(variant.Get<bool>())
+      if (variant.Get<bool>())
         cog->SetEditorViewportHidden(false);
       else
         cog->SetEditorViewportHidden(true);
     }
-    else if(column == cLockedColumn)
+    else if (column == cLockedColumn)
     {
-      if(variant.Get<bool>())
+      if (variant.Get<bool>())
         cog->SetLocked(true);
       else
         cog->SetLocked(false);
@@ -846,7 +871,9 @@ public:
     return true;
   }
 
-  void CanMove(Status& status, DataEntry* source, DataEntry* destination,
+  void CanMove(Status& status,
+               DataEntry* source,
+               DataEntry* destination,
                InsertMode::Type insertMode)
   {
     if (Z::gEngine->IsReadOnly())
@@ -862,11 +889,12 @@ public:
 
     if (sourceCog == nullptr)
     {
-      status.SetFailed("Cannot move removed children", InsertError::NotSupported);
+      status.SetFailed("Cannot move removed children",
+                       InsertError::NotSupported);
       return;
     }
 
-    if(destination == mSpace)
+    if (destination == mSpace)
     {
       status.SetSucceeded("Unparent");
     }
@@ -874,14 +902,15 @@ public:
     {
       Cog* destinationObj = Type::DynamicCast<Cog*>((Object*)destination);
 
-      if(destinationObj == nullptr)
+      if (destinationObj == nullptr)
       {
-        status.SetFailed("Cannot move to removed children", InsertError::NotSupported);
+        status.SetFailed("Cannot move to removed children",
+                         InsertError::NotSupported);
         return;
       }
 
       // Cannot move to a child object
-      if(sourceCog->IsDescendant(destinationObj))
+      if (sourceCog->IsDescendant(destinationObj))
       {
         String message = String::Format("Cannot move to a child object");
         status.SetFailed(message, InsertError::Invalid);
@@ -889,8 +918,8 @@ public:
       }
 
       // Cannot move objects above the level settings object
-      if(destinationObj->GetLevelSettings() == destinationObj &&
-         insertMode == InsertMode::Before)
+      if (destinationObj->GetLevelSettings() == destinationObj &&
+          insertMode == InsertMode::Before)
       {
         status.SetFailed("", InsertError::NotSupported);
         return;
@@ -898,18 +927,21 @@ public:
 
       // Cannot move an object with a transform to an object without a Transform
       bool sourceHasTransform = (sourceCog->has(Transform) != nullptr);
-      bool destinationHasTransform = (destinationObj->has(Transform) != nullptr);
+      bool destinationHasTransform =
+          (destinationObj->has(Transform) != nullptr);
 
-      if(sourceHasTransform && !destinationHasTransform)
+      if (sourceHasTransform && !destinationHasTransform)
       {
-        String message = String::Format("Cannot parent an object with a Transform to an object without a Transform");
+        String message =
+            String::Format("Cannot parent an object with a Transform to an "
+                           "object without a Transform");
         status.SetFailed(message, InsertError::Invalid);
         return;
       }
 
       String displayName = destinationObj->GetDescription();
 
-      if(insertMode == InsertMode::On)
+      if (insertMode == InsertMode::On)
       {
         String message = String::Format("Parent to %s", displayName.c_str());
         status.SetSucceeded(message);
@@ -917,7 +949,7 @@ public:
       else
       {
         String message;
-        if(insertMode == InsertMode::Before)
+        if (insertMode == InsertMode::Before)
           message = String::Format("Move before %s", displayName.c_str());
         else
           message = String::Format("Move after %s", displayName.c_str());
@@ -934,7 +966,9 @@ public:
     queue->SetActiveBatchName("ObjectView_BeginBatchMove");
   }
 
-  bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode)
+  bool Move(DataEntry* destinationEntry,
+            DataEntry* movingEntry,
+            InsertMode::Type insertMode)
   {
     if (Z::gEngine->IsReadOnly())
     {
@@ -942,32 +976,36 @@ public:
       return false;
     }
 
-    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
-    ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr, nullptr, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr,
+             nullptr,
+             "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr,
+             nullptr,
+             "This should always be a Cog");
 
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
-    
+
     Cog* dest = (Cog*)destinationEntry;
     Cog* moving = (Cog*)movingEntry;
 
-    if(moving->GetLevelSettings() == moving)
+    if (moving->GetLevelSettings() == moving)
     {
       DoNotifyWarning("Cannot move LevelSettings", "Cannot move LevelSettings");
       return false;
     }
 
     // No need to do anything if they're the same object
-    if(dest == moving)
+    if (dest == moving)
       return false;
 
-    if(destinationEntry == mSpace)
+    if (destinationEntry == mSpace)
       DetachObject(queue, moving);
-    else if(insertMode == InsertMode::On)
+    else if (insertMode == InsertMode::On)
       AttachObject(queue, moving, dest);
     else
     {
       uint destIndex = dest->GetHierarchyIndex();
-      if(insertMode == InsertMode::Before)
+      if (insertMode == InsertMode::Before)
         MoveObject(queue, moving, dest->GetParent(), destIndex);
       else
         MoveObject(queue, moving, dest->GetParent(), destIndex + 1);
@@ -976,7 +1014,8 @@ public:
     return true;
   }
 
-  bool Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove,
+  bool Move(DataEntry* destinationEntry,
+            Array<DataIndex>& indicesToMove,
             InsertMode::Type insertMode) override
   {
     if (Z::gEngine->IsReadOnly())
@@ -986,22 +1025,24 @@ public:
     }
 
     ReturnIf(indicesToMove.Empty(), false, "Nothing to move");
-    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
+    ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr,
+             nullptr,
+             "This should always be a Cog");
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
     Cog* dest = (Cog*)destinationEntry;
 
-    // We want all objects to be sorted by their hierarchy index so they stay in the current order
+    // We want all objects to be sorted by their hierarchy index so they stay in
+    // the current order
     Array<Cog*> sortedCogs;
-    forRange(DataIndex& index, indicesToMove.All())
-      sortedCogs.PushBack((Cog*)ToEntry(index));
+    forRange(DataIndex & index, indicesToMove.All())
+        sortedCogs.PushBack((Cog*)ToEntry(index));
 
     Zero::Sort(sortedCogs.All(), CogHierarchyIndexCompareFn);
 
     if (insertMode == InsertMode::After)
       Zero::Reverse(sortedCogs.Begin(), sortedCogs.End());
 
-    forRange(Cog* cog, sortedCogs)
-      Move(destinationEntry, cog, insertMode);
+    forRange(Cog * cog, sortedCogs) Move(destinationEntry, cog, insertMode);
 
     return true;
   }
@@ -1017,7 +1058,9 @@ public:
     return false;
   }
 
-  void OnMetaDrop(MetaDropEvent* e, DataEntry* mouseOver, InsertMode::Enum mode) override
+  void OnMetaDrop(MetaDropEvent* e,
+                  DataEntry* mouseOver,
+                  InsertMode::Enum mode) override
   {
     if (Z::gEngine->IsReadOnly())
     {
@@ -1025,18 +1068,18 @@ public:
       return;
     }
 
-    // If an archetype was dropped on the row, attach 
-    if(Archetype* archetype = e->Instance.Get<Archetype*>())
+    // If an archetype was dropped on the row, attach
+    if (Archetype* archetype = e->Instance.Get<Archetype*>())
     {
       e->Handled = true;
-      
+
       Object* mouseOverObject = (Object*)mouseOver;
       Cog* mouseOverCog = Type::DynamicCast<Cog*>(mouseOverObject);
-      if(mouseOverCog == nullptr)
+      if (mouseOverCog == nullptr)
         return;
 
       // Set the tooltip and return if we're only testing
-      if(e->Testing)
+      if (e->Testing)
       {
         e->Result = String::Format("Create '%s'", archetype->Name.c_str());
         return;
@@ -1045,19 +1088,20 @@ public:
       // We want this operation to be able to be un-done
       OperationQueue* queue = Z::gEditor->GetOperationQueue();
 
-      // The object will be created, parented, and potentially moved. All those operations should
-      // be batched as the user made one operation
+      // The object will be created, parented, and potentially moved. All those
+      // operations should be batched as the user made one operation
       queue->BeginBatch();
       queue->SetActiveBatchName("ObjectView_OnMetaDrop");
 
       // Create the object
-      Cog* newChild = CreateFromArchetype(queue, mSpace, archetype, Vec3::cZero);
+      Cog* newChild =
+          CreateFromArchetype(queue, mSpace, archetype, Vec3::cZero);
 
-      if(mouseOver == mSpace)
+      if (mouseOver == mSpace)
       {
         // We don't need to attach to anything if it's on the Space
       }
-      else if(mode == InsertMode::On)
+      else if (mode == InsertMode::On)
       {
         AttachObject(queue, newChild, mouseOverCog, false);
       }
@@ -1066,7 +1110,7 @@ public:
         Cog* parent = mouseOverCog->GetParent();
 
         uint destIndex = mouseOverCog->GetHierarchyIndex();
-        if(mode == InsertMode::Before)
+        if (mode == InsertMode::Before)
           MoveObject(queue, newChild, parent, destIndex, false);
         else
           MoveObject(queue, newChild, parent, destIndex + 1, false);
@@ -1096,9 +1140,9 @@ public:
     DispatchEvent(Events::DataReplaced, &eventToSend);
 
     // Walk all children and dispatch replace events for each one
-    forRange(Cog& oldChild, oldCog->GetChildren())
+    forRange(Cog & oldChild, oldCog->GetChildren())
     {
-      if(Cog* newChild = newCog->FindChildByChildId(oldChild.mChildId))
+      if (Cog* newChild = newCog->FindChildByChildId(oldChild.mChildId))
         SendReplaceEvents(&oldChild, newChild);
     }
   }
@@ -1109,23 +1153,20 @@ Cog* GetCogFromIndex(DataIndex index)
   return Z::gTracker->GetObjectWithId(index.Id);
 }
 
-//-------------------------------------------------------------- Space Selection
-//Simple adapter class to bind a engine selection to a DataSelection.
+// Simple adapter class to bind a engine selection to a DataSelection.
 class SpaceSelection : public DataSelection
 {
 public:
   MetaSelection* mSelection;
 
-  SpaceSelection(MetaSelection* selection)
-    :mSelection(selection)
-  { 
-
+  SpaceSelection(MetaSelection* selection) : mSelection(selection)
+  {
   }
 
   void GetSelected(Array<DataIndex>& selected) override
   {
-    forRange(Cog* object, mSelection->AllOfType<Cog>())
-      selected.PushBack(object->GetId().ToUint64());
+    forRange(Cog * object, mSelection->AllOfType<Cog>())
+        selected.PushBack(object->GetId().ToUint64());
   }
 
   uint Size() override
@@ -1136,8 +1177,8 @@ public:
   bool IsSelected(DataIndex index) override
   {
     Cog* object = GetCogFromIndex(index);
-    if(object)
-      return mSelection->Contains( object );
+    if (object)
+      return mSelection->Contains(object);
     else
       return false;
   }
@@ -1145,14 +1186,14 @@ public:
   void Select(DataIndex index, bool sendsEvents) override
   {
     Cog* object = GetCogFromIndex(index);
-    if(object)
+    if (object)
       mSelection->Add(object, (SendsEvents::Enum)sendsEvents);
   }
 
   void Deselect(DataIndex index) override
   {
     Cog* object = GetCogFromIndex(index);
-    if(object)
+    if (object)
       mSelection->Remove(object);
   }
 
@@ -1182,14 +1223,11 @@ void RegisterObjectViewEditors()
   factory->RegisterEditor("LockEditor", CreateLockEditor);
 }
 
-//------------------------------------------------------------------ Object View
 ZilchDefineType(ObjectView, builder, type)
 {
-  
 }
 
-ObjectView::ObjectView(Composite* parent)
-  : Composite(parent)
+ObjectView::ObjectView(Composite* parent) : Composite(parent)
 {
   this->SetLayout(CreateStackLayout());
 
@@ -1223,7 +1261,8 @@ ObjectView::ObjectView(Composite* parent)
   ConnectThisTo(mTree, Events::MouseEnterRow, OnMouseEnterRow);
   ConnectThisTo(mTree, Events::MouseExitRow, OnMouseExitRow);
 
-  ConnectThisTo(mTree->mArea->mClientArea, Events::RightMouseUp, OnRightMouseUp);
+  ConnectThisTo(
+      mTree->mArea->mClientArea, Events::RightMouseUp, OnRightMouseUp);
 }
 
 ObjectView::~ObjectView()
@@ -1237,7 +1276,8 @@ void ObjectView::UpdateTransform()
   PlaceWithRect(rect, mDimSearch);
 
   mNoSpaceText->SetColor(Vec4(1, 1, 1, 0.4f));
-  mNoSpaceText->SetTranslation(ToVector3(mSize * 0.5f - mNoSpaceText->GetMinSize() * 0.5f));
+  mNoSpaceText->SetTranslation(
+      ToVector3(mSize * 0.5f - mNoSpaceText->GetMinSize() * 0.5f));
   Composite::UpdateTransform();
 }
 
@@ -1245,7 +1285,7 @@ void ObjectView::SetSpace(Space* space)
 {
   // Space already set
   Space* oldSpace = mSpace;
-  if(oldSpace == space)
+  if (oldSpace == space)
     return;
 
   if (oldSpace)
@@ -1264,14 +1304,14 @@ void ObjectView::SetSpace(Space* space)
   mTree->SetDataSource(mSource);
   mTree->SetSelection(new SpaceSelection(Z::gEditor->GetSelection()));
 
-  // Delete the old source after we set the new data source since setting 
+  // Delete the old source after we set the new data source since setting
   // the data source can reference the old data source.
   SafeDelete(oldSource);
 
   ConnectThisTo(mSource, Events::DataActivated, OnDataActivated);
   ConnectThisTo(space, Events::SpaceObjectsChanged, OnSpaceChange);
   ConnectThisTo(space, Events::SpaceDestroyed, OnSpaceDestroyed);
-  
+
   MetaSelection* selection = Z::gEditor->GetSelection();
   DisconnectAll(selection, this);
   ConnectThisTo(selection, Events::SelectionChanged, OnSelectionChanged);
@@ -1280,28 +1320,28 @@ void ObjectView::SetSpace(Space* space)
 
 void ObjectView::OnKeyDown(KeyboardEvent* event)
 {
-  if(event->Handled)
+  if (event->Handled)
     return;
 
-  if(event->Key == Keys::F)
+  if (event->Key == Keys::F)
   {
     FocusOnSelectedObjects();
   }
 
-  if(event->Key == Keys::F2)
+  if (event->Key == Keys::F2)
   {
     Cog* object = Z::gEditor->GetSelection()->GetPrimaryAs<Cog>();
 
-    if(object)
+    if (object)
     {
       DataIndex index(object->GetId().ToUint64());
       TreeRow* row = mTree->FindRowByIndex(index);
-      if(row)
+      if (row)
         row->Edit(CommonColumns::Name);
     }
   }
 
-  if(event->CtrlPressed && event->Key == Keys::A)
+  if (event->CtrlPressed && event->Key == Keys::A)
   {
     SelectAll();
   }
@@ -1377,19 +1417,20 @@ void ObjectView::OnDelete(ObjectEvent* event)
 {
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("ObjectView", "Cannot delete objects while in read-only mode");
+    DoNotifyWarning("ObjectView",
+                    "Cannot delete objects while in read-only mode");
     return;
   }
 
   MetaSelection* selection = Z::gEditor->GetSelection();
-  if(selection->Empty())
+  if (selection->Empty())
     return;
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("ObjectView_OnDelete");
-  forRange(Cog* object, selection->AllOfType<Cog>())
-    DestroyObject(queue, object);
+  forRange(Cog * object, selection->AllOfType<Cog>())
+      DestroyObject(queue, object);
 
   selection->Clear();
   selection->FinalSelectionChanged();
@@ -1426,7 +1467,7 @@ void ObjectView::OnSelectionChanged(Event* event)
   // Show the object row that was selected
   MetaSelection* selection = Z::gEditor->GetSelection();
   Cog* primary = selection->GetPrimaryAs<Cog>();
-  if(primary && selection->Count() == 1)
+  if (primary && selection->Count() == 1)
     ShowObject(primary);
 }
 
@@ -1437,13 +1478,13 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
 
   mToolTip.SafeDestroy();
   Object* object = (Object*)mSource->ToEntry(e->Row->mIndex);
-  if(object == nullptr)
+  if (object == nullptr)
     return;
-  
+
   String toolTipMessage;
   ToolTipColorScheme::Enum toolTipColor = ToolTipColorScheme::Green;
 
-  if(RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
+  if (RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
   {
     Cog* cog = removed->mParent->FindNearestArchetypeContext();
     toolTipMessage = "Object has been locally removed from the Archetype.\n\n"
@@ -1453,28 +1494,33 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
   else
   {
     Cog* cog = (Cog*)object;
-    if(LocalModifications::GetInstance()->IsObjectLocallyAdded(cog, false))
+    if (LocalModifications::GetInstance()->IsObjectLocallyAdded(cog, false))
     {
       Cog* archetypeParent = cog->GetParent()->FindNearestArchetypeContext();
-      ErrorIf(archetypeParent == nullptr, "Cannot be modified if we're not a child of an Archetype");
-      if(archetypeParent)
+      ErrorIf(archetypeParent == nullptr,
+              "Cannot be modified if we're not a child of an Archetype");
+      if (archetypeParent)
       {
         String archetypeName = archetypeParent->GetArchetype()->Name;
-        toolTipMessage = String::Format("Object is locally added to the '%s' Archetype.", archetypeName.c_str());
+        toolTipMessage =
+            String::Format("Object is locally added to the '%s' Archetype.",
+                           archetypeName.c_str());
         toolTipColor = ToolTipColorScheme::Green;
       }
     }
-    else if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
+    else if (LocalModifications::GetInstance()->IsChildOrderModified(
+                 cog->has(Hierarchy)))
     {
       toolTipMessage = "Child order is locally modified.\n\n"
-                       "This objects children will ignore the order specified in the Archetype.\n\n"
+                       "This objects children will ignore the order specified "
+                       "in the Archetype.\n\n"
                        "Right click to revert order.";
 
       toolTipColor = ToolTipColorScheme::Yellow;
     }
   }
 
-  if(!toolTipMessage.Empty())
+  if (!toolTipMessage.Empty())
   {
     ToolTip* toolTip = new ToolTip(this);
     toolTip->SetText(toolTipMessage);
@@ -1484,8 +1530,10 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
     ToolTipPlacement placement;
     placement.mScreenRect = rect;
     placement.mHotSpot = rect.Center();
-    placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right,
-                          IndicatorSide::Bottom, IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Left,
+                          IndicatorSide::Right,
+                          IndicatorSide::Bottom,
+                          IndicatorSide::Top);
 
     toolTip->SetArrowTipTranslation(placement);
     toolTip->SetColorScheme(toolTipColor);
@@ -1510,15 +1558,16 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
   mCommandIndex = event->Row->mIndex;
 
   Object* object = (Object*)mSource->ToEntry(mCommandIndex);
-  if(Cog* cog = Type::DynamicCast<Cog*>(object))
+  if (Cog* cog = Type::DynamicCast<Cog*>(object))
   {
-    // Set the parent Cog as a context so that all commands can use it (e.g. creation commands
-    // will attach to this cog)
+    // Set the parent Cog as a context so that all commands can use it (e.g.
+    // creation commands will attach to this cog)
     menu->mRootEntry->mContext.Add(cog);
 
     ConnectMenu(menu, "Rename", OnRename, false);
     ConnectMenu(menu, "Delete", OnDelete, false);
-    if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
+    if (LocalModifications::GetInstance()->IsChildOrderModified(
+            cog->has(Hierarchy)))
       ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder, false);
 
     menu->AddDivider();
@@ -1526,7 +1575,8 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     ContextMenuEntry* createSubMenu = menu->AddEntry("Create");
     createSubMenu->AddEntry(new ContextMenuEntryMenu("Create"));
 
-    // Send out the ContextMenuEntry tree root to potentially alter the context menus structure/items
+    // Send out the ContextMenuEntry tree root to potentially alter the context
+    // menus structure/items
     ContextMenuEvent event(menu->GetRootEntry());
     cog->DispatchEvent(Events::ContextMenuCreated, &event);
     cog->DispatchUp(Events::ContextMenuCreated, &event);
@@ -1557,28 +1607,32 @@ void ObjectView::OnRestore(ObjectEvent* event)
 
   Object* object = (Object*)mSource->ToEntry(mCommandIndex);
   RemovedEntry* removedEntry = Type::DirectDynamicCast<RemovedEntry*>(object);
-  ReturnIf(removedEntry == nullptr, , "There should have been a RemovedEntry at the command index");
+  ReturnIf(removedEntry == nullptr,
+           ,
+           "There should have been a RemovedEntry at the command index");
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   Cog* parent = removedEntry->mParent;
   ReturnIf(parent == nullptr, , "The RemovedEntry should always have a parent");
   ObjectState::ChildId childId("Cog", removedEntry->mChildId);
   Hierarchy* parentHierarchy = parent->has(Hierarchy);
-  ReturnIf(parentHierarchy == nullptr, , "The parent Cog should have had a Hierarchy");
+  ReturnIf(parentHierarchy == nullptr,
+           ,
+           "The parent Cog should have had a Hierarchy");
   RestoreLocallyRemovedChild(queue, parentHierarchy, childId);
 }
 
 void ObjectView::OnRestoreChildOrder(ObjectEvent* event)
 {
   MetaSelection* selection = Z::gEditor->GetSelection();
-  if(selection->Empty())
+  if (selection->Empty())
     return;
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
   queue->BeginBatch();
   queue->SetActiveBatchName("RestoreChildOrder");
-  forRange(Cog* object, selection->AllOfType<Cog>())
-    RestoreChildOrder(queue, object->has(Hierarchy));
+  forRange(Cog * object, selection->AllOfType<Cog>())
+      RestoreChildOrder(queue, object->has(Hierarchy));
 
   queue->EndBatch();
 }
@@ -1586,10 +1640,10 @@ void ObjectView::OnRestoreChildOrder(ObjectEvent* event)
 void ObjectView::OnDataActivated(DataEvent* event)
 {
   Cog* cog = GetCogFromIndex(event->Index);
-  if(cog)
+  if (cog)
   {
     CameraFocusSpace(cog->GetSpace());
   }
 }
 
-}//namespace Zero
+} // namespace Zero

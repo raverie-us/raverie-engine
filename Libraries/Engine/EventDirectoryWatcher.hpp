@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,11 +6,11 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(FileModified);
-  DeclareEvent(FileCreated);
-  DeclareEvent(FileDeleted);
-  DeclareEvent(FileRenamed);
-}
+DeclareEvent(FileModified);
+DeclareEvent(FileCreated);
+DeclareEvent(FileDeleted);
+DeclareEvent(FileRenamed);
+} // namespace Events
 
 class FileEditEvent : public Event
 {
@@ -41,4 +36,4 @@ public:
   DirectoryWatcher mWatcher;
 };
 
-}
+} // namespace Zero

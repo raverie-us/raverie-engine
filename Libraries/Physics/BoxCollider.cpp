@@ -1,9 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -33,16 +28,20 @@ BoxCollider::BoxCollider()
 void BoxCollider::Serialize(Serializer& stream)
 {
   Collider::Serialize(stream);
-  
+
   stream.SerializeFieldDefault("HalfSize", mLocalHalfSize, Vec3(real(0.5f)));
   // To deal with bad serialized values (most before the setter was fixed)
-  mLocalHalfSize = Math::Clamp(mLocalHalfSize, mMinAllowedSize, mMaxAllowedSize);
+  mLocalHalfSize =
+      Math::Clamp(mLocalHalfSize, mMinAllowedSize, mMaxAllowedSize);
 }
 
 void BoxCollider::DebugDraw()
 {
   Collider::DebugDraw();
-  gDebugDraw->Add(Debug::Obb(GetWorldTranslation(), mWorldHalfSize, GetWorldRotation()).Color(Color::Plum).BackShade(true));
+  gDebugDraw->Add(
+      Debug::Obb(GetWorldTranslation(), mWorldHalfSize, GetWorldRotation())
+          .Color(Color::Plum)
+          .BackShade(true));
 }
 
 void BoxCollider::CacheWorldValues()
@@ -62,7 +61,8 @@ real BoxCollider::ComputeWorldVolumeInternal()
   return real(8.0f) * mWorldHalfSize[0] * mWorldHalfSize[1] * mWorldHalfSize[2];
 }
 
-void BoxCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
+void BoxCollider::ComputeLocalInverseInertiaTensor(real mass,
+                                                   Mat3Ref localInvInertia)
 {
   Vec3 size = GetWorldSize();
   real diagonal = real(1.0f / 12.0f) * mass;
@@ -75,7 +75,11 @@ void BoxCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvIn
 
 void BoxCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportObb(direction, GetWorldTranslation(), mWorldHalfSize, GetWorldRotation(), support);
+  Geometry::SupportObb(direction,
+                       GetWorldTranslation(),
+                       mWorldHalfSize,
+                       GetWorldRotation(),
+                       support);
 }
 
 Vec3 BoxCollider::GetHalfSize()
@@ -99,12 +103,12 @@ Vec3 BoxCollider::GetSize() const
 void BoxCollider::SetSize(Vec3Param localSize)
 {
   // This is just a more convenient view of half-size (which is actually saved)
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "HalfSize", GetHalfSize());
 
   Vec3 localHalfSize = localSize * real(0.5f);
-  mLocalHalfSize = Math::Clamp(localHalfSize, mMinAllowedSize, mMaxAllowedSize); 
-  
+  mLocalHalfSize = Math::Clamp(localHalfSize, mMinAllowedSize, mMaxAllowedSize);
+
   // Since our internal size changed make sure to run all common update code
   InternalSizeChanged();
 }
@@ -114,4 +118,4 @@ Vec3 BoxCollider::GetWorldSize() const
   return real(2) * mWorldHalfSize;
 }
 
-}//namespace Zero
+} // namespace Zero

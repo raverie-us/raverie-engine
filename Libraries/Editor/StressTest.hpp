@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StressTest.hpp
-/// Declaration of the StressTest class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -112,17 +104,17 @@ struct StressTest : public EventObject
   bool SwitchViewports;
   bool Undo;
   bool Redo;
-  //bool CreateObjectLinks;
-  //bool ModifyArchetypes;
-  //bool CreateResources;
-  //bool LoadResources;
-  //bool ResourceProperties;
-  //bool ConfigProperties;
-  //bool ProjectProperties;
-  //bool RunCommands;
-  //bool ShapeCasts;
-  //bool CollisionPairs;
-  //bool LightingModes;
+  // bool CreateObjectLinks;
+  // bool ModifyArchetypes;
+  // bool CreateResources;
+  // bool LoadResources;
+  // bool ResourceProperties;
+  // bool ConfigProperties;
+  // bool ProjectProperties;
+  // bool RunCommands;
+  // bool ShapeCasts;
+  // bool CollisionPairs;
+  // bool LightingModes;
 };
 
 /// A dialog that we use to run stress tests
@@ -150,7 +142,6 @@ public:
   Any RandomVariantOfType(BoundType* type, Space* targetSpace);
 
 private:
-
   // Run a single test
   void TestOnce();
 
@@ -161,14 +152,23 @@ private:
   Component* GetRandomComponent(Space* targetSpace);
   Property* GetRandomSetProperty(BoundType* boundType);
 
-  typedef Any (*ExtensionFunction)(StressRandom& random, Property* prop, Component* component);
-  static Any GetVariantForResourceExtension(StressRandom& random, Property* prop, Component* component);
-  static Any GetVariantForEnumExtension(StressRandom& random, Property* prop, Component* component);
-  static Any GetVariantForRangeExtension(StressRandom& random, Property* prop, Component* component);
-  static Any GetVariantForStringArray(StressRandom& random, Property* prop, Component* component);
+  typedef Any (*ExtensionFunction)(StressRandom& random,
+                                   Property* prop,
+                                   Component* component);
+  static Any GetVariantForResourceExtension(StressRandom& random,
+                                            Property* prop,
+                                            Component* component);
+  static Any GetVariantForEnumExtension(StressRandom& random,
+                                        Property* prop,
+                                        Component* component);
+  static Any GetVariantForRangeExtension(StressRandom& random,
+                                         Property* prop,
+                                         Component* component);
+  static Any GetVariantForStringArray(StressRandom& random,
+                                      Property* prop,
+                                      Component* component);
 
 private:
-
   // The editor for all the options
   PropertyView* mPropertyEditor;
 
@@ -203,4 +203,4 @@ private:
   String mSettingsLocation;
 };
 
-}//namespace Zero
+} // namespace Zero

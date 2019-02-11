@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PhysicsStandard.hpp
-/// The standard includes header file for the physics project.
-///
-/// Authors: Joshua Davis, Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -19,7 +11,7 @@
 #include "Geometry/DebugDraw.hpp"
 #include "Engine/Time.hpp"
 
-//Physics typedefs
+// Physics typedefs
 namespace Zero
 {
 
@@ -36,8 +28,7 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
-
+} // namespace Zero
 
 #include "ForwardDeclarations.hpp"
 
@@ -157,7 +148,6 @@ public:
 #include "ContactManager.hpp"
 #include "CustomCollisionEventTracker.hpp"
 #include "TimeOfImpact.hpp"
-
 
 #include "BodyMassCalculations.hpp"
 #include "CoreActions.hpp"

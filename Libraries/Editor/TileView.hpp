@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TileView.hpp
-/// Declaration of the TileView and supporting classes.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,14 +9,13 @@ namespace Events
 DeclareEvent(ScrolledAllTheWayOut);
 DeclareEvent(ScrolledAllTheWayIn);
 DeclareEvent(TileViewRightClick);
-}//namespace Events
+} // namespace Events
 
 const float cTileViewNameOffset = Pixels(19);
 
 class TileViewWidget;
 class TileView;
 
-//-------------------------------------------------------------- Tile View Event
 class TileViewEvent : public Event
 {
 public:
@@ -32,7 +23,6 @@ public:
   TileViewWidget* mTile;
 };
 
-//-------------------------------------------------------------- Item Pop Up
 class ItemPopUp : public PopUp
 {
 public:
@@ -45,29 +35,36 @@ public:
   Label* mExtra;
 };
 
-//------------------------------------------------------------- Tile View Widget
 class TileViewWidget : public Composite
 {
 public:
   ZilchDeclareType(TileViewWidget, TypeCopyMode::ReferenceType);
 
-  TileViewWidget(Composite* parent, TileView* tileView,
-                 PreviewWidget* tileWidget, DataIndex dataIndex);
+  TileViewWidget(Composite* parent,
+                 TileView* tileView,
+                 PreviewWidget* tileWidget,
+                 DataIndex dataIndex);
   ~TileViewWidget();
 
   DataIndex GetDataIndex();
 
-  //Widget Interface
+  // Widget Interface
   void UpdateTransform() override;
 
-  //TileViewWidget Interface
+  // TileViewWidget Interface
   virtual void Refresh(){};
   virtual void OnRightUp(MouseEvent* event);
   virtual void OnDoubleClick(MouseEvent* event);
-  virtual void AnimatePreview(PreviewAnimate::Enum value){mContent->AnimatePreview(value);}
-  virtual Handle GetEditObject(){return mContent->GetEditObject();}
+  virtual void AnimatePreview(PreviewAnimate::Enum value)
+  {
+    mContent->AnimatePreview(value);
+  }
+  virtual Handle GetEditObject()
+  {
+    return mContent->GetEditObject();
+  }
 
-  //Event Handlers
+  // Event Handlers
   virtual void OnMouseEnter(MouseEvent* event);
   virtual void OnMouseClick(MouseEvent* event);
   virtual void OnMouseExit(MouseEvent* event);
@@ -100,7 +97,6 @@ protected:
   HandleOf<ItemPopUp> mTilePopUp;
 };
 
-//-------------------------------------------------------------------- Tile View
 /// TileView displays a tile widgets in a grid layout
 class TileView : public Composite
 {
@@ -124,15 +120,18 @@ public:
   /// Percentage from [0-1].  0 being the smallest size, 1 being the largest.
   void SetItemSizePercent(float percentage);
   float GetItemSize();
-  void  SetItemSize(float size);
+  void SetItemSize(float size);
 
-  virtual TileViewWidget* CreateTileViewWidget(Composite* parent,
-               StringParam name, HandleParam instance, DataIndex index,
-               PreviewImportance::Enum minImportance = PreviewImportance::None);
+  virtual TileViewWidget* CreateTileViewWidget(
+      Composite* parent,
+      StringParam name,
+      HandleParam instance,
+      DataIndex index,
+      PreviewImportance::Enum minImportance = PreviewImportance::None);
 
   ScrollArea* GetScrollArea();
 
-  /// Builds a range of the selected tiles and sets the min 
+  /// Builds a range of the selected tiles and sets the min
   /// and max of the range to the given values.
   void GetSelectionRange(uint* minIndex, uint* maxIndex);
 
@@ -147,7 +146,7 @@ public:
 private:
   friend class TileViewWidget;
   friend class TileSelector;
-  
+
   void UpdateTileLayout();
   void UpdateVisibleTiles();
 
@@ -166,7 +165,7 @@ private:
   void ReloadData();
   void ClearTiles();
   void OnDataModified(Event*);
-  
+
   TileLayout mLayout;
   DataSource* mDataSource;
   // The tile view does not own the selection
@@ -181,4 +180,4 @@ private:
   Element* mBackground;
 };
 
-}//namespace Zero
+} // namespace Zero

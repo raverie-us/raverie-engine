@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,7 +6,7 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(AllObjectsInitialized);
+DefineEvent(AllObjectsInitialized);
 }
 
 ZilchDefineType(CogInitializerEvent, builder, type)
@@ -29,11 +24,12 @@ ZilchDefineType(CogInitializer, builder, type)
   ZeroBindEvent(Events::AllObjectsInitialized, CogInitializerEvent);
 }
 
-CogInitializer::CogInitializer(Zero::Space* space, Zero::GameSession* gameSession)
+CogInitializer::CogInitializer(Zero::Space* space,
+                               Zero::GameSession* gameSession)
 {
   mSpace = space;
   mGameSession = gameSession;
-  if(!gameSession && space)
+  if (!gameSession && space)
     mGameSession = space->GetGameSession();
   Context = NULL;
   mParent = NULL;
@@ -43,8 +39,9 @@ CogInitializer::CogInitializer(Zero::Space* space, Zero::GameSession* gameSessio
 
 CogInitializer::~CogInitializer()
 {
-  ErrorIf(!CreationList.Empty(), "A cog was initialized and AllCreated was not called"
-                                 " on the initializer to finish the creation.");
+  ErrorIf(!CreationList.Empty(),
+          "A cog was initialized and AllCreated was not called"
+          " on the initializer to finish the creation.");
 }
 
 void CogInitializer::DispatchEvent(StringParam eventId, Event* event)
@@ -65,7 +62,7 @@ SpaceCogList::range CogInitializer::AllCreated()
   Cog* first = CreationList.Begin();
   Cog* last = SpaceCogList::Prev(CreationList.End());
 
-  if(mSpace)
+  if (mSpace)
   {
     // Move newly created objects to the space list
     SpaceCogList::iterator begin = CreationList.Begin();
@@ -76,26 +73,26 @@ SpaceCogList::range CogInitializer::AllCreated()
 
   // Call OnAllObjectsCreated on new objects
   Cog* current = first;
-  for(;;)
+  for (;;)
   {
     PushErrorContextObject("Initializing Object", current);
     current->OnAllObjectsCreated(*this);
-    if(current == last)
+    if (current == last)
       break;
     current = SpaceCogList::Next(current);
   }
 
   // Call ScriptInitialize on new objects
   current = first;
-  for(;;)
+  for (;;)
   {
     // Object not marked for deletion?
-    if(!current->GetMarkedForDestruction())
+    if (!current->GetMarkedForDestruction())
     {
       PushErrorContextObject("Initializing Script Object", current);
       current->ScriptInitialize(*this);
     }
-    if(current == last)
+    if (current == last)
       break;
     current = SpaceCogList::Next(current);
   }
@@ -118,4 +115,4 @@ void CogInitializer::SendAllObjectsInitialized()
   this->DispatchEvent(Events::AllObjectsInitialized, &toSend);
 }
 
-}
+} // namespace Zero

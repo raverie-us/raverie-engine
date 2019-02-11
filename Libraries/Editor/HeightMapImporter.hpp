@@ -1,18 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// \file HeightMapImporter.hpp
-/// Declaration of the height map importer interface.
-///
-/// Authors: Dane Curbow
-/// Copyright 2015, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//forward declaration
+// forward declaration
 class Editor;
 class PatchGridArea;
 
@@ -31,11 +23,11 @@ public:
 
   // Getters/Setters
   ImportMode::Enum GetImportMode();
-  void             SetImportMode(ImportMode::Enum mode);
-  uint  GetPatchColumns();
-  void  SetPatchColumns(uint PatchRows);
-  uint  GetPatchRows();
-  void  SetPatchRows(uint PatchColumns);
+  void SetImportMode(ImportMode::Enum mode);
+  uint GetPatchColumns();
+  void SetPatchColumns(uint PatchRows);
+  uint GetPatchRows();
+  void SetPatchRows(uint PatchColumns);
 
   //
   void ScalePreviewArea(float scale);
@@ -49,7 +41,10 @@ private:
   Vec2 ScaleGridSizeToImage();
   Vec2 ScaleGridSizeToArea();
   void GenerateHeightMap(Event* e);
-  float CalculateAveragePixelHeight(uint column, uint row, uint patchCellX, uint patchCellY);
+  float CalculateAveragePixelHeight(uint column,
+                                    uint row,
+                                    uint patchCellX,
+                                    uint patchCellY);
 
   void OnMouseDown(MouseEvent* e);
   void OnClosePressed(Event* e);
@@ -68,7 +63,7 @@ private:
   Vec2 mPreviewArea;
   Vec2 mPreviewSize;
 
-  //Vars used in generating the height map
+  // Vars used in generating the height map
   uint mPixelsPerColumnPatch;
   uint mPixelsPerRowPatch;
   uint mPixelsPerXVert;
@@ -85,7 +80,7 @@ private:
   uint mPatchRows;
   uint mPatchSize;
 
-  //is the patch side being scaled along the x or y size of the image
+  // is the patch side being scaled along the x or y size of the image
   bool patchScaledToX;
 };
 
@@ -98,9 +93,18 @@ public:
   void SetGridSize(Vec2 gridSize);
   Vec2 GetGridSize();
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
   void SetupGrid(FrameBlock& frameBlock, Mat4Param localToView);
-  void SetupLines(FrameBlock& frameBlock, uint axis, float spacing, Vec2 totalSize, Mat4Param localToView, uint lineCount);
+  void SetupLines(FrameBlock& frameBlock,
+                  uint axis,
+                  float spacing,
+                  Vec2 totalSize,
+                  Mat4Param localToView,
+                  uint lineCount);
 
 private:
   Vec4 mLineColor;
@@ -111,9 +115,11 @@ private:
 class DragSizeManipulator : public MouseManipulation
 {
 public:
-  DragSizeManipulator(Mouse* mouse, Composite* relative, HeightMapImporter* importer);
-  ~DragSizeManipulator() {};
-  
+  DragSizeManipulator(Mouse* mouse,
+                      Composite* relative,
+                      HeightMapImporter* importer);
+  ~DragSizeManipulator(){};
+
   void OnMouseUpdate(MouseEvent* event);
   void OnMouseUp(MouseEvent* event);
 

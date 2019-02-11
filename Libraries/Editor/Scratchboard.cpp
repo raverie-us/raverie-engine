@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Scratchboard.cpp
-/// Implementation of the Scratchboard Composite.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Graph Lines
 class ScratchboardDrawer : public Widget
 {
 public:
@@ -22,11 +13,11 @@ public:
   ByteColor mLineColor;
 
   //****************************************************************************
-  ScratchboardDrawer(Composite* parent, 
+  ScratchboardDrawer(Composite* parent,
                      float lineWidth = 0.75f,
-                     ByteColor lineColor = ToByteColor(Vec4(0,0,0,0.1f)),
-                     float hashSize = Pixels(15))
-    : Widget(parent, AttachType::Direct)
+                     ByteColor lineColor = ToByteColor(Vec4(0, 0, 0, 0.1f)),
+                     float hashSize = Pixels(15)) :
+      Widget(parent, AttachType::Direct)
   {
     mOffset = Vec3::cZero;
     mHashSize = hashSize;
@@ -35,9 +26,12 @@ public:
   }
 
   //****************************************************************************
-  void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params)
+  void Draw(DisplayRender* render,
+            Mat4Param parentTx,
+            ColorTransform& colorTx,
+            DrawParams& params)
   {
-    if(mSize.x < 0 || mSize.y < 0)
+    if (mSize.x < 0 || mSize.y < 0)
       return;
 
     // Draw vertical lines
@@ -48,31 +42,29 @@ public:
   }
 
   //****************************************************************************
-  void DrawLines(DisplayRender* render, float offset, 
-                 Vec3 axis, Vec2 displaySize)
+  void
+  DrawLines(DisplayRender* render, float offset, Vec3 axis, Vec2 displaySize)
   {
-    //Vec3 tangent = Math::Abs(Math::Cross(axis, Vec3::cZAxis));
-    //Vec3 finalOffset = Math::FMod(offset, mHashSize) * axis;
+    // Vec3 tangent = Math::Abs(Math::Cross(axis, Vec3::cZAxis));
+    // Vec3 finalOffset = Math::FMod(offset, mHashSize) * axis;
 
-    //float hashSize = (axis * Vec3(displaySize)).Length();
-    //float hashLength = (tangent * Vec3(displaySize)).Length();
+    // float hashSize = (axis * Vec3(displaySize)).Length();
+    // float hashLength = (tangent * Vec3(displaySize)).Length();
 
-    //render->StartLines(mLineColor, mLineWidth);
-    //uint hashCount = uint(hashSize / mHashSize) + 2;
-    //for(uint i = 0; i < hashCount; ++i)
+    // render->StartLines(mLineColor, mLineWidth);
+    // uint hashCount = uint(hashSize / mHashSize) + 2;
+    // for(uint i = 0; i < hashCount; ++i)
     //{
     //  Vec3 start = axis * mHashSize * float(i);
     //  Vec3 end = start + tangent * hashLength;
 
-    //  render->LineSegment(SnapToPixels(start + finalOffset), 
+    //  render->LineSegment(SnapToPixels(start + finalOffset),
     //                      SnapToPixels(end + finalOffset));
     //}
-    //render->EndLines();
+    // render->EndLines();
   }
 };
 
-//------------------------------------------------------- Graph Node Manipulator
-//******************************************************************************
 class ScratchboardObjectMover : public MouseManipulation
 {
 public:
@@ -84,9 +76,12 @@ public:
   Vec2 mLastLocalMousePos;
 
   //****************************************************************************
-  ScratchboardObjectMover(Mouse* mouse, Scratchboard* scratchBoard, 
-                          Widget* widget, bool snapping, float snapFidelity)
-    : MouseManipulation(mouse, scratchBoard)
+  ScratchboardObjectMover(Mouse* mouse,
+                          Scratchboard* scratchBoard,
+                          Widget* widget,
+                          bool snapping,
+                          float snapFidelity) :
+      MouseManipulation(mouse, scratchBoard)
   {
     mScratchboard = scratchBoard;
     mWidget = widget;
@@ -102,21 +97,24 @@ public:
     // Get the local position on the scratchboard
     Vec2 local = mScratchboard->ToLocal(event->Position);
 
-
     // If the mouse is near the edge of the graph (within this distance),
     // we want to start scrolling the graph.  Calculate and store the current
     // scroll direction for frame update
     const float cScrollAreaSize = Pixels(30);
 
     mScrollDirection = Vec3::cZero;
-    if(local.y < cScrollAreaSize)
+    if (local.y < cScrollAreaSize)
       mScrollDirection += Vec3::cYAxis * (1.0f - (local.y / cScrollAreaSize));
-    else if(mScratchboard->GetSize().y - local.y < cScrollAreaSize)
-      mScrollDirection -= Vec3::cYAxis * (1.0f - ((mScratchboard->GetSize().y - local.y) / cScrollAreaSize));
-    if(local.x < cScrollAreaSize)
+    else if (mScratchboard->GetSize().y - local.y < cScrollAreaSize)
+      mScrollDirection -=
+          Vec3::cYAxis *
+          (1.0f - ((mScratchboard->GetSize().y - local.y) / cScrollAreaSize));
+    if (local.x < cScrollAreaSize)
       mScrollDirection += Vec3::cXAxis * (1.0f - (local.x / cScrollAreaSize));
-    else if(mScratchboard->GetSize().x - local.x < cScrollAreaSize)
-      mScrollDirection -= Vec3::cXAxis * (1.0f - ((mScratchboard->GetSize().x - local.x) / cScrollAreaSize));
+    else if (mScratchboard->GetSize().x - local.x < cScrollAreaSize)
+      mScrollDirection -=
+          Vec3::cXAxis *
+          (1.0f - ((mScratchboard->GetSize().x - local.x) / cScrollAreaSize));
 
     // Store the position for frame update
     mLastLocalMousePos = local;
@@ -133,7 +131,7 @@ public:
     Vec3 world = mScratchboard->ToGraphPosition(Vec3(local));
 
     // Snap in the world space
-    if(mSnapping)
+    if (mSnapping)
     {
       world.x -= Math::FMod(world.x, mSnapFidelity);
       world.y -= Math::FMod(world.y, mSnapFidelity);
@@ -153,16 +151,14 @@ public:
   }
 };
 
-//--------------------------------------------------------------- Graph Scroller
-//******************************************************************************
 class ScratchboardScroller : public MouseManipulation
 {
 public:
   Scratchboard* mScratchboard;
 
   //****************************************************************************
-  ScratchboardScroller(Mouse* mouse, Scratchboard* scratchboard) 
-    : MouseManipulation(mouse, scratchboard)
+  ScratchboardScroller(Mouse* mouse, Scratchboard* scratchboard) :
+      MouseManipulation(mouse, scratchboard)
   {
     mScratchboard = scratchboard;
   }
@@ -187,18 +183,16 @@ public:
     this->Destroy();
     event->GetMouse()->SetCursor(Cursor::Arrow);
   }
-
 };
 
-//----------------------------------------------------------------- Scratchboard
-//******************************************************************************
 Scratchboard::Scratchboard(Composite* parent) : Composite(parent)
 {
   mClientArea = nullptr;
 
   // Create the line drawers
   mLightGridDrawer = new ScratchboardDrawer(this);
-  mBoldGridDrawer = new ScratchboardDrawer(this, 2, ToByteColor(Vec4(0,0,0,0.2f)));
+  mBoldGridDrawer =
+      new ScratchboardDrawer(this, 2, ToByteColor(Vec4(0, 0, 0, 0.2f)));
 
   // Set the default grid size
   SetGridSize(Pixels(20));
@@ -213,7 +207,6 @@ Scratchboard::Scratchboard(Composite* parent) : Composite(parent)
   mKeepElementsInView = true;
 }
 
-//******************************************************************************
 void Scratchboard::Scroll(Vec3Param direction)
 {
   mClientArea->mTranslation += direction;
@@ -221,7 +214,6 @@ void Scratchboard::Scroll(Vec3Param direction)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void Scratchboard::CenterToPoint(Vec3Param graphPosition, float panTime)
 {
   Vec3 destination = Vec3(mSize) * 0.5f - graphPosition;
@@ -231,7 +223,6 @@ void Scratchboard::CenterToPoint(Vec3Param graphPosition, float panTime)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void Scratchboard::Frame(Aabb& worldAabb, float panTime)
 {
   Vec3 center = worldAabb.GetCenter();
@@ -239,14 +230,15 @@ void Scratchboard::Frame(Aabb& worldAabb, float panTime)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
-MouseManipulation* Scratchboard::StartObjectDrag(Mouse* mouse, Widget* object, 
-                                              bool snapping, float snapFidelity)
+MouseManipulation* Scratchboard::StartObjectDrag(Mouse* mouse,
+                                                 Widget* object,
+                                                 bool snapping,
+                                                 float snapFidelity)
 {
-  return new ScratchboardObjectMover(mouse, this, object, snapping, snapFidelity);
+  return new ScratchboardObjectMover(
+      mouse, this, object, snapping, snapFidelity);
 }
 
-//******************************************************************************
 bool Scratchboard::WithinView(Vec3Param graphPosition)
 {
   Vec3 local = ToPixelPosition(graphPosition);
@@ -256,38 +248,32 @@ bool Scratchboard::WithinView(Vec3Param graphPosition)
   return inBounds;
 }
 
-//******************************************************************************
 Vec3 Scratchboard::ToPixelPosition(Vec3Param graphPosition)
 {
   return graphPosition + mClientArea->GetTranslation();
 }
 
-//******************************************************************************
 Vec3 Scratchboard::ToGraphPosition(Vec3Param pixelPosition)
 {
   return pixelPosition - mClientArea->GetTranslation();
 }
 
-//******************************************************************************
 void Scratchboard::SetGridSize(float pixels)
 {
   mLightGridDrawer->mHashSize = pixels;
   mBoldGridDrawer->mHashSize = pixels * 5.0f;
 }
 
-//******************************************************************************
 float Scratchboard::GetGridSize() const
 {
   return mLightGridDrawer->mHashSize;
 }
 
-//******************************************************************************
 void Scratchboard::SetDragging(bool state)
 {
   mDraggingEnabled = state;
 }
 
-//******************************************************************************
 Vec3 Scratchboard::SnapToGrid(Vec3Param graphPos)
 {
   float gridSize = GetGridSize();
@@ -296,27 +282,25 @@ Vec3 Scratchboard::SnapToGrid(Vec3Param graphPos)
   return Vec3(x, y, 0.0f);
 }
 
-//******************************************************************************
 Composite* Scratchboard::GetClientArea()
 {
   return mClientArea;
 }
 
-//******************************************************************************
 
-void Scratchboard::AttachChildWidget(Widget* widget, AttachType::Enum attachType)
+void Scratchboard::AttachChildWidget(Widget* widget,
+                                     AttachType::Enum attachType)
 {
   // Used to redirect attachments to the client area
-  if(attachType == AttachType::Direct)
+  if (attachType == AttachType::Direct)
     Composite::AttachChildWidget(widget);
   else
     mClientArea->AttachChildWidget(widget);
 }
 
-//******************************************************************************
 void Scratchboard::UpdateTransform()
 {
-  if(mKeepElementsInView)
+  if (mKeepElementsInView)
     ClampViewToElements();
 
   mLightGridDrawer->SetSize(mSize);
@@ -327,17 +311,15 @@ void Scratchboard::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void Scratchboard::OnMiddleMouseDown(MouseEvent* e)
 {
-  if(mDraggingEnabled)
+  if (mDraggingEnabled)
   {
     e->GetMouse()->SetCursor(Cursor::SizeAll);
     new ScratchboardScroller(e->GetMouse(), this);
   }
 }
 
-//******************************************************************************
 void Scratchboard::ClampViewToElements()
 {
   Aabb objectsAabb = GetObjectsAabb();
@@ -350,13 +332,12 @@ void Scratchboard::ClampViewToElements()
   mClientArea->mTranslation.y = -Math::Clamp(-currPos.y, min.y, max.y);
 }
 
-//******************************************************************************
 Aabb Scratchboard::GetObjectsAabb()
 {
-  if(mClientArea->mChildren.Empty())
+  if (mClientArea->mChildren.Empty())
     return Aabb(Vec3::cZero, Vec3::cZero);
   Array<Vec3> positions;
-  forRange(Widget& widget, mClientArea->GetChildren())
+  forRange(Widget & widget, mClientArea->GetChildren())
   {
     positions.PushBack(widget.GetTranslation());
   }
@@ -366,4 +347,4 @@ Aabb Scratchboard::GetObjectsAabb()
   return aabb;
 }
 
-}//namespace Zero
+} // namespace Zero

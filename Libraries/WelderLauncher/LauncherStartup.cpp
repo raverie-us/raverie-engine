@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis, Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -32,7 +27,7 @@ bool LoadContent(Cog* configCog)
   bool coreContent = LoadContentLibrary("Loading", true);
 
   Array<String> coreLibs;
-  
+
   coreLibs.PushBack("ZeroCore");
   coreLibs.PushBack("ZeroLauncherResources");
 
@@ -41,14 +36,13 @@ bool LoadContent(Cog* configCog)
     coreContent = coreContent && LoadContentLibrary(libraryName, true);
   }
 
-  if(!coreContent)
+  if (!coreContent)
   {
     FatalEngineError("Failed to load core content library for editor. Resources"
-      " need to be in the working directory.");
+                     " need to be in the working directory.");
     return false;
   }
 
-  
   float time = (float)timer.UpdateAndGetTime();
   ZPrint("Finished Loading Editor Content in %.2f\n", time);
   return true;
@@ -60,29 +54,31 @@ bool LoadResources(Cog* configCog)
 
   Z::gLauncher->Initialize();
 
-  if(!LoadContent(configCog))
+  if (!LoadContent(configCog))
     return false;
 
   return true;
 }
 
-bool ZeroLauncherStartup(Engine* engine, StringMap& arguments, StringParam dllPath)
+bool ZeroLauncherStartup(Engine* engine,
+                         StringMap& arguments,
+                         StringParam dllPath)
 {
   TimerBlock startUp("Engine Startup");
   String applicationName = "ZeroVersionSelector";
 
   String project = GetStringValue<String>(arguments, "file", String());
   bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
-  
+
   Cog* launcherConfigCog = Z::gEngine->GetConfigCog();
-  
+
   SaveLauncherConfig(launcherConfigCog);
 
-  //Profile initializing systems
+  // Profile initializing systems
   {
     TimerBlock block("Initializing core systems.");
 
-    //Create all core systems
+    // Create all core systems
     engine->AddSystem(CreateUnitTestSystem());
     engine->AddSystem(CreateOsShellSystem());
     engine->AddSystem(CreateTimeSystem());
@@ -94,7 +90,7 @@ bool ZeroLauncherStartup(Engine* engine, StringMap& arguments, StringParam dllPa
     initializer.mEngine = engine;
     initializer.Config = launcherConfigCog;
 
-    //Initialize all systems.
+    // Initialize all systems.
     engine->Initialize(initializer);
   }
 
@@ -114,7 +110,8 @@ bool ZeroLauncherStartup(Engine* engine, StringMap& arguments, StringParam dllPa
   commands->RunParsedCommands();
 
   // Extra debug stuff to test crashing
-  if(arguments.ContainsKey("CrashEngine") && launcherConfigCog->has(DeveloperConfig))
+  if (arguments.ContainsKey("CrashEngine") &&
+      launcherConfigCog->has(DeveloperConfig))
   {
     CrashHandler::FatalError(1);
   }
@@ -125,19 +122,21 @@ bool ZeroLauncherStartup(Engine* engine, StringMap& arguments, StringParam dllPa
 Cog* ZeroLauncherStartupSettings::LoadConfig()
 {
   Environment* environment = Environment::GetInstance();
-  Cog* launcherConfigCog = LoadLauncherConfig(nullptr, environment->mParsedCommandLineArguments, true);
+  Cog* launcherConfigCog = LoadLauncherConfig(
+      nullptr, environment->mParsedCommandLineArguments, true);
   ErrorIf(launcherConfigCog == nullptr, "Unable to load the launcher config");
 
   MainConfig* mainConfig = launcherConfigCog->has(MainConfig);
   mainConfig->ApplicationDirectory = mDllPath;
-  //Also update the Data and Tools directory (if they exist, if they don't exist then we're likely
-  //running in visual studio and we want the default behavior to run which will grab them from the source directory)
+  // Also update the Data and Tools directory (if they exist, if they don't
+  // exist then we're likely running in visual studio and we want the default
+  // behavior to run which will grab them from the source directory)
   String dataDir = FilePath::Combine(mDllPath, "Data");
-  if(FileExists(dataDir))
+  if (FileExists(dataDir))
     mainConfig->DataDirectory = dataDir;
   ContentConfig* contentConfig = launcherConfigCog->has(ContentConfig);
   String toolsDir = FilePath::Combine(mDllPath, "Tools");
-  if(FileExists(toolsDir))
+  if (FileExists(toolsDir))
     contentConfig->ToolsDirectory = toolsDir;
 
   SaveLauncherConfig(launcherConfigCog);
@@ -162,4 +161,4 @@ void LauncherStartup::Shutdown()
   ZeroStartup::Shutdown();
 }
 
-}//namespace Zero
+} // namespace Zero

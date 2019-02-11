@@ -1,17 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------TypeCastKey
-/// Represents a unique hashable identifier for a type-cast. Currently type-casts
-/// are not function calls in zilch so we can't use a function pointer to resolve them.
+/// Represents a unique hashable identifier for a type-cast. Currently
+/// type-casts are not function calls in zilch so we can't use a function
+/// pointer to resolve them.
 struct TypeCastKey
 {
   TypeCastKey();
@@ -23,9 +18,9 @@ struct TypeCastKey
   Pair<Zilch::Type*, Zilch::Type*> mPair;
 };
 
-//-------------------------------------------------------------------UnaryOperatorKey
-/// Represents a unique hashable identifier for unary operators. Currently operators
-/// are not function calls in zilch so we can't use a function pointer to resolve them.
+/// Represents a unique hashable identifier for unary operators. Currently
+/// operators are not function calls in zilch so we can't use a function pointer
+/// to resolve them.
 struct UnaryOperatorKey
 {
   UnaryOperatorKey();
@@ -37,13 +32,15 @@ struct UnaryOperatorKey
   Pair<Zilch::Type*, int> mPair;
 };
 
-//-------------------------------------------------------------------BinaryOperatorKey
-/// Represents a unique hashable identifier for binary operators. Currently operators
-/// are not function calls in zilch so we can't use a function pointer to resolve them.
+/// Represents a unique hashable identifier for binary operators. Currently
+/// operators are not function calls in zilch so we can't use a function pointer
+/// to resolve them.
 struct BinaryOperatorKey
 {
   BinaryOperatorKey();
-  BinaryOperatorKey(Zilch::Type* type1, Zilch::Type* type2, Zilch::Grammar::Enum op);
+  BinaryOperatorKey(Zilch::Type* type1,
+                    Zilch::Type* type2,
+                    Zilch::Grammar::Enum op);
 
   size_t Hash() const;
   bool operator==(const BinaryOperatorKey& rhs) const;
@@ -52,4 +49,4 @@ struct BinaryOperatorKey
   Pair<ZilchTypePair, int> mPair;
 };
 
-}//public Zero
+} // namespace Zero

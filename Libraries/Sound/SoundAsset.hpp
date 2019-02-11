@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------------- Sound Asset
+//Sound Asset
 
 class SoundAsset : public ReferenceCountedObject
 {
@@ -20,14 +15,19 @@ public:
   SoundAsset(const String& assetName, bool streaming);
   virtual ~SoundAsset();
 
-  // Appends the specified number of samples to the array, starting at the specified frame index.
-  virtual void AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex,
-    unsigned numberOfSamples, unsigned instanceID) = 0;
+  // Appends the specified number of samples to the array, starting at the
+  // specified frame index.
+  virtual void AppendSamplesThreaded(BufferType* buffer,
+                                     const unsigned frameIndex,
+                                     unsigned numberOfSamples,
+                                     unsigned instanceID) = 0;
   // Resets a streaming file back to the beginning.
-  virtual void ResetStreamingFile(unsigned instanceID) {}
-  // Called when a non-threaded sound instance is created. 
+  virtual void ResetStreamingFile(unsigned instanceID)
+  {
+  }
+  // Called when a non-threaded sound instance is created.
   void AddInstance(unsigned instanceID);
-  // Called when a non-threaded sound instance is deleted. 
+  // Called when a non-threaded sound instance is deleted.
   void RemoveInstance(unsigned instanceID);
 
   // If true, this is a streaming asset.
@@ -46,24 +46,32 @@ private:
   unsigned mInstanceReferenceCount;
 
   // Called from AddInstance.
-  virtual void OnAddInstanceThreaded(unsigned instanceID) {}
+  virtual void OnAddInstanceThreaded(unsigned instanceID)
+  {
+  }
   // Called from RemoveInstance.
-  virtual void OnRemoveInstanceThreaded(unsigned instanceID) {}
-
+  virtual void OnRemoveInstanceThreaded(unsigned instanceID)
+  {
+  }
 };
 
-//------------------------------------------------------------------------- Decompressed Sound Asset
+//Decompressed Sound Asset
 
 class DecompressedSoundAsset : public SoundAsset
 {
 public:
   ZilchDeclareType(DecompressedSoundAsset, TypeCopyMode::ReferenceType);
 
-  DecompressedSoundAsset(Status& status, const String& fileName, const String& assetName);
+  DecompressedSoundAsset(Status& status,
+                         const String& fileName,
+                         const String& assetName);
 
-  // Appends the specified number of samples to the array, starting at the specified frame index.
-  void AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned numberOfSamples,
-    unsigned instanceID) override;
+  // Appends the specified number of samples to the array, starting at the
+  // specified frame index.
+  void AppendSamplesThreaded(BufferType* buffer,
+                             const unsigned frameIndex,
+                             unsigned numberOfSamples,
+                             unsigned instanceID) override;
   // Called by the decoder to pass off decoded samples
   void DecodingCallback(DecodedPacket* packet);
 
@@ -76,17 +84,27 @@ private:
   volatile unsigned mSamplesAvailableShared;
 };
 
-//---------------------------------------------------------------------- Streaming Data Per Instance
+//Streaming Data Per Instance
 
 class StreamingDataPerInstance
 {
 public:
-  // The file object must be already open, and will not be closed by this decoder
-  StreamingDataPerInstance(Status& status, File* inputFile, ThreadLock* lock, unsigned channels, 
-    unsigned frames, unsigned instanceID);
-  // The input data buffer must already exist, and will not be deleted by this decoder
-  StreamingDataPerInstance(Status& status, byte* inputData, unsigned dataSize, unsigned channels, 
-    unsigned frames, unsigned instanceID);
+  // The file object must be already open, and will not be closed by this
+  // decoder
+  StreamingDataPerInstance(Status& status,
+                           File* inputFile,
+                           ThreadLock* lock,
+                           unsigned channels,
+                           unsigned frames,
+                           unsigned instanceID);
+  // The input data buffer must already exist, and will not be deleted by this
+  // decoder
+  StreamingDataPerInstance(Status& status,
+                           byte* inputData,
+                           unsigned dataSize,
+                           unsigned channels,
+                           unsigned frames,
+                           unsigned instanceID);
 
   // Resets the data to start streaming from the beginning of the file
   void Reset();
@@ -107,20 +125,25 @@ public:
   Link<StreamingDataPerInstance> link;
 };
 
-//---------------------------------------------------------------------------- Streaming Sound Asset
+//Streaming Sound Asset
 
 class StreamingSoundAsset : public SoundAsset
 {
 public:
   ZilchDeclareType(StreamingSoundAsset, TypeCopyMode::ReferenceType);
 
-  StreamingSoundAsset(Status& status, const String& fileName, AudioFileLoadType::Enum loadType,
-    const String& assetName);
+  StreamingSoundAsset(Status& status,
+                      const String& fileName,
+                      AudioFileLoadType::Enum loadType,
+                      const String& assetName);
   ~StreamingSoundAsset();
 
-  // Appends the specified number of samples to the array, starting at the specified frame index.
-  void AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned numberOfSamples,
-    unsigned instanceID) override;
+  // Appends the specified number of samples to the array, starting at the
+  // specified frame index.
+  void AppendSamplesThreaded(BufferType* buffer,
+                             const unsigned frameIndex,
+                             unsigned numberOfSamples,
+                             unsigned instanceID) override;
   // Resets a streaming file back to the beginning.
   void ResetStreamingFile(unsigned instanceID) override;
   // Adds data for a new instance. Does not check for duplicates.
@@ -129,11 +152,14 @@ public:
   void OnRemoveInstanceThreaded(unsigned instanceID) override;
 
 private:
-  // Looks for a specific instance ID in the data list. Returns null if not found.
+  // Looks for a specific instance ID in the data list. Returns null if not
+  // found.
   StreamingDataPerInstance* GetInstanceData(unsigned instanceID);
   // Copies available decoded samples into the provided buffer
-  void CopySamplesIntoBuffer(float* outputBuffer, unsigned sampleIndex, unsigned samplesRequested,
-    StreamingDataPerInstance* data);
+  void CopySamplesIntoBuffer(float* outputBuffer,
+                             unsigned sampleIndex,
+                             unsigned samplesRequested,
+                             StreamingDataPerInstance* data);
 
   // Decoded data per instance
   InList<StreamingDataPerInstance> mDataPerInstanceList;

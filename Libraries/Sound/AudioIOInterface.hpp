@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -11,18 +6,20 @@ namespace Zero
 {
 
 /// The latency setting used by the audio system.
-/// <param name="Low">The default setting, where audio will have a low amount of latency.</param>
-/// <param name="High">Audio will have a higher latency. This can fix some audio problems in some cases.</param>
+/// <param name="Low">The default setting, where audio will have a low amount of
+/// latency.</param> <param name="High">Audio will have a higher latency. This
+/// can fix some audio problems in some cases.</param>
 DeclareEnum2(AudioLatency, Low, High);
 
 class StreamInfo
 {
 public:
   StreamInfo() :
-    mStatus(StreamStatus::Uninitialized),
-    mChannels(0),
-    mSampleRate(0)
-  {}
+      mStatus(StreamStatus::Uninitialized),
+      mChannels(0),
+      mSampleRate(0)
+  {
+  }
 
   StreamStatus::Enum mStatus;
   String mErrorMessage;
@@ -30,9 +27,12 @@ public:
   unsigned mSampleRate;
 };
 
-void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer, void* data);
+void IOCallback(float* outputBuffer,
+                float* inputBuffer,
+                unsigned framesPerBuffer,
+                void* data);
 
-//--------------------------------------------------------------------- Audio Input Output Interface
+//Input Output Interface
 
 class AudioIOInterface
 {
@@ -40,7 +40,7 @@ public:
   AudioIOInterface();
   ~AudioIOInterface();
 
-  // Initializes the audio API 
+  // Initializes the audio API
   bool InitializeAPI();
   // Initializes the input and/or output streams, depending on parameters
   bool Initialize(bool initOutput, bool initInput);
@@ -62,7 +62,8 @@ public:
   unsigned GetStreamSampleRate(StreamTypes::Enum whichStream);
   // Waits until another mix is needed, using semaphore counter
   void WaitUntilOutputNeededThreaded();
-  // Fills the buffer with the requested number of audio samples, or the max available if lower
+  // Fills the buffer with the requested number of audio samples, or the max
+  // available if lower
   void GetInputDataThreaded(Array<float>& buffer, unsigned howManySamples);
   // Sets whether the system should use a low or high latency value
   void SetOutputLatencyThreaded(AudioLatency::Enum latency);
@@ -70,7 +71,8 @@ public:
   // Ring buffer used for mixed output
   RingBuffer OutputRingBuffer;
 
-  // The following two functions are called from the audio IO thread using the callback
+  // The following two functions are called from the audio IO thread using the
+  // callback
 
   // Gets the mixed buffer that is ready to output
   void GetMixedOutputSamples(float* outputBuffer, const unsigned frames);
@@ -103,10 +105,13 @@ private:
   void InitializeOutputBuffers();
   // Initializes the input buffer at the appropriate size
   void InitializeInputBuffers();
-  // Determines a power of two size for buffers depending on the provided sample rate
+  // Determines a power of two size for buffers depending on the provided sample
+  // rate
   unsigned GetBufferSize(unsigned sampleRate, unsigned channels);
   // Initializes the specified RingBuffer at the specified size
-  void InitializeRingBuffer(RingBuffer& ringBuffer, float* buffer, unsigned size);
+  void InitializeRingBuffer(RingBuffer& ringBuffer,
+                            float* buffer,
+                            unsigned size);
 };
 
 } // namespace Zero

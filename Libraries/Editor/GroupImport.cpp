@@ -1,22 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GroupImport.cpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-// When importing Zero Engine resource files we strip the resource extension from the filename
-// to get the original resource name from the project it was imported from
-// if we do not do this then the file ZeroEngineResource.ResourceType.data
-// becomes    ZeroEngineResourceResourceType.ResourceType.data
-// instead of ZeroEngineResource.ResourceType.data
+// When importing Zero Engine resource files we strip the resource extension
+// from the filename to get the original resource name from the project it was
+// imported from if we do not do this then the file
+// ZeroEngineResource.ResourceType.data becomes
+// ZeroEngineResourceResourceType.ResourceType.data instead of
+// ZeroEngineResource.ResourceType.data
 String StripResourceExtension(StringParam filename)
 {
   // Count the periods in the filename
@@ -26,8 +19,8 @@ String StripResourceExtension(StringParam filename)
     if (rune == '.')
       ++periodCount;
   }
-  // If it contains more than 2 periods this is not one of Zero Engine's data files
-  // as at most a file would be named ZeroEngineResource.ResourceType.data
+  // If it contains more than 2 periods this is not one of Zero Engine's data
+  // files as at most a file would be named ZeroEngineResource.ResourceType.data
   // so anymore than 2 is a way of identifying a user named external file
   // and not accidentally turning a user file like User.Custom.Font.ttf
   // into UserCustom as a font instead of UserCustomFont
@@ -39,16 +32,19 @@ String StripResourceExtension(StringParam filename)
   StringRange resourceExtensionEnd = filename.FindLastOf('.');
   if (resourceExtensionStart.Begin() != resourceExtensionEnd.Begin())
   {
-    // Get the resource extension without including the beginning and end periods
-    String resourceExtension = filename.SubString(resourceExtensionStart.End(), resourceExtensionEnd.Begin());
+    // Get the resource extension without including the beginning and end
+    // periods
+    String resourceExtension = filename.SubString(resourceExtensionStart.End(),
+                                                  resourceExtensionEnd.Begin());
     // Check if the included middle extension is a Zero Engine resource
     MetaDatabase* metaDatabase = MetaDatabase::GetInstance();
     BoundType* type = metaDatabase->FindType(resourceExtension);
     // If it is a Zero Engine resource strip it from the filename
     if (type->IsA(ZilchTypeId(Resource)))
     {
-      // Replace the .ResourceType with nothing and return that filename to import
-      // Zero Engine created resources files from another project and get the same name
+      // Replace the .ResourceType with nothing and return that filename to
+      // import Zero Engine created resources files from another project and get
+      // the same name
       return filename.Replace(BuildString(".", resourceExtension), "");
     }
   }
@@ -69,18 +65,19 @@ void RunGroupImport(ImportOptions& options)
   Array<ContentItem*> contentToBuild;
 
   Array<String> filesToExport(options.mFiles);
-  if(options.mConflictOptions && options.mConflictOptions->GetAction() == ConflictAction::Replace)
+  if (options.mConflictOptions &&
+      options.mConflictOptions->GetAction() == ConflictAction::Replace)
     filesToExport.Append(options.mConflictedFiles.All());
 
   // For every file imported
-  for(uint fileIndex = 0; fileIndex < filesToExport.Size(); ++fileIndex)
+  for (uint fileIndex = 0; fileIndex < filesToExport.Size(); ++fileIndex)
   {
     String fullPath = filesToExport[fileIndex];
     String filename = StripResourceExtension(FilePath::GetFileName(fullPath));
     filename = SanitizeContentFilename(filename);
     String storedfilename = FilePath::Combine(library->SourcePath, filename);
 
-    //Add the content item
+    // Add the content item
     AddContentItemInfo addContent;
     addContent.FileName = filename;
     addContent.Library = library;
@@ -90,10 +87,11 @@ void RunGroupImport(ImportOptions& options)
 
     Status addItem;
 
-    ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(addItem, addContent);
+    ContentItem* newContentItem =
+        Z::gContentSystem->AddContentItemToLibrary(addItem, addContent);
 
-    //If the content add succeeded
-    if(addItem.Succeeded())
+    // If the content add succeeded
+    if (addItem.Succeeded())
       contentToBuild.PushBack(newContentItem);
     else
       DoNotifyError("Failed Import", addItem.Message);
@@ -102,7 +100,8 @@ void RunGroupImport(ImportOptions& options)
   // Now that all the content has been added. Build and load them for use.
 
   // Build all new content items
-  ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(library->Name);
+  ResourceLibrary* resourceLibrary =
+      Z::gResources->GetResourceLibrary(library->Name);
 
   ResourcePackage package;
   Status status;
@@ -118,10 +117,12 @@ void RunGroupImport(ImportOptions& options)
   // Compile all scripts
   ZilchManager::GetInstance()->TriggerCompileExternally();
 
-  if(!contentToBuild.Empty() && status.Succeeded())
-    DoNotify("Content Imported", "Content has been added to the project", "BigPlus");
+  if (!contentToBuild.Empty() && status.Succeeded())
+    DoNotify(
+        "Content Imported", "Content has been added to the project", "BigPlus");
   else if (status.Failed())
-    DoNotify("Content Import", "Content failed to be added to the project", "Error");
+    DoNotify(
+        "Content Import", "Content failed to be added to the project", "Error");
 }
 
 void GroupImport()
@@ -142,7 +143,7 @@ void OpenGroupImport(Array<String>& files)
   }
   else
   {
-    //Create the import options window
+    // Create the import options window
     Editor* editor = Z::gEditor;
     Window* window = new Window(Z::gEditor);
     window->SetTitle("Group Import Options");
@@ -162,7 +163,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
     return;
 
   {
-    //Check for project file load and load if true
+    // Check for project file load and load if true
     String fileName = files[0];
     String extension = FilePath::GetExtension(fileName);
     if (extension == "zeroproj")
@@ -182,7 +183,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
     }
   }
 
-  //Attempt to add files as resources to the project's library
+  // Attempt to add files as resources to the project's library
   ContentLibrary* library = Z::gEditor->mProjectLibrary;
 
   if (library == NULL)
@@ -191,18 +192,20 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
     return;
   }
 
-  // The user could've dragged a file in. Recursively find all files in the given path.
-  // Might need to be updated later to deal with multiple files of the same name in different directories...
+  // The user could've dragged a file in. Recursively find all files in the
+  // given path. Might need to be updated later to deal with multiple files of
+  // the same name in different directories...
   Array<String> allFiles;
-  for(size_t i = 0; i < files.Size(); ++i)
+  for (size_t i = 0; i < files.Size(); ++i)
     FindFilesRecursively(files[i], allFiles);
-  
+
   OpenGroupImport(allFiles);
 }
 
-//------------------------------------------------------------------------ GroupImportWindow
-GroupImportWindow::GroupImportWindow(Composite* parent, ImportOptions* options)
-  : Composite(parent)
+//GroupImportWindow
+GroupImportWindow::GroupImportWindow(Composite* parent,
+                                     ImportOptions* options) :
+    Composite(parent)
 {
   mOptions = options;
 
@@ -246,7 +249,7 @@ GroupImportWindow::GroupImportWindow(Composite* parent, ImportOptions* options)
     mCancelButton = new TextButton(buttonRow);
     mCancelButton->SetText("Cancel All");
   }
-    
+
   ConnectThisTo(mImportButton, Events::ButtonPressed, OnPressed);
   ConnectThisTo(mCancelButton, Events::ButtonPressed, OnCancel);
   ConnectThisTo(mOptions, Events::ImportOptionsModified, OnOptionsModified);
@@ -257,17 +260,23 @@ GroupImportWindow::GroupImportWindow(Composite* parent, ImportOptions* options)
 float GroupImportWindow::GetPropertyGridHeight()
 {
   uint propertyCount = 0;
-    
-  // METAREFACTOR - Confirm AllProperties.Size() will have the same results as the old Properties array
-  // Adding 1 to each for the 
-  if(mOptions->mImageOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mImageOptions)->AllProperties.Size() + 1;
-  if(mOptions->mGeometryOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mGeometryOptions)->AllProperties.Size() + 1;
-  if(mOptions->mAudioOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mAudioOptions)->AllProperties.Size() + 1;
-  if(mOptions->mConflictOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mConflictOptions)->AllProperties.Size() + 1;
+
+  // METAREFACTOR - Confirm AllProperties.Size() will have the same results as
+  // the old Properties array Adding 1 to each for the
+  if (mOptions->mImageOptions)
+    propertyCount +=
+        ZilchVirtualTypeId(mOptions->mImageOptions)->AllProperties.Size() + 1;
+  if (mOptions->mGeometryOptions)
+    propertyCount +=
+        ZilchVirtualTypeId(mOptions->mGeometryOptions)->AllProperties.Size() +
+        1;
+  if (mOptions->mAudioOptions)
+    propertyCount +=
+        ZilchVirtualTypeId(mOptions->mAudioOptions)->AllProperties.Size() + 1;
+  if (mOptions->mConflictOptions)
+    propertyCount +=
+        ZilchVirtualTypeId(mOptions->mConflictOptions)->AllProperties.Size() +
+        1;
 
   return (float)propertyCount * 20.0f;
 }
@@ -283,16 +292,18 @@ void GroupImportWindow::OnOptionsModified(Event* event)
   float height = GetPropertyGridHeight();
   Vec2 windowSize = Pixels(540, height + 60.0f);
 
-  Vec2 propertyGridSize = Pixels(200,GetPropertyGridHeight() + 9.0f);
+  Vec2 propertyGridSize = Pixels(200, GetPropertyGridHeight() + 9.0f);
 
   AnimateToSize(mPropertyView, propertyGridSize, time);
   AnimateToSize(mParentWindow, windowSize, time);
 
-  if(mOptions->mConflictOptions->mAction == ConflictAction::Replace)
+  if (mOptions->mConflictOptions->mAction == ConflictAction::Replace)
   {
     ActionSequence* sequence = new ActionSequence(this);
     sequence->Add(new ActionDelay(time));
-    sequence->Add(new CallAction<GroupImportWindow, &GroupImportWindow::RebuildTree>(this));
+    sequence->Add(
+        new CallAction<GroupImportWindow, &GroupImportWindow::RebuildTree>(
+            this));
   }
   else
   {
@@ -308,13 +319,13 @@ void GroupImportWindow::RebuildTree()
 void GroupImportWindow::UpdateListBoxSource()
 {
   mStrings.Strings.Clear();
-  for(uint i = 0; i < mOptions->mFiles.Size(); ++i)
+  for (uint i = 0; i < mOptions->mFiles.Size(); ++i)
   {
     String file = FilePath::GetFileName(mOptions->mFiles[i]);
     mStrings.Strings.PushBack(String::Format("(Add) %s", file.c_str()));
   }
 
-  for(uint i = 0; i < mOptions->mConflictedFiles.Size(); ++i)
+  for (uint i = 0; i < mOptions->mConflictedFiles.Size(); ++i)
   {
     String file = FilePath::GetFileName(mOptions->mConflictedFiles[i]);
     mStrings.Strings.PushBack(String::Format("(Update) %s", file.c_str()));
@@ -326,7 +337,10 @@ void GroupImportWindow::OnPressed(Event* event)
 {
   RunGroupImport(*mOptions);
   float time = 0.5f;
-  AnimateTo(mParentWindow, Pixels(2000.0f, 200.0f, 0), mParentWindow->GetSize() * 0.5f, time);
+  AnimateTo(mParentWindow,
+            Pixels(2000.0f, 200.0f, 0),
+            mParentWindow->GetSize() * 0.5f,
+            time);
 
   ActionSequence* sequence = new ActionSequence(mParentWindow);
   sequence->Add(new ActionDelay(time));
@@ -338,10 +352,10 @@ void GroupImportWindow::OnCancel(Event* event)
   mParentWindow->Destroy();
 }
 
-//------------------------------------------------------------------------ ImportCallback
+//ImportCallback
 void ImportCallback::Open()
 {
-  //Open the open file dialog
+  // Open the open file dialog
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "OnFileSelected";
   config->CallbackObject = this;
@@ -359,4 +373,4 @@ void ImportCallback::OnFilesSelected(OsFileSelection* fileSelection)
   delete this;
 }
 
-}//namespace Zero
+} // namespace Zero

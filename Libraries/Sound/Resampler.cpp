@@ -1,34 +1,26 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 Resampler::Resampler() :
-  ResampleFactor(0),
-  ResampleFrameIndex(0),
-  BufferFraction(0),
-  InputSamples(nullptr),
-  InputFrames(0),
-  InputChannels(0)
+    ResampleFactor(0),
+    ResampleFrameIndex(0),
+    BufferFraction(0),
+    InputSamples(nullptr),
+    InputFrames(0),
+    InputChannels(0)
 {
   memset(PreviousFrame, 0, sizeof(float) * AudioConstants::cMaxChannels);
 }
 
-//**************************************************************************************************
 void Resampler::SetFactor(double factor)
 {
   ResampleFactor = factor;
 }
 
-//**************************************************************************************************
 unsigned Resampler::GetOutputFrameCount(unsigned inputFrames)
 {
   // Get initial frame count
@@ -41,8 +33,9 @@ unsigned Resampler::GetOutputFrameCount(unsigned inputFrames)
   return (unsigned)frames;
 }
 
-//**************************************************************************************************
-void Resampler::SetInputBuffer(const float* inputSamples, unsigned frameCount, unsigned channels)
+void Resampler::SetInputBuffer(const float* inputSamples,
+                               unsigned frameCount,
+                               unsigned channels)
 {
   InputSamples = inputSamples;
   InputFrames = frameCount;
@@ -50,7 +43,6 @@ void Resampler::SetInputBuffer(const float* inputSamples, unsigned frameCount, u
   ResampleFrameIndex = ResampleFrameIndex - (int)ResampleFrameIndex;
 }
 
-//**************************************************************************************************
 bool Resampler::GetNextFrame(float* output)
 {
   // Save the integer frame index
@@ -66,7 +58,8 @@ bool Resampler::GetNextFrame(float* output)
   // Translate to the sample index
   unsigned sampleIndex = frameIndex * InputChannels;
 
-  // Get the pointer to the first frame. If the index is at 0, use the PreviousFrame values.
+  // Get the pointer to the first frame. If the index is at 0, use the
+  // PreviousFrame values.
   const float* firstFrame(PreviousFrame);
   if (ResampleFrameIndex > 1.0)
     firstFrame = InputSamples + (sampleIndex - InputChannels);
@@ -76,8 +69,8 @@ bool Resampler::GetNextFrame(float* output)
 
   // Interpolate between the two frames for each channel
   for (unsigned i = 0; i < InputChannels; ++i)
-    output[i] = firstFrame[i] + ((secondFrame[i] - firstFrame[i])
-      * (float)(ResampleFrameIndex - frameIndex));
+    output[i] = firstFrame[i] + ((secondFrame[i] - firstFrame[i]) *
+                                 (float)(ResampleFrameIndex - frameIndex));
 
   // Advance the frame index
   ResampleFrameIndex += ResampleFactor;
@@ -86,8 +79,9 @@ bool Resampler::GetNextFrame(float* output)
   if ((unsigned)ResampleFrameIndex >= InputFrames)
   {
     // Get the last frame of samples in the buffer
-    memcpy(PreviousFrame, InputSamples + ((InputFrames - 1) * InputChannels),
-      sizeof(float) * InputChannels);
+    memcpy(PreviousFrame,
+           InputSamples + ((InputFrames - 1) * InputChannels),
+           sizeof(float) * InputChannels);
     return false;
   }
   else

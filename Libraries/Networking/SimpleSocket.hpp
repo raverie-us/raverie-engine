@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SimpleSocket.hpp
-/// Declaration of the SimpleSocket class.
-///
-/// Authors: Joshua Claeys.
-/// Copyright 2012, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -26,9 +18,8 @@ public:
   TcpSocket* GetSocket();
 
 private:
-
   /// Socket.
   TcpSocket mSocket;
 };
 
-}//namespace Zero
+} // namespace Zero

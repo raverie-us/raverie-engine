@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "ZilchShaderIRReflection.hpp"
@@ -11,7 +6,6 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------MemberReflection
 ShaderResourceReflectionData::ShaderResourceReflectionData()
 {
   mBinding = -1;
@@ -22,4 +16,4 @@ ShaderResourceReflectionData::ShaderResourceReflectionData()
   mOffsetInBytes = 0;
 }
 
-}//namespace Zero
+} // namespace Zero

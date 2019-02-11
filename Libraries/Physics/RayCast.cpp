@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,10 +6,9 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(CastFilterCallback);
-}//namespace Events
+DefineEvent(CastFilterCallback);
+} // namespace Events
 
-//-------------------------------------------------------------------CastFilterEvent
 ZilchDefineType(CastFilterEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -33,13 +27,12 @@ Cog* CastFilterEvent::GetObject()
   return mCollider->GetOwner();
 }
 
-//-------------------------------------------------------------------CastFilter
 ZilchDefineType(CastFilter, builder, type)
 {
   type->CreatableInScript = true;
 
   ZeroBindDocumented();
-  
+
   ZilchBindDefaultCopyDestructor();
 
   ZilchBindGetterSetterProperty(IgnoreCog);
@@ -60,45 +53,49 @@ CastFilter::CastFilter() : BaseCastFilter()
 bool CastFilter::IsValid(void* clientData)
 {
   Collider* collider = static_cast<Collider*>(clientData);
-  
-  // If there is a callback object then check to see if we should skip this object
-  if(mCallbackObject != nullptr)
+
+  // If there is a callback object then check to see if we should skip this
+  // object
+  if (mCallbackObject != nullptr)
   {
     CastFilterEvent toSend;
     toSend.mCollider = collider;
     EventDispatcher* dispatcher = mCallbackObject->GetDispatcher();
-    if(dispatcher != nullptr)
+    if (dispatcher != nullptr)
     {
       dispatcher->Dispatch(mCallbackEventName, &toSend);
-      // If the user changed the state from the default behavior then don't perform
-      // any other filter logic, simply return whether or not the user accepts this object.
-      if(toSend.mFilterState != CastFilterState::DefaultBehavior)
+      // If the user changed the state from the default behavior then don't
+      // perform any other filter logic, simply return whether or not the user
+      // accepts this object.
+      if (toSend.mFilterState != CastFilterState::DefaultBehavior)
         return toSend.mFilterState == CastFilterState::Accept;
     }
   }
 
-  if(collider->GetOwner()->mFlags.IsSet(CogFlags::Locked | CogFlags::SelectionLimited))
+  if (collider->GetOwner()->mFlags.IsSet(CogFlags::Locked |
+                                         CogFlags::SelectionLimited))
     return false;
 
-  if(IsSet(BaseCastFilterFlags::IgnoreGhost) && collider->GetGhost())
+  if (IsSet(BaseCastFilterFlags::IgnoreGhost) && collider->GetGhost())
     return false;
-  if(IsSet(BaseCastFilterFlags::IgnoreKinematic) && collider->IsKinematic())
+  if (IsSet(BaseCastFilterFlags::IgnoreKinematic) && collider->IsKinematic())
     return false;
-  if(IsSet(BaseCastFilterFlags::IgnoreDynamic) && collider->IsDynamic())
+  if (IsSet(BaseCastFilterFlags::IgnoreDynamic) && collider->IsDynamic())
     return false;
-  if(IsSet(BaseCastFilterFlags::IgnoreStatic) && collider->IsStatic())
+  if (IsSet(BaseCastFilterFlags::IgnoreStatic) && collider->IsStatic())
     return false;
 
   // Check for the cog to ignore
-  if(collider->GetOwner() == static_cast<Cog*>(mIgnoredCog))
+  if (collider->GetOwner() == static_cast<Cog*>(mIgnoredCog))
     return false;
 
   // Check for collision groups
-  if(mFilterGroup != nullptr)
+  if (mFilterGroup != nullptr)
   {
-    CollisionGroupInstance* groupInstance = collider->mSpace->GetCollisionGroupInstance(mFilterGroup->mResourceId);
-    
-    if(groupInstance->SkipDetection(*(collider->mCollisionGroupInstance)))
+    CollisionGroupInstance* groupInstance =
+        collider->mSpace->GetCollisionGroupInstance(mFilterGroup->mResourceId);
+
+    if (groupInstance->SkipDetection(*(collider->mCollisionGroupInstance)))
       return false;
   }
 
@@ -125,7 +122,6 @@ void CastFilter::SetIgnoreCog(Cog* cog)
   mIgnoredCog = cog;
 }
 
-//-------------------------------------------------------------------CastResult
 ZilchDefineType(CastResult, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -171,7 +167,7 @@ void CastResult::operator=(const CastResult& rhs)
 
 CogId CastResult::GetCogId()
 {
-  if(mObjectHit == nullptr)
+  if (mObjectHit == nullptr)
     return CogId();
 
   return mObjectHit->GetOwner()->GetId();
@@ -184,7 +180,7 @@ Collider* CastResult::GetCollider()
 
 Cog* CastResult::GetObjectHit()
 {
-  if(mObjectHit == nullptr)
+  if (mObjectHit == nullptr)
     return nullptr;
 
   return mObjectHit->GetOwner();
@@ -192,12 +188,14 @@ Cog* CastResult::GetObjectHit()
 
 Vec3 CastResult::GetLocalPosition(uint pointIndex)
 {
-  if(mObjectHit == nullptr)
+  if (mObjectHit == nullptr)
     return Vec3::cZero;
 
-  if(pointIndex >= 2)
+  if (pointIndex >= 2)
   {
-    String msg = String::Format("Index %d is invalid. Index 0 and 1 are the only valid values", pointIndex);
+    String msg = String::Format(
+        "Index %d is invalid. Index 0 and 1 are the only valid values",
+        pointIndex);
     DoNotifyException("Invalid index", msg);
   }
 
@@ -220,7 +218,6 @@ real CastResult::GetDistance()
   return mTime;
 }
 
-//-------------------------------------------------------------------CastResults
 ZilchDefineType(CastResults, builder, type)
 {
   ZilchBindMethod(All);
@@ -231,34 +228,39 @@ ZilchDefineType(CastResults, builder, type)
 CastFilter CastResults::mDefaultFilter;
 
 CastResults::CastResults(uint amount, BaseCastFilter& filter) :
-  mResults((ProxyCastResultArray&)mArray, filter)
+    mResults((ProxyCastResultArray&)mArray, filter)
 {
   const uint maxResults = 100000;
 
   // Sanity check.  Can't cast a ray and get back 0 results.
-  if(amount == 0)
+  if (amount == 0)
   {
     DoNotifyTimer("Ray/Volume Cast Error",
-      "Cannot make a cast with 0 results.  Result count set to 1.",
-      "Warning", 1.0f);
+                  "Cannot make a cast with 0 results.  Result count set to 1.",
+                  "Warning",
+                  1.0f);
     amount = 1;
   }
-  if(amount > maxResults)
+  if (amount > maxResults)
   {
-    DoNotifyTimer("Ray/Volume Cast Error",
-      String::Format("Cannot have %d results in a cast, clamping to %d", amount, maxResults),
-      "Warning", 1.0f);
+    DoNotifyTimer(
+        "Ray/Volume Cast Error",
+        String::Format("Cannot have %d results in a cast, clamping to %d",
+                       amount,
+                       maxResults),
+        "Warning",
+        1.0f);
     amount = maxResults;
   }
   mArray.Resize(amount);
 }
 
 CastResults::CastResults(const CastResults& rhs) :
-  mResults((ProxyCastResultArray&)mArray, rhs.mResults.Filter)
+    mResults((ProxyCastResultArray&)mArray, rhs.mResults.Filter)
 {
   uint count = rhs.Capacity();
   mArray.Resize(count);
-  for(uint i = 0; i < rhs.Size(); ++i)
+  for (uint i = 0; i < rhs.Size(); ++i)
     mArray[i] = rhs[i];
   mResults.CurrSize = rhs.mResults.CurrSize;
 }
@@ -312,21 +314,20 @@ void CastResults::ConvertToColliders()
   // it was a proxy pointer to avoid allocations.  Now we're just grabbing the
   // data pointer (the Collider) stored in the proxy and replacing the proxy
   // pointer with the Collider pointer.
-  // NOTE: I'm going through mResults.Results[i], which is a reference to mArray,
-  // to avoid having to cast twice on one line.
-  for(uint i = 0; i < mResults.CurrSize; ++i)
+  // NOTE: I'm going through mResults.Results[i], which is a reference to
+  // mArray, to avoid having to cast twice on one line.
+  for (uint i = 0; i < mResults.CurrSize; ++i)
   {
     void* clientData = mResults.Results[i].mObjectHit;
     mArray[i].mObjectHit = static_cast<Collider*>(clientData);
   }
 }
 
-//------------------------------------------------------------CastResultsRange
 CastResultsRange::CastResultsRange(const CastResults& castResults)
 {
   uint count = castResults.Size();
   mArray.Resize(count);
-  for(uint i = 0; i < count; ++i)
+  for (uint i = 0; i < count; ++i)
     mArray[i] = castResults[i];
   mRange = mArray.All();
 }
@@ -335,7 +336,7 @@ CastResultsRange::CastResultsRange(const CastResultsRange& rhs)
 {
   uint count = rhs.mArray.Size();
   mArray.Resize(count);
-  for(uint i = 0; i < count; ++i)
+  for (uint i = 0; i < count; ++i)
     mArray[i] = rhs.mArray[i];
   mRange = mArray.All();
 }
@@ -360,4 +361,4 @@ uint CastResultsRange::Size()
   return mRange.Size();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -24,7 +23,7 @@ public:
 
   bool AddSpriteSource(SpriteSource* source, Image* image);
   void RemoveSpriteSource(SpriteSource* source);
-  
+
   HandleOf<Texture> mTexture;
 
   AvlDynamicAabbTree<Aabb> mPlacedAabbs;

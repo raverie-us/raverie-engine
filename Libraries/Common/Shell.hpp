@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,7 +6,6 @@ namespace Zero
 /// For detecting Intel drivers to handle driver bugs.
 extern bool gIntelGraphics;
 
-//-----------------------------------------------------------FileDialogFilter
 DeclareBitField2(FileDialogFlags, MultiSelect, Folder);
 
 static const IntVec2 cMinimumMonitorSize(800, 600);
@@ -27,9 +21,10 @@ struct FileDialogFilter
   String mFilter;
 };
 
-typedef void(*FileDialogCallback)(Array<String>& files, void* userData);
+typedef void (*FileDialogCallback)(Array<String>& files, void* userData);
 
-/// FileDialogConfig is used to configure the Open File Dialog and the Save File Dialog.
+/// FileDialogConfig is used to configure the Open File Dialog and the Save File
+/// Dialog.
 struct FileDialogInfo
 {
   FileDialogInfo();
@@ -51,219 +46,217 @@ struct FileDialogInfo
   Array<String> mFiles;
 };
 
-//-----------------------------------------------------------------------Keys
 extern cstr KeyNames[];
 
 namespace Keys
 {
-  // KeyCodes for keys A - Z same as capital ASCII characters 'A' - 'Z'
-  // KeyCodes for keys 0 - 9 same as ASCII number characters '0' - '9'
+// KeyCodes for keys A - Z same as capital ASCII characters 'A' - 'Z'
+// KeyCodes for keys 0 - 9 same as ASCII number characters '0' - '9'
 
-  enum Enum
-  {
-    // Key not mapped
-    Unknown = 0,
+enum Enum
+{
+  // Key not mapped
+  Unknown = 0,
 
-    // Letters 
-    A = 'A',
-    B = 'B',
-    C = 'C',
-    D = 'D',
-    E = 'E',
-    F = 'F',
-    G = 'G',
-    H = 'H',
-    I = 'I',
-    J = 'J',
-    K = 'K',
-    L = 'L',
-    M = 'M',
-    N = 'N',
-    O = 'O',
-    P = 'P',
-    Q = 'Q',
-    R = 'R',
-    S = 'S',
-    T = 'T',
-    U = 'U',
-    V = 'V',
-    W = 'W',
-    Y = 'Y',
-    X = 'X',
-    Z = 'Z',
+  // Letters
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  E = 'E',
+  F = 'F',
+  G = 'G',
+  H = 'H',
+  I = 'I',
+  J = 'J',
+  K = 'K',
+  L = 'L',
+  M = 'M',
+  N = 'N',
+  O = 'O',
+  P = 'P',
+  Q = 'Q',
+  R = 'R',
+  S = 'S',
+  T = 'T',
+  U = 'U',
+  V = 'V',
+  W = 'W',
+  Y = 'Y',
+  X = 'X',
+  Z = 'Z',
 
-    Space = ' ',
+  Space = ' ',
 
-    //Numbers
-    Num0 = '0',
-    Num1 = '1',
-    Num2 = '2',
-    Num3 = '3',
-    Num4 = '4',
-    Num5 = '5',
-    Num6 = '6',
-    Num7 = '7',
-    Num8 = '8',
-    Num9 = '9',
+  // Numbers
+  Num0 = '0',
+  Num1 = '1',
+  Num2 = '2',
+  Num3 = '3',
+  Num4 = '4',
+  Num5 = '5',
+  Num6 = '6',
+  Num7 = '7',
+  Num8 = '8',
+  Num9 = '9',
 
-    //Symbols
-    LeftBracket = '[',
-    RightBracket = ']',
-    Comma = ',',
-    Period = '.',
-    Semicolon = ';',
-    Minus = '-',
-    Apostrophe = '\'',
-    Slash = '/',
-    Backslash = '\\',
+  // Symbols
+  LeftBracket = '[',
+  RightBracket = ']',
+  Comma = ',',
+  Period = '.',
+  Semicolon = ';',
+  Minus = '-',
+  Apostrophe = '\'',
+  Slash = '/',
+  Backslash = '\\',
 
-    //Arrow Keys
-    Up = 128,
-    Down,
-    Left,
-    Right,
+  // Arrow Keys
+  Up = 128,
+  Down,
+  Left,
+  Right,
 
-    //Function Keys
-    F1,
-    F2,
-    F3,
-    F4,
-    F5,
-    F6,
-    F7,
-    F8,
-    F9,
-    F10,
-    F11,
-    F12,
+  // Function Keys
+  F1,
+  F2,
+  F3,
+  F4,
+  F5,
+  F6,
+  F7,
+  F8,
+  F9,
+  F10,
+  F11,
+  F12,
 
-    //Special Keys
-    Insert,
-    Delete,
-    Back,
-    Home,
-    End,
-    Tilde,
-    Tab,
-    Shift,
-    Alt,
-    Control,
-    Capital,
-    Enter,
-    Escape,
-    PageUp,
-    PageDown,
-    Equal,
+  // Special Keys
+  Insert,
+  Delete,
+  Back,
+  Home,
+  End,
+  Tilde,
+  Tab,
+  Shift,
+  Alt,
+  Control,
+  Capital,
+  Enter,
+  Escape,
+  PageUp,
+  PageDown,
+  Equal,
 
-    //Num Pad
-    NumPad0,
-    NumPad1,
-    NumPad2,
-    NumPad3,
-    NumPad4,
-    NumPad5,
-    NumPad6,
-    NumPad7,
-    NumPad8,
-    NumPad9,
-    Add,
-    Multiply,
-    Subtract,
-    Divide,
-    Decimal,
+  // Num Pad
+  NumPad0,
+  NumPad1,
+  NumPad2,
+  NumPad3,
+  NumPad4,
+  NumPad5,
+  NumPad6,
+  NumPad7,
+  NumPad8,
+  NumPad9,
+  Add,
+  Multiply,
+  Subtract,
+  Divide,
+  Decimal,
 
-    None,
+  None,
 
-    KeyMax,
-    Size
-  };
-}//namespace Keys
+  KeyMax,
+  Size
+};
+} // namespace Keys
 
-//----------------------------------------------------------------------Mouse
-/// As the extra mouse buttons are typically Back and Forward they have been named accordingly.
+/// As the extra mouse buttons are typically Back and Forward they have been
+/// named accordingly.
 DeclareEnum6(MouseButtons, Left, Right, Middle, XOneBack, XTwoForward, None);
 
 /// Standard Mouse Cursors
 DeclareEnum11(Cursor,
-  Arrow,
-  Wait,
-  Cross,
-  SizeNWSE,
-  SizeNESW,
-  SizeWE,
-  SizeNS,
-  SizeAll,
-  TextBeam,
-  Hand,
-  Invisible);
-
+              Arrow,
+              Wait,
+              Cross,
+              SizeNWSE,
+              SizeNESW,
+              SizeWE,
+              SizeNS,
+              SizeAll,
+              TextBeam,
+              Hand,
+              Invisible);
 
 // Usb Standard Usage Pages
 namespace UsbUsagePage
 {
-  const uint GenericDesktop = 0x01;
+const uint GenericDesktop = 0x01;
 }
 
 // Usb Standard usage ids
 // for GenericDesktop page
 namespace UsbUsage
 {
-  const uint Pointer = 0x01;
-  const uint Mouse = 0x02;
-  const uint Reserved = 0x03;
-  const uint Joystick = 0x04;
-  const uint Gamepad = 0x05;
-  const uint Keyboard = 0x06;
-  const uint Keypad = 0x07;
-  const uint MultiAxis = 0x08;
-  const uint Tablet = 0x09;
+const uint Pointer = 0x01;
+const uint Mouse = 0x02;
+const uint Reserved = 0x03;
+const uint Joystick = 0x04;
+const uint Gamepad = 0x05;
+const uint Keyboard = 0x06;
+const uint Keypad = 0x07;
+const uint MultiAxis = 0x08;
+const uint Tablet = 0x09;
 
-  //0A-2F Reserved
+// 0A-2F Reserved
 
-  const uint X = 0x30;
-  const uint Y = 0x31;
-  const uint Z = 0x32;
-  const uint Rx = 0x33;
-  const uint Ry = 0x34;
-  const uint Rz = 0x35;
-  const uint Slider = 0x36;
-  const uint Dial = 0x37;
-  const uint Wheel = 0x38;
-  const uint HatSwitch = 0x39;
-  const uint CountedBuffer = 0x3A;
-  const uint ByteCount = 0x3B;
-  const uint MotionWakeup = 0x3C;
-  const uint Start = 0x3D;
-  const uint Select = 0x3E;
-  const uint Vx = 0x40;
-  const uint Vy = 0x41;
-  const uint Vz = 0x42;
-  const uint Vbrx = 0x43;
-  const uint Vbry = 0x44;
-  const uint Vbrz = 0x45;
-  const uint Vno = 0x46;
-  const uint FeatureNotification = 0x47;
-  const uint SystemControl = 0x81;
-  const uint SystemPowerDown = 0x81;
-  const uint SystemSleep = 0x82;
-  const uint SystemWake = 0x83;
-  const uint SystemContextMenu = 0x84;
-  const uint SystemMainMenu = 0x85;
-  const uint SystemAppMenu = 0x86;
-  const uint SystemMenuHelp = 0x87;
-  const uint SystemMenuExit = 0x88;
-  const uint SystemMenuSelect = 0x89;
-  const uint SystemMenuRight = 0x8A;
-  const uint SystemMenuLeft = 0x8B;
-  const uint SystemMenuUp = 0x8C;
-  const uint SystemMenuDown = 0x8D;
-  const uint SystemColdRestart = 0x8E;
-  const uint SystemWarmRestart = 0x8F;
-  const uint DpadUp = 0x90;
-  const uint DpadDown = 0x91;
-  const uint DpadRight = 0x92;
-  const uint DpadLeft = 0x93;
-}
+const uint X = 0x30;
+const uint Y = 0x31;
+const uint Z = 0x32;
+const uint Rx = 0x33;
+const uint Ry = 0x34;
+const uint Rz = 0x35;
+const uint Slider = 0x36;
+const uint Dial = 0x37;
+const uint Wheel = 0x38;
+const uint HatSwitch = 0x39;
+const uint CountedBuffer = 0x3A;
+const uint ByteCount = 0x3B;
+const uint MotionWakeup = 0x3C;
+const uint Start = 0x3D;
+const uint Select = 0x3E;
+const uint Vx = 0x40;
+const uint Vy = 0x41;
+const uint Vz = 0x42;
+const uint Vbrx = 0x43;
+const uint Vbry = 0x44;
+const uint Vbrz = 0x45;
+const uint Vno = 0x46;
+const uint FeatureNotification = 0x47;
+const uint SystemControl = 0x81;
+const uint SystemPowerDown = 0x81;
+const uint SystemSleep = 0x82;
+const uint SystemWake = 0x83;
+const uint SystemContextMenu = 0x84;
+const uint SystemMainMenu = 0x85;
+const uint SystemAppMenu = 0x86;
+const uint SystemMenuHelp = 0x87;
+const uint SystemMenuExit = 0x88;
+const uint SystemMenuSelect = 0x89;
+const uint SystemMenuRight = 0x8A;
+const uint SystemMenuLeft = 0x8B;
+const uint SystemMenuUp = 0x8C;
+const uint SystemMenuDown = 0x8D;
+const uint SystemColdRestart = 0x8E;
+const uint SystemWarmRestart = 0x8F;
+const uint DpadUp = 0x90;
+const uint DpadDown = 0x91;
+const uint DpadRight = 0x92;
+const uint DpadLeft = 0x93;
+} // namespace UsbUsage
 
 ZeroShared HashMap<uint, String>& GetUsageNames();
 
@@ -297,15 +290,17 @@ public:
   Array<PlatformButton> mButtons;
 };
 
-//----------------------------------------------------------------------Shell
 class ShellWindow;
 class PlatformInputDevice;
 
-/// Monitor coordinates means a position anywhere on the desktop relative to the primary monitor's top left corner.
-/// Client coordinates means a position within a window (not including title bar if the window has a border).
-/// Sizes are in pixels and are independent of Monitor or Client coordinates (because Monitor to Client only translates)
+/// Monitor coordinates means a position anywhere on the desktop relative to the
+/// primary monitor's top left corner. Client coordinates means a position
+/// within a window (not including title bar if the window has a border). Sizes
+/// are in pixels and are independent of Monitor or Client coordinates (because
+/// Monitor to Client only translates)
 
-/// Contains any code to pump operating system messages and return information about the shell.
+/// Contains any code to pump operating system messages and return information
+/// about the shell.
 class Shell
 {
 public:
@@ -318,7 +313,8 @@ public:
   /// OS specific line-scroll setting when using the mouse scroll wheel.
   uint GetScrollLineCount();
 
-  /// Get the monitor rectangle for the primary monitor (in monitor coordinates).
+  /// Get the monitor rectangle for the primary monitor (in monitor
+  /// coordinates).
   IntRect GetPrimaryMonitorRectangle();
 
   /// Get the monitor size for the primary monitor (in monitor coordinates).
@@ -351,7 +347,8 @@ public:
   /// Check if the current clipboard holds plain-text.
   bool IsClipboardText();
 
-  /// Get whatever plain-text is on the clipboard (or an empty string if there is no text).
+  /// Get whatever plain-text is on the clipboard (or an empty string if there
+  /// is no text).
   String GetClipboardText();
 
   /// Set the clipboard to hold the given plain-text.
@@ -398,63 +395,62 @@ public:
   ZeroDeclarePrivateData(Shell, 64);
 };
 
-//----------------------------------------------------------------ShellWindow
 /// Flags used to control the behavior of an ShellWindow
 DeclareBitField7(WindowStyleFlags,
-  // Is the window visible. This is 'NotVisible' instead of visible so that the
-  // default is visible.
-  NotVisible,
-  // Main window
-  MainWindow,
-  // Does the window appear on the task bar
-  OnTaskBar,
-  // Does the window have a title bar area
-  TitleBar,
-  // Does this window have resizable borders
-  Resizable,
-  // Does this window have a close button
-  Close,
-  // Window has client area only
-  ClientOnly);
+                 // Is the window visible. This is 'NotVisible' instead of
+                 // visible so that the default is visible.
+                 NotVisible,
+                 // Main window
+                 MainWindow,
+                 // Does the window appear on the task bar
+                 OnTaskBar,
+                 // Does the window have a title bar area
+                 TitleBar,
+                 // Does this window have resizable borders
+                 Resizable,
+                 // Does this window have a close button
+                 Close,
+                 // Window has client area only
+                 ClientOnly);
 
 /// The state of the window for minimizing / maximizing
 DeclareEnum5(WindowState,
-  // Shrink the window to the taskbar
-  Minimized,
-  // Expand the window to fill the current desktop
-  Maximized,
-  // Arbitrarily sized window
-  Windowed,
-  // Window covers everything including the taskbar and is minimized without focus
-  Fullscreen,
-  // Restore window to previous state before being minimizing
-  Restore);
+             // Shrink the window to the taskbar
+             Minimized,
+             // Expand the window to fill the current desktop
+             Maximized,
+             // Arbitrarily sized window
+             Windowed,
+             // Window covers everything including the taskbar and is minimized
+             // without focus
+             Fullscreen,
+             // Restore window to previous state before being minimizing
+             Restore);
 
 /// Border of the window for manipulation
 DeclareEnum10(WindowBorderArea,
-  Title,
-  TopLeft,
-  Top,
-  TopRight,
-  Left,
-  Right,
-  BottomLeft,
-  Bottom,
-  BottomRight,
-  None);
+              Title,
+              TopLeft,
+              Top,
+              TopRight,
+              Left,
+              Right,
+              BottomLeft,
+              Bottom,
+              BottomRight,
+              None);
 
 DeclareEnum3(ProgressType, Normal, Indeterminate, None);
 
 class ShellWindow
 {
 public:
-  ShellWindow(
-    Shell* shell,
-    StringParam windowName,
-    Math::IntVec2Param clientSize,
-    Math::IntVec2Param monitorClientPos,
-    ShellWindow* parentWindow,
-    WindowStyleFlags::Enum flags);
+  ShellWindow(Shell* shell,
+              StringParam windowName,
+              Math::IntVec2Param clientSize,
+              Math::IntVec2Param monitorClientPos,
+              ShellWindow* parentWindow,
+              WindowStyleFlags::Enum flags);
 
   /// Destroy will be called automatically here.
   ~ShellWindow();
@@ -492,7 +488,6 @@ public:
   IntVec2 GetBorderedSize();
   void SetBorderedSize(Math::IntVec2Param borderedSize);
 
-
   /// Get the parent window of this window. Null if there is no parent.
   ShellWindow* GetParent();
 
@@ -526,17 +521,20 @@ public:
   String GetTitle();
   void SetTitle(StringParam title);
 
-  /// State of the Window, Set state to Minimize, Maximize, or Restore the window
+  /// State of the Window, Set state to Minimize, Maximize, or Restore the
+  /// window
   WindowState::Enum GetState();
   void SetState(WindowState::Enum windowState);
 
-  /// When the mouse is captured it will only allow mouse events to be sent to this
-  /// window (no other operating system windows or other windows we've created).
+  /// When the mouse is captured it will only allow mouse events to be sent to
+  /// this window (no other operating system windows or other windows we've
+  /// created).
   void SetMouseCapture(bool capture);
   bool GetMouseCapture();
 
   /// Try to take Focus and bring the window to the foreground.
-  /// The OS may prevent this from working if this app is not the foreground app.
+  /// The OS may prevent this from working if this app is not the foreground
+  /// app.
   void TakeFocus();
   /// Does this window have focus?
   bool HasFocus();
@@ -553,56 +551,80 @@ public:
   /// Returns the last value to SetProgress (default 0).
   float GetProgress();
 
-  /// Sets the progress visible to the operating system (for example, when downloading a file).
+  /// Sets the progress visible to the operating system (for example, when
+  /// downloading a file).
   void SetProgress(ProgressType::Enum progressType, float progress);
 
-  /// Fix the window (specifically for Intel related Windowing issues with OpenGL)
+  /// Fix the window (specifically for Intel related Windowing issues with
+  /// OpenGL)
   void PlatformSpecificFixup();
 
   /// The window has been requested to close.
-  void(*mOnClose)(ShellWindow* window);
+  void (*mOnClose)(ShellWindow* window);
 
   /// The window has been activated or deactivated.
-  void(*mOnFocusChanged)(bool activated, ShellWindow* window);
+  void (*mOnFocusChanged)(bool activated, ShellWindow* window);
 
   /// Files have been drag-dropped onto this window.
-  void(*mOnMouseDropFiles)(Math::IntVec2Param clientPosition, const Array<String>& files, ShellWindow* window);
+  void (*mOnMouseDropFiles)(Math::IntVec2Param clientPosition,
+                            const Array<String>& files,
+                            ShellWindow* window);
 
-  /// An update that is called in cases where the window may be frozen (such as dragging on the Windows OS).
-  void(*mOnFrozenUpdate)(ShellWindow* window);
+  /// An update that is called in cases where the window may be frozen (such as
+  /// dragging on the Windows OS).
+  void (*mOnFrozenUpdate)(ShellWindow* window);
 
-  /// Occurs when the window is resized (may occur even if the size is the same and should be protected against).
-  void(*mOnClientSizeChanged)(Math::IntVec2Param clientSize, ShellWindow* window);
+  /// Occurs when the window is resized (may occur even if the size is the same
+  /// and should be protected against).
+  void (*mOnClientSizeChanged)(Math::IntVec2Param clientSize,
+                               ShellWindow* window);
 
-  void(*mOnMinimized)(ShellWindow* window);
-  void(*mOnRestored)(ShellWindow* window);
+  void (*mOnMinimized)(ShellWindow* window);
+  void (*mOnRestored)(ShellWindow* window);
 
   /// Callback for when a keycode is translated into text.
-  void(*mOnTextTyped)(Rune rune, ShellWindow* window);
+  void (*mOnTextTyped)(Rune rune, ShellWindow* window);
 
   /// Callback for when a keyboard key is pressed.
-  void(*mOnKeyDown)(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window);
+  void (*mOnKeyDown)(Keys::Enum key,
+                     uint osKey,
+                     bool repeated,
+                     ShellWindow* window);
 
   /// Callback for when a keyboard key is released.
-  void(*mOnKeyUp)(Keys::Enum key, uint osKey, ShellWindow* window);
+  void (*mOnKeyUp)(Keys::Enum key, uint osKey, ShellWindow* window);
 
-  void(*mOnMouseDown)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
-  void(*mOnMouseUp)(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window);
-  void(*mOnMouseMove)(Math::IntVec2Param clientPosition, ShellWindow* window);
-  void(*mOnMouseScrollX)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
-  void(*mOnMouseScrollY)(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window);
+  void (*mOnMouseDown)(Math::IntVec2Param clientPosition,
+                       MouseButtons::Enum button,
+                       ShellWindow* window);
+  void (*mOnMouseUp)(Math::IntVec2Param clientPosition,
+                     MouseButtons::Enum button,
+                     ShellWindow* window);
+  void (*mOnMouseMove)(Math::IntVec2Param clientPosition, ShellWindow* window);
+  void (*mOnMouseScrollX)(Math::IntVec2Param clientPosition,
+                          float scrollAmount,
+                          ShellWindow* window);
+  void (*mOnMouseScrollY)(Math::IntVec2Param clientPosition,
+                          float scrollAmount,
+                          ShellWindow* window);
 
   /// Called when any hardware devices change.
-  void(*mOnDevicesChanged)(ShellWindow* window);
+  void (*mOnDevicesChanged)(ShellWindow* window);
 
   /// Called when a mouse moves (raw input without pointer balistics applied).
-  void(*mOnRawMouseChanged)(Math::IntVec2Param movement, ShellWindow* window);
+  void (*mOnRawMouseChanged)(Math::IntVec2Param movement, ShellWindow* window);
 
-  /// Called when the window is asking if a position should result in dragging or resizing the window.
-  WindowBorderArea::Enum(*mOnHitTest)(Math::IntVec2Param clientPosition, ShellWindow* window);
+  /// Called when the window is asking if a position should result in dragging
+  /// or resizing the window.
+  WindowBorderArea::Enum (*mOnHitTest)(Math::IntVec2Param clientPosition,
+                                       ShellWindow* window);
 
   /// Called when an input device is updated.
-  void(*mOnInputDeviceChanged)(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window);
+  void (*mOnInputDeviceChanged)(PlatformInputDevice& device,
+                                uint buttons,
+                                const Array<uint>& axes,
+                                const DataBlock& data,
+                                ShellWindow* window);
 
   /// Userdata used for all callbacks.
   void* mUserData;
@@ -636,4 +658,4 @@ public:
   float mProgress;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,21 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Gradient.hpp
-/// Declaration of the Gradient class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 /// Specifies a range of values that can be interpolated between.
-template <typename type, type (*lerpFunc)(const type&, 
-                                          const type&, 
-                                          const float) = Math::Lerp>
+template <typename type,
+          type (*lerpFunc)(const type&, const type&, const float) = Math::Lerp>
 class Gradient
 {
 public:
@@ -42,7 +33,7 @@ public:
     key.Interpolant = interpolant;
 
     // Check to make sure the interpolant is valid
-    ErrorIf(interpolant < 0.0f || interpolant > 1.0f, 
+    ErrorIf(interpolant < 0.0f || interpolant > 1.0f,
             "Interpolant value must be between [0,1].");
 
     uint count = mControlPoints.Size();
@@ -51,19 +42,19 @@ public:
     int lastIndex = count - 1;
 
     // If there are no values, simply add it
-    if(count == 0)
+    if (count == 0)
     {
       mControlPoints.PushBack(key);
     }
     // If the interpolant is greater than the end, add it to the end
-    else if(interpolant > mControlPoints[lastIndex].Interpolant)
+    else if (interpolant > mControlPoints[lastIndex].Interpolant)
     {
       mControlPoints.PushBack(key);
     }
     // If there is only 1 control point in there, we already know that the
     // new control point has to be before it, so we can just add it to the
     // back, and swap it with the first
-    else if(count == 1)
+    else if (count == 1)
     {
       mControlPoints.PushBack(key);
       Math::Swap(mControlPoints[0], mControlPoints[1]);
@@ -83,7 +74,7 @@ public:
   type Sample(float interpolant)
   {
     // Check to make sure the interpolant is valid
-    ErrorIf(interpolant < 0.0f || interpolant > 1.0f, 
+    ErrorIf(interpolant < 0.0f || interpolant > 1.0f,
             "Interpolant value must be between [0,1].");
 
     uint count = mControlPoints.Size();
@@ -92,22 +83,22 @@ public:
     int lastIndex = count - 1;
 
     // If there are no values, return a default
-    if(count == 0)
+    if (count == 0)
     {
       return type();
     }
     // If there is only one value, return it (base case)
-    else if(count == 1)
+    else if (count == 1)
     {
       return mControlPoints[firstIndex].Value;
     }
     // If 'interpolant' is before the first value, return the first value
-    else if(interpolant  <= mControlPoints[firstIndex].Interpolant)
+    else if (interpolant <= mControlPoints[firstIndex].Interpolant)
     {
       return mControlPoints[firstIndex].Value;
     }
     // If 'interpolant' is after the last value, return the last value
-    else if(interpolant >= mControlPoints[lastIndex].Interpolant)
+    else if (interpolant >= mControlPoints[lastIndex].Interpolant)
     {
       return mControlPoints[lastIndex].Value;
     }
@@ -136,7 +127,7 @@ public:
   void Sample(Array<type>& output, float sampleRate)
   {
     // Check to make sure the sampleRate is valid
-    ErrorIf(sampleRate < 0.0f || sampleRate > 1.0f, 
+    ErrorIf(sampleRate < 0.0f || sampleRate > 1.0f,
             "Sample Rate must be between [0,1].");
 
     // Make only one allocation
@@ -144,7 +135,7 @@ public:
     output.Resize(size + 1);
 
     // Fill the output with samples based on the given sample rate
-    for(uint i = 0; i < output.Size() ; ++i)
+    for (uint i = 0; i < output.Size(); ++i)
     {
       // Get the interpolant of the given value
       float interpolant = float(i) / float(size);
@@ -167,13 +158,13 @@ public:
     int max = (int)(mControlPoints.Size() - 1);
 
     // Binary search
-    while(min < max)
+    while (min < max)
     {
       // Get the middle index
       int middle = (max + min) / 2;
 
       // Find which side to search
-      if(mControlPoints[middle].Interpolant < interpolant)
+      if (mControlPoints[middle].Interpolant < interpolant)
       {
         min = middle + 1;
       }
@@ -198,4 +189,4 @@ public:
   KeyArray mControlPoints;
 };
 
-} //namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Loading.hpp
-/// 
-///
-/// Authors: Chris Peters, Nathan Carlson
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -33,4 +25,4 @@ private:
   HandleOf<ColorBlock> mDarkScreen;
 };
 
-}//namespace Zero
+} // namespace Zero

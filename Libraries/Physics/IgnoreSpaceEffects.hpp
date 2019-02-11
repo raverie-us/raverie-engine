@@ -1,16 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 /// Allows a cog to ignore certain effect types (such as gravity or drag)
-/// that are being applied to the entire space (effects on Space or LevelSettings).
+/// that are being applied to the entire space (effects on Space or
+/// LevelSettings).
 class IgnoreSpaceEffects : public Component
 {
 public:
@@ -70,4 +66,4 @@ private:
   BitField<PhysicsEffectType::Enum> mFlags;
 };
 
-}//namespace Zero
+} // namespace Zero

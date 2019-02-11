@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -21,7 +16,8 @@ ThreadSafeReferenceCounted::ThreadSafeReferenceCounted()
   ConstructThreadSafeReferenceCountedHandle();
 }
 
-ThreadSafeReferenceCounted::ThreadSafeReferenceCounted(const ThreadSafeReferenceCounted&)
+ThreadSafeReferenceCounted::ThreadSafeReferenceCounted(
+    const ThreadSafeReferenceCounted&)
 {
   ConstructThreadSafeReferenceCountedHandle();
 }

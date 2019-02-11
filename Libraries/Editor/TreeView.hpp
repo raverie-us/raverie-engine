@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TreeView.hpp
-/// Declaration of Tree View
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -28,19 +20,19 @@ class ObjectPollEvent;
 class MouseDragEvent;
 class TextUpdatedEvent;
 
-DeclareEnum3(ColumnType, 
+DeclareEnum3(ColumnType,
              Fixed,     // The size will never change (cannot be resized)
              Flex,      // Percentage of the owners width
-             Sizeable); // The size will remain unchanged unless 
+             Sizeable); // The size will remain unchanged unless
                         // the user resizes it by dragging the header
 
-DeclareEnum2(ColumnIconSizePolicy,
-             // Icon size will fill the header
-             Auto,
-             // Icon size will fill the specified size [ie, independent of header size]
-             Custom);
+DeclareEnum2(
+    ColumnIconSizePolicy,
+    // Icon size will fill the header
+    Auto,
+    // Icon size will fill the specified size [ie, independent of header size]
+    Custom);
 
-//---------------------------------------------------------------- Column Format
 /// Format for each Column in each Row
 struct ColumnFormat
 {
@@ -63,12 +55,13 @@ struct ColumnFormat
   /// Fixed size of the Column.
   Vec2 FixedSize;
 
-  /// Various flags that are different for each control (for instance, does a text box accept double click for edit).
+  /// Various flags that are different for each control (for instance, does a
+  /// text box accept double click for edit).
   u32 Flags;
 
   /// A relative weight of size (relative to other flex columns).
   /// If columnnA's flex size is 3 and columnB's flex size is 1,
-  /// columnA will take up 75% (3 / (3 + 1)) and 
+  /// columnA will take up 75% (3 / (3 + 1)) and
   /// columnB will take up 25% (1 / (3 + 1)).
   float FlexSize;
 
@@ -83,7 +76,7 @@ struct ColumnFormat
   String HeaderName;
   String HeaderIcon;
 
-  /// Data Base name of column used for 
+  /// Data Base name of column used for
   /// getting data.
   String Column;
 
@@ -97,8 +90,8 @@ struct ColumnFormat
   /// to search for in the custom resource editor).
   Any CustomEditorData;
 
-/// Runtime
-  /// The position that this column starts at based on the size of the tree.  
+  /// Runtime
+  /// The position that this column starts at based on the size of the tree.
   /// This does NOT include the offsets from indented rows.  That will
   /// be applied when each specific row updates its Transform.
   float StartX;
@@ -107,7 +100,8 @@ struct ColumnFormat
   Vec2 CurrSize;
 };
 
-DeclareBitField4(FormatFlags, ShowRoot, ShowHeaders, ShowSeparators, ColumnsResizable);
+DeclareBitField4(
+    FormatFlags, ShowRoot, ShowHeaders, ShowSeparators, ColumnsResizable);
 
 /// Formatting for Tree View
 struct TreeFormatting
@@ -116,27 +110,27 @@ struct TreeFormatting
   Array<ColumnFormat> Columns;
 };
 
-//Internal Node for InList
+// Internal Node for InList
 class TreeBase : public Composite
 {
 public:
-  TreeBase(Composite* parent)
-  :Composite(parent)
-  {}
+  TreeBase(Composite* parent) : Composite(parent)
+  {
+  }
   Link<TreeBase> link;
 };
 
 namespace Events
 {
-  //Tree Element Right Clicked
-  DeclareEvent(TreeRightClick);
-  //Key pressed in tree
-  DeclareEvent(TreeKeyPress);
-  DeclareEvent(MouseEnterRow);
-  DeclareEvent(MouseExitRow);
-  // Sent when a TreeView has created new ColumnHeader.
-  DeclareEvent(TreeViewHeaderAdded);
-}
+// Tree Element Right Clicked
+DeclareEvent(TreeRightClick);
+// Key pressed in tree
+DeclareEvent(TreeKeyPress);
+DeclareEvent(MouseEnterRow);
+DeclareEvent(MouseExitRow);
+// Sent when a TreeView has created new ColumnHeader.
+DeclareEvent(TreeViewHeaderAdded);
+} // namespace Events
 
 /// Tree Event Contains what row was affected.
 class TreeEvent : public Event
@@ -157,10 +151,9 @@ class TreeViewHeaderAddedEvent : public Event
   ColumnHeader* mNewHeader;
 };
 
-//--------------------------------------------------------------------- Tree Row
 DeclareEnum3(HighlightType, None, Selected, Preview);
 
-//Row in the TreeView.
+// Row in the TreeView.
 class TreeRow : public TreeBase
 {
 public:
@@ -194,11 +187,12 @@ public:
   /// Edit Column By Name
   void Edit(StringParam column);
   /// Select this row
-  void Select(bool singleSelect=false);
+  void Select(bool singleSelect = false);
   /// Multi select from the current selection to this row
   void MultiSelect();
 
-  void Highlight(HighlightType::Type type, InsertMode::Type mode = InsertMode::On);
+  void Highlight(HighlightType::Type type,
+                 InsertMode::Type mode = InsertMode::On);
 
   /// Destroy Row and Children
   void RecursiveDestroy();
@@ -208,7 +202,7 @@ public:
   void UpdateBgColor(uint index);
 
   void Fill(Array<TreeRow*>&, uint depth);
-//events
+  // events
   void OnKeyPress(KeyboardEvent* event);
   void OnMouseDownExpander(MouseEvent* event);
   void OnMouseClick(MouseEvent* event);
@@ -221,15 +215,17 @@ public:
   void OnAddGroup(MouseEvent* event);
   void OnValueChanged(ObjectEvent* event);
   void OnTextChanged(TextUpdatedEvent* event);
-  void GetInsertMode(Status& status, DataEntry* movingEntry, 
-                     Vec2Param screenPos, InsertMode::Type& mode);
+  void GetInsertMode(Status& status,
+                     DataEntry* movingEntry,
+                     Vec2Param screenPos,
+                     InsertMode::Type& mode);
   InsertMode::Enum GetInsertPosition(DataEntry* entry, Vec2Param screenPos);
   void OnMetaDrop(MetaDropEvent* event);
   void OnObjectPoll(ObjectPollEvent* event);
   void OnMouseEnter(MouseEvent* event);
   void OnMouseExit(MouseEvent* event);
-  
-  //Data
+
+  // Data
   void DestroyChildren();
   void RebuildChildren();
   DataIndex mIndex;
@@ -254,7 +250,6 @@ public:
   Spacer* mBackground;
 };
 
-//---------------------------------------------------------------- Column Header
 class ColumnHeader : public Composite
 {
 public:
@@ -279,7 +274,6 @@ public:
   TreeView* mTree;
 };
 
-//--------------------------------------------------------------- Column Resizer
 /// Placed in between headers
 class ColumnResizer : public Composite
 {
@@ -300,9 +294,8 @@ public:
   ColumnFormat* mRightFormat;
 };
 
-//-------------------------------------------------------------------- Tree View
-//Tree View display a Tree of Data. Each Row can have multiple columns. Used
-//to display resources, file systems, object trees etc.
+// Tree View display a Tree of Data. Each Row can have multiple columns. Used
+// to display resources, file systems, object trees etc.
 class TreeView : public Composite
 {
 public:
@@ -314,25 +307,31 @@ public:
   void UpdateTransform() override;
   bool TakeFocusOverride() override;
 
-  //Set the Data Source for this Tree View
+  // Set the Data Source for this Tree View
   void SetDataSource(DataSource* source);
   DataSource* GetDataSource();
 
-  //Set the selection to use for this Tree View
+  // Set the selection to use for this Tree View
   void SetSelection(DataSelection* selection);
-  DataSelection* GetSelection(){return mSelection;}
+  DataSelection* GetSelection()
+  {
+    return mSelection;
+  }
 
   // Allows modifications to which rows are expanded.
-  DataSelection* GetExpanded(){return mExpanded;}
+  DataSelection* GetExpanded()
+  {
+    return mExpanded;
+  }
 
-  //Full refresh of data tree.
+  // Full refresh of data tree.
   void Refresh();
 
   TreeRow* FindRowByIndex(DataIndex& index);
   uint FindRowIndex(TreeRow* row);
   void MoveToView(TreeRow* row);
 
-  //Return the first row who's named column has a given value. (Linear)
+  // Return the first row who's named column has a given value. (Linear)
   TreeRow* FindRowByColumnValue(StringParam column, StringParam value);
 
   void SelectFirstRow();
@@ -381,15 +380,15 @@ public:
   /// Used to forward keyboard events.
   ScrollArea* GetScrollArea();
 
-//private:
+  // private:
   friend class RowSelector;
   friend class TreeRow;
-  
+
   void DoFocus();
 
   ColumnFormat& GetColumn(StringParam name);
 
-  /// Builds a range of the selected rows and sets the min 
+  /// Builds a range of the selected rows and sets the min
   /// and max of the range to the given values.
   void GetSelectionRange(uint* minIndex, uint* maxIndex);
 
@@ -447,6 +446,6 @@ namespace TreeViewValidUi
 {
 DeclareTweakable(Vec4, PrimaryColor);
 DeclareTweakable(Vec4, SecondaryColor);
-}//namespace TreeViewUi
+} // namespace TreeViewValidUi
 
-}//namespace Zero
+} // namespace Zero

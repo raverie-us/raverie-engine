@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,15 +11,31 @@ public:
   BitField<ShaderStage::Enum> mSupportedStages;
 };
 
-DeclareEnum7(CompositorShaderStage, Cpu, Vertex, PreTesselation, PostTesselation, Geometry, Pixel, Gpu);
-DeclareEnum7(LinkedFieldType, None, Fragment, Stage, AppBuiltIn, HardwareBuiltIn, Property, SpecConstant);
+DeclareEnum7(CompositorShaderStage,
+             Cpu,
+             Vertex,
+             PreTesselation,
+             PostTesselation,
+             Geometry,
+             Pixel,
+             Gpu);
+DeclareEnum7(LinkedFieldType,
+             None,
+             Fragment,
+             Stage,
+             AppBuiltIn,
+             HardwareBuiltIn,
+             Property,
+             SpecConstant);
 
-CompositorShaderStage::Enum FragmentTypeToCompostitorShaderStage(FragmentType::Enum fragmentType);
+CompositorShaderStage::Enum
+FragmentTypeToCompostitorShaderStage(FragmentType::Enum fragmentType);
 
 class CompositorCallbackData;
 
-/// The compositor takes an input of fragments and composes them into a full shader based upon
-/// the described inputs and outputs of each fragment. The idea is to compose one shader from a bunch of small re-usable pieces.
+/// The compositor takes an input of fragments and composes them into a full
+/// shader based upon the described inputs and outputs of each fragment. The
+/// idea is to compose one shader from a bunch of small re-usable pieces.
 class ZilchShaderIRCompositor : public ShaderCompilationErrors
 {
 public:
@@ -35,10 +46,12 @@ public:
     ShaderIRFieldMeta* mMeta;
     /// What kind of input this resolved as.
     LinkedFieldType::Enum mLinkedType;
-    /// If this field's LinkedType is property, then this is the name that the property was declared as.
+    /// If this field's LinkedType is property, then this is the name that the
+    /// property was declared as.
     String mFieldPropertyName;
-    /// If the input was resolved by anything other than property, this is the output that 
-    /// this input will match to. If this input comes from the vertex definition then this field's owner will be null.
+    /// If the input was resolved by anything other than property, this is the
+    /// output that this input will match to. If this input comes from the
+    /// vertex definition then this field's owner will be null.
     ShaderIRFieldMeta* mOutputFieldDependency;
   };
   /// Describes all of the fields of a fragment and how they were resolved.
@@ -47,11 +60,14 @@ public:
     /// The reflection information about the fragment.
     ShaderIRTypeMeta* mMeta;
     /// The fields that were resolved as inputs.
-    /// @JoshD: Currently this doesn't include non-copyable types (samplers). Should this?
-    OrderedHashMap<ShaderIRFieldMeta*, ShaderFieldDescription> mFieldDescriptions;
+    /// @JoshD: Currently this doesn't include non-copyable types (samplers).
+    /// Should this?
+    OrderedHashMap<ShaderIRFieldMeta*, ShaderFieldDescription>
+        mFieldDescriptions;
   };
   /// A helper class that manages memory.
-  struct FragmentDescriptionMap : public OrderedHashMap<ShaderIRTypeMeta*, ShaderFragmentDescription*>
+  struct FragmentDescriptionMap
+      : public OrderedHashMap<ShaderIRTypeMeta*, ShaderFragmentDescription*>
   {
     // An intrusive reference count for memory handling
     ZilchRefLink(FragmentDescriptionMap);
@@ -71,7 +87,8 @@ public:
     String mClassName;
     /// What shader stage this is.
     FragmentType::Enum mFragmentType;
-    /// The description of each fragment in this stage. Describes how inputs were resolved for each fragment.
+    /// The description of each fragment in this stage. Describes how inputs
+    /// were resolved for each fragment.
     Zilch::Ref<FragmentDescriptionMap> mFragmentDescriptions;
   };
   /// The definition of a shader used to composite.
@@ -79,7 +96,8 @@ public:
   {
     ShaderDefinition();
 
-    /// The base name to use for the composited shader. Must be unique within a library dependency chain.
+    /// The base name to use for the composited shader. Must be unique within a
+    /// library dependency chain.
     String mShaderName;
     /// The input fragments to composite together.
     Array<ZilchShaderIRType*> mFragments;
@@ -87,17 +105,23 @@ public:
     /// and the description of each fragment that was used to create the shader.
     ShaderStageDescription mResults[FragmentType::Size];
 
-    /// Any extra attributes to add to declared compositor types (mostly for unit tests)
+    /// Any extra attributes to add to declared compositor types (mostly for
+    /// unit tests)
     ShaderIRAttributeList mExtraAttributes;
   };
 
   ZilchShaderIRCompositor();
 
-  /// Composite a shader for the rendering pipeline. Doesn't handle compute fragments and only allows one geometry fragment.
-  bool Composite(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
+  /// Composite a shader for the rendering pipeline. Doesn't handle compute
+  /// fragments and only allows one geometry fragment.
+  bool Composite(ShaderDefinition& shaderDef,
+                 const ShaderCapabilities& capabilities,
+                 ZilchShaderSpirVSettingsRef& settings);
   /// Composite a compute shader. Only currently handles one compute fragment.
   /// This basically takes care of attribute re-mappings and reflection data.
-  bool CompositeCompute(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
+  bool CompositeCompute(ShaderDefinition& shaderDef,
+                        const ShaderCapabilities& capabilities,
+                        ZilchShaderSpirVSettingsRef& settings);
 
   //-------------------------------------------------------------------Internal
   struct StageLinkingInfo;
@@ -108,44 +132,79 @@ public:
   struct FragmentLinkingInfo;
   struct ExpectedOutputData;
 
-  
-  void CollectFragmentsPerStage(Array<ZilchShaderIRType*>& inputFragments, CompositedShaderInfo& compositeInfo);
+  void CollectFragmentsPerStage(Array<ZilchShaderIRType*>& inputFragments,
+                                CompositedShaderInfo& compositeInfo);
   bool ValidateStages(CompositedShaderInfo& compositeInfo);
   void CollectExpectedOutputs(CompositedShaderInfo& compositeInfo);
-  void CollectExpectedOutputs(Array<ZilchShaderIRType*>& fragmentTypes, StageAttachmentLinkingInfo& linkingInfo);
+  void CollectExpectedOutputs(Array<ZilchShaderIRType*>& fragmentTypes,
+                              StageAttachmentLinkingInfo& linkingInfo);
   void CreateCpuStage(CompositedShaderInfo& compositeInfo);
 
-  void ResolveInputs(StageLinkingInfo* previousStage, StageLinkingInfo* currentStage);
-  void Link(StageAttachmentLinkingInfo& prevStageInfo, StageLinkingInfo* currentStage, Array<ZilchShaderIRType*>& fragmentTypes, StageAttachmentLinkingInfo& currStageInfo);
-  void AddStageInput(ExpectedOutputData* previousStageOutputData, StageAttachmentLinkingInfo* currentStage, StringParam fieldVarName, StringParam fieldAttributeName);
-  ShaderIRFieldMeta* FindUniform(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
-  ShaderIRFieldMeta* FindHardwareBuiltInInput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
-  ShaderIRFieldMeta* FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
-  ShaderFieldKey MakeFieldKey(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
+  void ResolveInputs(StageLinkingInfo* previousStage,
+                     StageLinkingInfo* currentStage);
+  void Link(StageAttachmentLinkingInfo& prevStageInfo,
+            StageLinkingInfo* currentStage,
+            Array<ZilchShaderIRType*>& fragmentTypes,
+            StageAttachmentLinkingInfo& currStageInfo);
+  void AddStageInput(ExpectedOutputData* previousStageOutputData,
+                     StageAttachmentLinkingInfo* currentStage,
+                     StringParam fieldVarName,
+                     StringParam fieldAttributeName);
+  ShaderIRFieldMeta* FindUniform(ShaderFieldKey& fieldKey,
+                                 FragmentType::Enum fragmentType);
+  ShaderIRFieldMeta* FindHardwareBuiltInInput(ShaderFieldKey& fieldKey,
+                                              FragmentType::Enum fragmentType);
+  ShaderIRFieldMeta* FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey,
+                                               FragmentType::Enum fragmentType);
+  ShaderFieldKey MakeFieldKey(ShaderIRFieldMeta* fieldMeta,
+                              ShaderIRAttribute* attribute);
   static String MakePropertyName(StringParam fieldName, StringParam ownerType);
-  static String GetFieldInOutName(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
-  static void GetStageFieldName(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute, String& fieldVarNameOut, String& fieldAttributeNameOut);
+  static String GetFieldInOutName(ShaderIRFieldMeta* fieldMeta,
+                                  ShaderIRAttribute* attribute);
+  static void GetStageFieldName(ShaderIRFieldMeta* fieldMeta,
+                                ShaderIRAttribute* attribute,
+                                String& fieldVarNameOut,
+                                String& fieldAttributeNameOut);
   void ResolveGpuStage(CompositedShaderInfo& compositeInfo);
 
   void ResolveStageLinkOrder(CompositedShaderInfo& compositeInfo);
 
-  void GenerateZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
-  void GenerateBasicZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
-  void GenerateGeometryZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
-  void GenerateComputeZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
-  void CreateFragmentAndCopyInputs(StageLinkingInfo* currentStage, ShaderCodeBuilder& builder, StringParam currentClassName, ZilchShaderIRType* fragmentType, StringParam fragmentVarName);
-  void DeclareFieldsInOrder(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& orderMap);
-  void DeclareFieldsWithAttribute(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& fieldSet, StringParam attributeName);
+  void GenerateZilchComposite(StageLinkingInfo* currentStage,
+                              ShaderStageDescription& stageResults,
+                              ShaderIRAttributeList& extraAttributes);
+  void GenerateBasicZilchComposite(StageLinkingInfo* currentStage,
+                                   ShaderStageDescription& stageResults,
+                                   ShaderIRAttributeList& extraAttributes);
+  void GenerateGeometryZilchComposite(StageLinkingInfo* currentStage,
+                                      ShaderStageDescription& stageResults,
+                                      ShaderIRAttributeList& extraAttributes);
+  void GenerateComputeZilchComposite(StageLinkingInfo* currentStage,
+                                     ShaderStageDescription& stageResults,
+                                     ShaderIRAttributeList& extraAttributes);
+  void CreateFragmentAndCopyInputs(StageLinkingInfo* currentStage,
+                                   ShaderCodeBuilder& builder,
+                                   StringParam currentClassName,
+                                   ZilchShaderIRType* fragmentType,
+                                   StringParam fragmentVarName);
+  void DeclareFieldsInOrder(ShaderCodeBuilder& builder,
+                            StageAttachmentLinkingInfo& linkingInfo,
+                            OrderedHashSet<ShaderFieldKey>& orderMap);
+  void DeclareFieldsWithAttribute(ShaderCodeBuilder& builder,
+                                  StageAttachmentLinkingInfo& linkingInfo,
+                                  OrderedHashSet<ShaderFieldKey>& fieldSet,
+                                  StringParam attributeName);
   String MakeFragmentVarName(ShaderIRTypeMeta* typeMeta);
 
-  void GenerateStageDescriptions(CompositedShaderInfo& compositeInfo, ShaderDefinition& shaderDef);
+  void GenerateStageDescriptions(CompositedShaderInfo& compositeInfo,
+                                 ShaderDefinition& shaderDef);
 
   ZilchShaderSpirVSettingsRef mSettings;
   ShaderCapabilities mCapabilities;
   String mShaderCompositeName;
 
   //-------------------------------------------------------------------FieldLinkingInfo
-  /// Used to store how each field on a fragment is linked together in the final shader.
+  /// Used to store how each field on a fragment is linked together in the final
+  /// shader.
   struct FieldLinkingInfo
   {
     FieldLinkingInfo();
@@ -154,27 +213,34 @@ public:
     ShaderIRFieldMeta* mFieldMeta;
     /// What kind of input this resolved as.
     LinkedFieldType::Enum mLinkedType;
-    /// If this field's LinkedType is property, then this is the name that the property was declared as.
+    /// If this field's LinkedType is property, then this is the name that the
+    /// property was declared as.
     String mFieldPropertyName;
-    /// If the input was resolved by anything other than property, this is the output that 
-    /// this input will match to. If this input comes from the vertex definition then this field's owner will be null.
+    /// If the input was resolved by anything other than property, this is the
+    /// output that this input will match to. If this input comes from the
+    /// vertex definition then this field's owner will be null.
     ShaderIRFieldMeta* mOutputFieldDependency;
-    /// The name of the field this comes from could be different than the name of the field 
-    /// and it's impossible to re-map due to supporting multiple attributes.
-    /// @JoshD: Potentially make a field meta for composites and link to that instead.
+    /// The name of the field this comes from could be different than the name
+    /// of the field and it's impossible to re-map due to supporting multiple
+    /// attributes.
+    /// @JoshD: Potentially make a field meta for composites and link to that
+    /// instead.
     String mOutputFieldDependencyName;
   };
 
   //-------------------------------------------------------------------FragmentLinkingInfo
-  /// Stores linking information about each fragment, in particular how each field is resolved.
+  /// Stores linking information about each fragment, in particular how each
+  /// field is resolved.
   struct FragmentLinkingInfo
   {
     void CopyTo(ShaderFragmentDescription& fragDesc);
-    void CopyFieldTo(FieldLinkingInfo& fieldInfo, ShaderFragmentDescription& fragDesc);
+    void CopyFieldTo(FieldLinkingInfo& fieldInfo,
+                     ShaderFragmentDescription& fragDesc);
 
     ShaderIRTypeMeta* mMeta;
     HashMap<ShaderFieldKey, FieldLinkingInfo> mFieldMap;
-    /// Fields that are resolved as inputs (in order). The field key maps into FieldMap
+    /// Fields that are resolved as inputs (in order). The field key maps into
+    /// FieldMap
     Array<ShaderFieldKey> mFieldList;
     /// Some properties are non-copyable (like images) so they can't be declared
     /// on the composite, we do need to generate reflection data for this
@@ -194,21 +260,25 @@ public:
   };
 
   //-------------------------------------------------------------------ResolvedFieldOutputInfo
-  /// Information about a resolved field. In particular, this contains the name of the
-  /// stage output to use as name overrides may make this different then the actual field's name.
-  /// It's only during linking that the actual name is known since multiple attribute can exist, each with their own overriding name.
+  /// Information about a resolved field. In particular, this contains the name
+  /// of the stage output to use as name overrides may make this different then
+  /// the actual field's name. It's only during linking that the actual name is
+  /// known since multiple attribute can exist, each with their own overriding
+  /// name.
   struct ResolvedFieldOutputInfo
   {
     ResolvedFieldOutputInfo();
-    ResolvedFieldOutputInfo(StringParam fieldName, ShaderIRFieldMeta* outputDependency);
+    ResolvedFieldOutputInfo(StringParam fieldName,
+                            ShaderIRFieldMeta* outputDependency);
 
     String mFieldName;
     ShaderIRFieldMeta* mOutputFieldDependency;
   };
 
   //-------------------------------------------------------------------ExpectedOutputData
-  /// Information about an expected output. In particular, this stores the fragment stage type
-  /// for the expected field output. This is important to distinguish pass-through from actual outputs.
+  /// Information about an expected output. In particular, this stores the
+  /// fragment stage type for the expected field output. This is important to
+  /// distinguish pass-through from actual outputs.
   struct ExpectedOutputData
   {
     ExpectedOutputData()
@@ -232,17 +302,29 @@ public:
   {
     StageAttachmentLinkingInfo();
 
-    void AddResolvedField(ShaderIRFieldMeta* fieldMeta, StringParam attributeName);
-    void AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
-    void AddResolvedStageField(SpirVNameSettings& nameSettings, ShaderIRFieldMeta* fieldMeta, StringParam fieldName, StringParam attributeName, StringParam attributeParameter);
-    // Create or return a field by the given name/type. Creates or finds the attribute by the given name and returns it.
-    ShaderIRAttribute* AddResolvedField(StringParam fieldName, StringParam fieldType, StringParam attributeName);
+    void AddResolvedField(ShaderIRFieldMeta* fieldMeta,
+                          StringParam attributeName);
+    void AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta,
+                                  ShaderIRAttribute* attribute);
+    void AddResolvedStageField(SpirVNameSettings& nameSettings,
+                               ShaderIRFieldMeta* fieldMeta,
+                               StringParam fieldName,
+                               StringParam attributeName,
+                               StringParam attributeParameter);
+    // Create or return a field by the given name/type. Creates or finds the
+    // attribute by the given name and returns it.
+    ShaderIRAttribute* AddResolvedField(StringParam fieldName,
+                                        StringParam fieldType,
+                                        StringParam attributeName);
 
     // Internal helper that creates a resolved field by name and type.
-    // Returns a pointer to the created field (should not be stored, the pointer is not safe).
-    ResolvedFieldInfo* CreateResolvedField(StringParam fieldName, StringParam fieldType);
+    // Returns a pointer to the created field (should not be stored, the pointer
+    // is not safe).
+    ResolvedFieldInfo* CreateResolvedField(StringParam fieldName,
+                                           StringParam fieldType);
 
-    /// Potential output from a this stage. These may become outputs if a later stage inputs them.
+    /// Potential output from a this stage. These may become outputs if a later
+    /// stage inputs them.
     OrderedHashMap<ShaderFieldKey, ExpectedOutputData> mExpectedOutputs;
     /// Actually resolved outputs (e.g. outputs that are input later).
     OrderedHashMap<ShaderFieldKey, ResolvedFieldOutputInfo> mResolvedOutputs;
@@ -253,7 +335,8 @@ public:
     OrderedHashSet<ShaderFieldKey> mHardwareInputs;
     OrderedHashSet<ShaderFieldKey> mHardwareOutputs;
 
-    /// The stage that owns this attachment point. Used to find what shader stage this is.
+    /// The stage that owns this attachment point. Used to find what shader
+    /// stage this is.
     StageLinkingInfo* mOwningStage;
     /// The previous/next stage attachment points that are currently active.
     StageAttachmentLinkingInfo* mPreviousStage;
@@ -261,8 +344,9 @@ public:
   };
 
   //-------------------------------------------------------------------StageLinkingInfo
-  /// Describes all info about a stage being composited. This includes the final properties 
-  /// on the composite as well as how each fragment's inputs/outputs are resolved.
+  /// Describes all info about a stage being composited. This includes the final
+  /// properties on the composite as well as how each fragment's inputs/outputs
+  /// are resolved.
   struct StageLinkingInfo
   {
     StageLinkingInfo();
@@ -272,14 +356,17 @@ public:
 
     /// All fragments belonging to the current stage.
     Array<ZilchShaderIRType*> mFragmentTypes;
-    /// Vertex types are types that transfer vertex data via the standard rendering pipeline.
-    /// This is the all vertex fragments, all pixel fragments, and the input/output types for the geometry streams.
-    /// Input/Output are split due to having separate input/output resolution for geometry stages (and later tessellation).
+    /// Vertex types are types that transfer vertex data via the standard
+    /// rendering pipeline. This is the all vertex fragments, all pixel
+    /// fragments, and the input/output types for the geometry streams.
+    /// Input/Output are split due to having separate input/output resolution
+    /// for geometry stages (and later tessellation).
     Array<ZilchShaderIRType*> mInputVertexTypes;
     Array<ZilchShaderIRType*> mOutputVertexTypes;
-    /// Any fragments that transfer data for a primitive. This is the primary geometry fragment (and later tessellation).
+    /// Any fragments that transfer data for a primitive. This is the primary
+    /// geometry fragment (and later tessellation).
     Array<ZilchShaderIRType*> mPrimitiveTypes;
-    
+
     /// Describes what each fragment's inputs were resolved to.
     HashMap<ZilchShaderIRType*, FragmentLinkingInfo> mFragmentLinkInfoMap;
 
@@ -304,7 +391,8 @@ public:
   };
 
   // Default callback zero uses for api perspective position.
-  static void ApiPerspectivePositionCallback(CompositorCallbackData& callbackData, void* userData);
+  static void ApiPerspectivePositionCallback(
+      CompositorCallbackData& callbackData, void* userData);
 };
 
 class CompositorCallbackData
@@ -315,4 +403,4 @@ public:
   ZilchShaderSpirVSettings* mSettings;
 };
 
-}//namespace Zero
+} // namespace Zero

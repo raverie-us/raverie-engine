@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -21,7 +16,7 @@ ZilchDefineType(JointMotor, builder, type)
   ZilchBindGetterSetterProperty(Speed)->ZeroSerialize(real(5));
   ZilchBindGetterSetterProperty(MaxImpulse)->ZeroSerialize(real(2));
 
-  if(Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
     ZilchBindGetterSetterProperty(AtomIds)->ZeroSerialize(255u);
   else
     ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
@@ -38,7 +33,7 @@ JointMotor::JointMotor()
 
 JointMotor::~JointMotor()
 {
-  if(mNode == nullptr)
+  if (mNode == nullptr)
     return;
 
   mNode->mMotor = nullptr;
@@ -54,7 +49,7 @@ void JointMotor::Serialize(Serializer& stream)
 void JointMotor::Initialize(CogInitializer& initializer)
 {
   Joint* joint = GetOwner()->has(Joint);
-  if(joint)
+  if (joint)
   {
     mNode = joint->mNode;
     mNode->mMotor = this;
@@ -79,7 +74,7 @@ bool JointMotor::GetActive() const
 void JointMotor::SetActive(bool active)
 {
   mFlags.SetState(JointMotorFlags::Active, active);
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -93,7 +88,7 @@ bool JointMotor::GetReverse() const
 void JointMotor::SetReverse(bool reverse)
 {
   mFlags.SetState(JointMotorFlags::Reverse, reverse);
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -107,7 +102,7 @@ uint JointMotor::GetAtomIds() const
 void JointMotor::SetAtomIds(uint atomIds)
 {
   mAtomIds = atomIds;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -121,7 +116,7 @@ real JointMotor::GetMaxImpulse() const
 void JointMotor::SetMaxImpulse(real maxImpulse)
 {
   mMaxImpulse = maxImpulse;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -135,10 +130,10 @@ real JointMotor::GetSpeed() const
 void JointMotor::SetSpeed(real speed)
 {
   mSpeed = speed;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
 }
 
-}//namespace Zero
+} // namespace Zero

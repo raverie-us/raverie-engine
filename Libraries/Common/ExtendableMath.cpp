@@ -1,17 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ExtendableMath.cpp
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2014, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
 
-//-------------------------------------------------------------------ExtendableVector
 void ExtendableVector::Resize(uint size)
 {
   mSize = size;
@@ -33,7 +25,6 @@ uint ExtendableVector::GetSize() const
   return mSize;
 }
 
-//-------------------------------------------------------------------ExtendableMatrix
 void ExtendableMatrix::Resize(uint sizeX, uint sizeY)
 {
   mSizeX = sizeX;
@@ -51,4 +42,4 @@ real ExtendableMatrix::operator()(uint y, uint x) const
   return mData[x + mSizeX * y];
 }
 
-}//namespace Math
+} // namespace Math

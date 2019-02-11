@@ -1,20 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 namespace Events
 {
-  DefineEvent(FileModified);
-  DefineEvent(FileCreated);
-  DefineEvent(FileDeleted);
-  DefineEvent(FileRenamed);
-}
+DefineEvent(FileModified);
+DefineEvent(FileCreated);
+DefineEvent(FileDeleted);
+DefineEvent(FileRenamed);
+} // namespace Events
 
 ZilchDefineType(EventDirectoryWatcher, builder, type)
 {
@@ -25,12 +20,17 @@ ZilchDefineType(FileEditEvent, builder, type)
 {
 }
 
-EventDirectoryWatcher::EventDirectoryWatcher(StringParam directory)
-  :mWatcher(directory.c_str(), DirectoryWatcher::CallBackCreator<EventDirectoryWatcher, &EventDirectoryWatcher::FileCallBack>, this)
+EventDirectoryWatcher::EventDirectoryWatcher(StringParam directory) :
+    mWatcher(
+        directory.c_str(),
+        DirectoryWatcher::CallBackCreator<EventDirectoryWatcher,
+                                          &EventDirectoryWatcher::FileCallBack>,
+        this)
 {
 }
 
-OsInt EventDirectoryWatcher::FileCallBack(DirectoryWatcher::FileOperationInfo& info)
+OsInt EventDirectoryWatcher::FileCallBack(
+    DirectoryWatcher::FileOperationInfo& info)
 {
   FileEditEvent* event = new FileEditEvent();
   event->FileName = info.FileName;
@@ -38,15 +38,15 @@ OsInt EventDirectoryWatcher::FileCallBack(DirectoryWatcher::FileOperationInfo& i
   event->TimeStamp = Time::Clock();
 
   String eventName = Events::FileModified;
-  if(info.Operation == DirectoryWatcher::Added)
+  if (info.Operation == DirectoryWatcher::Added)
     eventName = Events::FileCreated;
-  if(info.Operation == DirectoryWatcher::Removed)
+  if (info.Operation == DirectoryWatcher::Removed)
     eventName = Events::FileDeleted;
-  if(info.Operation == DirectoryWatcher::Renamed)
+  if (info.Operation == DirectoryWatcher::Renamed)
     eventName = Events::FileRenamed;
 
   Z::gDispatch->DispatchOn(this, this->GetDispatcher(), eventName, event);
   return 0;
 }
 
-}
+} // namespace Zero

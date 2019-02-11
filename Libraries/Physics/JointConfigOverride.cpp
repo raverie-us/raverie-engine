@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2012-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -19,9 +14,12 @@ ZilchDefineType(JointConfigOverride, builder, type)
   ZilchBindGetterSetterProperty(Slop)->ZeroSerialize(real(0.0));
   ZilchBindGetterSetterProperty(LinearBaumgarte)->ZeroSerialize(real(4.5));
   ZilchBindGetterSetterProperty(AngularBaumgarte)->ZeroSerialize(real(4.5));
-  ZilchBindGetterSetterProperty(LinearErrorCorrection)->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(AngularErrorCorrection)->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(PositionCorrectionType) ->ZeroSerialize(ConstraintPositionCorrection::Inherit);
+  ZilchBindGetterSetterProperty(LinearErrorCorrection)
+      ->ZeroSerialize(real(0.2));
+  ZilchBindGetterSetterProperty(AngularErrorCorrection)
+      ->ZeroSerialize(real(0.2));
+  ZilchBindGetterSetterProperty(PositionCorrectionType)
+      ->ZeroSerialize(ConstraintPositionCorrection::Inherit);
 
   ZeroBindTag(Tags::Physics);
   ZeroBindTag(Tags::Joint);
@@ -29,12 +27,11 @@ ZilchDefineType(JointConfigOverride, builder, type)
 
 JointConfigOverride::JointConfigOverride()
 {
-  
 }
 
 JointConfigOverride::~JointConfigOverride()
 {
-  if(mNode == nullptr)
+  if (mNode == nullptr)
     return;
 
   mNode->mConfigOverride = nullptr;
@@ -50,18 +47,21 @@ void JointConfigOverride::Serialize(Serializer& stream)
 void JointConfigOverride::Initialize(CogInitializer& initializer)
 {
   Joint* joint = GetOwner()->has(Joint);
-  if(joint)
+  if (joint)
   {
     mNode = joint->mNode;
     mNode->mConfigOverride = this;
   }
 
-  // If the joint is dynamically created, grab the default values from the current config
-  bool dynamicallyCreated = (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
-  if(dynamicallyCreated)
+  // If the joint is dynamically created, grab the default values from the
+  // current config
+  bool dynamicallyCreated =
+      (initializer.Flags & CreationFlags::DynamicallyAdded) != 0;
+  if (dynamicallyCreated)
   {
     PhysicsSolverConfig* config = joint->mSpace->GetPhysicsSolverConfig();
-    ConstraintConfigBlock& configBlock = config->mJointBlocks[joint->GetJointType()];
+    ConstraintConfigBlock& configBlock =
+        config->mJointBlocks[joint->GetJointType()];
     mSlop = configBlock.GetSlop();
     mLinearBaumgarte = configBlock.GetLinearBaumgarte();
     mAngularBaumgarte = configBlock.GetAngularBaumgarte();
@@ -107,7 +107,7 @@ real JointConfigOverride::GetLinearErrorCorrection()
 
 void JointConfigOverride::SetLinearErrorCorrection(real maxError)
 {
-  if(maxError < 0)
+  if (maxError < 0)
   {
     DoNotifyWarning("Invalid Value", "LinearErrorCorrection must be positive");
     maxError = 0;
@@ -123,7 +123,7 @@ real JointConfigOverride::GetAngularErrorCorrection()
 
 void JointConfigOverride::SetAngularErrorCorrection(real maxError)
 {
-  if(maxError < 0)
+  if (maxError < 0)
   {
     DoNotifyWarning("Invalid Value", "AngularErrorCorrection must be positive");
     maxError = 0;
@@ -132,14 +132,16 @@ void JointConfigOverride::SetAngularErrorCorrection(real maxError)
   mAngularErrorCorrection = maxError;
 }
 
-ConstraintPositionCorrection::Enum JointConfigOverride::GetPositionCorrectionType() const
+ConstraintPositionCorrection::Enum
+JointConfigOverride::GetPositionCorrectionType() const
 {
   return mPositionCorrectionType;
 }
 
-void JointConfigOverride::SetPositionCorrectionType(ConstraintPositionCorrection::Enum correctionType)
+void JointConfigOverride::SetPositionCorrectionType(
+    ConstraintPositionCorrection::Enum correctionType)
 {
   mPositionCorrectionType = correctionType;
 }
 
-}//namespace Zero
+} // namespace Zero

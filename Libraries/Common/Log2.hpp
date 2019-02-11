@@ -1,13 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Written as an unholy macro so it can be used at compile time.
-// We could have used a constexpr function instead of this madness if we had that C++11 feature!
+// We could have used a constexpr function instead of this madness if we had
+// that C++11 feature!
 
 #define LOG2_64(X) ((X) == 0 ? 63 : 0)
 #define LOG2_63(X) ((X) == 0 ? 62 : LOG2_64((X) >> 1))
@@ -63,17 +59,17 @@
 #define LOG2_13(X) ((X) == 0 ? 12 : LOG2_14((X) >> 1))
 #define LOG2_12(X) ((X) == 0 ? 11 : LOG2_13((X) >> 1))
 #define LOG2_11(X) ((X) == 0 ? 10 : LOG2_12((X) >> 1))
-#define LOG2_10(X) ((X) == 0 ? 9  : LOG2_11((X) >> 1))
-#define LOG2_9(X)  ((X) == 0 ? 8  : LOG2_10((X) >> 1))
-#define LOG2_8(X)  ((X) == 0 ? 7  : LOG2_9((X) >> 1))
-#define LOG2_7(X)  ((X) == 0 ? 6  : LOG2_8((X) >> 1))
-#define LOG2_6(X)  ((X) == 0 ? 5  : LOG2_7((X) >> 1))
-#define LOG2_5(X)  ((X) == 0 ? 4  : LOG2_6((X) >> 1))
-#define LOG2_4(X)  ((X) == 0 ? 3  : LOG2_5((X) >> 1))
-#define LOG2_3(X)  ((X) == 0 ? 2  : LOG2_4((X) >> 1))
-#define LOG2_2(X)  ((X) == 0 ? 1  : LOG2_3((X) >> 1))
-#define LOG2_1(X)  ((X) == 0 ? 0  : LOG2_2((X) >> 1))
-#define LOG2_0(X)  ((X) == 0 ? 0  : LOG2_1((X) >> 1))
+#define LOG2_10(X) ((X) == 0 ? 9 : LOG2_11((X) >> 1))
+#define LOG2_9(X) ((X) == 0 ? 8 : LOG2_10((X) >> 1))
+#define LOG2_8(X) ((X) == 0 ? 7 : LOG2_9((X) >> 1))
+#define LOG2_7(X) ((X) == 0 ? 6 : LOG2_8((X) >> 1))
+#define LOG2_6(X) ((X) == 0 ? 5 : LOG2_7((X) >> 1))
+#define LOG2_5(X) ((X) == 0 ? 4 : LOG2_6((X) >> 1))
+#define LOG2_4(X) ((X) == 0 ? 3 : LOG2_5((X) >> 1))
+#define LOG2_3(X) ((X) == 0 ? 2 : LOG2_4((X) >> 1))
+#define LOG2_2(X) ((X) == 0 ? 1 : LOG2_3((X) >> 1))
+#define LOG2_1(X) ((X) == 0 ? 0 : LOG2_2((X) >> 1))
+#define LOG2_0(X) ((X) == 0 ? 0 : LOG2_1((X) >> 1))
 
 /// Log base 2 of X
 #define LOG2(X) LOG2_0(X)

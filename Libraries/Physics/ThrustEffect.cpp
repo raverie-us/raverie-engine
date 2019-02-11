@@ -1,20 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-  
+
 ZilchDefineType(ThrustEffect, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDocumented();
-  
+
   ZilchBindGetterSetterProperty(LocalSpaceDirection)->ZeroSerialize(true);
   ZilchBindGetterSetterProperty(ForceStrength)->ZeroSerialize(real(10));
   ZilchBindGetterSetterProperty(ForceDirection)->ZeroSerialize(Vec3(0, 1, 0));
@@ -34,7 +29,7 @@ void ThrustEffect::Serialize(Serializer& stream)
 
 void ThrustEffect::DebugDraw()
 {
-  if(!GetDebugDrawEffect())
+  if (!GetDebugDrawEffect())
     return;
 
   PreCalculate(0);
@@ -45,7 +40,7 @@ void ThrustEffect::DebugDraw()
 
 void ThrustEffect::PreCalculate(real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // Update the cached center and direction
@@ -55,7 +50,7 @@ void ThrustEffect::PreCalculate(real dt)
 
 void ThrustEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // Apply the force to the rigid body at our thrust center
@@ -70,7 +65,7 @@ bool ThrustEffect::GetLocalSpaceDirection() const
 
 void ThrustEffect::SetLocalSpaceDirection(bool state)
 {
-  mThrustFlags.SetState(ThrustFlags::LocalSpaceDirection,state);
+  mThrustFlags.SetState(ThrustFlags::LocalSpaceDirection, state);
   CheckWakeUp();
 }
 
@@ -99,10 +94,10 @@ void ThrustEffect::SetForceDirection(Vec3Param force)
 Vec3 ThrustEffect::GetWorldForceDirection() const
 {
   Vec3 worldThrustDirection = mForceDirection;
-  if(mThrustFlags.IsSet(ThrustFlags::LocalSpaceDirection))
+  if (mThrustFlags.IsSet(ThrustFlags::LocalSpaceDirection))
     worldThrustDirection = TransformLocalDirectionToWorld(worldThrustDirection);
   // Always re-normalize the world axis
   return worldThrustDirection.AttemptNormalized();
 }
 
-}//namespace Zero
+} // namespace Zero

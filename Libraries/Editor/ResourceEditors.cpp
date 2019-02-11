@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceEditors.cpp
-/// 
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -41,7 +33,7 @@ void EditLevel(Editor* editor, Resource* resource)
   // Clear the undo queue
   editor->mQueue->ClearAll();
 
-  //Force tab area to update so name is changed
+  // Force tab area to update so name is changed
   editor->GetCenterWindow()->mTabArea->MarkAsNeedsUpdate();
 }
 
@@ -49,7 +41,7 @@ void EditArchetype(Editor* editor, Resource* resource)
 {
   Archetype* archetype = Type::DynamicCast<Archetype*>(resource);
 
-  if(!allowArchetypeEditing)
+  if (!allowArchetypeEditing)
   {
     // Just use property grid
     editor->mMainPropertyView->EditObject(resource, true);
@@ -57,7 +49,7 @@ void EditArchetype(Editor* editor, Resource* resource)
   }
 
   // Can only edit cog archetypes
-  if(archetype->mStoredType != ZilchTypeId(Cog))
+  if (archetype->mStoredType != ZilchTypeId(Cog))
     return;
 
   Space* space = editor->CreateNewSpace(CreationFlags::Editing);
@@ -112,7 +104,8 @@ void EditSampleCurve(Editor* editor, Resource* resource)
 void EditColorGradient(Editor* editor, Resource* resource)
 {
   ColorGradient* gradient = (ColorGradient*)resource;
-  ColorGradientEditor* gradientEditor = new ColorGradientEditor(editor, gradient);
+  ColorGradientEditor* gradientEditor =
+      new ColorGradientEditor(editor, gradient);
   gradientEditor->SetName(gradient->Name);
   gradientEditor->SetSize(Pixels(375, 80));
   editor->AddManagedWidget(gradientEditor, DockArea::Floating, true);
@@ -139,38 +132,41 @@ void EditCollisionTable(Editor* editor, Resource* resource)
 void EditMultiConvexMesh(Editor* editor, Resource* resource)
 {
   MultiConvexMesh* mesh = (MultiConvexMesh*)resource;
-  //prevent the user from editing the default resource
-  if(mesh == MultiConvexMeshManager::GetInstance()->GetDefaultResource())
+  // prevent the user from editing the default resource
+  if (mesh == MultiConvexMeshManager::GetInstance()->GetDefaultResource())
   {
-    DoNotifyWarning("Cannot edit default resource.", "Please add a new MultiConvexMesh resource to start editing");
+    DoNotifyWarning(
+        "Cannot edit default resource.",
+        "Please add a new MultiConvexMesh resource to start editing");
     return;
   }
 
   MultiConvexMeshEditor* meshEditor = new MultiConvexMeshEditor(editor, mesh);
 
-  //clamp the mesh editor's size to the main editor's size (so the window isn't off screen)
+  // clamp the mesh editor's size to the main editor's size (so the window isn't
+  // off screen)
   Vec2 size = Pixels(1000, 800);
   size = Math::Min(editor->GetSize(), size);
   meshEditor->SetSize(size);
   meshEditor->SetName(BuildString("MultiConvexMesh: ", mesh->Name));
 
-  //try to set the current sprite on the object as the preview sprite
+  // try to set the current sprite on the object as the preview sprite
   Cog* primarySelection = editor->GetSelection()->GetPrimaryAs<Cog>();
-  if(primarySelection != nullptr)
+  if (primarySelection != nullptr)
   {
     Sprite* sprite = primarySelection->has(Sprite);
-    if(sprite != nullptr)
+    if (sprite != nullptr)
     {
       meshEditor->UpdatePreview(sprite->mSpriteSource);
       meshEditor->SetGridSizeToPixels();
-      if(mesh->mFlags.IsSet(MultiConvexMeshFlags::NewlyCreatedInEditor))
+      if (mesh->mFlags.IsSet(MultiConvexMeshFlags::NewlyCreatedInEditor))
       {
         meshEditor->AutoCompute();
         mesh->mFlags.ClearFlag(MultiConvexMeshFlags::NewlyCreatedInEditor);
       }
     }
   }
-  //zoom in to the appropriate level for the current mesh and sprite
+  // zoom in to the appropriate level for the current mesh and sprite
   meshEditor->FocusOnPreviewCog();
   editor->AddManagedWidget(meshEditor, DockArea::Floating, true);
 }
@@ -180,7 +176,7 @@ void EditAnimation(Editor* editor, Resource* resource)
   Animation* animation = (Animation*)resource;
 
   Archetype* previewArchetype = GetAnimationPreviewArchetype(animation);
-  if(previewArchetype == nullptr)
+  if (previewArchetype == nullptr)
   {
     editor->GetSelection()->SelectOnly(resource);
     editor->GetSelection()->FinalSelectionChanged();
@@ -243,12 +239,12 @@ void ResourceEditors::FindResourceEditor(Resource* resource)
   // Try to find a resource editor for this resource type
   // Also check base types of the resource for resources
   // that share editors like document resources
-  BoundType* currentType =  resourceType;
-  while(currentType)
+  BoundType* currentType = resourceType;
+  while (currentType)
   {
     // Get resource editor
     EditResourceFunction editResource = Editors.FindValue(currentType, nullptr);
-    if(editResource)
+    if (editResource)
     {
       editResource(editor, resource);
       return;
@@ -264,4 +260,4 @@ void ResourceEditors::FindResourceEditor(Resource* resource)
   selection->FinalSelectionChanged();
 }
 
-}
+} // namespace Zero

@@ -1,7 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,8 +11,8 @@ class TextButton;
 
 namespace Events
 {
-  DeclareEvent(BugReporterResponse);
-}//namespace Events
+DeclareEvent(BugReporterResponse);
+} // namespace Events
 
 /// Event carrying the AsyncWebRequest back to the main thread
 /// so we can run it and listen for the completed response.
@@ -41,14 +38,14 @@ public:
   void OnBrowse(Event* event);
   void OnBrowseSelected(OsFileSelection* event);
   void OnUpdate(UpdateEvent* event);
-  
+
   TextBox* mUsername;
   TextBox* mTitle;
   TextEditor* mDescription;
   TextEditor* mRepro;
   TextButton* mSend;
   SelectorButton* mSelectorButton;
-  
+
   TextBox* mIncludeFile;
   TextButton* mBrowse;
   TextCheckBox* mIncludeClipboardImage;
@@ -56,7 +53,6 @@ public:
   TextCheckBox* mIncludeProject;
   bool mSent;
 };
-
 
 class BugReportJob : public Job
 {
@@ -77,5 +73,4 @@ public:
   Image mClipboardImage;
 };
 
-
-}//namespace Zero
+} // namespace Zero

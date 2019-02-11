@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Includes
@@ -16,30 +11,30 @@ namespace Zero
 /// Contains a sorted set of unique objects in a contiguous dynamic array
 /// Search, insertion, and removal operations have O(log n) complexity
 /// Functionality is similar to std::set but with better performance
-template<typename ValueType,
-         typename Sorter    = SortPolicy<ValueType>,
-         typename Allocator = DefaultAllocator>
+template <typename ValueType,
+          typename Sorter = SortPolicy<ValueType>,
+          typename Allocator = DefaultAllocator>
 class ArraySet : public SortedArray<ValueType, Sorter, Allocator>
 {
 public:
   /// Typedefs
-  typedef ArraySet<ValueType, Sorter, Allocator>    this_type;
+  typedef ArraySet<ValueType, Sorter, Allocator> this_type;
   typedef SortedArray<ValueType, Sorter, Allocator> sorted_array_type;
-  typedef sorted_array_type                         base_type;
+  typedef sorted_array_type base_type;
 
-  typedef typename base_type::reference             reference;
-  typedef typename base_type::const_reference       const_reference;
-  typedef typename base_type::value_type            value_type;
-  typedef typename base_type::pointer_bool_pair     pointer_bool_pair;
-  typedef typename base_type::iterator              iterator;
-  typedef typename base_type::size_type             size_type;
+  typedef typename base_type::reference reference;
+  typedef typename base_type::const_reference const_reference;
+  typedef typename base_type::value_type value_type;
+  typedef typename base_type::pointer_bool_pair pointer_bool_pair;
+  typedef typename base_type::iterator iterator;
+  typedef typename base_type::size_type size_type;
 
 protected:
   /// Base methods hidden to provide container behavior
-  using base_type::FindAll;
-  using base_type::Insert;
   using base_type::Assign;
   using base_type::EraseAll;
+  using base_type::FindAll;
+  using base_type::Insert;
 
 public:
   //
@@ -47,32 +42,30 @@ public:
   //
 
   /// Default Constructor
-  ArraySet()
-    : base_type()
+  ArraySet() : base_type()
   {
   }
 
   /// Copy Constructor
-  ArraySet(const this_type& rhs)
-    : base_type(rhs)
+  ArraySet(const this_type& rhs) : base_type(rhs)
   {
   }
 
   /// Move Constructor
-  ArraySet(MoveReference<this_type> rhs)
-    : base_type(ZeroMove(static_cast<base_type&>(*rhs)))
+  ArraySet(MoveReference<this_type> rhs) :
+      base_type(ZeroMove(static_cast<base_type&>(*rhs)))
   {
   }
 
   /// Copy Assignment Operator
-  ArraySet& operator =(const this_type& rhs)
+  ArraySet& operator=(const this_type& rhs)
   {
     base_type::operator=(rhs);
     return *this;
   }
 
   /// Move Assignment Operator
-  ArraySet& operator =(MoveReference<this_type> rhs)
+  ArraySet& operator=(MoveReference<this_type> rhs)
   {
     base_type::operator=(ZeroMove(static_cast<base_type&>(*rhs)));
     return *this;
@@ -87,9 +80,10 @@ public:
   reference FindOrInsert(const_reference value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
-    if(position != base_type::End()
-    && base_type::mSorter.Equal(*position, value)) // Found?
+    iterator position =
+        LowerBound(base_type::All(), value, base_type::mSorter).Begin();
+    if (position != base_type::End() &&
+        base_type::mSorter.Equal(*position, value)) // Found?
       return *position;
     else
     {
@@ -102,9 +96,10 @@ public:
   reference FindOrInsert(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
-    if(position != base_type::End()
-    && base_type::mSorter.Equal(*position, *value)) // Found?
+    iterator position =
+        LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
+    if (position != base_type::End() &&
+        base_type::mSorter.Equal(*position, *value)) // Found?
       return *position;
     else
     {
@@ -116,14 +111,16 @@ public:
   }
 
   /// Inserts a unique element at it's sorted position in the array
-  /// Returns a pair consisting of a pointer to the inserted element (or the equivalent element which prevented it's insertion),
-  /// and a bool which will be true if the insertion took place, else false if no changes were made
+  /// Returns a pair consisting of a pointer to the inserted element (or the
+  /// equivalent element which prevented it's insertion), and a bool which will
+  /// be true if the insertion took place, else false if no changes were made
   pointer_bool_pair Insert(const_reference value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
-    if(position != base_type::End()
-    && base_type::mSorter.Equal(*position, value)) // Found?
+    iterator position =
+        LowerBound(base_type::All(), value, base_type::mSorter).Begin();
+    if (position != base_type::End() &&
+        base_type::mSorter.Equal(*position, value)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
@@ -136,9 +133,10 @@ public:
   pointer_bool_pair Insert(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
-    if(position != base_type::End()
-    && base_type::mSorter.Equal(*position, *value)) // Found?
+    iterator position =
+        LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
+    if (position != base_type::End() &&
+        base_type::mSorter.Equal(*position, *value)) // Found?
       return pointer_bool_pair(position, false);
     else
     {
@@ -149,15 +147,18 @@ public:
     }
   }
 
-  /// Inserts a unique element at it's sorted position in the array or assigns over a previously inserted equivalent element
-  /// Returns a pair consisting of a pointer to the inserted element (or the equivalent element which was assigned to),
-  /// and a bool which will be true if the insertion took place, else false if the assignment took place
+  /// Inserts a unique element at it's sorted position in the array or assigns
+  /// over a previously inserted equivalent element Returns a pair consisting of
+  /// a pointer to the inserted element (or the equivalent element which was
+  /// assigned to), and a bool which will be true if the insertion took place,
+  /// else false if the assignment took place
   pointer_bool_pair InsertOrAssign(const_reference value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), value, base_type::mSorter).Begin();
-    if(position != base_type::End()
-    && base_type::mSorter.Equal(*position, value)) // Found?
+    iterator position =
+        LowerBound(base_type::All(), value, base_type::mSorter).Begin();
+    if (position != base_type::End() &&
+        base_type::mSorter.Equal(*position, value)) // Found?
     {
       // Assign over equivalent element
       *position = value;
@@ -174,9 +175,10 @@ public:
   pointer_bool_pair InsertOrAssign(MoveReference<value_type> value)
   {
     // Get lower bound
-    iterator position = LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
-    if(position != base_type::End()
-    && base_type::mSorter.Equal(*position, *value)) // Found?
+    iterator position =
+        LowerBound(base_type::All(), *value, base_type::mSorter).Begin();
+    if (position != base_type::End() &&
+        base_type::mSorter.Equal(*position, *value)) // Found?
     {
       // Assign over equivalent element
       *position = ZeroMove(value);
@@ -192,40 +194,41 @@ public:
   }
 
   /// Inserts a range of elements at their sorted positions in the array
-  template<typename iteratorType>
+  template <typename iteratorType>
   void Insert(iteratorType begin, iteratorType end)
   {
     Insert(BuildRange(begin, end));
   }
-  template<typename inputRangeType>
+  template <typename inputRangeType>
   void Insert(inputRangeType inputRange)
   {
     // Insert all elements in range
-    for( ; inputRange.Empty(); inputRange.PopFront())
+    for (; inputRange.Empty(); inputRange.PopFront())
       Insert(inputRange.Front());
   }
-  template<typename inputRangeType>
+  template <typename inputRangeType>
   void Insert(MoveReference<inputRangeType> inputRange)
   {
     // Insert all elements in range
-    for( ; inputRange.Empty(); inputRange.PopFront())
+    for (; inputRange.Empty(); inputRange.PopFront())
       Insert(ZeroMove(inputRange.Front()));
   }
 
-  /// Clears the array and inserts a range of elements at their sorted positions in the array
-  template<typename iteratorType>
+  /// Clears the array and inserts a range of elements at their sorted positions
+  /// in the array
+  template <typename iteratorType>
   void Assign(iteratorType begin, iteratorType end)
   {
     base_type::Clear();
     Insert(BuildRange(begin, end));
   }
-  template<typename inputRangeType>
+  template <typename inputRangeType>
   void Assign(inputRangeType range)
   {
     base_type::Clear();
     Insert(range);
   }
-  template<typename inputRangeType>
+  template <typename inputRangeType>
   void Assign(MoveReference<inputRangeType> range)
   {
     base_type::Clear();

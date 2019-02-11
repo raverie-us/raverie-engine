@@ -1,14 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Common/Utilities.hpp"
 #include "Common/FileSystem.hpp"
 #include "Common/CrashHandler.hpp"
-
 
 #include <unistd.h>
 #include <pwd.h>
@@ -21,7 +15,7 @@ namespace Os
 
 void Sleep(uint ms)
 {
-  usleep (ms * 1000);
+  usleep(ms * 1000);
 }
 
 void DebugBreak()
@@ -31,7 +25,7 @@ void DebugBreak()
 
 void SystemOpenFile(cstr file, uint verb, cstr workingDirectory)
 {
-  if(workingDirectory)
+  if (workingDirectory)
     SetWorkingDirectory(workingDirectory);
   system(file);
 }
@@ -46,9 +40,11 @@ bool IsDebuggerAttached()
   return false;
 }
 
-void SystemOpenFile(cstr file, uint verb, cstr parameters, cstr workingDirectory)
+void SystemOpenFile(cstr file,
+                    uint verb,
+                    cstr parameters,
+                    cstr workingDirectory)
 {
-  
 }
 
 String UserName()
@@ -75,7 +71,7 @@ void SetTimerFrequency(uint ms)
   // Not available on linux
 }
 
-}//namespace Os
+} // namespace Os
 
 u64 GenerateUniqueId64()
 {
@@ -84,10 +80,8 @@ u64 GenerateUniqueId64()
   return idGen + rand();
 }
 
-
 void CheckClassMemory(cstr className, byte* classMemory)
 {
-
 }
 
 void FatalError(int exitCode)
@@ -95,4 +89,4 @@ void FatalError(int exitCode)
   exit(exitCode);
 }
 
-}//namespace Zero
+} // namespace Zero

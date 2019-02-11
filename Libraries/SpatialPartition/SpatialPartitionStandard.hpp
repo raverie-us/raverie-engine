@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SpatialPartitionStandard.hpp
-/// Standard includes for the SpatialPartition library.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Standard includes
@@ -26,7 +18,7 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} // namespace Zero
 
 // Project includes
 #include "BroadPhaseProxy.hpp"

@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,10 +7,9 @@ namespace Zero
 namespace Location
 {
 
-//**************************************************************************************************
 bool IsCardinal(Location::Enum location)
 {
-  switch(location)
+  switch (location)
   {
   case Location::CenterLeft:
   case Location::TopCenter:
@@ -27,10 +21,9 @@ bool IsCardinal(Location::Enum location)
   }
 }
 
-//**************************************************************************************************
 int GetCardinalAxis(Location::Enum location)
 {
-  switch(location)
+  switch (location)
   {
   case Location::CenterLeft:
   case Location::CenterRight:
@@ -39,15 +32,15 @@ int GetCardinalAxis(Location::Enum location)
   case Location::BottomCenter:
     return 1;
   default:
-    DoNotifyException("Location not supported.", "The given location is not a cardinal axis");
+    DoNotifyException("Location not supported.",
+                      "The given location is not a cardinal axis");
     return -1;
   }
 }
 
-//**************************************************************************************************
 Vec2 GetDirection(Location::Enum location)
 {
-  switch(location)
+  switch (location)
   {
   case Location::TopLeft:
     return Vec2(-0.5f, 0.5f);
@@ -73,7 +66,6 @@ Vec2 GetDirection(Location::Enum location)
   }
 }
 
-//**************************************************************************************************
 Vec2 GetDirection(Location::Enum from, Location::Enum to)
 {
   Vec2 centerToFrom = GetDirection(from);
@@ -81,10 +73,9 @@ Vec2 GetDirection(Location::Enum from, Location::Enum to)
   return centerToTo - centerToFrom;
 }
 
-//**************************************************************************************************
 Location::Enum GetOpposite(Location::Enum location)
 {
-  switch(location)
+  switch (location)
   {
   case Location::TopLeft:
     return Location::BottomRight;
@@ -110,12 +101,11 @@ Location::Enum GetOpposite(Location::Enum location)
   }
 }
 
-} //namespace Location
+} // namespace Location
 
-//---------------------------------------------------------------------------------------- Thickness
+//Thickness
 const Thickness Thickness::cZero(0, 0, 0, 0);
 
-//**************************************************************************************************
 ZilchDefineType(Thickness, builder, type)
 {
   type->CreatableInScript = true;
@@ -138,63 +128,65 @@ ZilchDefineType(Thickness, builder, type)
   ZilchBindMethod(TopLeft);
 }
 
-//**************************************************************************************************
-Thickness::Thickness()
-  : Left(0), Top(0), Right(0), Bottom(0)
-{
-
-}
-
-//**************************************************************************************************
-Thickness::Thickness(float splat)
-  : Left(splat), Top(splat), Right(splat), Bottom(splat)
+Thickness::Thickness() : Left(0), Top(0), Right(0), Bottom(0)
 {
 }
 
-//**************************************************************************************************
-Thickness::Thickness(float left, float top, float right, float bottom)
-  : Left(left), Top(top), Right(right), Bottom(bottom)
+Thickness::Thickness(float splat) :
+    Left(splat),
+    Top(splat),
+    Right(splat),
+    Bottom(splat)
 {
-
 }
 
-//**************************************************************************************************
-Thickness::Thickness(Vec4 vector)
-  : Left(vector.x), Top(vector.y), Right(vector.z), Bottom(vector.w)
+Thickness::Thickness(float left, float top, float right, float bottom) :
+    Left(left),
+    Top(top),
+    Right(right),
+    Bottom(bottom)
 {
-
 }
 
-//**************************************************************************************************
-Thickness::Thickness(float leftRight, float topBottom)
-  : Left(leftRight), Top(topBottom), Right(leftRight), Bottom(topBottom)
+Thickness::Thickness(Vec4 vector) :
+    Left(vector.x),
+    Top(vector.y),
+    Right(vector.z),
+    Bottom(vector.w)
 {
-
 }
 
-//**************************************************************************************************
-Thickness::Thickness(Vec2 vector)
-  : Left(vector.x), Top(vector.y), Right(vector.x), Bottom(vector.y)
+Thickness::Thickness(float leftRight, float topBottom) :
+    Left(leftRight),
+    Top(topBottom),
+    Right(leftRight),
+    Bottom(topBottom)
 {
-
 }
 
-//**************************************************************************************************
+Thickness::Thickness(Vec2 vector) :
+    Left(vector.x),
+    Top(vector.y),
+    Right(vector.x),
+    Bottom(vector.y)
+{
+}
+
 Thickness Thickness::All(float amount)
 {
   return Thickness(amount, amount, amount, amount);
 }
 
-//**************************************************************************************************
 Thickness Thickness::operator+(const Thickness& rhs)
 {
-  return Thickness(Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
+  return Thickness(
+      Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
 }
 
-//------------------------------------------------------------------------------------------ Ui Rect
-const Rectangle Rectangle::cZero = Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
+//Ui Rect
+const Rectangle Rectangle::cZero =
+    Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 
-//**************************************************************************************************
 ZilchDefineType(Rectangle, builder, type)
 {
   type->CreatableInScript = true;
@@ -203,17 +195,24 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindFieldProperty(Max);
   ZilchBindGetterProperty(Size);
   ZilchBindMethod(SetSize);
-  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, float));
-  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
-  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
+  ZilchBindOverloadedMethod(ResizeToPoint,
+                            ZilchInstanceOverload(void, Location::Enum, float));
+  ZilchBindOverloadedMethod(
+      ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+  ZilchBindOverloadedMethod(
+      ResizeToPoint,
+      ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
   ZilchBindMethod(Expand);
 
   ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat2Param));
   ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat3Param));
   ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat4Param));
-  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat2Param));
-  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat3Param));
-  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat4Param));
+  ZilchBindOverloadedMethod(Transformed,
+                            ZilchConstInstanceOverload(Rectangle, Mat2Param));
+  ZilchBindOverloadedMethod(Transformed,
+                            ZilchConstInstanceOverload(Rectangle, Mat3Param));
+  ZilchBindOverloadedMethod(Transformed,
+                            ZilchConstInstanceOverload(Rectangle, Mat4Param));
 
   ZilchBindGetterSetterProperty(TopLeft);
   ZilchBindGetterSetterProperty(TopRight);
@@ -226,8 +225,10 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindGetterSetterProperty(Top);
   ZilchBindGetterSetterProperty(Bottom);
 
-  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, Vec2Param));
-  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, RectangleParam));
+  ZilchBindOverloadedMethod(Contains,
+                            ZilchConstInstanceOverload(bool, Vec2Param));
+  ZilchBindOverloadedMethod(Contains,
+                            ZilchConstInstanceOverload(bool, RectangleParam));
   ZilchBindMethodAs(Overlap, "Overlaps");
 
   Zilch::Function* overlapFn = ZilchBindMethodAs(Overlap, "Overlap");
@@ -237,20 +238,20 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindMethod(RemoveThickness);
 
   ZilchBindMethod(GetCardinalLocation);
-  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, float));
+  ZilchBindOverloadedMethod(SetLocation,
+                            ZilchInstanceOverload(void, Location::Enum, float));
   ZilchBindMethod(GetLocation);
-  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+  ZilchBindOverloadedMethod(
+      SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
 
   type->ToStringFunction = Zilch::BoundTypeToGlobalToString<Rectangle>;
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::PointAndSize(Vec2Param point, Vec2Param size)
 {
   return MinAndMax(point, point + size);
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::CenterAndSize(Vec2Param point, Vec2Param size)
 {
   Vec2 halfSize = size * 0.5f;
@@ -258,7 +259,6 @@ Rectangle Rectangle::CenterAndSize(Vec2Param point, Vec2Param size)
   return MinAndMax(point - halfSize, point + halfSize);
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::MinAndMax(Vec2Param min, Vec2Param max)
 {
   Rectangle r;
@@ -267,7 +267,6 @@ Rectangle Rectangle::MinAndMax(Vec2Param min, Vec2Param max)
   return r;
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::MinAndMax(Vec3Param min, Vec3Param max)
 {
   Rectangle r;
@@ -276,30 +275,32 @@ Rectangle Rectangle::MinAndMax(Vec3Param min, Vec3Param max)
   return r;
 }
 
-//**************************************************************************************************
 bool Rectangle::operator==(RectangleParam rhs) const
 {
   return (Min == rhs.Min) && (Max == rhs.Max);
 }
 
-//**************************************************************************************************
 void Rectangle::Translate(Vec2Param translation)
 {
   Min += translation;
   Max += translation;
 }
 
-//**************************************************************************************************
 void Rectangle::Transform(Mat2Param transform)
 {
-  Mat3 mat3(transform.m00, transform.m01, 0,
-            transform.m10, transform.m11, 0,
-            0,             0,             1);
+  Mat3 mat3(transform.m00,
+            transform.m01,
+            0,
+            transform.m10,
+            transform.m11,
+            0,
+            0,
+            0,
+            1);
 
   Transform(mat3);
 }
 
-//**************************************************************************************************
 void Rectangle::Transform(Mat3Param transform)
 {
   Mat2 rotationScale = Math::ToMatrix2(transform);
@@ -317,7 +318,6 @@ void Rectangle::Transform(Mat3Param transform)
   Max = center + halfExtent;
 }
 
-//**************************************************************************************************
 void Rectangle::Transform(Mat4Param transform)
 {
   Aabb aabb;
@@ -327,7 +327,6 @@ void Rectangle::Transform(Mat4Param transform)
   Max = ToVector2(aabb.mMax);
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::Transformed(Mat2Param transform) const
 {
   Rectangle other = *this;
@@ -335,7 +334,6 @@ Rectangle Rectangle::Transformed(Mat2Param transform) const
   return other;
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::Transformed(Mat3Param transform) const
 {
   Rectangle other = *this;
@@ -343,7 +341,6 @@ Rectangle Rectangle::Transformed(Mat3Param transform) const
   return other;
 }
 
-//**************************************************************************************************
 Rectangle Rectangle::Transformed(Mat4Param transform) const
 {
   Rectangle other = *this;
@@ -351,16 +348,14 @@ Rectangle Rectangle::Transformed(Mat4Param transform) const
   return other;
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetSize() const
 {
   return Max - Min;
 }
 
-//**************************************************************************************************
 void Rectangle::SetSize(Location::Enum origin, Vec2Param size)
 {
-  switch(origin)
+  switch (origin)
   {
   case Location::TopLeft:
   {
@@ -415,36 +410,37 @@ void Rectangle::SetSize(Location::Enum origin, Vec2Param size)
   }
 }
 
-//**************************************************************************************************
 void Rectangle::ResizeToPoint(Location::Enum location, float position)
 {
-  switch(location)
+  switch (location)
   {
   case Location::CenterLeft:
   case Location::TopCenter:
   case Location::CenterRight:
   case Location::BottomCenter:
-    {
-      Vec2 position2 = Vec2::cZero;
-      int axis = Location::GetCardinalAxis(location);
-      position2[axis] = position;
-      ResizeToPoint(location, position2);
-      break;
-    }
+  {
+    Vec2 position2 = Vec2::cZero;
+    int axis = Location::GetCardinalAxis(location);
+    position2[axis] = position;
+    ResizeToPoint(location, position2);
+    break;
+  }
   default:
-    {
-    DoNotifyException("Location not supported.", "The given location is not a cardinal axis");
-    }
+  {
+    DoNotifyException("Location not supported.",
+                      "The given location is not a cardinal axis");
+  }
   }
 }
 
-//**************************************************************************************************
 void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position)
 {
   ResizeToPoint(location, position, Vec2::cZero);
 }
 
-void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position, Vec2Param minSize)
+void Rectangle::ResizeToPoint(Location::Enum location,
+                              Vec2Param position,
+                              Vec2Param minSize)
 {
   switch (location)
   {
@@ -492,12 +488,13 @@ void Rectangle::ResizeToPoint(Location::Enum location, Vec2Param position, Vec2P
   }
   case Location::Center:
   {
-    DoNotifyException("Location not supported.", "Location.Center is not implemented as it doesn't make sense in this context.");
+    DoNotifyException("Location not supported.",
+                      "Location.Center is not implemented as it doesn't make "
+                      "sense in this context.");
   }
   }
 }
 
-//**************************************************************************************************
 void Rectangle::Expand(Vec2Param point)
 {
   Min.x = Math::Min(Min.x, point.x);
@@ -507,37 +504,33 @@ void Rectangle::Expand(Vec2Param point)
   Max.y = Math::Max(Max.y, point.y);
 }
 
-//**************************************************************************************************
 bool Rectangle::Contains(Vec2Param point) const
 {
-  if (point.x < Min.x) return false;
-  if (point.x > Max.x) return false;
-  if (point.y < Min.y) return false;
-  if (point.y > Max.y) return false;
+  if (point.x < Min.x)
+    return false;
+  if (point.x > Max.x)
+    return false;
+  if (point.y < Min.y)
+    return false;
+  if (point.y > Max.y)
+    return false;
   return true;
 }
 
-//**************************************************************************************************
 bool Rectangle::Contains(RectangleParam other) const
 {
-  return (Min.x <= other.Min.x) &&
-         (Min.y <= other.Min.y) &&
-         (Max.x >= other.Max.x) &&
-         (Max.y >= other.Max.y);
+  return (Min.x <= other.Min.x) && (Min.y <= other.Min.y) &&
+         (Max.x >= other.Max.x) && (Max.y >= other.Max.y);
 }
 
-//**************************************************************************************************
 bool Rectangle::Overlap(RectangleParam other) const
 {
-  bool noOverlap = (Min.x > other.Max.x) ||
-                   (Min.y > other.Max.y) ||
-                   (other.Min.x > Max.x) ||
-                   (other.Min.y > Max.y);
+  bool noOverlap = (Min.x > other.Max.x) || (Min.y > other.Max.y) ||
+                   (other.Min.x > Max.x) || (other.Min.y > Max.y);
 
   return !noOverlap;
 }
 
-//**************************************************************************************************
 void Rectangle::RemoveThickness(const Thickness& thickness)
 {
   Min.x += thickness.Left;
@@ -546,118 +539,99 @@ void Rectangle::RemoveThickness(const Thickness& thickness)
   Max.y -= thickness.Top;
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetTopLeft() const
 {
   return Vec2(Min.x, Max.y);
 }
 
-//**************************************************************************************************
 void Rectangle::SetTopLeft(Vec2Param point)
 {
   Translate(point - GetTopLeft());
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetTopRight() const
 {
   return Max;
 }
 
-//**************************************************************************************************
 void Rectangle::SetTopRight(Vec2Param point)
 {
   Translate(point - GetTopRight());
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetBottomLeft() const
 {
   return Min;
 }
 
-//**************************************************************************************************
 void Rectangle::SetBottomLeft(Vec2Param point)
 {
   Translate(point - GetBottomLeft());
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetBottomRight() const
 {
   return Vec2(Max.x, Min.y);
 }
 
-//**************************************************************************************************
 void Rectangle::SetBottomRight(Vec2Param point)
 {
   Translate(point - GetBottomRight());
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetCenter() const
 {
   return (Min + Max) * 0.5;
 }
 
-//**************************************************************************************************
 void Rectangle::SetCenter(Vec2Param point)
 {
   Translate(point - GetCenter());
 }
 
-//**************************************************************************************************
 float Rectangle::GetLeft() const
 {
   return Min.x;
 }
 
-//**************************************************************************************************
 void Rectangle::SetLeft(float left)
 {
   Translate(Vec2(left - GetLeft(), 0));
 }
 
-//**************************************************************************************************
 float Rectangle::GetRight() const
 {
   return Max.x;
 }
 
-//**************************************************************************************************
 void Rectangle::SetRight(float right)
 {
   Translate(Vec2(right - GetRight(), 0));
 }
 
-//**************************************************************************************************
 float Rectangle::GetTop() const
 {
   return Max.y;
 }
 
-//**************************************************************************************************
 void Rectangle::SetTop(float top)
 {
   Translate(Vec2(0, top - GetTop()));
 }
 
-//**************************************************************************************************
 float Rectangle::GetBottom() const
 {
   return Min.y;
 }
 
-//**************************************************************************************************
 void Rectangle::SetBottom(float bottom)
 {
   Translate(Vec2(0, bottom - GetBottom()));
 }
 
-//**************************************************************************************************
 float Rectangle::GetCardinalLocation(Location::Enum location)
 {
-  switch(location)
+  switch (location)
   {
   case Location::CenterLeft:
     return GetLeft();
@@ -668,16 +642,16 @@ float Rectangle::GetCardinalLocation(Location::Enum location)
   case Location::BottomCenter:
     return GetBottom();
   default:
-    DoNotifyException("Location not supported.", "Only cardinal axes are supported.");
+    DoNotifyException("Location not supported.",
+                      "Only cardinal axes are supported.");
   }
 
   return 0.0f;
 }
 
-//**************************************************************************************************
 void Rectangle::SetLocation(Location::Enum location, float value)
 {
-  switch(location)
+  switch (location)
   {
   case Location::CenterLeft:
   {
@@ -700,11 +674,11 @@ void Rectangle::SetLocation(Location::Enum location, float value)
     break;
   }
   default:
-    DoNotifyException("Location not supported.", "Only cardinal axes are supported.");
+    DoNotifyException("Location not supported.",
+                      "Only cardinal axes are supported.");
   }
 }
 
-//**************************************************************************************************
 Vec2 Rectangle::GetLocation(Location::Enum location) const
 {
   Vec2 bottomLeft = GetBottomLeft();
@@ -713,10 +687,9 @@ Vec2 Rectangle::GetLocation(Location::Enum location) const
   return bottomLeft + (toLocation * size);
 }
 
-//**************************************************************************************************
 void Rectangle::SetLocation(Location::Enum location, Vec2Param value)
 {
-  switch(location)
+  switch (location)
   {
   case Location::TopLeft:
   {
@@ -744,11 +717,11 @@ void Rectangle::SetLocation(Location::Enum location, Vec2Param value)
     break;
   }
   default:
-    DoNotifyException("Location not supported.", "Only non-cardinal axes are supported.");
+    DoNotifyException("Location not supported.",
+                      "Only non-cardinal axes are supported.");
   }
 }
 
-//**************************************************************************************************
 String ToString(const Rectangle& value, bool shortFormat)
 {
   String minStr = ToString(value.Min, shortFormat);
@@ -756,4 +729,4 @@ String ToString(const Rectangle& value, bool shortFormat)
   return String::Format("(%s), (%s)", minStr.c_str(), maxStr.c_str());
 }
 
-}//namespace Zero
+} // namespace Zero

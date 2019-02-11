@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Reals.cpp
-/// Implementation of the real typedef and utility functions.
-/// 
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Reals.hpp"
 
@@ -15,25 +7,25 @@ namespace Math
 
 namespace
 {
-const real cTemp     = real(-0.0);
-const uint cSignBit  = *reinterpret_cast<uint const*>(&cTemp);
+const real cTemp = real(-0.0);
+const uint cSignBit = *reinterpret_cast<uint const*>(&cTemp);
 const real cNegative = real(-1.0);
 const real cPositive = real(1.0);
 
 real gZeroForInf = real(0.0);
 real gInfinite = real(1.0) / gZeroForInf;
-}
+} // namespace
 
 const real& cInfinite = gInfinite;
 const real cPi = real(3.1415926535897932384626433832795);
 const real cTwoPi = real(2.0) * cPi;
 
-real Epsilon(void) 
+real Epsilon(void)
 {
   return real(0.00000001);
 }
 
-real PositiveMax(void) 
+real PositiveMax(void)
 {
   return FLT_MAX;
 }
@@ -43,7 +35,7 @@ real PositiveMin()
   return FLT_MIN;
 }
 
-bool Equal(real lhs, real rhs) 
+bool Equal(real lhs, real rhs)
 {
   return Abs(lhs - rhs) <= Epsilon() * (Abs(lhs) + Abs(rhs) + real(1.0));
 }
@@ -58,7 +50,7 @@ bool NotEqual(real lhs, real rhs)
   return !Equal(lhs, rhs);
 }
 
-bool IsZero(real val) 
+bool IsZero(real val)
 {
   return Abs(val) <= Epsilon();
 }
@@ -74,40 +66,40 @@ bool IsPositive(real number)
 }
 
 bool LessThan(real lhs, real rhs)
-{ 
+{
   return lhs < rhs;
 }
 
-bool LessThanOrEqual(real lhs, real rhs)  
-{ 
+bool LessThanOrEqual(real lhs, real rhs)
+{
   return lhs <= rhs;
 }
 
-bool GreaterThan(real lhs, real rhs)  
-{ 
+bool GreaterThan(real lhs, real rhs)
+{
   return lhs > rhs;
 }
 
-bool GreaterThanOrEqual(real lhs, real rhs)  
-{ 
+bool GreaterThanOrEqual(real lhs, real rhs)
+{
   return lhs >= rhs;
 }
 
-real Sqrt(real val) 
-{ 
+real Sqrt(real val)
+{
   return std::sqrt(val);
 }
 
 bool SafeSqrt(real val, real& result)
 {
-  if(val < 0)
+  if (val < 0)
     return false;
 
   result = Sqrt(val);
   return true;
 }
 
-real Rsqrt(real val) 
+real Rsqrt(real val)
 {
   return real(1.0) / std::sqrt(val);
 }
@@ -139,7 +131,8 @@ real Log10(real val)
 
 real Log2(real val)
 {
-  //log(2) is a constant (and actually calling log(2.0) caused a linker crash so use the constant)
+  // log(2) is a constant (and actually calling log(2.0) caused a linker crash
+  // so use the constant)
   real log2 = real(0.693147182);
   return Log(val) / log2;
 }
@@ -211,30 +204,30 @@ real FMod(real dividend, real divisor)
 
 bool SafeFMod(real dividend, real divisor, real& result)
 {
-  if(divisor == 0)
+  if (divisor == 0)
     return false;
 
   result = FMod(dividend, divisor);
   return true;
 }
 
-real GetSign(real val) 
+real GetSign(real val)
 {
-  return (*reinterpret_cast<uint*>(&val) & cSignBit) != 0 ? cNegative 
+  return (*reinterpret_cast<uint*>(&val) & cSignBit) != 0 ? cNegative
                                                           : cPositive;
-  //return lhs >= real(0.0) ? real(1.0) : real(-1.0);
+  // return lhs >= real(0.0) ? real(1.0) : real(-1.0);
 }
 
 int Sign(real val)
 {
-  if(val < 0)
+  if (val < 0)
     return -1;
   return 1;
 }
 
 int Sign(int val)
 {
-  if(val < 0)
+  if (val < 0)
     return -1;
   return 1;
 }
@@ -299,7 +292,7 @@ real ArcTan2(real y, real x)
 bool SafeArcCos(real radians, real& result)
 {
   bool isSafe = Math::TryClampIfClose(radians, -1.0f, 1.0f, 0.00001f);
-  if(isSafe)
+  if (isSafe)
     result = Math::ArcCos(radians);
   return isSafe;
 }
@@ -307,7 +300,7 @@ bool SafeArcCos(real radians, real& result)
 bool SafeArcSin(real radians, real& result)
 {
   bool isSafe = Math::TryClampIfClose(radians, -1.0f, 1.0f, 0.00001f);
-  if(isSafe)
+  if (isSafe)
     result = Math::ArcSin(radians);
   return isSafe;
 }
@@ -445,8 +438,8 @@ real Step(real y, real x)
 int CountBits(int value)
 {
   uint count = 0;
-  //trick that is O(k) where k is the number of bits set
-  while(value != 0)
+  // trick that is O(k) where k is the number of bits set
+  while (value != 0)
   {
     value = (value - 1) & value;
     ++count;
@@ -454,4 +447,4 @@ int CountBits(int value)
   return count;
 }
 
-}// namespace Math
+} // namespace Math

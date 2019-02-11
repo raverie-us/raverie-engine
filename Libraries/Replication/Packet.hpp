@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  RawPacket                                      //
-//---------------------------------------------------------------------------------//
+//                                  RawPacket //
 
 /// Unprocessed network data unit
 class RawPacket
@@ -27,13 +20,13 @@ public:
   RawPacket(MoveReference<RawPacket> rhs);
 
   /// Copy Assignment Operator
-  RawPacket& operator =(const RawPacket& rhs);
+  RawPacket& operator=(const RawPacket& rhs);
 
   /// Move Assignment Operator
-  RawPacket& operator =(MoveReference<RawPacket> rhs);
+  RawPacket& operator=(MoveReference<RawPacket> rhs);
 
   /// Contains a peer event message?
-  bool      mContainsEventMessage;
+  bool mContainsEventMessage;
   /// Source/Destination IP address
   IpAddress mIpAddress;
   /// Packet data stream
@@ -41,79 +34,81 @@ public:
 };
 
 /// RawPacket Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<RawPacket>
 {
   static inline void MoveWithoutDestruction(RawPacket* dest, RawPacket* source)
   {
-    new(dest) RawPacket(ZeroMove(*source));
+    new (dest) RawPacket(ZeroMove(*source));
   }
 };
 
-//---------------------------------------------------------------------------------//
-//                                    Packet                                       //
-//---------------------------------------------------------------------------------//
+//                                    Packet //
 
 /// Network data unit
 class Packet
 {
 public:
   /// Constructor
-  Packet(const IpAddress& ipAddress, bool isStandalone = true, PacketSequenceId sequenceId = 0);
+  Packet(const IpAddress& ipAddress,
+         bool isStandalone = true,
+         PacketSequenceId sequenceId = 0);
 
   /// Copy Constructor
   Packet(const Packet& rhs);
 
   /// Copy Assignment Operator
-  Packet& operator =(const Packet& rhs);
+  Packet& operator=(const Packet& rhs);
 
   /// Comparison Operators (compares packet sequence IDs)
-  bool operator ==(const Packet& rhs) const;
-  bool operator !=(const Packet& rhs) const;
-  bool operator  <(const Packet& rhs) const;
-  bool operator ==(PacketSequenceId rhs) const;
-  bool operator !=(PacketSequenceId rhs) const;
-  bool operator  <(PacketSequenceId rhs) const;
+  bool operator==(const Packet& rhs) const;
+  bool operator!=(const Packet& rhs) const;
+  bool operator<(const Packet& rhs) const;
+  bool operator==(PacketSequenceId rhs) const;
+  bool operator!=(PacketSequenceId rhs) const;
+  bool operator<(PacketSequenceId rhs) const;
 
   //
   // Member Functions
   //
 
-  /// Returns true if this is a standalone packet (not sent by a link), else false
+  /// Returns true if this is a standalone packet (not sent by a link), else
+  /// false
   bool IsStandalone() const;
 
   /// Returns the packet's sequence ID
   PacketSequenceId GetSequenceId() const;
 
-  /// Returns the packet's current header bits as it currently would result in when serialized
+  /// Returns the packet's current header bits as it currently would result in
+  /// when serialized
   Bits GetHeaderBits() const;
 
   /// Source/Destination IP address
-  IpAddress        mIpAddress;
+  IpAddress mIpAddress;
   /// Is a standalone packet?
-  bool             mIsStandalone;
+  bool mIsStandalone;
   /// Packet sequence ID
   PacketSequenceId mSequenceId;
 };
 
 /// Global Comparison Operators
-bool operator ==(PacketSequenceId lhs, const Packet& rhs);
-bool operator  <(PacketSequenceId lhs, const Packet& rhs);
+bool operator==(PacketSequenceId lhs, const Packet& rhs);
+bool operator<(PacketSequenceId lhs, const Packet& rhs);
 
 /// Typedefs
 typedef Array<PacketSequenceId> ACKArray;
 typedef Array<PacketSequenceId> NAKArray;
 
-//---------------------------------------------------------------------------------//
-//                                  OutPacket                                      //
-//---------------------------------------------------------------------------------//
+//                                  OutPacket //
 
 /// Outgoing network data unit (packet w/ additional send information)
 class OutPacket : public Packet
 {
 public:
   /// Constructor
-  OutPacket(const IpAddress& destination = IpAddress(), bool isStandalone = true, PacketSequenceId sequenceId = 0);
+  OutPacket(const IpAddress& destination = IpAddress(),
+            bool isStandalone = true,
+            PacketSequenceId sequenceId = 0);
 
   /// Copy Constructor
   OutPacket(const OutPacket& rhs);
@@ -122,10 +117,10 @@ public:
   OutPacket(MoveReference<OutPacket> rhs);
 
   /// Copy Assignment Operator
-  OutPacket& operator =(const OutPacket& rhs);
+  OutPacket& operator=(const OutPacket& rhs);
 
   /// Move Assignment Operator
-  OutPacket& operator =(MoveReference<OutPacket> rhs);
+  OutPacket& operator=(MoveReference<OutPacket> rhs);
 
   //
   // Member Functions
@@ -155,33 +150,35 @@ public:
   /// Contained messages
   Array<OutMessage> mMessages;
   /// Time the packet was queued for sending
-  TimeMs            mSendTime;
+  TimeMs mSendTime;
 
   /// Friends
   friend class LinkOutbox;
 
   template <typename OutPacket>
-  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
+  friend Bits Serialize(SerializeDirection::Enum direction,
+                        BitStream& bitStream,
+                        OutPacket& outPacket);
 };
 
 /// OutPacket Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<OutPacket>
 {
   static inline void MoveWithoutDestruction(OutPacket* dest, OutPacket* source)
   {
-    new(dest) OutPacket(ZeroMove(*source));
+    new (dest) OutPacket(ZeroMove(*source));
   }
 };
 
 /// Serializes an outgoing packet (write only)
 /// Returns the number of bits serialized if successful, else 0
 template <>
-Bits Serialize<OutPacket>(SerializeDirection::Enum direction, BitStream& bitStream, OutPacket& outPacket);
+Bits Serialize<OutPacket>(SerializeDirection::Enum direction,
+                          BitStream& bitStream,
+                          OutPacket& outPacket);
 
-//---------------------------------------------------------------------------------//
-//                                   InPacket                                      //
-//---------------------------------------------------------------------------------//
+//                                   InPacket //
 
 /// Incoming network data unit (packet w/ additional receive information)
 class InPacket : public Packet
@@ -197,10 +194,10 @@ public:
   InPacket(MoveReference<InPacket> rhs);
 
   /// Copy Assignment Operator
-  InPacket& operator =(const InPacket& rhs);
+  InPacket& operator=(const InPacket& rhs);
 
   /// Move Assignment Operator
-  InPacket& operator =(MoveReference<InPacket> rhs);
+  InPacket& operator=(MoveReference<InPacket> rhs);
 
   //
   // Member Functions
@@ -220,49 +217,58 @@ public:
 
   /// Friends
   template <typename InPacket>
-  friend Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
+  friend Bits Serialize(SerializeDirection::Enum direction,
+                        BitStream& bitStream,
+                        InPacket& inPacket);
 };
 
 /// InPacket Move-Without-Destruction Operator
-template<>
+template <>
 struct MoveWithoutDestructionOperator<InPacket>
 {
   static inline void MoveWithoutDestruction(InPacket* dest, InPacket* source)
   {
-    new(dest) InPacket(ZeroMove(*source));
+    new (dest) InPacket(ZeroMove(*source));
   }
 };
 
 /// Serializes an incoming packet (read only)
 /// Returns the number of bits serialized if successful, else 0
 template <>
-Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStream, InPacket& inPacket);
+Bits Serialize<InPacket>(SerializeDirection::Enum direction,
+                         BitStream& bitStream,
+                         InPacket& inPacket);
 
-//---------------------------------------------------------------------------------//
-//                               Packet Constants                                  //
-//---------------------------------------------------------------------------------//
+//                               Packet Constants //
 
 /// Maximum packet size (packet header size + data)
-/// Might work but it's likely the IPv4/IPv6 + UDP header will contain more options than the minimum
-static const Bits  MaxPacketBits      = BYTES_TO_BITS(EthernetMtuBytes - Ipv4MinHeaderBytes - UdpHeaderBytes);
-static const Bytes MaxPacketBytes     = BITS_TO_BYTES(MaxPacketBits);
+/// Might work but it's likely the IPv4/IPv6 + UDP header will contain more
+/// options than the minimum
+static const Bits MaxPacketBits =
+    BYTES_TO_BITS(EthernetMtuBytes - Ipv4MinHeaderBytes - UdpHeaderBytes);
+static const Bytes MaxPacketBytes = BITS_TO_BYTES(MaxPacketBits);
 /// Typical packet size (packet header size + data)
 /// Should be safe over the internet
-static const Bits  TypicalPacketBits  = BYTES_TO_BITS(Ipv4MinMtuBytes - Ipv4MaxHeaderBytes - UdpHeaderBytes);
+static const Bits TypicalPacketBits =
+    BYTES_TO_BITS(Ipv4MinMtuBytes - Ipv4MaxHeaderBytes - UdpHeaderBytes);
 static const Bytes TypicalPacketBytes = BITS_TO_BYTES(TypicalPacketBits);
 /// Minimum packet size (packet header size + data)
-/// Our peer protocol requires at least one minimum sized message fragment be able to fit into every packet
-static const Bits  MinPacketBits      = MaxPacketHeaderBits + MaxMessageHeaderBits + MinMessageFragmentDataBits;
-static const Bytes MinPacketBytes     = BITS_TO_BYTES(MinPacketBits);
+/// Our peer protocol requires at least one minimum sized message fragment be
+/// able to fit into every packet
+static const Bits MinPacketBits =
+    MaxPacketHeaderBits + MaxMessageHeaderBits + MinMessageFragmentDataBits;
+static const Bytes MinPacketBytes = BITS_TO_BYTES(MinPacketBits);
 
 /// Maximum packet data size left over for messages
-static const Bits  MaxPacketDataBits      = MaxPacketBits     - MaxPacketHeaderBits;
-static const Bytes MaxPacketDataBytes     = BITS_TO_BYTES(MaxPacketDataBits);
+static const Bits MaxPacketDataBits = MaxPacketBits - MaxPacketHeaderBits;
+static const Bytes MaxPacketDataBytes = BITS_TO_BYTES(MaxPacketDataBits);
 /// Typical packet data size left over for messages
-static const Bits  TypicalPacketDataBits  = TypicalPacketBits - MaxPacketHeaderBits;
-static const Bytes TypicalPacketDataBytes = BITS_TO_BYTES(TypicalPacketDataBits);
+static const Bits TypicalPacketDataBits =
+    TypicalPacketBits - MaxPacketHeaderBits;
+static const Bytes TypicalPacketDataBytes =
+    BITS_TO_BYTES(TypicalPacketDataBits);
 /// Minimum packet data size left over for messages
-static const Bits  MinPacketDataBits      = MinPacketBits     - MaxPacketHeaderBits;
-static const Bytes MinPacketDataBytes     = BITS_TO_BYTES(MinPacketDataBits);
+static const Bits MinPacketDataBits = MinPacketBits - MaxPacketHeaderBits;
+static const Bytes MinPacketDataBytes = BITS_TO_BYTES(MinPacketDataBits);
 
 } // namespace Zero

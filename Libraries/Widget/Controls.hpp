@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Controls.hpp
-///  Declaration of the basic Widget system controls.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,17 +7,15 @@ namespace Zero
 class KeyboardEvent;
 class HandleableEvent;
 
-//------------------------------------------------------------------------------
 namespace Events
 {
-  DeclareEvent(ValueChanged);
-}//namespace Events
+DeclareEvent(ValueChanged);
+} // namespace Events
 
 void TabJump(Widget* widget, KeyboardEvent* event);
 void FindNextFocus(Widget* widget, FocusDirection::Enum direction);
 
-//----------------------------------------------------------------------- Spacer
-//A widget that fills up space
+// A widget that fills up space
 class Spacer : public Widget
 {
 public:
@@ -39,7 +29,6 @@ public:
   void SetSize(Vec2 size);
 };
 
-//------------------------------------------------------------------------- Sash
 class Splitter : public Composite
 {
 public:
@@ -58,7 +47,7 @@ public:
   void OnMouseExit(MouseEvent* event);
 
   bool mDragging;
-  /// Reverses the logic for who to expand/contract. 
+  /// Reverses the logic for who to expand/contract.
   /// Easiest way to deal with different layouts at the moment.
   bool mReverse;
   /// The axis we're resizing on (x or y axis).
@@ -76,4 +65,4 @@ public:
   Vec2 mRightStartMinSize;
 };
 
-}//namespace Zero
+} // namespace Zero

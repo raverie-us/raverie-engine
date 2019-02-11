@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentUploader.hpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,19 +12,21 @@ class Composite;
 class MetaDropEvent;
 class ContentPackageExporter;
 
-//--------------------------------------------------------- ContentExportTile
 class ContentExportTile : public TileViewWidget
 {
 public:
   typedef ContentExportTile ZilchSelf;
-  ContentExportTile(Composite* parent, TileView* tileView,
-                    PreviewWidget* tileWidget, DataIndex dataIndex,
-                    ContentPackageExporter* exporter, ContentItem* contentItem);
+  ContentExportTile(Composite* parent,
+                    TileView* tileView,
+                    PreviewWidget* tileWidget,
+                    DataIndex dataIndex,
+                    ContentPackageExporter* exporter,
+                    ContentItem* contentItem);
 
   /// Widget Interface.
   void UpdateTransform() override;
-  
-  //TileViewWidget Event Handlers
+
+  // TileViewWidget Event Handlers
   void OnMouseHover(MouseEvent* event) override;
 
   /// Checks the resource for any dependent resources.
@@ -51,23 +45,24 @@ private:
   bool mMissingDependencies;
 };
 
-//---------------------------------------------------- Content Package Tile View
 class ContentExporterTileView : public TileView
 {
 public:
   typedef ContentExporterTileView ZilchSelf;
 
   ContentExporterTileView(ContentPackageExporter* parent);
-  TileViewWidget* CreateTileViewWidget(Composite* parent, StringParam name,
-                                       HandleParam instance, DataIndex index,
-                          PreviewImportance::Enum minImportance = PreviewImportance::None) override;
+  TileViewWidget* CreateTileViewWidget(
+      Composite* parent,
+      StringParam name,
+      HandleParam instance,
+      DataIndex index,
+      PreviewImportance::Enum minImportance = PreviewImportance::None) override;
 
   void OnMetaDrop(MetaDropEvent* e);
 
   ContentPackageExporter* mExporter;
 };
 
-//---------------------------------------------------------- Content Upload View
 class ContentPackageExporter : public Composite
 {
 public:
@@ -100,4 +95,4 @@ private:
   Text* mHintText;
 };
 
-}//namespace Zero
+} // namespace Zero

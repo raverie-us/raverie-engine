@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -21,7 +20,9 @@ public:
 
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
   bool TestFrustum(const Frustum& frustum, CastInfo& castInfo) override;
 

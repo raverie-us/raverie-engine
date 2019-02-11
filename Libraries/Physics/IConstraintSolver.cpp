@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -17,18 +12,19 @@ size_t GetMaxSolverSize()
   size_t basicSolver = sizeof(BasicSolver);
   size_t normalSolver = sizeof(NormalSolver);
   size_t basicGenericSolver = sizeof(GenericBasicSolver);
-  
-  return Math::Max(basicSolver, Math::Max(normalSolver,basicGenericSolver));
+
+  return Math::Max(basicSolver, Math::Max(normalSolver, basicGenericSolver));
 }
 
-Memory::Pool* IConstraintSolver::sPool = 
-  new Memory::Pool("Solvers", Memory::GetNamedHeap("Physics"), GetMaxSolverSize() , 512 );
+Memory::Pool* IConstraintSolver::sPool = new Memory::Pool(
+    "Solvers", Memory::GetNamedHeap("Physics"), GetMaxSolverSize(), 512);
 
-ImplementOverloadedNewWithAllocator(IConstraintSolver, IConstraintSolver::sPool);
+ImplementOverloadedNewWithAllocator(IConstraintSolver,
+                                    IConstraintSolver::sPool);
 
 void IConstraintSolver::AddJoints(JointList& joints)
 {
-  while(!joints.Empty())
+  while (!joints.Empty())
   {
     Joint* joint = &(joints.Front());
     joints.Unlink(joint);
@@ -38,7 +34,7 @@ void IConstraintSolver::AddJoints(JointList& joints)
 
 void IConstraintSolver::AddContacts(ContactList& contacts)
 {
-  while(!contacts.Empty())
+  while (!contacts.Empty())
   {
     Contact* contact = &(contacts.Front());
     contacts.Unlink(contact);
@@ -56,6 +52,6 @@ uint IConstraintSolver::GetSolverPositionIterationCount() const
   return mSolverConfig->mPositionIterationCount;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

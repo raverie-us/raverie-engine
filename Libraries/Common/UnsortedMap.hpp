@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Array.hpp
-/// Declaration of the Array container.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "ContainerCommon.hpp"
@@ -17,14 +9,17 @@
 namespace Zero
 {
 
-/// Array map is an associative container (like a hash-map) however the key type is neither sorted nor hashed
-/// and therefore the search time for an element is linear. The memory footprint, however, is much smaller than
-/// that of a hash-map. Furthermore, because the key is neither sorted nor hashed, the key can be changed without
-/// having to remove and re-Insert an element (and can be changed while iterating through this container).
-template< typename KeyType, typename DataType, 
-          typename Comparer = ComparePolicy<KeyType>, 
-          typename Allocator = DefaultAllocator >
-class UnsortedMap :  public Array<Pair<KeyType, DataType>, Allocator>
+/// Array map is an associative container (like a hash-map) however the key type
+/// is neither sorted nor hashed and therefore the search time for an element is
+/// linear. The memory footprint, however, is much smaller than that of a
+/// hash-map. Furthermore, because the key is neither sorted nor hashed, the key
+/// can be changed without having to remove and re-Insert an element (and can be
+/// changed while iterating through this container).
+template <typename KeyType,
+          typename DataType,
+          typename Comparer = ComparePolicy<KeyType>,
+          typename Allocator = DefaultAllocator>
+class UnsortedMap : public Array<Pair<KeyType, DataType>, Allocator>
 {
 public:
   typedef Array<Pair<KeyType, DataType>, Allocator> base_type;
@@ -57,8 +52,9 @@ public:
   }
 
   // Find an element by a key type that is different than the template key type
-  template<typename SearchType, typename comparePolicy>
-  range FindAs(const SearchType& key, comparePolicy comparer = ComparePolicy<SearchType>())
+  template <typename SearchType, typename comparePolicy>
+  range FindAs(const SearchType& key,
+               comparePolicy comparer = ComparePolicy<SearchType>())
   {
     // Loop through all the elements
     for (size_t i = 0; i < base_type::Size(); ++i)
@@ -100,6 +96,4 @@ public:
   }
 };
 
-}//namespace Zero
-
-
+} // namespace Zero

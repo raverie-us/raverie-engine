@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -9,7 +8,6 @@ namespace Zero
 class SpriteSourceLoader : public ResourceLoader
 {
 public:
-
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override
   {
     SpriteSource* source = new SpriteSource();
@@ -36,7 +34,7 @@ public:
     SpriteSource* source = (SpriteSource*)resource;
     source->Unload();
     DataBlock dataBlock = ReadFileIntoDataBlock(entry.FullPath.c_str());
-    LoadSprite(source, entry, dataBlock);    
+    LoadSprite(source, entry, dataBlock);
     FreeBlock(dataBlock);
   }
 
@@ -48,26 +46,28 @@ public:
 
     if (image.Data == nullptr)
     {
-      String message = String::Format("Failed to load sprite %s", entry.Name.c_str());
+      String message =
+          String::Format("Failed to load sprite %s", entry.Name.c_str());
       DoNotifyWarning("Sprite Error", message);
 
-      //Create a dummy source
+      // Create a dummy source
       image.Allocate(2, 2);
       image.ClearColorTo(0xFFFFFFFF);
     }
 
-    //If there is a builder the sprite is being load in the editor
+    // If there is a builder the sprite is being load in the editor
     SpriteSourceBuilder* builder = (SpriteSourceBuilder*)entry.mBuilder;
 
     if (builder)
     {
-      //Load sprite frame data directly from builder
+      // Load sprite frame data directly from builder
       source->GetSpriteData() = builder->GetSpriteData();
     }
     else
     {
-      //Get extra data on the end of the sprite file
-      SpriteData* spriteData = (SpriteData*)(block.Data + block.Size - sizeof(SpriteData));
+      // Get extra data on the end of the sprite file
+      SpriteData* spriteData =
+          (SpriteData*)(block.Data + block.Size - sizeof(SpriteData));
       memcpy(&source->GetSpriteData(), spriteData, sizeof(SpriteData));
     }
 
@@ -78,8 +78,10 @@ public:
       source->FrameSizeY = image.Height;
     }
     // Make sure frame size is valid
-    source->FrameSizeX = Math::Clamp(source->FrameSizeX, cMinFrameSize, (uint)image.Width);
-    source->FrameSizeY = Math::Clamp(source->FrameSizeY, cMinFrameSize, (uint)image.Height);
+    source->FrameSizeX =
+        Math::Clamp(source->FrameSizeX, cMinFrameSize, (uint)image.Width);
+    source->FrameSizeY =
+        Math::Clamp(source->FrameSizeY, cMinFrameSize, (uint)image.Height);
 
     FixAlphaHalo(&image);
 
@@ -87,7 +89,6 @@ public:
   }
 };
 
-//**************************************************************************************************
 ZilchDefineType(SpriteSource, builder, type)
 {
   ZeroBindDocumented();
@@ -98,31 +99,26 @@ ZilchDefineType(SpriteSource, builder, type)
   ZilchBindMethod(GetOrigin);
 }
 
-//**************************************************************************************************
 void SpriteSource::Unload()
 {
   AtlasManager::GetInstance()->RemoveSpriteSource(this);
 }
 
-//**************************************************************************************************
 Vec2 SpriteSource::GetSize()
 {
   return Vec2((float)FrameSizeX, (float)FrameSizeY);
 }
 
-//**************************************************************************************************
 Vec2 SpriteSource::GetOrigin()
 {
   return Vec2(OriginX, OriginY);
 }
 
-//**************************************************************************************************
 float SpriteSource::GetFrameRate()
 {
   return 1.0f / FrameDelay;
 }
 
-//**************************************************************************************************
 UvRect SpriteSource::GetUvRect(uint currentFrame)
 {
   if (mFramesPerRow == 0)
@@ -137,11 +133,10 @@ UvRect SpriteSource::GetUvRect(uint currentFrame)
   return frameUv;
 }
 
-//**************************************************************************************************
 void SpriteSource::LoadSourceImage(Status& status, Image* image)
 {
   String fullPath = mContentItem->GetFullPath();
-  if(!FileExists(fullPath))
+  if (!FileExists(fullPath))
   {
     String msg = String::Format("File '%s' didn't exist.", fullPath.c_str());
     status.SetFailed(msg);
@@ -155,7 +150,6 @@ void SpriteSource::LoadSourceImage(Status& status, Image* image)
   FreeBlock(block);
 }
 
-//**************************************************************************************************
 HandleOf<Texture> SpriteSource::GetAtlasTexture()
 {
   if (Atlas* atlas = mAtlas)
@@ -164,7 +158,6 @@ HandleOf<Texture> SpriteSource::GetAtlasTexture()
   return nullptr;
 }
 
-//**************************************************************************************************
 TextureRenderData* SpriteSource::GetAtlasTextureRenderData()
 {
   if (Atlas* atlas = mAtlas)
@@ -176,9 +169,8 @@ TextureRenderData* SpriteSource::GetAtlasTextureRenderData()
 
 ImplementResourceManager(SpriteSourceManager, SpriteSource);
 
-//**************************************************************************************************
-SpriteSourceManager::SpriteSourceManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+SpriteSourceManager::SpriteSourceManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("SpriteSource", new SpriteSourceLoader());
   mCategory = "Graphics";

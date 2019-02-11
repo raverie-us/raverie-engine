@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  IpAddress                                      //
-//---------------------------------------------------------------------------------//
+//                                  IpAddress //
 
 /// Updates an IP address' numeric "host:port" string
 void UpdateHostPortString(Status& status, IpAddress& ipAddress)
@@ -20,7 +13,7 @@ void UpdateHostPortString(Status& status, IpAddress& ipAddress)
 
   // Get host string
   String host;
-  switch(ipAddress.GetInternetProtocol())
+  switch (ipAddress.GetInternetProtocol())
   {
   case InternetProtocol::V4:
     host = Ipv4AddressToString(ipAddress);
@@ -34,7 +27,7 @@ void UpdateHostPortString(Status& status, IpAddress& ipAddress)
   case InternetProtocol::Unspecified:
     break;
   }
-  if(host == String()) // Unable?
+  if (host == String()) // Unable?
   {
     status.SetFailed("Unable to convert IP address host to string");
     return;
@@ -42,7 +35,7 @@ void UpdateHostPortString(Status& status, IpAddress& ipAddress)
 
   // Get port string
   String port = PortToString(ipAddress.GetPort());
-  if(port == String()) // Unable?
+  if (port == String()) // Unable?
   {
     status.SetFailed("Unable to convert IP address host to string");
     return;
@@ -58,85 +51,88 @@ void UpdateHostPortString(Status& status, IpAddress& ipAddress)
   ipAddress.mHostPortString = builder.ToString();
 }
 
-IpAddress::IpAddress()
-  : SocketAddress(),
-    mHostPortString()
+IpAddress::IpAddress() : SocketAddress(), mHostPortString()
 {
 }
 
-IpAddress::IpAddress(Status& status, StringParam host, uint port, InternetProtocol::Enum internetProtocol)
-  : SocketAddress(),
+IpAddress::IpAddress(Status& status,
+                     StringParam host,
+                     uint port,
+                     InternetProtocol::Enum internetProtocol) :
+    SocketAddress(),
     mHostPortString()
 {
   SetHost(status, host, internetProtocol);
-  if(status.Succeeded())
+  if (status.Succeeded())
     SetPort(status, port);
 }
-IpAddress::IpAddress(Status& status, StringParam host, uint port)
-  : SocketAddress(),
+IpAddress::IpAddress(Status& status, StringParam host, uint port) :
+    SocketAddress(),
     mHostPortString()
 {
   SetHost(status, host, InternetProtocol::Unspecified);
-  if(status.Succeeded())
+  if (status.Succeeded())
     SetPort(status, port);
 }
-IpAddress::IpAddress(StringParam host, uint port, InternetProtocol::Enum internetProtocol)
-  : SocketAddress(),
+IpAddress::IpAddress(StringParam host,
+                     uint port,
+                     InternetProtocol::Enum internetProtocol) :
+    SocketAddress(),
     mHostPortString()
 {
   Status status;
   SetHost(status, host, internetProtocol);
-  if(status.Succeeded())
+  if (status.Succeeded())
     SetPort(status, port);
   ErrorIf(status.Failed());
 }
-IpAddress::IpAddress(StringParam host, uint port)
-  : SocketAddress(),
+IpAddress::IpAddress(StringParam host, uint port) :
+    SocketAddress(),
     mHostPortString()
 {
   Status status;
   SetHost(status, host, InternetProtocol::Unspecified);
-  if(status.Succeeded())
+  if (status.Succeeded())
     SetPort(status, port);
   ErrorIf(status.Failed());
 }
 
-IpAddress::IpAddress(const IpAddress& rhs)
-  : SocketAddress(rhs),
+IpAddress::IpAddress(const IpAddress& rhs) :
+    SocketAddress(rhs),
     mHostPortString(rhs.mHostPortString)
 {
 }
-IpAddress::IpAddress(const SocketAddress& rhs)
-  : SocketAddress(),
+IpAddress::IpAddress(const SocketAddress& rhs) :
+    SocketAddress(),
     mHostPortString()
 {
   *this = rhs;
 }
 
-IpAddress::IpAddress(MoveReference<IpAddress> rhs)
-  : SocketAddress(*rhs),
+IpAddress::IpAddress(MoveReference<IpAddress> rhs) :
+    SocketAddress(*rhs),
     mHostPortString(rhs->mHostPortString)
 {
 }
 
-IpAddress& IpAddress::operator =(const IpAddress& rhs)
+IpAddress& IpAddress::operator=(const IpAddress& rhs)
 {
   SocketAddress::operator=(rhs);
-  mHostPortString        = rhs.mHostPortString;
+  mHostPortString = rhs.mHostPortString;
 
   return *this;
 }
-IpAddress& IpAddress::operator =(const SocketAddress& rhs)
+IpAddress& IpAddress::operator=(const SocketAddress& rhs)
 {
   SocketAddress::operator=(rhs);
 
-  if(IsValid())
+  if (IsValid())
   {
     Status status;
     UpdateHostPortString(status, *this);
     ErrorIf(status.Failed());
   }
-  else if(!SocketAddress::IsEmpty())
+  else if (!SocketAddress::IsEmpty())
   {
     Error("Not an IPv4 or IPv6 socket address");
     Clear();
@@ -147,14 +143,16 @@ IpAddress& IpAddress::operator =(const SocketAddress& rhs)
 
 bool IpAddress::IsValid() const
 {
-  return !SocketAddress::IsEmpty()
-  && (SocketAddress::GetAddressFamily() == SocketAddressFamily::InternetworkV4
-   || SocketAddress::GetAddressFamily() == SocketAddressFamily::InternetworkV6);
+  return !SocketAddress::IsEmpty() &&
+         (SocketAddress::GetAddressFamily() ==
+              SocketAddressFamily::InternetworkV4 ||
+          SocketAddress::GetAddressFamily() ==
+              SocketAddressFamily::InternetworkV6);
 }
 
 InternetProtocol::Enum IpAddress::GetInternetProtocol() const
 {
-  switch(SocketAddress::GetAddressFamily())
+  switch (SocketAddress::GetAddressFamily())
   {
   case SocketAddressFamily::InternetworkV4:
     return InternetProtocol::V4;
@@ -174,11 +172,13 @@ size_t IpAddress::Hash() const
   return mHostPortString.Hash();
 }
 
-void IpAddress::SetHost(Status& status, StringParam host, InternetProtocol::Enum internetProtocol)
+void IpAddress::SetHost(Status& status,
+                        StringParam host,
+                        InternetProtocol::Enum internetProtocol)
 {
   uint port = GetPort();
 
-  switch(internetProtocol)
+  switch (internetProtocol)
   {
   case InternetProtocol::V4:
     SocketAddress::SetIpv4(status, host, port);
@@ -191,7 +191,7 @@ void IpAddress::SetHost(Status& status, StringParam host, InternetProtocol::Enum
   default:
   case InternetProtocol::Unspecified:
     SocketAddress::SetIpv4(status, host, port);
-    if(status.Failed())
+    if (status.Failed())
     {
       status = Status();
       SocketAddress::SetIpv6(status, host, port);
@@ -199,14 +199,15 @@ void IpAddress::SetHost(Status& status, StringParam host, InternetProtocol::Enum
     break;
   }
 
-  if(IsValid())
+  if (IsValid())
     UpdateHostPortString(status, *this);
 }
 void IpAddress::SetHost(Status& status, StringParam host)
 {
   SetHost(status, host, InternetProtocol::Unspecified);
 }
-void IpAddress::SetHost(StringParam host, InternetProtocol::Enum internetProtocol)
+void IpAddress::SetHost(StringParam host,
+                        InternetProtocol::Enum internetProtocol)
 {
   Status status;
   SetHost(status, host, internetProtocol);
@@ -220,11 +221,10 @@ void IpAddress::SetHost(StringParam host)
 }
 String IpAddress::GetHost() const
 {
-  if(!IsValid())
+  if (!IsValid())
     return String();
 
-
-  //mHostPortString.FindLastOf
+  // mHostPortString.FindLastOf
   StringRange found = mHostPortString.FindLastOf(":");
   return mHostPortString.SubString(mHostPortString.Begin(), found.Begin());
 }
@@ -233,7 +233,7 @@ void IpAddress::SetPort(Status& status, uint port)
 {
   SocketAddress::SetIpPort(status, port);
 
-  if(IsValid())
+  if (IsValid())
     UpdateHostPortString(status, *this);
 }
 void IpAddress::SetPort(uint port)
@@ -244,7 +244,7 @@ void IpAddress::SetPort(uint port)
 }
 uint IpAddress::GetPort() const
 {
-  if(!IsValid())
+  if (!IsValid())
     return 0;
 
   Status status;
@@ -254,7 +254,7 @@ uint IpAddress::GetPort() const
 }
 String IpAddress::GetPortString() const
 {
-  if(!IsValid())
+  if (!IsValid())
     return String();
 
   StringRange separator = mHostPortString.FindLastOf(":");

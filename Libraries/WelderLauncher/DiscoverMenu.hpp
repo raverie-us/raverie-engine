@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------- Discover Tile
 class DiscoverTile : public Composite
 {
 public:
@@ -17,8 +11,11 @@ public:
   typedef DiscoverTile ZilchSelf;
 
   /// Constructor.
-  DiscoverTile(Composite* parent, StringParam text, StringParam fontStyle,
-               float titleHeight, StringParam url);
+  DiscoverTile(Composite* parent,
+               StringParam text,
+               StringParam fontStyle,
+               float titleHeight,
+               StringParam url);
 
   /// Composite Interface.
   void UpdateTransform() override;
@@ -42,7 +39,6 @@ public:
   String mUrl;
 };
 
-//------------------------------------------------------------- Dev Update Entry
 class DevUpdateEntry : public Composite
 {
 public:
@@ -55,7 +51,6 @@ public:
   MultiLineText* mUpdate;
 };
 
-//---------------------------------------------------------------- Discover Menu
 class DiscoverMenu : public Composite
 {
 public:
@@ -85,4 +80,4 @@ private:
   Array<DevUpdateEntry*> mDevUpdateEntries;
 };
 
-}//namespace Zero
+} // namespace Zero

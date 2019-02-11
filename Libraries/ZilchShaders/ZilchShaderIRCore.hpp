@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ZilchShaderIRCore
 /// The zilch shader wrapper around Zilch's core library. This needs to be
 /// built and have the Parse function called once before all shader translation.
 /// Contains the primitive types for translation.
@@ -29,14 +23,28 @@ public:
   SpirVExtensionLibrary* mGlsl450ExtensionsLibrary;
 
 private:
-  void MakeMathTypes(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
-  void RegisterPrimitiveFunctions(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types, ZilchShaderIRType* shaderType);
-  void RegisterVectorFunctions(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types, Array<ZilchShaderIRType*>& vectorTypes);
-  void RegisterMatrixFunctions(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types, Array<ZilchShaderIRType*>& matrixTypes);
-  void RegisterQuaternionFunctions(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types, ZilchShaderIRType* quaternionType);
+  void MakeMathTypes(ZilchSpirVFrontEnd* translator,
+                     ZilchShaderIRLibrary* shaderLibrary,
+                     TypeGroups& types);
+  void RegisterPrimitiveFunctions(ZilchSpirVFrontEnd* translator,
+                                  ZilchShaderIRLibrary* shaderLibrary,
+                                  TypeGroups& types,
+                                  ZilchShaderIRType* shaderType);
+  void RegisterVectorFunctions(ZilchSpirVFrontEnd* translator,
+                               ZilchShaderIRLibrary* shaderLibrary,
+                               TypeGroups& types,
+                               Array<ZilchShaderIRType*>& vectorTypes);
+  void RegisterMatrixFunctions(ZilchSpirVFrontEnd* translator,
+                               ZilchShaderIRLibrary* shaderLibrary,
+                               TypeGroups& types,
+                               Array<ZilchShaderIRType*>& matrixTypes);
+  void RegisterQuaternionFunctions(ZilchSpirVFrontEnd* translator,
+                                   ZilchShaderIRLibrary* shaderLibrary,
+                                   TypeGroups& types,
+                                   ZilchShaderIRType* quaternionType);
 
   ZilchShaderIRLibraryRef mLibraryRef;
   static ZilchShaderIRCore* mInstance;
 };
 
-}//namespace Zero
+} // namespace Zero

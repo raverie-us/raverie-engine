@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -20,16 +15,21 @@ void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo)
   symbolInfo.mLineNumber = 0;
 }
 
-size_t GetStackAddresses(CallStackAddresses& callStack, size_t stacksToCapture, size_t framesToSkip)
+size_t GetStackAddresses(CallStackAddresses& callStack,
+                         size_t stacksToCapture,
+                         size_t framesToSkip)
 {
   return -1;
 }
 
-void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& callStackSymbols)
+void GetStackInfo(CallStackAddresses& callStackAddresses,
+                  CallStackSymbolInfos& callStackSymbols)
 {
 }
 
-void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPaths, int stacksToSkip)
+void SimpleStackWalker::ShowCallstack(void* context,
+                                      StringParam extraSymbolPaths,
+                                      int stacksToSkip)
 {
 }
 
@@ -42,4 +42,4 @@ String SimpleStackWalker::GetFinalOutput()
   return String();
 }
 
-}//namespace Zero
+} // namespace Zero

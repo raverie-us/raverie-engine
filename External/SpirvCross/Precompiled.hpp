@@ -1,3 +1,4 @@
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Repo/GLSL.std.450.h"

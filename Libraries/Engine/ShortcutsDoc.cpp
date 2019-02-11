@@ -1,18 +1,9 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Ryan Edgemon
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-
 
 namespace Zero
 {
 
-
-//--------------------------------------------------------------- Shortcut Entry
-/******************************************************************************/
 void ShortcutEntry::Serialize(Serializer& stream)
 {
   SerializeName(mIndex);
@@ -21,32 +12,27 @@ void ShortcutEntry::Serialize(Serializer& stream)
   SerializeName(mDescription);
 }
 
-//----------------------------------------------------------- Shortcut Set Entry
 const ShortcutSetEntry ShortcutSetEntry::cZero;
 
-/******************************************************************************/
 void ShortcutSetEntry::Serialize(Serializer& stream)
 {
   SerializeName(mName);
   SerializeName(mShortcutSet);
 }
 
-//-------------------------------------------------------------------- Shortcuts
 ZilchDefineType(Shortcuts, builder, type)
 {
 }
 
-/******************************************************************************/
 Shortcuts::~Shortcuts()
 {
   DeleteObjectsInContainer(mShorcutSets);
 }
 
-/******************************************************************************/
 void Shortcuts::Serialize(Serializer& stream)
 {
   PolymorphicNode node;
-  while(stream.GetPolymorphic(node))
+  while (stream.GetPolymorphic(node))
   {
     ShortcutSetEntry* entry = new ShortcutSetEntry();
     entry->Serialize(stream);
@@ -55,10 +41,8 @@ void Shortcuts::Serialize(Serializer& stream)
 
     mShorcutSets.Insert(entry->mName, entry);
   }
-
 }
 
-/******************************************************************************/
 void Shortcuts::Load(StringParam filename)
 {
   // will throw if unable to load file
@@ -68,12 +52,11 @@ void Shortcuts::Load(StringParam filename)
   Z::gShortcutsDoc = this;
 }
 
-/******************************************************************************/
 const ShortcutSet* Shortcuts::FindSet(StringParam className)
 {
   ShortcutSetEntry* set = mShorcutSets.FindValue(className, nullptr);
 
-  if(set == nullptr)
+  if (set == nullptr)
     return nullptr;
   else
     return &set->mShortcutSet;
@@ -81,36 +64,34 @@ const ShortcutSet* Shortcuts::FindSet(StringParam className)
 
 namespace Z
 {
-  Shortcuts* gShortcutsDoc = nullptr;
+Shortcuts* gShortcutsDoc = nullptr;
 }
 
-//-------------------------------------------------------------- Shortcut Source
-#define IF_ROOT(r) DataEntry* root = &mSet; if(dataEntry == root) return r;
+#define IF_ROOT(r)                                                             \
+  DataEntry* root = &mSet;                                                     \
+  if (dataEntry == root)                                                       \
+    return r;
 
-//******************************************************************************
-ShortcutSource::ShortcutSource( )
+ShortcutSource::ShortcutSource()
 {
 }
 
-//******************************************************************************
-DataEntry* ShortcutSource::GetRoot( )
+DataEntry* ShortcutSource::GetRoot()
 {
   return &mSet;
 }
 
-//******************************************************************************
 DataEntry* ShortcutSource::ToEntry(DataIndex index)
 {
   DataEntry* root = &mSet;
-  if(((DataEntry *)index.Id) == root)
-    return ((DataEntry *)index.Id);
-  else if(index.Id >= mSet.Size( ))
+  if (((DataEntry*)index.Id) == root)
+    return ((DataEntry*)index.Id);
+  else if (index.Id >= mSet.Size())
     return NULL;
 
   return &mSet[(uint)index.Id];
 }
 
-//******************************************************************************
 DataIndex ShortcutSource::ToIndex(DataEntry* dataEntry)
 {
   IF_ROOT((DataIndex)((u64)dataEntry));
@@ -118,7 +99,6 @@ DataIndex ShortcutSource::ToIndex(DataEntry* dataEntry)
   return DataIndex(((ShortcutEntry*)dataEntry)->mIndex);
 }
 
-//******************************************************************************
 DataEntry* ShortcutSource::Parent(DataEntry* dataEntry)
 {
   // Everyone but the root has the parent of the root.
@@ -127,27 +107,26 @@ DataEntry* ShortcutSource::Parent(DataEntry* dataEntry)
   return root;
 }
 
-//******************************************************************************
-DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
+DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry,
+                                    uint index,
+                                    DataEntry* prev)
 {
-  if(index < mSet.Size( ))
+  if (index < mSet.Size())
     return &mSet[index];
 
-  IF_ROOT(&mSet.Front( ));
+  IF_ROOT(&mSet.Front());
 
   return NULL;
 }
 
-//******************************************************************************
 uint ShortcutSource::ChildCount(DataEntry* dataEntry)
 {
   // Only the root has children, no one else does.
-  IF_ROOT(mSet.Size( ));
+  IF_ROOT(mSet.Size());
 
   return 0;
 }
 
-//******************************************************************************
 bool ShortcutSource::IsExpandable(DataEntry* dataEntry)
 {
   // Only the root is expandable.
@@ -156,24 +135,25 @@ bool ShortcutSource::IsExpandable(DataEntry* dataEntry)
   return false;
 }
 
-//******************************************************************************
-void ShortcutSource::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
+void ShortcutSource::GetData(DataEntry* dataEntry,
+                             Any& variant,
+                             StringParam column)
 {
-  ShortcutEntry *entry = ((ShortcutEntry *)dataEntry);
+  ShortcutEntry* entry = ((ShortcutEntry*)dataEntry);
 
-  if(column == "Name")
+  if (column == "Name")
     variant = entry->mName;
-  else if(column == "Shortcut")
+  else if (column == "Shortcut")
     variant = entry->mShortcut;
-  else if(column == "Description")
+  else if (column == "Description")
     variant = entry->mDescription;
 }
 
-//******************************************************************************
-bool ShortcutSource::SetData(DataEntry* dataEntry, AnyParam variant, StringParam column)
+bool ShortcutSource::SetData(DataEntry* dataEntry,
+                             AnyParam variant,
+                             StringParam column)
 {
   return false;
 }
 
-
-}  // namespace Zero
+} // namespace Zero

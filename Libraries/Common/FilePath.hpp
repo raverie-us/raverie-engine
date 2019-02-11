@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file FilePath.hpp
-/// Declaration of the FilePath class.
-///
-/// Authors: Joshua Davis
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -33,11 +25,24 @@ class ZeroShared FilePath
 {
 public:
   static String Combine(StringRange path0, StringRange path1);
-  static String Combine(StringRange path0, StringRange path1, StringRange path2);
-  static String Combine(StringRange path0, StringRange path1, StringRange path2, StringRange path3);
-  static String Combine(StringRange path0, StringRange path1, StringRange path2, StringRange path3, StringRange path4);
-  static String Combine(const StringRange** paths, uint count, StringRange extension);
-  static String CombineWithExtension(StringRange path, StringRange fileName, StringRange ext);
+  static String Combine(StringRange path0,
+                        StringRange path1,
+                        StringRange path2);
+  static String Combine(StringRange path0,
+                        StringRange path1,
+                        StringRange path2,
+                        StringRange path3);
+  static String Combine(StringRange path0,
+                        StringRange path1,
+                        StringRange path2,
+                        StringRange path3,
+                        StringRange path4);
+  static String Combine(const StringRange** paths,
+                        uint count,
+                        StringRange extension);
+  static String CombineWithExtension(StringRange path,
+                                     StringRange fileName,
+                                     StringRange ext);
 
   /// Remove all different slashes and strip trailing separators
   static String Normalize(StringRange path);
@@ -59,4 +64,4 @@ public:
   static StringRange FindLastDirectorySeparator(StringRange path);
 };
 
-}//namespace Zero
+} // namespace Zero

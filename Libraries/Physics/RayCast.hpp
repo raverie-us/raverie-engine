@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,21 +6,21 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(CastFilterCallback);
-}//namespace Events
+DeclareEvent(CastFilterCallback);
+} // namespace Events
 
 struct CogId;
 class Cog;
 class Collider;
 class CollisionGroup;
 
-/// Controls custom cast filtering via the CastFilterEvent. Allows custom filter logic per object.
-/// <param name="Accept">Always accept this object for testing.</param>
-/// <param name="Reject">Always reject this object for testing.</param>
-/// <param name="DefaultBehavior">Run the rest of the filtering logic on the cast filter.</param>
+/// Controls custom cast filtering via the CastFilterEvent. Allows custom filter
+/// logic per object. <param name="Accept">Always accept this object for
+/// testing.</param> <param name="Reject">Always reject this object for
+/// testing.</param> <param name="DefaultBehavior">Run the rest of the filtering
+/// logic on the cast filter.</param>
 DeclareEnum3(CastFilterState, Accept, Reject, DefaultBehavior);
 
-//-------------------------------------------------------------------CastFilterEvent
 /// Allows a user to filter out an object during any cast in physics.
 struct CastFilterEvent : public Event
 {
@@ -42,7 +37,6 @@ struct CastFilterEvent : public Event
   Collider* mCollider;
 };
 
-//-------------------------------------------------------------------CastFilter
 /// Filter for casting operations in physics. Allows basic filtering such as
 /// static or dynamic objects, advanced filters such as collision groups, and
 /// custom filters via an event callback.
@@ -72,7 +66,6 @@ struct CastFilter : public BaseCastFilter
   String mCallbackEventName;
 };
 
-//-------------------------------------------------------------------CastResult
 /// A result from a cast operation on a PhysicsSpace.
 struct CastResult
 {
@@ -80,7 +73,9 @@ struct CastResult
 
   CastResult();
   CastResult(const CastResult& rhs);
-  ~CastResult(){}
+  ~CastResult()
+  {
+  }
 
   void operator=(const CastResult& rhs);
 
@@ -90,10 +85,12 @@ struct CastResult
   Collider* GetCollider();
   /// The cog hit by the cast.
   Cog* GetObjectHit();
-  /// Returns the local-space position that the object was hit. The point index is used
-  /// to get the first or last point of intersection. Invalid on volume casts.
+  /// Returns the local-space position that the object was hit. The point index
+  /// is used to get the first or last point of intersection. Invalid on volume
+  /// casts.
   Vec3 GetLocalPosition(uint pointIndex);
-  /// Returns the world-space position that the object was hit. Invalid on a volume cast.
+  /// Returns the world-space position that the object was hit. Invalid on a
+  /// volume cast.
   Vec3 GetWorldPosition();
   /// The normal of the object at the intersection point (world space).
   /// Invalid on a volume cast.
@@ -109,13 +106,12 @@ struct CastResult
   uint mShapeIndex;
 };
 
-static_assert(sizeof(CastResult)==sizeof(ProxyResult), 
-  "Size of CastResult must be the same size of ProxyResult.");
+static_assert(sizeof(CastResult) == sizeof(ProxyResult),
+              "Size of CastResult must be the same size of ProxyResult.");
 
 typedef Array<CastResult> CastResultArray;
 
-//-------------------------------------------------------------------CastResults
-///The public interface to ray casting.
+/// The public interface to ray casting.
 class CastResults
 {
 public:
@@ -125,56 +121,59 @@ public:
 
   static CastFilter mDefaultFilter;
 
-  ///Default the amount of objects to retrieve to 1.
+  /// Default the amount of objects to retrieve to 1.
   CastResults(uint amount = 1, BaseCastFilter& filter = mDefaultFilter);
   CastResults(const CastResults& rhs);
-  ~CastResults(){}
+  ~CastResults()
+  {
+  }
 
-  ///Returns a reference to the cast result at the given index.
+  /// Returns a reference to the cast result at the given index.
   CastResult& operator[](uint index);
   const CastResult& operator[](uint index) const;
-  
-  ///Returns the amount of objects retrieved.
+
+  /// Returns the amount of objects retrieved.
   uint Size() const;
 
-  ///Returns whether or not there were any objects found.
+  /// Returns whether or not there were any objects found.
   bool Empty();
 
-  ///Returns a range of all objects the ray hit (within the max).
+  /// Returns a range of all objects the ray hit (within the max).
   range All();
-  
-  ///Clears
+
+  /// Clears
   void Clear();
 
-  ///Resizes the number of results
+  /// Resizes the number of results
   void Resize(uint amount);
 
-  ///Returns the capacity (maximum amount of objects returned).
+  /// Returns the capacity (maximum amount of objects returned).
   uint Capacity() const;
 
 private:
-  ///The physics space needs access to the results class, 
-  ///but it should not be available to the public.
+  /// The physics space needs access to the results class,
+  /// but it should not be available to the public.
   friend class PhysicsSpace;
 
-  ///When we pass mResults to the broad phase, it will fill up mArray with
-  ///Broad Phase Proxies instead of Collider's.  This walks through them and replaces
-  ///the pointer with a pointer to the Collider.
+  /// When we pass mResults to the broad phase, it will fill up mArray with
+  /// Broad Phase Proxies instead of Collider's.  This walks through them and
+  /// replaces the pointer with a pointer to the Collider.
   void ConvertToColliders();
 
-  ///Holds the results
+  /// Holds the results
   CastResultArray mArray;
-  ///Has a pointer to the results.  Manages the insertion of ray cast contacts.
+  /// Has a pointer to the results.  Manages the insertion of ray cast contacts.
   ProxyCastResults mResults;
 };
 
-//-------------------------------------------------------------------CastResultsRange
 struct CastResultsRange
 {
   typedef CastResult value_type;
   typedef CastResult& return_type;
   typedef CastResult& FrontResult;
-  CastResultsRange(){}
+  CastResultsRange()
+  {
+  }
   CastResultsRange(const CastResults& castResults);
   CastResultsRange(const CastResultsRange& rhs);
 
@@ -187,4 +186,4 @@ struct CastResultsRange
   CastResultArray mArray;
 };
 
-}//namespace Zero
+} // namespace Zero

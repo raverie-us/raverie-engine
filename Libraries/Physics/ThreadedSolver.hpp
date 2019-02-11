@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -41,9 +36,8 @@ public:
   void DrawJoints(uint debugFlags);
 
 private:
-
-  typedef InList<Joint,&Joint::SolverLink> JointList;
-  typedef InList<Contact,&Contact::SolverLink> ContactList;
+  typedef InList<Joint, &Joint::SolverLink> JointList;
+  typedef InList<Contact, &Contact::SolverLink> ContactList;
   typedef Array<ConstraintMolecule> MoleculeList;
 
   JointList mJoints;
@@ -57,6 +51,6 @@ private:
   JointGroup mJointPhases;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

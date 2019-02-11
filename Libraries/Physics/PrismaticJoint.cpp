@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -83,7 +78,7 @@ void PrismaticJoint::ComputeInitialConfiguration()
   Vec3 axis = p1 - p0;
   real length = axis.AttemptNormalize();
   // If we got an invalid axis then just use the y axis...
-  if(length == real(0.0))
+  if (length == real(0.0))
     axis = Vec3::cYAxis;
   SetWorldAxis(axis);
 
@@ -146,24 +141,26 @@ void PrismaticJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void PrismaticJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
   DrawAxisAtomFragment(mAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint PrismaticJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint PrismaticJoint::GetAtomIndexFilter(uint atomIndex,
+                                        real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 3)
+  if (atomIndex < 3)
     return LinearAxis;
-  else if(atomIndex < 6)
+  else if (atomIndex < 6)
     return AngularAxis;
   return 0;
 }
@@ -196,6 +193,6 @@ real PrismaticJoint::GetJointTranslation() const
   return Math::Dot(anchors.GetPointDifference(), axes[0]);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

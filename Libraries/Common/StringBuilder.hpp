@@ -1,43 +1,55 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StringBuilder.hpp
-/// Declaration of StringBuilder.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "ByteBuffer.hpp"
 
 namespace Zero
 {
 
-//Simple String Builder
+// Simple String Builder
 ZeroShared String BuildString(StringRange a, StringRange b);
 ZeroShared String BuildString(StringRange a, StringRange b, StringRange c);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f);
-ZeroShared String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g);
+ZeroShared String BuildString(StringRange a,
+                              StringRange b,
+                              StringRange c,
+                              StringRange d);
+ZeroShared String BuildString(
+    StringRange a, StringRange b, StringRange c, StringRange d, StringRange e);
+ZeroShared String BuildString(StringRange a,
+                              StringRange b,
+                              StringRange c,
+                              StringRange d,
+                              StringRange e,
+                              StringRange f);
+ZeroShared String BuildString(StringRange a,
+                              StringRange b,
+                              StringRange c,
+                              StringRange d,
+                              StringRange e,
+                              StringRange f,
+                              StringRange g);
 ZeroShared String BuildString(StringRange** ranges, uint count);
 
 ZeroShared String StringJoin(Array<String>& strings, StringParam joinToken);
 
-
-///Extension of ByteBuffer for building strings. Has
-///stream operators overloaded so it can act as a replacement
-///for io streams.
+/// Extension of ByteBuffer for building strings. Has
+/// stream operators overloaded so it can act as a replacement
+/// for io streams.
 class ZeroShared StringBuilder : public ByteBuffer
 {
 public:
-  template<typename type>
+  template <typename type>
   friend struct MoveWithoutDestructionOperator;
 
   StringBuilder(){};
   ~StringBuilder(){};
-  void operator+=(StringRange adapter){Append(adapter);}
-  void operator+=(Rune rune){Append(rune);}
+  void operator+=(StringRange adapter)
+  {
+    Append(adapter);
+  }
+  void operator+=(Rune rune)
+  {
+    Append(rune);
+  }
   void Append(StringRange adapter);
   void Append(char character);
   void AppendFormat(cstr format, ...);
@@ -48,17 +60,20 @@ public:
   void Repeat(size_t count, StringParam str);
 
 private:
-  StringBuilder(const StringBuilder&) {};
-  void operator=(const StringBuilder&) {};
+  StringBuilder(const StringBuilder&){};
+  void operator=(const StringBuilder&){};
 };
 
-template<>
+template <>
 struct MoveWithoutDestructionOperator<StringBuilder>
 {
-  static inline void MoveWithoutDestruction(StringBuilder* dest, StringBuilder* source)
+  static inline void MoveWithoutDestruction(StringBuilder* dest,
+                                            StringBuilder* source)
   {
-    MoveWithoutDestructionOperator< Array<ByteBuffer::byteType*> >::MoveWithoutDestruction(&dest->mBlocks, &source->mBlocks);
-    
+    MoveWithoutDestructionOperator<
+        Array<ByteBuffer::byteType*>>::MoveWithoutDestruction(&dest->mBlocks,
+                                                              &source->mBlocks);
+
     dest->mBlockSize = source->mBlockSize;
     dest->mTotalSize = source->mTotalSize;
     dest->mCurBlockSize = source->mCurBlockSize;
@@ -96,18 +111,18 @@ inline StringBuilder& operator<<(StringBuilder& builder, StringParam str)
   return builder;
 }
 
-//Generic templated
-template<typename type>
+// Generic templated
+template <typename type>
 inline StringBuilder& operator<<(StringBuilder& builder, const type& value)
 {
   const uint bufferSize = 128;
   char buffer[bufferSize];
   uint size = ToBuffer(buffer, bufferSize, value);
-  builder.Append(String(buffer, buffer+size));
+  builder.Append(String(buffer, buffer + size));
   return builder;
 }
 
-template<typename T>
+template <typename T>
 inline String GetBinaryString(const T& value)
 {
   StringBuilder result;
@@ -128,4 +143,4 @@ inline String GetBinaryString(const T& value)
   return result.ToString();
 }
 
-}//namespace Zero
+} // namespace Zero

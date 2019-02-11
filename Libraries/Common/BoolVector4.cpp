@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file BoolVector4.cpp
-///  Implementation of the BoolVector4 structure.
-/// 
-///  Authors: Trevor Sundberg
-///  Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
@@ -17,7 +9,6 @@ const BoolVector4 BoolVector4::cXAxis(true, false, false, false);
 const BoolVector4 BoolVector4::cYAxis(false, true, false, false);
 const BoolVector4 BoolVector4::cZAxis(false, false, true, false);
 const BoolVector4 BoolVector4::cWAxis(false, false, false, true);
-
 
 BoolVector4::BoolVector4(bool x_, bool y_, bool z_, bool w_)
 {
@@ -62,4 +53,4 @@ void BoolVector4::Set(bool x_, bool y_, bool z_, bool w_)
   w = w_;
 }
 
-}// namespace Math
+} // namespace Math

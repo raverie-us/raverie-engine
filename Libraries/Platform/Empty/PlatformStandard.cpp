@@ -1,26 +1,20 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 extern void InitializeGamepad();
 void PlatformLibrary::Initialize()
 {
 }
 
-//**************************************************************************************************
 void PlatformLibrary::Shutdown()
 {
 }
 
-//**************************************************************************************************
 void StackHandle::Close()
 {
 }
 
-}//namespace Zero
+} // namespace Zero

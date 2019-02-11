@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PropertyTrack.hpp
-/// 
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2011-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -31,41 +23,58 @@ struct TrackParams
   UpdateType Type;
 };
 
-//--------------------------------------------------------------- Property Track
 /// Base class for all time line track that animate properties.
 class PropertyTrack
 {
 public:
-  PropertyTrack(){TrackIndex = uint(-1); TypeId = ZilchTypeId(void);}
-  
-  virtual void Serialize(Serializer& stream){}
-  
+  PropertyTrack()
+  {
+    TrackIndex = uint(-1);
+    TypeId = ZilchTypeId(void);
+  }
+
+  virtual void Serialize(Serializer& stream)
+  {
+  }
+
   virtual ~PropertyTrack(){};
-  virtual void LinkInstance(PropertyTrackPlayData& data, BlendTracks& tracks,
-                            StringParam objectPath, Cog* object) = 0;
-  virtual void UpdateFrame(PropertyTrackPlayData& data, TrackParams& params,
+  virtual void LinkInstance(PropertyTrackPlayData& data,
+                            BlendTracks& tracks,
+                            StringParam objectPath,
+                            Cog* object) = 0;
+  virtual void UpdateFrame(PropertyTrackPlayData& data,
+                           TrackParams& params,
                            AnimationFrame& animationFrame){};
-    
+
   // Editing
-  virtual void InsertKey(PropertyTrackPlayData& data, float time) {}
-  virtual void InsertKey(AnyParam value, float time){}
-  virtual void AddKey(AnyParam value, float time){}
+  virtual void InsertKey(PropertyTrackPlayData& data, float time)
+  {
+  }
+  virtual void InsertKey(AnyParam value, float time)
+  {
+  }
+  virtual void AddKey(AnyParam value, float time)
+  {
+  }
   virtual void ResortKeyFrames(){};
-  virtual void GetKeyTimes(Array<float>& times) {}
-  virtual void GetKeyValues(Array<Any>& values) {}
-  
+  virtual void GetKeyTimes(Array<float>& times)
+  {
+  }
+  virtual void GetKeyValues(Array<Any>& values)
+  {
+  }
+
   /// Will be "ComponentName.PropertyName" e.g. "Transform.Translation"
   String Name;
   BoundType* TypeId;
   String TypeName;
   uint TrackIndex;
-  
+
   IntrusiveLink(PropertyTrack, link);
 };
 
 typedef InList<PropertyTrack> PropertyTrackList;
 
-//-------------------------------------------------------- Animate Property Type
 template <typename propertyType>
 class AnimatePropertyType : public PropertyTrack
 {
@@ -79,9 +88,12 @@ public:
 
   /// PropertyTrack Interface.
   void Serialize(Serializer& stream) override;
-  void LinkInstance(PropertyTrackPlayData& data, BlendTracks& tracks,
-                    StringParam objectPath, Cog* object) override;
-  void UpdateFrame(PropertyTrackPlayData& data, TrackParams& params,
+  void LinkInstance(PropertyTrackPlayData& data,
+                    BlendTracks& tracks,
+                    StringParam objectPath,
+                    Cog* object) override;
+  void UpdateFrame(PropertyTrackPlayData& data,
+                   TrackParams& params,
                    AnimationFrame& animationFrame) override;
   void GetKeyTimes(Array<float>& times) override;
   void GetKeyValues(Array<Any>& values) override;
@@ -96,7 +108,10 @@ public:
     propertyType KeyValue;
     void Serialize(Serializer& stream);
 
-    bool operator<(const KeyFrameT& right) const { return Time < right.Time; }
+    bool operator<(const KeyFrameT& right) const
+    {
+      return Time < right.Time;
+    }
   };
 
   Array<KeyFrameT> mKeyFrames;
@@ -104,7 +119,7 @@ public:
   String mPropertyName;
 };
 
-//--------------------------------------------------- Animate Property Value Type
+//Type
 template <typename propertyType>
 class AnimatePropertyValueType : public AnimatePropertyType<propertyType>
 {
@@ -116,19 +131,21 @@ public:
   propertyType VariantToType(AnyParam variant) override;
 };
 
-//---------------------------------------------------- Animate Property Ref Type
 template <typename propertyType>
 class AnimatePropertyRefType : public AnimatePropertyType<propertyType*>
 {
 public:
   typedef AnimatePropertyType<propertyType*> BaseType;
   AnimatePropertyRefType(StringParam componentName, StringParam propertyName);
-  
+
   /// AnimatePropertyType Interface.
   propertyType* VariantToType(AnyParam variant) override;
 };
 
-BlendTrack* GetBlendTrack(StringParam name, BlendTracks& tracks, HandleParam instance, Property* prop);
+BlendTrack* GetBlendTrack(StringParam name,
+                          BlendTracks& tracks,
+                          HandleParam instance,
+                          Property* prop);
 /// Returns whether or not the given property can be animated.
 bool ValidPropertyTrack(Property* property);
 
@@ -143,4 +160,4 @@ PropertyTrack* MakePropertyTrack(BoundType* componentName, Property* property);
 
 #include "PropertyTrack.inl"
 
-}//namespace Zero
+} // namespace Zero

@@ -1,33 +1,30 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-
 
 extern "C" EMSCRIPTEN_KEEPALIVE void* Znaj(unsigned int n)
 {
   return malloc((size_t)n);
 }
 
-extern "C" EMSCRIPTEN_KEEPALIVE  void* Znwj(unsigned int n)
+extern "C" EMSCRIPTEN_KEEPALIVE void* Znwj(unsigned int n)
 {
   return malloc((size_t)n);
 }
 
-extern "C" EMSCRIPTEN_KEEPALIVE  void* _Znaj(unsigned int n)
+extern "C" EMSCRIPTEN_KEEPALIVE void* _Znaj(unsigned int n)
 {
   return malloc((size_t)n);
 }
 
-extern "C" EMSCRIPTEN_KEEPALIVE  void* _Znwj(unsigned int n)
+extern "C" EMSCRIPTEN_KEEPALIVE void* _Znwj(unsigned int n)
 {
   return malloc((size_t)n);
 }
 
-int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
+int vsprintf_s(char* buffer,
+               size_t numberOfElements,
+               const char* format,
+               va_list args)
 {
   return vsnprintf(buffer, numberOfElements, format, args);
 }
@@ -41,7 +38,10 @@ int sprintf_s(char* buffer, size_t numberOfElements, const char* format, ...)
   return result;
 }
 
-int swprintf_s(wchar_t* buffer, size_t numberOfElements, const wchar_t* format, ...)
+int swprintf_s(wchar_t* buffer,
+               size_t numberOfElements,
+               const wchar_t* format,
+               ...)
 {
   va_list args;
   va_start(args, format);
@@ -84,7 +84,7 @@ errno_t strcpy_s(char* dest, rsize_t destsz, const char* src)
       *dest = '\0';
     return 1;
   }
-    
+
   strcpy(dest, src);
   return 0;
 }
@@ -102,7 +102,7 @@ errno_t wcscpy_s(wchar_t* dest, rsize_t destsz, const wchar_t* src)
   return 0;
 }
 
-errno_t strncpy_s(char *dest, rsize_t destsz, const char *src, rsize_t count)
+errno_t strncpy_s(char* dest, rsize_t destsz, const char* src, rsize_t count)
 {
   if (count > destsz)
   {
@@ -117,11 +117,14 @@ errno_t strncpy_s(char *dest, rsize_t destsz, const char *src, rsize_t count)
 
 void glDrawBuffer(GLenum buf)
 {
-  GLenum drawBuffers[8] = { buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE };
+  GLenum drawBuffers[8] = {
+      buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE};
   glDrawBuffers(1, drawBuffers);
 }
 
-static const char* const cInvalidWebGl = "This function should not be called when running Emscripten: WebGL functionality was not properly queried";
+static const char* const cInvalidWebGl =
+    "This function should not be called when running Emscripten: WebGL "
+    "functionality was not properly queried";
 
 void glBlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
 {
@@ -133,7 +136,8 @@ void glBlendEquationi(GLuint buf, GLenum mode)
   Error(cInvalidWebGl);
 }
 
-void glBlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+void glBlendFuncSeparatei(
+    GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
   Error(cInvalidWebGl);
 }
@@ -157,10 +161,11 @@ using namespace Zero;
 
 extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
 {
-  // We're relying on the Emscripten instance only having one window with GL setup.
-  // This could be changed to get a saved id somewhere for the primary window.
+  // We're relying on the Emscripten instance only having one window with GL
+  // setup. This could be changed to get a saved id somewhere for the primary
+  // window.
   SDL_Window* sdlWindow = SDL_GL_GetCurrentWindow();
-  ReturnIf(!sdlWindow,, "Could not get window from SDL_GL_GetCurrentWindow");
+  ReturnIf(!sdlWindow, , "Could not get window from SDL_GL_GetCurrentWindow");
   Uint32 windowID = SDL_GetWindowID(sdlWindow);
 
   // Create the drop event
@@ -192,22 +197,27 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
   dropEvent.file = nullptr;
   SDL_PushEvent((SDL_Event*)&dropEvent);
 
-  // The filebuffer was allocated on the heap javascript side and we need to free it
+  // The filebuffer was allocated on the heap javascript side and we need to
+  // free it
   free(fileBuffer);
 }
 
-EM_JS(void, EmscriptenShellOpenFileBegin, (bool multiple, const char* accept, void* configPointer),
-{
-  if (!document)
-    return;
-  shellOpenFile(multiple, UTF8ToString(accept), configPointer);
-});
+EM_JS(void,
+      EmscriptenShellOpenFileBegin,
+      (bool multiple, const char* accept, void* configPointer),
+      {
+        if (!document)
+          return;
+        shellOpenFile(multiple, UTF8ToString(accept), configPointer);
+      });
 
-extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenShellOpenFileEnd(char* fileBuffer, void* configPointer)
+extern "C" EMSCRIPTEN_KEEPALIVE void
+EmscriptenShellOpenFileEnd(char* fileBuffer, void* configPointer)
 {
   FileDialogInfo& config = *(FileDialogInfo*)configPointer;
 
-  // Note the the 'fileBuffer' can be null if we cancelled, so we check it before iterating.
+  // Note the the 'fileBuffer' can be null if we cancelled, so we check it
+  // before iterating.
   if (fileBuffer)
   {
     // Loop through all the files and add them to the config.
@@ -232,13 +242,13 @@ namespace Zero
 
 void Shell::OpenFile(FileDialogInfo& config)
 {
-  // We have no way of selecting a folder, so for now we just enable multi-select.
-  bool multiple =
-    config.Flags & FileDialogFlags::MultiSelect ||
-    config.Flags & FileDialogFlags::Folder;
+  // We have no way of selecting a folder, so for now we just enable
+  // multi-select.
+  bool multiple = config.Flags & FileDialogFlags::MultiSelect ||
+                  config.Flags & FileDialogFlags::Folder;
 
   StringBuilder acceptExtensions;
-  forRange(FileDialogFilter& filter, config.mSearchFilters)
+  forRange(FileDialogFilter & filter, config.mSearchFilters)
   {
     if (acceptExtensions.GetSize() != 0)
       acceptExtensions.Append(',');

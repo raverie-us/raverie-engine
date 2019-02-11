@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///  
-///  Authors: Joshua Davis
-///  Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "IndexedHalfEdgeMesh.hpp"
@@ -12,7 +7,6 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------QuickHull3DTester
 ZilchDefineType(QuickHull3DInterface, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -60,12 +54,12 @@ bool QuickHull3DInterface::Build()
 
   // If we don't debug draw then pass null to quick-hull
   DebugDrawStack* debugStack = &mDebugDrawStack;
-  if(!mShowDebugDraw)
+  if (!mShowDebugDraw)
     debugStack = nullptr;
 
   bool result = mQuickHull3D.Build(mPoints, debugStack);
   // If quick-hull succeeded then build the half-edge mesh
-  if(result)
+  if (result)
     BuildHalfEdgeMesh();
   return result;
 }
@@ -115,20 +109,22 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
   int faceId = 0;
 
   // Compute the ids of all faces, edges, and vertices
-  for(FaceList::range faces = mQuickHull3D.GetFaces(); !faces.Empty(); faces.PopFront())
+  for (FaceList::range faces = mQuickHull3D.GetFaces(); !faces.Empty();
+       faces.PopFront())
   {
     Face* face = &faces.Front();
     mFaceIds[face] = faceId;
     ++faceId;
 
-    for(EdgeList::range edges = face->mEdges.All(); !edges.Empty(); edges.PopFront())
+    for (EdgeList::range edges = face->mEdges.All(); !edges.Empty();
+         edges.PopFront())
     {
       Edge* edge = &edges.Front();
       mEdgeIds[edge] = edgeId;
       ++edgeId;
 
       // Check to see if this vertex has already been mapped
-      if(!mVertexIds.ContainsKey(edge->mTail))
+      if (!mVertexIds.ContainsKey(edge->mTail))
       {
         mVertexIds[edge->mTail] = vertexId;
         ++vertexId;
@@ -137,12 +133,12 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
   }
 
   // Copy all vertices
-  forRange(VertexMap::PairType& pair, mVertexIds.All())
+  forRange(VertexMap::PairType & pair, mVertexIds.All())
   {
     outMeshVertices[pair.second] = pair.first->mPosition;
   }
   // Copy all edges, making sure to map the vertex, twin, and faces
-  forRange(EdgeMap::PairType& pair, mEdgeIds.All())
+  forRange(EdgeMap::PairType & pair, mEdgeIds.All())
   {
     IndexedHalfEdge* outEdge = outMeshEdges[pair.second];
     Edge* inEdge = pair.first;
@@ -156,7 +152,8 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
     IndexedHalfEdgeFace* outFace = outMeshFaces[pair.second];
     Face* inFace = pair.first;
 
-    for(EdgeList::range edges = inFace->mEdges.All(); !edges.Empty(); edges.PopFront())
+    for (EdgeList::range edges = inFace->mEdges.All(); !edges.Empty();
+         edges.PopFront())
     {
       Edge* edge = &edges.Front();
       outFace->mEdges.PushBack(mEdgeIds[edge]);
@@ -164,4 +161,4 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
   }
 }
 
-}// namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentLogic.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -29,60 +21,71 @@ void LoadContentConfig(Cog* configCog)
   String documentDirectory = GetUserDocumentsDirectory();
   String workingDirectory = GetWorkingDirectory();
 
-  
   String applicationName = mainConfig->ApplicationName;
 
   String sourceDirectory = mainConfig->SourceDirectory;
 
-  if(contentConfig)
+  if (contentConfig)
     librarySearchPaths.InsertAt(0, contentConfig->LibraryDirectories.All());
 
-  CreateDirectoryAndParents(FilePath::Combine(appCacheDirectory, applicationName));
+  CreateDirectoryAndParents(
+      FilePath::Combine(appCacheDirectory, applicationName));
 
-  //Add application directory resources if available
-  if(!applicationDirectory.Empty())
+  // Add application directory resources if available
+  if (!applicationDirectory.Empty())
   {
-    librarySearchPaths.PushBack(FilePath::Combine(applicationDirectory, "Resources"));
+    librarySearchPaths.PushBack(
+        FilePath::Combine(applicationDirectory, "Resources"));
   }
 
-  //Add the source path for resources
-  if(!sourceDirectory.Empty())
-    librarySearchPaths.PushBack(FilePath::Combine(sourceDirectory, "Resources"));
+  // Add the source path for resources
+  if (!sourceDirectory.Empty())
+    librarySearchPaths.PushBack(
+        FilePath::Combine(sourceDirectory, "Resources"));
 
-  //Add working directory resources
+  // Add working directory resources
   librarySearchPaths.PushBack(FilePath::Combine(workingDirectory, "Resources"));
 
   // Hack!
-  if(mExtraLibrarySearchPaths != nullptr)
+  if (mExtraLibrarySearchPaths != nullptr)
     mExtraLibrarySearchPaths(configCog, librarySearchPaths);
 
-  //First try to use the tools directory specified in the user config
-  if(contentConfig && !contentConfig->ToolsDirectory.Empty() && FileExists(contentConfig->ToolsDirectory))
-    contentSystem->ToolPath = FilePath::Normalize(contentConfig->ToolsDirectory);
-  else if(!sourceDirectory.Empty())
-    //Use the build info version if it is not empty
+  // First try to use the tools directory specified in the user config
+  if (contentConfig && !contentConfig->ToolsDirectory.Empty() &&
+      FileExists(contentConfig->ToolsDirectory))
+    contentSystem->ToolPath =
+        FilePath::Normalize(contentConfig->ToolsDirectory);
+  else if (!sourceDirectory.Empty())
+    // Use the build info version if it is not empty
     contentSystem->ToolPath = FilePath::Combine(sourceDirectory, "Tools");
-  else if(!applicationDirectory.Empty())
+  else if (!applicationDirectory.Empty())
     contentSystem->ToolPath = FilePath::Combine(applicationDirectory, "Tools");
   else
-    //Just use working directory
+    // Just use working directory
     contentSystem->ToolPath = FilePath::Combine(workingDirectory, "Tools");
 
   contentSystem->mHistoryEnabled = contentConfig->HistoryEnabled;
 
-  //To avoid conflicts of assets of different versions(especially when the version selector goes live)
-  //set the content folder to a unique directory based upon the version number
-  String revisionChangesetName = BuildString("ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
-  contentSystem->ContentOutputPath = FilePath::Combine(appCacheDirectory, "ZeroContent", revisionChangesetName);
+  // To avoid conflicts of assets of different versions(especially when the
+  // version selector goes live) set the content folder to a unique directory
+  // based upon the version number
+  String revisionChangesetName = BuildString(
+      "ZeroVersion", GetRevisionNumberString(), "-", GetChangeSetString());
+  contentSystem->ContentOutputPath = FilePath::Combine(
+      appCacheDirectory, "ZeroContent", revisionChangesetName);
 
-  // If we don't already have the content output directory, then see if we have local prebuilt content
-  // that can be copied into the output directory (this is faster than building the content ourselves, if it exists).
+  // If we don't already have the content output directory, then see if we have
+  // local prebuilt content that can be copied into the output directory (this
+  // is faster than building the content ourselves, if it exists).
   if (!DirectoryExists(contentSystem->ContentOutputPath))
   {
-    String prebuiltContent = FilePath::Combine(applicationDirectory, "PrebuiltZeroContent");
+    String prebuiltContent =
+        FilePath::Combine(applicationDirectory, "PrebuiltZeroContent");
     if (DirectoryExists(prebuiltContent))
     {
-      ZPrint("Copying prebuilt content from '%s' to '%s'\n", prebuiltContent.c_str(), contentSystem->ContentOutputPath.c_str());
+      ZPrint("Copying prebuilt content from '%s' to '%s'\n",
+             prebuiltContent.c_str(),
+             contentSystem->ContentOutputPath.c_str());
       CopyFolderContents(contentSystem->ContentOutputPath, prebuiltContent);
     }
   }
@@ -92,25 +95,27 @@ void LoadContentConfig(Cog* configCog)
 
 bool LoadContentLibrary(StringParam name, bool isCore)
 {
-  ContentLibrary* library = Z::gContentSystem->Libraries.FindValue(name, nullptr);
-  if(library)
+  ContentLibrary* library =
+      Z::gContentSystem->Libraries.FindValue(name, nullptr);
+  if (library)
   {
-    if(isCore)
+    if (isCore)
       library->SetReadOnly(true);
-    
+
     Status status;
     ResourcePackage package;
     Z::gContentSystem->BuildLibrary(status, library, package);
 
-    if(status)
+    if (status)
     {
-      if(isCore)
+      if (isCore)
       {
-        forRange(ResourceEntry& entry, package.Resources.All())
+        forRange(ResourceEntry & entry, package.Resources.All())
         {
-          if(entry.mLibrarySource)
+          if (entry.mLibrarySource)
           {
-            if(ContentEditorOptions* options = entry.mLibrarySource->has(ContentEditorOptions))
+            if (ContentEditorOptions* options =
+                    entry.mLibrarySource->has(ContentEditorOptions))
               entry.mLibrarySource->ShowInEditor = options->mShowInEditor;
             else
               entry.mLibrarySource->ShowInEditor = false;
@@ -120,8 +125,8 @@ bool LoadContentLibrary(StringParam name, bool isCore)
 
       Status status;
       Z::gResources->LoadPackage(status, &package);
-      if(!status)
-        DoNotifyError("Failed to load resource package.",status.Message);
+      if (!status)
+        DoNotifyError("Failed to load resource package.", status.Message);
 
       return (bool)status;
     }
@@ -139,7 +144,6 @@ bool LoadContentLibrary(StringParam name, bool isCore)
   }
 }
 
-//-------------------------------------------------------- Editor Package Loader
 ZilchDefineType(EditorPackageLoader, builder, type)
 {
 }
@@ -151,39 +155,44 @@ EditorPackageLoader::EditorPackageLoader()
 
 void EditorPackageLoader::OnPackagedBuilt(ContentSystemEvent* event)
 {
-  LoadPackage(Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
+  LoadPackage(
+      Z::gEditor, Z::gEditor->mProject, event->mLibrary, event->mPackage);
 }
 
-bool EditorPackageLoader::LoadPackage(Editor* editor, Cog* projectCog, ContentLibrary* library,
-                  ResourcePackage* package)
+bool EditorPackageLoader::LoadPackage(Editor* editor,
+                                      Cog* projectCog,
+                                      ContentLibrary* library,
+                                      ResourcePackage* package)
 {
   ProjectSettings* project = projectCog->has(ProjectSettings);
 
   ResourceSystem* resourceSystem = Z::gResources;
 
-  if(project->ProjectContentLibrary == library)
+  if (project->ProjectContentLibrary == library)
   {
-    //Load all packages
-    forRange(ResourcePackage* dependentPackage, PackagesToLoad.All())
+    // Load all packages
+    forRange(ResourcePackage * dependentPackage, PackagesToLoad.All())
     {
       Status status;
-      ResourceLibrary* library = resourceSystem->LoadPackage(status, dependentPackage);
-      if(!status)
-        DoNotifyError("Failed to load resource package.",status.Message);
+      ResourceLibrary* library =
+          resourceSystem->LoadPackage(status, dependentPackage);
+      if (!status)
+        DoNotifyError("Failed to load resource package.", status.Message);
 
       project->SharedResourceLibraries.PushBack(library);
       delete dependentPackage;
     }
     PackagesToLoad.Clear();
 
-    //Set the content library so Loading may try to create new content for
-    //fixing old content elements.
+    // Set the content library so Loading may try to create new content for
+    // fixing old content elements.
     editor->mProjectLibrary = library;
 
     Status status;
-    project->ProjectResourceLibrary = resourceSystem->LoadPackage(status, package);
-    if(!status)
-      DoNotifyError("Failed to load resource package.",status.Message);
+    project->ProjectResourceLibrary =
+        resourceSystem->LoadPackage(status, package);
+    if (!status)
+      DoNotifyError("Failed to load resource package.", status.Message);
 
     //?
     DoEditorSideImporting(package, nullptr);
@@ -201,11 +210,11 @@ bool EditorPackageLoader::LoadPackage(Editor* editor, Cog* projectCog, ContentLi
   return false;
 }
 
-template<typename ManagerType>
+template <typename ManagerType>
 void ShowBuiltInResource(StringParam name)
 {
   Resource* resource = ManagerType::Find(name);
-  if(resource && resource->mContentItem)
+  if (resource && resource->mContentItem)
     resource->mContentItem->ShowInEditor = true;
 }
 
@@ -221,7 +230,7 @@ bool LoadEditorContent(Cog* configCog)
   timer.Update();
 
   String docDirectory = GetUserDocumentsDirectory();
-  
+
   LoadContentLibrary("FragmentCore", true);
   bool coreContent = LoadContentLibrary("Loading", true);
 
@@ -237,42 +246,48 @@ bool LoadEditorContent(Cog* configCog)
   }
 
   // Hack!
-  if(mCustomLibraryLoader != nullptr)
+  if (mCustomLibraryLoader != nullptr)
     mCustomLibraryLoader(configCog);
 
-  if(!coreContent)
+  if (!coreContent)
   {
     FatalEngineError("Failed to load core content library for editor. Resources"
                      " need to be in the working directory.");
     return false;
   }
 
-  //Show all default resources
-  forRange(ResourceManager* manager, Z::gResources->Managers.Values())
+  // Show all default resources
+  forRange(ResourceManager * manager, Z::gResources->Managers.Values())
   {
-    if(manager->mCanCreateNew)
-      ErrorIf(manager->mExtension.Empty(), "Must set an extension on %s", manager->GetResourceType()->Name.c_str());
+    if (manager->mCanCreateNew)
+      ErrorIf(manager->mExtension.Empty(),
+              "Must set an extension on %s",
+              manager->GetResourceType()->Name.c_str());
 
-    Resource* resource = manager->GetResource(manager->DefaultResourceName, ResourceNotFound::ReturnNull);
-    if(resource && resource->mContentItem)
+    Resource* resource = manager->GetResource(manager->DefaultResourceName,
+                                              ResourceNotFound::ReturnNull);
+    if (resource && resource->mContentItem)
     {
       resource->mContentItem->ShowInEditor = true;
 
       // Moved default font to the Loading library for progress display
-      ErrorIf(resource->mContentItem->mLibrary->Name != "ZeroCore" && resource->mContentItem->mLibrary->Name != "Loading", 
-        "Only resources that are in core can be defaults");
+      ErrorIf(resource->mContentItem->mLibrary->Name != "ZeroCore" &&
+                  resource->mContentItem->mLibrary->Name != "Loading",
+              "Only resources that are in core can be defaults");
     }
     else
     {
-      ErrorIf(!manager->mNoFallbackNeeded, "Failed to find default resource for resource type %s", 
+      ErrorIf(!manager->mNoFallbackNeeded,
+              "Failed to find default resource for resource type %s",
               manager->mResourceTypeName.c_str());
     }
   }
 
   // The UVS on these need to be verified (currently they are incorrect)
-  //MeshManager::Find("Cube")->PrimitiveShape = MeshPrimitiveShape::Box;
-  //MeshManager::Find("Sphere")->PrimitiveShape = MeshPrimitiveShape::Sphere;
-  //MeshManager::Find("Cylinder")->PrimitiveShape = MeshPrimitiveShape::Cylinder;
+  // MeshManager::Find("Cube")->PrimitiveShape = MeshPrimitiveShape::Box;
+  // MeshManager::Find("Sphere")->PrimitiveShape = MeshPrimitiveShape::Sphere;
+  // MeshManager::Find("Cylinder")->PrimitiveShape =
+  // MeshPrimitiveShape::Cylinder;
 
   float time = (float)timer.UpdateAndGetTime();
   ZPrint("Finished Loading Editor Content in %.2f\n", time);

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file FileConsoleListener.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,7 @@ namespace Zero
 
 static String gEngineStartTime = GetTimeAndDateStamp();
 
-//Listen to console output and output to a log file.
+// Listen to console output and output to a log file.
 class FileListener : public ConsoleListener
 {
 public:
@@ -37,35 +29,38 @@ public:
 
   void Print(FilterType filterType, cstr message) override
   {
-    //Do not log user messages
-    if(filterType & Filter::UserFilter)
+    // Do not log user messages
+    if (filterType & Filter::UserFilter)
       return;
 
-    if(logFile == nullptr && mCanOpen)
+    if (logFile == nullptr && mCanOpen)
     {
       logFile = new File();
       String logFilePath = GetLogFilePath();
-      bool opened = logFile->Open(logFilePath.c_str(), FileMode::Append, FileAccessPattern::Sequential);
+      bool opened = logFile->Open(
+          logFilePath.c_str(), FileMode::Append, FileAccessPattern::Sequential);
 
-      if(!opened)
+      if (!opened)
       {
         logFile = nullptr;
         mCanOpen = false;
       }
     }
 
-    if(logFile != nullptr)
+    if (logFile != nullptr)
       logFile->Write((byte*)message, strlen(message));
   }
 
   String GetLogFilePath()
   {
-    //if we have an overridden path then write to that instead
-    if(!mOverridenFilePath.Empty())
+    // if we have an overridden path then write to that instead
+    if (!mOverridenFilePath.Empty())
       return mOverridenFilePath;
 
-    String logFileName = BuildString(mBaseLogFileName, gEngineStartTime, ".txt");
-    String logFilePath = FilePath::Combine(GetTemporaryDirectory(), logFileName);
+    String logFileName =
+        BuildString(mBaseLogFileName, gEngineStartTime, ".txt");
+    String logFilePath =
+        FilePath::Combine(GetTemporaryDirectory(), logFileName);
     return logFilePath;
   }
 
@@ -78,7 +73,7 @@ public:
 
   void Flush() override
   {
-    if(logFile)
+    if (logFile)
     {
       logFile->Flush();
       logFile->Close();
@@ -93,4 +88,4 @@ public:
   }
 };
 
-}
+} // namespace Zero

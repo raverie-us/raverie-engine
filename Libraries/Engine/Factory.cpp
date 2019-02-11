@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Factory.cpp
-/// Implementation of game engine Factory class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 namespace Z
 {
-  Factory* gFactory = nullptr;
+Factory* gFactory = nullptr;
 }
 
 ZilchDefineType(Factory, builder, type)
@@ -39,17 +31,17 @@ Factory::~Factory()
 
 BoundType* GetMetaFromTypeNode(const PolymorphicNode& node)
 {
-  if(node.RuntimeType != nullptr)
+  if (node.RuntimeType != nullptr)
     return node.RuntimeType;
   else
     return MetaDatabase::GetInstance()->FindType(node.TypeName);
 }
 
-template<typename type>
+template <typename type>
 bool TestIdent(const PolymorphicNode& node)
 {
   BoundType* boundType = ZilchTypeId(type);
-  if(node.RuntimeType != nullptr)
+  if (node.RuntimeType != nullptr)
   {
     return node.RuntimeType == boundType;
   }
@@ -62,23 +54,23 @@ bool TestIdent(const PolymorphicNode& node)
 void ComponentPropertyPatched(cstr fieldName, void* clientData)
 {
   Component* component = (Component*)clientData;
-  if(*fieldName == 'm')
+  if (*fieldName == 'm')
     ++fieldName;
   Property* property = ZilchVirtualTypeId(component)->GetProperty(fieldName);
-  if(property == nullptr)
+  if (property == nullptr)
     return;
   LocalModifications* modifications = LocalModifications::GetInstance();
   PropertyPath path(component, property);
   modifications->SetPropertyModified(component->GetOwner(), path, true);
 }
 
-//******************************************************************************
 Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
 {
   bool previousPatching = stream.mPatching;
-  //Instantiation of script components can require the game session (to add some sort of script state component to the game)
+  // Instantiation of script components can require the game session (to add
+  // some sort of script state component to the game)
   GameSession* gameSession = context->mGameSession;
-  if(!gameSession && context->mSpace)
+  if (!gameSession && context->mSpace)
     gameSession = context->mSpace->GetGameSession();
 
   ErrorIf(context == NULL, "Need context");
@@ -88,15 +80,15 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
 
   DataNode* cogDataNode = nullptr;
   ObjectLoader* objectLoader = nullptr;
-  if(stream.GetType() == SerializerType::Text)
+  if (stream.GetType() == SerializerType::Text)
   {
     objectLoader = (ObjectLoader*)(&stream);
     cogDataNode = objectLoader->GetNext();
   }
 
   PolymorphicNode cogNode;
-  //Make sure the stream is valid
-  if(stream.GetPolymorphic(cogNode))
+  // Make sure the stream is valid
+  if (stream.GetPolymorphic(cogNode))
   {
     // Create a new game object to hold the components
     Cog* gameObject = nullptr;
@@ -114,10 +106,10 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     // Replace legacy type with Cog
     if (cogNode.TypeName == "LevelSettings")
       cogNode.TypeName = "Cog";
-    
+
     BoundType* compositionMeta = GetMetaFromTypeNode(cogNode);
 
-    if(TestIdent<ArchetypeInstance>(cogNode))
+    if (TestIdent<ArchetypeInstance>(cogNode))
     {
       String Name;
       SerializeName(Name);
@@ -127,13 +119,14 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
 
       // Default the Archetype if it could not be found
       Archetype* archetype = ArchetypeManager::Find(Name);
-      if(archetype == nullptr)
+      if (archetype == nullptr)
         archetype = ArchetypeManager::GetDefault();
 
       // Build the object
-      gameObject = BuildFromArchetype(archetype->mStoredType, archetype, context);
+      gameObject =
+          BuildFromArchetype(archetype->mStoredType, archetype, context);
 
-      if(gameObject == nullptr)
+      if (gameObject == nullptr)
         return nullptr;
 
       // Set the sub context id on the object so it can look up its children
@@ -142,17 +135,20 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
       archetypedInstance = true;
       stream.mPatching = true;
     }
-    else if(compositionMeta)
+    else if (compositionMeta)
     {
-      gameObject = ZilchAllocate(Cog, compositionMeta, HeapFlags::NonReferenceCounted);
+      gameObject =
+          ZilchAllocate(Cog, compositionMeta, HeapFlags::NonReferenceCounted);
       // Allocate can return a null object if it can't be defaultly constructed
-      ReturnIf(gameObject == nullptr, nullptr, "Factory can only create objects of type Cog.");
+      ReturnIf(gameObject == nullptr,
+               nullptr,
+               "Factory can only create objects of type Cog.");
       gameObject->mChildId = cogNode.UniqueNodeId;
 
       // We entered an Archetype, so we need to start a sub context so that
       // the link id's we read in are offset to not overlap with id's in the
       // current context
-      if(cogNode.Flags.IsSet(PolymorphicFlags::Inherited))
+      if (cogNode.Flags.IsSet(PolymorphicFlags::Inherited))
         prevSubContextId = context->EnterSubContext();
     }
     else
@@ -160,13 +156,14 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
       ErrorIf(gameObject == nullptr, "Can not build object from stream");
       return nullptr;
     }
-    
+
     // Pull the Archetype name if it exists
-    if(Archetype* archetype = ArchetypeManager::FindOrNull(cogNode.mInheritId))
+    if (Archetype* archetype = ArchetypeManager::FindOrNull(cogNode.mInheritId))
       gameObject->SetArchetype(archetype);
 
-    // The game session might be what we're creating, in that case the script context is itself
-    if(!gameSession)
+    // The game session might be what we're creating, in that case the script
+    // context is itself
+    if (!gameSession)
       gameSession = Type::DynamicCast<GameSession*>(gameObject);
 
     // Read Local Component
@@ -179,40 +176,40 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     stream.SerializeFieldDefault("LinkId", localContextId, localContextId);
 
     // Check for a link id attribute
-    if(cogNode.mAttributes != nullptr)
+    if (cogNode.mAttributes != nullptr)
     {
       static String sContextId = "ContextId";
-      forRange(DataAttribute& attribute, cogNode.mAttributes->All( ))
+      forRange(DataAttribute & attribute, cogNode.mAttributes->All())
       {
-        if(attribute.mName == sContextId)
+        if (attribute.mName == sContextId)
           ToValue(attribute.mValue, localContextId);
       }
     }
 
-    while(stream.GetPolymorphic(componentNode))
+    while (stream.GetPolymorphic(componentNode))
     {
-      if(TestIdent<LinkId>(componentNode))
+      if (TestIdent<LinkId>(componentNode))
       {
         LinkId id;
         id.Serialize(stream);
-        localContextId = id.Id; 
+        localContextId = id.Id;
       }
-      else if(TestIdent<Named>(componentNode))
+      else if (TestIdent<Named>(componentNode))
       {
         Named named;
         named.Serialize(stream);
         gameObject->mName = named.Name;
-      
+
         // Because 'Named' isn't a property, we have to store that it was
         // patched in a custom way. This should probably be changed.
-        if(componentNode.Flags.IsSet(PolymorphicFlags::Patched))
+        if (componentNode.Flags.IsSet(PolymorphicFlags::Patched))
         {
           LocalModifications* modifications = LocalModifications::GetInstance();
           PropertyPath path("Name");
           modifications->SetPropertyModified(gameObject, path, true);
         }
       }
-      else if(TestIdent<Archetyped>(componentNode))
+      else if (TestIdent<Archetyped>(componentNode))
       {
         Archetyped archetyped;
         archetyped.Serialize(stream);
@@ -220,19 +217,20 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
         Archetype* archetype = ArchetypeManager::Find(archetyped.Name);
         gameObject->SetArchetype(archetype);
       }
-      else if(TestIdent<EditorFlags>(componentNode))
+      else if (TestIdent<EditorFlags>(componentNode))
       {
         EditorFlags flags;
         flags.Serialize(stream);
-      
+
         // Only set them if we're in the editor
-        if(context->mSpace->IsEditorMode())
+        if (context->mSpace->IsEditorMode())
         {
-          gameObject->mFlags.SetState(CogFlags::EditorViewportHidden, flags.mHidden);
+          gameObject->mFlags.SetState(CogFlags::EditorViewportHidden,
+                                      flags.mHidden);
           gameObject->mFlags.SetState(CogFlags::Locked, flags.mLocked);
         }
       }
-      else if(TestIdent<SpaceObjects>(componentNode))
+      else if (TestIdent<SpaceObjects>(componentNode))
       {
         Space* newSpace = (Space*)gameObject;
         CogInitializer initializer(nullptr);
@@ -243,103 +241,121 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
       }
       else
       {
-        BoundType* componentMeta = MetaDatabase::GetInstance()->FindType(componentNode.TypeName);
-        if(componentMeta != nullptr && !componentMeta->IsA(ZilchTypeId(Component)))
+        BoundType* componentMeta =
+            MetaDatabase::GetInstance()->FindType(componentNode.TypeName);
+        if (componentMeta != nullptr &&
+            !componentMeta->IsA(ZilchTypeId(Component)))
         {
-          String message = String::Format("We tried to create a Component named %s while loading "
-                                          "'%s' but it is not a Component type",
-                                          componentMeta->Name.c_str(), context->Source.c_str());
+          String message = String::Format(
+              "We tried to create a Component named %s while loading "
+              "'%s' but it is not a Component type",
+              componentMeta->Name.c_str(),
+              context->Source.c_str());
           DoNotifyError("Could not create Component", message);
           componentMeta = nullptr;
         }
 
-        bool subtractiveNode = componentNode.Flags.IsSet(PolymorphicFlags::Subtractive);
+        bool subtractiveNode =
+            componentNode.Flags.IsSet(PolymorphicFlags::Subtractive);
 
         // Handle missing components
-        if(componentMeta == nullptr && !subtractiveNode)
+        if (componentMeta == nullptr && !subtractiveNode)
         {
           // If Zilch hasn't fully compiled due to script errors or
           // because it's waiting on plugins then don't emit proxy errors.
-          bool compileSuccess = ZilchManager::GetInstance()->mLastCompileResult == CompileResult::CompilationSucceeded;
-          bool proxyComponentsExpected = context->Flags & CreationFlags::ProxyComponentsExpected;
-          if(!proxyComponentsExpected && compileSuccess)
+          bool compileSuccess =
+              ZilchManager::GetInstance()->mLastCompileResult ==
+              CompileResult::CompilationSucceeded;
+          bool proxyComponentsExpected =
+              context->Flags & CreationFlags::ProxyComponentsExpected;
+          if (!proxyComponentsExpected && compileSuccess)
           {
-            String message = String::Format("Could not find component '%s'. "\
-              "Creating proxy.\n", componentNode.TypeName.Data());
+            String message = String::Format("Could not find component '%s'. "
+                                            "Creating proxy.\n",
+                                            componentNode.TypeName.Data());
 
             // In the editor throw an error in
             // the exported version just log and continue so
             // missing component do not create errors in export
-            // This should not be an exception in script because it causes too many export bugs!
-            if(Z::EditorDebugFeatures)
+            // This should not be an exception in script because it causes too
+            // many export bugs!
+            if (Z::EditorDebugFeatures)
               DoNotifyErrorWithContext(message, NotifyException::None);
             else
               ZPrint("Suppressed: %s", message.c_str());
           }
 
           // Create a Proxy to be used for this component
-          componentMeta = ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::TypeDidntExist);
-          if(componentMeta == nullptr)
+          componentMeta = ProxyObject<Component>::CreateProxyType(
+              componentNode.TypeName, ProxyReason::TypeDidntExist);
+          if (componentMeta == nullptr)
           {
             Error("Could not create proxy meta");
-            //Move to next component
+            // Move to next component
             continue;
           }
 
-          // We have a proxy, but lets search all scripts for where it could have possibly come from
-          // This is helpful when scripts failed to compile on startup
+          // We have a proxy, but lets search all scripts for where it could
+          // have possibly come from This is helpful when scripts failed to
+          // compile on startup
           EngineLibraryExtensions::FindProxiedTypeOrigin(componentMeta);
         }
 
         Component* component = nullptr;
 
-        // All components in the Archetype instance should all already be created from the archetype,
-        // re-serialize the components in place
-        if(archetypedInstance)
+        // All components in the Archetype instance should all already be
+        // created from the archetype, re-serialize the components in place
+        if (archetypedInstance)
         {
           component = gameObject->QueryComponentType(componentMeta);
         }
 
         // Create and add the component
-        if(component == nullptr && !subtractiveNode)
+        if (component == nullptr && !subtractiveNode)
         {
-          // Only check dependencies for native types. We do this because non-native types (script
-          // Components) safely handle null dependencies, and it avoids loss of data
+          // Only check dependencies for native types. We do this because
+          // non-native types (script Components) safely handle null
+          // dependencies, and it avoids loss of data
           bool canAdd = true;
-          if(componentMeta->Native)
+          if (componentMeta->Native)
             canAdd = gameObject->CheckForAddition(componentMeta);
 
-          if(canAdd)
+          if (canAdd)
           {
             uint flags = 0;
-            if(context)
+            if (context)
             {
               flags = context->Flags;
-              //Get the spaces flags
-              if(context->mSpace)
+              // Get the spaces flags
+              if (context->mSpace)
                 flags = context->mSpace->GetCreationFlags();
             }
 
             // Create the component by using the ComponentMeta
-            component = ZilchAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);
+            component = ZilchAllocate(
+                Component, componentMeta, HeapFlags::NonReferenceCounted);
 
-            // If we failed to create the object (should only happen on Script Components where
-            // an exception was thrown in the constructor), proxy the object and re-create it
-            // under the proxy
-            if(component == nullptr && componentMeta->HasAttribute(ObjectAttributes::cProxy) == nullptr)
+            // If we failed to create the object (should only happen on Script
+            // Components where an exception was thrown in the constructor),
+            // proxy the object and re-create it under the proxy
+            if (component == nullptr &&
+                componentMeta->HasAttribute(ObjectAttributes::cProxy) ==
+                    nullptr)
             {
-              componentMeta = ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::AllocationException);
-              component = ZilchAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);
+              componentMeta = ProxyObject<Component>::CreateProxyType(
+                  componentNode.TypeName, ProxyReason::AllocationException);
+              component = ZilchAllocate(
+                  Component, componentMeta, HeapFlags::NonReferenceCounted);
             }
 
-            //Be tolerant of the meta create failing!
-            //Add the new component to the composition
-            if(component)
+            // Be tolerant of the meta create failing!
+            // Add the new component to the composition
+            if (component)
               gameObject->AddComponentInternal(componentMeta, component);
           }
         }
 
-        if(component && subtractiveNode)
+        if (component && subtractiveNode)
         {
           gameObject->RemoveComponentInternal(component);
           component = nullptr;
@@ -348,7 +364,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
         PushErrorContextObject("Serializing Component", component);
 
         // Serialize the component from the data stream.
-        if(component)
+        if (component)
         {
           stream.mPatchClientData = component;
           component->Serialize(stream);
@@ -360,7 +376,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     }
 
     // Leave the sub context if we entered one above
-    if(prevSubContextId != uint(-1))
+    if (prevSubContextId != uint(-1))
     {
       // Archetyped objects have two context ids:
       // One is archetype relative id so child objects of that archetype can
@@ -373,21 +389,21 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
 
       // If it was an archetyped instance, it would have already been registered
       // when it was created
-      if(!archetypedInstance)
+      if (!archetypedInstance)
         context->RegisterCog(gameObject, 1);
 
       context->LeaveSubContext(prevSubContextId);
     }
 
     // Add to the context id map so Cog references can be relinked
-    if(context && localContextId != 0)
+    if (context && localContextId != 0)
       context->RegisterCog(gameObject, localContextId);
 
-    //End the composition
+    // End the composition
     stream.EndPolymorphic();
 
     // Record all patched nodes on the object
-    if(objectLoader)
+    if (objectLoader)
     {
       CachedModifications modifications;
       modifications.Cache(cogDataNode);
@@ -395,7 +411,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     }
 
     // Move the Hierarchy to the end before initialization
-    if(Hierarchy* hierarchy = gameObject->has(Hierarchy))
+    if (Hierarchy* hierarchy = gameObject->has(Hierarchy))
     {
       gameObject->mComponents.EraseValue(hierarchy);
       gameObject->mComponents.PushBack(hierarchy);
@@ -404,106 +420,125 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
     return gameObject;
   }
   stream.mPatching = previousPatching;
-  //Failed to create composition.
+  // Failed to create composition.
   return nullptr;
 }
 
-Cog* TypeCheckFail(cstr sourceType, cstr sourceContainedType, cstr sourceName, BoundType* expectedMetaType)
+Cog* TypeCheckFail(cstr sourceType,
+                   cstr sourceContainedType,
+                   cstr sourceName,
+                   BoundType* expectedMetaType)
 {
-    String message = String::Format("Attempted to create an object from %s that Contains a different type. "
-      "Expected '%s'. Source type was '%s' in %s", sourceType, expectedMetaType->Name.c_str(), sourceContainedType, sourceName);
-    
-    DoNotifyErrorWithContext(message);
+  String message = String::Format(
+      "Attempted to create an object from %s that Contains a different type. "
+      "Expected '%s'. Source type was '%s' in %s",
+      sourceType,
+      expectedMetaType->Name.c_str(),
+      sourceContainedType,
+      sourceName);
 
-    return nullptr;
+  DoNotifyErrorWithContext(message);
+
+  return nullptr;
 }
 
-Cog* Factory::BuildFromFile(BoundType* expectedMetaType, StringParam fileName, CogCreationContext* context)
+Cog* Factory::BuildFromFile(BoundType* expectedMetaType,
+                            StringParam fileName,
+                            CogCreationContext* context)
 {
   String message = String::Format("Loading Cog File '%s'", fileName.c_str());
   PushErrorContext(message.c_str());
 
-  //Now loading from file.
-  if(!FileExists(fileName))
+  // Now loading from file.
+  if (!FileExists(fileName))
   {
-    String errorMessage = String::Format("No loaded archetype or file with name '%s'", fileName.c_str());
+    String errorMessage = String::Format(
+        "No loaded archetype or file with name '%s'", fileName.c_str());
     DoNotifyErrorNoAssert("Missing", errorMessage);
     return nullptr;
   }
 
   Cog* cog = nullptr;
 
-  //Load the file from data tree.
+  // Load the file from data tree.
   ObjectLoader loader;
   Status status;
   bool success = loader.OpenFile(status, fileName);
-  if(!status || !success)
+  if (!status || !success)
   {
     DoNotifyStatus(status);
     DoNotifyErrorWithContext("Failed to parse data file");
     return nullptr;
   }
 
-  //Validation - make sure the file contains the expected type
+  // Validation - make sure the file contains the expected type
   DataNode* root = loader.GetNext();
-  if(!(root->mTypeName == expectedMetaType->Name))
-    return TypeCheckFail("a file", root->mTypeName.c_str(), fileName.c_str(), expectedMetaType);
+  if (!(root->mTypeName == expectedMetaType->Name))
+    return TypeCheckFail(
+        "a file", root->mTypeName.c_str(), fileName.c_str(), expectedMetaType);
 
   return BuildFromStream(context, loader);
 }
 
-Cog* Factory::BuildFromArchetype(BoundType* expectedMetaType, Archetype* archetype, CogCreationContext* context)
+Cog* Factory::BuildFromArchetype(BoundType* expectedMetaType,
+                                 Archetype* archetype,
+                                 CogCreationContext* context)
 {
 
   PushErrorContextObject("Loading Archetype", archetype);
 
-  //Validation - make sure the archetype Contains the expected type
-  if(archetype->mStoredType != expectedMetaType)
-    return TypeCheckFail("an Archetype", archetype->mStoredType->Name.c_str(), archetype->Name.c_str(), expectedMetaType);
+  // Validation - make sure the archetype Contains the expected type
+  if (archetype->mStoredType != expectedMetaType)
+    return TypeCheckFail("an Archetype",
+                         archetype->mStoredType->Name.c_str(),
+                         archetype->Name.c_str(),
+                         expectedMetaType);
 
   const bool CacheBinaryArchetypes = true;
-  if(archetype->mBinaryCache && CacheBinaryArchetypes)
+  if (archetype->mBinaryCache && CacheBinaryArchetypes)
   {
     BinaryBufferLoader stream;
     stream.SetBlock(archetype->mBinaryCache);
     Cog* cog = BuildFromStream(context, stream);
 
-    if(cog)
+    if (cog)
       cog->SetArchetype(archetype);
 
     return cog;
   }
-  else if(DataNode* cachedTree = archetype->GetCachedDataTree())
+  else if (DataNode* cachedTree = archetype->GetCachedDataTree())
   {
     DataTreeLoader loader;
     loader.SetRoot(cachedTree);
 
     Cog* cog = BuildFromStream(context, loader);
 
-    if(cog)
+    if (cog)
       cog->SetArchetype(archetype);
 
-    // The Archetype owns the data tree, so pull it back from the loader so that it doesn't free it
+    // The Archetype owns the data tree, so pull it back from the loader so that
+    // it doesn't free it
     loader.TakeOwnershipOfFirstRoot();
 
-    if(CacheBinaryArchetypes)
+    if (CacheBinaryArchetypes)
       archetype->BinaryCache(cog, context);
 
     return cog;
   }
   else
   {
-    Cog* cog = BuildFromFile(expectedMetaType,  archetype->mLoadPath, context);
+    Cog* cog = BuildFromFile(expectedMetaType, archetype->mLoadPath, context);
 
-    if(cog)
+    if (cog)
     {
       cog->SetArchetype(archetype);
 
-      // If the Archetype inherits from a base Archetype, or has child Archetypes with 
-      // modifications, we want to clear them because they're modifications of a different context
+      // If the Archetype inherits from a base Archetype, or has child
+      // Archetypes with modifications, we want to clear them because they're
+      // modifications of a different context
       cog->MarkNotModified();
 
-      if(CacheBinaryArchetypes)
+      if (CacheBinaryArchetypes)
         archetype->BinaryCache(cog, context);
     }
 
@@ -517,26 +552,33 @@ Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType, StringParam source)
   return BuildAndSerialize(expectedMetaType, source, &context);
 }
 
-Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType, StringParam source, CogCreationContext* context)
+Cog* Factory::BuildAndSerialize(BoundType* expectedMetaType,
+                                StringParam source,
+                                CogCreationContext* context)
 {
   // Create and setup object
 
   ErrorIf(context == nullptr, "Context should not be NULL");
   Archetype* archetype = ArchetypeManager::FindOrNull(source);
 
-  if(archetype == nullptr)
+  if (archetype == nullptr)
     return BuildFromFile(expectedMetaType, source, context);
   else
     return BuildFromArchetype(expectedMetaType, archetype, context);
-
 }
 
-Space* Factory::CreateSpaceFromStream(Serializer& stream, uint flags, GameSession* gameSession)
+Space* Factory::CreateSpaceFromStream(Serializer& stream,
+                                      uint flags,
+                                      GameSession* gameSession)
 {
   return (Space*)CreateFromStream(nullptr, stream, flags, gameSession);
 }
 
-Cog* Factory::CreateCheckedType(BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession)
+Cog* Factory::CreateCheckedType(BoundType* expectedType,
+                                Space* space,
+                                StringParam filename,
+                                uint flags,
+                                GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;
@@ -546,14 +588,15 @@ Cog* Factory::CreateCheckedType(BoundType* expectedType, Space* space, StringPar
   context.mGameSession = gameSession;
 
   Cog* cog = BuildAndSerialize(expectedType, filename, &context);
-  if(cog != nullptr)
+  if (cog != nullptr)
   {
-    // If we're creating a game sessions, the game session in this function would be null (can't
-    // create a game session in another game session). So we should set ourself as the game
-    // session before calling initialize
-    if(expectedType == ZilchTypeId(GameSession))
+    // If we're creating a game sessions, the game session in this function
+    // would be null (can't create a game session in another game session). So
+    // we should set ourself as the game session before calling initialize
+    if (expectedType == ZilchTypeId(GameSession))
     {
-      ErrorIf(gameSession != nullptr, "Cannot create a game session in another game session");
+      ErrorIf(gameSession != nullptr,
+              "Cannot create a game session in another game session");
       initializer.mGameSession = (GameSession*)cog;
     }
 
@@ -564,12 +607,18 @@ Cog* Factory::CreateCheckedType(BoundType* expectedType, Space* space, StringPar
   return cog;
 }
 
-Space* Factory::CreateSpace(StringParam filename, uint flags, GameSession* gameSession)
+Space* Factory::CreateSpace(StringParam filename,
+                            uint flags,
+                            GameSession* gameSession)
 {
-  return (Space*)CreateCheckedType(ZilchTypeId(Space), nullptr, filename, flags, gameSession);
+  return (Space*)CreateCheckedType(
+      ZilchTypeId(Space), nullptr, filename, flags, gameSession);
 }
 
-Cog* Factory::CreateFromStream(Space* space, Serializer& stream, uint flags, GameSession* gameSession)
+Cog* Factory::CreateFromStream(Space* space,
+                               Serializer& stream,
+                               uint flags,
+                               GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;
@@ -579,7 +628,7 @@ Cog* Factory::CreateFromStream(Space* space, Serializer& stream, uint flags, Gam
   context.mGameSession = gameSession;
 
   Cog* cog = BuildFromStream(&context, stream);
-  if(cog != nullptr)
+  if (cog != nullptr)
   {
     cog->Initialize(initializer);
   }
@@ -588,7 +637,10 @@ Cog* Factory::CreateFromStream(Space* space, Serializer& stream, uint flags, Gam
   return cog;
 }
 
-Cog* Factory::Create(Space* space, StringParam filename, uint flags, GameSession* gameSession)
+Cog* Factory::Create(Space* space,
+                     StringParam filename,
+                     uint flags,
+                     GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;
@@ -598,7 +650,7 @@ Cog* Factory::Create(Space* space, StringParam filename, uint flags, GameSession
   context.mGameSession = gameSession;
 
   Cog* cog = BuildAndSerialize(ZilchTypeId(Cog), filename, &context);
-  if(cog != nullptr)
+  if (cog != nullptr)
   {
     cog->Initialize(initializer);
   }
@@ -607,12 +659,16 @@ Cog* Factory::Create(Space* space, StringParam filename, uint flags, GameSession
   return cog;
 }
 
-Cog* Factory::CreateRequired(Space* space, StringParam filename, uint flags, GameSession* gameSession)
+Cog* Factory::CreateRequired(Space* space,
+                             StringParam filename,
+                             uint flags,
+                             GameSession* gameSession)
 {
   Cog* object = Create(space, filename, flags, gameSession);
-  if(object == nullptr)
+  if (object == nullptr)
   {
-    FatalEngineError("Failed to create a required archetype '%s'.", filename.c_str());
+    FatalEngineError("Failed to create a required archetype '%s'.",
+                     filename.c_str());
   }
   return object;
 }
@@ -622,4 +678,4 @@ void Factory::Destroy(Cog* gameObject)
   mTracker->Destroy(gameObject);
 }
 
-}//namespace Zero
+} // namespace Zero

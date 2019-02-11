@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,15 +6,14 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(JointExceedImpulseLimit);
-  DeclareEvent(JointLowerLimitReached);
-  DeclareEvent(JointUpperLimitReached);
-}
+DeclareEvent(JointExceedImpulseLimit);
+DeclareEvent(JointLowerLimitReached);
+DeclareEvent(JointUpperLimitReached);
+} // namespace Events
 
 struct Joint;
 class Collider;
 
-//-------------------------------------------------------------------JointEvent
 /// Sent out when a joint reaches some condition. Currently sent out when
 /// a limit is reached or an impulse's limit is exceeded.
 class JointEvent : public Event
@@ -47,4 +41,4 @@ public:
   Link<JointEvent> link;
 };
 
-}//namespace Zero
+} // namespace Zero

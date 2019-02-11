@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GeometryContent.cpp
-/// Implementation of the Geometry content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -38,43 +30,47 @@ Vec3 GetBasisVector(BasisType::Enum basisEnum)
 {
   switch (basisEnum)
   {
-    case BasisType::PositiveX:
-      return Vec3(1.f, 0.f, 0.f);
-    case BasisType::NegativeX:
-      return Vec3(-1.f, 0.f, 0.f);
-    case BasisType::PositiveY:
-      return Vec3(0.f, 1.f, 0.f);
-    case BasisType::NegativeY:
-      return Vec3(0.f, -1.f, 0.f);
-    case BasisType::PositiveZ:
-      return Vec3(0.f, 0.f, 1.f);
-    case BasisType::NegativeZ:
-      return Vec3(0.f, 0.f, -1.f);
+  case BasisType::PositiveX:
+    return Vec3(1.f, 0.f, 0.f);
+  case BasisType::NegativeX:
+    return Vec3(-1.f, 0.f, 0.f);
+  case BasisType::PositiveY:
+    return Vec3(0.f, 1.f, 0.f);
+  case BasisType::NegativeY:
+    return Vec3(0.f, -1.f, 0.f);
+  case BasisType::PositiveZ:
+    return Vec3(0.f, 0.f, 1.f);
+  case BasisType::NegativeZ:
+    return Vec3(0.f, 0.f, -1.f);
   }
   return Vec3();
 }
 
-void SetGeometryContentImportOptions(GeometryImport* importOptions, GeometryOptions* geoOptions)
+void SetGeometryContentImportOptions(GeometryImport* importOptions,
+                                     GeometryOptions* geoOptions)
 {
   importOptions->mCollapsePivots = geoOptions->mCollapsePivots;
   importOptions->mOriginOffset = geoOptions->mOriginOffset;
-  importOptions->mScaleFactor  = geoOptions->mScaleFactor;
-  importOptions->mChangeBasis  = geoOptions->mChangeBasis;
-  importOptions->mXBasisTo     = geoOptions->mXBasisTo;
-  importOptions->mYBasisTo     = geoOptions->mYBasisTo;
-  importOptions->mZBasisTo     = geoOptions->mZBasisTo;
+  importOptions->mScaleFactor = geoOptions->mScaleFactor;
+  importOptions->mChangeBasis = geoOptions->mChangeBasis;
+  importOptions->mXBasisTo = geoOptions->mXBasisTo;
+  importOptions->mYBasisTo = geoOptions->mYBasisTo;
+  importOptions->mZBasisTo = geoOptions->mZBasisTo;
 }
 
-void SetGeometryContentMeshBuilderOptions(MeshBuilder* meshBuilder, GeometryOptions* geoOptions)
+void SetGeometryContentMeshBuilderOptions(MeshBuilder* meshBuilder,
+                                          GeometryOptions* geoOptions)
 {
   meshBuilder->mGenerateSmoothNormals = geoOptions->mGenerateSmoothNormals;
-  meshBuilder->mSmoothingAngleDegreesThreshold = geoOptions->mSmoothingAngleDegreesThreshold;
+  meshBuilder->mSmoothingAngleDegreesThreshold =
+      geoOptions->mSmoothingAngleDegreesThreshold;
   meshBuilder->mGenerateTangentSpace = geoOptions->mGenerateTangentSpace;
   meshBuilder->mInvertUvYAxis = geoOptions->mInvertUvYAxis;
   meshBuilder->mFlipWindingOrder = geoOptions->mFlipWindingOrder;
 }
 
-void SetGeometryContentPhysicsMeshBuilderOptions(PhysicsMeshBuilder* physicsBuilder, GeometryOptions* geoOptions)
+void SetGeometryContentPhysicsMeshBuilderOptions(
+    PhysicsMeshBuilder* physicsBuilder, GeometryOptions* geoOptions)
 {
   if (geoOptions->mPhysicsImport == PhysicsImport::StaticMesh)
     physicsBuilder->MeshBuilt = PhysicsMeshType::PhysicsMesh;
@@ -85,18 +81,19 @@ void SetGeometryContentPhysicsMeshBuilderOptions(PhysicsMeshBuilder* physicsBuil
 ContentItem* MakeGeometryContent(ContentInitializer& initializer)
 {
   String filename = initializer.Filename;
-  String metaFile = FilePath::CombineWithExtension(initializer.Library->SourcePath, filename, ".meta");
+  String metaFile = FilePath::CombineWithExtension(
+      initializer.Library->SourcePath, filename, ".meta");
 
   GeometryContent* newGeo = new GeometryContent();
 
-  //Always add Geometry Import
+  // Always add Geometry Import
   GeometryImport* import = new GeometryImport();
   import->Generate(initializer);
   newGeo->AddComponent(import);
 
   if (initializer.Options == nullptr)
   {
-    //Just add mesh and return
+    // Just add mesh and return
     MeshBuilder* meshBuilder = new MeshBuilder();
     meshBuilder->Generate(initializer);
     newGeo->AddComponent(meshBuilder);
@@ -106,7 +103,7 @@ ContentItem* MakeGeometryContent(ContentInitializer& initializer)
   ImportOptions* options = initializer.Options;
   SetGeometryContentImportOptions(import, options->mGeometryOptions);
 
-  //initializer.Options is present
+  // initializer.Options is present
   if (options->mGeometryOptions->mImportMeshes)
   {
     GeometryOptions* geoOptions = options->mGeometryOptions;
@@ -114,36 +111,38 @@ ContentItem* MakeGeometryContent(ContentInitializer& initializer)
     meshBuilder->Generate(initializer);
 
     // builder options
-    //meshBuilder->mCombineMeshes = geoOptions->mCombineMeshes;
+    // meshBuilder->mCombineMeshes = geoOptions->mCombineMeshes;
     SetGeometryContentMeshBuilderOptions(meshBuilder, geoOptions);
 
     newGeo->AddComponent(meshBuilder);
   }
 
-  //PhysicsImport::Enum physicsImportType = options->mGeometryOptions->mPhysicsImport;
-  if(options->mGeometryOptions->mPhysicsImport != PhysicsImport::NoMesh)
+  // PhysicsImport::Enum physicsImportType =
+  // options->mGeometryOptions->mPhysicsImport;
+  if (options->mGeometryOptions->mPhysicsImport != PhysicsImport::NoMesh)
   {
     PhysicsMeshBuilder* meshBuilder = new PhysicsMeshBuilder();
     meshBuilder->Generate(initializer);
 
-    SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder, options->mGeometryOptions);
+    SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder,
+                                                options->mGeometryOptions);
     newGeo->AddComponent(meshBuilder);
   }
 
-  if(options->mGeometryOptions->mImportAnimations)
+  if (options->mGeometryOptions->mImportAnimations)
   {
     AnimationBuilder* animationBuilder = new AnimationBuilder();
     animationBuilder->Generate(initializer);
     newGeo->AddComponent(animationBuilder);
   }
 
-  if(options->mGeometryOptions->mCreateArchetype)
+  if (options->mGeometryOptions->mCreateArchetype)
   {
     GeneratedArchetype* archetypeGeometry = new GeneratedArchetype();
     archetypeGeometry->Generate(initializer);
     newGeo->AddComponent(archetypeGeometry);
   }
-  
+
   if (options->mGeometryOptions->mImportTextures)
   {
     TextureContent* textureContent = new TextureContent();
@@ -154,22 +153,26 @@ ContentItem* MakeGeometryContent(ContentInitializer& initializer)
   return newGeo;
 }
 
-ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer& initializer)
+ContentItem* UpdateGeometryContent(ContentItem* existingItem,
+                                   ContentInitializer& initializer)
 {
   String filename = initializer.Filename;
-  String metaFile = FilePath::CombineWithExtension(initializer.Library->SourcePath, filename, ".meta");
+  String metaFile = FilePath::CombineWithExtension(
+      initializer.Library->SourcePath, filename, ".meta");
 
-  if(!FileExists(metaFile))
+  if (!FileExists(metaFile))
     return nullptr;
 
-  GeometryContent* geometryContent = Type::DebugOnlyDynamicCast<GeometryContent*>(existingItem);
+  GeometryContent* geometryContent =
+      Type::DebugOnlyDynamicCast<GeometryContent*>(existingItem);
 
-  // we have loaded our existing geometry content and need to update the meta file for our rebuild
+  // we have loaded our existing geometry content and need to update the meta
+  // file for our rebuild
   GeometryImport* import = geometryContent->has(GeometryImport);
 
   if (initializer.Options == nullptr && !geometryContent->has(MeshBuilder))
   {
-    //Just add mesh and return
+    // Just add mesh and return
     MeshBuilder* meshBuilder = new MeshBuilder();
     meshBuilder->Generate(initializer);
     geometryContent->AddComponent(meshBuilder);
@@ -179,19 +182,21 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   ImportOptions* options = initializer.Options;
   SetGeometryContentImportOptions(import, options->mGeometryOptions);
 
-  //initializer.Options is present
-  if (options->mGeometryOptions->mImportMeshes && !geometryContent->has(MeshBuilder))
+  // initializer.Options is present
+  if (options->mGeometryOptions->mImportMeshes &&
+      !geometryContent->has(MeshBuilder))
   {
     GeometryOptions* geoOptions = options->mGeometryOptions;
     MeshBuilder* meshBuilder = new MeshBuilder();
     meshBuilder->Generate(initializer);
 
     // builder options
-    //meshBuilder->mCombineMeshes = geoOptions->mCombineMeshes;
+    // meshBuilder->mCombineMeshes = geoOptions->mCombineMeshes;
     SetGeometryContentMeshBuilderOptions(meshBuilder, geoOptions);
     geometryContent->AddComponent(meshBuilder);
   }
-  else if (!options->mGeometryOptions->mImportMeshes && geometryContent->has(MeshBuilder))
+  else if (!options->mGeometryOptions->mImportMeshes &&
+           geometryContent->has(MeshBuilder))
   {
     // we no longer have this option selected, delete it
     geometryContent->RemoveComponent(ZilchTypeId(MeshBuilder));
@@ -203,15 +208,19 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
     SetGeometryContentMeshBuilderOptions(meshBuilder, geoOptions);
   }
 
-  if ((options->mGeometryOptions->mPhysicsImport != PhysicsImport::NoMesh) && !geometryContent->has(PhysicsMeshBuilder))
+  if ((options->mGeometryOptions->mPhysicsImport != PhysicsImport::NoMesh) &&
+      !geometryContent->has(PhysicsMeshBuilder))
   {
     PhysicsMeshBuilder* meshBuilder = new PhysicsMeshBuilder();
     meshBuilder->Generate(initializer);
 
-    SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder, options->mGeometryOptions);
+    SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder,
+                                                options->mGeometryOptions);
     geometryContent->AddComponent(meshBuilder);
   }
-  else if ((options->mGeometryOptions->mPhysicsImport == PhysicsImport::NoMesh) && geometryContent->has(PhysicsMeshBuilder))
+  else if ((options->mGeometryOptions->mPhysicsImport ==
+            PhysicsImport::NoMesh) &&
+           geometryContent->has(PhysicsMeshBuilder))
   {
     // we no longer have this option selected, delete it
     geometryContent->RemoveComponent(ZilchTypeId(PhysicsMeshBuilder));
@@ -219,40 +228,47 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (geometryContent->has(PhysicsMeshBuilder))
   {
     PhysicsMeshBuilder* meshBuilder = geometryContent->has(PhysicsMeshBuilder);
-    SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder, options->mGeometryOptions);
+    SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder,
+                                                options->mGeometryOptions);
   }
 
-  if (options->mGeometryOptions->mImportAnimations && !geometryContent->has(AnimationBuilder))
+  if (options->mGeometryOptions->mImportAnimations &&
+      !geometryContent->has(AnimationBuilder))
   {
     AnimationBuilder* animationBuilder = new AnimationBuilder();
     animationBuilder->Generate(initializer);
     geometryContent->AddComponent(animationBuilder);
   }
-  else if (!options->mGeometryOptions->mImportAnimations && geometryContent->has(AnimationBuilder))
+  else if (!options->mGeometryOptions->mImportAnimations &&
+           geometryContent->has(AnimationBuilder))
   {
     // we no longer have this option selected, delete it
     geometryContent->RemoveComponent(ZilchTypeId(AnimationBuilder));
   }
 
-  if (options->mGeometryOptions->mCreateArchetype && !geometryContent->has(GeneratedArchetype))
+  if (options->mGeometryOptions->mCreateArchetype &&
+      !geometryContent->has(GeneratedArchetype))
   {
     GeneratedArchetype* archetypeGeometry = new GeneratedArchetype();
     archetypeGeometry->Generate(initializer);
     geometryContent->AddComponent(archetypeGeometry);
   }
-  else if (!options->mGeometryOptions->mCreateArchetype && geometryContent->has(GeneratedArchetype))
+  else if (!options->mGeometryOptions->mCreateArchetype &&
+           geometryContent->has(GeneratedArchetype))
   {
     // we no longer have this option selected, delete it;
     geometryContent->RemoveComponent(ZilchTypeId(GeneratedArchetype));
   }
 
-  if (options->mGeometryOptions->mImportTextures && !geometryContent->has(TextureContent))
+  if (options->mGeometryOptions->mImportTextures &&
+      !geometryContent->has(TextureContent))
   {
     TextureContent* textureContent = new TextureContent();
     textureContent->Generate(initializer);
     geometryContent->AddComponent(textureContent);
   }
-  else if (!options->mGeometryOptions->mImportTextures && geometryContent->has(TextureContent))
+  else if (!options->mGeometryOptions->mImportTextures &&
+           geometryContent->has(TextureContent))
   {
     // we no longer have this option selected, delete it
     geometryContent->RemoveComponent(ZilchTypeId(TextureContent));
@@ -261,7 +277,6 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   return geometryContent;
 }
 
-//------------------------------------------------------------ GeometryContent
 ZilchDefineType(GeometryContent, builder, type)
 {
 }
@@ -277,7 +292,6 @@ GeometryContent::GeometryContent(StringParam inputFilename)
   Filename = FilePath::GetFileName(inputFilename);
 }
 
-//-------------------------------------------------------------- Geometry Import
 ZilchDefineType(GeometryImport, builder, type)
 {
   ZeroBindComponent();
@@ -287,10 +301,14 @@ ZilchDefineType(GeometryImport, builder, type)
   ZilchBindFieldProperty(mCollapsePivots);
   ZilchBindFieldProperty(mOriginOffset);
   ZilchBindFieldProperty(mScaleFactor);
-  ZilchBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mXBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
-  ZilchBindFieldProperty(mYBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
-  ZilchBindFieldProperty(mZBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
+  ZilchBindFieldProperty(mChangeBasis)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindFieldProperty(mXBasisTo)->ZeroFilterEquality(
+      mChangeBasis, bool, true);
+  ZilchBindFieldProperty(mYBasisTo)->ZeroFilterEquality(
+      mChangeBasis, bool, true);
+  ZilchBindFieldProperty(mZBasisTo)->ZeroFilterEquality(
+      mChangeBasis, bool, true);
 }
 
 void GeometryImport::Serialize(Serializer& stream)
@@ -326,7 +344,8 @@ void GeometryImport::ComputeTransforms()
     mChangeOfBasis.Transpose();
     if (!mChangeOfBasis.SafeInvert())
     {
-      ZPrint("Geometry Processor: Change of basis invalid. Falling back to no change of basis.\n");
+      ZPrint("Geometry Processor: Change of basis invalid. Falling back to no "
+             "change of basis.\n");
       mChangeOfBasis.SetIdentity();
     }
   }
@@ -335,14 +354,13 @@ void GeometryImport::ComputeTransforms()
   mNormalTransform.BuildTransform(mChangeOfBasis, Vec3(1.0f / mScaleFactor));
 }
 
-//--------------------------------------------------------- Physics Mesh Builder
 ZilchDefineType(PhysicsMeshBuilder, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::CallSetDefaults);
   ZeroBindDependency(GeometryContent);
   ZeroBindDependency(MeshBuilder);
-  
+
   ZilchBindGetterSetterProperty(MeshBuilt);
 
   type->CreatableInScript = false;
@@ -350,10 +368,10 @@ ZilchDefineType(PhysicsMeshBuilder, builder, type)
 
 bool PhysicsMeshBuilder::NeedsBuilding(BuildOptions& options)
 {
-  if(Meshes.Empty())
+  if (Meshes.Empty())
     return true;
-  
-  //Just check the first file
+
+  // Just check the first file
   String outputFile = GetOutputFile(0);
   String destFile = FilePath::Combine(options.OutputPath, outputFile);
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
@@ -366,7 +384,7 @@ const String ConvexMeshExtension = ".convexmesh";
 String PhysicsMeshBuilder::GetOutputFile(uint index)
 {
   String extension = NormalMeshExtension;
-  if(MeshBuilt == PhysicsMeshType::ConvexMesh)
+  if (MeshBuilt == PhysicsMeshType::ConvexMesh)
     extension = ConvexMeshExtension;
 
   return BuildString(Meshes[index].mName, extension);
@@ -382,11 +400,11 @@ void PhysicsMeshBuilder::SetMeshBuilt(PhysicsMeshType::Enum type)
   // If they're different types, we need to re-generate Id's for each entry
   // We need to re-generate it so that when the content is reloaded, it will
   // be reloaded into new resources (as the type has changed)
-  if(MeshBuilt != type)
+  if (MeshBuilt != type)
   {
     ResourceId baseId = GenerateUniqueId64();
 
-    for(uint i = 0; i < Meshes.Size(); ++i)
+    for (uint i = 0; i < Meshes.Size(); ++i)
     {
       GeometryResourceEntry& entry = Meshes[i];
 
@@ -411,19 +429,30 @@ void PhysicsMeshBuilder::Serialize(Serializer& stream)
 
 void PhysicsMeshBuilder::BuildListing(ResourceListing& listing)
 {
-  for(uint i=0;i<Meshes.Size();++i)
+  for (uint i = 0; i < Meshes.Size(); ++i)
   {
     GeometryResourceEntry& entry = Meshes[i];
     String outputFile = GetOutputFile(i);
 
-    if(MeshBuilt == PhysicsMeshType::PhysicsMesh)
-      listing.PushBack(ResourceEntry(0, "PhysicsMesh", entry.mName, outputFile, entry.mResourceId, this->mOwner, this));
+    if (MeshBuilt == PhysicsMeshType::PhysicsMesh)
+      listing.PushBack(ResourceEntry(0,
+                                     "PhysicsMesh",
+                                     entry.mName,
+                                     outputFile,
+                                     entry.mResourceId,
+                                     this->mOwner,
+                                     this));
     else
-      listing.PushBack(ResourceEntry(0, "ConvexMesh", entry.mName, outputFile, entry.mResourceId, this->mOwner, this));
+      listing.PushBack(ResourceEntry(0,
+                                     "ConvexMesh",
+                                     entry.mName,
+                                     outputFile,
+                                     entry.mResourceId,
+                                     this->mOwner,
+                                     this));
   }
 }
 
-//--------------------------------------------------------------- Animation Clip
 ZilchDefineType(AnimationClip, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -449,7 +478,6 @@ void AnimationClip::SetDefaults()
   mAnimationIndex = 0;
 }
 
-//------------------------------------------------------------ Animation Builder
 ZilchDefineType(AnimationBuilder, builder, type)
 {
   ZeroBindComponent();
@@ -483,14 +511,20 @@ bool AnimationBuilder::NeedsBuilding(BuildOptions& options)
 
 void AnimationBuilder::BuildListing(ResourceListing& listing)
 {
-  forRange (GeometryResourceEntry& entry, mAnimations.All())
+  forRange(GeometryResourceEntry & entry, mAnimations.All())
   {
     String output = BuildString(entry.mName, ".anim.bin");
-    listing.PushBack(ResourceEntry(0, "AnimationBin", entry.mName, output, entry.mResourceId, this->mOwner, this));
+    listing.PushBack(ResourceEntry(0,
+                                   "AnimationBin",
+                                   entry.mName,
+                                   output,
+                                   entry.mResourceId,
+                                   this->mOwner,
+                                   this));
   }
 }
 
-//------------------------------------------------------------------------ Texture Content
+//Texture Content
 ZilchDefineType(TextureContent, builder, type)
 {
   ZeroBindComponent();
@@ -507,7 +541,7 @@ void TextureContent::Generate(ContentInitializer& initializer)
 {
 }
 
-//------------------------------------------------------------------------ Geometry Content
+//Geometry Content
 
 String GeometryContent::GetName()
 {
@@ -517,7 +551,7 @@ String GeometryContent::GetName()
 void GeometryContent::BuildContent(BuildOptions& options)
 {
   bool needToBuild = ContentComposition::AnyNeedsBuilding(options);
-  if(needToBuild)
+  if (needToBuild)
   {
     String fullFilePath = FilePath::Combine(options.SourcePath, Filename);
     GeometryImporter importer(fullFilePath, options.OutputPath, String());
@@ -526,57 +560,65 @@ void GeometryContent::BuildContent(BuildOptions& options)
     bool needsLoading = false;
     switch (result)
     {
-      // no content was present in the file
-      case Zero::GeometryProcessorCodes::NoContent:
-      {
-        options.Failure = true;
-        options.Message = String::Format("Failed to process Geometry. File '%s' Error: No importable content present",
-                                         Filename.c_str());
+    // no content was present in the file
+    case Zero::GeometryProcessorCodes::NoContent:
+    {
+      options.Failure = true;
+      options.Message = String::Format("Failed to process Geometry. File '%s' "
+                                       "Error: No importable content present",
+                                       Filename.c_str());
 
-        // there was no content, remove the associated files from our content directory
-        String metaFile = BuildString(fullFilePath, ".meta");
-        return;
-      }
-      // it worked
-      case Zero::GeometryProcessorCodes::Success:
-        return;
-      // something went wrong, abort processing imported file. 
-      // the geometry processor outputs its own error messages to the console.
-      case Zero::GeometryProcessorCodes::Failed:
-      {
-        options.Failure = true;
-        options.Message = String::Format("Failed to process Geometry. File '%s', See above Geometry Processor Error.", Filename.c_str());
-
-        // Get our projects content folder
-        ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
-        if (projectSettings != nullptr)
-        {
-          String contentDirectory = FilePath::Normalize(projectSettings->GetContentFolder());
-
-          // If importing the item failed delete the content item but only if that item
-          // is in the projects local content folder since it was copied and will fail
-          // to be processed each time the project is opened until the user deletes the files
-          // manually. Otherwise a core resource failed and should not be deleted.
-          String fileDirectory = FilePath::Normalize(FilePath::GetDirectoryPath(fullFilePath));
-          if (fileDirectory == contentDirectory)
-          {
-            String metaFile = BuildString(fullFilePath, ".meta");
-            DeleteFile(metaFile);
-            DeleteFile(fullFilePath);
-          }
-        }
-        return;
-      }
-      // let editor side importing know we have to load/reload the scene graph or textures
-      case Zero::GeometryProcessorCodes::LoadGraph:
-      case Zero::GeometryProcessorCodes::LoadTextures:
-      case Zero::GeometryProcessorCodes::LoadGraphAndTextures:
-        needsLoading = true;
-        break;
-      default:
-        break;
+      // there was no content, remove the associated files from our content
+      // directory
+      String metaFile = BuildString(fullFilePath, ".meta");
+      return;
     }
-    
+    // it worked
+    case Zero::GeometryProcessorCodes::Success:
+      return;
+    // something went wrong, abort processing imported file.
+    // the geometry processor outputs its own error messages to the console.
+    case Zero::GeometryProcessorCodes::Failed:
+    {
+      options.Failure = true;
+      options.Message = String::Format("Failed to process Geometry. File '%s', "
+                                       "See above Geometry Processor Error.",
+                                       Filename.c_str());
+
+      // Get our projects content folder
+      ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
+      if (projectSettings != nullptr)
+      {
+        String contentDirectory =
+            FilePath::Normalize(projectSettings->GetContentFolder());
+
+        // If importing the item failed delete the content item but only if that
+        // item is in the projects local content folder since it was copied and
+        // will fail to be processed each time the project is opened until the
+        // user deletes the files manually. Otherwise a core resource failed and
+        // should not be deleted.
+        String fileDirectory =
+            FilePath::Normalize(FilePath::GetDirectoryPath(fullFilePath));
+        if (fileDirectory == contentDirectory)
+        {
+          String metaFile = BuildString(fullFilePath, ".meta");
+          DeleteFile(metaFile);
+          DeleteFile(fullFilePath);
+        }
+      }
+      return;
+    }
+    // let editor side importing know we have to load/reload the scene graph or
+    // textures
+    case Zero::GeometryProcessorCodes::LoadGraph:
+    case Zero::GeometryProcessorCodes::LoadTextures:
+    case Zero::GeometryProcessorCodes::LoadGraphAndTextures:
+      needsLoading = true;
+      break;
+    default:
+      break;
+    }
+
     if (needsLoading)
     {
       // we need to do more work
@@ -591,7 +633,6 @@ void GeometryContent::BuildContent(BuildOptions& options)
   }
 }
 
-//------------------------------------------------------------
 ZilchDefineType(GeneratedArchetype, builder, type)
 {
   ZeroBindComponent();
@@ -611,19 +652,17 @@ void GeneratedArchetype::Serialize(Serializer& stream)
 
 GeneratedArchetype::GeneratedArchetype()
 {
-
 }
 
 bool GeneratedArchetype::NeedToBuildArchetype(ContentItem* item)
 {
   String metaFile = mOwner->GetMetaFilePath();
   String archetypeFile = item->GetFullPath();
-  bool fileOutOfDate =  NeedToBuild(mOwner->GetFullPath(), archetypeFile);
-  bool metaFileOutOfDate =  NeedToBuild(metaFile, archetypeFile);
+  bool fileOutOfDate = NeedToBuild(mOwner->GetFullPath(), archetypeFile);
+  bool metaFileOutOfDate = NeedToBuild(metaFile, archetypeFile);
   return fileOutOfDate || metaFileOutOfDate;
 }
 
-//------------------------------------------------------------------------------
 
 void CreateGeometryContent(ContentSystem* system)
 {
@@ -637,116 +676,170 @@ void CreateGeometryContent(ContentSystem* system)
 
   AddContent<GeometryContent>(system);
   // COMMON INTERCHANGE FORMATS
-  // Autodesk 
-  system->CreatorsByExtension["fbx"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // Autodesk
+  system->CreatorsByExtension["fbx"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Wavefront Object
-  system->CreatorsByExtension["obj"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  // Collada 
-  system->CreatorsByExtension["dae"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["obj"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // Collada
+  system->CreatorsByExtension["dae"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Global Module in Basic Program
-  system->CreatorsByExtension["glb"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["glb"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3ds Max 3DS
-  system->CreatorsByExtension["3ds"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["3ds"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Blender 3D
-  system->CreatorsByExtension["blend"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["blend"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3ds Max ASE
-  system->CreatorsByExtension["ase"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  // Industry Foundation Classes (IFC/Step) NEEDS ADDITIONAL TESTING TO FIGURE OUT WHAT WENT WRONG
-  system->CreatorsByExtension["ifc"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ase"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // Industry Foundation Classes (IFC/Step) NEEDS ADDITIONAL TESTING TO FIGURE
+  // OUT WHAT WENT WRONG
+  system->CreatorsByExtension["ifc"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // XGL
-  system->CreatorsByExtension["xgl"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["zgl"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["xgl"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["zgl"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Stanford Polygon Library
-  system->CreatorsByExtension["ply"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ply"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // AutoCAD DXF
-  system->CreatorsByExtension["dxf"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  // LightWave 
-  system->CreatorsByExtension["lwo"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["dxf"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // LightWave
+  system->CreatorsByExtension["lwo"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // LightWave Scene
-  system->CreatorsByExtension["lws"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["lws"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Modo
-  system->CreatorsByExtension["lxo"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  // Stereolithography 
-  system->CreatorsByExtension["stl"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["lxo"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // Stereolithography
+  system->CreatorsByExtension["stl"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // DirectX X
-  system->CreatorsByExtension["x"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["x"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // AC3D
-  system->CreatorsByExtension["ac"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ac"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Milkshape 3D
-  system->CreatorsByExtension["ms3d"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  // TrueSpace 
-  system->CreatorsByExtension["cob"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ms3d"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // TrueSpace
+  system->CreatorsByExtension["cob"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // untested truespace format
-  system->CreatorsByExtension["scn"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  
+  system->CreatorsByExtension["scn"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+
   // MOTION CAPTURE FORMATS
-  // Biovision BVH <- ASSIMP tokenizer does not properly handle nodes names with spaces in this format.
-  // system->CreatorsByExtension["bvh"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  // Biovision BVH <- ASSIMP tokenizer does not properly handle nodes names with
+  // spaces in this format. system->CreatorsByExtension["bvh"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // CharacterStudio Motion
-  system->CreatorsByExtension["csm"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  
+  system->CreatorsByExtension["csm"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+
   // GRAPHICS ENGINE FORMATS
   // Ogre XML
-  system->CreatorsByExtension["xml"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["xml"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Irrlicht Mesh
-  // system->CreatorsByExtension["irrmesh"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  // system->CreatorsByExtension["irrmesh"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // Irrlicht Scene <- irradiance values to apply to the above
-  // system->CreatorsByExtension["irr"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
-  
+  // system->CreatorsByExtension["irr"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+
   // GAME FILE FORMATS
   // Quake I && (not game file) -> 3D GameStudio (3DGS)
-  system->CreatorsByExtension["mdl"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["mdl"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake II
-  system->CreatorsByExtension["md2"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["md2"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake III Mesh
-  system->CreatorsByExtension["md3"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  // Quake III Map/BSP, none of these files I found had models or textures present in them
-  //system->CreatorsByExtension["pk3"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  system->CreatorsByExtension["md3"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  // Quake III Map/BSP, none of these files I found had models or textures
+  // present in them
+  // system->CreatorsByExtension["pk3"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // Doom 3
-  system->CreatorsByExtension["md5mesh"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["md5mesh"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Valve Model
-  system->CreatorsByExtension["smd"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["smd"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Open Game Engine Exchange
-  system->CreatorsByExtension["ogex"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  
+  system->CreatorsByExtension["ogex"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+
   // OTHER FILE FORMATS
   // BlitzBasic 3D
-  system->CreatorsByExtension["b3d"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["b3d"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quick3D
-  system->CreatorsByExtension["q3o"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["q3s"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["q3o"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["q3s"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Neutral File Format && Sense8 WorldToolKit
-  system->CreatorsByExtension["nff"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["nff"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Object File Format
-  system->CreatorsByExtension["off"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["off"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // PovRAY Raw
-  system->CreatorsByExtension["raw"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["raw"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Terragen Terrain
-  system->CreatorsByExtension["ter"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ter"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3D GameStudio (3DGS) Terrain
-  system->CreatorsByExtension["hmp"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["hmp"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Nevercenter Silo Object
-  system->CreatorsByExtension["sib"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["sib"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
-  system->CreatorsByExtension["amf"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["x3d"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["mmd"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["amf"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["x3d"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["mmd"] = ContentTypeEntry(
+      ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
-  //system->CreatorsByExtension["wrl"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  
+  // system->CreatorsByExtension["wrl"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent,
+  // UpdateGeometryContent);
+
   // UNTESTED FORMAT IMPORTS BELOW, no readily available models to test
   // UNTESTED GAME FORMATS
   // glTF <-DOESN'T WORK, NEEDS TO OPEN ADDITIONAL FILES
-  //system->CreatorsByExtension["gltf"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  // system->CreatorsByExtension["gltf"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // Return to Castle Wolfenstein
-  //system->CreatorsByExtension["mdc"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
-  //system->CreatorsByExtension["vta"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
-//   // Unreal, may attempt to open multiple files that reference each other, not currently supported
-//   system->CreatorsByExtension["3d"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
- 
+  // system->CreatorsByExtension["mdc"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  // system->CreatorsByExtension["vta"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  //   // Unreal, may attempt to open multiple files that reference each other,
+  //   not currently supported system->CreatorsByExtension["3d"] =
+  //   ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+
   // UNTESTED OTHER FILE FORMATS
   // Izware Nendo
-  //system->CreatorsByExtension["ndo"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
+  // system->CreatorsByExtension["ndo"] =
+  // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
 }
 
 void AddGeometryFileFilters(ResourceManager* manager)
@@ -803,7 +896,7 @@ void AddGeometryFileFilters(ResourceManager* manager)
   StringBuilder filterBuilder;
 
   // Skip the first filter (it's the one we're building)
-  for(uint i = allMeshesIndex + 1; i < filters.Size(); ++i)
+  for (uint i = allMeshesIndex + 1; i < filters.Size(); ++i)
   {
     FileDialogFilter& currFilter = filters[i];
     filterBuilder.Append(currFilter.mFilter);
@@ -815,4 +908,4 @@ void AddGeometryFileFilters(ResourceManager* manager)
   allFilter.mFilter = filterBuilder.ToString();
 }
 
-}//namespace Zero
+} // namespace Zero

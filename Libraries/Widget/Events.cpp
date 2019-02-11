@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,54 +6,56 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(MouseEnterPreview);
-  DefineEvent(KeyPreview);
-  DefineEvent(HoverKeyPreview);
-  DefineEvent(HoverKeyDown);
-  DefineEvent(HoverKeyUp);
-  DefineEvent(HoverKeyRepeated);
-  DefineEvent(MouseFileDrop);
-  DefineEvent(MouseUpdate);
-  DefineEvent(MouseEnter);
-  DefineEvent(MouseExit);
-  DefineEvent(MouseEnterHierarchy);
-  DefineEvent(MouseExitHierarchy);
-  DefineEvent(MouseDown);
-  DefineEvent(MouseUp);
-  DefineEvent(LeftMouseDown);
-  DefineEvent(LeftMouseUp);
-  DefineEvent(RightMouseDown);
-  DefineEvent(RightMouseUp);
-  DefineEvent(MiddleMouseDown);
-  DefineEvent(MiddleMouseUp);
-  DefineEvent(MouseMove);
-  DefineEvent(MouseScroll);
-  DefineEvent(LeftMouseDrag);
-  DefineEvent(RightMouseDrag);
-  DefineEvent(MouseHold);
-  DefineEvent(MouseHover);
-  DefineEvent(LeftClick);
-  DefineEvent(RightClick);
-  DefineEvent(MiddleClick);
-  DefineEvent(DoubleClick);
-  DefineEvent(MouseDrop);
-  DefineEvent(FocusLost);
-  DefineEvent(FocusGained);
-  DefineEvent(FocusLostHierarchy);
-  DefineEvent(FocusGainedHierarchy);
-  DefineEvent(FocusReset);
-  DefineEvent(WidgetUpdate);
-  DefineEvent(Activated);
-  DefineEvent(Deactivated);
-  DefineEvent(WidgetShown);
-  DefineEvent(OnDestroy);
-  DefineEvent(Closing);
-}//namespace Events
+DefineEvent(MouseEnterPreview);
+DefineEvent(KeyPreview);
+DefineEvent(HoverKeyPreview);
+DefineEvent(HoverKeyDown);
+DefineEvent(HoverKeyUp);
+DefineEvent(HoverKeyRepeated);
+DefineEvent(MouseFileDrop);
+DefineEvent(MouseUpdate);
+DefineEvent(MouseEnter);
+DefineEvent(MouseExit);
+DefineEvent(MouseEnterHierarchy);
+DefineEvent(MouseExitHierarchy);
+DefineEvent(MouseDown);
+DefineEvent(MouseUp);
+DefineEvent(LeftMouseDown);
+DefineEvent(LeftMouseUp);
+DefineEvent(RightMouseDown);
+DefineEvent(RightMouseUp);
+DefineEvent(MiddleMouseDown);
+DefineEvent(MiddleMouseUp);
+DefineEvent(MouseMove);
+DefineEvent(MouseScroll);
+DefineEvent(LeftMouseDrag);
+DefineEvent(RightMouseDrag);
+DefineEvent(MouseHold);
+DefineEvent(MouseHover);
+DefineEvent(LeftClick);
+DefineEvent(RightClick);
+DefineEvent(MiddleClick);
+DefineEvent(DoubleClick);
+DefineEvent(MouseDrop);
+DefineEvent(FocusLost);
+DefineEvent(FocusGained);
+DefineEvent(FocusLostHierarchy);
+DefineEvent(FocusGainedHierarchy);
+DefineEvent(FocusReset);
+DefineEvent(WidgetUpdate);
+DefineEvent(Activated);
+DefineEvent(Deactivated);
+DefineEvent(WidgetShown);
+DefineEvent(OnDestroy);
+DefineEvent(Closing);
+} // namespace Events
 
-
-String NamedMouseDown[] = {Events::LeftMouseDown, Events::RightMouseDown, Events::MiddleMouseDown};
-String NamedMouseUp[] = {Events::LeftMouseUp, Events::RightMouseUp, Events::MiddleMouseUp};
-String NamedMouseClick[] = {Events::LeftClick, Events::RightClick, Events::MiddleClick};
+String NamedMouseDown[] = {
+    Events::LeftMouseDown, Events::RightMouseDown, Events::MiddleMouseDown};
+String NamedMouseUp[] = {
+    Events::LeftMouseUp, Events::RightMouseUp, Events::MiddleMouseUp};
+String NamedMouseClick[] = {
+    Events::LeftClick, Events::RightClick, Events::MiddleClick};
 
 ZilchDefineType(FocusEvent, builder, type)
 {
@@ -85,9 +82,9 @@ MouseEvent::MouseEvent()
   Source = NULL;
   Button = MouseButtons::None;
   ButtonDown = false;
-  Position = Vec2(0,0);
-  Movement = Vec2(0,0);
-  Scroll = Vec2(0,0);
+  Position = Vec2(0, 0);
+  Movement = Vec2(0, 0);
+  Scroll = Vec2(0, 0);
   ShiftPressed = false;
   AltPressed = false;
   Handled = false;
@@ -112,20 +109,17 @@ ZilchDefineType(MouseEvent, builder, type)
   ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
 }
 
-//------------------------------------------------------------MouseFileDropEvent
 ZilchDefineType(MouseFileDropEvent, builder, type)
 {
   ZilchBindMember(Files);
 }
 
-MouseFileDropEvent::MouseFileDropEvent()
-  : MouseEvent()
+MouseFileDropEvent::MouseFileDropEvent() : MouseEvent()
 {
   Files = ZilchAllocate(ArrayString);
 }
 
-MouseFileDropEvent::MouseFileDropEvent(const MouseEvent& rhs)
-  : MouseEvent(rhs)
+MouseFileDropEvent::MouseFileDropEvent(const MouseEvent& rhs) : MouseEvent(rhs)
 {
   Files = ZilchAllocate(ArrayString);
 }
@@ -136,5 +130,4 @@ void MouseFileDropEvent::Copy(const OsMouseDropEvent& rhs)
   files.Insert(files.Begin(), rhs.Files.Begin(), rhs.Files.End());
 }
 
-
-}
+} // namespace Zero

@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file String.cpp
-/// Implementation of the referenced string class.
-///
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "ThreadSync.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------------------------- StringPool
+//StringPool
 #if defined(ZeroStringPooling)
 typedef HashSet<StringNode*, PoolPolicy> StringPoolSet;
 class StringPool
@@ -23,7 +15,8 @@ public:
   ~StringPool();
   static StringPool& GetInstance();
 
-  // The empty node is an optimization for empty strings, but it still has to be in the pool
+  // The empty node is an optimization for empty strings, but it still has to be
+  // in the pool
   StringNode& GetEmptyNode();
 
   SpinLock mLock;
@@ -40,7 +33,7 @@ StringPool::~StringPool()
   // It is possible that the StringPool can be freed before the last few Strings
   // This only occurs post main (due to pre-main allocated strings)
   // We handle this by setting a special flag on the StringNode
-  forRange(StringNode* node, mPool.All())
+  forRange(StringNode * node, mPool.All())
   {
     node->HashCode = StringNode::StringPoolFreeHashCode;
   }
@@ -48,7 +41,7 @@ StringPool::~StringPool()
 
 StringNode& StringPool::GetEmptyNode()
 {
-  static StringNode node = { 1, 0, 0,{ 0 } };
+  static StringNode node = {1, 0, 0, {0}};
   return node;
 }
 
@@ -75,7 +68,7 @@ size_t HashString(const char* str, size_t l)
   // if string is too long, don't hash all its chars
   size_t step = (l >> 5) + 1;
   size_t l1;
-  for (l1 = l; l1 >= step; l1 -= step)  /* compute hash */
+  for (l1 = l; l1 >= step; l1 -= step) /* compute hash */
     h = h ^ ((h << 5) + (h >> 2) + byte(str[l1 - 1]));
   return h;
 }
@@ -90,7 +83,6 @@ bool CaseInsensitiveCompare(Rune a, Rune b)
   return UTF8::ToLower(a) == UTF8::ToLower(b);
 }
 
-//----------------------------------------------------------------------- String
 
 String::String()
 {
@@ -135,7 +127,7 @@ String::String(const this_type& rhs)
 
 String::String(char character)
 {
-  char str[2] = { character, '\0' };
+  char str[2] = {character, '\0'};
   Assign(str, 1);
 }
 
@@ -217,7 +209,8 @@ StringRange String::SubString(StringIterator begin, StringIterator end) const
   return All().SubString(begin, end);
 }
 
-StringRange String::SubStringFromByteIndices(size_t startIndex, size_t endIndex) const
+StringRange String::SubStringFromByteIndices(size_t startIndex,
+                                             size_t endIndex) const
 {
   return All().SubStringFromByteIndices(startIndex, endIndex);
 }
@@ -239,14 +232,15 @@ StringRange String::All() const
 
 String& String::operator=(const String& other)
 {
-  // Instead of checking if we're doing self assignment with the string, its much more useful to check if
-  // we're self assigning the node (because there could be two different String objects with the same StringNode)
+  // Instead of checking if we're doing self assignment with the string, its
+  // much more useful to check if we're self assigning the node (because there
+  // could be two different String objects with the same StringNode)
   if (this->mNode == other.mNode)
     return *this;
 
-  //release this strings data
+  // release this strings data
   release();
-  //Assign and add a reference
+  // Assign and add a reference
   Assign(other.mNode);
   return *this;
 }
@@ -257,14 +251,15 @@ void String::initializeToDefault()
   StringPool& pool = StringPool::GetInstance();
   StringNode& node = pool.GetEmptyNode();
 #else
-  static StringNode node = { 1, 0, 0,{ 0 } };
+  static StringNode node = {1, 0, 0, {0}};
 #endif
   Assign(&node);
 }
 
 void String::InitializeCharacter(int character)
 {
-  // This is an optimization where we keep pre-allocated character strings around for ascii characters
+  // This is an optimization where we keep pre-allocated character strings
+  // around for ascii characters
   if (character < cPreAllocatedCharacterCount)
   {
     Assign(GetPreAllocatedCharacterStrings()[character].mNode);
@@ -277,7 +272,7 @@ void String::InitializeCharacter(int character)
 void String::InitializeCharacterNonPreallocated(int character)
 {
   // Until we actually do unicode encoding, just call the character version
-  char str[2] = { (char)character, '\0' };
+  char str[2] = {(char)character, '\0'};
   Assign(str, 1);
 }
 
@@ -288,10 +283,26 @@ String::String(int unicodeCharacter, bool)
 
 String* String::GetPreAllocatedCharacterStrings()
 {
-  // We do this all in one line to take advantage of compiler generated thread safety
-  #define S(value) String(value, true)
-  static String ascii[] = { S(0), S(1), S(2), S(3), S(4), S(5), S(6), S(7), S(8), S(9), S(10), S(11), S(12), S(13), S(14), S(15), S(16), S(17), S(18), S(19), S(20), S(21), S(22), S(23), S(24), S(25), S(26), S(27), S(28), S(29), S(30), S(31), S(32), S(33), S(34), S(35), S(36), S(37), S(38), S(39), S(40), S(41), S(42), S(43), S(44), S(45), S(46), S(47), S(48), S(49), S(50), S(51), S(52), S(53), S(54), S(55), S(56), S(57), S(58), S(59), S(60), S(61), S(62), S(63), S(64), S(65), S(66), S(67), S(68), S(69), S(70), S(71), S(72), S(73), S(74), S(75), S(76), S(77), S(78), S(79), S(80), S(81), S(82), S(83), S(84), S(85), S(86), S(87), S(88), S(89), S(90), S(91), S(92), S(93), S(94), S(95), S(96), S(97), S(98), S(99), S(100), S(101), S(102), S(103), S(104), S(105), S(106), S(107), S(108), S(109), S(110), S(111), S(112), S(113), S(114), S(115), S(116), S(117), S(118), S(119), S(120), S(121), S(122), S(123), S(124), S(125), S(126), S(127) };
-  #undef S
+// We do this all in one line to take advantage of compiler generated thread
+// safety
+#define S(value) String(value, true)
+  static String ascii[] = {
+      S(0),   S(1),   S(2),   S(3),   S(4),   S(5),   S(6),   S(7),   S(8),
+      S(9),   S(10),  S(11),  S(12),  S(13),  S(14),  S(15),  S(16),  S(17),
+      S(18),  S(19),  S(20),  S(21),  S(22),  S(23),  S(24),  S(25),  S(26),
+      S(27),  S(28),  S(29),  S(30),  S(31),  S(32),  S(33),  S(34),  S(35),
+      S(36),  S(37),  S(38),  S(39),  S(40),  S(41),  S(42),  S(43),  S(44),
+      S(45),  S(46),  S(47),  S(48),  S(49),  S(50),  S(51),  S(52),  S(53),
+      S(54),  S(55),  S(56),  S(57),  S(58),  S(59),  S(60),  S(61),  S(62),
+      S(63),  S(64),  S(65),  S(66),  S(67),  S(68),  S(69),  S(70),  S(71),
+      S(72),  S(73),  S(74),  S(75),  S(76),  S(77),  S(78),  S(79),  S(80),
+      S(81),  S(82),  S(83),  S(84),  S(85),  S(86),  S(87),  S(88),  S(89),
+      S(90),  S(91),  S(92),  S(93),  S(94),  S(95),  S(96),  S(97),  S(98),
+      S(99),  S(100), S(101), S(102), S(103), S(104), S(105), S(106), S(107),
+      S(108), S(109), S(110), S(111), S(112), S(113), S(114), S(115), S(116),
+      S(117), S(118), S(119), S(120), S(121), S(122), S(123), S(124), S(125),
+      S(126), S(127)};
+#undef S
   return ascii;
 }
 
@@ -322,12 +333,11 @@ public:
 
   bool Equal(const TemporaryString& temp, StringNode* node)
   {
-    // Note that we MUST use memcmp here and not strcmp because the temporary string
-    // could not be null terminated (we could be constructing a string from a range)
-    return
-      temp.mSize == node->Size &&
-      temp.mHash == node->HashCode &&
-      memcmp(temp.mData, node->Data, temp.mSize) == 0;
+    // Note that we MUST use memcmp here and not strcmp because the temporary
+    // string could not be null terminated (we could be constructing a string
+    // from a range)
+    return temp.mSize == node->Size && temp.mHash == node->HashCode &&
+           memcmp(temp.mData, node->Data, temp.mSize) == 0;
   }
 };
 
@@ -338,7 +348,8 @@ void String::Assign(const_pointer data, size_type size)
   {
     data = "";
     ErrorIf(size != 0,
-      "When given a null pointer to construct an empty string, the size must also be 0!");
+            "When given a null pointer to construct an empty string, the size "
+            "must also be 0!");
     size = 0;
   }
 
@@ -363,8 +374,9 @@ void String::Assign(const_pointer data, size_type size)
     else
     {
       // Note: It is OK if the existingNode's RefCount is 0 here
-      // This happens in the case where we're creating the SAME string on one thread
-      // but it's literally being released on another thread at the same time (already ref count 0)
+      // This happens in the case where we're creating the SAME string on one
+      // thread but it's literally being released on another thread at the same
+      // time (already ref count 0)
       StringNode* existingNode = foundRange.Front();
       Assign(existingNode);
     }
@@ -381,7 +393,9 @@ void String::Assign(StringNode* node)
   addRef();
 }
 
-void String::CreateAndAssignNode(const_pointer data, size_type size, size_t hash)
+void String::CreateAndAssignNode(const_pointer data,
+                                 size_type size,
+                                 size_t hash)
 {
   StringNode* node = AllocateNode(size);
   memcpy(node->Data, data, size);
@@ -396,7 +410,7 @@ void StringNode::addRef()
 
 bool String::DebugIsNodePointerInPool(String* str)
 {
-  if(str == nullptr)
+  if (str == nullptr)
     return false;
 
   bool isInPool = false;
@@ -415,25 +429,25 @@ void String::ComputeStringStats(StringStats& stats)
 {
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Lock();
-  
+
   stats.mTotalSize = 0;
   stats.mTotalCount = pool.mPool.Size();
 
-  forRange(StringNode* node, pool.mPool.All())
+  forRange(StringNode * node, pool.mPool.All())
   {
     stats.mTotalSize += node->Size;
   }
-  
+
   pool.mLock.Unlock();
 }
 
 void String::DebugForceReleaseStringPoolLock()
 {
-  // On rare occasions, a crash could've happened when the string pool's spin lock
-  // was locked. This forces it to be unlocked so that crash handler can continue.
-  // There's a chance we could be in an invalid state but we're already crashing.
-  // This makes the worst case scenario that we double crash and get no report
-  // instead of infinite looping on a background process.
+  // On rare occasions, a crash could've happened when the string pool's spin
+  // lock was locked. This forces it to be unlocked so that crash handler can
+  // continue. There's a chance we could be in an invalid state but we're
+  // already crashing. This makes the worst case scenario that we double crash
+  // and get no report instead of infinite looping on a background process.
 #if defined(ZeroStringPooling)
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Unlock();
@@ -454,8 +468,9 @@ void String::poolOrDeleteNode(StringNode* node)
     else
     {
       // Note: It is OK if the existingNode's RefCount is 0 here
-      // This happens in the case where we're creating the SAME string on one thread
-      // but it's literally being released on another thread at the same time (already ref count 0)
+      // This happens in the case where we're creating the SAME string on one
+      // thread but it's literally being released on another thread at the same
+      // time (already ref count 0)
       zDeallocate(node);
       Assign(existingNode);
     }
@@ -482,7 +497,8 @@ void StringNode::release()
 
   if (AtomicPreDecrement(&RefCount) == 0)
   {
-    ErrorIf(pool.mPool.FindValue(this, nullptr) == nullptr, "Did not find node in pool");
+    ErrorIf(pool.mPool.FindValue(this, nullptr) == nullptr,
+            "Did not find node in pool");
     pool.mPool.Erase(this);
     zDeallocate(this);
   }
@@ -495,12 +511,10 @@ void StringNode::release()
 
 bool StringNode::isEqual(StringNode* l, StringNode* r)
 {
-  if(!(l == r))
+  if (!(l == r))
   {
-    return
-      l->Size == r->Size &&
-      l->HashCode == r->HashCode &&
-      memcmp(l->Data, r->Data, l->Size) == 0;
+    return l->Size == r->Size && l->HashCode == r->HashCode &&
+           memcmp(l->Data, r->Data, l->Size) == 0;
   }
   else
   {
@@ -515,7 +529,7 @@ void String::addRef()
 
 void String::release()
 {
-  if(mNode)
+  if (mNode)
     mNode->release();
 }
 
@@ -526,16 +540,16 @@ StringNode* String::AllocateNode(size_type size)
 
 StringNode* String::AllocateNode(size_type memorySize, size_t subStringSize)
 {
-  ErrorIf(subStringSize > memorySize, "Memory must be greater or equal to the sub-string");
-  const size_type nodeSize = 
-                             sizeof(StringNode) //size of the string node
-                           - sizeof(value_type);//remove the extra
+  ErrorIf(subStringSize > memorySize,
+          "Memory must be greater or equal to the sub-string");
+  const size_type nodeSize = sizeof(StringNode)    // size of the string node
+                             - sizeof(value_type); // remove the extra
 
-  //size of buffer is string size plus once extra buffer
-  //for null terminator '\0'
+  // size of buffer is string size plus once extra buffer
+  // for null terminator '\0'
   const size_type bufferSize = memorySize + sizeof(value_type);
 
-  //Make new string node
+  // Make new string node
   StringNode* newNode = (StringNode*)zAllocate(nodeSize + bufferSize);
   newNode->RefCount = 1;
   newNode->Size = subStringSize;
@@ -545,7 +559,6 @@ StringNode* String::AllocateNode(size_type memorySize, size_t subStringSize)
   return newNode;
 }
 
-//--------------------------------------------------------------- String Helpers
 String String::Format(cstr format, ...)
 {
   va_list va;
@@ -557,10 +570,10 @@ String String::Format(cstr format, ...)
 
 String String::FormatArgs(cstr format, va_list args)
 {
-  //Get the number of characters needed for message
+  // Get the number of characters needed for message
   int bufferSize;
   ZeroVSPrintfCount(format, args, 1, bufferSize);
-  char* stringBuffer = (char*)alloca((bufferSize+1)*sizeof(char));
+  char* stringBuffer = (char*)alloca((bufferSize + 1) * sizeof(char));
   stringBuffer[bufferSize] = '\0';
   ZeroVSPrintf(stringBuffer, bufferSize, format, args);
   return String(stringBuffer);
@@ -572,13 +585,15 @@ StringNode* String::GetNode() const
 }
 // Should be fine left as bytes despite UTF8
 // only used by Recursive Descent Parser working with bytes.
-String String::ReplaceSub(StringRange source, StringRange text,
-                                size_type start, size_type end)
+String String::ReplaceSub(StringRange source,
+                          StringRange text,
+                          size_type start,
+                          size_type end)
 {
   size_type sizeToRemove = end - start;
   size_type sizeToAdd = text.SizeInBytes();
 
-  //time to build the new string
+  // time to build the new string
   size_type newSize = source.SizeInBytes() - sizeToRemove + sizeToAdd;
 
   StringNode* node = String::AllocateNode(newSize);
@@ -588,24 +603,24 @@ String String::ReplaceSub(StringRange source, StringRange text,
   ErrorIf(start > source.SizeInBytes(), "Start was outside the string range");
   ErrorIf(end > source.SizeInBytes(), "End was outside the string range");
 
-  //Copy over the front if there is anything to copy
-  if(start > 0)
+  // Copy over the front if there is anything to copy
+  if (start > 0)
   {
     ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data(), start);
     bufferPos += start;
   }
 
-  if(sizeToAdd != 0)
+  if (sizeToAdd != 0)
   {
     ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, text.Data(), sizeToAdd);
     bufferPos += sizeToAdd;
   }
 
   size_type sizeOfEndText = source.SizeInBytes() - end;
-  if(sizeOfEndText)
+  if (sizeOfEndText)
   {
-    ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data() + end, 
-                sizeOfEndText);
+    ZeroCStringCopy(
+        bufferPos, bufferEnd - bufferPos, source.Data() + end, sizeOfEndText);
     bufferPos += sizeOfEndText;
   }
 
@@ -634,12 +649,14 @@ StringRange String::FindLastOf(const StringRange& value) const
   return All().FindLastOf(value);
 }
 
-StringRange String::FindRangeExclusive(StringRangeParam startRange, StringRangeParam endRange)
+StringRange String::FindRangeExclusive(StringRangeParam startRange,
+                                       StringRangeParam endRange)
 {
   return All().FindRangeExclusive(startRange, endRange);
 }
 
-StringRange String::FindRangeInclusive(StringRangeParam startRange, StringRangeParam endRange)
+StringRange String::FindRangeInclusive(StringRangeParam startRange,
+                                       StringRangeParam endRange)
 {
   return All().FindRangeInclusive(startRange, endRange);
 }
@@ -664,53 +681,67 @@ bool String::IsAllWhitespace() const
   return All().IsAllWhitespace();
 }
 
-String String::Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2)
+String String::Join(StringRangeParam separator,
+                    StringRangeParam string1,
+                    StringRangeParam string2)
 {
   StringRange values[2] = {string1, string2};
   return JoinInternal(separator, values, 2);
 }
 
-String String::Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3)
+String String::Join(StringRangeParam separator,
+                    StringRangeParam string1,
+                    StringRangeParam string2,
+                    StringRangeParam string3)
 {
   StringRange values[3] = {string1, string2, string3};
   return JoinInternal(separator, values, 3);
 }
 
-String String::Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3, StringRangeParam string4)
+String String::Join(StringRangeParam separator,
+                    StringRangeParam string1,
+                    StringRangeParam string2,
+                    StringRangeParam string3,
+                    StringRangeParam string4)
 {
   StringRange values[4] = {string1, string2, string3, string4};
   return JoinInternal(separator, values, 4);
 }
 
-String String::Join(StringRangeParam separator, const String* strings, size_t stringCount)
+String String::Join(StringRangeParam separator,
+                    const String* strings,
+                    size_t stringCount)
 {
   Array<StringRange> values;
   values.Resize(stringCount);
 
-  // String range Contains string and garbage data causes string to attempt to release 
-  // the string data
-  for(size_t i = 0; i < stringCount; ++i)
+  // String range Contains string and garbage data causes string to attempt to
+  // release the string data
+  for (size_t i = 0; i < stringCount; ++i)
     values[i] = strings[i].All();
-  
+
   return JoinInternal(separator, values.Begin(), stringCount);
 }
 
-String String::JoinInternal(StringRangeParam separator, const StringRange* values, size_t count)
+String String::JoinInternal(StringRangeParam separator,
+                            const StringRange* values,
+                            size_t count)
 {
-  if(count == 0)
+  if (count == 0)
     return String();
 
-  //count the total size needed (don't include an extra for the null as the string constructor adds the null)
+  // count the total size needed (don't include an extra for the null as the
+  // string constructor adds the null)
   size_t separatorSize = separator.SizeInBytes();
   size_t totalSize = separatorSize * (count - 1);
-  for(size_t i = 0; i < count; ++i)
+  for (size_t i = 0; i < count; ++i)
     totalSize += values[i].SizeInBytes();
 
-  //allocate the entire buffer
+  // allocate the entire buffer
   char* data = (char*)alloca(totalSize);
   char* current = data;
-  //Append item + separator for all but the last item
-  for(size_t i = 0; i < count - 1; ++i)
+  // Append item + separator for all but the last item
+  for (size_t i = 0; i < count - 1; ++i)
   {
     StringRangeParam value = values[i];
     size_t valueSize = value.SizeInBytes();
@@ -721,7 +752,7 @@ String String::JoinInternal(StringRangeParam separator, const StringRange* value
     current += separatorSize;
   }
 
-  //add the last item
+  // add the last item
   StringRangeParam lastValue = values[count - 1];
   size_t lastValueSize = lastValue.SizeInBytes();
   memcpy(current, lastValue.Data(), lastValueSize);
@@ -730,7 +761,8 @@ String String::JoinInternal(StringRangeParam separator, const StringRange* value
   return String(data, totalSize);
 }
 
-String String::Replace(StringRangeParam oldValue, StringRangeParam newValue) const
+String String::Replace(StringRangeParam oldValue,
+                       StringRangeParam newValue) const
 {
   return All().Replace(oldValue, newValue);
 }
@@ -745,7 +777,9 @@ bool String::StartsWith(StringRange startsWith, RuneComparer compare) const
   return StartsWith(All(), startsWith, compare);
 }
 
-bool String::StartsWith(StringRange source, StringRange startsWith, RuneComparer compare)
+bool String::StartsWith(StringRange source,
+                        StringRange startsWith,
+                        RuneComparer compare)
 {
   // If the string we're matching is larger than our string, then we don't match
   if (startsWith.SizeInBytes() > source.SizeInBytes())
@@ -798,7 +832,8 @@ String String::Repeat(Rune rune, size_t numberOfTimes)
 {
   byte utf8Bytes[4];
   int bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
-  // Create a temporary memory buffer that Contains the character repeated over and over
+  // Create a temporary memory buffer that Contains the character repeated over
+  // and over
   size_t bufferSize = numberOfTimes * bytesRead;
   char* buffer = (char*)alloca(bufferSize);
   // Advance the buffer by the amount by the amount of bytes written each copy
@@ -824,7 +859,6 @@ bool String::EndsWith(StringRangeParam value) const
   return All().EndsWith(value);
 }
 
-//------------------------------------------------------------- Global Functions
 StringIterator GetNextWhitespace(StringRange input)
 {
   StringIterator it = input.Begin();
@@ -840,55 +874,55 @@ StringIterator GetNextWhitespace(StringRange input)
 String WordWrap(StringRange input, size_t maxLineLength)
 {
   StringBuilder builder;
-  
+
   size_t lineLength = 0;
-  
-  while(!input.Empty())
+
+  while (!input.Empty())
   {
     Rune r = input.Front();
     input.PopFront();
-    
+
     ++lineLength;
-    
-    if(r == '\n' || r == '\r')
+
+    if (r == '\n' || r == '\r')
     {
       lineLength = 0;
       builder.Append(r);
       continue;
     }
-    else if(!UTF8::IsWhiteSpace(r))
+    else if (!UTF8::IsWhiteSpace(r))
     {
       StringIterator nextWhiteSpace = GetNextWhitespace(input);
       uint wordLength = nextWhiteSpace - input.Begin();
       bool isWordShort = wordLength < maxLineLength;
       bool doesWordMakeLineTooLong = lineLength + wordLength >= maxLineLength;
-      if(isWordShort && doesWordMakeLineTooLong)
+      if (isWordShort && doesWordMakeLineTooLong)
       {
         lineLength = 0;
         builder.Append('\n');
       }
     }
-    
-    if(lineLength >= maxLineLength)
+
+    if (lineLength >= maxLineLength)
     {
       lineLength = 0;
       builder.Append('\n');
     }
 
     // Eat any whitespace at the beginning of the line
-    if(lineLength == 0 && UTF8::IsWhiteSpace(r))
+    if (lineLength == 0 && UTF8::IsWhiteSpace(r))
       continue;
-    
+
     builder.Append(r);
   }
 
   return builder.ToString();
 }
 
-//----------------------------------------------------------- String SimplePolicy
+//SimplePolicy
 StringRange String::SimplePolicy::ToStringRange(StringParam value)
 {
   return value.All();
 }
 
-}//namespace Zero
+} // namespace Zero

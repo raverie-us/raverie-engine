@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BroadPhaseEditor.cpp
-/// 
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------------- Record Sampler
 class RecordSampler : public DataSampler
 {
 public:
@@ -30,7 +21,8 @@ public:
   virtual float Sample()
   {
     mRecord->Update();
-    float timeInS = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)mRecord->SmoothAverage());
+    float timeInS = Profile::ProfileSystem::Instance->GetTimeInSeconds(
+        (Profile::ProfileTime)mRecord->SmoothAverage());
 
     // Convert to milliseconds
     float ms = timeInS * 1000.0f;
@@ -42,7 +34,6 @@ public:
   Profile::Record* mRecord;
 };
 
-//----------------------------------------------------------- Statistics Sampler
 class StatisticsSampler : public DataSampler
 {
 public:
@@ -59,9 +50,9 @@ public:
 
   virtual float Sample()
   {
-    if(mStats->mPossibleCollisionsReturned == 0)
+    if (mStats->mPossibleCollisionsReturned == 0)
       return 0.0f;
-    float percentageCorrect = float(mStats->mActualCollisions) / 
+    float percentageCorrect = float(mStats->mActualCollisions) /
                               float(mStats->mPossibleCollisionsReturned);
 
     return 1.0f - percentageCorrect;
@@ -71,7 +62,6 @@ public:
   Statistics* mStats;
 };
 
-//------------------------------------------------------------------ Cos Sampler
 class CosSampler : public DataSampler
 {
 public:
@@ -92,9 +82,7 @@ public:
   }
 };
 
-//----------------------------------------------------------- Broad Phase Editor
-BroadPhaseEditor::BroadPhaseEditor(Editor* parent) 
-  : Composite(parent)
+BroadPhaseEditor::BroadPhaseEditor(Editor* parent) : Composite(parent)
 {
   mEditor = parent;
 
@@ -112,7 +100,8 @@ BroadPhaseEditor::BroadPhaseEditor(Editor* parent)
     IconButton* addButton = mAddButtons[BroadPhase::Dynamic];
     ConnectThisTo(addButton, Events::ButtonPressed, DynamicAddButtonPressed);
     IconButton* removeButton = mRemoveButtons[BroadPhase::Dynamic];
-    ConnectThisTo(removeButton, Events::ButtonPressed, DynamicRemoveButtonPressed);
+    ConnectThisTo(
+        removeButton, Events::ButtonPressed, DynamicRemoveButtonPressed);
 
     // Add a spacer in between
     Spacer* spacer = new Spacer(dynamicStatic);
@@ -125,10 +114,11 @@ BroadPhaseEditor::BroadPhaseEditor(Editor* parent)
     addButton = mAddButtons[BroadPhase::Static];
     ConnectThisTo(addButton, Events::ButtonPressed, StaticAddButtonPressed);
     removeButton = mRemoveButtons[BroadPhase::Static];
-    ConnectThisTo(removeButton, Events::ButtonPressed, StaticRemoveButtonPressed);
+    ConnectThisTo(
+        removeButton, Events::ButtonPressed, StaticRemoveButtonPressed);
   }
-  
-  for(uint i = 0; i < BPStats::Size; ++i)
+
+  for (uint i = 0; i < BPStats::Size; ++i)
   {
     mCheckBoxes[i] = new TextCheckBox(this);
     mCheckBoxes[i]->SetText(Zero::BuildString("Track ", BPStats::Names[i]));
@@ -144,22 +134,22 @@ BroadPhaseEditor::BroadPhaseEditor(Editor* parent)
 void BroadPhaseEditor::RunTest(ObjectEvent* event)
 {
   // Check to make sure a dynamic broad phase is selected
-  if(mActiveBroadPhases[BroadPhase::Dynamic].Empty())
+  if (mActiveBroadPhases[BroadPhase::Dynamic].Empty())
   {
     DoNotifyWarning("Cannot Run Test", "You must add a Dynamic Broad Phase.");
     return;
   }
 
   // Check to make sure a static broad phase is selected
-  if(mActiveBroadPhases[BroadPhase::Static].Empty())
+  if (mActiveBroadPhases[BroadPhase::Static].Empty())
   {
     DoNotifyWarning("Cannot Run Test", "You must add a Static Broad Phase.");
     return;
   }
 
-  //stop the old game if it was running (and close the old ui)
+  // stop the old game if it was running (and close the old ui)
   GameSession* oldGame = mActiveGame;
-  if(oldGame != NULL)
+  if (oldGame != NULL)
   {
     mEditor->StopGame();
     GameSpaceDestroyed(NULL);
@@ -182,14 +172,14 @@ void BroadPhaseEditor::RunTest(ObjectEvent* event)
   delete oldBroadPhase;
 
   CreateGraphs(BroadPhase::Dynamic, tracker);
-  //CreateGraphs(BroadPhase::Static, tracker);
+  // CreateGraphs(BroadPhase::Static, tracker);
 }
 
 BroadPhaseTracker* BroadPhaseEditor::CreateTracker()
 {
   // Allocate the tracker
   BroadPhaseTracker* tracker = new BroadPhaseTracker();
-  
+
   // Allocate and add all the active broad phases
   AddBroadPhasesToTracker(BroadPhase::Dynamic, tracker);
   AddBroadPhasesToTracker(BroadPhase::Static, tracker);
@@ -197,10 +187,10 @@ BroadPhaseTracker* BroadPhaseEditor::CreateTracker()
   return tracker;
 }
 
-void BroadPhaseEditor::AddBroadPhasesToTracker(BroadPhase::Type type, 
+void BroadPhaseEditor::AddBroadPhasesToTracker(BroadPhase::Type type,
                                                BroadPhaseTracker* tracker)
 {
-  for(uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
+  for (uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
   {
     // We need to add the "BroadPhase" back to the end of the name
     String name = mActiveBroadPhases[type][i];
@@ -214,20 +204,20 @@ void BroadPhaseEditor::AddBroadPhasesToTracker(BroadPhase::Type type,
   }
 }
 
-void BroadPhaseEditor::CreateGraphs(BroadPhase::Type type, 
+void BroadPhaseEditor::CreateGraphs(BroadPhase::Type type,
                                     BroadPhaseTracker* tracker)
 {
   // Create the graph for percentage correct
   Widget* statsGraph = CreateStatsGraphWidget(type, tracker);
   Window* window = mEditor->AddManagedWidget(statsGraph, DockArea::Right, true);
-  
-  //Remove for now
+
+  // Remove for now
   mActiveWindows.PushBack(window);
 
   // Create the record graphs
-  for(uint recordType = 0; recordType < BPStats::Size; ++recordType)
+  for (uint recordType = 0; recordType < BPStats::Size; ++recordType)
   {
-    if(!mCheckBoxes[recordType]->GetChecked())
+    if (!mCheckBoxes[recordType]->GetChecked())
       continue;
 
     Widget* graph = CreateRecordGraphWidget(type, tracker, recordType);
@@ -238,15 +228,16 @@ void BroadPhaseEditor::CreateGraphs(BroadPhase::Type type,
   }
 }
 
-Widget* BroadPhaseEditor::CreateRecordGraphWidget(BroadPhase::Type type, 
-         BroadPhaseTracker* tracker, BPStats::Type recordType)
+Widget* BroadPhaseEditor::CreateRecordGraphWidget(BroadPhase::Type type,
+                                                  BroadPhaseTracker* tracker,
+                                                  BPStats::Type recordType)
 {
   // Create a graph
   GraphView* graph = new GraphView(mEditor);
   graph->SetName(BPStats::Names[recordType]);
 
   // Add a sampler for each broad phase
-  for(uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
+  for (uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
   {
     // Pull the statistics from the tracker
     Statistics* stats = tracker->GetStatistics(type, i);
@@ -262,7 +253,7 @@ Widget* BroadPhaseEditor::CreateRecordGraphWidget(BroadPhase::Type type,
   return graph;
 }
 
-Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type, 
+Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type,
                                                  BroadPhaseTracker* tracker)
 {
   // Create a graph
@@ -270,7 +261,7 @@ Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type,
   graph->SetName("False Positives");
 
   // Add a sampler for each broad phase
-  for(uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
+  for (uint i = 0; i < mActiveBroadPhases[type].Size(); ++i)
   {
     // Pull the statistics from the tracker
     Statistics* stats = tracker->GetStatistics(type, i);
@@ -286,8 +277,8 @@ Widget* BroadPhaseEditor::CreateStatsGraphWidget(BroadPhase::Type type,
   return graph;
 }
 
-Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label, 
-                                               BroadPhase::Type type, 
+Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
+                                               BroadPhase::Type type,
                                                Composite* parent)
 {
   // Create the encasing composite
@@ -310,7 +301,8 @@ Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
       comboBox->SetSizing(SizeAxis::X, SizePolicy::Flex, 1.0f);
 
       // Enumerate the names
-      Z::gBroadPhaseLibrary->EnumerateNamesOfType(type, mBroadPhaseNames[type].Strings);
+      Z::gBroadPhaseLibrary->EnumerateNamesOfType(
+          type, mBroadPhaseNames[type].Strings);
 
       // Set the data source
       comboBox->SetListSource(&mBroadPhaseNames[type]);
@@ -326,11 +318,10 @@ Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
       IconButton* button = new IconButton(addComposite);
       button->SetIcon("BigPlus");
       button->SetToolTip("Add Broad Phase");
-      
+
       // Store the button
       mAddButtons[type] = button;
     }
-
 
     // Create a horizontal spacer
     Spacer* spacer = new Spacer(composite);
@@ -358,7 +349,6 @@ Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
       // Store the button
       mRemoveButtons[type] = button;
     }
-
   }
 
   return composite;
@@ -367,7 +357,7 @@ Composite* BroadPhaseEditor::BuildPropertyGrid(StringParam label,
 void BroadPhaseEditor::AddButtonPressed(BroadPhase::Type type)
 {
   // If there are no more items to add, do nothing
-  if(mBroadPhaseNames[type].Empty())
+  if (mBroadPhaseNames[type].Empty())
     return;
 
   // Get the combo box
@@ -377,7 +367,7 @@ void BroadPhaseEditor::AddButtonPressed(BroadPhase::Type type)
   int selectedItem = comboBox->GetSelectedItem();
 
   // Do nothing if there is nothing selected
-  if(selectedItem == -1)
+  if (selectedItem == -1)
     return;
 
   // Get the name of the selected broad phase
@@ -407,7 +397,7 @@ void BroadPhaseEditor::StaticAddButtonPressed(ObjectEvent* event)
 void BroadPhaseEditor::RemoveButtonPressed(BroadPhase::Type type)
 {
   // If there are no more items to remove, do nothing
-  if(mActiveBroadPhases[type].Empty())
+  if (mActiveBroadPhases[type].Empty())
     return;
 
   // Get the list box
@@ -417,7 +407,7 @@ void BroadPhaseEditor::RemoveButtonPressed(BroadPhase::Type type)
   int selectedItem = listBox->GetSelectedItem();
 
   // Do nothing if there is nothing selected
-  if(selectedItem == -1)
+  if (selectedItem == -1)
     return;
 
   // Get the name of the selected broad phase
@@ -448,8 +438,8 @@ void BroadPhaseEditor::StaticRemoveButtonPressed(ObjectEvent* event)
 
 void BroadPhaseEditor::GameSpaceDestroyed(ObjectEvent* event)
 {
-  for(uint i = 0; i < mActiveWindows.Size(); ++i)
+  for (uint i = 0; i < mActiveWindows.Size(); ++i)
     mActiveWindows[i].SafeDestroy();
 }
 
-}//namespace Zero
+} // namespace Zero

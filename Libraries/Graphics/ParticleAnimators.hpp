@@ -1,16 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------- Linear Particle Animator
-///Basic Particle Animation Effects
+/// Basic Particle Animation Effects
 class LinearParticleAnimator : public ParticleAnimator
 {
 public:
@@ -19,15 +13,16 @@ public:
   LinearParticleAnimator();
   ~LinearParticleAnimator();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //ParticleAnimator Interface 
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  // ParticleAnimator Interface
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
 private:
-
   /// Constance force applied to particles.
   Vec3 mForce;
 
@@ -47,8 +42,7 @@ private:
   Vec3 mTwist;
 };
 
-//-------------------------------------------------------------- Particle Wander
-///Particle animator that causes particle to wander
+/// Particle animator that causes particle to wander
 /// or smoothly vary directions
 class ParticleWander : public ParticleAnimator
 {
@@ -58,19 +52,21 @@ public:
   ParticleWander();
   ~ParticleWander();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //ParticleAnimator Interface 
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  // ParticleAnimator Interface
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
+
 private:
   float mWanderAngle;
   float mWanderAngleVariance;
   float mWanderStrength;
 };
 
-//--------------------------------------------------- Particle Color Animator
 /// Linear interpolate colors across the particles lifetime.
 class ParticleColorAnimator : public ParticleAnimator
 {
@@ -79,12 +75,14 @@ public:
 
   ~ParticleColorAnimator();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //ParticleAnimator Interface 
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  // ParticleAnimator Interface
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
 private:
   friend class LinearParticleAnimator;
@@ -94,7 +92,6 @@ private:
   float mMaxParticleSpeed;
 };
 
-//----------------------------------------------------------- Particle Attractor
 class ParticleAttractor : public ParticleAnimator
 {
 public:
@@ -106,8 +103,10 @@ public:
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  // ParticleAnimator Interface 
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  // ParticleAnimator Interface
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
 private:
   SystemSpace::Enum mPositionSpace;
@@ -118,7 +117,6 @@ private:
   float mMinDistance;
 };
 
-//------------------------------------------------------------- Particle Twister
 class ParticleTwister : public ParticleAnimator
 {
 public:
@@ -127,12 +125,14 @@ public:
   ParticleTwister();
   ~ParticleTwister();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //ParticleAnimator Interface
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform)  override;
+  // ParticleAnimator Interface
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
 private:
   Vec3 mAxis;
@@ -141,7 +141,6 @@ private:
   float mMinDistance;
 };
 
-//----------------------------------------------------- Particle Collision Plane
 class ParticleCollisionPlane : public ParticleAnimator
 {
 public:
@@ -154,18 +153,20 @@ public:
   void Serialize(Serializer& stream) override;
 
   /// ParticleAnimator Interface.
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
-  /// How much the particle will bounce during a collision. Values should be in the range
-  /// of [0, 1], where 0 is an in-elastic collision and 1 is a fully elastic collision (bouncy).
-  /// If the value is greater than 1, the particle will gain energy and move
-  /// faster after the bounce.
+  /// How much the particle will bounce during a collision. Values should be in
+  /// the range of [0, 1], where 0 is an in-elastic collision and 1 is a fully
+  /// elastic collision (bouncy). If the value is greater than 1, the particle
+  /// will gain energy and move faster after the bounce.
   float GetRestitution();
   void SetRestitution(float restitution);
 
-  /// How slippery or rough the particle is. When friction is 0, the object will be slippery.
-  /// When friction is 1, it will completely stop in the direction tangential to the
-  /// collision normal. Values should be in the range [0, 1].
+  /// How slippery or rough the particle is. When friction is 0, the object will
+  /// be slippery. When friction is 1, it will completely stop in the direction
+  /// tangential to the collision normal. Values should be in the range [0, 1].
   float GetFriction();
   void SetFriction(float friction);
 
@@ -177,7 +178,7 @@ private:
   float mFriction;
 };
 
-//----------------------------------------------------- Particle Collision Heightmap
+//Heightmap
 class ParticleCollisionHeightmap : public ParticleAnimator
 {
 public:
@@ -185,24 +186,26 @@ public:
 
   ~ParticleCollisionHeightmap();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
   void OnAllObjectsCreated(CogInitializer& initializer) override;
 
-  //ParticleAnimator Interface 
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  // ParticleAnimator Interface
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
-  /// How much the particle will bounce during a collision. Values should be in the range
-  /// of [0, 1], where 0 is an in-elastic collision and 1 is a fully elastic collision (bouncy).
-  /// If the value is greater than 1, the particle will gain energy and move
-  /// faster after the bounce.
+  /// How much the particle will bounce during a collision. Values should be in
+  /// the range of [0, 1], where 0 is an in-elastic collision and 1 is a fully
+  /// elastic collision (bouncy). If the value is greater than 1, the particle
+  /// will gain energy and move faster after the bounce.
   float GetRestitution();
   void SetRestitution(float restitution);
 
-  /// How slippery or rough the particle is. When friction is 0, the object will be slippery.
-  /// When friction is 1, it will completely stop in the direction tangential to the
-  /// collision normal.
+  /// How slippery or rough the particle is. When friction is 0, the object will
+  /// be slippery. When friction is 1, it will completely stop in the direction
+  /// tangential to the collision normal.
   float GetFriction();
   void SetFriction(float friction);
 
@@ -212,4 +215,4 @@ private:
   float mFriction;
 };
 
-}//namespace Zero
+} // namespace Zero

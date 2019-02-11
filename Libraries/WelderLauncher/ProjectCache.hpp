@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,9 +9,8 @@ namespace Events
 
 DeclareEvent(ScreenshotUpdated);
 
-}//namespace Events
+} // namespace Events
 
-//-------------------------------------------------------------------LauncherProjectInfo
 class LauncherProjectInfo : public Component
 {
 public:
@@ -34,7 +28,7 @@ public:
   BuildId mBuildId;
 };
 
-//------------------------------------------------------------------------ CachedProject
+//CachedProject
 /// A cached project with it's latest screenshot texture.
 class CachedProject : public EventObject
 {
@@ -64,11 +58,12 @@ public:
   String GetProjectFolder();
   // The name of the project inside the ".zeroproj"
   String GetProjectName();
-  /// Rename this project to the given name. Also renames the folder containing the
-  /// zeroproj to the new name (assumes the user has checked for existing folders/files of the new name).
+  /// Rename this project to the given name. Also renames the folder containing
+  /// the zeroproj to the new name (assumes the user has checked for existing
+  /// folders/files of the new name).
   bool RenameAndMoveProject(Status& status, StringParam newProjectName);
-  /// Removes all empty directories in a path. Helper used by RenameAndMoveProject
-  /// to clean up empty folders after moving file contents.
+  /// Removes all empty directories in a path. Helper used by
+  /// RenameAndMoveProject to clean up empty folders after moving file contents.
   void DeleteEmptyDirectoriesRecursively(StringParam path);
 
   void GetTags(HashSet<String>& tags);
@@ -78,14 +73,20 @@ public:
 
   //-------------------------------------------------------------------Internal
   void ParseTags(LauncherProjectInfo* launcherInfo, StringParam tags);
-  DataNode* GetComponentPropertyNode(StringParam componentType, StringParam propertyName);
-  String GetChildComponentPropertyValue(StringParam componentType, StringParam propertyName);
-  void SetChildComponentPropertyValue(StringParam componentType, StringParam propertyName, StringParam value);
+  DataNode* GetComponentPropertyNode(StringParam componentType,
+                                     StringParam propertyName);
+  String GetChildComponentPropertyValue(StringParam componentType,
+                                        StringParam propertyName);
+  void SetChildComponentPropertyValue(StringParam componentType,
+                                      StringParam propertyName,
+                                      StringParam value);
   void AddOrReplaceDataNodeComponent(Component* component);
 
-  // Helper to get a value from the "Project" component. This is special as the Project component has been renamed.
+  // Helper to get a value from the "Project" component. This is special as the
+  // Project component has been renamed.
   String GetProjectPropertyValue(StringParam propertyName);
-  // Helper to set a value from the "Project" component. See GetProjectPropertyValue for why this is special.
+  // Helper to set a value from the "Project" component. See
+  // GetProjectPropertyValue for why this is special.
   void SetProjectPropertyValue(StringParam propertyName, StringParam value);
 
   String mProjectPath;
@@ -99,7 +100,7 @@ public:
   TimeType mLastLoadTime;
 };
 
-//------------------------------------------------------------------------ ProjectCache
+//ProjectCache
 /// Caches all projects and their latest screenshot textures.
 class ProjectCache
 {
@@ -109,21 +110,25 @@ public:
 
   /// Load the project and create a cache entry for it.
   CachedProject* LoadProjectFile(StringParam projectFilePath);
-  /// Reload the Project on a cached project (get any new property changes from a running zero)
+  /// Reload the Project on a cached project (get any new property changes from
+  /// a running zero)
   bool ReloadProjectFile(CachedProject* cachedProject, bool preserveVersionId);
   /// Create a project from a template file zip
-  CachedProject* CreateProjectFromTemplate(StringParam projectName, StringParam projectDir, StringParam templatePath, const BuildId& buildId,
-    const HashSet<String>& projectTags);
+  CachedProject* CreateProjectFromTemplate(StringParam projectName,
+                                           StringParam projectDir,
+                                           StringParam templatePath,
+                                           const BuildId& buildId,
+                                           const HashSet<String>& projectTags);
 
   /// Update all of the cached project's textures.
   void UpdateAllTextures();
 
 private:
-  /// Given a path and an expected project name, find the zero project (not currently recursive)
+  /// Given a path and an expected project name, find the zero project (not
+  /// currently recursive)
   String FindZeroProj(StringParam searchpath, StringParam projectName);
 
 public:
-
   // Cached projects and their screenshot textures
   typedef HashMap<String, CachedProject*> CachedProjectMap;
   CachedProjectMap mProjectMap;
@@ -132,4 +137,4 @@ public:
   RecentProjects* mRecentProjects;
 };
 
-}//namespace Zero
+} // namespace Zero

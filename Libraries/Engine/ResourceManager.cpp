@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceManager.cpp
-/// Implementation of the Resource Manager.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,14 +6,13 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ResourceNewlyCreated);
-  DefineEvent(ResourceAdded);
-  DefineEvent(ResourceModified);
-  DefineEvent(ResourceRemoved);
-  DefineEvent(ResourceReload);
-}
+DefineEvent(ResourceNewlyCreated);
+DefineEvent(ResourceAdded);
+DefineEvent(ResourceModified);
+DefineEvent(ResourceRemoved);
+DefineEvent(ResourceReload);
+} // namespace Events
 
-//------------------------------------------------------------
 ZilchDefineType(ResourceEvent, builder, type)
 {
 }
@@ -34,15 +25,14 @@ ResourceEvent::ResourceEvent()
   RemoveMode = RemoveMode::None;
 }
 
-ResourceEvent::ResourceEvent(ResourceManager* manager, Resource* resource)
-  : Manager(manager)
-  , EventResource(resource)
+ResourceEvent::ResourceEvent(ResourceManager* manager, Resource* resource) :
+    Manager(manager),
+    EventResource(resource)
 {
   EventResourceLibrary = nullptr;
   RemoveMode = RemoveMode::None;
 }
 
-//------------------------------------------------------------- Resource Manager
 void* ResourceManager::operator new(size_t size)
 {
   return Resource::sHeap->Allocate(size);
@@ -53,13 +43,16 @@ void ResourceManager::operator delete(void* pMem, size_t size)
   return Resource::sHeap->Deallocate(pMem, size);
 }
 
-void AddIdAndCheckConflicts(ResourceManager::ResourceIdMapType& resourceIdMap, ResourceEntry& entry, Resource* resource)
+void AddIdAndCheckConflicts(ResourceManager::ResourceIdMapType& resourceIdMap,
+                            ResourceEntry& entry,
+                            Resource* resource)
 {
-  //see if there is already a resource of the given id
-  ResourceManager::ResourceIdMapType::range idrange = resourceIdMap.Find(entry.mResourceId);
-  if(!idrange.Empty())
+  // see if there is already a resource of the given id
+  ResourceManager::ResourceIdMapType::range idrange =
+      resourceIdMap.Find(entry.mResourceId);
+  if (!idrange.Empty())
   {
-    if(Z::gRuntimeEditor)
+    if (Z::gRuntimeEditor)
       Z::gRuntimeEditor->OnResourceIdConflict(entry, idrange.Front().second);
     else
       ZPrint("Resource Id Conflict %s\n", entry.Name.c_str());
@@ -90,7 +83,6 @@ ResourceManager::ResourceManager(BoundType* resourceType)
 
 ResourceManager::~ResourceManager()
 {
-
 }
 
 BoundType* ResourceManager::GetResourceType()
@@ -113,7 +105,7 @@ Resource* ResourceManager::CreateRuntimeInternal(StringParam name)
   static const String cRuntimeResourceName = "Runtime";
 
   String resourceName = name;
-  if(resourceName.Empty())
+  if (resourceName.Empty())
     resourceName = cRuntimeResourceName;
 
   Resource* resource = CreateNewResourceInternal(resourceName);
@@ -136,12 +128,16 @@ Resource* ResourceManager::CreateRuntimeInternal(StringParam name)
   return resource;
 }
 
-void ResourceManager::ValidateNewName(Status& status, StringParam name, BoundType* optionalType)
+void ResourceManager::ValidateNewName(Status& status,
+                                      StringParam name,
+                                      BoundType* optionalType)
 {
   // Do nothing (assume its valid)
 }
 
-void ResourceManager::ValidateRawName(Status& status, StringParam name, BoundType* optionalType)
+void ResourceManager::ValidateRawName(Status& status,
+                                      StringParam name,
+                                      BoundType* optionalType)
 {
   // Do nothing (assume its valid)
 }
@@ -154,7 +150,7 @@ void ResourceManager::AddResource(ResourceEntry& entry, Resource* resource)
   String hexId = ToString(entry.mResourceId, true);
   String resourceIdName = BuildString(hexId, ":", entry.Name);
 
-  if(entry.mLibrarySource)
+  if (entry.mLibrarySource)
     entry.mLibrarySource->mRuntimeResource = entry.mResourceId;
 
   // Add to the main resource manager
@@ -198,13 +194,14 @@ ResourceManager::ResourceRange ResourceManager::AllResources()
 
 void ResourceManager::Remove(Resource* resource, RemoveMode::Enum removeMode)
 {
-  // Remove the resource so that is can not be found with EnumerateResources or by name
+  // Remove the resource so that is can not be found with EnumerateResources or
+  // by name
 
   // Remove from Name map
   ResourceNameMap.Erase(resource->Name);
 
   // Remove from local Id map
-  if(resource->mResourceId != 0)
+  if (resource->mResourceId != 0)
     ResourceIdMap.Erase(resource->mResourceId);
 
   // Signal that the resource has been removed
@@ -223,10 +220,10 @@ void ResourceManager::Remove(Resource* resource, RemoveMode::Enum removeMode)
 void ResourceManager::EnumerateResources(Array<String>& values)
 {
   // Append the names of all resource items that should be shown in the editor
-  forRange(Resource* resource, AllResources())
+  forRange(Resource * resource, AllResources())
   {
     ContentItem* contentItem = resource->mContentItem;
-    if(contentItem && contentItem->ShowInEditor)
+    if (contentItem && contentItem->ShowInEditor)
       values.PushBack(resource->Name);
   }
 
@@ -236,67 +233,75 @@ void ResourceManager::EnumerateResources(Array<String>& values)
 
 void ResourceManager::EnumerateResources(Array<Resource*>& values)
 {
-  forRange(Resource* resource, AllResources())
-    values.PushBack(resource);
+  forRange(Resource * resource, AllResources()) values.PushBack(resource);
 }
 
-Resource* ResourceManager::GetResource(StringParam resourceString, ResourceNotFound::Enum notFound)
+Resource* ResourceManager::GetResource(StringParam resourceString,
+                                       ResourceNotFound::Enum notFound)
 {
-  /// Standard resource string is 16 digit hex and a resource name separated by a ':'
-  /// Example 0123456789ABCDEF:SomeName
-  // The reason we're using 'SizeInBytes' instead of 'ComputeRuneCount' because we can guarantee that each rune is 1 byte
-  // for the hex portion of the resource string
-  if(resourceString.SizeInBytes() > cHex64Size + 1 && resourceString.Data()[cHex64Size] == ':')
+  /// Standard resource string is 16 digit hex and a resource name separated by
+  /// a ':' Example 0123456789ABCDEF:SomeName
+  // The reason we're using 'SizeInBytes' instead of 'ComputeRuneCount' because
+  // we can guarantee that each rune is 1 byte for the hex portion of the
+  // resource string
+  if (resourceString.SizeInBytes() > cHex64Size + 1 &&
+      resourceString.Data()[cHex64Size] == ':')
   {
     /// Isolate Hex sub string
-    StringRange hexString = resourceString.SubStringFromByteIndices(0, cHex64Size);
+    StringRange hexString =
+        resourceString.SubStringFromByteIndices(0, cHex64Size);
     ResourceId resourceId = ReadHexString(hexString);
 
     /// Isolate Name sub string
-    StringRange stringName = resourceString.SubStringFromByteIndices(cHex64Size + 1, resourceString.SizeInBytes());
+    StringRange stringName = resourceString.SubStringFromByteIndices(
+        cHex64Size + 1, resourceString.SizeInBytes());
 
     Resource* resource = GetResourceNameOrId(stringName, resourceId);
-    if(resource)
+    if (resource)
       return resource;
   }
 
-  //Old resource id is 16 digit hex followed by (name)
-  //Example 0123456789ABCDEF(SomeName)
+  // Old resource id is 16 digit hex followed by (name)
+  // Example 0123456789ABCDEF(SomeName)
   if (resourceString.SizeInBytes() > cHex64Size + 2 &&
       resourceString.Data()[resourceString.SizeInBytes() - 1] == ')' &&
       resourceString.Data()[cHex64Size] == '(')
   {
-    //StringRange delimiter = resourceString.FindFirstOf('(');
-    //StringRange delimiterEnd = resourceString.FindFirstOf(')');
-    //Hex part
-    //StringRange hexString = resourceString.SubString(resourceString.Begin(), delimiter.Begin());
-    StringRange hexString = resourceString.SubStringFromByteIndices(0, cHex64Size);
+    // StringRange delimiter = resourceString.FindFirstOf('(');
+    // StringRange delimiterEnd = resourceString.FindFirstOf(')');
+    // Hex part
+    // StringRange hexString = resourceString.SubString(resourceString.Begin(),
+    // delimiter.Begin());
+    StringRange hexString =
+        resourceString.SubStringFromByteIndices(0, cHex64Size);
     Guid resourceId = ReadHexString(hexString);
 
-    //String part
-    StringRange stringName = resourceString.SubStringFromByteIndices(cHex64Size + 1, resourceString.SizeInBytes() - 1);    Resource* resource = GetResourceNameOrId(stringName, resourceId);
-    if(resource)
+    // String part
+    StringRange stringName = resourceString.SubStringFromByteIndices(
+        cHex64Size + 1, resourceString.SizeInBytes() - 1);
+    Resource* resource = GetResourceNameOrId(stringName, resourceId);
+    if (resource)
       return resource;
   }
 
   /// Try to find Resource as a simple string
   ResourceId resourceId = ResourceNameMap.FindValue(resourceString, 0);
-  if(resourceId)
+  if (resourceId)
   {
     Resource* resource = ResourceIdMap.FindValue(resourceId, NULL);
-    if(resource)
+    if (resource)
       return resource;
   }
 
   // Resource is missing handle failure
-  if(notFound == ResourceNotFound::ReturnNull)
+  if (notFound == ResourceNotFound::ReturnNull)
     return nullptr;
 
-  if(notFound == ResourceNotFound::ReturnDefault)
+  if (notFound == ResourceNotFound::ReturnDefault)
     return GetDefaultResource();
 
   // Empty string use default resource
-  if(resourceString.Empty())
+  if (resourceString.Empty())
     return GetDefaultResource();
 
   // Signal the error
@@ -305,22 +310,23 @@ Resource* ResourceManager::GetResource(StringParam resourceString, ResourceNotFo
   return GetFallbackResource();
 }
 
-Resource* ResourceManager::GetResource(ResourceId resourceId, ResourceNotFound::Enum notFound)
+Resource* ResourceManager::GetResource(ResourceId resourceId,
+                                       ResourceNotFound::Enum notFound)
 {
   // Try the id
   Resource* resource = ResourceIdMap.FindValue(resourceId, nullptr);
-  if(resource)
+  if (resource)
     return resource;
 
   // Resource can not be found
-  if(notFound == ResourceNotFound::ReturnNull)
+  if (notFound == ResourceNotFound::ReturnNull)
     return nullptr;
 
   // Resource Id 0 returns the default resource
-  if(resourceId == 0)
+  if (resourceId == 0)
     return GetDefaultResource();
 
-  if(notFound == ResourceNotFound::ReturnDefault)
+  if (notFound == ResourceNotFound::ReturnDefault)
     return GetDefaultResource();
 
   // Signal the error
@@ -337,7 +343,7 @@ Resource* ResourceManager::GetDefaultResource()
 Resource* ResourceManager::GetResourceById(ResourceId id)
 {
   Resource* resource = ResourceIdMap.FindValue(id, nullptr);
-  if(resource == nullptr)
+  if (resource == nullptr)
     return GetFallbackResource();
   else
     return resource;
@@ -349,44 +355,52 @@ Resource* ResourceManager::GetResourceByName(StringParam name)
   return GetResourceById(resourceId);
 }
 
-void ResourceManager::MissingResource(StringParam resourceName, ResourceId resourceId)
+void ResourceManager::MissingResource(StringParam resourceName,
+                                      ResourceId resourceId)
 {
   String nameOfResource = resourceName;
 
-  if(resourceName.Empty())
+  if (resourceName.Empty())
     nameOfResource = ToString(resourceId);
 
-  String errorMessage = String::Format("Could not find %s resource with name and id "
-    "'%s'. Using default.", mResourceTypeName.c_str(),
-    nameOfResource.c_str());
+  String errorMessage =
+      String::Format("Could not find %s resource with name and id "
+                     "'%s'. Using default.",
+                     mResourceTypeName.c_str(),
+                     nameOfResource.c_str());
   DoNotifyErrorWithContext(errorMessage);
 }
 
 Resource* ResourceManager::GetFallbackResource()
 {
   // If no fallback resource is set use the DefaultResource instead
-  String fallback = FallbackResourceName.Empty() ? DefaultResourceName : FallbackResourceName;
+  String fallback =
+      FallbackResourceName.Empty() ? DefaultResourceName : FallbackResourceName;
 
   // No fall back or default return null
-  if(fallback.Empty())
+  if (fallback.Empty())
     return nullptr;
 
   // Get the fallback resource by name
-  Resource* resource = this->GetResource(fallback, ResourceNotFound::ReturnNull);
+  Resource* resource =
+      this->GetResource(fallback, ResourceNotFound::ReturnNull);
   // RESOURCEREFACTOR Should this check for no fallback needed?
-  if(resource == nullptr/* && mNoFallbackNeeded == false*/)
+  if (resource == nullptr /* && mNoFallbackNeeded == false*/)
   {
-    ZPrint("No fallback '%s' name %s.\n", mResourceTypeName.c_str(), fallback.c_str());
+    ZPrint("No fallback '%s' name %s.\n",
+           mResourceTypeName.c_str(),
+           fallback.c_str());
   }
 
   return resource;
 }
 
-Resource* ResourceManager::GetResourceNameOrId(StringRange resourceName, ResourceId resourceId)
+Resource* ResourceManager::GetResourceNameOrId(StringRange resourceName,
+                                               ResourceId resourceId)
 {
   // Try the resource Id
   Resource* resource = ResourceIdMap.FindValue(resourceId, nullptr);
-  if(resource)
+  if (resource)
     return resource;
 
   // Try to get a resource id for this resource name
@@ -399,17 +413,18 @@ Resource* ResourceManager::GetResourceNameOrId(StringRange resourceName, Resourc
 
 const String cNullResource = "null";
 
-Resource* ResourceManager::ResolveResourceStream(cstr fieldName,
-                                                 Serializer& stream,
-                                                 Resource* resourcePtr,
-                                                 ResourceNotFound::Enum ifNotFound,
-                                                 cstr defaultResourceName)
+Resource*
+ResourceManager::ResolveResourceStream(cstr fieldName,
+                                       Serializer& stream,
+                                       Resource* resourcePtr,
+                                       ResourceNotFound::Enum ifNotFound,
+                                       cstr defaultResourceName)
 {
-  if(stream.GetMode() == SerializerMode::Saving)
+  if (stream.GetMode() == SerializerMode::Saving)
   {
-    if(stream.GetType() == SerializerType::Binary)
+    if (stream.GetType() == SerializerType::Binary)
     {
-      if(resourcePtr != nullptr && resourcePtr->IsRuntime() == false)
+      if (resourcePtr != nullptr && resourcePtr->IsRuntime() == false)
       {
         // In binary, save resource by id
         ResourceId id = resourcePtr->mResourceId;
@@ -419,14 +434,14 @@ Resource* ResourceManager::ResolveResourceStream(cstr fieldName,
       else
       {
         // No resource, serialize empty resource id
-        ResourceId id =  0;
+        ResourceId id = 0;
         stream.SerializeField(fieldName, id);
         return resourcePtr;
       }
     }
     else
     {
-      if(resourcePtr != nullptr && resourcePtr->IsRuntime() == false)
+      if (resourcePtr != nullptr && resourcePtr->IsRuntime() == false)
       {
         // In text, save resource by Id and name
         StringRange name = resourcePtr->ResourceIdName.All();
@@ -444,7 +459,7 @@ Resource* ResourceManager::ResolveResourceStream(cstr fieldName,
   }
   else
   {
-    if(stream.GetType() == SerializerType::Binary)
+    if (stream.GetType() == SerializerType::Binary)
     {
       ResourceId resourceId;
       stream.SerializeField(fieldName, resourceId);
@@ -457,30 +472,33 @@ Resource* ResourceManager::ResolveResourceStream(cstr fieldName,
       bool valid = stream.StringField("string", fieldName, resourceIdName);
 
       // Attempt to read the old type
-      if(!valid)
+      if (!valid)
       {
         String oldName = BuildString(fieldName, "Name");
         valid = stream.StringField("string", oldName.c_str(), resourceIdName);
       }
 
       // Return the default if we didn't find anything
-      if(valid == false)
+      if (valid == false)
         resourceIdName = defaultResourceName;
 
       // Return null if it was explicitly set to null
-      if (resourceIdName == cNullResource && ifNotFound == ResourceNotFound::ReturnNull)
+      if (resourceIdName == cNullResource &&
+          ifNotFound == ResourceNotFound::ReturnNull)
         return nullptr;
 
       Resource* newResource = GetResource(resourceIdName, ifNotFound);
 
-      // We have to handle if the Resource specified in the file was removed (or doesn't exist).
-      // It will return null, but we still want to set it to the default
-      // We need to check if resourceIdName is empty, because empty is valid for nullable properties
+      // We have to handle if the Resource specified in the file was removed (or
+      // doesn't exist). It will return null, but we still want to set it to the
+      // default We need to check if resourceIdName is empty, because empty is
+      // valid for nullable properties
       if (newResource == nullptr && valid && resourceIdName.Empty() == false)
-        newResource = GetResource(defaultResourceName, ResourceNotFound::ErrorFallback);
+        newResource =
+            GetResource(defaultResourceName, ResourceNotFound::ErrorFallback);
 
       // If it wasn't in the file, just return the current value
-      if(!valid && stream.mPatching)
+      if (!valid && stream.mPatching)
         return resourcePtr;
 
       return newResource;
@@ -488,10 +506,9 @@ Resource* ResourceManager::ResolveResourceStream(cstr fieldName,
   }
 }
 
-
 void ResourceManager::DestroyResources()
 {
   ErrorIf(!ResourceIdMap.Empty(), "Resources that still have Ids are left!");
 }
 
-}//namespace Zero
+} // namespace Zero

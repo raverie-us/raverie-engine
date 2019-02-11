@@ -1,19 +1,21 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-/// Represents meta data of shader fragment types that can be composited together on Materials.
+/// Represents meta data of shader fragment types that can be composited
+/// together on Materials.
 class MaterialBlock : public Object
 {
 public:
   ZilchDeclareInheritableType(MaterialBlock, TypeCopyMode::ReferenceType);
 
   MaterialBlock();
-  virtual ~MaterialBlock() {}
+  virtual ~MaterialBlock()
+  {
+  }
 
   void Serialize(Serializer& stream) override;
 

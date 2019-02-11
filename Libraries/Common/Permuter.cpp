@@ -1,34 +1,24 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//******************************************************************************
 Permutation::Permutation() :
-  mInOrder(false),
-  mNoDuplicates(false),
-  mMinIndex(0),
-  mMaxIndex(0)
+    mInOrder(false),
+    mNoDuplicates(false),
+    mMinIndex(0),
+    mMaxIndex(0)
 {
 }
 
-//******************************************************************************
-Permuter::Permuter() :
-  mArraySize(0),
-  mEmpty(true)
+Permuter::Permuter() : mArraySize(0), mEmpty(true)
 {
 }
 
-//******************************************************************************
 Permuter::Permuter(size_t arraySize, size_t howManyToSelect) :
-  mArraySize(arraySize),
-  mEmpty(false)
+    mArraySize(arraySize),
+    mEmpty(false)
 {
   if (howManyToSelect == 0 || arraySize == 0)
   {
@@ -43,19 +33,16 @@ Permuter::Permuter(size_t arraySize, size_t howManyToSelect) :
   ComputeStats();
 }
 
-//******************************************************************************
 bool Permuter::Empty() const
 {
   return mEmpty;
 }
 
-//******************************************************************************
 Permuter::FrontResult Permuter::Front() const
 {
   return mPermutation;
 }
 
-//******************************************************************************
 void Permuter::PopFront()
 {
   // Increment the first index
@@ -70,7 +57,8 @@ void Permuter::PopFront()
     if (mPermutation[i] != mArraySize)
       break;
 
-    // Otherwise we're overflowing here, but if this is the last value then we're done
+    // Otherwise we're overflowing here, but if this is the last value then
+    // we're done
     if (i == lastIndex)
     {
       mEmpty = true;
@@ -87,7 +75,6 @@ void Permuter::PopFront()
   ComputeStats();
 }
 
-//******************************************************************************
 void Permuter::ComputeStats()
 {
   // Do some more processing to discover if this is in order or has duplicates
@@ -96,7 +83,8 @@ void Permuter::ComputeStats()
   mPermutation.mMinIndex = (size_t)-1;
   mPermutation.mMaxIndex = 0;
 
-  // This array tells us if we've already used a component from the selection array
+  // This array tells us if we've already used a component from the selection
+  // array
   size_t usedComponentSizeBytes = mArraySize * sizeof(bool);
   bool* usedComponent = (bool*)alloca(usedComponentSizeBytes);
   memset(usedComponent, 0, usedComponentSizeBytes);
@@ -123,18 +111,16 @@ void Permuter::ComputeStats()
   }
 }
 
-//******************************************************************************
-MultiPermuter::MultiPermuter() :
-  mMaxSelect(0),
-  mEmpty(true)
+MultiPermuter::MultiPermuter() : mMaxSelect(0), mEmpty(true)
 {
 }
 
-//******************************************************************************
-MultiPermuter::MultiPermuter(size_t arraySize, size_t minSelect, size_t maxSelect) :
-  mMaxSelect(maxSelect),
-  mPermuter(arraySize, minSelect),
-  mEmpty(false)
+MultiPermuter::MultiPermuter(size_t arraySize,
+                             size_t minSelect,
+                             size_t maxSelect) :
+    mMaxSelect(maxSelect),
+    mPermuter(arraySize, minSelect),
+    mEmpty(false)
 {
   if (minSelect == 0)
     minSelect = 1;
@@ -146,19 +132,16 @@ MultiPermuter::MultiPermuter(size_t arraySize, size_t minSelect, size_t maxSelec
     mEmpty = true;
 }
 
-//******************************************************************************
 bool MultiPermuter::Empty() const
 {
   return mEmpty;
 }
 
-//******************************************************************************
 MultiPermuter::FrontResult MultiPermuter::Front() const
 {
   return mPermuter.Front();
 }
 
-//******************************************************************************
 void MultiPermuter::PopFront()
 {
   mPermuter.PopFront();

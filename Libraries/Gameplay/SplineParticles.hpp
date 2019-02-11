@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleEmitters.hpp
-/// Declaration of the Particle emitters.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------ Spline Particle Emitter
 class SplineParticleEmitter : public ParticleEmitterShared
 {
 public:
@@ -27,8 +18,11 @@ public:
   void FindSpline();
 
   /// ParticleEmitter Interface.
-  int EmitParticles(ParticleList* particleList, float dt,
-                    Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  int EmitParticles(ParticleList* particleList,
+                    float dt,
+                    Mat4Ref transform,
+                    Vec3Param velocity,
+                    float timeAlive) override;
 
   /// The current spline being emitted along
   Spline* GetSpline() const;
@@ -44,7 +38,6 @@ public:
   bool mClampT;
 };
 
-//----------------------------------------------------- Spline Particle Animator
 DeclareEnum2(SplineAnimatorMode, Exact, Spring);
 
 class SplineParticleAnimator : public ParticleAnimator
@@ -60,13 +53,15 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// ParticleAnimator Interface.
-  void Animate(ParticleList* particleList, float dt, Mat4Ref transform) override;
+  void Animate(ParticleList* particleList,
+               float dt,
+               Mat4Ref transform) override;
 
   /// Speed setter / getter.
   void SetSpeed(float speed);
   float GetSpeed();
 
-  /// 
+  ///
   SplineParticleEmitter* mEmitter;
 
   /// The speed at which the particles move in meters / second.
@@ -95,4 +90,4 @@ public:
   float mSpringDampingRatio;
 };
 
-}//namespace Zero
+} // namespace Zero

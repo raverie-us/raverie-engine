@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file OnionSkinning.hpp
-/// Declaration of the OnionSkinning class.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 class AnimationEditor;
 
-//--------------------------------------------------------------- Onion Skinning
 class OnionSkinning
 {
 public:
@@ -44,4 +35,4 @@ private:
   AnimationEditor* mEditor;
 };
 
-}//namespace Zero
+} // namespace Zero

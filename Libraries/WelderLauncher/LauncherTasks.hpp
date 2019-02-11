@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,7 +6,6 @@ namespace Zero
 // We cache all requests for 4 hours (forced, we don't contact the server).
 const u64 cCacheSeconds = 60 * 60 * 4;
 
-//-------------------------------------------------------------------GetVersionListingTask
 // Get the possible versions of zero from the server.
 class GetVersionListingTaskJob : public DownloadTaskJob
 {
@@ -29,7 +23,6 @@ public:
   Array<Cog*> mPackages;
 };
 
-//-------------------------------------------------------------------DownloadImageTask
 class DownloadImageTaskJob : public DownloadTaskJob
 {
 public:
@@ -45,7 +38,6 @@ public:
   bool mImageWasInvalid;
 };
 
-//-------------------------------------------------------------------LoadImageFromDiskTask
 class LoadImageFromDiskTaskJob : public DownloadImageTaskJob
 {
 public:
@@ -58,7 +50,6 @@ public:
   String mPath;
 };
 
-//-------------------------------------------------------------------GetDataTask
 // Gets the data from the url
 class GetDataTaskJob : public DownloadTaskJob
 {
@@ -74,7 +65,6 @@ public:
   String mData;
 };
 
-//-------------------------------------------------------------------DownloadStandaloneTask
 // A background task to download and install the latest zero
 class DownloadStandaloneTaskJob : public DownloadTaskJob
 {
@@ -91,7 +81,6 @@ public:
   String mMetaContents;
 };
 
-//-------------------------------------------------------------------InstallBuildTask
 class InstallBuildTaskJob : public BackgroundTaskJob
 {
 public:
@@ -109,15 +98,17 @@ public:
   String mInstallLocation;
 };
 
-//-------------------------------------------------------------------DeleteDirectoryJob
-// Deletes a directory on a thread because deleting can take a little bit of time.
-// Can also recursively delete empty parent directories up to a certain root so as to not leave empty folders.
+// Deletes a directory on a thread because deleting can take a little bit of
+// time. Can also recursively delete empty parent directories up to a certain
+// root so as to not leave empty folders.
 class DeleteDirectoryJob : public BackgroundTaskJob
 {
 public:
   typedef DeleteDirectoryJob ZilchSelf;
 
-  DeleteDirectoryJob(StringParam directory, StringParam rootDirectory, bool recursivelyDeleteEmpty);
+  DeleteDirectoryJob(StringParam directory,
+                     StringParam rootDirectory,
+                     bool recursivelyDeleteEmpty);
 
   /// Job Interface.
   void Execute() override;
@@ -127,7 +118,6 @@ public:
   bool mRecursivelyDeleteEmpty;
 };
 
-//-------------------------------------------------------------------GetTemplateListingTask
 // Get the possible templates from the server.
 class GetTemplateListingTaskJob : public DownloadTaskJob
 {
@@ -146,7 +136,6 @@ public:
   Array<TemplateProject> mTemplateList;
 };
 
-//-------------------------------------------------------------------DownloadTemplateTask
 class DownloadTemplateTaskJob : public DownloadTaskJob
 {
 public:
@@ -165,19 +154,21 @@ public:
   String mMetaContents;
 };
 
-//-------------------------------------------------------------------DownloadAndCreateTemplateTask
-// Downloads a template (if needed) and creates a new project from that template.
+// Downloads a template (if needed) and creates a new project from that
+// template.
 class DownloadAndCreateTemplateTaskJob : public DownloadTemplateTaskJob
 {
 public:
   typedef DownloadAndCreateTemplateTaskJob ZilchSelf;
-  DownloadAndCreateTemplateTaskJob(StringParam templateUrl, TemplateProject* project);
+  DownloadAndCreateTemplateTaskJob(StringParam templateUrl,
+                                   TemplateProject* project);
 
   /// Job Interface.
   void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
-  // Creating a project currently involves serialization which is not thread safe, this must be called on the main thread.
+  // Creating a project currently involves serialization which is not thread
+  // safe, this must be called on the main thread.
   CachedProject* GetOrCreateCachedProject(ProjectCache* projectCache);
 
   /// What to name the project that is created from the template
@@ -191,19 +182,21 @@ public:
 
 private:
   // Create the project from the template file path (must be downloaded to disk)
-  void CreateFromTemplateFile(StringParam templateFilePath, ProjectCache* projectCache);
+  void CreateFromTemplateFile(StringParam templateFilePath,
+                              ProjectCache* projectCache);
 
   // A cached project created (on the main thread)
   CachedProject* mCachedProject;
 };
 
-//-------------------------------------------------------------------DownloadLauncherPatchInstallerJob
-// A background task to check if there's a new patch version installer for the launcher and if so download it.
+// A background task to check if there's a new patch version installer for the
+// launcher and if so download it.
 class DownloadLauncherPatchInstallerJob : public DownloadTaskJob
 {
 public:
   typedef DownloadLauncherPatchInstallerJob ZilchSelf;
-  DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation);
+  DownloadLauncherPatchInstallerJob(StringParam url,
+                                    StringParam rootDownloadLocation);
 
   /// Job Interface.
   void Execute() override;
@@ -217,8 +210,8 @@ public:
   String mRootDownloadLocation;
 };
 
-//-------------------------------------------------------------------DownloadLauncherMajorInstallerJob
-// A background task to check if there's a new major version installer for the launcher and if so download it.
+// A background task to check if there's a new major version installer for the
+// launcher and if so download it.
 class DownloadLauncherMajorInstallerJob : public DownloadTaskJob
 {
 public:
@@ -235,7 +228,6 @@ public:
   String mInstallerPath;
 };
 
-//-------------------------------------------------------------------BackupProjectJob
 // A job to backup a user's project to a directory.
 class BackupProjectJob : public BackgroundTaskJob
 {
@@ -251,11 +243,13 @@ public:
     String mFullFilePath;
     String mRelativePath;
   };
-  void GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList);
+  void GetFileList(StringParam path,
+                   StringParam parentPath,
+                   Array<ArchiveData>& fileList);
 
   String mProjectPath;
   String mDestinationFilePath;
   bool mOpenDirectoryOnCompletion;
 };
 
-}//namespace Zero
+} // namespace Zero

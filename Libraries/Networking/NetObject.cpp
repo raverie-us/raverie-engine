@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean.
-/// Copyright 2015, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  NetObject                                      //
-//---------------------------------------------------------------------------------//
+//                                  NetObject //
 
 ZilchDefineType(NetObject, builder, type)
 {
@@ -98,8 +91,8 @@ ZilchDefineType(NetObject, builder, type)
   ZilchBindFieldProperty(mNetPropertyInfos);
 }
 
-NetObject::NetObject()
-  : Replica(),
+NetObject::NetObject() :
+    Replica(),
     Component(),
     mInitLevelResourceIdName(),
     mIsAncestor(false),
@@ -125,17 +118,23 @@ void NetObject::Serialize(Serializer& stream)
   // Get this net object's derived type
   BoundType* derivedType = ZilchVirtualTypeId(this);
 
-  // Use accurate timestamps by default for all derived net object types (every net object type other than NetObject itself)
-  // These types (NetPeer, NetSpace, and NetUser) almost always require accurate timestamps, so we enable them by default
+  // Use accurate timestamps by default for all derived net object types (every
+  // net object type other than NetObject itself) These types (NetPeer,
+  // NetSpace, and NetUser) almost always require accurate timestamps, so we
+  // enable them by default
   bool accurateTimestampsByDefault = (derivedType != ZilchTypeId(NetObject));
 
   // Serialize data members
   SerializeNameDefault(mDetectOutgoingChanges, GetDetectOutgoingChanges());
   SerializeNameDefault(mAcceptIncomingChanges, GetAcceptIncomingChanges());
   SerializeNameDefault(mAllowNapping, GetAllowNapping());
-  stream.SerializeFieldDefault("AccurateTimestampOnOnline", mAccurateTimestampOnInitialization, accurateTimestampsByDefault);
+  stream.SerializeFieldDefault("AccurateTimestampOnOnline",
+                               mAccurateTimestampOnInitialization,
+                               accurateTimestampsByDefault);
   SerializeNameDefault(mAccurateTimestampOnChange, accurateTimestampsByDefault);
-  stream.SerializeFieldDefault("AccurateTimestampOnOffline", mAccurateTimestampOnUninitialization, accurateTimestampsByDefault);
+  stream.SerializeFieldDefault("AccurateTimestampOnOffline",
+                               mAccurateTimestampOnUninitialization,
+                               accurateTimestampsByDefault);
   SerializeResourceName(mAutomaticChannel, NetChannelConfigManager);
   SerializeNameDefault(mNetPropertyInfos, NetPropertyInfoArray());
 }
@@ -146,23 +145,28 @@ void NetObject::Initialize(CogInitializer& initializer)
   Cog* owner = GetOwner();
 
   // Is editor or preview mode?
-  if(owner->IsEditorOrPreviewMode())
+  if (owner->IsEditorOrPreviewMode())
     return;
 
   // Get gamesession
   GameSession* gameSession = owner->GetGameSession();
-  if(!gameSession) // Unable?
+  if (!gameSession) // Unable?
     return;
 
   // Get net peer
   NetPeer* netPeer = gameSession->has(NetPeer);
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    // (This can happen if the user forgot to add a net peer component to their game session)
-    DoNotifyWarning("Invalid NetObject GameSession",
-                  String::Format("Unable to initialize NetObject - NetObject '%s' was created in the GameSession '%s' which does not have a NetPeer component."
-                                 " Please add a NetPeer component to the GameSession.",
-                                 owner->GetDescription().c_str(), gameSession->GetDescription().c_str()));
+    // (This can happen if the user forgot to add a net peer component to their
+    // game session)
+    DoNotifyWarning(
+        "Invalid NetObject GameSession",
+        String::Format(
+            "Unable to initialize NetObject - NetObject '%s' was created in "
+            "the GameSession '%s' which does not have a NetPeer component."
+            " Please add a NetPeer component to the GameSession.",
+            owner->GetDescription().c_str(),
+            gameSession->GetDescription().c_str()));
     return;
   }
 
@@ -181,7 +185,7 @@ void NetObject::Initialize(CogInitializer& initializer)
   Space* space = GetSpace();
 
   // Created by level initialization?
-  if(space && space->mIsLoadingLevel)
+  if (space && space->mIsLoadingLevel)
   {
     // Get the level's resource ID name
     String levelResourceIdName = space->GetCurrentLevel()->ResourceIdName;
@@ -200,10 +204,11 @@ void NetObject::Initialize(CogInitializer& initializer)
   //
 
   // Connect event handlers
-  ConnectThisTo(owner, Events::CogNameChanged,           OnCogNameChanged);
-  ConnectThisTo(owner, Events::Attached,                 OnAttached);
-  ConnectThisTo(owner, Events::Detached,                 OnDetached);
-  ConnectThisTo(owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
+  ConnectThisTo(owner, Events::CogNameChanged, OnCogNameChanged);
+  ConnectThisTo(owner, Events::Attached, OnAttached);
+  ConnectThisTo(owner, Events::Detached, OnDetached);
+  ConnectThisTo(
+      owner, Events::RegisterCppNetProperties, OnRegisterCppNetProperties);
 
   // Add C++ component net properties
   AddCppNetProperties();
@@ -227,43 +232,53 @@ void NetObject::OnAllObjectsCreated(CogInitializer& initializer)
   Cog* parent = owner->GetParent();
 
   // Is editor or preview mode?
-  if(owner->IsEditorOrPreviewMode())
+  if (owner->IsEditorOrPreviewMode())
     return;
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return;
 
   // Not the net peer?
-  if(!IsNetPeer())
+  if (!IsNetPeer())
   {
     // Get space
     Space* space = owner->GetSpace();
-    if(!space) // Unable?
+    if (!space) // Unable?
       return;
 
     // Get net space
     NetSpace* netSpace = GetNetSpace();
-    if(!netSpace) // Unable?
+    if (!netSpace) // Unable?
     {
-      // (This can happen if the user forgot to add a net space component to their space)
-      DoNotifyError("Invalid NetObject Space",
-                    String::Format("Unable to initialize NetObject - NetObject '%s' was created in the Space '%s' which does not have a NetSpace component."
-                                   " Please add a NetSpace component to the Space.",
-                                   owner->GetDescription().c_str(), space->GetDescription().c_str()));
+      // (This can happen if the user forgot to add a net space component to
+      // their space)
+      DoNotifyError(
+          "Invalid NetObject Space",
+          String::Format(
+              "Unable to initialize NetObject - NetObject '%s' was created in "
+              "the Space '%s' which does not have a NetSpace component."
+              " Please add a NetSpace component to the Space.",
+              owner->GetDescription().c_str(),
+              space->GetDescription().c_str()));
       return;
     }
   }
 
   // Parent is not a net object?
-  if(parent && !parent->has(NetObject))
+  if (parent && !parent->has(NetObject))
   {
-    // (This can happen if the user forgot to add a net object component to their parent)
-    DoNotifyError("Invalid NetObject Hierarchy",
-                    String::Format("Unable to initialize NetObject - NetObject Child '%s' was attached to Parent '%s' which does not have a NetObject component."
-                                   " Please add a NetObject component to the Parent.",
-                                   owner->GetDescription().c_str(), parent->GetDescription().c_str()));
+    // (This can happen if the user forgot to add a net object component to
+    // their parent)
+    DoNotifyError(
+        "Invalid NetObject Hierarchy",
+        String::Format(
+            "Unable to initialize NetObject - NetObject Child '%s' was "
+            "attached to Parent '%s' which does not have a NetObject component."
+            " Please add a NetObject component to the Parent.",
+            owner->GetDescription().c_str(),
+            parent->GetDescription().c_str()));
     return;
   }
 
@@ -278,12 +293,14 @@ void NetObject::OnAllObjectsCreated(CogInitializer& initializer)
   InitializeCreateContext();
 
   // Is client or server, and the ancestor?
-  if(IsClientOrServer() && IsAncestor())
+  if (IsClientOrServer() && IsAncestor())
   {
-    // (Ancestor's create context and replica type must be initialized by this point)
+    // (Ancestor's create context and replica type must be initialized by this
+    // point)
     Assert(GetCreateContext().IsNotEmpty() && GetReplicaType().IsNotEmpty());
 
-    // Create the complete family tree representing this ancestor and all of it's descendants
+    // Create the complete family tree representing this ancestor and all of
+    // it's descendants
     InitializeFamilyTree();
   }
 
@@ -292,26 +309,30 @@ void NetObject::OnAllObjectsCreated(CogInitializer& initializer)
   //
 
   // Net peer not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-    // (This indicates it is either invalid or unnecessary to bring the net object online here)
-    // (If it is unnecessary to bring the net object online here, it will be brought online elsewhere)
+    // (This indicates it is either invalid or unnecessary to bring the net
+    // object online here) (If it is unnecessary to bring the net object online
+    // here, it will be brought online elsewhere)
     return;
   }
 
   // Is client and created by cog initialization?
-  if(IsClient() && WasCogInitialized())
+  if (IsClient() && WasCogInitialized())
   {
     // Claim the active replica stream
-    if(!netPeer->ClaimActiveReplicaStream(&initializer)) // Unable?
+    if (!netPeer->ClaimActiveReplicaStream(&initializer)) // Unable?
     {
-      DoNotifyWarning("Unauthorized NetObject Creation Attempted",
-                      String::Format("The Client attempted to illegally create a NetObject '%s'."
-                      " Clients are not permitted to spawn NetObjects."
-                      " Try creating the NetObject on the Server instead.",
-                      owner->GetDescription().c_str()));
+      DoNotifyWarning(
+          "Unauthorized NetObject Creation Attempted",
+          String::Format(
+              "The Client attempted to illegally create a NetObject '%s'."
+              " Clients are not permitted to spawn NetObjects."
+              " Try creating the NetObject on the Server instead.",
+              owner->GetDescription().c_str()));
 
-      // Remove this net object from it's family tree (if it hasn't been removed already)
+      // Remove this net object from it's family tree (if it hasn't been removed
+      // already)
       GetNetPeer()->RemoveNetObjectFromFamilyTree(this);
 
       // Mark object for destruction and return
@@ -323,14 +344,16 @@ void NetObject::OnAllObjectsCreated(CogInitializer& initializer)
     const ReplicaStream* replicaStream = netPeer->GetActiveReplicaStream();
     Assert(replicaStream);
 
-    // Read identification information (such as IsAbsent, ReplicaId, IsCloned, IsEmplaced, EmplaceContext, and EmplaceId) from the replica stream
+    // Read identification information (such as IsAbsent, ReplicaId, IsCloned,
+    // IsEmplaced, EmplaceContext, and EmplaceId) from the replica stream
     bool isAbsent = false;
     ReadIdentificationInfo(replicaStream, isAbsent);
 
     // Replica is supposed to be absent (destroyed/forgotten)?
-    if(isAbsent)
+    if (isAbsent)
     {
-      // Remove this net object from it's family tree (if it hasn't been removed already)
+      // Remove this net object from it's family tree (if it hasn't been removed
+      // already)
       GetNetPeer()->RemoveNetObjectFromFamilyTree(this);
 
       // Mark object for destruction and return
@@ -341,7 +364,8 @@ void NetObject::OnAllObjectsCreated(CogInitializer& initializer)
     // (Should not be marked for destruction at this point)
     Assert(!owner->GetMarkedForDestruction());
 
-    // Read channel data (such as forward and reverse ReplicaChannels) from the replica stream
+    // Read channel data (such as forward and reverse ReplicaChannels) from the
+    // replica stream
     ReadChannelData(replicaStream);
   }
 
@@ -349,7 +373,7 @@ void NetObject::OnAllObjectsCreated(CogInitializer& initializer)
   NetSpace* netSpace = GetNetSpace();
 
   // We are receiving a net game clone?
-  if(netPeer && netSpace && netPeer->IsReceivingNetGame())
+  if (netPeer && netSpace && netPeer->IsReceivingNetGame())
   {
     Assert(netPeer->IsClient());
 
@@ -369,18 +393,19 @@ void NetObject::OnDestroy(uint flags)
 
   // Get gamesession
   GameSession* gameSession = owner->GetGameSession();
-  if(!gameSession) // Unable?
+  if (!gameSession) // Unable?
     return;
 
   // Is editor or preview mode?
-  if(owner->IsEditorOrPreviewMode())
+  if (owner->IsEditorOrPreviewMode())
     return;
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    // (This can happen if the user forgot to add a net peer component to their game session)
+    // (This can happen if the user forgot to add a net peer component to their
+    // game session)
     return;
   }
 
@@ -389,10 +414,11 @@ void NetObject::OnDestroy(uint flags)
   //
 
   // Net peer not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-    // (This indicates it is either invalid or unnecessary to take the net object offline here)
-    // (If it is unnecessary to take the net object offline here, it will be taken offline elsewhere)
+    // (This indicates it is either invalid or unnecessary to take the net
+    // object offline here) (If it is unnecessary to take the net object offline
+    // here, it will be taken offline elsewhere)
     return;
   }
 
@@ -400,17 +426,18 @@ void NetObject::OnDestroy(uint flags)
   bool causedByGameQuitting = gameSession->mQuiting;
 
   // Is client?
-  if(netPeer->IsClient())
+  if (netPeer->IsClient())
   {
     //     Net object still online?
     // AND Not caused by the game quitting?
-    if(IsOnline() && !causedByGameQuitting)
+    if (IsOnline() && !causedByGameQuitting)
     {
-      DoNotifyWarning("Unauthorized NetObject Destruction",
-                      String::Format("The Client illegally destroyed a NetObject '%s'."
-                      " Clients are not permitted to destroy NetObjects."
-                      " Try destroying the NetObject on the Server instead.",
-                      owner->GetDescription().c_str()));
+      DoNotifyWarning(
+          "Unauthorized NetObject Destruction",
+          String::Format("The Client illegally destroyed a NetObject '%s'."
+                         " Clients are not permitted to destroy NetObjects."
+                         " Try destroying the NetObject on the Server instead.",
+                         owner->GetDescription().c_str()));
     }
   }
 
@@ -422,10 +449,10 @@ void NetObject::OnCogNameChanged(Event* event)
 {
 
   // Is server?
-  if(IsServer())
+  if (IsServer())
   {
     // Replicate name changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if (NetChannel* netObjectChannel = GetNetChannel("NetObject"))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -441,21 +468,26 @@ void NetObject::OnAttached(HierarchyEvent* event)
   Cog* parent = event->Parent;
 
   // Parent is not a net object?
-  if(!parent->has(NetObject))
+  if (!parent->has(NetObject))
   {
-    // (This can happen if the user forgot to add a net object component to their parent)
-    DoNotifyError("Invalid NetObject Attachment",
-                  String::Format("Unable to replicate NetObject attachment - NetObject Child '%s' was attached to Parent '%s' which does not have a NetObject component."
-                                 " Please add a NetObject component to the Parent.",
-                                 owner->GetDescription().c_str(), parent->GetDescription().c_str()));
+    // (This can happen if the user forgot to add a net object component to
+    // their parent)
+    DoNotifyError(
+        "Invalid NetObject Attachment",
+        String::Format("Unable to replicate NetObject attachment - NetObject "
+                       "Child '%s' was attached to Parent '%s' which does not "
+                       "have a NetObject component."
+                       " Please add a NetObject component to the Parent.",
+                       owner->GetDescription().c_str(),
+                       parent->GetDescription().c_str()));
     return;
   }
 
   // Is server?
-  if(IsServer())
+  if (IsServer())
   {
     // Replicate parent changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if (NetChannel* netObjectChannel = GetNetChannel("NetObject"))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -464,10 +496,10 @@ void NetObject::OnAttached(HierarchyEvent* event)
 void NetObject::OnDetached(HierarchyEvent* event)
 {
   // Is server?
-  if(IsServer())
+  if (IsServer())
   {
     // Replicate parent changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if (NetChannel* netObjectChannel = GetNetChannel("NetObject"))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -491,42 +523,74 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
 
   // Add 'built-in' net object channel
   NetChannel* netObjectChannel = AddNetChannel("NetObject");
-  if(!netObjectChannel) // Unable?
+  if (!netObjectChannel) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
+    DoNotifyError(
+        "Unable to Add Built-In C++ NetProperties",
+        String::Format(
+            "Unable to add built-in 'NetObject' channel on the NetObject '%s'",
+            owner->GetDescription().c_str()));
     return;
   }
 
   // Configure net object channel
-  // (Note: Since we know exactly when the net properties included in this built-in channel are changed,
-  // we don't need to wait until the end of the frame to detect changes. So we use manual replication instead.
-  // This improves both responsiveness and performance, since we don't need to poll all these net objects constantly)
+  // (Note: Since we know exactly when the net properties included in this
+  // built-in channel are changed, we don't need to wait until the end of the
+  // frame to detect changes. So we use manual replication instead. This
+  // improves both responsiveness and performance, since we don't need to poll
+  // all these net objects constantly)
   netObjectChannel->GetNetChannelType()->SetDetectOutgoingChanges(false);
   netObjectChannel->GetNetChannelType()->SetAcceptIncomingChanges(true);
-  netObjectChannel->GetNetChannelType()->SetEventOnOutgoingPropertyChange(false);
+  netObjectChannel->GetNetChannelType()->SetEventOnOutgoingPropertyChange(
+      false);
   netObjectChannel->GetNetChannelType()->SetEventOnIncomingPropertyChange(true);
 
   // Add name net property (replicates object name changes)
-  NetProperty* nameProperty = netObjectChannel->AddBasicNetProperty("Name", Variant(this), NativeTypeOf(String), SerializeKnownExtendedVariant, GetNetObjectNameProperty, SetNetObjectNameProperty);
-  if(!nameProperty) // Unable?
+  NetProperty* nameProperty =
+      netObjectChannel->AddBasicNetProperty("Name",
+                                            Variant(this),
+                                            NativeTypeOf(String),
+                                            SerializeKnownExtendedVariant,
+                                            GetNetObjectNameProperty,
+                                            SetNetObjectNameProperty);
+  if (!nameProperty) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'Name' NetProperty to the 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
+    DoNotifyError(
+        "Unable to Add Built-In C++ NetProperties",
+        String::Format("Unable to add built-in 'Name' NetProperty to the "
+                       "'NetObject' channel on the NetObject '%s'",
+                       owner->GetDescription().c_str()));
     return;
   }
 
   // Add parent net property (replicates parent changes)
-  NetProperty* parentProperty = netObjectChannel->AddBasicNetProperty("Parent", Variant(this), NativeTypeOf(NetObjectId), SerializeKnownExtendedVariant, GetNetObjectParentProperty, SetNetObjectParentProperty);
-  if(!parentProperty) // Unable?
+  NetProperty* parentProperty =
+      netObjectChannel->AddBasicNetProperty("Parent",
+                                            Variant(this),
+                                            NativeTypeOf(NetObjectId),
+                                            SerializeKnownExtendedVariant,
+                                            GetNetObjectParentProperty,
+                                            SetNetObjectParentProperty);
+  if (!parentProperty) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'Parent' NetProperty to the 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
+    DoNotifyError(
+        "Unable to Add Built-In C++ NetProperties",
+        String::Format("Unable to add built-in 'Parent' NetProperty to the "
+                       "'NetObject' channel on the NetObject '%s'",
+                       owner->GetDescription().c_str()));
     return;
   }
 
   // Add owning network user net property (replicates network owner changes)
-  NetProperty* netUserOwnerIdProperty = netObjectChannel->AddBasicNetProperty("NetUserOwnerUserId", mNetUserOwnerUserId);
-  if(!netUserOwnerIdProperty) // Unable?
+  NetProperty* netUserOwnerIdProperty = netObjectChannel->AddBasicNetProperty(
+      "NetUserOwnerUserId", mNetUserOwnerUserId);
+  if (!netUserOwnerIdProperty) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'NetUserOwnerUserId' NetProperty to the 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
+    DoNotifyError("Unable to Add Built-In C++ NetProperties",
+                  String::Format(
+                      "Unable to add built-in 'NetUserOwnerUserId' NetProperty "
+                      "to the 'NetObject' channel on the NetObject '%s'",
+                      owner->GetDescription().c_str()));
     return;
   }
 }
@@ -537,30 +601,33 @@ void NetObject::AddScriptNetProperties()
 
   // For all components
   Cog::ComponentRange components = owner->GetComponents();
-  forRange(Component* component, components)
+  forRange(Component * component, components)
   {
     // Get component type
     BoundType* componentType = ZilchVirtualTypeId(component);
-    if(!componentType) // Unable?
+    if (!componentType) // Unable?
     {
       Assert(false);
       continue; // Skip component
     }
 
     // Not a scripted component?
-    if(componentType->Native)
+    if (componentType->Native)
       continue; // Skip component
 
     // For all properties
-    MemberRange<Property> properties = componentType->GetProperties(Members::InheritedInstanceExtension);
-    forRange(Property* property, properties)
+    MemberRange<Property> properties =
+        componentType->GetProperties(Members::InheritedInstanceExtension);
+    forRange(Property * property, properties)
     {
       // Get net property attribute
-      Attribute* netPropertyAttribute = property->HasAttribute(PropertyAttributes::cNetProperty);
-      if(!netPropertyAttribute) // Unable? (Is not a net property?)
-        continue; // Skip property
+      Attribute* netPropertyAttribute =
+          property->HasAttribute(PropertyAttributes::cNetProperty);
+      if (!netPropertyAttribute) // Unable? (Is not a net property?)
+        continue;                // Skip property
 
-      // (Should be a valid net property since we already validate properties with the net property attribute)
+      // (Should be a valid net property since we already validate properties
+      // with the net property attribute)
       Assert(IsValidNetProperty(property));
 
       //
@@ -571,40 +638,51 @@ void NetObject::AddScriptNetProperties()
       String netPropertyTypeName = "Default";
 
       // Net property has a "netPropertyConfig" attribute parameter?
-      AttributeParameter* netPropertyConfigAttributeParameter = netPropertyAttribute->HasAttributeParameter("netPropertyConfig");
-      if(netPropertyConfigAttributeParameter)
+      AttributeParameter* netPropertyConfigAttributeParameter =
+          netPropertyAttribute->HasAttributeParameter("netPropertyConfig");
+      if (netPropertyConfigAttributeParameter)
       {
         // Set net property type name
         netPropertyTypeName = netPropertyConfigAttributeParameter->StringValue;
       }
 
       // Find net property config resource by name (if one exists)
-      NetPropertyConfig* netPropertyConfig = NetPropertyConfigManager::FindOrNull(netPropertyTypeName);
+      NetPropertyConfig* netPropertyConfig =
+          NetPropertyConfigManager::FindOrNull(netPropertyTypeName);
 
       //
       // Get NetChannelConfig Parameter
       //
 
-      // Get desired net channel name (assume automatic channel resource name by default)
+      // Get desired net channel name (assume automatic channel resource name by
+      // default)
       String netChannelName = mAutomaticChannel->Name;
 
       // Net property has a "netChannelConfig" attribute parameter?
-      AttributeParameter* netChannelConfigAttributeParameter = netPropertyAttribute->HasAttributeParameter("netChannelConfig");
-      if(netChannelConfigAttributeParameter)
+      AttributeParameter* netChannelConfigAttributeParameter =
+          netPropertyAttribute->HasAttributeParameter("netChannelConfig");
+      if (netChannelConfigAttributeParameter)
       {
         // Set desired net channel name
         netChannelName = netChannelConfigAttributeParameter->StringValue;
       }
 
       // Find net channel config resource by name (if one exists)
-      NetChannelConfig* netChannelConfig = NetChannelConfigManager::FindOrNull(netChannelName);
+      NetChannelConfig* netChannelConfig =
+          NetChannelConfigManager::FindOrNull(netChannelName);
 
       //
       // Add NetProperty With Config Parameters
       //
 
-      // Add net property to the specified channel (which will also be added and configured if it doesn't already exist)
-      bool result = AddNetPropertyToChannel(component, property, netPropertyTypeName, netPropertyConfig, netChannelName, netChannelConfig);
+      // Add net property to the specified channel (which will also be added and
+      // configured if it doesn't already exist)
+      bool result = AddNetPropertyToChannel(component,
+                                            property,
+                                            netPropertyTypeName,
+                                            netPropertyConfig,
+                                            netChannelName,
+                                            netChannelConfig);
       Assert(result);
     }
   }
@@ -615,52 +693,78 @@ void NetObject::AddConfiguredNetProperties()
   Cog* owner = GetOwner();
 
   // For all net property infos
-  forRange(NetPropertyInfo& netPropertyInfo, mNetPropertyInfos.All())
+  forRange(NetPropertyInfo & netPropertyInfo, mNetPropertyInfos.All())
   {
-    if(!netPropertyInfo.mComponentType) // Unable?
+    if (!netPropertyInfo.mComponentType) // Unable?
     {
-      DoNotifyWarning("Unable To Add Configured NetProperty",
-        String::Format("Unable to add NetProperty '%s' to the NetChannel '%s' on the NetObject '%s' - Unable to get component property meta",
-          netPropertyInfo.mPropertyName.c_str(), netPropertyInfo.mNetChannelConfig->Name.c_str(), owner->GetDescription().c_str()));
+      DoNotifyWarning(
+          "Unable To Add Configured NetProperty",
+          String::Format(
+              "Unable to add NetProperty '%s' to the NetChannel '%s' on the "
+              "NetObject '%s' - Unable to get component property meta",
+              netPropertyInfo.mPropertyName.c_str(),
+              netPropertyInfo.mNetChannelConfig->Name.c_str(),
+              owner->GetDescription().c_str()));
       continue; // Skip net property info
     }
 
     // Get meta property (specified by component and property name)
-    Property* property = netPropertyInfo.mComponentType->GetProperty(netPropertyInfo.mPropertyName);
-    if(!property) // Unable?
+    Property* property = netPropertyInfo.mComponentType->GetProperty(
+        netPropertyInfo.mPropertyName);
+    if (!property) // Unable?
     {
-      DoNotifyWarning("Unable To Add Configured NetProperty",
-                      String::Format("Unable to add NetProperty '%s' configured on Component '%s' to the NetChannel '%s' on the NetObject '%s' - Unable to get component property meta",
-                        netPropertyInfo.mPropertyName.c_str(), netPropertyInfo.mComponentType->Name.c_str(), netPropertyInfo.mNetChannelConfig->Name.c_str(), owner->GetDescription().c_str()));
+      DoNotifyWarning(
+          "Unable To Add Configured NetProperty",
+          String::Format(
+              "Unable to add NetProperty '%s' configured on Component '%s' to "
+              "the NetChannel '%s' on the NetObject '%s' - Unable to get "
+              "component property meta",
+              netPropertyInfo.mPropertyName.c_str(),
+              netPropertyInfo.mComponentType->Name.c_str(),
+              netPropertyInfo.mNetChannelConfig->Name.c_str(),
+              owner->GetDescription().c_str()));
       continue; // Skip net property info
     }
 
     // Not a valid net property?
-    if(!IsValidNetProperty(property))
+    if (!IsValidNetProperty(property))
     {
       Assert(false);
       continue; // Skip net property info
     }
 
     // Has net property attribute?
-    Attribute* netPropertyAttribute = property->HasAttribute(PropertyAttributes::cNetProperty);
-    if(netPropertyAttribute)
-      continue; // Skip net property info (We've already added the net property above)
+    Attribute* netPropertyAttribute =
+        property->HasAttribute(PropertyAttributes::cNetProperty);
+    if (netPropertyAttribute)
+      continue; // Skip net property info (We've already added the net property
+                // above)
 
     // Get component instance from owner
-    Component* component = owner->QueryComponentType(netPropertyInfo.mComponentType);
-    if(!component) // Unable?
+    Component* component =
+        owner->QueryComponentType(netPropertyInfo.mComponentType);
+    if (!component) // Unable?
     {
-      // TODO: Uncomment this error message. We're just temporarily ignoring this error.
+      // TODO: Uncomment this error message. We're just temporarily ignoring
+      // this error.
 
       // DoNotifyWarning("Unable To Add Configured NetProperty",
-      //                 String::Format("Unable to add NetProperty '%s' configured on Component '%s' to the NetChannel '%s' on the NetObject '%s' - Unable to get component instance from owner",
-      //                 property->Name.c_str(), netPropertyInfo.mComponentType->TypeName.c_str(), netPropertyInfo.mNetChannelConfig->Name.c_str(), owner->GetDescription().c_str()));
+      //                 String::Format("Unable to add NetProperty '%s'
+      //                 configured on Component '%s' to the NetChannel '%s' on
+      //                 the NetObject '%s' - Unable to get component instance
+      //                 from owner", property->Name.c_str(),
+      //                 netPropertyInfo.mComponentType->TypeName.c_str(),
+      //                 netPropertyInfo.mNetChannelConfig->Name.c_str(),
+      //                 owner->GetDescription().c_str()));
       continue; // Skip net property info
     }
 
-    // Add net property to the specified channel (which will also be added and configured if it doesn't already exist)
-    bool result = AddNetPropertyToChannel(component, property, netPropertyInfo.mNetPropertyConfig, netPropertyInfo.mNetChannelConfig);
+    // Add net property to the specified channel (which will also be added and
+    // configured if it doesn't already exist)
+    bool result = AddNetPropertyToChannel(component,
+                                          property,
+                                          netPropertyInfo.mNetPropertyConfig,
+                                          netPropertyInfo.mNetChannelConfig);
     Assert(result);
   }
 }
@@ -671,31 +775,48 @@ void NetObject::AddNetChannelAuthorityNetProperties()
 
   // Get 'built-in' net object channel
   NetChannel* netObjectChannel = GetNetChannel("NetObject");
-  if(!netObjectChannel) // Unable?
+  if (!netObjectChannel) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In Authority NetProperties", String::Format("Unable to get built-in 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
+    DoNotifyError(
+        "Unable to Add Built-In Authority NetProperties",
+        String::Format(
+            "Unable to get built-in 'NetObject' channel on the NetObject '%s'",
+            owner->GetDescription().c_str()));
     return;
   }
 
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
   {
     // Get replica channel type
-    ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+    ReplicaChannelType* replicaChannelType =
+        replicaChannel->GetReplicaChannelType();
 
     // Replica channel type has dynamic change authority mode?
-    if(replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
     {
       // Create net property name ("ChannelName_Authority")
-      String netPropertyName = String::Format("%s_Authority", replicaChannel->GetName().c_str());
+      String netPropertyName =
+          String::Format("%s_Authority", replicaChannel->GetName().c_str());
 
-      // Add net channel authority net property (replicates net channel authority changes)
-      NetProperty* authorityProperty = netObjectChannel->AddBasicNetProperty(netPropertyName, Variant(replicaChannel), NativeTypeOf(Any), SerializeKnownExtendedVariant, GetNetChannelAuthorityProperty, SetNetChannelAuthorityProperty);
-      if(!authorityProperty) // Unable?
+      // Add net channel authority net property (replicates net channel
+      // authority changes)
+      NetProperty* authorityProperty =
+          netObjectChannel->AddBasicNetProperty(netPropertyName,
+                                                Variant(replicaChannel),
+                                                NativeTypeOf(Any),
+                                                SerializeKnownExtendedVariant,
+                                                GetNetChannelAuthorityProperty,
+                                                SetNetChannelAuthorityProperty);
+      if (!authorityProperty) // Unable?
       {
-        DoNotifyError("Unable to Add Built-In Authority NetProperties",
-                      String::Format("Unable to add NetProperty '%s' to the built-in 'NetObject' channel on the NetObject '%s' - Error adding NetProperty",
-                      netPropertyName.c_str(), owner->GetDescription().c_str()));
+        DoNotifyError(
+            "Unable to Add Built-In Authority NetProperties",
+            String::Format(
+                "Unable to add NetProperty '%s' to the built-in 'NetObject' "
+                "channel on the NetObject '%s' - Error adding NetProperty",
+                netPropertyName.c_str(),
+                owner->GetDescription().c_str()));
         return;
       }
     }
@@ -710,11 +831,12 @@ void NetObject::InitializeIsAncestor()
 {
   // Net peer not open?
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer || !netPeer->IsOpen())
+  if (!netPeer || !netPeer->IsOpen())
   {
     // Clear is-ancestor flag
-    // (This case indicates the NetObject is going to be emplaced against the game session)
-    // (We don't use ancestors/descendants for emplacement so we must set ancestor to false here)
+    // (This case indicates the NetObject is going to be emplaced against the
+    // game session) (We don't use ancestors/descendants for emplacement so we
+    // must set ancestor to false here)
     mIsAncestor = false;
     return;
   }
@@ -722,9 +844,10 @@ void NetObject::InitializeIsAncestor()
   // Get owner
   Cog* owner = GetOwner();
 
-  // Determine if we are the ancestor (is root, has an archetype, and was cog initialized)
-  bool isRoot            = owner->GetParent()    == nullptr;
-  bool hasArchetype      = owner->GetArchetype() != nullptr;
+  // Determine if we are the ancestor (is root, has an archetype, and was cog
+  // initialized)
+  bool isRoot = owner->GetParent() == nullptr;
+  bool hasArchetype = owner->GetArchetype() != nullptr;
   bool wasCogInitialized = WasCogInitialized();
   Assert(isRoot ? owner->FindRoot() == owner : true);
 
@@ -737,14 +860,15 @@ void NetObject::InitializeCreateContext()
   NetObjectId spaceNetObjectId = 0;
 
   // Is a net peer (game session)?
-  if(IsNetPeer())
+  if (IsNetPeer())
   {
     // Use 0 as the create context
-    // (We don't use create context for game sessions because we only ever emplace them)
+    // (We don't use create context for game sessions because we only ever
+    // emplace them)
     spaceNetObjectId = 0;
   }
   // Is a net space?
-  else if(IsNetSpace())
+  else if (IsNetSpace())
   {
     // Use 0 as the create context
     // (Indicates a net space is to be created in the game session)
@@ -755,10 +879,10 @@ void NetObject::InitializeCreateContext()
   {
     // Get our net space
     NetSpace* netSpace = GetNetSpace();
-    if(!netSpace) // Unable?
+    if (!netSpace) // Unable?
     {
-      // (This can happen if the user forgot to add a net space component to their space)
-      // (We currently give an error prior to this)
+      // (This can happen if the user forgot to add a net space component to
+      // their space) (We currently give an error prior to this)
       return;
     }
 
@@ -767,11 +891,14 @@ void NetObject::InitializeCreateContext()
     spaceNetObjectId = netSpace->GetNetObjectId();
 
     // Our net space is still invalid by this point?
-    if(spaceNetObjectId == 0)
+    if (spaceNetObjectId == 0)
     {
-      // (This can happen for net objects created in an emplaced net space, which won't be online yet)
-      // (This is intended behavior, not an error. Emplaced net objects created in an emplaced net space will never have a create context!)
-      // (This can also happen when a net object is created immediately after a netspace is created, because the net space won't be brought online until next frame)
+      // (This can happen for net objects created in an emplaced net space,
+      // which won't be online yet) (This is intended behavior, not an error.
+      // Emplaced net objects created in an emplaced net space will never have a
+      // create context!) (This can also happen when a net object is created
+      // immediately after a netspace is created, because the net space won't be
+      // brought online until next frame)
       return;
     }
   }
@@ -788,14 +915,17 @@ void NetObject::InitializeReplicaType()
 #ifdef NETOBJECT_USE_RESOURCE_ID_NAME_STRING
 
   // Set replica type to archetype resource ID name (if there is an archetype)
-  String archetypeResourceIdName = owner->GetArchetype() ? owner->GetArchetype()->ResourceIdName : String();
+  String archetypeResourceIdName =
+      owner->GetArchetype() ? owner->GetArchetype()->ResourceIdName : String();
   Replica::SetReplicaType(ReplicaType(archetypeResourceIdName));
 
 // Using Archetype ResourceId u64 as ReplicaType? (Much more efficient)
 #else
 
   // Set replica type to archetype resource ID (if there is an archetype)
-  u64 archetypeResourceId = (u64)(owner->GetArchetype() ? owner->GetArchetype()->mResourceId : ResourceId(0));
+  u64 archetypeResourceId =
+      (u64)(owner->GetArchetype() ? owner->GetArchetype()->mResourceId
+                                  : ResourceId(0));
   Replica::SetReplicaType(ReplicaType(archetypeResourceId));
 
 #endif
@@ -806,8 +936,9 @@ void NetObject::InitializeFamilyTree()
   Assert(IsClientOrServer());
   Assert(IsAncestor());
 
-  // Add net object root to family tree as ancestor (this will create the family tree)
-  // Add net object children recursively to family tree as descendants (in depth-first pre-order traversal order)
+  // Add net object root to family tree as ancestor (this will create the family
+  // tree) Add net object children recursively to family tree as descendants (in
+  // depth-first pre-order traversal order)
   AddDownFamilyTree(this);
 }
 void NetObject::AddDownFamilyTree(NetObject* ancestor)
@@ -827,20 +958,23 @@ void NetObject::AddDownFamilyTree(NetObject* ancestor)
   Assert(result);
 
   // Add this net object's children to the family tree
-  forRange(Cog& cog, owner->GetChildren())
-    if(NetObject* netObject = cog.has(NetObject))
+  forRange(Cog & cog,
+           owner->GetChildren()) if (NetObject* netObject = cog.has(NetObject))
       netObject->AddDownFamilyTree(ancestor);
 }
 
-void NetObject::ReadIdentificationInfo(const ReplicaStream* replicaStream, bool& isAbsent)
+void NetObject::ReadIdentificationInfo(const ReplicaStream* replicaStream,
+                                       bool& isAbsent)
 {
-  // Read identification information (such as IsAbsent, ReplicaId, IsCloned, IsEmplaced, EmplaceContext, and EmplaceId) from the replica stream
+  // Read identification information (such as IsAbsent, ReplicaId, IsCloned,
+  // IsEmplaced, EmplaceContext, and EmplaceId) from the replica stream
   bool result = replicaStream->ReadIdentificationInfo(isAbsent, this);
   Assert(result);
 }
 void NetObject::ReadChannelData(const ReplicaStream* replicaStream)
 {
-  // Read channel data (such as forward and reverse ReplicaChannels) from the replica stream
+  // Read channel data (such as forward and reverse ReplicaChannels) from the
+  // replica stream
   bool result = replicaStream->ReadChannelData(this);
   Assert(result);
 }
@@ -862,10 +996,11 @@ void NetObject::BringNetObjectOnline()
   Assert(Replica::IsInvalid());
 
   // Is offline role?
-  if(IsOffline())
+  if (IsOffline())
   {
     // Bring net object online next engine update (if it still exists)
-    // (We artificially frame-delay this operation to stay consistent with the server role which must naturally frame-delay)
+    // (We artificially frame-delay this operation to stay consistent with the
+    // server role which must naturally frame-delay)
     netSpace->mPendingNetObjects.PushBack(owner->mObjectId);
   }
   // Is client/server role?
@@ -874,13 +1009,14 @@ void NetObject::BringNetObjectOnline()
     Assert(IsClientOrServer());
 
     // Was level initialized?
-    if(WasLevelInitialized())
+    if (WasLevelInitialized())
     {
       // Is server?
-      if(IsServer())
+      if (IsServer())
       {
         // Emplace net object by level next engine update (if it still exists)
-        // (We naturally frame-delay this operation to allow initial net property values to be set in script)
+        // (We naturally frame-delay this operation to allow initial net
+        // property values to be set in script)
         netSpace->mPendingNetObjects.PushBack(owner->mObjectId);
       }
       // Is client?
@@ -889,8 +1025,12 @@ void NetObject::BringNetObjectOnline()
         Assert(IsClient());
 
         // Emplace net object by level now
-        // (We cannot frame-delay this operation, nor is there any benefit to doing so for clients)
-        if(!netPeer->EmplaceNetObjectBySpaceAndLevel(owner, owner->GetSpace(), GetInitializationLevelResourceIdName())) // Unable?
+        // (We cannot frame-delay this operation, nor is there any benefit to
+        // doing so for clients)
+        if (!netPeer->EmplaceNetObjectBySpaceAndLevel(
+                owner,
+                owner->GetSpace(),
+                GetInitializationLevelResourceIdName())) // Unable?
           return;
       }
     }
@@ -900,10 +1040,11 @@ void NetObject::BringNetObjectOnline()
       Assert(WasCogInitialized());
 
       // Is server?
-      if(IsServer())
+      if (IsServer())
       {
         // Spawn net object by level next engine update (if it still exists)
-        // (We naturally frame-delay this operation to allow initial net property values to be set in script)
+        // (We naturally frame-delay this operation to allow initial net
+        // property values to be set in script)
         netSpace->mPendingNetObjects.PushBack(owner->mObjectId);
       }
       // Is client?
@@ -936,10 +1077,10 @@ void NetObject::TakeNetObjectOffline()
   bool causedByLevelTransition = pendingLevel;
 
   // Is offline?
-  if(netPeer->IsOffline())
+  if (netPeer->IsOffline())
   {
     // Net object still online?
-    if(IsOnline())
+    if (IsOnline())
     {
       // Handle net object going offline
       HandleNetObjectOffline();
@@ -951,10 +1092,10 @@ void NetObject::TakeNetObjectOffline()
     Assert(IsClientOrServer());
 
     // Is server?
-    if(netPeer->IsServer())
+    if (netPeer->IsServer())
     {
       // Net object still online?
-      if(IsOnline())
+      if (IsOnline())
       {
         // Handle net object going offline
         HandleNetObjectOffline();
@@ -962,32 +1103,34 @@ void NetObject::TakeNetObjectOffline()
 
       //     Not caused by a level transition?
       // AND Not caused by the game quitting?
-      if(!causedByLevelTransition && !causedByGameQuitting)
+      if (!causedByLevelTransition && !causedByGameQuitting)
       {
         // Net object still live?
-        if(IsLive())
+        if (IsLive())
         {
           // Destroy net object
-          if(!netPeer->DestroyNetObject(owner, Route::All)) // Unable?
+          if (!netPeer->DestroyNetObject(owner, Route::All)) // Unable?
             return;
         }
       }
       // Caused by a level transition?
-      else if(causedByLevelTransition)
+      else if (causedByLevelTransition)
       {
-        // (Sanity check: Net peers and net spaces shouldn't fall into this case)
+        // (Sanity check: Net peers and net spaces shouldn't fall into this
+        // case)
         Assert(!IsNetPeer());
         Assert(!IsNetSpace());
       }
     }
 
     //     Net object still valid?
-    // AND We don't already have an uninitialization timestamp? (This can get called *during* a DestroyNetObject command, so we must check this first)
-    if(IsValid()
-    && Replica::GetUninitializationTimestamp() == cInvalidMessageTimestamp)
+    // AND We don't already have an uninitialization timestamp? (This can get
+    // called *during* a DestroyNetObject command, so we must check this first)
+    if (IsValid() &&
+        Replica::GetUninitializationTimestamp() == cInvalidMessageTimestamp)
     {
       // Forget net object locally
-      if(!netPeer->ForgetNetObject(owner, Route::All)) // Unable?
+      if (!netPeer->ForgetNetObject(owner, Route::All)) // Unable?
         return;
     }
   }
@@ -1003,27 +1146,29 @@ void NetObject::HandleNetObjectOnline()
 
   // Create event
   NetObjectOnline event;
-  event.mGameSession       = GetGameSession();
-  event.mSpace             = GetSpace();
-  event.mObject            = GetOwner();
-  event.mIsStartOfLifespan = !Replica::IsCloned(); // TODO: Implement this for network relevance
+  event.mGameSession = GetGameSession();
+  event.mSpace = GetSpace();
+  event.mObject = GetOwner();
+  event.mIsStartOfLifespan =
+      !Replica::IsCloned(); // TODO: Implement this for network relevance
 
-  // Handle special behavior according to net object derived type before dispatching the online event
+  // Handle special behavior according to net object derived type before
+  // dispatching the online event
   HandleNetObjectOnlinePreDispatch(&event);
 
   // Get event ID according to net object derived type
   const String& eventId = GetNetObjectOnlineEventId();
 
   // Dispatch event on object
-  if(event.mObject)
+  if (event.mObject)
     event.mObject->DispatchEvent(eventId, &event);
 
   // Dispatch event on space
-  if(event.mSpace && (event.mObject != event.mSpace))
+  if (event.mSpace && (event.mObject != event.mSpace))
     event.mSpace->DispatchEvent(eventId, &event);
 
   // Dispatch event on game session
-  if(event.mGameSession && (event.mObject != event.mGameSession))
+  if (event.mGameSession && (event.mObject != event.mGameSession))
     event.mGameSession->DispatchEvent(eventId, &event);
 }
 const String& NetObject::GetNetObjectOnlineEventId() const
@@ -1046,7 +1191,7 @@ void NetObject::HandleNetObjectOffline()
   NetSpace* netSpace = GetNetSpace();
 
   // We are receiving a net game clone?
-  if(netPeer && netSpace && netPeer->IsReceivingNetGame())
+  if (netPeer && netSpace && netPeer->IsReceivingNetGame())
   {
     Assert(netPeer->IsClient());
 
@@ -1056,40 +1201,42 @@ void NetObject::HandleNetObjectOffline()
 
   // Create event
   NetObjectOffline event;
-  event.mGameSession     = GetGameSession();
-  event.mSpace           = GetSpace();
-  event.mObject          = GetOwner();
+  event.mGameSession = GetGameSession();
+  event.mSpace = GetSpace();
+  event.mObject = GetOwner();
   event.mIsEndOfLifespan = true; // TODO: Implement this for network relevance
 
   // Get event ID according to net object derived type
   const String& eventId = GetNetObjectOfflineEventId();
 
   // Dispatch event on object
-  if(event.mObject)
+  if (event.mObject)
     event.mObject->DispatchEvent(eventId, &event);
 
   // Dispatch event on space
-  if(event.mSpace && (event.mObject != event.mSpace))
+  if (event.mSpace && (event.mObject != event.mSpace))
     event.mSpace->DispatchEvent(eventId, &event);
 
   // Dispatch event on game session
-  if(event.mGameSession && (event.mObject != event.mGameSession))
+  if (event.mGameSession && (event.mObject != event.mGameSession))
     event.mGameSession->DispatchEvent(eventId, &event);
 
-  // Handle special behavior according to net object derived type after dispatching the offline event
+  // Handle special behavior according to net object derived type after
+  // dispatching the offline event
   HandleNetObjectOfflinePostDispatch(&event);
 
   // Is server or offline?
-  if(IsServerOrOffline())
+  if (IsServerOrOffline())
   {
     // Clear net user owner
     SetNetUserOwnerUserById(NetUserId(0));
   }
 
   // Is client or server, and was cog initialized?
-  if(IsClientOrServer() && WasCogInitialized())
+  if (IsClientOrServer() && WasCogInitialized())
   {
-    // Remove this net object from it's family tree (if it hasn't been removed already)
+    // Remove this net object from it's family tree (if it hasn't been removed
+    // already)
     GetNetPeer()->RemoveNetObjectFromFamilyTree(this);
   }
 
@@ -1129,20 +1276,17 @@ bool NetObject::IsOffline() const
 bool NetObject::IsClientOrOffline() const
 {
   Role::Enum role = GetRole();
-  return role == Role::Client
-      || role == Role::Offline;
+  return role == Role::Client || role == Role::Offline;
 }
 bool NetObject::IsServerOrOffline() const
 {
   Role::Enum role = GetRole();
-  return role == Role::Server
-      || role == Role::Offline;
+  return role == Role::Server || role == Role::Offline;
 }
 bool NetObject::IsClientOrServer() const
 {
   Role::Enum role = GetRole();
-  return role == Role::Client
-      || role == Role::Server;
+  return role == Role::Client || role == Role::Server;
 }
 
 //
@@ -1217,7 +1361,7 @@ float NetObject::GetOnlineTimestamp() const
 {
   // Get initialization timestamp
   TimeMs timestamp = Replica::GetInitializationTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
   return TimeMsToFloatSeconds(timestamp);
@@ -1226,7 +1370,7 @@ float NetObject::GetLastChangeTimestamp() const
 {
   // Get last change timestamp
   TimeMs timestamp = Replica::GetLastChangeTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
   return TimeMsToFloatSeconds(timestamp);
@@ -1235,7 +1379,7 @@ float NetObject::GetOfflineTimestamp() const
 {
   // Get uninitialization timestamp
   TimeMs timestamp = Replica::GetUninitializationTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
   return TimeMsToFloatSeconds(timestamp);
@@ -1245,7 +1389,7 @@ float NetObject::GetOnlineTimePassed() const
 {
   // Get replicator
   Replicator* replicator = Replica::GetReplicator();
-  if(!replicator) // Unable?
+  if (!replicator) // Unable?
     return 0;
 
   // Get current time
@@ -1253,10 +1397,11 @@ float NetObject::GetOnlineTimePassed() const
 
   // Get initialization timestamp
   TimeMs timestamp = Replica::GetInitializationTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
-  // Compute time passed since initialization (duration between now and initialization timestamp)
+  // Compute time passed since initialization (duration between now and
+  // initialization timestamp)
   TimeMs timePassed = (now - timestamp);
   return TimeMsToFloatSeconds(timePassed);
 }
@@ -1264,7 +1409,7 @@ float NetObject::GetLastChangeTimePassed() const
 {
   // Get replicator
   Replicator* replicator = Replica::GetReplicator();
-  if(!replicator) // Unable?
+  if (!replicator) // Unable?
     return 0;
 
   // Get current time
@@ -1272,10 +1417,11 @@ float NetObject::GetLastChangeTimePassed() const
 
   // Get last change timestamp
   TimeMs timestamp = Replica::GetLastChangeTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
-  // Compute time passed since last change (duration between now and last change timestamp)
+  // Compute time passed since last change (duration between now and last change
+  // timestamp)
   TimeMs timePassed = (now - timestamp);
   return TimeMsToFloatSeconds(timePassed);
 }
@@ -1283,7 +1429,7 @@ float NetObject::GetOfflineTimePassed() const
 {
   // Get replicator
   Replicator* replicator = Replica::GetReplicator();
-  if(!replicator) // Unable?
+  if (!replicator) // Unable?
     return 0;
 
   // Get current time
@@ -1291,10 +1437,11 @@ float NetObject::GetOfflineTimePassed() const
 
   // Get uninitialization timestamp
   TimeMs timestamp = Replica::GetUninitializationTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
-  // Compute time passed since uninitialization (duration between now and uninitialization timestamp)
+  // Compute time passed since uninitialization (duration between now and
+  // uninitialization timestamp)
   TimeMs timePassed = (now - timestamp);
   return TimeMsToFloatSeconds(timePassed);
 }
@@ -1314,28 +1461,28 @@ bool NetObject::ReplicateNow()
   Cog* owner = GetOwner();
 
   // Is editor or preview mode?
-  if(owner->IsEditorOrPreviewMode())
+  if (owner->IsEditorOrPreviewMode())
     return false;
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return false;
 
   // Not client or server?
-  if(!netPeer->IsClientOrServer())
+  if (!netPeer->IsClientOrServer())
     return false;
 
   // Net object not valid?
-  if(!IsValid())
+  if (!IsValid())
     return false;
 
   // For all replica channels
   bool result = false;
-  forRange(ReplicaChannel* replicaChannel, Replica::GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, Replica::GetReplicaChannels().All())
   {
     NetChannel* netChannel = static_cast<NetChannel*>(replicaChannel);
-    if(netChannel->ReplicateNow())
+    if (netChannel->ReplicateNow())
       result = true;
   }
   return result;
@@ -1373,7 +1520,8 @@ bool NetObject::WasCogInitialized() const
   return !WasLevelInitialized();
 }
 
-void NetObject::SetInitializationLevelResourceIdName(const String& initLevelResourceIdName)
+void NetObject::SetInitializationLevelResourceIdName(
+    const String& initLevelResourceIdName)
 {
   mInitLevelResourceIdName = initLevelResourceIdName;
 }
@@ -1412,13 +1560,13 @@ bool NetObject::IsInvalid() const
 }
 bool NetObject::IsValid() const
 {
-  if(Replica::IsValid())
+  if (Replica::IsValid())
     return true;
   else
   {
     // Get net peer
     NetPeer* netPeer = GetNetPeer();
-    if(!netPeer) // Unable?
+    if (!netPeer) // Unable?
       return false;
 
     // Is offline?
@@ -1444,20 +1592,20 @@ bool NetObject::Forget()
   Cog* owner = GetOwner();
 
   // Is editor or preview mode?
-  if(owner->IsEditorOrPreviewMode())
+  if (owner->IsEditorOrPreviewMode())
     return false;
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return false;
 
   // Not client or server?
-  if(!netPeer->IsClientOrServer())
+  if (!netPeer->IsClientOrServer())
     return false;
 
   // Net object not valid?
-  if(!IsValid())
+  if (!IsValid())
     return false;
 
   // Forget net object locally and remotely for all relevant peers
@@ -1472,42 +1620,41 @@ bool NetObject::SelectRemote()
   Cog* owner = GetOwner();
 
   // Is editor or preview mode?
-  if(owner->IsEditorOrPreviewMode())
+  if (owner->IsEditorOrPreviewMode())
     return false;
 
   // Unable to get editor?
-  if(!Z::gRuntimeEditor)
+  if (!Z::gRuntimeEditor)
     return false;
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return false;
 
   // Not client or server?
-  if(!netPeer->IsClientOrServer())
+  if (!netPeer->IsClientOrServer())
     return false;
 
   // Net object not valid?
-  if(!IsValid())
+  if (!IsValid())
     return false;
 
   // Let our target role be the opposite of our local peer's role
-  Role::Enum targetRole = (GetRole() == Role::Client)
-                        ? Role::Server
-                        : Role::Client;
+  Role::Enum targetRole =
+      (GetRole() == Role::Client) ? Role::Server : Role::Client;
 
   // Find the first game session with a net peer with our target role
   NetPeer* targetNetPeer = nullptr;
-  forRange(GameSession* gameSession, Z::gEngine->GetGameSessions())
+  forRange(GameSession * gameSession, Z::gEngine->GetGameSessions())
   {
     // Get game session's net peer component
     NetPeer* netPeer = gameSession->has(NetPeer);
-    if(!netPeer) // Unable?
-      continue; // Skip
+    if (!netPeer) // Unable?
+      continue;   // Skip
 
     // Net peer has our target role?
-    if(netPeer->GetRole() == targetRole)
+    if (netPeer->GetRole() == targetRole)
     {
       // Found target peer
       targetNetPeer = netPeer;
@@ -1516,17 +1663,17 @@ bool NetObject::SelectRemote()
   }
 
   // Unable to find target peer?
-  if(!targetNetPeer)
+  if (!targetNetPeer)
     return false;
 
   // Find our remote net object using our local net object's ID
   Cog* remoteNetObjectCog = targetNetPeer->GetNetObject(GetNetObjectId());
-  if(!remoteNetObjectCog) // Unable?
+  if (!remoteNetObjectCog) // Unable?
     return false;
 
   // Get editor's active selection
   MetaSelection* activeSelection = Z::gRuntimeEditor->GetActiveSelection();
-  if(!activeSelection) // Unable?
+  if (!activeSelection) // Unable?
     return false;
 
   // Set the remote net object cog as the editor's active selection
@@ -1541,21 +1688,26 @@ bool NetObject::SelectRemote()
 // Channel Management
 //
 
-bool NetObject::DoesThisNetPropertyAlreadyBelongToAChannel(Component* component, StringParam propertyName) const
+bool NetObject::DoesThisNetPropertyAlreadyBelongToAChannel(
+    Component* component, StringParam propertyName) const
 {
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
   {
     // Try to get replica property by name
-    NetProperty* replicaProperty = static_cast<NetChannel*>(replicaChannel)->GetNetProperty(component, propertyName);
-    if(replicaProperty) // Found?
+    NetProperty* replicaProperty =
+        static_cast<NetChannel*>(replicaChannel)
+            ->GetNetProperty(component, propertyName);
+    if (replicaProperty) // Found?
     {
       // Get property info
-      ComponentPropertyInstanceData componentPropertyMetaData = replicaProperty->GetPropertyData().GetOrError<ComponentPropertyInstanceData>();
+      ComponentPropertyInstanceData componentPropertyMetaData =
+          replicaProperty->GetPropertyData()
+              .GetOrError<ComponentPropertyInstanceData>();
       Assert(componentPropertyMetaData.mPropertyName == propertyName);
 
       // Component matches?
-      if(componentPropertyMetaData.mComponent == component)
+      if (componentPropertyMetaData.mComponent == component)
       {
         // Net property already belongs to a net channel
         return true;
@@ -1577,28 +1729,40 @@ NetChannel* NetObject::GetNetChannel(const String& netChannelName)
   return static_cast<NetChannel*>(Replica::GetReplicaChannel(netChannelName));
 }
 
-NetChannel* NetObject::AddNetChannel(const String& netChannelName, NetChannelConfig* netChannelConfig)
+NetChannel* NetObject::AddNetChannel(const String& netChannelName,
+                                     NetChannelConfig* netChannelConfig)
 {
   // Already valid? (Net object is already online?)
-  if(Replica::IsValid())
+  if (Replica::IsValid())
   {
-    DoNotifyError("NetObject", String::Format("Unable to add NetChannel named '%s' - NetObject is already online", netChannelName.c_str()));
+    DoNotifyError(
+        "NetObject",
+        String::Format(
+            "Unable to add NetChannel named '%s' - NetObject is already online",
+            netChannelName.c_str()));
     return nullptr;
   }
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return nullptr;
 
   // Get or add corresponding net channel type
-  NetChannelType* netChannelType = netPeer->GetOrAddReplicaChannelType(netChannelName, netChannelConfig);
+  NetChannelType* netChannelType =
+      netPeer->GetOrAddReplicaChannelType(netChannelName, netChannelConfig);
 
   // Add net channel
-  return static_cast<NetChannel*>(Replica::AddReplicaChannel(ReplicaChannelPtr(new NetChannel(netChannelName, netChannelType))));
+  return static_cast<NetChannel*>(Replica::AddReplicaChannel(
+      ReplicaChannelPtr(new NetChannel(netChannelName, netChannelType))));
 }
 
-bool NetObject::AddNetPropertyToChannel(Component* component, Property* property, const String& netPropertyTypeName, NetPropertyConfig* netPropertyConfig, const String& netChannelName, NetChannelConfig* netChannelConfig)
+bool NetObject::AddNetPropertyToChannel(Component* component,
+                                        Property* property,
+                                        const String& netPropertyTypeName,
+                                        NetPropertyConfig* netPropertyConfig,
+                                        const String& netChannelName,
+                                        NetChannelConfig* netChannelConfig)
 {
   // (Net object should not be online yet)
   Assert(!Replica::IsValid());
@@ -1609,7 +1773,7 @@ bool NetObject::AddNetPropertyToChannel(Component* component, Property* property
   // Get net channel (if it already exists)
   NetChannel* netChannel = GetNetChannel(netChannelName);
   bool addedNetChannel = false;
-  if(!netChannel) // Doesn't exist?
+  if (!netChannel) // Doesn't exist?
   {
     // Add net channel (using provided config settings, if any)
     netChannel = AddNetChannel(netChannelName, netChannelConfig);
@@ -1617,24 +1781,37 @@ bool NetObject::AddNetPropertyToChannel(Component* component, Property* property
   }
 
   // Unable to get or add net channel?
-  if(!netChannel)
+  if (!netChannel)
   {
-    DoNotifyError("Unable To Add NetProperty",
-                  String::Format("Unable to add NetProperty '%s' declared in Component '%s' to the NetChannel '%s' on the NetObject '%s' - Error adding NetChannel",
-                  property->Name.c_str(), ZilchVirtualTypeId(component)->Name.c_str(), netChannelName.c_str(), owner->GetDescription().c_str()));
+    DoNotifyError(
+        "Unable To Add NetProperty",
+        String::Format(
+            "Unable to add NetProperty '%s' declared in Component '%s' to the "
+            "NetChannel '%s' on the NetObject '%s' - Error adding NetChannel",
+            property->Name.c_str(),
+            ZilchVirtualTypeId(component)->Name.c_str(),
+            netChannelName.c_str(),
+            owner->GetDescription().c_str()));
     return false;
   }
 
   // Add net property
-  NetProperty* netProperty = netChannel->AddNetProperty(component, property, netPropertyTypeName, netPropertyConfig);
-  if(!netProperty) // Unable?
+  NetProperty* netProperty = netChannel->AddNetProperty(
+      component, property, netPropertyTypeName, netPropertyConfig);
+  if (!netProperty) // Unable?
   {
-    DoNotifyError("Unable To Add NetProperty",
-                  String::Format("Unable to add NetProperty '%s' declared in Component '%s' to the NetChannel '%s' on the NetObject '%s' - Error adding NetProperty",
-                  property->Name.c_str(), ZilchVirtualTypeId(component)->Name.c_str(), netChannelName.c_str(), owner->GetDescription().c_str()));
+    DoNotifyError(
+        "Unable To Add NetProperty",
+        String::Format(
+            "Unable to add NetProperty '%s' declared in Component '%s' to the "
+            "NetChannel '%s' on the NetObject '%s' - Error adding NetProperty",
+            property->Name.c_str(),
+            ZilchVirtualTypeId(component)->Name.c_str(),
+            netChannelName.c_str(),
+            owner->GetDescription().c_str()));
 
     // Net channel was added as a result of this property?
-    if(addedNetChannel)
+    if (addedNetChannel)
       RemoveNetChannel(netChannel->GetName()); // Remove net channel
 
     return false;
@@ -1643,17 +1820,28 @@ bool NetObject::AddNetPropertyToChannel(Component* component, Property* property
   // Success
   return true;
 }
-bool NetObject::AddNetPropertyToChannel(Component* component, Property* property, NetPropertyConfig* netPropertyConfig, NetChannelConfig* netChannelConfig)
+bool NetObject::AddNetPropertyToChannel(Component* component,
+                                        Property* property,
+                                        NetPropertyConfig* netPropertyConfig,
+                                        NetChannelConfig* netChannelConfig)
 {
-  return AddNetPropertyToChannel(component, property, netPropertyConfig->GetName(), netPropertyConfig, netChannelConfig->GetName(), netChannelConfig);
+  return AddNetPropertyToChannel(component,
+                                 property,
+                                 netPropertyConfig->GetName(),
+                                 netPropertyConfig,
+                                 netChannelConfig->GetName(),
+                                 netChannelConfig);
 }
 
 bool NetObject::RemoveNetChannel(const String& netChannelName)
 {
   // Already valid? (Net object is already online?)
-  if(Replica::IsValid())
+  if (Replica::IsValid())
   {
-    DoNotifyError("NetObject", String::Format("Unable to remove NetChannel named '%s' - NetObject is already online", netChannelName.c_str()));
+    DoNotifyError("NetObject",
+                  String::Format("Unable to remove NetChannel named '%s' - "
+                                 "NetObject is already online",
+                                 netChannelName.c_str()));
     return false;
   }
 
@@ -1664,9 +1852,12 @@ bool NetObject::RemoveNetChannel(const String& netChannelName)
 void NetObject::ClearNetChannels()
 {
   // Already valid? (Net object is already online?)
-  if(Replica::IsValid())
+  if (Replica::IsValid())
   {
-    DoNotifyError("NetObject", String::Format("Unable to clear NetChannels - NetObject is already online"));
+    DoNotifyError(
+        "NetObject",
+        String::Format(
+            "Unable to clear NetChannels - NetObject is already online"));
     return;
   }
 
@@ -1692,13 +1883,15 @@ bool NetObject::IsOwnedByUser(Cog* cog) const
   NetUserId netUserId = 0;
 
   // Valid cog?
-  if(cog)
+  if (cog)
   {
     // Get net user ID
     NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
+    if (!netUser) // Unable?
     {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      DoNotifyWarning(
+          "NetObject",
+          "Invalid Cog parameter - Cog must have a NetUser component");
       return false;
     }
     netUserId = netUser->mNetUserId;
@@ -1720,7 +1913,7 @@ bool NetObject::IsMine() const
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer || !netPeer->IsOpen()) // Unable or not open?
+  if (!netPeer || !netPeer->IsOpen()) // Unable or not open?
     return false;
 
   return IsOwnedByPeer(netPeer->GetNetPeerId());
@@ -1761,7 +1954,7 @@ NetPeerId NetObject::GetNetUserOwnerPeerId() const
 {
   // Get net user object
   Cog* cog = GetNetUserOwner();
-  if(!cog) // Unable?
+  if (!cog) // Unable?
     return 0;
 
   // Get net user
@@ -1778,7 +1971,7 @@ Cog* NetObject::GetNetUserOwner() const
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return nullptr;
 
   return netPeer->GetUser(GetNetUserOwnerUserId());
@@ -1795,13 +1988,15 @@ void NetObject::SetNetUserOwner(Cog* cog)
   NetUserId netUserId = 0;
 
   // Valid cog?
-  if(cog)
+  if (cog)
   {
     // Get net user ID
     NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
+    if (!netUser) // Unable?
     {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      DoNotifyWarning(
+          "NetObject",
+          "Invalid Cog parameter - Cog must have a NetUser component");
       return;
     }
     netUserId = netUser->mNetUserId;
@@ -1814,13 +2009,14 @@ void NetObject::SetNetUserOwnerUserById(NetUserId netUserId)
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return;
 
   // Not server or offline?
-  if(!netPeer->IsServerOrOffline())
+  if (!netPeer->IsServerOrOffline())
   {
-    DoNotifyError("Unable to set NetUser owner on NetObject", "NetPeer must be open as a server or offline");
+    DoNotifyError("Unable to set NetUser owner on NetObject",
+                  "NetPeer must be open as a server or offline");
     return;
   }
 
@@ -1829,10 +2025,10 @@ void NetObject::SetNetUserOwnerUserById(NetUserId netUserId)
   mNetUserOwnerUserId = netUserId;
 
   // Has changed?
-  if(GetNetUserOwnerUserId() != previousNetUserOwnerUserId)
+  if (GetNetUserOwnerUserId() != previousNetUserOwnerUserId)
   {
     // Replicate net user owner ID changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if (NetChannel* netObjectChannel = GetNetChannel("NetObject"))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -1847,13 +2043,15 @@ void NetObject::SetNetUserOwnerUp(Cog* cog)
   NetUserId netUserId = 0;
 
   // Valid cog?
-  if(cog)
+  if (cog)
   {
     // Get net user ID
     NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
+    if (!netUser) // Unable?
     {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      DoNotifyWarning(
+          "NetObject",
+          "Invalid Cog parameter - Cog must have a NetUser component");
       return;
     }
     netUserId = netUser->mNetUserId;
@@ -1866,13 +2064,14 @@ void NetObject::SetNetUserOwnerUpById(NetUserId netUserId)
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return;
 
   // Not server or offline?
-  if(!netPeer->IsServerOrOffline())
+  if (!netPeer->IsServerOrOffline())
   {
-    DoNotifyError("Unable to set NetUser owner on NetObject", "NetPeer must be open as a server or offline");
+    DoNotifyError("Unable to set NetUser owner on NetObject",
+                  "NetPeer must be open as a server or offline");
     return;
   }
 
@@ -1880,9 +2079,9 @@ void NetObject::SetNetUserOwnerUpById(NetUserId netUserId)
   SetNetUserOwnerUserById(netUserId);
 
   // Has parent net object?
-  Cog*       parentCog       = GetOwner()->GetParent();
+  Cog* parentCog = GetOwner()->GetParent();
   NetObject* parentNetObject = parentCog ? parentCog->has(NetObject) : nullptr;
-  if(parentNetObject)
+  if (parentNetObject)
   {
     // Set net user owner up the tree on it's parent recursively in pre-order
     parentNetObject->SetNetUserOwnerUpById(netUserId);
@@ -1894,13 +2093,15 @@ void NetObject::SetNetUserOwnerDown(Cog* cog)
   NetUserId netUserId = 0;
 
   // Valid cog?
-  if(cog)
+  if (cog)
   {
     // Get net user ID
     NetUser* netUser = cog->has(NetUser);
-    if(!netUser) // Unable?
+    if (!netUser) // Unable?
     {
-      DoNotifyWarning("NetObject", "Invalid Cog parameter - Cog must have a NetUser component");
+      DoNotifyWarning(
+          "NetObject",
+          "Invalid Cog parameter - Cog must have a NetUser component");
       return;
     }
     netUserId = netUser->mNetUserId;
@@ -1913,13 +2114,14 @@ void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
 {
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return;
 
   // Not server or offline?
-  if(!netPeer->IsServerOrOffline())
+  if (!netPeer->IsServerOrOffline())
   {
-    DoNotifyError("Unable to set NetUser owner on NetObject", "NetPeer must be open as a server or offline");
+    DoNotifyError("Unable to set NetUser owner on NetObject",
+                  "NetPeer must be open as a server or offline");
     return;
   }
 
@@ -1928,14 +2130,15 @@ void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
 
   // For all child net objects
   Hierarchy* hierarchy = GetOwner()->has(Hierarchy);
-  if(hierarchy)
+  if (hierarchy)
   {
     forRange(HierarchyList::sub_reference child, hierarchy->GetChildren())
     {
       NetObject* childNetObject = child.has(NetObject);
-      if(childNetObject)
+      if (childNetObject)
       {
-        // Set net user owner down the tree on all it's children recursively in pre-order
+        // Set net user owner down the tree on all it's children recursively in
+        // pre-order
         childNetObject->SetNetUserOwnerDownById(netUserId);
       }
     }
@@ -1944,7 +2147,8 @@ void NetObject::SetNetUserOwnerDownById(NetUserId netUserId)
 
 void NetObject::HandleNetUserOwnerChanged(NetUserId previousNetUserOwnerUserId)
 {
-  Assert(GetNetUserOwnerUserId() != previousNetUserOwnerUserId); // (Should have actually changed)
+  Assert(GetNetUserOwnerUserId() !=
+         previousNetUserOwnerUserId); // (Should have actually changed)
 
   // Set change authority client to net user owner's peer
   Replica::SetAuthorityClientReplicatorId(GetNetUserOwnerPeerId());
@@ -1954,7 +2158,7 @@ void NetObject::HandleNetUserOwnerChanged(NetUserId previousNetUserOwnerUserId)
 
   // Get net peer
   NetPeer* netPeer = GetNetPeer();
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
     return;
 
   // Get previous net user owner
@@ -1968,21 +2172,24 @@ void NetObject::HandleNetUserOwnerChanged(NetUserId previousNetUserOwnerUserId)
   //
 
   // Has previous owner?
-  if(previousNetUserOwner)
+  if (previousNetUserOwner)
   {
     Assert(previousNetUserOwner->has(NetUser));
 
-    // Remove object from previous owner's network owned object list (should succeed)
-    previousNetUserOwner->has(NetUser)->mOwnedNetObjects.Erase(owner->mObjectId);
+    // Remove object from previous owner's network owned object list (should
+    // succeed)
+    previousNetUserOwner->has(NetUser)->mOwnedNetObjects.Erase(
+        owner->mObjectId);
   }
 
   // Has current owner?
-  if(currentNetUserOwner)
+  if (currentNetUserOwner)
   {
     Assert(currentNetUserOwner->has(NetUser));
 
     // Add object to current owner's network owned object list (must succeed)
-    currentNetUserOwner->has(NetUser)->mOwnedNetObjects.InsertOrError(owner->mObjectId);
+    currentNetUserOwner->has(NetUser)->mOwnedNetObjects.InsertOrError(
+        owner->mObjectId);
   }
 
   //
@@ -1990,38 +2197,40 @@ void NetObject::HandleNetUserOwnerChanged(NetUserId previousNetUserOwnerUserId)
   //
 
   // Net object is not online?
-  if(!IsOnline())
+  if (!IsOnline())
     return; // Do nothing (these generated events would be unexpected)
 
   // Has previous owner?
-  if(previousNetUserOwner)
+  if (previousNetUserOwner)
   {
     // Notify previous owner
     NetUserLostObjectOwnership event;
-    event.mLostObject          = owner;
+    event.mLostObject = owner;
     event.mCurrentNetUserOwner = currentNetUserOwner;
 
     // Dispatch event
-    previousNetUserOwner->DispatchEvent(Events::NetUserLostObjectOwnership, &event);
+    previousNetUserOwner->DispatchEvent(Events::NetUserLostObjectOwnership,
+                                        &event);
   }
 
   // Has current owner?
-  if(currentNetUserOwner)
+  if (currentNetUserOwner)
   {
     // Notify current owner
     NetUserAcquiredObjectOwnership event;
-    event.mAcquiredObject       = owner;
+    event.mAcquiredObject = owner;
     event.mPreviousNetUserOwner = previousNetUserOwner;
 
     // Dispatch event
-    currentNetUserOwner->DispatchEvent(Events::NetUserAcquiredObjectOwnership, &event);
+    currentNetUserOwner->DispatchEvent(Events::NetUserAcquiredObjectOwnership,
+                                       &event);
   }
 
   // Notify this object
   {
     NetUserOwnerChanged event;
     event.mPreviousNetUserOwner = previousNetUserOwner;
-    event.mCurrentNetUserOwner  = currentNetUserOwner;
+    event.mCurrentNetUserOwner = currentNetUserOwner;
 
     // Dispatch event
     owner->DispatchEvent(Events::NetUserOwnerChanged, &event);
@@ -2039,16 +2248,19 @@ void NetObject::DispatchLocal(StringParam eventId, Event* event)
 
   // Get net peer
   NetPeer* netPeer = owner->GetGameSession()->has(NetPeer);
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - GameSession must have a NetPeer component");
+    DoNotifyException("Cog",
+                      "Unable to network dispatch event - GameSession must "
+                      "have a NetPeer component");
     return;
   }
 
   // Not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-	  DoNotifyException("Cog", "Unable to network dispatch event - NetPeer must be open");
+    DoNotifyException(
+        "Cog", "Unable to network dispatch event - NetPeer must be open");
     return;
   }
 
@@ -2056,28 +2268,33 @@ void NetObject::DispatchLocal(StringParam eventId, Event* event)
   netPeer->DispatchLocalInternal(eventId, event, owner);
 }
 
-void NetObject::DispatchRemote(StringParam eventId, Event* event, NetPeerId netPeerId)
+void NetObject::DispatchRemote(StringParam eventId,
+                               Event* event,
+                               NetPeerId netPeerId)
 {
   // Get owner
   Cog* owner = GetOwner();
 
   // Get net peer
   NetPeer* netPeer = owner->GetGameSession()->has(NetPeer);
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    DoNotifyWarning("Cog", "Unable to network dispatch event - GameSession must have a NetPeer component");
+    DoNotifyWarning("Cog",
+                    "Unable to network dispatch event - GameSession must have "
+                    "a NetPeer component");
     return;
   }
 
   // Not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-    DoNotifyWarning("Cog", "Unable to network dispatch event - NetPeer must be open");
+    DoNotifyWarning("Cog",
+                    "Unable to network dispatch event - NetPeer must be open");
     return;
   }
 
   // Is offline?
-  if(netPeer->IsOffline())
+  if (netPeer->IsOffline())
   {
     // Network dispatch event on this Cog locally
     netPeer->DispatchLocalInternal(eventId, event, owner);
@@ -2097,21 +2314,24 @@ void NetObject::DispatchBroadcast(StringParam eventId, Event* event)
 
   // Get net peer
   NetPeer* netPeer = owner->GetGameSession()->has(NetPeer);
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - GameSession must have a NetPeer component");
+    DoNotifyException("Cog",
+                      "Unable to network dispatch event - GameSession must "
+                      "have a NetPeer component");
     return;
   }
 
   // Not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - NetPeer must be open");
+    DoNotifyException(
+        "Cog", "Unable to network dispatch event - NetPeer must be open");
     return;
   }
 
   // Is offline?
-  if(netPeer->IsOffline())
+  if (netPeer->IsOffline())
   {
     // Network dispatch event on this Cog locally
     netPeer->DispatchLocalInternal(eventId, event, owner);
@@ -2124,28 +2344,33 @@ void NetObject::DispatchBroadcast(StringParam eventId, Event* event)
   }
 }
 
-void NetObject::DispatchLocalAndRemote(StringParam eventId, Event* event, NetPeerId netPeerId)
+void NetObject::DispatchLocalAndRemote(StringParam eventId,
+                                       Event* event,
+                                       NetPeerId netPeerId)
 {
   // Get owner
   Cog* owner = GetOwner();
 
   // Get net peer
   NetPeer* netPeer = owner->GetGameSession()->has(NetPeer);
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - GameSession must have a NetPeer component");
+    DoNotifyException("Cog",
+                      "Unable to network dispatch event - GameSession must "
+                      "have a NetPeer component");
     return;
   }
 
   // Not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - NetPeer must be open");
+    DoNotifyException(
+        "Cog", "Unable to network dispatch event - NetPeer must be open");
     return;
   }
 
   // Is offline?
-  if(netPeer->IsOffline())
+  if (netPeer->IsOffline())
   {
     // Network dispatch event on this Cog locally
     netPeer->DispatchLocalInternal(eventId, event, owner);
@@ -2154,7 +2379,7 @@ void NetObject::DispatchLocalAndRemote(StringParam eventId, Event* event, NetPee
   else
   {
     // Network dispatch event on this Cog locally and remotely
-    if(netPeer->DispatchLocalInternal(eventId, event, owner))
+    if (netPeer->DispatchLocalInternal(eventId, event, owner))
       netPeer->DispatchRemoteInternal(eventId, event, netPeerId, owner);
   }
 }
@@ -2166,21 +2391,24 @@ void NetObject::DispatchLocalAndBroadcast(StringParam eventId, Event* event)
 
   // Get net peer
   NetPeer* netPeer = owner->GetGameSession()->has(NetPeer);
-  if(!netPeer) // Unable?
+  if (!netPeer) // Unable?
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - GameSession must have a NetPeer component");
+    DoNotifyException("Cog",
+                      "Unable to network dispatch event - GameSession must "
+                      "have a NetPeer component");
     return;
   }
 
   // Not open?
-  if(!netPeer->IsOpen())
+  if (!netPeer->IsOpen())
   {
-    DoNotifyException("Cog", "Unable to network dispatch event - NetPeer must be open");
+    DoNotifyException(
+        "Cog", "Unable to network dispatch event - NetPeer must be open");
     return;
   }
 
   // Is offline?
-  if(netPeer->IsOffline())
+  if (netPeer->IsOffline())
   {
     // Network dispatch event on this Cog locally
     netPeer->DispatchLocalInternal(eventId, event, owner);
@@ -2189,7 +2417,7 @@ void NetObject::DispatchLocalAndBroadcast(StringParam eventId, Event* event)
   else
   {
     // Network dispatch event on this Cog locally and broadcast
-    if(netPeer->DispatchLocalInternal(eventId, event, owner))
+    if (netPeer->DispatchLocalInternal(eventId, event, owner))
       netPeer->DispatchBroadcastInternal(eventId, event, owner);
   }
 }
@@ -2200,7 +2428,7 @@ void NetObject::DispatchLocalAndBroadcast(StringParam eventId, Event* event)
 
 void NetObject::SetAutomaticChannel(NetChannelConfig* netChannelConfig)
 {
-  if(netChannelConfig)
+  if (netChannelConfig)
     mAutomaticChannel = netChannelConfig;
 }
 NetChannelConfig* NetObject::GetAutomaticChannel()
@@ -2212,47 +2440,55 @@ NetChannelConfig* NetObject::GetAutomaticChannel()
 // Property Info
 //
 
-bool NetObject::HasNetPropertyInfo(BoundType* componentType, StringParam propertyName)
+bool NetObject::HasNetPropertyInfo(BoundType* componentType,
+                                   StringParam propertyName)
 {
   return GetNetPropertyInfo(componentType, propertyName) != nullptr;
 }
 
-NetPropertyInfo* NetObject::GetNetPropertyInfo(BoundType* componentType, StringParam propertyName)
+NetPropertyInfo* NetObject::GetNetPropertyInfo(BoundType* componentType,
+                                               StringParam propertyName)
 {
-  return mNetPropertyInfos.FindPointer(Pair<BoundType*, String>(componentType, propertyName));
+  return mNetPropertyInfos.FindPointer(
+      Pair<BoundType*, String>(componentType, propertyName));
 }
 
-NetPropertyInfo* NetObject::AddNetPropertyInfo(BoundType* componentType, StringParam propertyName)
+NetPropertyInfo* NetObject::AddNetPropertyInfo(BoundType* componentType,
+                                               StringParam propertyName)
 {
   // Get meta property (specified by component and property name)
   Property* property = componentType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return nullptr;
 
   // Not a valid net property?
-  if(!IsValidNetProperty(property))
+  if (!IsValidNetProperty(property))
     return nullptr;
 
   // Already have net property info?
-  if(HasNetPropertyInfo(componentType, propertyName))
+  if (HasNetPropertyInfo(componentType, propertyName))
     return nullptr;
 
   // Create net property info
   NetPropertyInfo netPropertyInfo(componentType, propertyName);
 
   // Does this property belong to the Transform or RigidBody component?
-  if(componentType == ZilchTypeId(Transform)
-  || componentType == ZilchTypeId(RigidBody))
+  if (componentType == ZilchTypeId(Transform) ||
+      componentType == ZilchTypeId(RigidBody))
   {
-    // Note: We special case Transform and RigidBody to both use the Transform NetChannel by default for performance and convenience reasons
-    // In the future this may change, but for now it's reasonable
+    // Note: We special case Transform and RigidBody to both use the Transform
+    // NetChannel by default for performance and convenience reasons In the
+    // future this may change, but for now it's reasonable
 
-    // Set initial net channel config to the "Transform" NetChannelConfig resource
-    netPropertyInfo.mNetChannelConfig = NetChannelConfigManager::Find("Transform");
+    // Set initial net channel config to the "Transform" NetChannelConfig
+    // resource
+    netPropertyInfo.mNetChannelConfig =
+        NetChannelConfigManager::Find("Transform");
   }
   else
   {
-    // Set initial net channel config to the automatic net channel config (typically the "DefaultChannel") resource by default
+    // Set initial net channel config to the automatic net channel config
+    // (typically the "DefaultChannel") resource by default
     netPropertyInfo.mNetChannelConfig = mAutomaticChannel;
   }
 
@@ -2260,7 +2496,7 @@ NetPropertyInfo* NetObject::AddNetPropertyInfo(BoundType* componentType, StringP
   mNetPropertyInfos.PushBack(netPropertyInfo);
 
   Space* space = GetSpace();
-  if(space)
+  if (space)
     space->MarkModified();
 
   // We want the property grid to reflect the changes
@@ -2271,11 +2507,13 @@ NetPropertyInfo* NetObject::AddNetPropertyInfo(BoundType* componentType, StringP
   return &mNetPropertyInfos.Back();
 }
 
-void NetObject::RemoveNetPropertyInfo(BoundType* componentType, StringParam propertyName)
+void NetObject::RemoveNetPropertyInfo(BoundType* componentType,
+                                      StringParam propertyName)
 {
   // Find net property info in set
-  NetPropertyInfo* netPropertyInfo = GetNetPropertyInfo(componentType, propertyName);
-  if(!netPropertyInfo) // Unable?
+  NetPropertyInfo* netPropertyInfo =
+      GetNetPropertyInfo(componentType, propertyName);
+  if (!netPropertyInfo) // Unable?
     return;
 
   // Remove net property info from set
@@ -2283,7 +2521,7 @@ void NetObject::RemoveNetPropertyInfo(BoundType* componentType, StringParam prop
 
   // The object has been modified
   Space* space = GetSpace();
-  if(space)
+  if (space)
     space->MarkModified();
 
   // We want the property grid to reflect the changes
@@ -2291,9 +2529,7 @@ void NetObject::RemoveNetPropertyInfo(BoundType* componentType, StringParam prop
   GetOwner()->DispatchEvent(Events::ObjectStructureModified, &e);
 }
 
-//---------------------------------------------------------------------------------//
-//                               EditInGameFilter                                  //
-//---------------------------------------------------------------------------------//
+//                               EditInGameFilter //
 
 ZilchDefineType(EditInGameFilter, builder, type)
 {
@@ -2302,7 +2538,7 @@ ZilchDefineType(EditInGameFilter, builder, type)
 bool EditInGameFilter::Filter(Member* prop, HandleParam instance)
 {
   Component* component = instance.Get<Component*>();
-  if(!component)
+  if (!component)
   {
     // Hide the property
     Error("Unable to get component from meta property filter instance handle");
@@ -2310,7 +2546,7 @@ bool EditInGameFilter::Filter(Member* prop, HandleParam instance)
   }
 
   Cog* owner = component->GetOwner();
-  if(!owner)
+  if (!owner)
   {
     // Hide the property
     Error("Unable to get owner from component");
@@ -2318,7 +2554,8 @@ bool EditInGameFilter::Filter(Member* prop, HandleParam instance)
   }
 
   // Show the property if this is not editor mode
-  // (We are actually running the game and this filter is being checked in this context - aka "edit in-game")
+  // (We are actually running the game and this filter is being checked in this
+  // context - aka "edit in-game")
   return !owner->IsEditorMode();
 }
 

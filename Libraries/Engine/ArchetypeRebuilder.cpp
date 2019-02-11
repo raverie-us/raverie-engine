@@ -1,11 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// \file ArchetypeRebuilder.cpp
-///
-/// Authors: Joshua Claeys
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "ObjectSaver.hpp"
 #include "CogRestoreState.hpp"
@@ -13,7 +6,7 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------- Cog Replace Event
+//Cog Replace Event
 namespace Events
 {
 DefineEvent(CogReplaced);
@@ -23,20 +16,19 @@ ZilchDefineType(CogReplaceEvent, builder, type)
 {
 }
 
-//**************************************************************************************************
 CogReplaceEvent::CogReplaceEvent(Cog* oldCog, Cog* newCog) :
-  mOldCog(oldCog),
-  mNewCog(newCog)
+    mOldCog(oldCog),
+    mNewCog(newCog)
 {
   mOldIndex = oldCog->GetId().ToUint64();
   mNewIndex = newCog->GetId().ToUint64();
 }
 
-//------------------------------------------------------------------------------ Archetype Rebuilder
-void ReplaceInSelection(Cog* oldCog, Cog* newCog,
+//Archetype Rebuilder
+void ReplaceInSelection(Cog* oldCog,
+                        Cog* newCog,
                         HashSet<MetaSelection*>* modifiedSelections);
 
-//**************************************************************************************************
 Cog* FindNextInOrderSkipChildren(Cog* cog)
 {
   if (Cog* sibling = cog->FindNextSibling())
@@ -54,11 +46,12 @@ Cog* FindNextInOrderSkipChildren(Cog* cog)
   return nullptr;
 }
 
-//**************************************************************************************************
-void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ignore,
-                                           Array<CogRestoreState*>* restoreStates)
+void ArchetypeRebuilder::RebuildArchetypes(
+    Archetype* modifiedArchetype,
+    Cog* ignore,
+    Array<CogRestoreState*>* restoreStates)
 {
-  if(modifiedArchetype == nullptr)
+  if (modifiedArchetype == nullptr)
     return;
 
   PushErrorContextObject("Rebuild Archetype", modifiedArchetype);
@@ -67,72 +60,75 @@ void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ig
   // This is so iteration can be safe later
   HashSet<Cog*> objectsToReload;
 
-  forRange(GameSession* gameSession, Z::gEngine->GetGameSessions())
+  forRange(GameSession * gameSession, Z::gEngine->GetGameSessions())
   {
-    forRange(Space* space, gameSession->GetAllSpaces())
+    forRange(Space * space, gameSession->GetAllSpaces())
     {
       Cog* cog = &space->AllRootObjects().Front();
-      while(cog)
+      while (cog)
       {
         // We don't want to re-create an object that's going to be destroyed
-        if(cog->GetMarkedForDestruction() || cog == ignore)
+        if (cog->GetMarkedForDestruction() || cog == ignore)
         {
           // Skip all of this Cogs children
           cog = FindNextInOrderSkipChildren(cog);
           continue;
         }
-        
+
         bool found = false;
-        
-        // Walk all base types to see if the current cog's Archetype derives from the
-        // Archetype we're rebuilding
+
+        // Walk all base types to see if the current cog's Archetype derives
+        // from the Archetype we're rebuilding
         Resource* currArchetype = cog->GetArchetype();
         while (currArchetype)
         {
           if (currArchetype == modifiedArchetype)
           {
-            // If the Archetype is contained under another Archetype, we want to rebuild it from
-            // the highest Archetype context. This way, when we delete and re-create it, all
-            // potential modifications on the root Archetype will be properly applied to this
-            // object we want to rebuild.
-            // An alternative to this solution is applying cached modifications (stored on
-            // Archetype) to the object, save it out, then rebuild it. This method is already
-            // used when uploading to Archetype on a child of another Archetype.
-            // See Cog::UploadToArchetype.
+            // If the Archetype is contained under another Archetype, we want to
+            // rebuild it from the highest Archetype context. This way, when we
+            // delete and re-create it, all potential modifications on the root
+            // Archetype will be properly applied to this object we want to
+            // rebuild. An alternative to this solution is applying cached
+            // modifications (stored on Archetype) to the object, save it out,
+            // then rebuild it. This method is already used when uploading to
+            // Archetype on a child of another Archetype. See
+            // Cog::UploadToArchetype.
             Cog* archetypeContext = cog->FindNearestArchetypeContext();
             objectsToReload.Insert(archetypeContext);
-      
-            // We're already rebuilding this Cog, so we can skip all its children and move
-            // to the next Cog
+
+            // We're already rebuilding this Cog, so we can skip all its
+            // children and move to the next Cog
             cog = FindNextInOrderSkipChildren(archetypeContext);
             found = true;
             break;
           }
-          
+
           currArchetype = currArchetype->GetBaseResource();
         }
-        
-        // We didn't find an object with the modified Archetype, so continue searching
-        // the full hierarchy
-        if(found == false)
+
+        // We didn't find an object with the modified Archetype, so continue
+        // searching the full hierarchy
+        if (found == false)
           cog = cog->FindNextInOrder();
       }
     }
   }
 
   // If there are no live objects with that Archetype, no need to do anything
-  if(objectsToReload.Empty())
+  if (objectsToReload.Empty())
     return;
 
-  ZPrint("Rebuilding %d Archetypes of '%s'\n", objectsToReload.Size(), modifiedArchetype->Name.c_str());
+  ZPrint("Rebuilding %d Archetypes of '%s'\n",
+         objectsToReload.Size(),
+         modifiedArchetype->Name.c_str());
 
   HashSet<MetaSelection*> modifiedSelections;
 
   // Replace all needed objects
-  forRange(Cog* oldCog, objectsToReload.All())
+  forRange(Cog * oldCog, objectsToReload.All())
   {
     // Store the state of the Cog for undo/redo before rebuilding it
-    if(restoreStates)
+    if (restoreStates)
     {
       CogRestoreState* restoreState = new CogRestoreState();
       restoreState->StoreObjectState(oldCog);
@@ -142,11 +138,10 @@ void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ig
     RebuildCog(oldCog, &modifiedSelections);
   }
 
-  forRange(MetaSelection* selection, modifiedSelections.All())
-    selection->FinalSelectionUpdated();
+  forRange(MetaSelection * selection, modifiedSelections.All())
+      selection->FinalSelectionUpdated();
 }
 
-//**************************************************************************************************
 Cog* ArchetypeRebuilder::RebuildCog(Cog* cog)
 {
   HashSet<MetaSelection*> modifiedSelections;
@@ -155,42 +150,42 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* cog)
   Cog* newCog = ArchetypeRebuilder::RebuildCog(cog, &modifiedSelections);
 
   // Notify that the selections have been changed
-  forRange(MetaSelection* selection, modifiedSelections.All())
-    selection->FinalSelectionUpdated();
+  forRange(MetaSelection * selection, modifiedSelections.All())
+      selection->FinalSelectionUpdated();
 
   return newCog;
 }
 
-//**************************************************************************************************
 void RestoreUndoHandles(Cog* oldCog, Cog* newCog)
 {
   Z::gUndoMap->UpdateHandleIfExists(oldCog, newCog);
 
   // Update Component handles
-  forRange(Component* newComponent, newCog->GetComponents())
+  forRange(Component * newComponent, newCog->GetComponents())
   {
     BoundType* componentType = ZilchVirtualTypeId(newComponent);
-    if(Component* oldComponent = oldCog->QueryComponentType(componentType))
+    if (Component* oldComponent = oldCog->QueryComponentType(componentType))
       Z::gUndoMap->UpdateHandleIfExists(oldComponent, newComponent);
   }
 
   // Update child Objects
-  forRange(Cog& newChild, newCog->GetChildren())
+  forRange(Cog & newChild, newCog->GetChildren())
   {
-    if(Cog* oldChild = oldCog->FindChildByChildId(newChild.mChildId))
+    if (Cog* oldChild = oldCog->FindChildByChildId(newChild.mChildId))
       RestoreUndoHandles(oldChild, &newChild);
   }
 }
 
-//**************************************************************************************************
-Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifiedSelections)
+Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog,
+                                    HashSet<MetaSelection*>* modifiedSelections)
 {
-  // TODO: For now, don't rebuild objects that are transient. We could mark them as non-transient,
-  // rebuild, then mark the new one as transient
+  // TODO: For now, don't rebuild objects that are transient. We could mark them
+  // as non-transient, rebuild, then mark the new one as transient
   if (oldCog->GetTransient() || oldCog->GetMarkedForDestruction())
     return nullptr;
 
-  ErrorIf(oldCog->FindNearestArchetypeContext() != oldCog, "Can only rebuild root contexts.");
+  ErrorIf(oldCog->FindNearestArchetypeContext() != oldCog,
+          "Can only rebuild root contexts.");
 
   LocalModifications* modifications = LocalModifications::GetInstance();
   Space* space = oldCog->GetSpace();
@@ -199,10 +194,11 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
   // from that string. This way it retains any local modifications
 
   // TODO: There is a possible issue with this action:
-  // One example is regarding Gizmos. The Translate tool creates a Translate Gizmo and
-  // destroys it when the tool is de-activated. If we rebuild that Gizmo due to an Archetype change,
-  // the Tool's handle to it will now be null, and the Gizmo will forever be sitting there.
-  // We should consider creating the new Cog with the old Cog's id.
+  // One example is regarding Gizmos. The Translate tool creates a Translate
+  // Gizmo and destroys it when the tool is de-activated. If we rebuild that
+  // Gizmo due to an Archetype change, the Tool's handle to it will now be null,
+  // and the Gizmo will forever be sitting there. We should consider creating
+  // the new Cog with the old Cog's id.
 
   // Save the object
   ObjectSaver saver;
@@ -222,7 +218,7 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
   context.Source = "ArchetypeRebuild";
   Cog* updatedCog = Z::gFactory->BuildFromStream(&context, loader);
 
-  if(updatedCog == nullptr)
+  if (updatedCog == nullptr)
   {
     Error("Failed to rebuild object from Archetype.");
     return nullptr;
@@ -252,7 +248,7 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
 
   // Move to the same place on the tree
   Cog* parent = oldCog->GetParent();
-  if(parent == nullptr)
+  if (parent == nullptr)
   {
     // Move in root
     space->mRoots.Erase(updatedCog);
@@ -272,18 +268,18 @@ Cog* ArchetypeRebuilder::RebuildCog(Cog* oldCog, HashSet<MetaSelection*>* modifi
   return updatedCog;
 }
 
-//**************************************************************************************************
-void ReplaceInSelection(Cog* oldCog, Cog* newCog,
+void ReplaceInSelection(Cog* oldCog,
+                        Cog* newCog,
                         HashSet<MetaSelection*>* modifiedSelections)
 {
   // If the old object was selected, we want to re-insert the new object
   // in the old one's place
-  forRange(MetaSelection* selection, MetaSelection::GetAllSelections())
+  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
   {
-    if(selection->Contains(oldCog))
+    if (selection->Contains(oldCog))
     {
       selection->Replace(oldCog, newCog);
-      if(modifiedSelections)
+      if (modifiedSelections)
         modifiedSelections->Insert(selection);
       else
         selection->FinalSelectionChanged();
@@ -291,13 +287,13 @@ void ReplaceInSelection(Cog* oldCog, Cog* newCog,
   }
 
   // Recurse down through the children
-  forRange(Cog& newChild, newCog->GetChildren())
+  forRange(Cog & newChild, newCog->GetChildren())
   {
     // Find the old child that has the same child id
     Cog* oldChild = oldCog->FindChildByChildId(newChild.mChildId);
-    if(oldChild)
+    if (oldChild)
       ReplaceInSelection(oldChild, &newChild, modifiedSelections);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

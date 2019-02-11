@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -18,14 +13,13 @@ class CopyOnWriteData
 public:
   friend class CopyOnWriteHandle<T>;
 
-  CopyOnWriteData() :
-    mReferenceCount(0)
+  CopyOnWriteData() : mReferenceCount(0)
   {
   }
 
   CopyOnWriteData(const CopyOnWriteData& rhs) :
-    mObject(rhs.mObject),
-    mReferenceCount(rhs.mReferenceCount)
+      mObject(rhs.mObject),
+      mReferenceCount(rhs.mReferenceCount)
   {
   }
 
@@ -41,20 +35,17 @@ template <typename T>
 class CopyOnWriteHandle
 {
 public:
-  CopyOnWriteHandle() :
-    mData(nullptr)
+  CopyOnWriteHandle() : mData(nullptr)
   {
   }
 
-  CopyOnWriteHandle(const CopyOnWriteHandle& rhs) :
-    mData(rhs.mData)
+  CopyOnWriteHandle(const CopyOnWriteHandle& rhs) : mData(rhs.mData)
   {
     Lock stackLock(mData->mLock);
     ++mData->mReferenceCount;
   }
 
-  CopyOnWriteHandle(CopyOnWriteData<T>* data) :
-    mData(data)
+  CopyOnWriteHandle(CopyOnWriteData<T>* data) : mData(data)
   {
     Lock stackLock(mData->mLock);
     ++data->mReferenceCount;
@@ -90,13 +81,17 @@ public:
 
   T* operator->() const
   {
-    ReturnIf(mData == nullptr, nullptr, "Attempting to arrow -> off an invalid CopyOnWriteHandle");
+    ReturnIf(mData == nullptr,
+             nullptr,
+             "Attempting to arrow -> off an invalid CopyOnWriteHandle");
     return &mData->mObject;
   }
 
   T& operator*() const
   {
-    ReturnIf(mData == nullptr, *nullptr, "Attempting to dereference * off an invalid CopyOnWriteHandle");
+    ReturnIf(mData == nullptr,
+             *nullptr,
+             "Attempting to dereference * off an invalid CopyOnWriteHandle");
     return mData->mObject;
   }
 
@@ -109,7 +104,9 @@ public:
   // This only copies if the reference count is 1 (meaning we own the object).
   void CopyIfNeeded()
   {
-    ReturnIf(!mData, , "The handle did not point at any data so a copy is not possible");
+    ReturnIf(!mData,
+             ,
+             "The handle did not point at any data so a copy is not possible");
 
     Lock stackLock(mData->mLock);
     // If we have the only reference count then we don't need to copy

@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,23 +6,29 @@ namespace Zero
 
 class Editor;
 
-//-------------------------------------------------------------------------------------- Zero Static
-/// Global functionality exposed to Zilch script. Bound as "Zero" to script (e.g. Zero.Keyboard)
-/// ZeroStatic was used to avoid the conflict with namespace Zero).
+//Zero Static
+/// Global functionality exposed to Zilch script. Bound as "Zero" to script
+/// (e.g. Zero.Keyboard) ZeroStatic was used to avoid the conflict with
+/// namespace Zero).
 class ZeroStatic
 {
 public:
   ZilchDeclareType(ZeroStatic, TypeCopyMode::ReferenceType);
 
-  /// Connection invokes the given delegate when sender dispatches the specified event.
-  static void Connect(Object* sender, StringParam eventId, DelegateParam receiverDelegate);
-  /// Removes specified event connection, 
-  /// if connection delegate was a component method then receiver object is just the component.
+  /// Connection invokes the given delegate when sender dispatches the specified
+  /// event.
+  static void Connect(Object* sender,
+                      StringParam eventId,
+                      DelegateParam receiverDelegate);
+  /// Removes specified event connection,
+  /// if connection delegate was a component method then receiver object is just
+  /// the component.
   static void Disconnect(Object* sender, StringParam eventId, Object* receiver);
-  /// Removes all event connections between sender and receiver, 
-  /// if connection delegate was a component method then receiver object is just the component.
+  /// Removes all event connections between sender and receiver,
+  /// if connection delegate was a component method then receiver object is just
+  /// the component.
   static void DisconnectAllEvents(Object* sender, Object* receiver);
-  
+
   static Keyboard* GetKeyboard();
   static Mouse* GetMouse();
   static Editor* GetEditor();
@@ -40,16 +41,18 @@ public:
   static OsShell* GetOsShell();
   static SoundSystem* GetAudio();
 
-  //static Joysticks* GetJoysticks();
-  //static MultiTouch* GetMultiTouch();
+  // static Joysticks* GetJoysticks();
+  // static MultiTouch* GetMultiTouch();
 };
 
-//---------------------------------------------------------------------------- ZilchScriptConnection
+//ZilchScriptConnection
 /// ZilchScriptConnection enables zilch to connect to any event in the engine.
 class ZilchScriptConnection : public EventConnection
 {
 public:
-  ZilchScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate);
+  ZilchScriptConnection(EventDispatcher* dispatcher,
+                        StringParam eventId,
+                        DelegateParam delagate);
   ~ZilchScriptConnection();
 
   void RaiseError(StringParam message) override;
@@ -60,4 +63,4 @@ public:
   Delegate mDelegate;
 };
 
-}//namespace Zero
+} // namespace Zero

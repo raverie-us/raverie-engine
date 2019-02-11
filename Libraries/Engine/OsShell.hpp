@@ -1,18 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 namespace Events
 {
-// This event occurs in the middle of OsShell update before we process Os messages
+// This event occurs in the middle of OsShell update before we process Os
+// messages
 DeclareEvent(OsShellUpdate);
-}
+} // namespace Events
 
 class OsWindow;
 struct FileDialogConfig;
@@ -23,8 +19,7 @@ public:
   virtual void HookUpdate() = 0;
 };
 
-//--------------------------------------------------------------------- OS Shell
-/// Os Shell interface used to provide abstract platform user interface 
+/// Os Shell interface used to provide abstract platform user interface
 /// functionality. Used to manage mouse, keyboard, and clipboard functionality.
 class OsShell : public System
 {
@@ -50,25 +45,24 @@ public:
   IntVec2 GetPrimaryMonitorSize();
 
   /// Create an OS window.
-  OsWindow* CreateOsWindow(
-    StringParam windowName,
-    IntVec2Param clientSize,
-    IntVec2Param monitorClientPos,
-    OsWindow* parentWindow,
-    WindowStyleFlags::Enum flags);
+  OsWindow* CreateOsWindow(StringParam windowName,
+                           IntVec2Param clientSize,
+                           IntVec2Param monitorClientPos,
+                           OsWindow* parentWindow,
+                           WindowStyleFlags::Enum flags);
 
   /// Get the pixel color at the mouse position.
   ByteColor GetColorAtMouse();
 
   /// Set the cursor for the mouse.
   void SetMouseCursor(Cursor::Enum cursorId);
-  
+
   /// Check if the current clipboard Contains text.
   bool IsClipboardText();
   /// The current clipboard text.
   String GetClipboardText();
   void SetClipboardText(StringParam text);
-  
+
   /// Checks if the clipboard holds an image
   bool IsClipboardImage();
   /// Get an image from clipboard.
@@ -89,7 +83,7 @@ public:
   /// How many OsWindows current exist
   size_t GetWindowCount();
   OsWindow* GetWindow(size_t index);
-  
+
   /// Debug helper to print out memory logging information
   void DumpMemoryDebuggerStats();
 
@@ -104,7 +98,6 @@ public:
   Shell mShell;
 };
 
-//-------------------------------------------------------------------- Os Events
 /// Files have been selected by the File Dialog.
 class OsFileSelection : public Event
 {
@@ -114,7 +107,6 @@ public:
   Array<String> Files;
 };
 
-//-------------------------------------------------------------------FileDialogConfig
 /// FileDialogConfig is used to configure the Open File Dialog
 /// and the Save File Dialog.
 /// Note that the config may only be used ONCE because it will be automatically
@@ -131,4 +123,4 @@ private:
   static void Callback(Array<String>& files, void* userData);
 };
 
-}//namespace Zero
+} // namespace Zero

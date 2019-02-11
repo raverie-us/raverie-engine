@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -28,7 +23,7 @@ struct FrameArea
   IntRect Rect;
 };
 
-//------------------------------------------------------------------------ Pixel Grid Area
+//Grid Area
 class PixelGridArea : public Widget
 {
 public:
@@ -37,10 +32,14 @@ public:
 
   PixelGridArea(Composite* parent, SpriteSheetImporter* owner);
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 };
 
-//------------------------------------------------------------------------ Sprite Sheet Importer
+//Sprite Sheet Importer
 class SpriteSheetImporter : public Composite
 {
 public:
@@ -48,7 +47,12 @@ public:
 
   SpriteSheetImporter(Composite* parent);
 
-  void ComputeFrameWidthAndCount(int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset);
+  void ComputeFrameWidthAndCount(int& frameSize,
+                                 int& frameCount,
+                                 int newFrameSize,
+                                 int spacing,
+                                 int sourceSize,
+                                 int offset);
   void UpdateTexture();
   void LoadImages(Array<String>& files);
   void LoadSprite(SpriteSource* spriteSource);
@@ -61,9 +65,14 @@ public:
   void UpdatePreview();
   void ClearSelectedFrames();
   void OnClearPressed(ObjectEvent* event);
-  
-  void SaveDataToSpriteSource(SpriteSource* sprite, IntRect frameSize, uint numberOfFrames);
-  SpriteSource* AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames);
+
+  void SaveDataToSpriteSource(SpriteSource* sprite,
+                              IntRect frameSize,
+                              uint numberOfFrames);
+  SpriteSource* AddSpriteResource(StringParam name,
+                                  Image& output,
+                                  IntRect frameSize,
+                                  uint numberOfFrames);
   bool AddFramesAsSprites();
   bool AddMultiFrameSprite();
 
@@ -83,8 +92,18 @@ public:
   void UpdateZoomedSize();
   void UpdateTransform() override;
 
-  void DrawLines(Array<StreamedVertex>& lines, uint axis, float zoom, float spacing, Vec2 totalSize, Vec2 startOffset, uint lineCount);
-  void DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  void DrawLines(Array<StreamedVertex>& lines,
+                 uint axis,
+                 float zoom,
+                 float spacing,
+                 Vec2 totalSize,
+                 Vec2 startOffset,
+                 uint lineCount);
+  void DrawRedirect(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect);
   void NudgePosition(IntVec2 move);
   void AddFrame(IntVec2 gridCell);
   void RemoveFrame(int frameIndex);
@@ -97,19 +116,23 @@ public:
 
   // Getter/Setters
 
-  /// The width of each sprite frame in pixels located on the sprite sheet (Updates FramesPerRow)
+  /// The width of each sprite frame in pixels located on the sprite sheet
+  /// (Updates FramesPerRow)
   int GetFrameWidth();
   void SetFrameWidth(int frameSizeX);
 
-  /// The height of each sprite frame in pixels located on the sprite sheet (Updates NumberOfRows)
+  /// The height of each sprite frame in pixels located on the sprite sheet
+  /// (Updates NumberOfRows)
   int GetFrameHeight();
   void SetFrameHeight(int frameSizeY);
 
-  /// The total number of frames on the horizontal axis of the sprite sheet (Updates FrameWidth)
+  /// The total number of frames on the horizontal axis of the sprite sheet
+  /// (Updates FrameWidth)
   int GetFramesPerRow();
   void SetFramesPerRow(int framesX);
 
-  /// The total number of frames on the vertical axis of the sprite sheet (Updates FrameHeight)
+  /// The total number of frames on the vertical axis of the sprite sheet
+  /// (Updates FrameHeight)
   int GetNumberOfRows();
   void SetNumberOfRows(int framesY);
 
@@ -170,7 +193,7 @@ public:
   ColorBlock* mBackground;
   HandleOf<SpriteSource> mDestination;
 
-  //Settings
+  // Settings
   /// The name for the new SpriteSource resource
   String Name;
   /// The local translation on the sprite considered to be 0,0
@@ -185,7 +208,8 @@ public:
   int OffsetY;
   int SpacingX;
   int SpacingY;
-  /// The number of pixels that occupy one unit of distance in the engine's world space
+  /// The number of pixels that occupy one unit of distance in the engine's
+  /// world space
   int PixelsPerUnit;
   SpriteSampling::Enum Sampling;
   /// Create a TilePaletteSource from all the selected sprite frames
@@ -206,5 +230,4 @@ public:
   int FrameSelected;
   IntVec2 PixelCursor;
 };
-}//namespace Zero
-
+} // namespace Zero

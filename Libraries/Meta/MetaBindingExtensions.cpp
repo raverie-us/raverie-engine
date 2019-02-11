@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Joshua Claeys
-/// Copyright 2016-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,7 +6,7 @@ namespace Zero
 
 const String cInvalidTypeName = "void";
 
-//-------------------------------------------------------------------------------- Object Attributes
+//Object Attributes
 namespace ObjectAttributes
 {
 
@@ -32,9 +27,9 @@ const String cTags("Tags");
 const String cShortcut("Shortcut");
 const String cTool("Tool");
 
-}//namespace ObjectFlags
+} // namespace ObjectAttributes
 
- //------------------------------------------------------------------------------ Property Attributes
+//Property Attributes
 namespace PropertyAttributes
 {
 
@@ -58,9 +53,9 @@ const String cRange("Range");
 const String cSlider("Slider");
 const String cOptional("Optional");
 
-}//namespace PropertyFlags
+} // namespace PropertyAttributes
 
-//------------------------------------------------------------------------------ Function Attributes
+//Function Attributes
 namespace FunctionAttributes
 {
 
@@ -69,29 +64,30 @@ const String cInternal("Internal");
 const String cDisplay("Display");
 const String cInvalidatesObject("InvalidatesObject");
 
-}//namespace FunctionAttributes
+} // namespace FunctionAttributes
 
- //------------------------------------------------------------------------- Serialization Attributes
+//Serialization Attributes
 namespace SerializationAttributes
 {
 
 const String cSerializationPrimitive("SerializationPrimitive");
 
-}//namespace SerializationAttributes
+} // namespace SerializationAttributes
 
- //------------------------------------------------------------------------------------------- Events
+//Events
 namespace Events
 {
 DefineEvent(PropertyModified);
 DefineEvent(PropertyModifiedIntermediate);
 DefineEvent(ComponentsModified);
 DefineEvent(ObjectModified);
-}//namespace Events
+} // namespace Events
 
-
-//**************************************************************************************************
-void PropertyModifiedDefault(HandleParam object, PropertyPathParam property, AnyParam oldValue,
-                             AnyParam newValue, bool intermediateChange)
+void PropertyModifiedDefault(HandleParam object,
+                             PropertyPathParam property,
+                             AnyParam oldValue,
+                             AnyParam newValue,
+                             bool intermediateChange)
 {
   if (Object* zeroObject = object.Get<Object*>())
   {
@@ -102,12 +98,11 @@ void PropertyModifiedDefault(HandleParam object, PropertyPathParam property, Any
 
     // Send the event to the object
     PropertyEvent eventToSend(object, property, oldValue, newValue);
-    if(EventDispatcher* dispatcher = zeroObject->GetDispatcher())
+    if (EventDispatcher* dispatcher = zeroObject->GetDispatcher())
       dispatcher->Dispatch(eventId, &eventToSend);
   }
 }
 
-//**************************************************************************************************
 void ComponentsChangedDefault(HandleParam object)
 {
   if (Object* zeroObject = object.Get<Object*>())
@@ -118,7 +113,6 @@ void ComponentsChangedDefault(HandleParam object)
   }
 }
 
-//**************************************************************************************************
 void ObjectModifiedDefault(HandleParam object)
 {
   if (Object* zeroObject = object.Get<Object*>())
@@ -129,11 +123,12 @@ void ObjectModifiedDefault(HandleParam object)
   }
 }
 
-//---------------------------------------------------------------------------------- Meta Operations
-//**************************************************************************************************
-void MetaOperations::NotifyPropertyModified(HandleParam object, PropertyPathParam property,
-                                          AnyParam oldValue, AnyParam newValue,
-                                          bool intermediateChange)
+//Meta Operations
+void MetaOperations::NotifyPropertyModified(HandleParam object,
+                                            PropertyPathParam property,
+                                            AnyParam oldValue,
+                                            AnyParam newValue,
+                                            bool intermediateChange)
 {
   Array<Handle> instances;
 
@@ -146,17 +141,22 @@ void MetaOperations::NotifyPropertyModified(HandleParam object, PropertyPathPara
 
   // The leaf will be at the end
   Handle& leafVariant = instances.Back();
-  ReturnIf(leafVariant.IsNull(), , "Instances should always be valid if in undo/redo.");
+  ReturnIf(leafVariant.IsNull(),
+           ,
+           "Instances should always be valid if in undo/redo.");
 
-  // Make sure the property path is always relative to the current object we're sending an event on
+  // Make sure the property path is always relative to the current object we're
+  // sending an event on
   PropertyPath localPath = property;
-  forRange(Handle& localObject, instances.All())
+  forRange(Handle & localObject, instances.All())
   {
     BoundType* objectType = localObject.StoredType;
     if (MetaOperations* metaOps = objectType->HasInherited<MetaOperations>())
-      metaOps->PropertyModified(localObject, localPath, oldValue, newValue, intermediateChange);
+      metaOps->PropertyModified(
+          localObject, localPath, oldValue, newValue, intermediateChange);
     else
-      PropertyModifiedDefault(localObject, localPath, oldValue, newValue, intermediateChange);
+      PropertyModifiedDefault(
+          localObject, localPath, oldValue, newValue, intermediateChange);
 
     // The object has been modified, so notify that as well
     NotifyObjectModified(localObject, intermediateChange);
@@ -165,7 +165,6 @@ void MetaOperations::NotifyPropertyModified(HandleParam object, PropertyPathPara
   }
 }
 
-//**************************************************************************************************
 void MetaOperations::NotifyComponentsModified(HandleParam object)
 {
   BoundType* objectType = object.StoredType;
@@ -181,8 +180,8 @@ void MetaOperations::NotifyComponentsModified(HandleParam object)
   }
 }
 
-//**************************************************************************************************
-void MetaOperations::NotifyObjectModified(HandleParam object, bool intermediateChange)
+void MetaOperations::NotifyObjectModified(HandleParam object,
+                                          bool intermediateChange)
 {
   BoundType* objectType = object.StoredType;
   if (MetaOperations* metaOps = objectType->HasInherited<MetaOperations>())
@@ -191,63 +190,59 @@ void MetaOperations::NotifyObjectModified(HandleParam object, bool intermediateC
     ObjectModifiedDefault(object);
 }
 
-//**************************************************************************************************
 u64 MetaOperations::GetUndoHandleId(HandleParam object)
 {
   return (u64)-1;
 }
 
-//**************************************************************************************************
 Any MetaOperations::GetUndoData(HandleParam object)
 {
   return Any();
 }
 
-//**************************************************************************************************
-void MetaOperations::PropertyModified(HandleParam object, PropertyPathParam property, 
-                                      AnyParam oldValue, AnyParam newValue, bool intermediateChange)
+void MetaOperations::PropertyModified(HandleParam object,
+                                      PropertyPathParam property,
+                                      AnyParam oldValue,
+                                      AnyParam newValue,
+                                      bool intermediateChange)
 {
-  PropertyModifiedDefault(object, property, oldValue, newValue, intermediateChange);
+  PropertyModifiedDefault(
+      object, property, oldValue, newValue, intermediateChange);
 }
 
-//**************************************************************************************************
 void MetaOperations::ComponentsModified(HandleParam object)
 {
   ComponentsChangedDefault(object);
 }
 
-//**************************************************************************************************
 void MetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 {
   ObjectModifiedDefault(object);
 }
 
-//----------------------------------------------------------------------------------- Property Event
-//**************************************************************************************************
+//Property Event
 ZilchDefineType(PropertyEvent, builder, type)
 {
-  ZeroBindEvent(Events::PropertyModified,             PropertyEvent);
+  ZeroBindEvent(Events::PropertyModified, PropertyEvent);
   ZeroBindEvent(Events::PropertyModifiedIntermediate, PropertyEvent);
 }
 
-//**************************************************************************************************
-PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property,
-                             AnyParam oldValue, AnyParam newValue) : 
-  mObject(object),
-  mProperty(property),
-  mOldValue(oldValue),
-  mNewValue(newValue)
+PropertyEvent::PropertyEvent(HandleParam object,
+                             PropertyPathParam property,
+                             AnyParam oldValue,
+                             AnyParam newValue) :
+    mObject(object),
+    mProperty(property),
+    mOldValue(oldValue),
+    mNewValue(newValue)
 {
-
 }
 
-//--------------------------------------------------------------------------------------- Type Event
-//**************************************************************************************************
+//Type Event
 ZilchDefineType(TypeEvent, builder, type)
 {
 }
 
-//**************************************************************************************************
 // Getter for bound events extensions e.g. Events.LogicUpdate
 void GetEventNameProperty(Call& call, ExceptionReport& report)
 {
@@ -259,14 +254,17 @@ void GetEventNameProperty(Call& call, ExceptionReport& report)
   call.Set<String>(Call::Return, eventName);
 }
 
-//**************************************************************************************************
-void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType)
+void BindEventSent(LibraryBuilder& builder,
+                   BoundType* boundType,
+                   StringParam eventName,
+                   BoundType* eventType)
 {
   ErrorIf(eventType == nullptr, "Event type must be provided");
 
   ErrorIf(!eventType->IsA(ZilchTypeId(Event)),
-    "Attempting to bind '%s' as an event that isn't an Event type: BindBase(Event)",
-    eventType->Name.c_str());
+          "Attempting to bind '%s' as an event that isn't an Event type: "
+          "BindBase(Event)",
+          eventType->Name.c_str());
 
   builder.AddSendsEvent(boundType, eventName, eventType);
 }
@@ -291,7 +289,7 @@ ZilchDefineType(MetaTransform, builder, type)
 {
 }
 
-//------------------------------------------------------------------------ TypeNameDisplay
+//TypeNameDisplay
 String TypeNameDisplay::GetName(HandleParam object)
 {
   return object.StoredType->Name;
@@ -302,9 +300,8 @@ String TypeNameDisplay::GetDebugText(HandleParam object)
   return GetName(object);
 }
 
-//------------------------------------------------------------------------ StringNameDisplay
-StringNameDisplay::StringNameDisplay(StringParam string)
- : mString(string)
+//StringNameDisplay
+StringNameDisplay::StringNameDisplay(StringParam string) : mString(string)
 {
 }
 
@@ -318,115 +315,102 @@ String StringNameDisplay::GetDebugText(HandleParam)
   return mString;
 }
 
-//----------------------------------------------------------------------------------- Meta Transform
-//**************************************************************************************************
+//Meta Transform
 bool MetaTransformInstance::IsNull()
 {
   return mInstance.IsNull();
 }
 
-//**************************************************************************************************
 bool MetaTransformInstance::IsNotNull()
 {
   return !IsNull();
 }
 
-//**************************************************************************************************
 Vec3 MetaTransformInstance::GetLocalTranslation()
 {
-  if(mLocalTranslation)
+  if (mLocalTranslation)
     return mLocalTranslation->GetValue(mInstance).Get<Vec3>();
   return Vec3::cZero;
 }
 
-//**************************************************************************************************
 Quat MetaTransformInstance::GetLocalRotation()
 {
-  if(mLocalRotation)
+  if (mLocalRotation)
     return mLocalRotation->GetValue(mInstance).Get<Quat>();
   return Quat::cIdentity;
 }
 
-//**************************************************************************************************
 Vec3 MetaTransformInstance::GetLocalScale()
 {
-  if(mLocalScale)
+  if (mLocalScale)
     return mLocalScale->GetValue(mInstance).Get<Vec3>();
   return Vec3::cZero;
 }
 
-//**************************************************************************************************
 void MetaTransformInstance::SetLocalTranslation(Vec3Param value)
 {
-  if(mLocalTranslation)
+  if (mLocalTranslation)
     mLocalTranslation->SetValue(mInstance, value);
 }
 
-//**************************************************************************************************
 void MetaTransformInstance::SetLocalRotation(QuatParam value)
 {
-  if(mLocalRotation)
+  if (mLocalRotation)
     mLocalRotation->SetValue(mInstance, value);
 }
 
-//**************************************************************************************************
 void MetaTransformInstance::SetLocalScale(Vec3Param value)
 {
-  if(mLocalScale)
+  if (mLocalScale)
     mLocalScale->SetValue(mInstance, value);
 }
 
-//**************************************************************************************************
 Vec3 MetaTransformInstance::GetWorldTranslation()
 {
-  if(mWorldTranslation)
+  if (mWorldTranslation)
     return mWorldTranslation->GetValue(mInstance).Get<Vec3>();
   return Vec3::cZero;
 }
 
-//**************************************************************************************************
 Quat MetaTransformInstance::GetWorldRotation()
 {
-  if(mWorldRotation)
+  if (mWorldRotation)
     return mWorldRotation->GetValue(mInstance).Get<Quat>();
   return Quat::cIdentity;
 }
 
-//**************************************************************************************************
 Vec3 MetaTransformInstance::GetWorldScale()
 {
-  if(mWorldScale)
+  if (mWorldScale)
     return mWorldScale->GetValue(mInstance).Get<Vec3>();
   return Vec3::cZero;
 }
 
-//**************************************************************************************************
 Mat4 MetaTransformInstance::GetParentWorldMatrix()
 {
-  if(mParentWorldMatrix)
+  if (mParentWorldMatrix)
     return mParentWorldMatrix->GetValue(mParentInstance).Get<Mat4>();
   return Mat4::cIdentity;
 }
 
-//**************************************************************************************************
 Mat4 MetaTransformInstance::GetParentLocalMatrix()
 {
-  if(mParentLocalMatrix)
+  if (mParentLocalMatrix)
     return mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>();
   return Mat4::cIdentity;
 }
 
-//**************************************************************************************************
 Vec3 MetaTransformInstance::ToParent(Vec3Param local)
 {
-  if(mParentLocalMatrix)
-    return Math::TransformPoint(mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>(), local);
+  if (mParentLocalMatrix)
+    return Math::TransformPoint(
+        mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>(), local);
   return local;
 }
 
-//----------------------------------------------------------------------------------- Meta Attribute
+//Meta Attribute
 ZilchDefineType(MetaAttribute, builder, type)
 {
 }
 
-}//namespace Zero
+} // namespace Zero

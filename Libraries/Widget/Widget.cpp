@@ -1,31 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Widget.cpp
-/// Implementation of the base widget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------- Size Policies
-//******************************************************************************
 ZilchDefineType(SizePolicies, builder, type)
 {
 }
 
-//----------------------------------------------------------------------- Widget
-//******************************************************************************
 ZilchDefineType(Widget, builder, type)
 {
   type->HandleManager = ZilchManagerId(WidgetHandleManager);
 }
 
-void WidgetHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
+void WidgetHandleManager::ObjectToHandle(const byte* object,
+                                         BoundType* type,
+                                         Handle& handleToInitialize)
 {
   if (object == nullptr)
     return;
@@ -56,12 +46,12 @@ u64 WidgetHandleManager::HandleToId(const Handle& handle)
   if (handle.StoredType == nullptr)
     return 0;
 
-  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)), 0,
-    "A handle to a non widget was passed in.");
+  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)),
+           0,
+           "A handle to a non widget was passed in.");
 
   return handle.HandleU64;
 }
-
 
 Widget::Widget(Composite* parent, AttachType::Enum attachType)
 {
@@ -70,7 +60,7 @@ Widget::Widget(Composite* parent, AttachType::Enum attachType)
 
   ClearValues();
 
-  if(parent)
+  if (parent)
   {
     mRootWidget = parent->mRootWidget;
     mDefSet = parent->GetDefinitionSet();
@@ -118,10 +108,10 @@ Widget::~Widget()
   SafeDelete(mDocker);
   SafeRelease(mActions);
 
-  if(mManager)
+  if (mManager)
     mManager->Destroyed(this);
 
-  if(mParent)
+  if (mParent)
   {
     mParent->MarkAsNeedsUpdate(true);
     mParent->mChildren.Erase(this);
@@ -131,7 +121,7 @@ Widget::~Widget()
 
 String Widget::GetDebugName()
 {
-  if(!mName.Empty())
+  if (!mName.Empty())
     return mName;
 
   return ZilchVirtualTypeId(this)->Name;
@@ -139,7 +129,7 @@ String Widget::GetDebugName()
 
 void Widget::InternalDestroy()
 {
-  if(!mDestroyed)
+  if (!mDestroyed)
   {
     mDestroyed = true;
     mNotInLayout = true;
@@ -147,19 +137,18 @@ void Widget::InternalDestroy()
     Z::gWidgetManager->Widgets.Erase(mId);
     Z::gWidgetManager->DestroyList.PushBack(this);
 
-    if(HasFocus())
+    if (HasFocus())
       this->LoseFocus();
   }
 }
 
 void Widget::OnDestroy()
 {
-
 }
 
 void Widget::Destroy()
 {
-  if(!mDestroyed)
+  if (!mDestroyed)
   {
     // Call on Destroy for this chain
     this->OnDestroy();
@@ -184,12 +173,12 @@ bool Widget::InputBlocked()
 
 bool Widget::CheckClipping(Vec2Param screenPoint)
 {
-  if(mClipping)
+  if (mClipping)
   {
     WidgetRect rect = GetLocalRect();
     Vec2 localMousePos = this->ToLocal(screenPoint);
     bool withIn = rect.Contains(localMousePos);
-    if(!withIn)
+    if (!withIn)
       return false;
   }
   return true;
@@ -198,17 +187,17 @@ bool Widget::CheckClipping(Vec2Param screenPoint)
 Widget* Widget::HitTest(Vec2 screenPoint, Widget* ignore)
 {
   // Skip inactive object
-  if(InputBlocked())
+  if (InputBlocked())
     return nullptr;
 
-  if(ignore == this)
+  if (ignore == this)
     return nullptr;
 
   // Check for containment
-  if(!CheckClipping(screenPoint))
+  if (!CheckClipping(screenPoint))
     return nullptr;
 
-  if(!Contains(screenPoint))
+  if (!Contains(screenPoint))
     return nullptr;
 
   return this;
@@ -228,12 +217,13 @@ void Widget::SetDocker(Docker* docker)
 void Widget::DispatchBubble(StringParam eventId, Event* event)
 {
   GetDispatcher()->Dispatch(eventId, event);
-  if(mParent) mParent->DispatchBubble(eventId, event);
+  if (mParent)
+    mParent->DispatchBubble(eventId, event);
 }
 
 Actions* Widget::GetActions()
 {
-  if(mActions == nullptr)
+  if (mActions == nullptr)
   {
     mActions = new Actions(Z::gWidgetManager->mWidgetActionSpace);
     mActions->AddReference();
@@ -300,7 +290,7 @@ void Widget::SetTranslationAndSize(Vec3 newTranslation, Vec2 newSize)
 void Widget::NeedsRedraw()
 {
   mNeedsRedraw = true;
-  if(mParent)
+  if (mParent)
     mParent->NeedsRedraw();
 }
 
@@ -308,17 +298,17 @@ void Widget::MarkAsNeedsUpdate(bool local)
 {
   mNeedsRedraw = true;
 
-  if(mTransformUpdateState == TransformUpdateState::Updated)
+  if (mTransformUpdateState == TransformUpdateState::Updated)
   {
-    if(local)
+    if (local)
       mTransformUpdateState = TransformUpdateState::LocalUpdate;
     else
       mTransformUpdateState = TransformUpdateState::ChildUpdate;
 
-    if(mParent)
+    if (mParent)
       mParent->MarkAsNeedsUpdate(false);
   }
-  else if(local && mTransformUpdateState == TransformUpdateState::ChildUpdate)
+  else if (local && mTransformUpdateState == TransformUpdateState::ChildUpdate)
   {
     mTransformUpdateState = TransformUpdateState::LocalUpdate;
   }
@@ -327,10 +317,10 @@ void Widget::MarkAsNeedsUpdate(bool local)
 bool Widget::IsAncestorOf(Widget* child)
 {
   Widget* current = child;
-  while(current)
+  while (current)
   {
     current = current->GetParent();
-    if(current == this)
+    if (current == this)
       return true;
   }
   return false;
@@ -353,7 +343,8 @@ void Widget::MoveToBack()
 Vec2 Widget::ToLocal(Vec2Param screenPoint)
 {
   Mat4 toLocal = Invert2D(mWorldTx);
-  Vec3 localPoint = TransformPointCol(toLocal, Vec3(screenPoint.x, screenPoint.y, 0.0f));
+  Vec3 localPoint =
+      TransformPointCol(toLocal, Vec3(screenPoint.x, screenPoint.y, 0.0f));
   return Vec2(localPoint.x, localPoint.y);
 }
 
@@ -372,7 +363,7 @@ Vec2 Widget::ToScreen(Vec2Param localPoint)
 
 Vec3 Widget::GetScreenPosition() const
 {
-  if(mParent)
+  if (mParent)
     return mTranslation + mParent->GetScreenPosition();
   return mTranslation;
 }
@@ -387,7 +378,7 @@ WidgetRect Widget::GetRectInParent()
 
 WidgetRect Widget::GetLocalRect() const
 {
-  if(mOrigin == DisplayOrigin::Center)
+  if (mOrigin == DisplayOrigin::Center)
     return WidgetRect::PointAndSize(mSize * 0.5f, mSize);
   else
     return WidgetRect::PointAndSize(Vec2::cZero, mSize);
@@ -405,7 +396,8 @@ WidgetRect Widget::GetScreenRect() const
 Vec2 Widget::GetClientCenterPosition() const
 {
   WidgetRect clientRect = GetScreenRect();
-  return Vec2(clientRect.X + clientRect.SizeX / 2.0f, clientRect.Y + clientRect.SizeY / 2.0f);
+  return Vec2(clientRect.X + clientRect.SizeX / 2.0f,
+              clientRect.Y + clientRect.SizeY / 2.0f);
 }
 
 bool Widget::Contains(Vec2 screenPoint)
@@ -450,7 +442,6 @@ void Widget::LoseFocus()
 
 void Widget::ChangeDefinition(BaseDefinition* def)
 {
-
 }
 
 void Widget::CaptureMouse()
@@ -481,10 +472,12 @@ void Widget::ScreenCaptureBackBuffer(Image& image)
 
 void Widget::ScreenCaptureBackBuffer(Image& image, WidgetRect& subRect)
 {
-  //GraphicsViewport viewport = GenerateSubViewport(mWorldTx, subRect.TopLeft(), subRect.Size());
+  // GraphicsViewport viewport = GenerateSubViewport(mWorldTx,
+  // subRect.TopLeft(), subRect.Size());
 
-  //RootWidget* root = GetRootWidget();
-  //CaptureViewport(root->GetOsWindow()->GetGraphicsContext(), &image, viewport);
+  // RootWidget* root = GetRootWidget();
+  // CaptureViewport(root->GetOsWindow()->GetGraphicsContext(), &image,
+  // viewport);
 }
 
 void Widget::SetTakeFocusMode(FocusMode::Type focusMode)
@@ -500,9 +493,10 @@ void Widget::SetClipping(bool clipping)
 void Widget::DispatchAt(DispatchAtParams& params)
 {
   Widget* hit = this->HitTest(params.Position, params.Ignore);
-  if(!hit) return;
+  if (!hit)
+    return;
 
-  if(params.BubbleEvent)
+  if (params.BubbleEvent)
     hit->DispatchBubble(params.EventId, params.EventObject);
   else
     hit->DispatchEvent(params.EventId, params.EventObject);
@@ -522,7 +516,7 @@ bool GetZIndexDepthFirst(Widget* widget, Widget* target, int* zindex)
   Composite* composite = widget->GetSelfAsComposite();
   if (composite)
   {
-    forRange(Widget& child, composite->GetChildren())
+    forRange(Widget & child, composite->GetChildren())
     {
       if (&child == target)
         return true;
@@ -551,14 +545,21 @@ void Widget::BuildLocalMatrix(Mat4& output)
   Build2dTransform(output, this->mTranslation, this->mAngle);
 }
 
-void Widget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void Widget::RenderUpdate(ViewBlock& viewBlock,
+                          FrameBlock& frameBlock,
+                          Mat4Param parentTx,
+                          ColorTransform colorTx,
+                          WidgetRect clipRect)
 {
   Mat4 localTx;
   BuildLocalMatrix(localTx);
   mWorldTx = localTx * parentTx;
 }
 
-ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture)
+ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock,
+                                 FrameBlock& frameBlock,
+                                 WidgetRect clipRect,
+                                 Texture* texture)
 {
   FrameNode& frameNode = frameBlock.mFrameNodes.PushBack();
   ViewNode& viewNode = viewBlock.mViewNodes.PushBack();
@@ -574,12 +575,13 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, W
   viewNode.mFrameNodeIndex = frameBlock.mFrameNodes.Size() - 1;
   viewNode.mLocalToView = viewBlock.mWorldToView * frameNode.mLocalToWorld;
 
-  frameNode.mClip = Vec4(clipRect.X, clipRect.Y, clipRect.SizeX, clipRect.SizeY);
+  frameNode.mClip =
+      Vec4(clipRect.X, clipRect.Y, clipRect.SizeX, clipRect.SizeY);
 
   // maybe cache this lookup on root
   Material* spriteMaterial = nullptr;
-  
-  if(texture->mType == TextureType::TextureCube)
+
+  if (texture->mType == TextureType::TextureCube)
     spriteMaterial = MaterialManager::FindOrNull("TextureCubePreview");
   else
     spriteMaterial = MaterialManager::FindOrNull("AlphaSprite");
@@ -590,18 +592,24 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, W
 
   // default setup for adding streamed data
   viewNode.mStreamedVertexType = PrimitiveType::Triangles;
-  viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
+  viewNode.mStreamedVertexStart =
+      frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
   return viewNode;
 }
 
-void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType)
+void Widget::CreateRenderData(ViewBlock& viewBlock,
+                              FrameBlock& frameBlock,
+                              WidgetRect clipRect,
+                              Array<StreamedVertex>& vertices,
+                              PrimitiveType::Enum primitiveType)
 {
   if (vertices.Empty())
     return;
 
-  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices =
+      frameBlock.mRenderQueues->mStreamedVertices;
 
   static Texture* white = TextureManager::Find("White");
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, white);
@@ -610,11 +618,13 @@ void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, Widg
   for (uint i = 0; i < vertices.Size(); ++i)
   {
     StreamedVertex vertex = vertices[i];
-    vertex.mPosition = Math::TransformPoint(viewNode.mLocalToView, vertex.mPosition);
+    vertex.mPosition =
+        Math::TransformPoint(viewNode.mLocalToView, vertex.mPosition);
     streamedVertices.PushBack(vertex);
   }
 
-  viewNode.mStreamedVertexCount = streamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount =
+      streamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
 void Widget::SizeToContents()
@@ -626,14 +636,16 @@ void Widget::UpdateTransformExternal()
 {
   UpdateTransform();
 
-  static String message = "Improper Widget Update. Did you forget to call your base UpdateTransform at the end of "
-                         "your UpdateTransform?";
-  ErrorIf(!mDestroyed && mTransformUpdateState != TransformUpdateState::Updated, message.c_str());
+  static String message = "Improper Widget Update. Did you forget to call your "
+                          "base UpdateTransform at the end of "
+                          "your UpdateTransform?";
+  ErrorIf(!mDestroyed && mTransformUpdateState != TransformUpdateState::Updated,
+          message.c_str());
 }
 
 void Widget::UpdateTransform()
 {
-  //Clear the update flag
+  // Clear the update flag
   mTransformUpdateState = TransformUpdateState::Updated;
 }
 
@@ -645,9 +657,9 @@ void Widget::SetDockMode(DockMode::Enum dockMode)
 
 void Widget::SetDockArea(DockArea::Enum dockArea)
 {
-  if(mDocker)
+  if (mDocker)
     mDocker->Dock(this, dockArea);
-  if(dockArea == DockArea::Floating)
+  if (dockArea == DockArea::Floating)
     SetDockMode(DockMode::DockNone);
   else
     SetDockMode(DockMode::DockFill);
@@ -661,7 +673,7 @@ bool Widget::GetActive()
 bool Widget::GetGlobalActive()
 {
   Widget* current = this;
-  while(current)
+  while (current)
   {
     if (current->mActive == false)
       return false;
@@ -673,7 +685,7 @@ bool Widget::GetGlobalActive()
 
 void Widget::SetActive(bool active)
 {
-  if(mActive != active)
+  if (mActive != active)
   {
     mActive = active;
     MarkAsNeedsUpdate();
@@ -681,7 +693,7 @@ void Widget::SetActive(bool active)
 
     // Activated does not bubble.
     ObjectEvent event(this);
-    if(active)
+    if (active)
       DispatchEvent(Events::Activated, &event);
     else
     {
@@ -704,9 +716,9 @@ Vec2 Widget::GetMinSize()
 Vec2 Widget::Measure(LayoutArea& data)
 {
   Vec2 measureSize = GetMinSize();
-  if(mSizePolicy.XPolicy == SizePolicy::Fixed)
+  if (mSizePolicy.XPolicy == SizePolicy::Fixed)
     measureSize.x = mSize.x;
-  if(mSizePolicy.YPolicy == SizePolicy::Fixed)
+  if (mSizePolicy.YPolicy == SizePolicy::Fixed)
     measureSize.y = mSize.y;
   return measureSize;
 }
@@ -724,4 +736,4 @@ Thickness Widget::GetBorderThickness()
   return Thickness::cZero;
 }
 
-}//namespace Zero
+} // namespace Zero

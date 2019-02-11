@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -16,9 +11,9 @@
 #include <GL/GL.h>
 
 #ifdef PLATFORM_APPLE
-#include <CoreServices/CoreServices.h>
-#include <mach/mach.h>
-#include <mach/mach_time.h>
+#  include <CoreServices/CoreServices.h>
+#  include <mach/mach.h>
+#  include <mach/mach_time.h>
 #endif
 
 #include "curl.h"

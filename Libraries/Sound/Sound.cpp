@@ -1,24 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//-------------------------------------------------------------------------------------------- Sound
+//Sound
 
-//**************************************************************************************************
 String SoundToString(const BoundType* type, const byte* instance)
 {
   Sound* sound = (Sound*)instance;
   return BuildString("Sound: ", sound->Name);
 }
 
-//**************************************************************************************************
 ZilchDefineType(Sound, builder, type)
 {
   type->ToStringFunction = SoundToString;
@@ -29,11 +22,13 @@ ZilchDefineType(Sound, builder, type)
   ZilchBindGetterProperty(Channels);
 }
 
-//**************************************************************************************************
-void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, 
-  AudioFileLoadType::Enum loadType)
+void Sound::CreateAsset(Status& status,
+                        StringParam assetName,
+                        StringParam fileName,
+                        AudioFileLoadType::Enum loadType)
 {
-  // If the load type is set to auto, determine the type based on the length of the file
+  // If the load type is set to auto, determine the type based on the length of
+  // the file
   if (loadType == AudioFileLoadType::Auto)
   {
     // Open the audio file
@@ -49,7 +44,8 @@ void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileN
 
       if (status.Succeeded())
       {
-        float fileLength = (float)header.SamplesPerChannel / (float)AudioConstants::cSystemSampleRate;
+        float fileLength = (float)header.SamplesPerChannel /
+                           (float)AudioConstants::cSystemSampleRate;
 
         if (fileLength < mStreamFromMemoryLength)
           loadType = AudioFileLoadType::Uncompressed;
@@ -61,7 +57,8 @@ void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileN
     }
   }
 
-  if (loadType == AudioFileLoadType::StreamFromFile || loadType == AudioFileLoadType::StreamFromMemory)
+  if (loadType == AudioFileLoadType::StreamFromFile ||
+      loadType == AudioFileLoadType::StreamFromMemory)
     mAsset = new StreamingSoundAsset(status, fileName, loadType, Name);
   else
     mAsset = new DecompressedSoundAsset(status, fileName, Name);
@@ -75,7 +72,6 @@ void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileN
   }
 }
 
-//**************************************************************************************************
 float Sound::GetLength()
 {
   if (mAsset)
@@ -84,7 +80,6 @@ float Sound::GetLength()
     return 0.0f;
 }
 
-//**************************************************************************************************
 int Sound::GetChannels()
 {
   if (mAsset)
@@ -93,7 +88,6 @@ int Sound::GetChannels()
     return 0;
 }
 
-//**************************************************************************************************
 bool Sound::GetStreaming()
 {
   if (mAsset)
@@ -102,35 +96,30 @@ bool Sound::GetStreaming()
     return false;
 }
 
-//------------------------------------------------------------------------------------ Sound Display
+//Sound Display
 
-//**************************************************************************************************
 ZilchDefineType(SoundDisplay, builder, type)
 {
 }
 
-//**************************************************************************************************
 String SoundDisplay::GetName(HandleParam object)
 {
   Sound* sound = object.Get<Sound*>(GetOptions::AssertOnNull);
   return BuildString("Sound: ", sound->Name);
 }
 
-//**************************************************************************************************
 String SoundDisplay::GetDebugText(HandleParam object)
 {
   return GetName(object);
 }
 
-//------------------------------------------------------------------------------------- Sound Loader
+//Sound Loader
 
-//**************************************************************************************************
 HandleOf<Resource> SoundLoader::LoadFromBlock(ResourceEntry& entry)
 {
   return LoadFromFile(entry);
 }
 
-//**************************************************************************************************
 HandleOf<Resource> SoundLoader::LoadFromFile(ResourceEntry& entry)
 {
   Sound* sound = new Sound();
@@ -148,7 +137,6 @@ HandleOf<Resource> SoundLoader::LoadFromFile(ResourceEntry& entry)
   }
 }
 
-//**************************************************************************************************
 void SoundLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 {
   Sound* sound = (Sound*)resource;
@@ -156,7 +144,6 @@ void SoundLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
   LoadSound(sound, entry);
 }
 
-//**************************************************************************************************
 bool SoundLoader::LoadSound(Sound* sound, ResourceEntry& entry)
 {
   Zero::Status status;
@@ -171,16 +158,16 @@ bool SoundLoader::LoadSound(Sound* sound, ResourceEntry& entry)
     return true;
 }
 
-//------------------------------------------------------------------------------------ Sound Manager
+//Sound Manager
 
 ImplementResourceManager(SoundManager, Sound);
 
-//**************************************************************************************************
-SoundManager::SoundManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+SoundManager::SoundManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("Sound", new SoundLoader(AudioFileLoadType::Uncompressed));
-  AddLoader("StreamedSound", new SoundLoader(AudioFileLoadType::StreamFromFile));
+  AddLoader("StreamedSound",
+            new SoundLoader(AudioFileLoadType::StreamFromFile));
   AddLoader("AutoStreamedSound", new SoundLoader(AudioFileLoadType::Auto));
   mCategory = "Sound";
   mCanAddFile = true;
@@ -191,4 +178,4 @@ SoundManager::SoundManager(BoundType* resourceType)
   DefaultResourceName = "DefaultSound";
 }
 
-}//namespace Zero
+} // namespace Zero

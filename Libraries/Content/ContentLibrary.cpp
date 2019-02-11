@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentLibrary.hpp
-///
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -38,14 +30,13 @@ bool ContentLibrary::Load()
 
 void ContentLibrary::SaveAllContentItemMeta()
 {
-  forRange(ContentItem* item, ContentItems.Values())
-    item->SaveMetaFile();
+  forRange(ContentItem * item, ContentItems.Values()) item->SaveMetaFile();
 }
 
 String ContentLibrary::GetOutputPath()
 {
-  //to avoid conflicts of same named libraries in the out directory,
-  //include the hash as part of the output file name.
+  // to avoid conflicts of same named libraries in the out directory,
+  // include the hash as part of the output file name.
   Guid hashOfLibraryIdAndLocation = LibraryId ^ (u64)SourcePath.Hash();
   String hexHash = StripHex0x(ToString(hashOfLibraryIdAndLocation));
   String fileName = BuildString(Name, hexHash);
@@ -66,7 +57,7 @@ void ContentLibrary::AddContentItem(ContentItem* contentItem)
 
 bool ContentLibrary::RemoveContentItem(ContentItem* contentItem)
 {
-  //remove from the map
+  // remove from the map
   ContentItems.Erase(contentItem->UniqueFileId);
 
   return true;
@@ -84,7 +75,7 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
 {
   Z::gEngine->LoadingStart();
 
-  //Begin building content
+  // Begin building content
   buildOptions.BuildStatus = BuildStatus::Running;
 
   int itemsToBuild = ContentItems.Size();
@@ -94,21 +85,26 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
   String currentTask = this->Name;
   ContentMapType::valuerange itemsToProcess = ContentItems.Values();
 
-  //Continue until finished or canceled
-  while(!itemsToProcess.Empty() && buildOptions.BuildStatus == BuildStatus::Running)
+  // Continue until finished or canceled
+  while (!itemsToProcess.Empty() &&
+         buildOptions.BuildStatus == BuildStatus::Running)
   {
     ContentItem* item = itemsToProcess.Front();
 
-    if(buildOptions.SendProgress)
+    if (buildOptions.SendProgress)
     {
       float progress = float(itemsBuilt + 1) / float(itemsToBuild);
-      Z::gEngine->LoadingUpdate(currentOperation, currentTask, item->Filename, ProgressType::Normal, progress);
+      Z::gEngine->LoadingUpdate(currentOperation,
+                                currentTask,
+                                item->Filename,
+                                ProgressType::Normal,
+                                progress);
     }
 
-    //Build the content item
+    // Build the content item
     item->BuildContent(buildOptions);
 
-    if(buildOptions.Failure)
+    if (buildOptions.Failure)
     {
       ZPrint("Content Build Failed, %s\n", buildOptions.Message.c_str());
       buildOptions.Failure = false;
@@ -122,15 +118,16 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
     YieldToOs();
   }
 
-  //if all of the items were built, then the build completed successfully
-  if(itemsBuilt == itemsToBuild)
+  // if all of the items were built, then the build completed successfully
+  if (itemsBuilt == itemsToBuild)
   {
     buildOptions.BuildStatus = BuildStatus::Completed;
   }
   else
   {
     buildOptions.BuildStatus = BuildStatus::Failed;
-    String message = String::Format("Failed to build content library '%s'", this->Name.c_str());
+    String message = String::Format("Failed to build content library '%s'",
+                                    this->Name.c_str());
     DoNotifyError("Content Library build failed", message);
   }
 
@@ -139,7 +136,7 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
 
 void ContentLibrary::BuildListing(ResourceListing& listing)
 {
-  forRange(ContentItem* node, ContentItems.Values())
+  forRange(ContentItem * node, ContentItems.Values())
   {
     node->BuildListing(listing);
   }
@@ -151,4 +148,4 @@ void ContentLibrary::SetPaths(BuildOptions& buildOptions)
   buildOptions.OutputPath = GetOutputPath();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2013-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,9 +14,9 @@ class ZilchShaderDefinition;
 class SimpleZilchShaderGenerator;
 class ZilchFragment;
 
-//-------------------------------------------------------------------TranslatedShaderScriptEditor
-// Base class for displaying translated scripts in the editor. Mostly manages a lot of
-// helper functions on a ZilchCompositor and the actual script editor display.
+// Base class for displaying translated scripts in the editor. Mostly manages a
+// lot of helper functions on a ZilchCompositor and the actual script editor
+// display.
 class TranslatedShaderScriptEditor : public ScriptEditor
 {
 public:
@@ -32,15 +27,18 @@ public:
   // Updates the script editor with the translated text from OnTranslate
   void Build();
   void OnBuild(Event* e);
-  // Function meant to be implemented by derived classes that translate as needed
+  // Function meant to be implemented by derived classes that translate as
+  // needed
   virtual String OnTranslate();
 
   // Helper functions
-  //void CompileAndTranslateFragments(SimpleZilchShaderGenerator& shaderGenerator);
-  //void TranslateMaterial(SimpleZilchShaderGenerator& shaderGenerator, Material* material);
-  
-  // The Connect macro doesn't seem to work when trying to connect from a derived type on a base class function,
-  // hence this function allows easy connection on a resource type being modified.
+  // void CompileAndTranslateFragments(SimpleZilchShaderGenerator&
+  // shaderGenerator); void TranslateMaterial(SimpleZilchShaderGenerator&
+  // shaderGenerator, Material* material);
+
+  // The Connect macro doesn't seem to work when trying to connect from a
+  // derived type on a base class function, hence this function allows easy
+  // connection on a resource type being modified.
   template <typename ResourceType>
   void ListenForModified(ResourceType* resource)
   {
@@ -50,9 +48,8 @@ public:
   SimpleZilchShaderGenerator* mShaderGenerator;
 };
 
-//-------------------------------------------------------------------FragmentFileTranslatorScriptEditor
-// Translates a given fragment. As long as this editor is open on save/modification
-// of the fragment the script editor will be updated.
+// Translates a given fragment. As long as this editor is open on
+// save/modification of the fragment the script editor will be updated.
 class FragmentFileTranslatorScriptEditor : public TranslatedShaderScriptEditor
 {
 public:
@@ -65,9 +62,9 @@ public:
   ZilchFragment* mFragment;
 };
 
-//-------------------------------------------------------------------ZilchCompositorScriptEditor
-// Builds the zilch script representing a composite from a material. As long as this editor is open
-// on save/modification of the fragment the script editor will be updated.
+// Builds the zilch script representing a composite from a material. As long as
+// this editor is open on save/modification of the fragment the script editor
+// will be updated.
 class ZilchCompositorScriptEditor : public TranslatedShaderScriptEditor
 {
 public:
@@ -81,10 +78,10 @@ public:
 };
 
 DeclareEnum4(TranslationDisplayMode, Pixel, Geometry, Vertex, Full);
-//-------------------------------------------------------------------ZilchCompositorScriptEditor
 // Translates the zilch script of a material. As long as this editor is open
 // on save/modification of the fragment the script editor will be updated.
-class TranslatedZilchCompositorScriptEditor : public TranslatedShaderScriptEditor
+class TranslatedZilchCompositorScriptEditor
+    : public TranslatedShaderScriptEditor
 {
 public:
   typedef TranslatedZilchCompositorScriptEditor self_type;
@@ -99,7 +96,6 @@ public:
   TranslationDisplayMode::Enum mDisplayMode;
 };
 
-//-------------------------------------------------------------------FragmentSplitScriptEditor
 class BaseSplitScriptEditor : public Composite
 {
 public:
@@ -110,21 +106,21 @@ public:
   virtual void SetTranslatedEditor();
   virtual void SaveCheck();
   virtual void Build();
-  //virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult);
+  // virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult);
 
   void SetLexer(uint lexer);
   void OnSaveCheck(SavingEvent* e);
   void OnBuild(Event* e);
   void OnLeftMouseDown(MouseEvent* e);
 
-  //CodeRangeMapping* FindRange(int positionWithinParent, CodeRangeMapping* current);
-  
+  // CodeRangeMapping* FindRange(int positionWithinParent, CodeRangeMapping*
+  // current);
+
   ScriptEditor* mSourceEditor;
   Splitter* mSplitter;
   TranslatedShaderScriptEditor* mTranslatedEditor;
 };
 
-//-------------------------------------------------------------------FragmentSplitScriptEditor
 // A simple script editor to view a translated shader and a source fragment.
 // Currently used to debug line number mappings (Cleanup later).
 class FragmentSplitScriptEditor : public BaseSplitScriptEditor
@@ -136,14 +132,14 @@ public:
   virtual void SetTranslatedEditor() override;
   virtual void SaveCheck() override;
   virtual void Build() override;
-  //virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
+  // virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult)
+  // override;
 
   void SetResource(ZilchFragment* fragment);
-  
+
   ZilchFragment* mFragment;
 };
 
-//-------------------------------------------------------------------MaterialSplitScriptEditor
 // A simple script editor to view a translated shader and a source material.
 // Currently used to debug line number mappings (Cleanup later).
 class MaterialSplitScriptEditor : public BaseSplitScriptEditor
@@ -154,16 +150,15 @@ public:
 
   void SetTranslatedEditor() override;
   void Build() override;
-  //void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
+  // void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
 
   void SetResource(Material* material);
   void SetDisplayMode(TranslationDisplayMode::Enum displayMode);
-  
+
   TranslationDisplayMode::Enum mDisplayMode;
   Material* mMaterial;
 };
 
-//-------------------------------------------------------------------CodeTranslatorListener
 // A simple class to listen for events. Ideally this should be a component.
 class CodeTranslatorListener : public EventObject
 {
@@ -184,4 +179,4 @@ public:
 
 void BindCodeTranslatorCommands(Cog* configCog, CommandManager* commands);
 
-}//namespace Zero
+} // namespace Zero

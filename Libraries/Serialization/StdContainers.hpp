@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StdContainers.hpp
-/// Declaration of serialization polices for STL types so they can be
-/// serialized by the serialization system.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include <string>
@@ -23,7 +14,6 @@
 #include "Serialization\SerializationTraits.hpp"
 #include "Serialization\Serialization.hpp"
 
-
 namespace Zero
 {
 
@@ -32,19 +22,27 @@ typedef std::string StlString;
 namespace Serialization
 {
 
-template<>
+template <>
 struct Trait<StlString>
 {
-  enum { Type = StructureType::Value };
-  static inline cstr TypeName(){ return "string"; }
+  enum
+  {
+    Type = StructureType::Value
+  };
+  static inline cstr TypeName()
+  {
+    return "string";
+  }
 };
 
-template<>
+template <>
 struct Policy<StlString>
 {
-  static inline bool Serialize(Serializer& serializer, cstr fieldName, StlString& stringValue)
+  static inline bool Serialize(Serializer& serializer,
+                               cstr fieldName,
+                               StlString& stringValue)
   {
-    if(serializer.GetMode() == SerializerMode::Saving)
+    if (serializer.GetMode() == SerializerMode::Saving)
     {
       cstr byteStart = stringValue.c_str();
       cstr byteEnd = stringValue.c_str() + stringValue.size();
@@ -54,7 +52,7 @@ struct Policy<StlString>
     else
     {
       StringRange strData;
-      if(serializer.StringField("string", fieldName, strData))
+      if (serializer.StringField("string", fieldName, strData))
       {
         stringValue = StlString(strData.Data(), strData.SizeInBytes());
         return true;
@@ -64,11 +62,12 @@ struct Policy<StlString>
   }
 };
 
-template<typename type>
+template <typename type>
 struct StdSerializeFunctor
 {
-  StdSerializeFunctor(Serializer& s)
-    : stream(s) {}
+  StdSerializeFunctor(Serializer& s) : stream(s)
+  {
+  }
   void operator()(const type& constValue)
   {
     type& value = const_cast<type&>(constValue);
@@ -77,13 +76,16 @@ struct StdSerializeFunctor
   Serializer& stream;
 };
 
-template<typename first, typename second>
-struct Policy< std::pair<first, second> >
+template <typename first, typename second>
+struct Policy<std::pair<first, second>>
 {
-  typedef std::pair<first, second>  containertype;
-  static inline bool Serialize(Serializer& serializer, cstr fieldName, std::pair<first, second>& pair)
+  typedef std::pair<first, second> containertype;
+  static inline bool Serialize(Serializer& serializer,
+                               cstr fieldName,
+                               std::pair<first, second>& pair)
   {
-    serializer.Start(Trait<containertype>::TypeName(), fieldName, StructureType::Object);
+    serializer.Start(
+        Trait<containertype>::TypeName(), fieldName, StructureType::Object);
     serializer.SerializeField("key", pair.first);
     serializer.SerializeField("value", pair.second);
     serializer.End(Trait<containertype>::TypeName(), StructureType::Object);
@@ -91,13 +93,16 @@ struct Policy< std::pair<first, second> >
   }
 };
 
-template<typename first, typename second>
-struct Policy< std::pair<const first, second>  >
+template <typename first, typename second>
+struct Policy<std::pair<const first, second>>
 {
-  typedef std::pair<const first, second>  containertype;
-  static inline bool Serialize(Serializer& serializer, cstr fieldName,  std::pair<const first,second>& pair)
+  typedef std::pair<const first, second> containertype;
+  static inline bool Serialize(Serializer& serializer,
+                               cstr fieldName,
+                               std::pair<const first, second>& pair)
   {
-    serializer.Start(Trait<containertype>::TypeName(), fieldName, StructureType::Object);
+    serializer.Start(
+        Trait<containertype>::TypeName(), fieldName, StructureType::Object);
     serializer.SerializeField("key", const_cast<first&>(pair.first));
     serializer.SerializeField("value", pair.second);
     serializer.End(Trait<containertype>::TypeName(), StructureType::Object);
@@ -105,30 +110,36 @@ struct Policy< std::pair<const first, second>  >
   }
 };
 
-template<typename containerType>
+template <typename containerType>
 void StdSaveSequence(Serializer& serializer, containerType& container)
 {
   uint containerSize = container.size();
   serializer.ArraySize(containerSize);
-  std::for_each(container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
+  std::for_each(
+      container.begin(),
+      container.end(),
+      StdSerializeFunctor<typename containerType::value_type>(serializer));
 }
 
-template<typename containerType>
+template <typename containerType>
 void StdLoadSequence(Serializer& serializer, containerType& container)
 {
   uint containerSize = 0;
   serializer.ArraySize(containerSize);
   container.resize(containerSize);
-  std::for_each(container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
+  std::for_each(
+      container.begin(),
+      container.end(),
+      StdSerializeFunctor<typename containerType::value_type>(serializer));
 }
 
-template<typename containerType>
+template <typename containerType>
 void StdInsertSequence(Serializer& serializer, containerType& container)
 {
   container.clear();
   uint containerSize = 0;
   serializer.ArraySize(containerSize);
-  for(uint i=0;i<containerSize;++i)
+  for (uint i = 0; i < containerSize; ++i)
   {
     typename containerType::value_type tempValue;
     serializer.SerializeValue(tempValue);
@@ -136,16 +147,18 @@ void StdInsertSequence(Serializer& serializer, containerType& container)
   }
 }
 
-template<typename type>
-struct Policy< std::vector<type>  >
+template <typename type>
+struct Policy<std::vector<type>>
 {
-  typedef std::vector<type>  containertype;
-  static bool Serialize(Serializer& stream, cstr fieldName,  containertype& container)
+  typedef std::vector<type> containertype;
+  static bool Serialize(Serializer& stream,
+                        cstr fieldName,
+                        containertype& container)
   {
     bool started = stream.Start("Array", fieldName, StructureType::Array);
-    if(started)
+    if (started)
     {
-      if(stream.GetMode() == SerializerMode::Saving)
+      if (stream.GetMode() == SerializerMode::Saving)
       {
         StdSaveSequence(stream, container);
       }
@@ -159,16 +172,18 @@ struct Policy< std::vector<type>  >
   }
 };
 
-template<typename keytype, typename valuetype>
-struct Policy< std::map<keytype, valuetype>  >
+template <typename keytype, typename valuetype>
+struct Policy<std::map<keytype, valuetype>>
 {
-  typedef std::map<keytype, valuetype>  containertype;
-  static bool Serialize(Serializer& stream, cstr fieldName,  containertype& container)
+  typedef std::map<keytype, valuetype> containertype;
+  static bool Serialize(Serializer& stream,
+                        cstr fieldName,
+                        containertype& container)
   {
     bool started = stream.Start("Map", fieldName, StructureType::Array);
-    if(started)
+    if (started)
     {
-      if(stream.GetMode() == Zero::SerializerMode::Saving)
+      if (stream.GetMode() == Zero::SerializerMode::Saving)
       {
         StdSaveSequence(stream, container);
       }
@@ -182,16 +197,18 @@ struct Policy< std::map<keytype, valuetype>  >
   }
 };
 
-template<typename type>
-struct Policy< std::set<type> >
+template <typename type>
+struct Policy<std::set<type>>
 {
   typedef std::set<type> containertype;
-  static bool Serialize(Serializer& stream, cstr fieldName,  containertype& container)
+  static bool Serialize(Serializer& stream,
+                        cstr fieldName,
+                        containertype& container)
   {
     bool started = stream.Start("Array", fieldName, StructureType::Array);
-    if(started)
+    if (started)
     {
-      if(stream.GetMode() == Zero::SerializerMode::Saving)
+      if (stream.GetMode() == Zero::SerializerMode::Saving)
       {
         StdSaveSequence(stream, container);
       }
@@ -205,5 +222,5 @@ struct Policy< std::set<type> >
   }
 };
 
-}//namespace Serialization
-}//namespace Zero
+} // namespace Serialization
+} // namespace Zero

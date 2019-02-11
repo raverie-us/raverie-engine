@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------BaseJointTool
 ZilchDefineType(JointTool, builder, type)
 {
   ZeroBindComponent();
@@ -30,7 +24,7 @@ JointTool::JointTool()
 
 void JointTool::OnMouseEndDrag(Event* e)
 {
-  if(GetAttachToWorld())
+  if (GetAttachToWorld())
     ObjectB = ObjectA;
 
   ObjectConnectingTool::OnMouseEndDrag(e);
@@ -38,18 +32,19 @@ void JointTool::OnMouseEndDrag(Event* e)
 
 void JointTool::DoConnection()
 {
-  if(Cog* a = ObjectA)
+  if (Cog* a = ObjectA)
   {
-    if(Cog* b = ObjectB)
+    if (Cog* b = ObjectB)
     {
       Transform* t0 = a->has(Transform);
       Transform* t1 = b->has(Transform);
-      if(t0 == nullptr || t1 == nullptr)
+      if (t0 == nullptr || t1 == nullptr)
         return;
 
-      Cog* jointCog = mJointCreator.CreateWorldPoints(a, b, GetJointName(), PointOnObjectA, PointOnObjectB);
+      Cog* jointCog = mJointCreator.CreateWorldPoints(
+          a, b, GetJointName(), PointOnObjectA, PointOnObjectB);
       // Queue up an undo operation on this joint being created
-      if(jointCog != nullptr)
+      if (jointCog != nullptr)
       {
         OperationQueue* queue = Z::gEditor->GetOperationQueue();
         ObjectCreated(queue, jointCog);
@@ -63,4 +58,4 @@ cstr JointTool::GetJointName()
   return JointToolTypes::Names[mJointType];
 }
 
-}//namespace Zero
+} // namespace Zero

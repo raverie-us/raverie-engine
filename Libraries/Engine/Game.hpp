@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Game.hpp
-/// Declaration of the Game class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,20 +15,19 @@ class GameWidget;
 
 namespace Events
 {
-  DeclareEvent(GameSetup);
-  DeclareEvent(GameQuit);
-  DeclareEvent(GameStarted);
-  DeclareEvent(GameFocusIn);
-  DeclareEvent(GameFocusOut);
-  DeclareEvent(LevelStarted);
-  DeclareEvent(GameRequestQuit);
-  DeclareEvent(EditSpaces);
-}//namespace Events
+DeclareEvent(GameSetup);
+DeclareEvent(GameQuit);
+DeclareEvent(GameStarted);
+DeclareEvent(GameFocusIn);
+DeclareEvent(GameFocusOut);
+DeclareEvent(LevelStarted);
+DeclareEvent(GameRequestQuit);
+DeclareEvent(EditSpaces);
+} // namespace Events
 
 /// Typedefs.
 typedef ArrayMultiMap<String, Space*> SpaceMap;
 
-//------------------------------------------------------------------- Game Event
 
 /// Event type used by the GameSession
 class GameEvent : public Event
@@ -47,7 +38,7 @@ public:
   GameEvent();
 
   /// Has this event been handled?
-  /// Used to for the engine to poll for 
+  /// Used to for the engine to poll for
   /// Request Quit and other operations.
   bool mHandled;
   /// GameSession Object
@@ -58,7 +49,6 @@ public:
   String LevelName;
 };
 
-//----------------------------------------------------------------- Game Session
 /// The GameSession manages all spaces and data for a a game.
 class GameSession : public Cog
 {
@@ -86,7 +76,8 @@ public:
   /// Step the game one frame
   void Step();
 
-  /// Pauses the game session which prevents updates to all spaces owned by this game.
+  /// Pauses the game session which prevents updates to all spaces owned by this
+  /// game.
   void Pause();
 
   /// Create a space in the game. Use the archetype's name.
@@ -108,7 +99,7 @@ public:
 
   /// Request to quit sending out the GameRequestQuit event.
   void RequestQuit();
-  
+
   /// Set the in editor flag.
   void SetInEditor(bool inEditor);
 
@@ -125,22 +116,24 @@ public:
   // In the editor bring up space editing
   void EditSpaces();
 
-//Internals
+  // Internals
   void OnClose(OsWindowEvent* event);
   void OnFocusLost(OsWindowEvent* event);
   void OnFocusGained(OsWindowEvent* event);
   void OnSpaceLoaded(ObjectEvent* event);
 
   /// Is the game running in the editor?
-  /// This property specifies if the editor was present (as opposed to an exported game) in this space.
-  /// Currently this only gets set on game sessions created by the editor but not the editor's space itself.
-  /// Note: this is not if this is an editor (or editing) space.
+  /// This property specifies if the editor was present (as opposed to an
+  /// exported game) in this space. Currently this only gets set on game
+  /// sessions created by the editor but not the editor's space itself. Note:
+  /// this is not if this is an editor (or editing) space.
   bool mInEditor;
 
   /// Is the game running in edit mode?
   BitField<CreationFlags::Enum> mCreationFlags;
 
-  /// Controls if the game session is paused which prevents updates to all spaces owned by this game.
+  /// Controls if the game session is paused which prevents updates to all
+  /// spaces owned by this game.
   bool mPaused;
 
   /// Has the game started prevents double starts
@@ -164,4 +157,4 @@ public:
   OsWindow* mMainWindow;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -20,28 +15,27 @@ DefineEvent(TagHasNoInstances);
 
 } // namespace Events
 
-//--------------------------------------------------------------------------------------- Tag Object
+//Tag Object
 
-//**************************************************************************************************
 ZilchDefineType(TagObject, builder, type)
 {
-
 }
 
-//**************************************************************************************************
 TagObject::TagObject() :
-  mInstanceLimit(0),
-  mPaused(false),
-  mUseEqualizer(false),
-  mUseCompressor(false),
-  mCompressorInputTag(nullptr),
-  mMixVersionThreaded(Z::gSound->Mixer.mMixVersionThreaded - 1),
-  mVolume(1.0f),
-  mModifyingVolumeThreaded(false)
+    mInstanceLimit(0),
+    mPaused(false),
+    mUseEqualizer(false),
+    mUseCompressor(false),
+    mCompressorInputTag(nullptr),
+    mMixVersionThreaded(Z::gSound->Mixer.mMixVersionThreaded - 1),
+    mVolume(1.0f),
+    mModifyingVolumeThreaded(false)
 {
   for (int i = 0; i < EqualizerBands::Count; ++i)
     mEqualizerGainValues[i] = 1.0f;
-  memcpy(mEqualizerGainValuesThreaded, mEqualizerGainValues, sizeof(float) * EqualizerBands::Count);
+  memcpy(mEqualizerGainValuesThreaded,
+         mEqualizerGainValues,
+         sizeof(float) * EqualizerBands::Count);
 
   mCompressorThreshold = CompressorObjectThreaded.GetThreshold();
   mCompressorAttackMs = CompressorObjectThreaded.GetAttackMSec();
@@ -50,13 +44,11 @@ TagObject::TagObject() :
   mCompressorKnee = CompressorObjectThreaded.GetKneeWidth();
 }
 
-//**************************************************************************************************
 TagObject::~TagObject()
 {
   // TODO make sure removed from instances - call RemoveTag?
 }
 
-//**************************************************************************************************
 void TagObject::AddInstanceThreaded(SoundInstance* instance)
 {
   // Add a new data object to the map
@@ -67,7 +59,8 @@ void TagObject::AddInstanceThreaded(SoundInstance* instance)
   if (mModifyingVolumeThreaded)
   {
     data->mVolumeModifier = instance->GetAvailableVolumeModThreaded();
-    data->mVolumeModifier->Reset(1.0f, mVolume.Get(AudioThreads::MixThread), cPropertyChangeFrames, 0);
+    data->mVolumeModifier->Reset(
+        1.0f, mVolume.Get(AudioThreads::MixThread), cPropertyChangeFrames, 0);
   }
 
   // If using equalizer, create it and set the settings
@@ -75,7 +68,6 @@ void TagObject::AddInstanceThreaded(SoundInstance* instance)
     data->mEqualizer = new Equalizer(mEqualizerGainValuesThreaded);
 }
 
-//**************************************************************************************************
 void TagObject::RemoveInstanceThreaded(SoundInstance* instance)
 {
   // Find this instance's data in the map
@@ -85,8 +77,10 @@ void TagObject::RemoveInstanceThreaded(SoundInstance* instance)
     // If we are modifying the volume, interpolate back to 1.0
     if (mModifyingVolumeThreaded && data->mVolumeModifier)
     {
-      data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), 1.0f,
-        cPropertyChangeFrames, cPropertyChangeFrames);
+      data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(),
+                                   1.0f,
+                                   cPropertyChangeFrames,
+                                   cPropertyChangeFrames);
       data->mVolumeModifier = nullptr;
     }
 
@@ -98,139 +92,142 @@ void TagObject::RemoveInstanceThreaded(SoundInstance* instance)
   }
 }
 
-//**************************************************************************************************
 float TagObject::GetVolume()
 {
   return mVolume.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void TagObject::SetVolume(float volume, float time)
 {
   mVolume.Set(volume, AudioThreads::MainThread);
 
   // TODO -- could this crash because it's not saving a handle?
-  Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::SetVolumeThreaded, this, volume, time), nullptr);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&TagObject::SetVolumeThreaded, this, volume, time),
+      nullptr);
 }
 
-//**************************************************************************************************
 float TagObject::GetEQBandGain(EqualizerBands::Enum whichBand)
 {
   return mEqualizerGainValues[whichBand];
 }
 
-//**************************************************************************************************
 void TagObject::SetEQBandGain(EqualizerBands::Enum whichBand, float gain)
 {
   mEqualizerGainValues[whichBand] = gain;
 
   // TODO -- could this crash because it's not saving a handle?
-  Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::SetEQBandGainThreaded, this, whichBand, gain), nullptr);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&TagObject::SetEQBandGainThreaded, this, whichBand, gain),
+      nullptr);
 }
 
-//**************************************************************************************************
-void TagObject::InterpolateEQBandsThreaded(float* values, float timeToInterpolate)
+void TagObject::InterpolateEQBandsThreaded(float* values,
+                                           float timeToInterpolate)
 {
   if (!values)
     return;
 
-  memcpy(mEqualizerGainValuesThreaded, values, sizeof(float) * EqualizerBands::Count);
+  memcpy(mEqualizerGainValuesThreaded,
+         values,
+         sizeof(float) * EqualizerBands::Count);
 
-  // Set the value on existing equalizers. If new ones are created they will copy settings.
-  forRange(InstanceData* data, DataPerInstanceThreaded.Values())
-    data->mEqualizer->InterpolateBands(values, timeToInterpolate);
+  // Set the value on existing equalizers. If new ones are created they will
+  // copy settings.
+  forRange(InstanceData * data, DataPerInstanceThreaded.Values())
+      data->mEqualizer->InterpolateBands(values, timeToInterpolate);
 
   delete values;
 }
 
-//**************************************************************************************************
 float TagObject::GetCompressorThresholdDb()
 {
   return mCompressorThreshold;
 }
 
-//**************************************************************************************************
 void TagObject::SetCompressorThresholdDb(float decibels)
 {
   mCompressorThreshold = decibels;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetThreshold, &CompressorObjectThreaded,
-    decibels), nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetThreshold,
+                                         &CompressorObjectThreaded,
+                                         decibels),
+                           nullptr);
 }
 
-//**************************************************************************************************
 float TagObject::GetCompressorAttackMs()
 {
   return mCompressorAttackMs;
 }
 
-//**************************************************************************************************
 void TagObject::SetCompressorAttackMs(float milliseconds)
 {
   mCompressorAttackMs = milliseconds;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetAttackMSec, &CompressorObjectThreaded,
-    milliseconds), nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetAttackMSec,
+                                         &CompressorObjectThreaded,
+                                         milliseconds),
+                           nullptr);
 }
 
-//**************************************************************************************************
 float TagObject::GetCompressorReleaseMs()
 {
   return mCompressorReleaseMs;
 }
 
-//**************************************************************************************************
 void TagObject::SetCompressorReleaseMs(float milliseconds)
 {
   mCompressorReleaseMs = milliseconds;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &CompressorObjectThreaded,
-    milliseconds), nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetReleaseMSec,
+                                         &CompressorObjectThreaded,
+                                         milliseconds),
+                           nullptr);
 }
 
-//**************************************************************************************************
 float TagObject::GetCompresorRatio()
 {
   return mCompressorRatio;
 }
 
-//**************************************************************************************************
 void TagObject::SetCompressorRatio(float ratio)
 {
   mCompressorRatio = ratio;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetRatio, &CompressorObjectThreaded,
-    ratio), nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetRatio,
+                                         &CompressorObjectThreaded,
+                                         ratio),
+                           nullptr);
 }
 
-//**************************************************************************************************
 float TagObject::GetCompresorKneeWidth()
 {
   return mCompressorKnee;
 }
 
-//**************************************************************************************************
 void TagObject::SetCompressorKneeWidth(float knee)
 {
   mCompressorKnee = knee;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetKneeWidth, &CompressorObjectThreaded,
-    knee), nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetKneeWidth,
+                                         &CompressorObjectThreaded,
+                                         knee),
+                           nullptr);
 }
 
-//**************************************************************************************************
 void TagObject::RemoveTag()
 {
   // TODO remove all instances
 }
 
-//**************************************************************************************************
-void TagObject::ProcessInstanceThreaded(BufferType* instanceOutput, unsigned channels, SoundInstance* instance)
+void TagObject::ProcessInstanceThreaded(BufferType* instanceOutput,
+                                        unsigned channels,
+                                        SoundInstance* instance)
 {
   // If this is the first instance for this mix, update
   if (mMixVersionThreaded != Z::gSound->Mixer.mMixVersionThreaded)
@@ -250,32 +247,37 @@ void TagObject::ProcessInstanceThreaded(BufferType* instanceOutput, unsigned cha
     BufferType processedOutput(instanceOutput->Size());
 
     // Apply the filter to all samples
-    data->mEqualizer->ProcessBuffer(instanceOutput->Data(), processedOutput.Data(), channels,
-      instanceOutput->Size());
+    data->mEqualizer->ProcessBuffer(instanceOutput->Data(),
+                                    processedOutput.Data(),
+                                    channels,
+                                    instanceOutput->Size());
 
     // Move the equalizer output into the instanceOutput buffer
     instanceOutput->Swap(processedOutput);
   }
 
   // Check if we are using the compressor and there are volume values
-  if (mUseCompressor.Get(AudioThreads::MixThread) && !mCompressorVolumesThreaded.Empty())
+  if (mUseCompressor.Get(AudioThreads::MixThread) &&
+      !mCompressorVolumesThreaded.Empty())
   {
     // Apply the corresponding compressor volume to each sample
     int i = 0;
-    forRange(float& sample, instanceOutput->All())
-      sample *= mCompressorVolumesThreaded[i++];
+    forRange(float& sample, instanceOutput->All()) sample *=
+        mCompressorVolumesThreaded[i++];
   }
 }
 
-//**************************************************************************************************
-BufferType* TagObject::GetTotalInstanceOutputThreaded(unsigned howManyFrames, unsigned channels)
+BufferType* TagObject::GetTotalInstanceOutputThreaded(unsigned howManyFrames,
+                                                      unsigned channels)
 {
   // Create a temporary buffer to get output from each instance
   BufferType instanceBuffer(howManyFrames * channels);
   // Resize the total output buffer
   mTotalInstanceOutputThreaded.Resize(howManyFrames * channels);
   // Set all samples to zero
-  memset(mTotalInstanceOutputThreaded.Data(), 0, sizeof(float) * mTotalInstanceOutputThreaded.Size());
+  memset(mTotalInstanceOutputThreaded.Data(),
+         0,
+         sizeof(float) * mTotalInstanceOutputThreaded.Size());
 
   forRange(InstanceDataMapType::pair mapPair, DataPerInstanceThreaded.All())
   {
@@ -286,21 +288,23 @@ BufferType* TagObject::GetTotalInstanceOutputThreaded(unsigned howManyFrames, un
     {
       // Get the instance's attenuated volume (SoundEmitters, VolumeNodes, etc.)
       float attenuatedVolume = instance->GetAttenuationThisMixThreaded();
-      // Use the size of either the total output or instance output, whichever is smaller
-      unsigned limit = Math::Min(mTotalInstanceOutputThreaded.Size(), instanceBuffer.Size());
+      // Use the size of either the total output or instance output, whichever
+      // is smaller
+      unsigned limit =
+          Math::Min(mTotalInstanceOutputThreaded.Size(), instanceBuffer.Size());
 
-      // Add the instance output into the total output, adjusting with tag volume
-      // and attenuated instance volume
+      // Add the instance output into the total output, adjusting with tag
+      // volume and attenuated instance volume
       for (unsigned i = 0; i < limit; ++i)
-        mTotalInstanceOutputThreaded[i] += instanceBuffer[i] * attenuatedVolume 
-          * mVolume.Get(AudioThreads::MixThread);
+        mTotalInstanceOutputThreaded[i] += instanceBuffer[i] *
+                                           attenuatedVolume *
+                                           mVolume.Get(AudioThreads::MixThread);
     }
   }
 
   return &mTotalInstanceOutputThreaded;
 }
 
-//**************************************************************************************************
 void TagObject::UpdateForMixThreaded(unsigned howManyFrames, unsigned channels)
 {
   if (mMixVersionThreaded == Z::gSound->Mixer.mMixVersionThreaded)
@@ -311,13 +315,15 @@ void TagObject::UpdateForMixThreaded(unsigned howManyFrames, unsigned channels)
   {
     BufferType* compressorInput;
 
-    // If we are not using another tag for the compressor input, get the output from this tag
+    // If we are not using another tag for the compressor input, get the output
+    // from this tag
     if (!mCompressorInputTag.Get(AudioThreads::MixThread))
       compressorInput = GetTotalInstanceOutputThreaded(howManyFrames, channels);
     // Otherwise get the output from the other tag
     else
-      compressorInput = mCompressorInputTag.Get(AudioThreads::MixThread)->
-        GetTotalInstanceOutputThreaded(howManyFrames, channels);
+      compressorInput =
+          mCompressorInputTag.Get(AudioThreads::MixThread)
+              ->GetTotalInstanceOutputThreaded(howManyFrames, channels);
 
     // Reset the buffer of volume modifiers
     mCompressorVolumesThreaded.Clear();
@@ -325,26 +331,30 @@ void TagObject::UpdateForMixThreaded(unsigned howManyFrames, unsigned channels)
     // Check if there was output from the tag
     if (!compressorInput->Empty())
     {
-      // Reset the volume buffer to all 1.0 (this will become volume multipliers when 
-      // processed by the compressor filter)
+      // Reset the volume buffer to all 1.0 (this will become volume multipliers
+      // when processed by the compressor filter)
       mCompressorVolumesThreaded.Resize(compressorInput->Size(), 1.0f);
 
       // Run the compressor filter, using the tag output as the envelope input
-      CompressorObjectThreaded.ProcessBuffer(mCompressorVolumesThreaded.Data(), compressorInput->Data(),
-        mCompressorVolumesThreaded.Data(), channels, mCompressorVolumesThreaded.Size());
+      CompressorObjectThreaded.ProcessBuffer(mCompressorVolumesThreaded.Data(),
+                                             compressorInput->Data(),
+                                             mCompressorVolumesThreaded.Data(),
+                                             channels,
+                                             mCompressorVolumesThreaded.Size());
     }
   }
 
   mMixVersionThreaded = Z::gSound->Mixer.mMixVersionThreaded;
 }
 
-//**************************************************************************************************
 void TagObject::SetVolumeThreaded(float volume, float time)
 {
   mModifyingVolumeThreaded = true;
 
-  // Determine how many frames to change the volume over, keeping a minimum value
-  unsigned frames = Math::Max((unsigned)(time * cSystemSampleRate), cPropertyChangeFrames);
+  // Determine how many frames to change the volume over, keeping a minimum
+  // value
+  unsigned frames =
+      Math::Max((unsigned)(time * cSystemSampleRate), cPropertyChangeFrames);
 
   // Set the volume modifier for each tagged instance
   forRange(InstanceDataMapType::pair mapPair, DataPerInstanceThreaded.All())
@@ -355,29 +365,28 @@ void TagObject::SetVolumeThreaded(float volume, float time)
     if (!data->mVolumeModifier)
       data->mVolumeModifier = instance->GetAvailableVolumeModThreaded();
 
-    data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), volume, frames, 0);
+    data->mVolumeModifier->Reset(
+        data->mVolumeModifier->GetCurrentVolume(), volume, frames, 0);
   }
 }
 
-//**************************************************************************************************
-void TagObject::SetEQBandGainThreaded(EqualizerBands::Enum whichBand, float gain)
+void TagObject::SetEQBandGainThreaded(EqualizerBands::Enum whichBand,
+                                      float gain)
 {
   mEqualizerGainValuesThreaded[whichBand] = gain;
 
-  // Set the value on existing equalizers. If new ones are created they will copy settings.
-  forRange(InstanceData* data, DataPerInstanceThreaded.Values())
-    data->mEqualizer->SetBandGain(whichBand, gain);
+  // Set the value on existing equalizers. If new ones are created they will
+  // copy settings.
+  forRange(InstanceData * data, DataPerInstanceThreaded.Values())
+      data->mEqualizer->SetBandGain(whichBand, gain);
 }
 
-//**************************************************************************************************
 TagObject::InstanceData::InstanceData() :
-  mVolumeModifier(nullptr),
-  mEqualizer(nullptr)
+    mVolumeModifier(nullptr),
+    mEqualizer(nullptr)
 {
-
 }
 
-//**************************************************************************************************
 TagObject::InstanceData::~InstanceData()
 {
   if (mEqualizer)
@@ -386,34 +395,29 @@ TagObject::InstanceData::~InstanceData()
     mVolumeModifier->Active = false;
 }
 
-//---------------------------------------------------------------------------------------- Sound Tag
+//Sound Tag
 
-//**************************************************************************************************
 ZilchDefineType(SoundTagDisplay, builder, type)
 {
 }
 
-//**************************************************************************************************
 String SoundTagDisplay::GetName(HandleParam object)
 {
   SoundTag* soundTag = object.Get<SoundTag*>(GetOptions::AssertOnNull);
   return BuildString("SoundTag: ", soundTag->Name);
 }
 
-//**************************************************************************************************
 String SoundTagDisplay::GetDebugText(HandleParam object)
 {
   return GetName(object);
 }
 
-//**************************************************************************************************
 String SoundTagToString(const BoundType* type, const byte* instance)
 {
   SoundTag* soundTag = (SoundTag*)instance;
   return BuildString("SoundTag: ", soundTag->Name);
 }
 
-//**************************************************************************************************
 ZilchDefineType(SoundTag, builder, type)
 {
   ZeroBindDocumented();
@@ -449,10 +453,7 @@ ZilchDefineType(SoundTag, builder, type)
   ZeroBindEvent(Events::TagHasNoInstances, SoundEvent);
 }
 
-//**************************************************************************************************
-SoundTag::SoundTag() :
-  mTagObject(nullptr),
-  mCompressorTag(nullptr)
+SoundTag::SoundTag() : mTagObject(nullptr), mCompressorTag(nullptr)
 {
   Z::gSound->mSoundTags.PushBack(this);
 
@@ -460,7 +461,6 @@ SoundTag::SoundTag() :
     CreateTag();
 }
 
-//**************************************************************************************************
 SoundTag::~SoundTag()
 {
   Z::gSound->mSoundTags.Erase(this);
@@ -469,14 +469,12 @@ SoundTag::~SoundTag()
     ReleaseTag();
 }
 
-//**************************************************************************************************
 void SoundTag::Unload()
 {
   SoundInstanceList.Clear();
   mCompressorTag = nullptr;
 }
 
-//**************************************************************************************************
 void SoundTag::TagSound(HandleOf<SoundInstance>& instanceHandle)
 {
   // Check if this sound is already tagged
@@ -485,7 +483,8 @@ void SoundTag::TagSound(HandleOf<SoundInstance>& instanceHandle)
 
   SoundInstance* instance = instanceHandle;
 
-  // If we have an instance limit and we've reached it, stop the sound and return
+  // If we have an instance limit and we've reached it, stop the sound and
+  // return
   if (GetInstanceLimit() > 0 && SoundInstanceList.Size() >= GetInstanceLimit())
   {
     instance->Stop();
@@ -504,13 +503,13 @@ void SoundTag::TagSound(HandleOf<SoundInstance>& instanceHandle)
 
   // Add the instance to the tag object
   if (tag)
-    Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::AddInstanceThreaded, tag, instance), nullptr);
+    Z::gSound->Mixer.AddTask(
+        CreateFunctor(&TagObject::AddInstanceThreaded, tag, instance), nullptr);
 
   SoundEvent event;
   DispatchEvent(Events::AddedInstanceToTag, &event);
 }
 
-//**************************************************************************************************
 void SoundTag::UnTagSound(HandleOf<SoundInstance>& instanceHandle)
 {
   // First check if the instance has been added to this tag
@@ -525,7 +524,10 @@ void SoundTag::UnTagSound(HandleOf<SoundInstance>& instanceHandle)
 
   // Remove it from the tag object
   if (mTagObject)
-    Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::RemoveInstanceThreaded, *mTagObject, instance), nullptr);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::RemoveInstanceThreaded,
+                                           *mTagObject,
+                                           instance),
+                             nullptr);
 
   if (SoundInstanceList.Empty())
   {
@@ -534,14 +536,11 @@ void SoundTag::UnTagSound(HandleOf<SoundInstance>& instanceHandle)
   }
 }
 
-//**************************************************************************************************
 void SoundTag::StopSounds()
 {
-  forRange(SoundInstance* instance, SoundInstanceList.All())
-    instance->Stop();
+  forRange(SoundInstance * instance, SoundInstanceList.All()) instance->Stop();
 }
 
-//**************************************************************************************************
 bool SoundTag::GetPaused()
 {
   if (mTagObject)
@@ -550,7 +549,6 @@ bool SoundTag::GetPaused()
     return false;
 }
 
-//**************************************************************************************************
 void SoundTag::SetPaused(bool pause)
 {
   if (!mTagObject)
@@ -558,23 +556,20 @@ void SoundTag::SetPaused(bool pause)
 
   mTagObject->mPaused.Set(pause, AudioThreads::MainThread);
 
-  forRange(SoundInstance* instance, SoundInstanceList.All())
-    instance->SetPaused(pause);
+  forRange(SoundInstance * instance, SoundInstanceList.All())
+      instance->SetPaused(pause);
 }
 
-//**************************************************************************************************
 int SoundTag::GetInstanceCount()
 {
   return SoundInstanceList.Size();
 }
 
-//**************************************************************************************************
 InstanceListType::range SoundTag::GetInstances()
 {
   return SoundInstanceList.All();
 }
 
-//**************************************************************************************************
 float SoundTag::GetVolume()
 {
   if (mTagObject)
@@ -583,13 +578,11 @@ float SoundTag::GetVolume()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetVolume(float value)
 {
   InterpolateVolume(value, 0.0f);
 }
 
-//**************************************************************************************************
 void SoundTag::InterpolateVolume(float value, float time)
 {
   if (mTagObject)
@@ -600,7 +593,6 @@ void SoundTag::InterpolateVolume(float value, float time)
   }
 }
 
-//**************************************************************************************************
 float SoundTag::GetDecibels()
 {
   if (mTagObject)
@@ -609,19 +601,16 @@ float SoundTag::GetDecibels()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetDecibels(float decibels)
 {
   InterpolateDecibels(decibels, 0.0f);
 }
 
-//**************************************************************************************************
 void SoundTag::InterpolateDecibels(float decibels, float interpolationTime)
 {
   InterpolateVolume(DecibelsToVolume(decibels), interpolationTime);
 }
 
-//**************************************************************************************************
 float SoundTag::GetEQLowPassGain()
 {
   if (mTagObject)
@@ -630,14 +619,13 @@ float SoundTag::GetEQLowPassGain()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetEQLowPassGain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetEQBandGain(EqualizerBands::Below80, Math::Clamp(gain, 0.0f, cMaxVolumeValue));
+    mTagObject->SetEQBandGain(EqualizerBands::Below80,
+                              Math::Clamp(gain, 0.0f, cMaxVolumeValue));
 }
 
-//**************************************************************************************************
 float SoundTag::GetEQBand1Gain()
 {
   if (mTagObject)
@@ -646,14 +634,13 @@ float SoundTag::GetEQBand1Gain()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetEQBand1Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetEQBandGain(EqualizerBands::At150, Math::Clamp(gain, 0.0f, cMaxVolumeValue));
+    mTagObject->SetEQBandGain(EqualizerBands::At150,
+                              Math::Clamp(gain, 0.0f, cMaxVolumeValue));
 }
 
-//**************************************************************************************************
 float SoundTag::GetEQBand2Gain()
 {
   if (mTagObject)
@@ -662,14 +649,13 @@ float SoundTag::GetEQBand2Gain()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetEQBand2Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetEQBandGain(EqualizerBands::At600, Math::Clamp(gain, 0.0f, cMaxVolumeValue));
+    mTagObject->SetEQBandGain(EqualizerBands::At600,
+                              Math::Clamp(gain, 0.0f, cMaxVolumeValue));
 }
 
-//**************************************************************************************************
 float SoundTag::GetEQBand3Gain()
 {
   if (mTagObject)
@@ -678,14 +664,13 @@ float SoundTag::GetEQBand3Gain()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetEQBand3Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetEQBandGain(EqualizerBands::At2500, Math::Clamp(gain, 0.0f, cMaxVolumeValue));
+    mTagObject->SetEQBandGain(EqualizerBands::At2500,
+                              Math::Clamp(gain, 0.0f, cMaxVolumeValue));
 }
 
-//**************************************************************************************************
 float SoundTag::GetEQHighPassGain()
 {
   if (mTagObject)
@@ -694,32 +679,41 @@ float SoundTag::GetEQHighPassGain()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetEQHighPassGain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetEQBandGain(EqualizerBands::Above5000, Math::Clamp(gain, 0.0f, cMaxVolumeValue));
+    mTagObject->SetEQBandGain(EqualizerBands::Above5000,
+                              Math::Clamp(gain, 0.0f, cMaxVolumeValue));
 }
 
-//**************************************************************************************************
-void SoundTag::EQSetAllBands(float below80Hz, float at150Hz, float at600Hz, 
-  float at2500Hz, float above5000Hz, float timeToInterpolate)
+void SoundTag::EQSetAllBands(float below80Hz,
+                             float at150Hz,
+                             float at600Hz,
+                             float at2500Hz,
+                             float above5000Hz,
+                             float timeToInterpolate)
 {
   if (mTagObject)
   {
     float* values = new float[EqualizerBands::Count];
-    values[EqualizerBands::Below80] = Math::Clamp(below80Hz, 0.0f, cMaxVolumeValue);
+    values[EqualizerBands::Below80] =
+        Math::Clamp(below80Hz, 0.0f, cMaxVolumeValue);
     values[EqualizerBands::At150] = Math::Clamp(at150Hz, 0.0f, cMaxVolumeValue);
     values[EqualizerBands::At600] = Math::Clamp(at600Hz, 0.0f, cMaxVolumeValue);
-    values[EqualizerBands::At2500] = Math::Clamp(at2500Hz, 0.0f, cMaxVolumeValue);
-    values[EqualizerBands::Above5000] = Math::Clamp(above5000Hz, 0.0f, cMaxVolumeValue);
+    values[EqualizerBands::At2500] =
+        Math::Clamp(at2500Hz, 0.0f, cMaxVolumeValue);
+    values[EqualizerBands::Above5000] =
+        Math::Clamp(above5000Hz, 0.0f, cMaxVolumeValue);
 
-    Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::InterpolateEQBandsThreaded, *mTagObject,
-      values, timeToInterpolate), nullptr);
+    Z::gSound->Mixer.AddTask(
+        CreateFunctor(&TagObject::InterpolateEQBandsThreaded,
+                      *mTagObject,
+                      values,
+                      timeToInterpolate),
+        nullptr);
   }
 }
 
-//**************************************************************************************************
 float SoundTag::GetCompressorThreshold()
 {
   if (mTagObject)
@@ -728,14 +722,13 @@ float SoundTag::GetCompressorThreshold()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetCompressorThreshold(float decibels)
 {
   if (mTagObject)
-    mTagObject->SetCompressorThresholdDb(Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue));
+    mTagObject->SetCompressorThresholdDb(
+        Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue));
 }
 
-//**************************************************************************************************
 float SoundTag::GetCompressorAttack()
 {
   if (mTagObject)
@@ -744,14 +737,12 @@ float SoundTag::GetCompressorAttack()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetCompressorAttack(float attack)
 {
   if (mTagObject)
     mTagObject->SetCompressorAttackMs(Math::Max(0.0f, attack));
 }
 
-//**************************************************************************************************
 float SoundTag::GetCompressorRelease()
 {
   if (mTagObject)
@@ -760,14 +751,12 @@ float SoundTag::GetCompressorRelease()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetCompressorRelease(float release)
 {
   if (mTagObject)
     mTagObject->SetCompressorReleaseMs(Math::Max(release, 0.0f));
 }
 
-//**************************************************************************************************
 float SoundTag::GetCompressorRatio()
 {
   if (mTagObject)
@@ -776,14 +765,12 @@ float SoundTag::GetCompressorRatio()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetCompressorRatio(float ratio)
 {
   if (mTagObject)
     mTagObject->SetCompressorRatio(ratio);
 }
 
-//**************************************************************************************************
 float SoundTag::GetCompressorKneeWidth()
 {
   if (mTagObject)
@@ -792,20 +779,17 @@ float SoundTag::GetCompressorKneeWidth()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetCompressorKneeWidth(float knee)
 {
   if (mTagObject)
     mTagObject->SetCompressorKneeWidth(knee);
 }
 
-//**************************************************************************************************
 SoundTag* SoundTag::GetTagForDucking()
 {
   return mCompressorTag;
 }
 
-//**************************************************************************************************
 void SoundTag::SetTagForDucking(SoundTag* tag)
 {
   mCompressorTag = tag;
@@ -813,13 +797,13 @@ void SoundTag::SetTagForDucking(SoundTag* tag)
   if (mTagObject)
   {
     if (tag)
-      mTagObject->mCompressorInputTag.Set(tag->mTagObject, AudioThreads::MainThread);
+      mTagObject->mCompressorInputTag.Set(tag->mTagObject,
+                                          AudioThreads::MainThread);
     else
       mTagObject->mCompressorInputTag.Set(nullptr, AudioThreads::MainThread);
   }
 }
 
-//**************************************************************************************************
 bool SoundTag::GetUseEqualizer()
 {
   if (mTagObject)
@@ -828,14 +812,12 @@ bool SoundTag::GetUseEqualizer()
     return false;
 }
 
-//**************************************************************************************************
 void SoundTag::SetUseEqualizer(bool useEQ)
 {
   if (mTagObject)
     mTagObject->mUseEqualizer.Set(useEQ, AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 bool SoundTag::GetUseCompressor()
 {
   if (mTagObject)
@@ -844,14 +826,12 @@ bool SoundTag::GetUseCompressor()
     return false;
 }
 
-//**************************************************************************************************
 void SoundTag::SetUseCompressor(bool useCompressor)
 {
   if (mTagObject)
     mTagObject->mUseCompressor.Set(useCompressor, AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 float SoundTag::GetInstanceLimit()
 {
   if (mTagObject)
@@ -860,21 +840,18 @@ float SoundTag::GetInstanceLimit()
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundTag::SetInstanceLimit(float limit)
 {
   if (mTagObject)
     mTagObject->mInstanceLimit = (int)limit;
 }
 
-//**************************************************************************************************
 void SoundTag::CreateTag()
 {
   if (!mTagObject)
     mTagObject = new TagObject();
 }
 
-//**************************************************************************************************
 void SoundTag::ReleaseTag()
 {
   if (mTagObject)
@@ -884,12 +861,12 @@ void SoundTag::ReleaseTag()
   }
 }
 
-//-------------------------------------------------------------------------------- Sound Tag Manager
+//Sound Tag Manager
 
 ImplementResourceManager(SoundTagManager, SoundTag);
 
-//**************************************************************************************************
-SoundTagManager::SoundTagManager(BoundType* resourceType) : ResourceManager(resourceType)
+SoundTagManager::SoundTagManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("SoundTag", new TextDataFileLoader<SoundTagManager>());
   DefaultResourceName = "DefaultSoundTag";

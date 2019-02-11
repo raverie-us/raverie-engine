@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -40,8 +39,14 @@ class UvRect
 public:
   Vec2 TopLeft;
   Vec2 BotRight;
-  Vec2 GetTopRight() { return Vec2(BotRight.x, TopLeft.y); }
-  Vec2 GetBotLeft() { return Vec2(TopLeft.x, BotRight.y); }
+  Vec2 GetTopRight()
+  {
+    return Vec2(BotRight.x, TopLeft.y);
+  }
+  Vec2 GetBotLeft()
+  {
+    return Vec2(TopLeft.x, BotRight.y);
+  }
 };
 
 struct ShaderPolicy

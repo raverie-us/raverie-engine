@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ByteBuffer.cpp
-/// Definition of ByteBuffer.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ Block Range 
 
 ByteBuffer::BlockRange::BlockRange(ByteBuffer* buffer)
 {
@@ -24,7 +15,7 @@ ByteBuffer::BlockRange::BlockRange(ByteBuffer* buffer)
 
 const ByteBuffer::Block& ByteBuffer::BlockRange::Front()
 {
-  ErrorIf(Empty(),"Read empty range.");
+  ErrorIf(Empty(), "Read empty range.");
   LoadBlock();
   return mCurrent;
 }
@@ -36,17 +27,16 @@ bool ByteBuffer::BlockRange::Empty()
 
 void ByteBuffer::BlockRange::LoadBlock()
 {
-  mCurrent.Size = mBlock == (mLast-1) ? mLastBlockSize : mBlockSize;
+  mCurrent.Size = mBlock == (mLast - 1) ? mLastBlockSize : mBlockSize;
   mCurrent.Data = *mBlock;
 }
 
 void ByteBuffer::BlockRange::PopFront()
 {
-  ErrorIf(Empty(),"Popped and empty range.");
+  ErrorIf(Empty(), "Popped and empty range.");
   ++mBlock;
 }
 
-//------------------------------------------------------------ Byte Buffer 
 
 ByteBuffer::ByteBuffer(size_t blockSize)
 {
@@ -78,55 +68,54 @@ void ByteBuffer::Write(const byteType* data, size_t sizeInBytes)
 
 void ByteBuffer::Append(const byteType* data, size_t sizeInBytes)
 {
-  if(mCurBlockBuffer == nullptr)
+  if (mCurBlockBuffer == nullptr)
   {
-    //Allocator more memory
+    // Allocator more memory
     mCurBlockBuffer = (byteType*)zAllocate(mBlockSize);
     mCurBlockSize = 0;
 
-    //Store the block
+    // Store the block
     mBlocks.PushBack(mCurBlockBuffer);
-
   }
 
-  while(mCurBlockSize + sizeInBytes > mBlockSize)
+  while (mCurBlockSize + sizeInBytes > mBlockSize)
   {
-    //Partial copy to remaining area of block
+    // Partial copy to remaining area of block
     size_t sizeToCopy = mBlockSize - mCurBlockSize;
 
-    //Copy into data block
+    // Copy into data block
     memcpy(mCurBlockBuffer + mCurBlockSize, data, sizeToCopy);
 
-    //Allocator more memory
+    // Allocator more memory
     mCurBlockBuffer = (byteType*)zAllocate(mBlockSize);
     mCurBlockSize = 0;
 
-    //Store the block
+    // Store the block
     mBlocks.PushBack(mCurBlockBuffer);
 
-    //Decrement bytes copied and try again
-    sizeInBytes-=sizeToCopy;
-    mTotalSize+=sizeToCopy;
-    data+=sizeToCopy;
+    // Decrement bytes copied and try again
+    sizeInBytes -= sizeToCopy;
+    mTotalSize += sizeToCopy;
+    data += sizeToCopy;
   }
 
-  //Is there any more data to be copied?
-  if(sizeInBytes > 0)
+  // Is there any more data to be copied?
+  if (sizeInBytes > 0)
   {
     memcpy(mCurBlockBuffer + mCurBlockSize, data, sizeInBytes);
-    mCurBlockSize+=sizeInBytes;
-    mTotalSize+=sizeInBytes;
+    mCurBlockSize += sizeInBytes;
+    mTotalSize += sizeInBytes;
   }
-
 }
 
 void ByteBuffer::Backup(size_t sizeInBytes)
 {
-  ErrorIf(sizeInBytes > mTotalSize, "Attempting to back-up more than the total size of the ByteBuffer");
+  ErrorIf(sizeInBytes > mTotalSize,
+          "Attempting to back-up more than the total size of the ByteBuffer");
 
   mTotalSize -= sizeInBytes;
 
-  while(sizeInBytes > mCurBlockSize)
+  while (sizeInBytes > mCurBlockSize)
   {
     delete mBlocks.Back();
     mBlocks.PopBack();
@@ -155,25 +144,27 @@ byte& ByteBuffer::operator[](size_t index)
   return mBlocks[outerIndex][innerIndex];
 }
 
-void ByteBuffer::ExtractInto(byteType* byteBuffer, size_t bufferSizeInBytes) const
+void ByteBuffer::ExtractInto(byteType* byteBuffer,
+                             size_t bufferSizeInBytes) const
 {
-  ErrorIf(mTotalSize > bufferSizeInBytes, "Buffer is not large enough for data.");
-  if(mTotalSize > bufferSizeInBytes)
-    return;//Do nothing
+  ErrorIf(mTotalSize > bufferSizeInBytes,
+          "Buffer is not large enough for data.");
+  if (mTotalSize > bufferSizeInBytes)
+    return; // Do nothing
 
-  //unreferenced formal parameter in release
+  // unreferenced formal parameter in release
   (void)bufferSizeInBytes;
 
-  //Copy over all blocks
+  // Copy over all blocks
   byteType* bufferPosition = byteBuffer;
   Array<byteType*>::range blocks = mBlocks.All();
-  for(;!blocks.Empty();blocks.PopFront())
+  for (; !blocks.Empty(); blocks.PopFront())
   {
-    size_t blockSize = blocks.Front() == mCurBlockBuffer ? mCurBlockSize : mBlockSize;
+    size_t blockSize =
+        blocks.Front() == mCurBlockBuffer ? mCurBlockSize : mBlockSize;
     memcpy(bufferPosition, blocks.Front(), blockSize);
-    bufferPosition+=mBlockSize;
+    bufferPosition += mBlockSize;
   }
-
 }
 
 void ByteBuffer::ExtractInto(ByteBufferBlock& buffer) const
@@ -188,9 +179,9 @@ void ByteBuffer::ExtractInto(ByteBufferBlock& buffer) const
 
 void ByteBuffer::Deallocate()
 {
-  //Deallocate all blocks
+  // Deallocate all blocks
   Array<byteType*>::range blocks = mBlocks.All();
-  for(;!blocks.Empty();blocks.PopFront())
+  for (; !blocks.Empty(); blocks.PopFront())
   {
     zDeallocate(blocks.Front());
   }
@@ -201,7 +192,6 @@ void ByteBuffer::Deallocate()
   mTotalSize = 0;
 }
 
-//------------------------------------------------------------ ByteBufferBlock
 
 ByteBufferBlock::ByteBufferBlock()
 {
@@ -212,10 +202,10 @@ ByteBufferBlock::ByteBufferBlock()
 }
 
 ByteBufferBlock::ByteBufferBlock(ByteBufferBlock&& rhs) :
-  mData(rhs.mData),
-  mSize(rhs.mSize),
-  mCurrent(rhs.mCurrent),
-  mOwnsData(rhs.mOwnsData)
+    mData(rhs.mData),
+    mSize(rhs.mSize),
+    mCurrent(rhs.mCurrent),
+    mOwnsData(rhs.mOwnsData)
 {
   rhs.mData = nullptr;
   rhs.mSize = 0;
@@ -224,10 +214,10 @@ ByteBufferBlock::ByteBufferBlock(ByteBufferBlock&& rhs) :
 }
 
 ByteBufferBlock::ByteBufferBlock(MoveReference<ByteBufferBlock> rhs) :
-  mData(rhs->mData),
-  mSize(rhs->mSize),
-  mCurrent(rhs->mCurrent),
-  mOwnsData(rhs->mOwnsData)
+    mData(rhs->mData),
+    mSize(rhs->mSize),
+    mCurrent(rhs->mCurrent),
+    mOwnsData(rhs->mOwnsData)
 {
   rhs->mData = nullptr;
   rhs->mSize = 0;
@@ -236,8 +226,8 @@ ByteBufferBlock::ByteBufferBlock(MoveReference<ByteBufferBlock> rhs) :
 }
 
 ByteBufferBlock::ByteBufferBlock(const ByteBufferBlock& rhs) :
-  mSize(rhs.mSize),
-  mOwnsData(rhs.mOwnsData)
+    mSize(rhs.mSize),
+    mOwnsData(rhs.mOwnsData)
 {
   if (mOwnsData)
   {
@@ -293,7 +283,7 @@ ByteBufferBlock::~ByteBufferBlock()
 
 void ByteBufferBlock::Deallocate()
 {
-  if(mData && mOwnsData)
+  if (mData && mOwnsData)
     zDeallocate(mData);
 
   mData = nullptr;
@@ -311,15 +301,15 @@ size_t ByteBufferBlock::Read(Status& status, byte* data, size_t sizeInBytes)
 {
   ErrorIf(mCurrent + sizeInBytes > mData + mSize, "Buffer Overflow Read");
   memcpy(data, mCurrent, sizeInBytes);
-  mCurrent+=sizeInBytes;
+  mCurrent += sizeInBytes;
   return sizeInBytes;
 }
 
 size_t ByteBufferBlock::Write(byte* data, size_t sizeInBytes)
 {
-  ErrorIf(mCurrent+sizeInBytes > mData+mSize, "Buffer Overflow Write");
+  ErrorIf(mCurrent + sizeInBytes > mData + mSize, "Buffer Overflow Write");
   memcpy(mCurrent, data, sizeInBytes);
-  mCurrent+=sizeInBytes;
+  mCurrent += sizeInBytes;
   return sizeInBytes;
 }
 
@@ -355,7 +345,7 @@ String ByteBuffer::ToString() const
   // A string nodes already Contains (and sets) the last null terminator
   StringNode* node = String::AllocateNode(bufferSize);
 
-  //Copy data into buffer
+  // Copy data into buffer
   ExtractInto((byte*)node->Data, bufferSize);
 
   return String(node);
@@ -368,11 +358,11 @@ String ByteBuffer::ToString(size_t subStringSizeBytes) const
   // A string nodes already Contains (and sets) the last null terminator
   StringNode* node = String::AllocateNode(bufferSize, subStringSizeBytes);
 
-  //Copy data into buffer
+  // Copy data into buffer
   ExtractInto((byte*)node->Data, bufferSize);
   node->Data[subStringSizeBytes] = '\0';
 
   return String(node);
 }
 
-}
+} // namespace Zero

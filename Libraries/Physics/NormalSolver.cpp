@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -23,14 +18,13 @@ NormalSolver::~NormalSolver()
   Clear();
 }
 
-//define a case statement for each joint type
-#define JointType(type) \
-  case JointEnums::type##Type: \
-  { \
-  m##type##List.PushBack(joint); \
-    break; \
+// define a case statement for each joint type
+#define JointType(type)                                                        \
+  case JointEnums::type##Type:                                                 \
+  {                                                                            \
+    m##type##List.PushBack(joint);                                             \
+    break;                                                                     \
   }
-  
 
 void NormalSolver::AddJoint(Joint* joint)
 {
@@ -38,8 +32,8 @@ void NormalSolver::AddJoint(Joint* joint)
   joint->UpdateAtomsVirtual();
   mConstraintCount += joint->MoleculeCountVirtual();
 
-  //switch to determine which list to add the joint to
-  switch(joint->GetJointType())
+  // switch to determine which list to add the joint to
+  switch (joint->GetJointType())
   {
 #include "JointList.hpp"
   default:
@@ -57,7 +51,7 @@ void NormalSolver::AddContact(Contact* contact)
   mContacts.PushBack(contact);
 }
 
-///Necessary solving functions
+/// Necessary solving functions
 void NormalSolver::Solve(real dt)
 {
   NormalSolver::UpdateData();
@@ -69,24 +63,22 @@ void NormalSolver::Solve(real dt)
 
 void NormalSolver::DebugDraw(uint debugFlags)
 {
-  if(!(debugFlags & PhysicsSpaceDebugDrawFlags::DrawConstraints))
+  if (!(debugFlags & PhysicsSpaceDebugDrawFlags::DrawConstraints))
     return;
 
-#define JointType(type) \
-  DrawJointsFragmentList(m##type##List);
+#define JointType(type) DrawJointsFragmentList(m##type##List);
 
 #include "JointList.hpp"
 
 #undef JointType
   DrawJointsFragmentList(mContacts);
-  //if(debugFlags & Physics::DebugDraw::DrawConstraints)
+  // if(debugFlags & Physics::DebugDraw::DrawConstraints)
   //  DrawJoints(debugFlags);
 }
 
 void NormalSolver::Clear()
 {
-#define JointType(type) \
-  ClearFragmentList(m##type##List);
+#define JointType(type) ClearFragmentList(m##type##List);
 
 #include "JointList.hpp"
 
@@ -98,118 +90,116 @@ void NormalSolver::Clear()
 void NormalSolver::UpdateData()
 {
   mMolecules.Resize(mConstraintCount);
-  
-  MoleculeWalker molecules(mMolecules.Data(),sizeof(ConstraintMolecule),0);
 
-#define JointType(type) \
-  UpdateDataFragmentList(m##type##List,molecules);
+  MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
+
+#define JointType(type) UpdateDataFragmentList(m##type##List, molecules);
 
 #include "JointList.hpp"
 
 #undef JointType
 
-  UpdateDataFragmentList(mContacts,molecules);
+  UpdateDataFragmentList(mContacts, molecules);
 }
 
 void NormalSolver::WarmStart()
 {
-  if(mSolverConfig->mWarmStart == false)
+  if (mSolverConfig->mWarmStart == false)
     return;
 
-  MoleculeWalker molecules(mMolecules.Data(),sizeof(ConstraintMolecule),0);
+  MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
-#define JointType(type) \
-  WarmStartFragmentList(m##type##List,molecules);
+#define JointType(type) WarmStartFragmentList(m##type##List, molecules);
 
 #include "JointList.hpp"
 
 #undef JointType
 
-  WarmStartFragmentList(mContacts,molecules);
+  WarmStartFragmentList(mContacts, molecules);
 }
 
 void NormalSolver::SolveVelocities()
 {
-  //solve all of the velocity constraints the given number of times
-  for(uint i = 0; i < GetSolverIterationCount(); ++i)
+  // solve all of the velocity constraints the given number of times
+  for (uint i = 0; i < GetSolverIterationCount(); ++i)
     IterateVelocities(i);
 }
 
 void NormalSolver::IterateVelocities(uint iteration)
 {
-  MoleculeWalker molecules(mMolecules.Data(),sizeof(ConstraintMolecule),0);
+  MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
-#define JointType(type) \
-  IterateVelocitiesFragmentList(m##type##List,molecules,iteration);
+#define JointType(type)                                                        \
+  IterateVelocitiesFragmentList(m##type##List, molecules, iteration);
 
 #include "JointList.hpp"
 
 #undef JointType
 
-  IterateVelocitiesFragmentList(mContacts,molecules,iteration);
+  IterateVelocitiesFragmentList(mContacts, molecules, iteration);
 }
 
 void NormalSolver::SolvePositions()
 {
-  //get a list of all joints that actually need position correction
-#define JointType(type)                                \
-  type##List type##ToSolve;                            \
-  CollectJointsToSolve(m##type##List, type##ToSolve);  
+  // get a list of all joints that actually need position correction
+#define JointType(type)                                                        \
+  type##List type##ToSolve;                                                    \
+  CollectJointsToSolve(m##type##List, type##ToSolve);
 
 #include "JointList.hpp"
 #undef JointType
-  //get a list of all contacts that need position correction (currently all or nothing)
+  // get a list of all contacts that need position correction (currently all or
+  // nothing)
   ContactList contactsToSolve;
   CollectContactsToSolve(mContacts, contactsToSolve, mSolverConfig);
 
-  for(uint iterationCount = 0; iterationCount < GetSolverPositionIterationCount(); ++iterationCount)
+  for (uint iterationCount = 0;
+       iterationCount < GetSolverPositionIterationCount();
+       ++iterationCount)
   {
-    //solve each joint list
-#define JointType(type)                                                   \
-    BlockSolvePositions(type##ToSolve, EmptyUpdate<Joint>);
+    // solve each joint list
+#define JointType(type) BlockSolvePositions(type##ToSolve, EmptyUpdate<Joint>);
 
-    #include "JointList.hpp"
+#include "JointList.hpp"
 #undef JointType
 
     BlockSolvePositions(contactsToSolve, ContactUpdate);
   }
 
-  //splice each list of joints we solved back into the main list
-#define JointType(type)                                                  \
-  if(!type##ToSolve.Empty())                                             \
+  // splice each list of joints we solved back into the main list
+#define JointType(type)                                                        \
+  if (!type##ToSolve.Empty())                                                  \
     m##type##List.Splice(m##type##List.End(), type##ToSolve.All());
 
-  #include "JointList.hpp"
+#include "JointList.hpp"
 #undef JointType
 
-  if(!contactsToSolve.Empty())
+  if (!contactsToSolve.Empty())
     mContacts.Splice(mContacts.End(), contactsToSolve.All());
 }
 
 void NormalSolver::Commit()
 {
-  MoleculeWalker molecules(mMolecules.Data(),sizeof(ConstraintMolecule),0);
+  MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
-#define JointType(type) \
-  CommitFragmentList(m##type##List,molecules);
+#define JointType(type) CommitFragmentList(m##type##List, molecules);
 
 #include "JointList.hpp"
 
 #undef JointType
 
-  CommitFragmentList(mContacts,molecules);
+  CommitFragmentList(mContacts, molecules);
 }
 
 void NormalSolver::BatchEvents()
 {
-#define JointType(type) \
-  BatchEventsFragmentList(m##type##List);
+#define JointType(type) BatchEventsFragmentList(m##type##List);
 
 #include "JointList.hpp"
 
 #undef JointType
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

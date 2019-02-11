@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "HashMap.hpp"
@@ -12,11 +7,13 @@
 namespace Zero
 {
 
-/// A hashmap that preserving insertion order, typically for displaying data in a consistent order such as in a property grid.
-/// Currently implemented as a hashmap of linked list nodes. Can be optimized later, meant as a quick and easy solution for now.
-template <typename KeyType, 
+/// A hashmap that preserving insertion order, typically for displaying data in
+/// a consistent order such as in a property grid. Currently implemented as a
+/// hashmap of linked list nodes. Can be optimized later, meant as a quick and
+/// easy solution for now.
+template <typename KeyType,
           typename ValueType,
-          typename SubSorter = less<KeyType> >
+          typename SubSorter = less<KeyType>>
 class OrderedHashMap
 {
 public:
@@ -24,9 +21,10 @@ public:
 
   struct Node
   {
-    Node() {}
-    Node(const KeyType& key, const ValueType& value) :
-      mPair(key, value)
+    Node()
+    {
+    }
+    Node(const KeyType& key, const ValueType& value) : mPair(key, value)
     {
     }
 
@@ -46,9 +44,9 @@ public:
   };
 
   typedef NodeSortPolicy<SubSorter> Sorter;
-  typedef HashMap<KeyType, Node*>   MapType;
-  typedef InList<Node>              ListType;
-  typedef typename ListType::range  ListTypeRange;
+  typedef HashMap<KeyType, Node*> MapType;
+  typedef InList<Node> ListType;
+  typedef typename ListType::range ListTypeRange;
 
   OrderedHashMap() : mSorter()
   {
@@ -61,7 +59,7 @@ public:
 
   void Clear()
   {
-    while(!mList.Empty())
+    while (!mList.Empty())
     {
       Node* node = &mList.Front();
       mList.Erase(node);
@@ -70,7 +68,7 @@ public:
     mList.Clear();
     mMap.Clear();
   }
-  
+
   size_t Size() const
   {
     return mMap.Size();
@@ -97,7 +95,7 @@ public:
 
   void InsertOrIgnore(const KeyType& key, const ValueType& value)
   {
-    if(mMap.ContainsKey(key))
+    if (mMap.ContainsKey(key))
       return;
 
     InsertInternal(key, value);
@@ -106,8 +104,9 @@ public:
   void InsertOrOverride(const KeyType& key, const ValueType& value)
   {
     Node* node = mMap.FindValue(key, nullptr);
-    // If the key already exist then just override the value, don't update the order in the list
-    if(node != nullptr)
+    // If the key already exist then just override the value, don't update the
+    // order in the list
+    if (node != nullptr)
     {
       node->mPair.second = value;
       return;
@@ -141,7 +140,8 @@ public:
   void SortedInsertOrOverride(const KeyType& key, const ValueType& value)
   {
     Node* node = mMap.FindValue(key, nullptr);
-    // If the key already exist then just override the value, don't update the order in the list
+    // If the key already exist then just override the value, don't update the
+    // order in the list
     if (node != nullptr)
     {
       node->mPair.second = value;
@@ -154,7 +154,7 @@ public:
   bool Erase(const KeyType& key)
   {
     Node* node = mMap.FindValue(key, nullptr);
-    if(node != nullptr)
+    if (node != nullptr)
     {
       mMap.Erase(key);
       mList.Erase(node);
@@ -172,7 +172,7 @@ public:
   ValueType FindValue(const KeyType& key, const ValueType& defaultValue)
   {
     Node* node = mMap.FindValue(key, nullptr);
-    if(node == nullptr)
+    if (node == nullptr)
       return defaultValue;
     return node->mPair.second;
   }
@@ -180,7 +180,7 @@ public:
   ValueType* FindPointer(const KeyType& key)
   {
     Node* node = mMap.FindValue(key, nullptr);
-    if(node == nullptr)
+    if (node == nullptr)
       return nullptr;
     return &(node->mPair.second);
   }
@@ -188,30 +188,66 @@ public:
   struct Range
   {
     typedef PairType& FrontResult;
-    bool Empty() { return mRange.Empty(); }
-    PairType& Front() { return mRange.Front().mPair; }
-    void PopFront() { mRange.PopFront(); }
-    Range& All() { return *this; }
+    bool Empty()
+    {
+      return mRange.Empty();
+    }
+    PairType& Front()
+    {
+      return mRange.Front().mPair;
+    }
+    void PopFront()
+    {
+      mRange.PopFront();
+    }
+    Range& All()
+    {
+      return *this;
+    }
     ListTypeRange mRange;
   };
 
   struct KeyRange
   {
     typedef KeyType& FrontResult;
-    bool Empty() { return mRange.Empty(); }
-    KeyType& Front() { return mRange.Front().mPair.first; }
-    void PopFront() { mRange.PopFront(); }
-    KeyRange& All() { return *this; }
+    bool Empty()
+    {
+      return mRange.Empty();
+    }
+    KeyType& Front()
+    {
+      return mRange.Front().mPair.first;
+    }
+    void PopFront()
+    {
+      mRange.PopFront();
+    }
+    KeyRange& All()
+    {
+      return *this;
+    }
     ListTypeRange mRange;
   };
 
   struct ValueRange
   {
     typedef ValueType& FrontResult;
-    bool Empty() { return mRange.Empty(); }
-    ValueType& Front() { return mRange.Front().mPair.second; }
-    void PopFront() { mRange.PopFront(); }
-    ValueRange& All() { return *this; }
+    bool Empty()
+    {
+      return mRange.Empty();
+    }
+    ValueType& Front()
+    {
+      return mRange.Front().mPair.second;
+    }
+    void PopFront()
+    {
+      mRange.PopFront();
+    }
+    ValueRange& All()
+    {
+      return *this;
+    }
     ListTypeRange mRange;
   };
 
@@ -239,7 +275,7 @@ public:
   ValueType& operator[](const KeyType& key)
   {
     Node*& node = mMap[key];
-    if(node == nullptr)
+    if (node == nullptr)
     {
       node = new Node(key, ValueType());
       mList.PushBack(node);
@@ -250,10 +286,9 @@ public:
   MapType mMap;
   ListType mList;
 
-  protected:
-    /// Sort policy functor
-    Sorter mSorter;
+protected:
+  /// Sort policy functor
+  Sorter mSorter;
 };
 
-}//namespace Zero
-
+} // namespace Zero

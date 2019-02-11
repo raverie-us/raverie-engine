@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,7 +8,10 @@ namespace Zero
 ZilchDefineRange(MetaSelection::range);
 
 // METAREFACTOR - move to platform meta library
-ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, type)
+ZilchDefineExternalBaseType(IpAddress,
+                            TypeCopyMode::ReferenceType,
+                            builder,
+                            type)
 {
   type->CreatableInScript = true;
 
@@ -33,14 +31,20 @@ ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, typ
   ZilchBindGetterProperty(String);
   ZilchBindCustomGetterProperty(Hash);
 
-  ZilchFullBindGetterSetter(builder, type,
-    &Zero::IpAddress::GetHost, (String(Zero::IpAddress::*)() const),
-    &Zero::IpAddress::SetHost, (void(Zero::IpAddress::*)(StringParam)),
-    "Host");
-  ZilchFullBindGetterSetter(builder, type,
-    &Zero::IpAddress::GetPort, (uint(Zero::IpAddress::*)() const),
-    &Zero::IpAddress::SetPort, (void(Zero::IpAddress::*)(uint)),
-    "Port");
+  ZilchFullBindGetterSetter(builder,
+                            type,
+                            &Zero::IpAddress::GetHost,
+                            (String(Zero::IpAddress::*)() const),
+                            &Zero::IpAddress::SetHost,
+                            (void (Zero::IpAddress::*)(StringParam)),
+                            "Host");
+  ZilchFullBindGetterSetter(builder,
+                            type,
+                            &Zero::IpAddress::GetPort,
+                            (uint(Zero::IpAddress::*)() const),
+                            &Zero::IpAddress::SetPort,
+                            (void (Zero::IpAddress::*)(uint)),
+                            "Port");
 
   ZilchBindGetterProperty(PortString);
 }
@@ -51,14 +55,13 @@ ZilchDefineEnum(InternetProtocol);
 
 ZeroDefineArrayType(Array<Revision>);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(MetaLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
   ZilchInitializeRangeAs(MetaSelection::range, "MetaSelectionRange");
-  
+
   // Enums
   ZilchInitializeEnum(SendsEvents);
   ZilchInitializeEnum(InternetProtocol);
@@ -153,7 +156,6 @@ ZilchDefineStaticLibrary(MetaLibrary)
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void MetaLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -175,17 +177,26 @@ void MetaLibrary::Initialize()
   RegisterPropertyAttribute(PropertyAttributes::cSerialize);
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedSerialized);
   RegisterPropertyAttribute(PropertyAttributes::cDisplay)->AllowStatic(true);
-  RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)->AllowStatic(true);
-  RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)->AllowStatic(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cShaderInput, MetaShaderInput)->AllowMultiple(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom, MetaPropertyRename);
+  RegisterPropertyAttribute(PropertyAttributes::cDeprecatedEditable)
+      ->AllowStatic(true);
+  RegisterPropertyAttribute(PropertyAttributes::cRuntimeClone)
+      ->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cShaderInput,
+                                MetaShaderInput)
+      ->AllowMultiple(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cRenamedFrom,
+                                MetaPropertyRename);
   RegisterPropertyAttribute(PropertyAttributes::cLocalModificationOverride);
-  RegisterPropertyAttributeType(PropertyAttributes::cGroup, MetaGroup)->AllowStatic(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cRange, EditorRange)->TypeMustBe(float)->AllowStatic(true);
-  RegisterPropertyAttributeType(PropertyAttributes::cSlider, EditorSlider)->TypeMustBe(float)->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cGroup, MetaGroup)
+      ->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cRange, EditorRange)
+      ->TypeMustBe(float)
+      ->AllowStatic(true);
+  RegisterPropertyAttributeType(PropertyAttributes::cSlider, EditorSlider)
+      ->TypeMustBe(float)
+      ->AllowStatic(true);
 }
 
-//**************************************************************************************************
 void MetaLibrary::Shutdown()
 {
   AttributeExtensions::Destroy();
@@ -193,4 +204,4 @@ void MetaLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-}// namespace Zero
+} // namespace Zero

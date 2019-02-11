@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Ryan Edgemon
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,16 +12,14 @@ class ViewportMouseEvent;
 class GizmoUpdateEvent;
 class ObjectTransformState;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DeclareEvent(RingGizmoModified);
-  DeclareEvent(TranslateGizmoModified);
-  DeclareEvent(ScaleGizmoModified);
-  DeclareEvent(RotateGizmoModified);
-}
+DeclareEvent(RingGizmoModified);
+DeclareEvent(TranslateGizmoModified);
+DeclareEvent(ScaleGizmoModified);
+DeclareEvent(RotateGizmoModified);
+} // namespace Events
 
-//------------------------------------------------- Translate Gizmo Update Event
 class TranslateGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
@@ -40,7 +33,6 @@ public:
   Vec3 mGizmoWorldTranslation;
 };
 
-//----------------------------------------------------- Scale Gizmo Update Event
 class ScaleGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
@@ -54,7 +46,6 @@ public:
   Vec3 mGizmoWorldScale;
 };
 
-//---------------------------------------------------- Rotate Gizmo Update Event
 class RotateGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
@@ -71,7 +62,6 @@ public:
   Vec3 mGizmoWorldRotationAxis;
 };
 
-//----------------------------------------------------------------- GizmoHelpers
 namespace GizmoHelpers
 {
 
@@ -83,16 +73,17 @@ Vec3 SingleAxisToOffAxesScale(int dragAxis, Vec3Param movement);
 Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases);
 
 Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
-  Vec3Param worldMovement, QuatParam worldToLocal);
+                                       Vec3Param worldMovement,
+                                       QuatParam worldToLocal);
 Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
-  Vec3Param worldMovement, QuatParam worldToLocal);
+                                       Vec3Param worldMovement,
+                                       QuatParam worldToLocal);
 
 float ProcessScale(float movement, float startDis, float starting);
 Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start);
 
-}
+} // namespace GizmoHelpers
 
-//--------------------------------------------------------------- Gizmo Snapping
 /// Different snapping behaviors to suit specific needs [ex: Tile-based games].
 /// Note: When group-selected, objects will snap individually.
 /// <param name="Relative">
@@ -103,26 +94,33 @@ Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start);
 ///   but only on non-zero drag-axis(axes) values.
 /// </param>
 /// <param name="WorldGrid">
-///   Will first snap all 3 axes to a world position defined by 'SnapDistance' increments.
-///   Then will continue to snap to world positions, but only on non-zero drag-axis(axes) values.
+///   Will first snap all 3 axes to a world position defined by 'SnapDistance'
+///   increments. Then will continue to snap to world positions, but only on
+///   non-zero drag-axis(axes) values.
 /// </param>
 DeclareEnum3(GizmoSnapMode, Relative, WorldAxes, WorldGrid);
 
 namespace GizmoSnapping
 {
 
-Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement,
-  QuatParam basis, GizmoDragMode::Enum dragMode,
-  GizmoSnapMode::Enum snapMode, float snapDistance);
+Vec3 GetSnappedPosition(Vec3Param currentPosition,
+                        Vec3Param worldMovement,
+                        QuatParam basis,
+                        GizmoDragMode::Enum dragMode,
+                        GizmoSnapMode::Enum snapMode,
+                        float snapDistance);
 
-Vec3 GetSnappedScale(Vec3Param startPosition, Vec3Param mouseWorldMovement,
-  GizmoSnapMode::Enum snapMode, float snapDistance,
-  GizmoDragMode::Enum dragMode);
+Vec3 GetSnappedScale(Vec3Param startPosition,
+                     Vec3Param mouseWorldMovement,
+                     GizmoSnapMode::Enum snapMode,
+                     float snapDistance,
+                     GizmoDragMode::Enum dragMode);
 
-Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistance);
+Vec3 GetSnappedVectorWorldAxes(Vec3Param start,
+                               Vec3Param end,
+                               float snapDistance);
 
-}  // namespace GizmoSnapping
-
+} // namespace GizmoSnapping
 
 /// Set the bases of operation for a gizmo to use when being manipulated.
 /// <param name="Local">
@@ -133,8 +131,6 @@ Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistanc
 /// </param>
 DeclareEnum2(GizmoBasis, Local, World);
 
-
-//------------------------------------------------------------ Simple Gizmo Base
 class SimpleGizmoBase : public Component
 {
 public:
@@ -184,13 +180,12 @@ public:
   bool mDrawOnTop;
 };
 
-//----------------------------------------------------------------- Square Gizmo
 class SquareGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
   ZilchDeclareType(SquareGizmo, TypeCopyMode::ReferenceType);
-  
+
   /// Component Interface.
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -210,7 +205,6 @@ public:
   bool mViewAligned;
 };
 
-//------------------------------------------------------------------ Arrow Gizmo
 DeclareEnum2(ArrowHeadType, Arrow, Cube);
 
 class ArrowGizmo : public SimpleGizmoBase
@@ -241,7 +235,8 @@ public:
   bool mFilledHeads;
   /// Length of the arrow shaft.
   float mLength;
-  /// Radius around the arrow shaft within which the Gizmo receives mouse events.
+  /// Radius around the arrow shaft within which the Gizmo receives mouse
+  /// events.
   float mSelectRadius;
   /// Arrow head size.
   float mHeadSize;
@@ -251,8 +246,8 @@ public:
   ArrowHeadType::Enum mHeadType;
 };
 
-//------------------------------------------------------------- Ring Gizmo Event
-/// Notification about various rotation parameters on the most recent RingGizmo modification.
+/// Notification about various rotation parameters on the most recent RingGizmo
+/// modification.
 class RingGizmoEvent : public GizmoUpdateEvent
 {
 public:
@@ -268,7 +263,6 @@ public:
   float mDeltaRadiansAroundAxis;
 };
 
-//------------------------------------------------------------------- Ring Gizmo
 class RingGizmo : public SimpleGizmoBase
 {
 public:
@@ -327,7 +321,6 @@ public:
   bool mGrabArrowOnTop;
 };
 
-//-------------------------------------------------------------- Translate Gizmo
 DeclareEnum3(UpdateMode, None, TranslateSelf, TranslateRoot);
 
 /// Updates the translation of the gizmo when it's being dragged
@@ -341,7 +334,7 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  bool GetSnapping( );
+  bool GetSnapping();
   void SetSnapping(bool snapping);
 
   /// When the mouse drag starts, we want to store our position in order
@@ -352,8 +345,10 @@ public:
   /// on the current update mode.
   void OnGizmoModified(GizmoUpdateEvent* e);
 
-  Vec3 TranslateFromDrag(GizmoDrag* gizmoDrag, Vec3Param startPosition,
-    Vec3Param movement, QuatParam rotation);
+  Vec3 TranslateFromDrag(GizmoDrag* gizmoDrag,
+                         Vec3Param startPosition,
+                         Vec3Param movement,
+                         QuatParam rotation);
 
   /// Start Position getter (we want it to be read only).
   Vec3 GetStartPosition();
@@ -377,7 +372,6 @@ public:
   GizmoSnapMode::Enum mSnapMode;
 };
 
-//-------------------------------------------------------------------Scale Gizmo
 class ScaleGizmo : public Component
 {
 public:
@@ -388,7 +382,7 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  bool GetSnapping( );
+  bool GetSnapping();
   void SetSnapping(bool snapping);
 
   /// Record where a gizmo drag began.
@@ -397,11 +391,16 @@ public:
   /// As the gizmo is being dragged, we want to update all objects.
   void OnGizmoModified(GizmoUpdateEvent* e);
 
-  /// Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane, gizmo-axis].
-  Vec3 ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, float distance,
-    Vec3Param movement, Vec3Param startScale, MetaTransformParam transform);
+  /// Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane,
+  /// gizmo-axis].
+  Vec3 ScaleFromDrag(GizmoBasis::Enum basis,
+                     GizmoDrag* gizmoDrag,
+                     float distance,
+                     Vec3Param movement,
+                     Vec3Param startScale,
+                     MetaTransformParam transform);
 
-  /// Used when dragging on the view axis to determine which direction 
+  /// Used when dragging on the view axis to determine which direction
   Vec3 mEyeDirection;
   /// Drag distance on the view plane.
   float mViewPlaneMove;
@@ -409,7 +408,6 @@ public:
   /// Most recent drag mode used with gizmo.
   /// Copied from 'GizmoUpdateEvent' when gizmo is modified.
   GizmoDragMode::Enum mDragMode;
-
 
   /// Scaled mouse movement based on grab-point vs. gizmo origin
   /// (note: movement in local gizmo-orientation).
@@ -423,7 +421,6 @@ public:
   Vec3 mDirection;
 };
 
-//------------------------------------------------------------------Rotate Gizmo
 class RotateGizmo : public Component
 {
 public:
@@ -434,7 +431,7 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  bool GetSnapping( );
+  bool GetSnapping();
   void SetSnapping(bool snapping);
 
   /// Record where a gizmo drag began.
@@ -449,5 +446,4 @@ public:
   float mPreviousSnap;
 };
 
-
-}//namespace Zero
+} // namespace Zero

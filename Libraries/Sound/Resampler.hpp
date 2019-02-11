@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -17,7 +12,9 @@ public:
 
   void SetFactor(double factor);
   unsigned GetOutputFrameCount(unsigned inputFrames);
-  void SetInputBuffer(const float* inputSamples, unsigned frameCount, unsigned channels);
+  void SetInputBuffer(const float* inputSamples,
+                      unsigned frameCount,
+                      unsigned channels);
   bool GetNextFrame(float* output);
 
 private:

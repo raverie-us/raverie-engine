@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleLogic.cpp
-/// Implementation of the Particle system component classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,7 +6,7 @@ namespace Zero
 
 namespace Tags
 {
-  DefineTag(Particle);
+DefineTag(Particle);
 }
 
 //////////Helper functions///////////////
@@ -24,7 +16,6 @@ void PushFront(Particle*& front, Particle* particle)
   front = particle;
 }
 
-//--------------------------------------------------------------------- Particle
 ZilchDefineType(Particle, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -39,7 +30,6 @@ ZilchDefineType(Particle, builder, type)
   ZilchBindFieldProperty(WanderAngle);
 }
 
-//---------------------------------------------------------------- Particle List
 Memory::Pool* ParticleList::Memory = NULL;
 
 void ParticleList::Initialize()
@@ -57,7 +47,7 @@ void ParticleList::AddParticle(Particle* particle)
 
 Particle* ParticleList::AllocateParticle()
 {
-  return(Particle*)Memory->Allocate(sizeof(Particle));
+  return (Particle*)Memory->Allocate(sizeof(Particle));
 }
 
 void ParticleList::FreeParticle(Particle* particle)
@@ -74,7 +64,7 @@ void ParticleList::DestroyParticle(Particle* particle)
 void ParticleList::ClearDestroyed()
 {
   Particle* curParticle = Destroyed;
-  while(curParticle != NULL)
+  while (curParticle != NULL)
   {
     Particle* nextParticle = curParticle->Next;
     FreeParticle(curParticle);
@@ -86,7 +76,7 @@ void ParticleList::ClearDestroyed()
 void ParticleList::FreeParticles()
 {
   Particle* curParticle = Particles;
-  while(curParticle != NULL)
+  while (curParticle != NULL)
   {
     Particle* nextParticle = curParticle->Next;
     FreeParticle(curParticle);

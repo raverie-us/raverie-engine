@@ -1,12 +1,12 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 // For all properties that affect the perspective transforms
-#define SetPerspectiveProperty(member, value) \
-  if (value == member) return;                \
-  member = value;                             \
+#define SetPerspectiveProperty(member, value)                                  \
+  if (value == member)                                                         \
+    return;                                                                    \
+  member = value;                                                              \
   mDirtyPerspective = true;
 
 namespace Zero
@@ -14,11 +14,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(CameraUpdate);
-  DefineEvent(CameraDestroyed);
-}
+DefineEvent(CameraUpdate);
+DefineEvent(CameraDestroyed);
+} // namespace Events
 
-//**************************************************************************************************
 ZilchDefineType(Camera, builder, type)
 {
   ZeroBindComponent();
@@ -28,9 +27,15 @@ ZilchDefineType(Camera, builder, type)
 
   ZilchBindGetterSetterProperty(NearPlane);
   ZilchBindGetterSetterProperty(FarPlane);
-  ZilchBindGetterSetterProperty(PerspectiveMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(FieldOfView)->Add(new EditorSlider(45, 135, 1))->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
-  ZilchBindGetterSetterProperty(Size)->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
+  ZilchBindGetterSetterProperty(PerspectiveMode)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(FieldOfView)
+      ->Add(new EditorSlider(45, 135, 1))
+      ->ZeroFilterEquality(mPerspectiveMode,
+                           PerspectiveMode::Enum,
+                           PerspectiveMode::Perspective);
+  ZilchBindGetterSetterProperty(Size)->ZeroFilterEquality(
+      mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
 
   ZilchBindGetter(CameraViewportCog);
   ZilchBindGetter(WorldTranslation);
@@ -40,17 +45,16 @@ ZilchDefineType(Camera, builder, type)
   ZilchBindMethod(GetFrustum);
 }
 
-//**************************************************************************************************
 void Camera::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mNearPlane, 0.5f);
   SerializeNameDefault(mFarPlane, 100.0f);
-  SerializeEnumNameDefault(PerspectiveMode, mPerspectiveMode, PerspectiveMode::Perspective);
+  SerializeEnumNameDefault(
+      PerspectiveMode, mPerspectiveMode, PerspectiveMode::Perspective);
   SerializeNameDefault(mFieldOfView, 45.0f);
   SerializeNameDefault(mSize, 20.0f);
 }
 
-//**************************************************************************************************
 void Camera::Initialize(CogInitializer& initializer)
 {
   mTransform = GetOwner()->has(Transform);
@@ -62,7 +66,6 @@ void Camera::Initialize(CogInitializer& initializer)
   mRenderQueuesDataNeeded = false;
 }
 
-//**************************************************************************************************
 void Camera::OnDestroy(uint flags)
 {
   // Tell CameraViewport, if there is one, to remove this camera
@@ -70,7 +73,6 @@ void Camera::OnDestroy(uint flags)
   DispatchEvent(Events::CameraDestroyed, &event);
 }
 
-//**************************************************************************************************
 void Camera::TransformUpdate(TransformUpdateInfo& info)
 {
   mDirtyView = true;
@@ -78,13 +80,11 @@ void Camera::TransformUpdate(TransformUpdateInfo& info)
   DispatchEvent(Events::CameraUpdate, &event);
 }
 
-//**************************************************************************************************
 float Camera::GetNearPlane()
 {
   return mNearPlane;
 }
 
-//**************************************************************************************************
 void Camera::SetNearPlane(float nearPlane)
 {
   nearPlane = Math::Max(nearPlane, 0.01f);
@@ -93,58 +93,49 @@ void Camera::SetNearPlane(float nearPlane)
   SetPerspectiveProperty(mFarPlane, farPlane);
 }
 
-//**************************************************************************************************
 float Camera::GetFarPlane()
 {
   return mFarPlane;
 }
 
-//**************************************************************************************************
 void Camera::SetFarPlane(float farPlane)
 {
   farPlane = Math::Max(farPlane, mNearPlane + 0.1f);
   SetPerspectiveProperty(mFarPlane, farPlane);
 }
 
-//**************************************************************************************************
 PerspectiveMode::Enum Camera::GetPerspectiveMode()
 {
   return mPerspectiveMode;
 }
 
-//**************************************************************************************************
 void Camera::SetPerspectiveMode(PerspectiveMode::Enum perspectiveMode)
 {
   SetPerspectiveProperty(mPerspectiveMode, perspectiveMode);
 }
 
-//**************************************************************************************************
 float Camera::GetFieldOfView()
 {
   return mFieldOfView;
 }
 
-//**************************************************************************************************
 void Camera::SetFieldOfView(float fieldOfView)
 {
   fieldOfView = Math::Clamp(fieldOfView, 10.0f, 170.0f);
   SetPerspectiveProperty(mFieldOfView, fieldOfView);
 }
 
-//**************************************************************************************************
 float Camera::GetSize()
 {
   return mSize;
 }
 
-//**************************************************************************************************
 void Camera::SetSize(float size)
 {
   size = Math::Max(size, 0.01f);
   SetPerspectiveProperty(mSize, size);
 }
 
-//**************************************************************************************************
 HandleOf<Cog> Camera::GetCameraViewportCog()
 {
   if (mViewportInterface != nullptr)
@@ -152,37 +143,31 @@ HandleOf<Cog> Camera::GetCameraViewportCog()
   return nullptr;
 }
 
-//**************************************************************************************************
 Vec3 Camera::GetWorldTranslation()
 {
   return mTransform->GetWorldTranslation();
 }
 
-//**************************************************************************************************
 Vec3 Camera::GetWorldDirection()
 {
   return Math::Multiply(mTransform->GetWorldRotation(), -Vec3::cZAxis);
 }
 
-//**************************************************************************************************
 Vec3 Camera::GetWorldUp()
 {
   return Math::Multiply(mTransform->GetWorldRotation(), Vec3::cYAxis);
 }
 
-//**************************************************************************************************
 float Camera::GetAspectRatio()
 {
   return mAspectRatio;
 }
 
-//**************************************************************************************************
 void Camera::SetAspectRatio(float aspectRatio)
 {
   SetPerspectiveProperty(mAspectRatio, aspectRatio);
 }
 
-//**************************************************************************************************
 Mat4 Camera::GetViewTransform()
 {
   if (mDirtyView == false)
@@ -198,7 +183,6 @@ Mat4 Camera::GetViewTransform()
   return mWorldToView;
 }
 
-//**************************************************************************************************
 Mat4 Camera::GetPerspectiveTransform()
 {
   if (mDirtyPerspective == false)
@@ -206,20 +190,29 @@ Mat4 Camera::GetPerspectiveTransform()
 
   if (mPerspectiveMode == PerspectiveMode::Perspective)
   {
-    BuildPerspectiveTransformZero(mViewToPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
-    Z::gRenderer->BuildPerspectiveTransform(mViewToApiPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
+    BuildPerspectiveTransformZero(mViewToPerspective,
+                                  Math::DegToRad(mFieldOfView),
+                                  mAspectRatio,
+                                  mNearPlane,
+                                  mFarPlane);
+    Z::gRenderer->BuildPerspectiveTransform(mViewToApiPerspective,
+                                            Math::DegToRad(mFieldOfView),
+                                            mAspectRatio,
+                                            mNearPlane,
+                                            mFarPlane);
   }
   else
   {
-    BuildOrthographicTransformZero(mViewToPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
-    Z::gRenderer->BuildOrthographicTransform(mViewToApiPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
+    BuildOrthographicTransformZero(
+        mViewToPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
+    Z::gRenderer->BuildOrthographicTransform(
+        mViewToApiPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
   }
 
   mDirtyPerspective = false;
   return mViewToPerspective;
 }
 
-//**************************************************************************************************
 Mat4 Camera::GetApiPerspectiveTransform()
 {
   // Will update both perspective transforms if dirty
@@ -227,10 +220,10 @@ Mat4 Camera::GetApiPerspectiveTransform()
   return mViewToApiPerspective;
 }
 
-//**************************************************************************************************
 void Camera::GetViewData(ViewBlock& block)
 {
-  ErrorIf(mViewportInterface == nullptr, "Invalid Camera to get view data from.");
+  ErrorIf(mViewportInterface == nullptr,
+          "Invalid Camera to get view data from.");
 
   SetAspectRatio(mViewportInterface->GetAspectRatio());
 
@@ -238,14 +231,16 @@ void Camera::GetViewData(ViewBlock& block)
   block.mViewToPerspective = GetPerspectiveTransform();
 
   Mat4 apiPerspective = GetApiPerspectiveTransform();
-  block.mZeroPerspectiveToApiPerspective = apiPerspective * block.mViewToPerspective.SafeInverted();
+  block.mZeroPerspectiveToApiPerspective =
+      apiPerspective * block.mViewToPerspective.SafeInverted();
 
   block.mNearPlane = mNearPlane;
   block.mFarPlane = mFarPlane;
 
   Vec2 viewportSize = mViewportInterface->GetViewportSize();
   block.mViewportSize = viewportSize;
-  block.mInverseViewportSize = Vec2(1.0f / viewportSize.x, 1.0f / viewportSize.y);
+  block.mInverseViewportSize =
+      Vec2(1.0f / viewportSize.x, 1.0f / viewportSize.y);
 
   block.mEyePosition = GetWorldTranslation();
   block.mEyeDirection = GetWorldDirection();
@@ -257,7 +252,6 @@ void Camera::GetViewData(ViewBlock& block)
   block.mCameraId = GetOwner()->GetId().ToUint64();
 }
 
-//**************************************************************************************************
 Frustum Camera::GetFrustum(float aspect) const
 {
   Vec3 position = mTransform->GetWorldTranslation();
@@ -266,9 +260,17 @@ Frustum Camera::GetFrustum(float aspect) const
   Frustum f;
 
   if (mPerspectiveMode == PerspectiveMode::Perspective)
-    f.Generate(position, rotation, mNearPlane, mFarPlane, aspect, Math::DegToRad(mFieldOfView));
+    f.Generate(position,
+               rotation,
+               mNearPlane,
+               mFarPlane,
+               aspect,
+               Math::DegToRad(mFieldOfView));
   else
-    f.Generate(position - rotation.BasisZ() * mNearPlane, -rotation.BasisZ(), rotation.BasisY(), Vec3(mSize * 0.5f * aspect, mSize * 0.5f, mFarPlane));
+    f.Generate(position - rotation.BasisZ() * mNearPlane,
+               -rotation.BasisZ(),
+               rotation.BasisY(),
+               Vec3(mSize * 0.5f * aspect, mSize * 0.5f, mFarPlane));
 
   return f;
 }

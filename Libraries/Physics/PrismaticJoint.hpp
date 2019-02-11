@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,12 +11,12 @@ class PhysicsSpace;
 namespace Physics
 {
 
-/// A prismatic joint sometimes called a slider) is used to create something similar
-/// to a piston. This joint fixes all degrees of rotation and leaves one linear axis free.
-/// Therefore, the bodies will rotate with each other and move with each other, except for
-/// one axis where they can move freely.
-/// Add on definitions:
-/// Limit: A limit will provide a min/max translational distance for the two
+/// A prismatic joint sometimes called a slider) is used to create something
+/// similar to a piston. This joint fixes all degrees of rotation and leaves one
+/// linear axis free. Therefore, the bodies will rotate with each other and move
+/// with each other, except for one axis where they can move freely. Add on
+/// definitions: Limit: A limit will provide a min/max translational distance
+/// for the two
 ///   objects on the slider axis.
 /// Motor: A motor will push/pull the objects on the slider axis.
 /// Spring: A spring will make the slider axis springy at its limits.
@@ -36,7 +31,7 @@ struct PrismaticJoint : public Joint
   DeclareAngleAccessors(PrismaticJoint, mReferenceAngle);
 
   PrismaticJoint();
-  
+
   // Component Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -72,8 +67,8 @@ struct PrismaticJoint : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::PrismaticJoint PrismaticJoint;
 
-}//namespace Zero
+} // namespace Zero

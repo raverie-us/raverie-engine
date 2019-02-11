@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SourceControl.cpp
-///  Source Control Interface
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,7 +16,7 @@ class FileSourceControl : public SourceControl
 {
   void Add(Status& status, StringParam filePath) override
   {
-    //nothing to do
+    // nothing to do
   }
 
   void Remove(Status& status, StringParam filePath) override
@@ -32,12 +24,16 @@ class FileSourceControl : public SourceControl
     DeleteFile(filePath);
   }
 
-  void Rename(Status& status, StringParam sourcePath, StringParam destPath) override
+  void Rename(Status& status,
+              StringParam sourcePath,
+              StringParam destPath) override
   {
     MoveFile(destPath, sourcePath);
   }
 
-  void GetRevisions(Status& status, StringParam path, Array<Revision>& revisions) override
+  void GetRevisions(Status& status,
+                    StringParam path,
+                    Array<Revision>& revisions) override
   {
     status.SetFailed("Not supported");
   }
@@ -50,9 +46,9 @@ SourceControl* GetSourceControl(StringParam sourceControlType)
 {
   static FileSourceControl fileSourceControl;
 
-  if(sourceControlType == "Mercurial")
+  if (sourceControlType == "Mercurial")
     return GetMercurial();
-  else if(sourceControlType == "Svn")
+  else if (sourceControlType == "Svn")
     return GetSvn();
   else
     return &fileSourceControl;
@@ -64,9 +60,9 @@ int RunSimpleCommandLine(Status& status, StringParam commandLine)
   SimpleProcess process;
   process.ExecProcess("CommandLine", commandLine.c_str(), &buffer);
   int returnCode = process.WaitForClose();
-  if(returnCode!=0)
+  if (returnCode != 0)
     status.SetFailed(buffer.ToString());
   return returnCode;
 }
 
-}
+} // namespace Zero

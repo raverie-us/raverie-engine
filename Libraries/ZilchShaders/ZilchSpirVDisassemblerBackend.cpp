@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ZilchSpirVDisassemblerBackend
 ZilchSpirVDisassemblerBackend::ZilchSpirVDisassemblerBackend()
 {
   mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
@@ -20,7 +14,9 @@ String ZilchSpirVDisassemblerBackend::GetExtension()
   return "spvtxt";
 }
 
-bool ZilchSpirVDisassemblerBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+bool ZilchSpirVDisassemblerBackend::RunTranslationPass(
+    ShaderTranslationPassResult& inputData,
+    ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -30,16 +26,19 @@ bool ZilchSpirVDisassemblerBackend::RunTranslationPass(ShaderTranslationPassResu
 
   spv_text text;
   spv_diagnostic diagnostic = nullptr;
-  uint32_t options = SPV_BINARY_TO_TEXT_OPTION_NONE | SPV_BINARY_TO_TEXT_OPTION_INDENT | SPV_BINARY_TO_TEXT_OPTION_FRIENDLY_NAMES;
+  uint32_t options = SPV_BINARY_TO_TEXT_OPTION_NONE |
+                     SPV_BINARY_TO_TEXT_OPTION_INDENT |
+                     SPV_BINARY_TO_TEXT_OPTION_FRIENDLY_NAMES;
 
   spv_context context = spvContextCreate((spv_target_env)mTargetEnv);
-  spv_result_t spvResult = spvBinaryToText(context, data, wordCount, options, &text, &diagnostic);
+  spv_result_t spvResult =
+      spvBinaryToText(context, data, wordCount, options, &text, &diagnostic);
   spvContextDestroy(context);
 
   bool success = (spvResult == SPV_SUCCESS);
-  if(!success)
+  if (!success)
   {
-    if(diagnostic != nullptr)
+    if (diagnostic != nullptr)
       mErrorLog = diagnostic->error;
     return false;
   }
@@ -47,7 +46,7 @@ bool ZilchSpirVDisassemblerBackend::RunTranslationPass(ShaderTranslationPassResu
   outputData.mByteStream.Load(text->str, text->length);
   spvTextDestroy(text);
   outputData.mReflectionData = inputData.mReflectionData;
-  
+
   return success;
 }
 
@@ -56,4 +55,4 @@ String ZilchSpirVDisassemblerBackend::GetErrorLog()
   return mErrorLog;
 }
 
-}//namespace Zero
+} // namespace Zero

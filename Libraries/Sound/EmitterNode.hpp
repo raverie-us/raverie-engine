@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------ Emitter Data Per Listener
+//Emitter Data Per Listener
 
 // Stores data for each listener
 class EmitterDataPerListener
@@ -31,14 +26,17 @@ public:
   float mGainValues[AudioConstants::cMaxChannels];
 };
 
-//------------------------------------------------------------------------------------- Emitter Node
+//Emitter Node
 
 class EmitterNode : public SoundNode
 {
 public:
   ZilchDeclareType(EmitterNode, TypeCopyMode::ReferenceType);
 
-  EmitterNode(StringParam name, const unsigned ID, Vec3Param position, Vec3Param velocity);
+  EmitterNode(StringParam name,
+              const unsigned ID,
+              Vec3Param position,
+              Vec3Param velocity);
 
   // Pauses and resumes all output (doesn't process inputs while paused)
   void SetPausedThreaded(bool paused);
@@ -47,16 +45,22 @@ public:
   // Sets the emitter's current orientation
   void SetForwardDirectionThreaded(const Vec3 forwardDirection);
   // Sets the angle for a directional emitter
-  void SetDirectionalAngleThreaded(const float angleInDegrees, const float reducedVolume);
+  void SetDirectionalAngleThreaded(const float angleInDegrees,
+                                   const float reducedVolume);
 
 private:
-  // Note: all functions and data below should be accessed only on the mix thread
+  // Note: all functions and data below should be accessed only on the mix
+  // thread
 
-  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
-    ListenerNode* listener, const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer,
+                        const unsigned numberOfChannels,
+                        ListenerNode* listener,
+                        const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
-  void CalculateData(EmitterDataPerListener* data, const Vec3& relativePosition,
-    ListenerNode* listener, const unsigned numberOfChannels);
+  void CalculateData(EmitterDataPerListener* data,
+                     const Vec3& relativePosition,
+                     ListenerNode* listener,
+                     const unsigned numberOfChannels);
 
   // Current emitter position
   Vec3 mPosition;
@@ -84,7 +88,8 @@ private:
   const float cMinimumVolume = 0.2f;
   // Minimum position change to recalculate data
   const float cMinimumPositionChange = 0.01f;
-  // The lowest value for the low pass cutoff frequency (for sounds behind listener)
+  // The lowest value for the low pass cutoff frequency (for sounds behind
+  // listener)
   const float cLowPassCutoffBase = 5000.0f;
   // The additional value added to the low pass cutoff depending on angle
   const float cLowPassCutoffAdditional = 15000.0f;

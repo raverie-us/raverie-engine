@@ -1,12 +1,12 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-/// A composition of shader fragments that defines a shader program that is used when rendering Graphicals.
+/// A composition of shader fragments that defines a shader program that is used
+/// when rendering Graphicals.
 class Material : public DataResource
 {
 public:
@@ -18,8 +18,12 @@ public:
   Material();
   ~Material();
 
-  HandleOf<Resource> Clone() override {return RuntimeClone();}
-  /// Creates an anonymous copy that can be independently modified, destroyed when all references are gone.
+  HandleOf<Resource> Clone() override
+  {
+    return RuntimeClone();
+  }
+  /// Creates an anonymous copy that can be independently modified, destroyed
+  /// when all references are gone.
   HandleOf<Material> RuntimeClone();
 
   void Serialize(Serializer& stream) override;
@@ -32,7 +36,10 @@ public:
   void ResourceModified() override;
 
   // Ui for label divider
-  uint GetCompositionLabel() { return 0; }
+  uint GetCompositionLabel()
+  {
+    return 0;
+  }
 
   // Factory interface
   uint GetSize() const;
@@ -55,11 +62,14 @@ public:
   // List of resources to be associated with that are saved by this resource
   RenderGroupList mSerializedList;
   // List of resources that have this resource in their serialized list
-  // Populated at runtime, used to easily see associations from the property grid
+  // Populated at runtime, used to easily see associations from the property
+  // grid
   RenderGroupList mReferencedByList;
-  // List used to get associated resources, need to know every associated RenderGroup to add Graphical entries
-  // Should have one entry of other resource if either or both reference each other
-  // Pointers are never kept around if a resource is removed, cannot be handles or runtime resources will never get removed
+  // List used to get associated resources, need to know every associated
+  // RenderGroup to add Graphical entries Should have one entry of other
+  // resource if either or both reference each other Pointers are never kept
+  // around if a resource is removed, cannot be handles or runtime resources
+  // will never get removed
   Array<RenderGroup*> mActiveResources;
 
   typedef Array<HandleOf<MaterialBlock>> MaterialBlockArray;
@@ -88,7 +98,8 @@ public:
   void ReInitializeAddComponents();
 
 private:
-  // Using an operation queue to reinitialize materials so that the types associated with undo map id's are fixed.
+  // Using an operation queue to reinitialize materials so that the types
+  // associated with undo map id's are fixed.
   OperationQueue mReInitializeQueue;
 };
 

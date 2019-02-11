@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CommandSelector.hpp
-/// Declaration of the GeneralSearchView class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +7,7 @@ namespace Zero
 struct SearchViewResult;
 class SearchViewEvent;
 
-//GeneralSearchView that can be opened anywhere.
+// GeneralSearchView that can be opened anywhere.
 class GeneralSearchView : public Composite
 {
 public:
@@ -43,4 +35,4 @@ public:
   SearchView* mView;
 };
 
-}
+} // namespace Zero

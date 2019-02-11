@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file WatchView.hpp
-/// 
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -32,4 +24,4 @@ private:
   WatchViewSource* mSource;
 };
 
-}// Namespace Zero
+} // Namespace Zero

@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ColorGradient.hpp
-/// Declaration of the ColorGradient resource.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------------- Color Gradient
 /// Specifies a range of colors that are interpolated when sampled.
 class ColorGradient : public DataResource
 {
@@ -43,7 +34,6 @@ public:
   Gradient<Vec4> mGradient;
 };
 
-//------------------------------------------------------- Color Gradient Manager
 class ColorGradientManager : public ResourceManager
 {
 public:
@@ -53,4 +43,4 @@ public:
   ColorGradient* CreateNewResourceInternal(StringParam name) override;
 };
 
-}//namespace Zero
+} // namespace Zero

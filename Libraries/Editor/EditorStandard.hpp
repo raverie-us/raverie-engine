@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Widget/WidgetStandard.hpp"
@@ -17,7 +12,6 @@
 namespace Zero
 {
 
-
 // Editor library
 class ZeroNoImportExport EditorLibrary : public Zilch::StaticLibrary
 {
@@ -28,7 +22,7 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} // namespace Zero
 
 // Misc.
 #include "LauncherCommunicationEvent.hpp"

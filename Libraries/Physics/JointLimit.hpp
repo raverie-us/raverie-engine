@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,13 +6,18 @@ namespace Zero
 
 struct JointNode;
 
-DeclareBitField5(JointLimitState, Active, AtLowerLimit, WasAtLowerLimit, AtUpperLimit, WasAtUpperLimit);
+DeclareBitField5(JointLimitState,
+                 Active,
+                 AtLowerLimit,
+                 WasAtLowerLimit,
+                 AtUpperLimit,
+                 WasAtUpperLimit);
 
-/// Defines limit properties for a joint. Used to add a min/max bounds to a joint. When the
-/// joint is in between the min/max bounds, the "limited" portion will be
-/// ignored (The stick will not solve when it is in between the bounds,
-/// making it a rope).
-/// See each joint for a description of how it reacts to a limit.
+/// Defines limit properties for a joint. Used to add a min/max bounds to a
+/// joint. When the joint is in between the min/max bounds, the "limited"
+/// portion will be ignored (The stick will not solve when it is in between the
+/// bounds, making it a rope). See each joint for a description of how it reacts
+/// to a limit.
 struct JointLimit : public Component
 {
   ZilchDeclareType(JointLimit, TypeCopyMode::ReferenceType);
@@ -29,7 +29,7 @@ struct JointLimit : public Component
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  //Helpers
+  // Helpers
   bool GetAtomIndexActive(uint atomIndexMask) const;
   /// Has this joint been initialized with a valid joint.
   /// Also used to deal with calling sets in serialize.
@@ -50,9 +50,8 @@ struct JointLimit : public Component
   real GetUpperLimit() const;
   void SetUpperLimit(real limit);
 
-
   // Runtime helpers for event sending
-  
+
   /// Are we currently at the lower limit?
   bool GetAtLowerLimit();
   void SetAtLowerLimit(bool state);
@@ -77,4 +76,4 @@ struct JointLimit : public Component
   JointNode* mNode;
 };
 
-}//namespace Zero
+} // namespace Zero

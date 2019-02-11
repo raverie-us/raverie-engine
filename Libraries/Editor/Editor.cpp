@@ -1,29 +1,20 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Editor.cpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-
 
 namespace Zero
 {
 
 namespace Z
 {
-  Editor* gEditor = nullptr;
+Editor* gEditor = nullptr;
 }
 
 namespace Events
 {
-  DefineEvent(EditorChangeSpace);
-  DefineEvent(UnloadProject);
-  DefineEvent(LoadedProject);
-}//namespace Events
+DefineEvent(EditorChangeSpace);
+DefineEvent(UnloadProject);
+DefineEvent(LoadedProject);
+} // namespace Events
 
 ZilchDefineType(EditorEvent, builder, type)
 {
@@ -31,17 +22,14 @@ ZilchDefineType(EditorEvent, builder, type)
   ZilchBindFieldProperty(mEditor);
 }
 
-
 EditorEvent::EditorEvent(Editor* editor)
 {
   mEditor = editor;
 }
 
-//------------------------------------------------------------- Simple Visualize
 class RuntimeEditorImpl : public RuntimeEditor
 {
 public:
-
   struct EditorIconToAdd
   {
     CogId Object;
@@ -55,7 +43,6 @@ public:
 
   ~RuntimeEditorImpl()
   {
-
   }
 
   Array<EditorIconToAdd> Proxies;
@@ -66,34 +53,37 @@ public:
 
   void OnResourceIdConflict(ResourceEntry& entry, Resource* previous) override
   {
-    //Only check for duplicate resource ids in the editor. 
-    //Content items are not loaded out of editor.
-    if(previous->mContentItem && entry.mLibrarySource)
+    // Only check for duplicate resource ids in the editor.
+    // Content items are not loaded out of editor.
+    if (previous->mContentItem && entry.mLibrarySource)
     {
       String prevIdAndName = previous->ResourceIdName;
-      String newIdAndName = BuildString(ToString(entry.mResourceId), ":", entry.Name);
+      String newIdAndName =
+          BuildString(ToString(entry.mResourceId), ":", entry.Name);
 
       String prevFileName = entry.mLibrarySource->Filename.c_str();
       String newFileName = previous->mContentItem->Filename.c_str();
 
       ZPrint("Another resource is already mapped to the "
-        "resource id '%s',  it was mapped as '%s'.\n", 
-        prevIdAndName.c_str(),
-        newIdAndName.c_str());
+             "resource id '%s',  it was mapped as '%s'.\n",
+             prevIdAndName.c_str(),
+             newIdAndName.c_str());
 
-      if(previous->mContentItem == entry.mLibrarySource)
+      if (previous->mContentItem == entry.mLibrarySource)
       {
-        ZPrint("To fix, remove file '%s' with conflicting Ids.\n", newFileName.c_str()); 
+        ZPrint("To fix, remove file '%s' with conflicting Ids.\n",
+               newFileName.c_str());
       }
       else
       {
-        ZPrint("To fix conflicting Ids, you can remove either '%s' or '%s'\n", 
-          prevFileName.c_str(),
-          newFileName.c_str());     
+        ZPrint("To fix conflicting Ids, you can remove either '%s' or '%s'\n",
+               prevFileName.c_str(),
+               newFileName.c_str());
       }
 
-      DoNotifyError("Resource Id Conflict. ", 
-        "Id conflict, resources fail to load. See console for details or contact zero support team.");
+      DoNotifyError("Resource Id Conflict. ",
+                    "Id conflict, resources fail to load. See console for "
+                    "details or contact zero support team.");
     }
   }
 
@@ -102,16 +92,22 @@ public:
     return Z::gEditor->GetEditLevel();
   }
 
-  Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* type, StringParam property, Space* space,
-                               Resource* resource, Archetype* archetype, bool modified) override
+  Resource* NewResourceOnWrite(ResourceManager* resourceManager,
+                               BoundType* type,
+                               StringParam property,
+                               Space* space,
+                               Resource* resource,
+                               Archetype* archetype,
+                               bool modified) override
   {
-    return Zero::NewResourceOnWrite(resourceManager, type, property, space, resource, archetype, modified);
+    return Zero::NewResourceOnWrite(
+        resourceManager, type, property, space, resource, archetype, modified);
   }
 
   bool HasFocus(GameSession* game) override
   {
     GameWidget* gameWidget = game->mGameWidget;
-    if(gameWidget)
+    if (gameWidget)
       return gameWidget->HasFocus();
     else
       return false;
@@ -122,17 +118,20 @@ public:
     // Look for existing EditorViewport for this space first and change tab
     SetFocus(space);
 
-    EditorViewport* editorViewport = new EditorViewport(Z::gEditor, OwnerShip::Sharing);
+    EditorViewport* editorViewport =
+        new EditorViewport(Z::gEditor, OwnerShip::Sharing);
     Z::gEditor->mEditInGameViewports.PushBack(editorViewport);
     Z::gEditor->GetCenterWindow()->AttachAsTab(editorViewport);
     // Set GameSession handle to null to GameWidget does not quit game
     editorViewport->mGameWidget->mGame = nullptr;
     editorViewport->SetTargetSpace(space);
-    // Level is already loaded so call this manually, event is not used so just pass null
+    // Level is already loaded so call this manually, event is not used so just
+    // pass null
     editorViewport->OnSpaceLevelLoaded(nullptr);
     editorViewport->SetName(BuildString("Space: ", space->GetName()));
 
-    CameraViewport* cameraViewport = editorViewport->mEditorCamera.Has<CameraViewport>();
+    CameraViewport* cameraViewport =
+        editorViewport->mEditorCamera.Has<CameraViewport>();
     // Override which GameWidget this CameraViewport will attach its viewport to
     cameraViewport->SetGameWidgetOverride(editorViewport->mGameWidget);
     cameraViewport->SetRenderInGame(true);
@@ -144,7 +143,8 @@ public:
     Z::gEditor->SetFocus(space);
   }
 
-  Resource* AddResource(ResourceManager* resourceManager, ResourceAdd& resourceAdd) override
+  Resource* AddResource(ResourceManager* resourceManager,
+                        ResourceAdd& resourceAdd) override
   {
     AddNewResource(resourceManager, resourceAdd);
     return resourceAdd.SourceResource;
@@ -152,9 +152,9 @@ public:
 
   void Visualize(Component* component, StringParam icon) override
   {
-    if(component->GetSpace()->IsEditorMode())
+    if (component->GetSpace()->IsEditorMode())
     {
-      EditorIconToAdd toAdd = { component->GetOwner() , icon };
+      EditorIconToAdd toAdd = {component->GetOwner(), icon};
       Proxies.PushBack(toAdd);
     }
   }
@@ -162,14 +162,17 @@ public:
   void ShowTextError(StringParam file, int line, StringParam message) override
   {
     DocumentEditor* editor = Z::gEditor->OpenTextFileAuto(file);
-    if(editor != NULL)
+    if (editor != NULL)
     {
       editor->SetLexer(Lexer::Shader);
       editor->SetAnnotation(line, message);
     }
   }
 
-  void ShowTextBlock(StringParam name, StringRange text, int line, StringParam message)
+  void ShowTextBlock(StringParam name,
+                     StringRange text,
+                     int line,
+                     StringParam message)
   {
     DocumentEditor* editor = Z::gEditor->OpenTextString(name, text);
     editor->SetLexer(Lexer::Shader);
@@ -182,7 +185,6 @@ public:
   }
 };
 
-//----------------------------------------------------------------------- Editor
 ZilchDefineType(Editor, builder, type)
 {
   ZilchBindGetterProperty(Actions);
@@ -201,7 +203,8 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(PlayNewGame);
   Zilch::Function* pauseFunction = ZilchBindMethod(PauseGame);
   pauseFunction->AddAttribute(DeprecatedAttribute);
-  pauseFunction->Description = "PauseGame() is deprecated, please call ToggleGamePaused()";
+  pauseFunction->Description =
+      "PauseGame() is deprecated, please call ToggleGamePaused()";
   ZilchBindMethod(ToggleGamePaused);
   ZilchBindMethod(SetGamePaused);
   ZilchBindMethod(StopGame);
@@ -221,8 +224,7 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(DebuggerStepOut);
 }
 
-Editor::Editor(Composite* parent)
-  : MultiDock(parent)
+Editor::Editor(Composite* parent) : MultiDock(parent)
 {
   mRuntimeEditorImpl = new RuntimeEditorImpl();
   Z::gEditor = this;
@@ -249,10 +251,12 @@ Editor::Editor(Composite* parent)
   mCogCommands = new CogCommandManager();
 
   MetaSelection* selection = GetSelection();
-  
+
   ZilchManager* zilchManager = ZilchManager::GetInstance();
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
+  ConnectThisTo(
+      zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
+  ConnectThisTo(
+      zilchManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
 
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
@@ -261,7 +265,7 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(Z::gEngine, Events::EngineDebuggerUpdate, OnEngineUpdate);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
   ConnectThisTo(GetRootWidget(), Events::MouseFileDrop, OnMouseFileDrop);
-  
+
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
 }
@@ -300,7 +304,7 @@ void Editor::SetEditSpace(Space* space)
   EditorEvent editorEvent(this);
   this->GetDispatcher()->Dispatch(Events::EditorChangeSpace, &editorEvent);
 
-  if(mObjectView)
+  if (mObjectView)
     mObjectView->SetSpace(space);
 
   CommandManager::GetInstance()->GetContext()->Add(space);
@@ -322,7 +326,7 @@ void Editor::SetEditorViewportSpace(Space* space)
 
 void Editor::SetFocus(Space* space)
 {
-  forRange(EditorViewport* viewport, mEditInGameViewports.All())
+  forRange(EditorViewport * viewport, mEditInGameViewports.All())
   {
     if ((Space*)viewport->mEditSpace == space)
     {
@@ -341,11 +345,11 @@ Cog* Editor::GetProjectCog()
 String Editor::GetProjectPath()
 {
   Cog* projectCog = GetProjectCog();
-  if(projectCog == nullptr)
+  if (projectCog == nullptr)
     return String();
 
   ProjectSettings* projectSettings = projectCog->has(ProjectSettings);
-  if(projectSettings == nullptr)
+  if (projectSettings == nullptr)
     return String();
 
   return projectSettings->GetProjectFolder();
@@ -353,7 +357,7 @@ String Editor::GetProjectPath()
 
 MetaSelection* Editor::GetSelection()
 {
-  if(MetaSelection* selection = mSelection)
+  if (MetaSelection* selection = mSelection)
     return selection;
   MetaSelection* selection = new MetaSelection();
   mSelection = selection;
@@ -363,7 +367,7 @@ MetaSelection* Editor::GetSelection()
 void Editor::LoadDefaultLevel()
 {
   Cog* projectCog = Z::gEditor->mProject;
-  if(projectCog == nullptr)
+  if (projectCog == nullptr)
     return;
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
@@ -372,13 +376,13 @@ void Editor::LoadDefaultLevel()
 
   // Load the last level edited
   Cog* configCog = Z::gEngine->GetConfigCog();
-  if(EditorConfig* editorConfig = configCog->has(EditorConfig))
+  if (EditorConfig* editorConfig = configCog->has(EditorConfig))
   {
     String lastEditedLevel = configCog->has(EditorConfig)->EditingLevel;
     Level* lastEdited = LevelManager::FindOrNull(lastEditedLevel);
 
     // Is this level from this project?
-    if(lastEdited && lastEdited->mContentItem->mLibrary == mProjectLibrary)
+    if (lastEdited && lastEdited->mContentItem->mLibrary == mProjectLibrary)
       level = lastEdited;
   }
 
@@ -386,11 +390,11 @@ void Editor::LoadDefaultLevel()
 
   // If there is DefaultGameSetup use that starting level
   DefaultGameSetup* gameSetup = gameSession->has(DefaultGameSetup);
-  if(level == nullptr && gameSetup)
+  if (level == nullptr && gameSetup)
     level = gameSetup->GetStartingLevel();
 
   // Load the default level for the project
-  if(level == nullptr)
+  if (level == nullptr)
     level = LevelManager::FindOrNull(project->DefaultLevel);
 
   // Do not load core resource, it is not editable
@@ -398,11 +402,13 @@ void Editor::LoadDefaultLevel()
     level = nullptr;
 
   // Load any level in project
-  if(level == nullptr)
+  if (level == nullptr)
   {
-    forRange(Resource* resource,  LevelManager::GetInstance()->ResourceIdMap.Values())
+    forRange(Resource * resource,
+             LevelManager::GetInstance()->ResourceIdMap.Values())
     {
-      if(resource->mContentItem && resource->mContentItem->mLibrary == mProjectLibrary)
+      if (resource->mContentItem &&
+          resource->mContentItem->mLibrary == mProjectLibrary)
       {
         level = (Level*)resource;
         break;
@@ -427,13 +433,14 @@ void Editor::LoadDefaultLevel()
 
 GameSession* Editor::CreateDefaultGameSession()
 {
-  //No game session archetype in project create a new one
+  // No game session archetype in project create a new one
   Cog* projectCog = Z::gEditor->mProject;
-  if(projectCog == nullptr)
+  if (projectCog == nullptr)
     return nullptr;
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
-  // METAREFACTOR - Improper GameSession creation - wait, why does this comment exist, maybe because we removed MetaCreateContext...
+  // METAREFACTOR - Improper GameSession creation - wait, why does this comment
+  // exist, maybe because we removed MetaCreateContext...
   GameSession* game = new GameSession();
   game->SetInEditor(true);
   DefaultGameSetup* gameSetup = new DefaultGameSetup();
@@ -441,26 +448,34 @@ GameSession* Editor::CreateDefaultGameSession()
   gameSetup->mStartingSpace = ArchetypeManager::Find(project->ProjectSpace);
   gameSetup->mStartingLevel = LevelManager::Find(project->DefaultLevel);
   game->AddComponent(gameSetup);
-  ArchetypeManager::GetInstance()->MakeNewArchetypeWith(game, CoreArchetypes::Game);
+  ArchetypeManager::GetInstance()->MakeNewArchetypeWith(game,
+                                                        CoreArchetypes::Game);
   return game;
 }
 
 GameSession* Editor::EditorCreateGameSession(uint flags)
 {
-  Archetype* gameSessionArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Game);
+  Archetype* gameSessionArchetype =
+      ArchetypeManager::FindOrNull(CoreArchetypes::Game);
 
   GameSession* game = nullptr;
 
-  if(gameSessionArchetype == nullptr)
+  if (gameSessionArchetype == nullptr)
   {
     game = CreateDefaultGameSession();
   }
   else
   {
-    game = (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession), nullptr, CoreArchetypes::Game, flags, nullptr);
+    game =
+        (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession),
+                                                     nullptr,
+                                                     CoreArchetypes::Game,
+                                                     flags,
+                                                     nullptr);
 
-    //For some reason we failed to actually create a game session. Maybe the archetype contained the wrong expected type?
-    if(game == nullptr)
+    // For some reason we failed to actually create a game session. Maybe the
+    // archetype contained the wrong expected type?
+    if (game == nullptr)
       game = CreateDefaultGameSession();
     game->SetInEditor(true);
   }
@@ -476,19 +491,20 @@ void Editor::SetMainPropertyViewObject(Object* object)
 void Editor::ProjectLoaded()
 {
   Cog* projectCog = Z::gEditor->mProject;
-  if(projectCog == nullptr)
+  if (projectCog == nullptr)
     return;
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
 
-  String message = String::Format("Project '%s' has been loaded.", project->ProjectName.c_str());
+  String message = String::Format("Project '%s' has been loaded.",
+                                  project->ProjectName.c_str());
 
   // The first time a project is loaded, game session needs to
-  // update its references named "Space" and "Level" 
+  // update its references named "Space" and "Level"
   // so always mark game session as modified so it is saved
   // at least once.
-  //GameSession* gameSession = GetEditGameSession();
-  //gameSession->ModifiedFromArchetype();
+  // GameSession* gameSession = GetEditGameSession();
+  // gameSession->ModifiedFromArchetype();
 
   mLibrary->View(mProjectLibrary, project->ProjectResourceLibrary);
 
@@ -496,9 +512,12 @@ void Editor::ProjectLoaded()
   CommandManager::GetInstance()->GetContext()->Add(project);
 
   SafeDelete(mProjectDirectoryWatcher);
-  mProjectDirectoryWatcher = new EventDirectoryWatcher(mProjectLibrary->SourcePath);
-  ConnectThisTo(mProjectDirectoryWatcher, Events::FileModified, OnProjectFileModified);
-  ConnectThisTo(mProjectDirectoryWatcher, Events::FileRenamed, OnProjectFileModified);
+  mProjectDirectoryWatcher =
+      new EventDirectoryWatcher(mProjectLibrary->SourcePath);
+  ConnectThisTo(
+      mProjectDirectoryWatcher, Events::FileModified, OnProjectFileModified);
+  ConnectThisTo(
+      mProjectDirectoryWatcher, Events::FileRenamed, OnProjectFileModified);
 
   ObjectEvent event(projectCog);
   this->DispatchEvent(Events::ProjectLoaded, &event);
@@ -508,10 +527,10 @@ void Editor::ProjectLoaded()
 
   LoadDefaultLevel();
 
-  // Run any command-line arguments. This has to happen here because otherwise we have no
-  // guarantee that their project file and their scripts have been loaded otherwise. There 
-  // is a chance that if they open a new project these commands could re-run, but this is 
-  // something left for a later refactor.
+  // Run any command-line arguments. This has to happen here because otherwise
+  // we have no guarantee that their project file and their scripts have been
+  // loaded otherwise. There is a chance that if they open a new project these
+  // commands could re-run, but this is something left for a later refactor.
   CommandManager* commandManager = CommandManager::GetInstance();
   commandManager->RunParsedCommands();
 }
@@ -522,41 +541,44 @@ void Editor::OnSelectionFinal(SelectionChangedEvent* event)
   Handle primary = Handle(selection->GetPrimary());
 
   // Clear all selection gizmos
-  forRange(Cog* gizmo, mSelectionGizmos.All())
+  forRange(Cog * gizmo, mSelectionGizmos.All())
   {
-    if(gizmo)
+    if (gizmo)
       gizmo->Destroy();
   }
 
   mSelectionGizmos.Clear();
 
-  if(Cog* primaryCog = primary.Get<Cog*>())
+  if (Cog* primaryCog = primary.Get<Cog*>())
   {
-    //EditorViewport* editorViewport = mActiveViewport;
+    // EditorViewport* editorViewport = mActiveViewport;
 
-    //if(editorViewport)
-      //TryOpenPreview(primaryCog, editorViewport, selection);
+    // if(editorViewport)
+    // TryOpenPreview(primaryCog, editorViewport, selection);
 
     // Gizmo creation
-    if(selection->Count() == 1)
+    if (selection->Count() == 1)
     {
       // The position we're going to create the gizmo at
       Vec3 objectPos = Vec3::cZero;
-      if(Transform* transform = primaryCog->has(Transform))
+      if (Transform* transform = primaryCog->has(Transform))
         objectPos = transform->GetWorldTranslation();
 
       // Walk each component and look for valid gizmo archetypes
-      forRange(Component* component, primaryCog->GetComponents())
+      forRange(Component * component, primaryCog->GetComponents())
       {
-        if(MetaEditorGizmo* editorGizmo = ZilchVirtualTypeId(component)->HasInherited<MetaEditorGizmo>())
+        if (MetaEditorGizmo* editorGizmo =
+                ZilchVirtualTypeId(component)->HasInherited<MetaEditorGizmo>())
         {
           String archetypeName = editorGizmo->mGizmoArchetype;
-          Cog* gizmo = primaryCog->GetSpace()->CreateAt(archetypeName, objectPos);
-          if(gizmo)
+          Cog* gizmo =
+              primaryCog->GetSpace()->CreateAt(archetypeName, objectPos);
+          if (gizmo)
           {
-            gizmo->mFlags.SetFlag(CogFlags::Transient | CogFlags::ObjectViewHidden);
+            gizmo->mFlags.SetFlag(CogFlags::Transient |
+                                  CogFlags::ObjectViewHidden);
             mSelectionGizmos.PushBack(gizmo->GetId());
-            if(Gizmo* gizmoComponent = gizmo->has(Gizmo))
+            if (Gizmo* gizmoComponent = gizmo->has(Gizmo))
             {
               gizmoComponent->mEditingObject = primaryCog;
 
@@ -573,7 +595,8 @@ void Editor::OnSelectionFinal(SelectionChangedEvent* event)
 
 void Editor::OnSaveCheck(SavingEvent* event)
 {
-  if(!Z::gResources->mModifiedResources.Empty() || !Z::gContentSystem->mModifiedContentItems.Empty())
+  if (!Z::gResources->mModifiedResources.Empty() ||
+      !Z::gContentSystem->mModifiedContentItems.Empty())
     event->NeedSaving = true;
 }
 
@@ -605,19 +628,23 @@ Widget* Editor::ShowBrowser()
 
 Widget* Editor::ShowBrowser(StringParam url, StringParam tabName)
 {
-	WebBrowserSetup setup;
-	setup.mUrl = url;
-	WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
-	browser->SetName(tabName);
-	browser->SetHideOnClose(false);
+  WebBrowserSetup setup;
+  setup.mUrl = url;
+  WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
+  browser->SetName(tabName);
+  browser->SetHideOnClose(false);
 
-	this->AddManagedWidget(browser, DockArea::Center, true);
-	return browser;
+  this->AddManagedWidget(browser, DockArea::Center, true);
+  return browser;
 }
 
 Widget* Editor::ShowMarket()
 {
-  WebBrowserSetup setup(Urls::cUserMarket, cWebBrowserDefaultSize, IntVec2::cZero, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+  WebBrowserSetup setup(Urls::cUserMarket,
+                        cWebBrowserDefaultSize,
+                        IntVec2::cZero,
+                        false,
+                        Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Market");
@@ -629,7 +656,11 @@ Widget* Editor::ShowMarket()
 
 Widget* Editor::ShowChat()
 {
-  WebBrowserSetup setup(Urls::cUserChat, cWebBrowserDefaultSize, IntVec2::cZero, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+  WebBrowserSetup setup(Urls::cUserChat,
+                        cWebBrowserDefaultSize,
+                        IntVec2::cZero,
+                        false,
+                        Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Chat");
@@ -654,9 +685,9 @@ Widget* Editor::HideWindow(StringParam name)
   return mManager->HideWidget(name);
 }
 
-
-
-Window* Editor::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible)
+Window* Editor::AddManagedWidget(Widget* widget,
+                                 DockArea::Enum dockArea,
+                                 bool visible)
 {
   return mManager->AddManagedWidget(widget, dockArea, visible);
 }
@@ -664,8 +695,11 @@ Window* Editor::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool v
 class SpaceViewport : public Composite
 {
 public:
-  SpaceViewport(Composite* parent, CameraViewport* cameraViewport, bool destroySpaceOnClose) :
-    Composite(parent), mDestroySpaceOnClose(destroySpaceOnClose)
+  SpaceViewport(Composite* parent,
+                CameraViewport* cameraViewport,
+                bool destroySpaceOnClose) :
+      Composite(parent),
+      mDestroySpaceOnClose(destroySpaceOnClose)
   {
     // Fill the game widget
     SetLayout(CreateFillLayout());
@@ -679,7 +713,7 @@ public:
   {
     Composite::OnDestroy();
 
-    if(mDestroySpaceOnClose)
+    if (mDestroySpaceOnClose)
       mSpace.SafeDestroy();
   }
 
@@ -687,11 +721,15 @@ public:
   HandleOf<Space> mSpace;
 };
 
-void Editor::CreateDockableWindow(StringParam windowName, CameraViewport* cameraViewport,
-  Vec2Param initialSize, bool destroySpaceOnClose, DockArea::Enum dockMode)
+void Editor::CreateDockableWindow(StringParam windowName,
+                                  CameraViewport* cameraViewport,
+                                  Vec2Param initialSize,
+                                  bool destroySpaceOnClose,
+                                  DockArea::Enum dockMode)
 {
   Space* space = cameraViewport->GetSpace();
-  SpaceViewport* viewport = new SpaceViewport(this, cameraViewport, destroySpaceOnClose);
+  SpaceViewport* viewport =
+      new SpaceViewport(this, cameraViewport, destroySpaceOnClose);
   viewport->SetSize(initialSize);
 
   viewport->SetName(windowName);
@@ -702,16 +740,19 @@ void Editor::SetEditMode(EditorMode::Enum mode)
 {
   Space* editSpace = GetEditSpace();
 
-  if(editSpace == nullptr)
+  if (editSpace == nullptr)
     return;
-  
-  // With the camera controller mode tied to the level any changes need to mark the active space as modified
-  editSpace->MarkModified();
-  Cog* editorCameraCog = editSpace->FindObjectByName(SpecialCogNames::EditorCamera);
-  Camera* editorCamera = editorCameraCog->has(Camera);
-  EditorCameraController* cameraController = editorCameraCog->has(EditorCameraController);
 
-  if(mode == EditorMode::Mode2D)
+  // With the camera controller mode tied to the level any changes need to mark
+  // the active space as modified
+  editSpace->MarkModified();
+  Cog* editorCameraCog =
+      editSpace->FindObjectByName(SpecialCogNames::EditorCamera);
+  Camera* editorCamera = editorCameraCog->has(Camera);
+  EditorCameraController* cameraController =
+      editorCameraCog->has(EditorCameraController);
+
+  if (mode == EditorMode::Mode2D)
   {
     if (!cameraController)
       editorCamera->SetPerspectiveMode(PerspectiveMode::Orthographic);
@@ -736,9 +777,11 @@ EditorMode::Enum Editor::GetEditMode()
   if (editSpace == nullptr)
     return EditorMode::Mode3D;
 
-  Cog* editorCameraCog = editSpace->FindObjectByName(SpecialCogNames::EditorCamera);
+  Cog* editorCameraCog =
+      editSpace->FindObjectByName(SpecialCogNames::EditorCamera);
   Camera* editorCamera = editorCameraCog->has(Camera);
-  EditorCameraController* cameraController = editorCameraCog->has(EditorCameraController);
+  EditorCameraController* cameraController =
+      editorCameraCog->has(EditorCameraController);
 
   return cameraController->GetEditMode();
 }
@@ -746,22 +789,22 @@ EditorMode::Enum Editor::GetEditMode()
 void Editor::OnProjectFileModified(FileEditEvent* e)
 {
   EditorSettings* settings = Z::gEngine->GetConfigCog()->has(EditorSettings);
-  if(!settings->mAutoUpdateContentChanges)
+  if (!settings->mAutoUpdateContentChanges)
     return;
 
-  if(mProjectLibrary == nullptr)
+  if (mProjectLibrary == nullptr)
     return;
 
   // Walk through each content item in the loaded library and find any
   // files we need to reload
-  forRange(ContentItem* contentItem, mProjectLibrary->GetContentItems())
+  forRange(ContentItem * contentItem, mProjectLibrary->GetContentItems())
   {
-    if(contentItem->Filename == e->FileName)
+    if (contentItem->Filename == e->FileName)
     {
       String filePath = contentItem->GetFullPath();
 
       // Don't reload it if we were the one that modified it
-      if(!FileModifiedState::HasModifiedSinceTime(filePath, e->TimeStamp))
+      if (!FileModifiedState::HasModifiedSinceTime(filePath, e->TimeStamp))
         ReloadContentItem(contentItem);
     }
   }
@@ -774,13 +817,13 @@ PropertyView* Editor::GetPropertyView()
 
 Composite* Editor::OpenSearchWindow(Widget* returnFocus, bool noBorder)
 {
-  //If focus is NULL return focus to who current has it
-  if(returnFocus == nullptr)
+  // If focus is NULL return focus to who current has it
+  if (returnFocus == nullptr)
     returnFocus = this->GetRootWidget()->GetFocusObject();
 
   Window* newWindow = new Window(this->GetParent());
 
-  if(noBorder)
+  if (noBorder)
     newWindow->ChangeStyle(WindowStyle::NoFrame);
 
   GeneralSearchView* cs = new GeneralSearchView(newWindow, returnFocus);
@@ -788,10 +831,10 @@ Composite* Editor::OpenSearchWindow(Widget* returnFocus, bool noBorder)
   newWindow->SetTranslationAndSize(Pixels(0, 0, 0), Pixels(320, 440));
   CenterToWindow(this->GetParent(), newWindow, false);
 
-  //Update the transform so everything is the right size
+  // Update the transform so everything is the right size
   newWindow->UpdateTransformExternal();
 
-  //Now populate the list
+  // Now populate the list
   cs->StartSearch();
 
   return newWindow;
@@ -807,8 +850,7 @@ void Editor::OnEngineUpdate(UpdateEvent* event)
 {
   if (mStopGame)
   {
-    forRange(GameSession* game, GetGames())
-      game->Quit();
+    forRange(GameSession * game, GetGames()) game->Quit();
     mStopGame = false;
   }
 }
@@ -817,28 +859,31 @@ Space* Editor::CreateNewSpace(uint flags)
 {
   Space* space = nullptr;
   Cog* projectCog = Z::gEditor->mProject;
-  
+
   GameSession* gameSession = GetEditGameSession();
 
-  if(projectCog)
+  if (projectCog)
   {
     ProjectSettings* project = projectCog->has(ProjectSettings);
-    if(!project->ProjectSpace.Empty())
+    if (!project->ProjectSpace.Empty())
     {
-      Archetype* spaceArchetype = ArchetypeManager::FindOrNull(project->ProjectSpace);
-      if(spaceArchetype)
+      Archetype* spaceArchetype =
+          ArchetypeManager::FindOrNull(project->ProjectSpace);
+      if (spaceArchetype)
         space = gameSession->CreateSpaceFlags(spaceArchetype, flags);
     }
   }
 
-  if(space == nullptr)
+  if (space == nullptr)
   {
     DoNotifyError("Project Error", "Failed to create space from project");
-    Archetype* spaceArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::DefaultSpace);
-    if(gameSession)
+    Archetype* spaceArchetype =
+        ArchetypeManager::FindOrNull(CoreArchetypes::DefaultSpace);
+    if (gameSession)
       return gameSession->CreateSpaceFlags(spaceArchetype, flags);
     else
-      return Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace, flags, nullptr);
+      return Z::gFactory->CreateSpace(
+          CoreArchetypes::DefaultSpace, flags, nullptr);
   }
   else
     return space;
@@ -857,28 +902,31 @@ void Editor::Redo()
 void EditorSaveResource(Resource* resource)
 {
   // Resource was deleted
-  if(resource == nullptr)
+  if (resource == nullptr)
     return;
 
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Resource", "Cannot save a resource while in read-only mode.");
+    DoNotifyWarning("Resource",
+                    "Cannot save a resource while in read-only mode.");
     return;
   }
 
   // Check for resource not Writable
-  if(!resource->IsWritable())
+  if (!resource->IsWritable())
   {
-    DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
-    if(devConfig == nullptr || !devConfig->mCanModifyReadOnlyResources)
+    DeveloperConfig* devConfig =
+        Z::gEngine->GetConfigCog()->has(DeveloperConfig);
+    if (devConfig == nullptr || !devConfig->mCanModifyReadOnlyResources)
     {
-      DoNotifyWarning("Resource is not writable", "Resource is a protected or built in resource.");
+      DoNotifyWarning("Resource is not writable",
+                      "Resource is a protected or built in resource.");
       return;
     }
   }
-  
+
   // Check for runtime resources
-  if(resource->IsRuntime())
+  if (resource->IsRuntime())
   {
     DoNotifyError("Can not save", "Runtime resources can not be saved.");
     return;
@@ -912,7 +960,8 @@ Status Editor::SaveAll(bool showNotify)
   // Save all content items that have been edited
   forRange(ContentItemId id, Z::gContentSystem->mModifiedContentItems.All())
   {
-    ContentItem* contentItem = Z::gContentSystem->LoadedItems.FindValue(id, nullptr);
+    ContentItem* contentItem =
+        Z::gContentSystem->LoadedItems.FindValue(id, nullptr);
     if (contentItem)
       contentItem->SaveContent();
   }
@@ -928,21 +977,21 @@ Status Editor::SaveAll(bool showNotify)
 
   GameSession* editedGame = mEditGame;
   // Auto upload the Game Archetype
-  if(editedGame)
+  if (editedGame)
   {
-    if(editedGame->IsModifiedFromArchetype())
+    if (editedGame->IsModifiedFromArchetype())
       editedGame->UploadToArchetype();
   }
 
   // Save the project itself
   Cog* projectCog = Z::gEditor->mProject;
-  if(projectCog)
+  if (projectCog)
     projectCog->has(ProjectSettings)->Save();
 
   // Scripts need to be fully compiling before we run
   ZilchManager* zilchManager = ZilchManager::GetInstance();
   zilchManager->TriggerCompileExternally();
-  if(zilchManager->mLastCompileResult == CompileResult::CompilationFailed)
+  if (zilchManager->mLastCompileResult == CompileResult::CompilationFailed)
     return Status(StatusState::Failure, "Failed to compile Zilch Scripts");
 
   Tweakables::Save();
@@ -953,7 +1002,8 @@ Status Editor::SaveAll(bool showNotify)
   if (showNotify)
     DoNotify("Saved", "Project and all scripts saved.", "Disk");
 
-  // On some platforms, to make files persist between runs we need to call this function.
+  // On some platforms, to make files persist between runs we need to call this
+  // function.
   PersistFiles();
 
   return Status();
@@ -962,7 +1012,7 @@ Status Editor::SaveAll(bool showNotify)
 bool Editor::TakeProjectScreenshot()
 {
   // Take a screen shot if it's enabled
-  if(Cog* projectCog = mProject)
+  if (Cog* projectCog = mProject)
   {
     ProjectSettings* project = projectCog->has(ProjectSettings);
 
@@ -971,14 +1021,14 @@ bool Editor::TakeProjectScreenshot()
     // give games sessions a priority, then editor viewports
 
     // Search for active games sessions
-    forRange(GameSession* gameSession, mGames.All())
+    forRange(GameSession * gameSession, mGames.All())
     {
-      if(gameSession == nullptr)
+      if (gameSession == nullptr)
         continue;
 
-      if(GameWidget* gameWidget = gameSession->mGameWidget)
+      if (GameWidget* gameWidget = gameSession->mGameWidget)
       {
-        if(gameWidget->mActive)
+        if (gameWidget->mActive)
         {
           // Take the screen shot and save it to the project folder
           CreateDirectoryAndParents(project->EditorContentFolder);
@@ -988,9 +1038,9 @@ bool Editor::TakeProjectScreenshot()
       }
     }
 
-    if(EditorViewport* viewport = mEditorViewport)
+    if (EditorViewport* viewport = mEditorViewport)
     {
-      if(viewport->mActive)
+      if (viewport->mActive)
       {
         // Take the screen shot and save it to the project folder
         CreateDirectoryAndParents(project->EditorContentFolder);
@@ -1003,26 +1053,28 @@ bool Editor::TakeProjectScreenshot()
   return false;
 }
 
-void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue,
+void ReInitializeScriptsOnObject(Cog* cog,
+                                 OperationQueue& queue,
                                  HashSet<ResourceLibrary*>& modifiedLibraries)
 {
-  forRange(Cog& child, cog->GetChildren())
-    ReInitializeScriptsOnObject(&child, queue, modifiedLibraries);
+  forRange(Cog & child, cog->GetChildren())
+      ReInitializeScriptsOnObject(&child, queue, modifiedLibraries);
 
   BoundType* zilchComponentType = ZilchTypeId(ZilchComponent);
 
   // We want to walk the components in reverse so we don't run into issues
   // with dependencies
   Cog::ComponentRange r = cog->GetComponents();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     Component* component = r.Back();
     BoundType* componentType = ZilchVirtualTypeId(component);
 
-    // NOTE: We could attempt to optimize this by only removing the components that were modified
-    // however we have to be very careful because any non-modified component could possibly get a handle
-    // to a modified component e.g. via GetComponentByName then the handle will become garbage
-    
+    // NOTE: We could attempt to optimize this by only removing the components
+    // that were modified however we have to be very careful because any
+    // non-modified component could possibly get a handle to a modified
+    // component e.g. via GetComponentByName then the handle will become garbage
+
     // Remove proxies in case they were replaced by the actual script type
     bool isProxy = componentType->HasAttribute(ObjectAttributes::cProxy);
     bool isZilchComponent = componentType->IsA(zilchComponentType);
@@ -1032,31 +1084,33 @@ void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue,
     // in an invalid order caused by adding dependencies after the fact
     bool ignoreDependencies = true;
 
-    if(isProxy || isZilchComponent)
+    if (isProxy || isZilchComponent)
       QueueRemoveComponent(&queue, cog, componentType, ignoreDependencies);
 
     r.PopBack();
   }
 }
 
-void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue,
+void ReInitializeScriptsOnGame(GameSession* game,
+                               OperationQueue& queue,
                                HashMap<Space*, bool>& spaceModifiedStates,
                                HashSet<ResourceLibrary*>& modifiedLibraries)
 {
-  // Game can be null if they failed to open a project (for instance, a project created in a new version)
-  if(game == nullptr)
+  // Game can be null if they failed to open a project (for instance, a project
+  // created in a new version)
+  if (game == nullptr)
     return;
 
-  // Reinitialize 
-  forRange(Space* space, game->GetAllSpaces())
+  // Reinitialize
+  forRange(Space * space, game->GetAllSpaces())
   {
     // Store the modified state of this space
     bool spaceModified = space->GetModified();
     spaceModifiedStates.Insert(space, spaceModified);
 
     // All cogs in the space
-    forRange(Cog& cog, space->AllRootObjects())
-      ReInitializeScriptsOnObject(&cog, queue, modifiedLibraries);
+    forRange(Cog & cog, space->AllRootObjects())
+        ReInitializeScriptsOnObject(&cog, queue, modifiedLibraries);
 
     // The space itself can have script components
     ReInitializeScriptsOnObject(space, queue, modifiedLibraries);
@@ -1068,15 +1122,16 @@ void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue,
 void RevertSpaceModifiedState(GameSession* game,
                               HashMap<Space*, bool>& spaceModifiedStates)
 {
-  // Game can be null if they failed to open a project (for instance, a project created in a new version)
-  if(game == nullptr)
+  // Game can be null if they failed to open a project (for instance, a project
+  // created in a new version)
+  if (game == nullptr)
     return;
 
   // Update the modified state of all spaces
-  forRange(Space* space, game->GetAllSpaces())
+  forRange(Space * space, game->GetAllSpaces())
   {
     bool modified = spaceModifiedStates.FindValue(space, true);
-    if(!modified)
+    if (!modified)
       space->MarkNotModified();
   }
 }
@@ -1085,7 +1140,7 @@ void ClearSelections(ZilchCompileEvent* e)
 {
   Array<Handle> objectsToDeselect;
   HashSet<MetaSelection*> modifiedSelections;
-  forRange(MetaSelection* selection, MetaSelection::GetAllSelections())
+  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
   {
     // Remove objects in the selection who's type was modified
     forRange(Handle obj, selection->All())
@@ -1094,17 +1149,16 @@ void ClearSelections(ZilchCompileEvent* e)
         objectsToDeselect.PushBack(obj);
     }
 
-    forRange(Handle& obj, objectsToDeselect.All())
-      selection->Remove(obj);
-    
+    forRange(Handle & obj, objectsToDeselect.All()) selection->Remove(obj);
+
     if (!objectsToDeselect.Empty())
       modifiedSelections.Insert(selection);
 
     objectsToDeselect.Clear();
   }
 
-  forRange(MetaSelection* selection, modifiedSelections.All())
-    selection->FinalSelectionChanged();
+  forRange(MetaSelection * selection, modifiedSelections.All())
+      selection->FinalSelectionChanged();
 }
 
 void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
@@ -1118,10 +1172,11 @@ void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
 
 void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
 {
-  //ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
+  // ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
   //
-  //// Patch anything that was not reinitialized if the compilation was successful
-  //if(e->mLibrary != nullptr)
+  //// Patch anything that was not reinitialized if the compilation was
+  ///successful
+  // if(e->mLibrary != nullptr)
   //  zilchManager->PatchLibraryIfNeeded(e->mLibrary);
 
   // Re-add all the components
@@ -1129,8 +1184,8 @@ void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
 
   // Revert all space modified states on all game sessions
   RevertSpaceModifiedState(GetEditGameSession(), mSpaceModifiedStates);
-  forRange(GameSession* game, GetGames())
-    RevertSpaceModifiedState(game, mSpaceModifiedStates);
+  forRange(GameSession * game, GetGames())
+      RevertSpaceModifiedState(game, mSpaceModifiedStates);
 
   // Cleanup
   mSpaceModifiedStates.Clear();
@@ -1138,7 +1193,8 @@ void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
   Archetype::sRebuilding = false;
 }
 
-void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries)
+void Editor::TearDownZilchStateOnGames(
+    HashSet<ResourceLibrary*>& modifiedLibraries)
 {
   // Shouldn't be anything in here, but just in case..
   mReInitializeQueue.ClearAll();
@@ -1149,11 +1205,12 @@ void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibrar
 
   // Re-Initialize all components in the editors game session
   GameSession* game = GetEditGameSession();
-  ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
+  ReInitializeScriptsOnGame(
+      game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   // Re-Initialize all components in all game sessions
-  forRange(GameSession* game, GetGames())
-    ReInitializeScriptsOnGame(game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
+  forRange(GameSession * game, GetGames()) ReInitializeScriptsOnGame(
+      game, mReInitializeQueue, mSpaceModifiedStates, modifiedLibraries);
 
   mReInitializeQueue.EndBatch();
 }
@@ -1163,7 +1220,7 @@ void Editor::OnResourcesUnloaded(ResourceEvent* event)
   MetaSelection* selection = GetSelection();
 
   Array<Handle> toRemove;
-  forRange (Handle handle, selection->All())
+  forRange(Handle handle, selection->All())
   {
     // Object is gone.
     if (handle.IsNull())
@@ -1183,8 +1240,7 @@ void Editor::OnResourcesUnloaded(ResourceEvent* event)
   }
 
   // Remove deleted objects from selection.
-  forRange (Handle handle, toRemove.All())
-    selection->Remove(handle);
+  forRange(Handle handle, toRemove.All()) selection->Remove(handle);
 
   // Don't need to call selection changed if nothing was removed.
   if (!toRemove.Empty())
@@ -1198,21 +1254,21 @@ void Editor::OnMouseFileDrop(MouseFileDropEvent* event)
 
 void Editor::Update()
 {
-  //Debug::DefaultConfig config;
+  // Debug::DefaultConfig config;
 
-  //if(Space* space = GetEditSpace())
+  // if(Space* space = GetEditSpace())
   //  config.SpaceId(GetEditSpace()->GetId().Id);
 
   uint spaceId = 0;
-  if(Space* space = GetEditSpace())
+  if (Space* space = GetEditSpace())
     spaceId = space->GetId().Id;
 
   Debug::ActiveDrawSpace drawSpace(spaceId);
 
-  //MetaSelection* selection = GetActiveSelection();
-  //Cog* primary = selection->GetPrimaryAs<Cog>();
+  // MetaSelection* selection = GetActiveSelection();
+  // Cog* primary = selection->GetPrimaryAs<Cog>();
 
-  //if(primary && primary->GetMeta() == MetaTypeOf(Cog))
+  // if(primary && primary->GetMeta() == MetaTypeOf(Cog))
   //{
   //  // If the object is a cog setup of debug drawing
   //  // to draw in that space
@@ -1220,8 +1276,8 @@ void Editor::Update()
   //  config.SpaceId(space->GetId().Id);
   //}
 
-  // Debug Draw the active tool (rare cases it could've been null (old tile editor),
-  // just safe guard in case it ever gets set to null again)
+  // Debug Draw the active tool (rare cases it could've been null (old tile
+  // editor), just safe guard in case it ever gets set to null again)
   if (Cog* toolCog = Tools->GetActiveCog())
   {
     Event e;
@@ -1230,10 +1286,10 @@ void Editor::Update()
 
   // Always draw the selection tool unless
   // it was active and already drawn
-  if(Cog* toolCog = Tools->GetActiveCog())
+  if (Cog* toolCog = Tools->GetActiveCog())
   {
     Cog* selectToolCog = Tools->mSelectTool->GetOwner();
-    if(toolCog != selectToolCog)
+    if (toolCog != selectToolCog)
     {
       Event e;
       selectToolCog->DispatchEvent(Events::ToolDraw, &e);
@@ -1244,15 +1300,17 @@ void Editor::Update()
 
   mRuntimeEditorImpl->VisualizePending();
 
-  // If there's an un-ended operation batch, someone in script forgot to end the batch
+  // If there's an un-ended operation batch, someone in script forgot to end the
+  // batch
   OperationQueue* opQueue = GetOperationQueue();
-  if(opQueue->ActiveBatch != nullptr)
+  if (opQueue->ActiveBatch != nullptr)
   {
-    DoNotifyErrorNoAssert("Operation Batch Not Closed", "'BeginBatch' was called on an "
-                  "operation queue, but 'EndBatch' was not called.");
+    DoNotifyErrorNoAssert("Operation Batch Not Closed",
+                          "'BeginBatch' was called on an "
+                          "operation queue, but 'EndBatch' was not called.");
 
     // Close all batches
-    while(opQueue->ActiveBatch != nullptr)
+    while (opQueue->ActiveBatch != nullptr)
       opQueue->EndBatch();
   }
 }
@@ -1260,13 +1318,14 @@ void Editor::Update()
 void Editor::ExecuteCommand(StringParam commandName)
 {
   Command* command = mCommands->mNamedCommands.FindValue(commandName, nullptr);
-  if(command)
+  if (command)
   {
     command->ExecuteCommand();
   }
   else
   {
-    String message = String::Format("%s is not a registered command.", commandName.c_str());
+    String message =
+        String::Format("%s is not a registered command.", commandName.c_str());
     DoNotify("Command not found", message, "Warning");
   }
 }
@@ -1276,15 +1335,15 @@ void Editor::OnCaptureContext(CommandCaptureContextEvent* event)
   event->ActiveSet->GetContext()->Add(this);
 }
 
-
-//------------------------------------------------------------ Game Running Functions
+//Functions
 
 // Game Commands
 
 GameSession* Editor::GetEditGameSession()
 {
   if (mEditGame == nullptr)
-    mEditGame = EditorCreateGameSession(CreationFlags::Editing | CreationFlags::ProxyComponentsExpected);
+    mEditGame = EditorCreateGameSession(CreationFlags::Editing |
+                                        CreationFlags::ProxyComponentsExpected);
 
   return mEditGame;
 }
@@ -1309,10 +1368,10 @@ bool Editor::AreGamesRunning()
 
 void Editor::ClearInvalidGames()
 {
-  for(size_t i = 0; i < mGames.Size();)
+  for (size_t i = 0; i < mGames.Size();)
   {
     GameSession* game = mGames[i];
-    if(!game)
+    if (!game)
       mGames.EraseAt(i);
     else
       ++i;
@@ -1328,14 +1387,16 @@ Editor::GameRange Editor::GetGames()
 void Editor::DisplayGameSession(StringParam name, GameSession* gameSession)
 {
   if (gameSession->mStarted)
-    DoNotifyErrorNoAssert("Game Session Playing", "You must start the game session after calling DisplayGameSession");
-  //mGamePending = false;
+    DoNotifyErrorNoAssert(
+        "Game Session Playing",
+        "You must start the game session after calling DisplayGameSession");
+  // mGamePending = false;
 
   // Create a GameWidget that will contain the GameSession
   GameWidget* gameWidget = new GameWidget(this);
   gameWidget->TakeFocus();
   gameWidget->SetName(name);
-  
+
   // Attach the gameWidget as a tab to the main window
   Window* main = this->GetCenterWindow();
   main->AttachAsTab(gameWidget);
@@ -1364,35 +1425,39 @@ void FocusTabbedWidget(Widget* widget)
   widget->TakeFocus();
 }
 
-GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, bool startGame)
+GameSession* Editor::PlayGame(PlayGameOptions::Enum options,
+                              bool takeFocus,
+                              bool startGame)
 {
-  // If the debugger is breakpointed then we signal it to resume instead of playing a new game
+  // If the debugger is breakpointed then we signal it to resume instead of
+  // playing a new game
   Zilch::Debugger& debugger = ZilchManager::GetInstance()->mDebugger;
-  if (debugger.IsBreakpointed || debugger.Action != Zilch::DebuggerAction::Resume)
+  if (debugger.IsBreakpointed ||
+      debugger.Action != Zilch::DebuggerAction::Resume)
   {
     debugger.Resume();
 
     GameRange games = GetGames();
-    forRange(GameSession* game, games)
-      FocusTabbedWidget(game->mGameWidget);
+    forRange(GameSession * game, games) FocusTabbedWidget(game->mGameWidget);
 
     return nullptr;
   }
 
   // Is there a level to start on?
   Level* playLevel = GetStartingLevel();
-  if(playLevel == nullptr)
+  if (playLevel == nullptr)
   {
-    DoNotifyError("No level loaded.", "Can not play a game without a loaded level.");
+    DoNotifyError("No level loaded.",
+                  "Can not play a game without a loaded level.");
     return nullptr;
   }
 
   // If we had old games running and we're only launching a single instance...
   GameRange games = GetGames();
-  if(!games.Empty() && options == PlayGameOptions::SingleInstance)
+  if (!games.Empty() && options == PlayGameOptions::SingleInstance)
   {
     // Check to see if there is a valid old game (if so, clear them out)
-    forRange(GameSession* oldGame, games)
+    forRange(GameSession * oldGame, games)
     {
       // Shut it down
       oldGame->Quit();
@@ -1406,19 +1471,21 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
   mGamePending = false;
 
   // Attempt to save the game, and if it fails do not play
-  // Note: This should definitely come down here, before we close out of the first game
-  // The reason is that if anything is 'in use' while the game is running (eg the Zilch library)
-  // then it cannot be updated by saving
+  // Note: This should definitely come down here, before we close out of the
+  // first game The reason is that if anything is 'in use' while the game is
+  // running (eg the Zilch library) then it cannot be updated by saving
   Status status = SaveAll(false);
-  if(status.Failed())
+  if (status.Failed())
   {
-    DoNotifyErrorNoAssert("Play Game", String::Format("Cannot run the game because: %s", status.Message.c_str()));
+    DoNotifyErrorNoAssert("Play Game",
+                          String::Format("Cannot run the game because: %s",
+                                         status.Message.c_str()));
     return nullptr;
   }
 
   // Create a GameWidget that will contain the GameSession
   GameWidget* gameWidget = new GameWidget(this);
-  if(takeFocus)
+  if (takeFocus)
     gameWidget->TakeFocus();
   gameWidget->SetName("Game");
 
@@ -1438,7 +1505,7 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
   // Store the game on the editor
   mGames.PushBack(game);
 
-  if(startGame)
+  if (startGame)
     game->Start();
 
   return game;
@@ -1456,15 +1523,15 @@ GameSession* Editor::PlayNewGame()
 
 void Editor::ZoomOnGame(GameSession* gameSession)
 {
-  if(gameSession == nullptr)
+  if (gameSession == nullptr)
     return;
 
   GameWidget* widget = gameSession->mGameWidget;
-  if(widget == nullptr)
+  if (widget == nullptr)
     return;
 
   Window* window = GetWindowContaining(widget);
-  if(window == nullptr || window->mDocker == nullptr)
+  if (window == nullptr || window->mDocker == nullptr)
     return;
 
   window->mDocker->Zoom(widget);
@@ -1473,7 +1540,7 @@ void Editor::ZoomOnGame(GameSession* gameSession)
 void Editor::EditGameSpaces()
 {
   GameRange games = GetGames();
-  forRange(GameSession* game, games)
+  forRange(GameSession * game, games)
   {
     game->EditSpaces();
   }
@@ -1484,7 +1551,8 @@ void Editor::StepGame()
   Zilch::Debugger& debugger = ZilchManager::GetInstance()->mDebugger;
   if (debugger.IsBreakpointed)
   {
-    DoNotifyWarning("Editor", "Cannot step the game while we're paused in the debugger");
+    DoNotifyWarning("Editor",
+                    "Cannot step the game while we're paused in the debugger");
     return;
   }
 
@@ -1492,15 +1560,16 @@ void Editor::StepGame()
   GameRange games = GetGames();
 
   // If there's no active game to step, start a new game and pause it
-  if(games.Empty())
+  if (games.Empty())
   {
     GameSession* game = PlayGame(PlayGameOptions::SingleInstance);
-    if(game) game->Pause();
+    if (game)
+      game->Pause();
   }
   else
   {
     // Step all active games
-    forRange(GameSession* game, games)
+    forRange(GameSession * game, games)
     {
       game->Step();
     }
@@ -1510,7 +1579,7 @@ void Editor::StepGame()
 void Editor::DestroyGames()
 {
   // Clean up an active game sessions
-  if(GameSession* session = mEditGame)
+  if (GameSession* session = mEditGame)
     session->Destroy();
 }
 
@@ -1519,7 +1588,8 @@ void Editor::StopGame()
   ZilchManager::GetInstance()->mDebugger.Resume();
 
   // Wait until after system updates to stop game.
-  // This prevents events such as LogicUpdate from happening in an unexpected state.
+  // This prevents events such as LogicUpdate from happening in an unexpected
+  // state.
   if (GetGames().Empty() == false)
     mStopGame = true;
 }
@@ -1545,9 +1615,9 @@ void Editor::ToggleGamePaused()
 
 void Editor::SetGamePaused(bool state)
 {
-  // Set the new pause state on all currently running game sessions in the editor
-  forRange(GameSession* game, GetGames())
-    game->mPaused = state;
+  // Set the new pause state on all currently running game sessions in the
+  // editor
+  forRange(GameSession * game, GetGames()) game->mPaused = state;
 
   // If the game pauses due to a script error, we need to undo trap
   // otherwise the mouse gets caught and you can't fix anything
@@ -1562,29 +1632,33 @@ void Editor::AddResource()
   AddResourceType(nullptr);
 }
 
-void Editor::AddResourceType(BoundType* resourceType, ContentLibrary* library, StringParam resourceName)
+void Editor::AddResourceType(BoundType* resourceType,
+                             ContentLibrary* library,
+                             StringParam resourceName)
 {
-  // We don't need a project as long as another ContentLibrary is specified to add the new
-  // Resource to
+  // We don't need a project as long as another ContentLibrary is specified to
+  // add the new Resource to
   if (library == nullptr && !mProject)
   {
-    DoNotifyError("No project to add resources", "Need a project to add resources");\
+    DoNotifyError("No project to add resources",
+                  "Need a project to add resources");
     return;
   }
 
-  AddResourceWindow* addWindow = OpenAddWindow(resourceType, nullptr, resourceName);
+  AddResourceWindow* addWindow =
+      OpenAddWindow(resourceType, nullptr, resourceName);
   addWindow->SetLibrary(library);
 }
 
 void Editor::EditResource(Resource* resource)
 {
-  if(resource == nullptr)
+  if (resource == nullptr)
     return;
 
   // Is this resource already open?
   // If so use that window
   Widget* widget = mManager->ShowWidgetWith(resource);
-  if(widget)
+  if (widget)
     return;
 
   ResourceEditors::GetInstance()->FindResourceEditor(resource);
@@ -1596,20 +1670,28 @@ bool Editor::RequestQuit(bool isRestart)
   SavingEvent saveEvent;
   this->GetDispatcher()->Dispatch(Events::SaveCheck, &saveEvent);
 
-  if(saveEvent.NeedSaving)
+  if (saveEvent.NeedSaving)
   {
     // If anything needs saving prompt the user
     MessageBox* box;
     if (isRestart)
     {
-      const cstr MBSaveRestartCancel[] = { "Save and Restart", "Restart without Saving", "Cancel", nullptr };
-      box = MessageBox::Show("Restart Confirmation", "Save all changes to levels, scripts, and resources?", MBSaveRestartCancel);
+      const cstr MBSaveRestartCancel[] = {
+          "Save and Restart", "Restart without Saving", "Cancel", nullptr};
+      box = MessageBox::Show(
+          "Restart Confirmation",
+          "Save all changes to levels, scripts, and resources?",
+          MBSaveRestartCancel);
       ConnectThisTo(box, Events::MessageBoxResult, OnSaveRestartMessageBox);
     }
     else
     {
-      const cstr MBSaveQuitCancel[] = { "Save and Quit", "Quit without Saving", "Cancel", nullptr };
-      box = MessageBox::Show("Quit Confirmation", "Save all changes to levels, scripts, and resources?", MBSaveQuitCancel);
+      const cstr MBSaveQuitCancel[] = {
+          "Save and Quit", "Quit without Saving", "Cancel", nullptr};
+      box = MessageBox::Show(
+          "Quit Confirmation",
+          "Save all changes to levels, scripts, and resources?",
+          MBSaveQuitCancel);
       ConnectThisTo(box, Events::MessageBoxResult, OnSaveQuitMessageBox);
     }
     // Block the quit
@@ -1625,13 +1707,13 @@ bool Editor::RequestQuit(bool isRestart)
 
 void Editor::OnSaveQuitMessageBox(MessageBoxEvent* event)
 {
-  if(event->ButtonIndex == 0)
+  if (event->ButtonIndex == 0)
   {
     SaveAll(false);
     Z::gEngine->Terminate();
   }
 
-  if(event->ButtonIndex == 1)
+  if (event->ButtonIndex == 1)
   {
     Z::gEngine->Terminate();
   }
@@ -1653,7 +1735,7 @@ void Editor::OnSaveRestartMessageBox(MessageBoxEvent* event)
   }
 
   // 2 is cancel
-  
+
   // This was a restart request
   Os::SystemOpenFile(GetApplication().c_str());
 }
@@ -1683,4 +1765,4 @@ void Editor::DebuggerStepOut()
   ZilchManager::GetInstance()->mDebugger.StepOut();
 }
 
-}//namespace Zero
+} // namespace Zero

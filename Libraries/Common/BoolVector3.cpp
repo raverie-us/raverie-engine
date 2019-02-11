@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file BoolVector3.cpp
-///  Implementation of the BoolVector3 structure.
-/// 
-///  Authors: Trevor Sundberg
-///  Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
@@ -16,7 +8,6 @@ const BoolVector3 BoolVector3::cZero(false, false, false);
 const BoolVector3 BoolVector3::cXAxis(true, false, false);
 const BoolVector3 BoolVector3::cYAxis(false, true, false);
 const BoolVector3 BoolVector3::cZAxis(false, false, true);
-
 
 BoolVector3::BoolVector3(bool x_, bool y_, bool z_)
 {
@@ -59,4 +50,4 @@ void BoolVector3::Set(bool x_, bool y_, bool z_)
   z = z_;
 }
 
-}// namespace Math
+} // namespace Math

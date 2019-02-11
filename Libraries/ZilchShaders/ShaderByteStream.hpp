@@ -1,21 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-
-//-------------------------------------------------------------------ShaderStreamWriter
 /// A writer object base class to write to a shader stream.
 class ShaderStreamWriter
 {
 public:
-  virtual ~ShaderStreamWriter() {};
+  virtual ~ShaderStreamWriter(){};
   virtual void WriteWord(uint32 word) = 0;
 
   void Write(uint32 word);
@@ -23,20 +16,23 @@ public:
   void Write(uint8 a, uint8 b, uint8 c, uint8 d);
   void WriteInstruction(uint16 size, uint16 instruction);
   void WriteInstruction(uint16 size, uint16 instruction, uint32 data0);
-  void WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1);
-  void WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1, uint32 data2);
+  void
+  WriteInstruction(uint16 size, uint16 instruction, uint32 data0, uint32 data1);
+  void WriteInstruction(uint16 size,
+                        uint16 instruction,
+                        uint32 data0,
+                        uint32 data1,
+                        uint32 data2);
   void WriteInstruction(uint16 instruction, Array<uint32>& args);
 
   void Write(StringParam text);
   size_t GetPaddedByteCount(StringParam text);
 };
 
-//-------------------------------------------------------------------ShaderByteStream
 /// Shader data that results from a pipeline pass.
 class ShaderByteStream
 {
 public:
-
   /// Load an array of words into this byte stream.
   void Load(Array<uint32>& words);
   /// Load a string into this byte stream.
@@ -63,7 +59,6 @@ public:
   Array<byte> mData;
 };
 
-//-------------------------------------------------------------------ShaderByteWriter
 /// A writer for a shader byte stream.
 class ShaderByteStreamWriter : public ShaderStreamWriter
 {
@@ -82,4 +77,4 @@ public:
   bool mStreamIsOwned;
 };
 
-}//namespace Zero
+} // namespace Zero

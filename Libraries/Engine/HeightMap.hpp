@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Nathan Carlson, Ryan Edgemon
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,22 +11,21 @@ struct HeightMapAabbRange;
 class HeightMapSource;
 
 // Type-defines
-typedef IntVec2       PatchIndex;
-typedef IntVec2Param  PatchIndexParam;
-typedef IntVec2       CellIndex;
-typedef IntVec2Param  CellIndexParam;
-typedef IntVec2       AbsoluteIndex;
-typedef IntVec2Param  AbsoluteIndexParam;
+typedef IntVec2 PatchIndex;
+typedef IntVec2Param PatchIndexParam;
+typedef IntVec2 CellIndex;
+typedef IntVec2Param CellIndexParam;
+typedef IntVec2 AbsoluteIndex;
+typedef IntVec2Param AbsoluteIndexParam;
 
-//------------------------------------------------------------------- Events
 
 namespace Events
 {
-  DeclareEvent(HeightMapPatchAdded);
-  DeclareEvent(HeightMapPatchRemoved);
-  DeclareEvent(HeightMapPatchModified);
-  DeclareEvent(HeightMapSave);
-}//namespace Events
+DeclareEvent(HeightMapPatchAdded);
+DeclareEvent(HeightMapPatchRemoved);
+DeclareEvent(HeightMapPatchModified);
+DeclareEvent(HeightMapSave);
+} // namespace Events
 
 /// Used by any height map event
 struct HeightMapEvent : public Event
@@ -48,7 +42,7 @@ struct HeightMapEvent : public Event
   HeightMapSource* Source;
 };
 
-//------------------------------------------------------------------- HeightPatch
+//HeightPatch
 
 /// A large 2d block of height data
 struct HeightPatch
@@ -56,23 +50,26 @@ struct HeightPatch
   ZilchDeclareType(HeightPatch, TypeCopyMode::ReferenceType);
 
   /// The size of each patch (in height cells)
-  static const size_t Size      = 32;
+  static const size_t Size = 32;
   static const size_t TotalSize = Size * Size;
 
-  /// We actually have as many quads as we have height cells, though our vertices
-  /// are placed in the middle of a height cell. This means we have extra quads, which
-  /// we use to seam between patches (they stick out to the right and up)
-  static const size_t NumQuadsPerSide     = Size;
-  static const size_t NumQuadsTotal       = NumQuadsPerSide * NumQuadsPerSide;
-  static const size_t NumVerticesPerSide  = (Size + 1);
-  static const size_t NumVerticesTotal    = NumVerticesPerSide * NumVerticesPerSide;
+  /// We actually have as many quads as we have height cells, though our
+  /// vertices are placed in the middle of a height cell. This means we have
+  /// extra quads, which we use to seam between patches (they stick out to the
+  /// right and up)
+  static const size_t NumQuadsPerSide = Size;
+  static const size_t NumQuadsTotal = NumQuadsPerSide * NumQuadsPerSide;
+  static const size_t NumVerticesPerSide = (Size + 1);
+  static const size_t NumVerticesTotal =
+      NumVerticesPerSide * NumVerticesPerSide;
   static const size_t NumTrianglesPerSide = NumQuadsPerSide * 2;
-  static const size_t NumTrianglesTotal   = NumQuadsTotal * 2;
-  static const size_t NumIndicesPerSide   = NumTrianglesPerSide * 3;
-  static const size_t NumIndicesTotal     = NumTrianglesTotal * 3;
+  static const size_t NumTrianglesTotal = NumQuadsTotal * 2;
+  static const size_t NumIndicesPerSide = NumTrianglesPerSide * 3;
+  static const size_t NumIndicesTotal = NumTrianglesTotal * 3;
 
-  static const size_t PaddedNumVerticesPerSide  = NumVerticesPerSide + 2;
-  static const size_t PaddedNumVerticesTotal    = PaddedNumVerticesPerSide * PaddedNumVerticesPerSide;
+  static const size_t PaddedNumVerticesPerSide = NumVerticesPerSide + 2;
+  static const size_t PaddedNumVerticesTotal =
+      PaddedNumVerticesPerSide * PaddedNumVerticesPerSide;
 
   /// Constructor
   HeightPatch();
@@ -96,7 +93,6 @@ struct HeightPatch
   HeightValueType MaxHeight;
 };
 
-//------------------------------------------------------------------- PatchMap
 
 /// Type-defines
 typedef Pair<PatchIndex, HeightPatch*> PatchMapPair;
@@ -104,20 +100,18 @@ typedef HashMap<PatchIndex, HeightPatch*> PatchMap;
 typedef HashMap<PatchIndex, HeightPatch> PatchMapCopy;
 
 
-//------------------------------------------------------------------- CellRange
-
 struct HeightMapCell
 {
-  /// The index of the cell in a patch. Note that this is not necessarily related
-  /// to a height in the patch
+  /// The index of the cell in a patch. Note that this is not necessarily
+  /// related to a height in the patch
   CellIndex Index;
 
-  /// Typically cells are returned in queries (many of those queries use feathering)
-  /// This is the computed influence for this particular cell
+  /// Typically cells are returned in queries (many of those queries use
+  /// feathering) This is the computed influence for this particular cell
   float Influence;
 
-  /// The patch that this cell relates to. Note that the Index not necessarily related
-  /// to a height in the patch
+  /// The patch that this cell relates to. Note that the Index not necessarily
+  /// related to a height in the patch
   HeightPatch* Patch;
 };
 
@@ -125,15 +119,24 @@ class HeightMapCellRange
 {
 public:
   typedef HeightMapCell FrontResult;
-  HeightMapCellRange(HeightMap* heightMap, Vec2 toolPosition, real radius, real feather);
-  HeightMapCellRange(PatchMapCopy& patchMap, Vec2 toolPosition, real radius, real feather);
+  HeightMapCellRange(HeightMap* heightMap,
+                     Vec2 toolPosition,
+                     real radius,
+                     real feather);
+  HeightMapCellRange(PatchMapCopy& patchMap,
+                     Vec2 toolPosition,
+                     real radius,
+                     real feather);
 
-  void Reset( );
+  void Reset();
 
   HeightMapCell Front();
   void PopFront();
   bool Empty();
-  HeightMapCellRange& All() { return *this; }
+  HeightMapCellRange& All()
+  {
+    return *this;
+  }
 
   void GetNextPatch();
   void SkipDeadPatches();
@@ -162,7 +165,6 @@ public:
   CellIndex mCellIndex;
 };
 
-//-------------------------------------------------------------------- HeightMap
 
 /// A common class that represents height map data
 class HeightMap : public Component
@@ -197,14 +199,19 @@ public:
   void SignalAllPatchesModified();
 
   /// Sample a height given an absolute index
-  /// Absolute indices are determined using the PatchIndex * HeightPatch::Size + CellIndex
+  /// Absolute indices are determined using the PatchIndex * HeightPatch::Size +
+  /// CellIndex
   float SampleHeight(AbsoluteIndexParam absoluteIndex, float defaultValue);
 
   /// Sample the height using a local space position
-  float SampleHeight(Vec2Param localPosition, float defaultValue, Vec3* worldNormal = nullptr);
+  float SampleHeight(Vec2Param localPosition,
+                     float defaultValue,
+                     Vec3* worldNormal = nullptr);
 
   /// Sample the height using a world space position
-  float SampleHeight(Vec3Param worldPosition, float defaultValue, Vec3* worldNormal = nullptr);
+  float SampleHeight(Vec3Param worldPosition,
+                     float defaultValue,
+                     Vec3* worldNormal = nullptr);
 
   /// Get the height of a given point relative to the height map
   /// Note that this function does NOT sample the height map
@@ -216,7 +223,8 @@ public:
   /// Populates the given array with the vertex data that represents the patch
   /// Will generate the vertex data if it is not cached
   /// Adjacent vertices are padded on all sides for gradient calculations
-  void GetPaddedHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices);
+  void GetPaddedHeightPatchVertices(HeightPatch* patch,
+                                    Array<Vec3>& outVertices);
   // Non padded is only used by debug drawer currently
   void GetHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices);
 
@@ -250,9 +258,12 @@ public:
   CellIndex GetCellIndexFromWorld(Vec3Param worldPosition);
   CellIndex GetCellIndexFromLocal(Vec2Param localPosition);
   CellIndex GetCellIndex(AbsoluteIndexParam absoluteIndex);
-  CellIndex GetCellIndex(AbsoluteIndexParam absoluteIndex, PatchIndexParam patchIndex);
+  CellIndex GetCellIndex(AbsoluteIndexParam absoluteIndex,
+                         PatchIndexParam patchIndex);
 
-  void GetPatchAndCellIndex(AbsoluteIndexParam absoluteIndex, PatchIndex& patchIndex, CellIndex& cellIndex);
+  void GetPatchAndCellIndex(AbsoluteIndexParam absoluteIndex,
+                            PatchIndex& patchIndex,
+                            CellIndex& cellIndex);
 
   /// Get the world position from a local position
   Vec3 GetWorldPosition(Vec2Param localPosition);
@@ -266,12 +277,14 @@ public:
   /// Get the local position
   Vec2 GetLocalPosition(PatchIndexParam index);
 
-
   /// Create a patch at a particular index
   HeightPatch* CreatePatchAtIndex(PatchIndexParam index);
 
   /// Apply a noise function to a patch (generate terrain)
-  void ApplyNoiseToPatch(HeightPatch* patch, float baseHeight, float frequency, float amplitude);
+  void ApplyNoiseToPatch(HeightPatch* patch,
+                         float baseHeight,
+                         float frequency,
+                         float amplitude);
 
   /// Destroy a patch at a given index
   void DestroyPatchAtIndex(PatchIndexParam index);
@@ -281,15 +294,18 @@ public:
 
   void GetQuadAtIndex(AbsoluteIndex index, Triangle triangles[2], uint& count);
 
-  /// Signal that a particular patch was modified (typically updates physics, graphics, etc)
+  /// Signal that a particular patch was modified (typically updates physics,
+  /// graphics, etc)
   void SignalPatchModified(HeightPatch* patch);
   void SignalPatchModified(HeightPatch* patch, Vec2 min, Vec2 max);
 
   /// Get all of the patches
   PatchMap::valuerange GetAllPatches();
 
-  HeightMapRayRange CastLocalRay(const Ray& ray, float maxT = Math::PositiveMax());
-  HeightMapRayRange CastWorldRay(const Ray& ray, float maxT = Math::PositiveMax());
+  HeightMapRayRange CastLocalRay(const Ray& ray,
+                                 float maxT = Math::PositiveMax());
+  HeightMapRayRange CastWorldRay(const Ray& ray,
+                                 float maxT = Math::PositiveMax());
   HeightMapAabbRange GetLocalAabbRange(const Aabb& aabb, real thickness);
   HeightMapAabbRange GetWorldAabbRange(const Aabb& aabb, real thickness);
 
@@ -317,13 +333,18 @@ private:
   /// Updates adjacent patch vertices
   void UpdateAdjacentPatches(HeightPatch* patch);
 
-  /// Pre-fetches all patch and adjacent patch heights that are needed to compute
-  /// tangents and bitangents for this patch to prevent any hashes or branching when computing vertices
+  /// Pre-fetches all patch and adjacent patch heights that are needed to
+  /// compute tangents and bitangents for this patch to prevent any hashes or
+  /// branching when computing vertices
   void MakePaddedHeightBuffer(HeightPatch* patch, real* heights);
 
   /// Computes the patch's vertex data and stores it in outVertices
-  /// outVertices must already be the correct size, it is assumed that not all vertices always need to be computed
-  void ComputePaddedHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices, CellIndex min = sCellIndexMin, CellIndex max = sCellIndexMax);
+  /// outVertices must already be the correct size, it is assumed that not all
+  /// vertices always need to be computed
+  void ComputePaddedHeightPatchVertices(HeightPatch* patch,
+                                        Array<Vec3>& outVertices,
+                                        CellIndex min = sCellIndexMin,
+                                        CellIndex max = sCellIndexMax);
 
 public:
   friend struct CellRayRange;
@@ -346,7 +367,7 @@ public:
   /// Source for height map data
   HandleOf<HeightMapSource> mSource;
 
-  HashMap< PatchIndex, Array<Vec3> > mCachedPatchVertices;
+  HashMap<PatchIndex, Array<Vec3>> mCachedPatchVertices;
 
 public:
   static void SaveToObj(StringParam fileName, HeightMap* heightMap);
@@ -359,10 +380,18 @@ public:
 /// and raycasting use the center of the cell.
 struct CellRayRange
 {
-  CellRayRange() {};
-  CellRayRange(HeightMap* map, PatchIndex index, Vec2Param rayStart, Vec2Param rayDir, real maxT);
+  CellRayRange(){};
+  CellRayRange(HeightMap* map,
+               PatchIndex index,
+               Vec2Param rayStart,
+               Vec2Param rayDir,
+               real maxT);
 
-  void Set(HeightMap* map, PatchIndex index, Vec2Param rayStart, Vec2Param rayDir, real maxT);
+  void Set(HeightMap* map,
+           PatchIndex index,
+           Vec2Param rayStart,
+           Vec2Param rayDir,
+           real maxT);
 
   Vec2 GetCurrentCellCenter();
   Vec2 GetNextTValues();
@@ -372,13 +401,15 @@ struct CellRayRange
   CellIndex Front();
   bool Empty();
 
-  //static because both the cell and patch range need this function
-  static Vec2 IntersectPlane(Vec2Param planeDistance, Vec2Param rayStart, Vec2Param rayDir);
+  // static because both the cell and patch range need this function
+  static Vec2 IntersectPlane(Vec2Param planeDistance,
+                             Vec2Param rayStart,
+                             Vec2Param rayDir);
 
 private:
   Vec2 mRayStart;
   Vec2 mRayDir;
-  int mStepX,mStepY;
+  int mStepX, mStepY;
   real mMaxT;
   real mCurrT;
   Vec2 mPatchStart;
@@ -391,19 +422,30 @@ private:
 struct HeightMapQueryCache
 {
   HeightMapQueryCache();
-  float SampleHeight(HeightMap* map, PatchIndexParam patchIndex, CellIndexParam cellIndex);
+  float SampleHeight(HeightMap* map,
+                     PatchIndexParam patchIndex,
+                     CellIndexParam cellIndex);
 
   HeightPatch* mCachedPatch;
 };
 
 /// A range to iterate through all of the patches that a ray hits. Used during
-/// actual raycasting to determine which patches we should used the cell range on.
+/// actual raycasting to determine which patches we should used the cell range
+/// on.
 struct PatchRayRange
 {
-  PatchRayRange() {};
-  PatchRayRange(HeightMap* map, Vec2Param rayStart, Vec2Param rayDir, real minT, real maxT);
+  PatchRayRange(){};
+  PatchRayRange(HeightMap* map,
+                Vec2Param rayStart,
+                Vec2Param rayDir,
+                real minT,
+                real maxT);
 
-  void Set(HeightMap* map, Vec2Param rayStart, Vec2Param rayDir, real minT, real maxT);
+  void Set(HeightMap* map,
+           Vec2Param rayStart,
+           Vec2Param rayDir,
+           real minT,
+           real maxT);
   /// Helper function to clear the range so it will return empty.
   void SetEmpty();
 
@@ -429,9 +471,9 @@ private:
 };
 
 /// A range for performing raycasting against a height map. Uses DDA to iterate
-/// efficiently through only the patches and cells that the ray actually touches.
-/// Returns a structure containing the triangle hit and the intersection
-/// info about how it was hit.
+/// efficiently through only the patches and cells that the ray actually
+/// touches. Returns a structure containing the triangle hit and the
+/// intersection info about how it was hit.
 struct HeightMapRayRange
 {
   /// Data returned by this range. Contains the triangle
@@ -444,11 +486,19 @@ struct HeightMapRayRange
 
   HeightMapRayRange();
 
-  void SetLocal(HeightMap* map, const Ray& ray, float maxT = Math::PositiveMax());
-  void SetWorld(HeightMap* map, const Ray& ray, float maxT = Math::PositiveMax());
+  void SetLocal(HeightMap* map,
+                const Ray& ray,
+                float maxT = Math::PositiveMax());
+  void SetWorld(HeightMap* map,
+                const Ray& ray,
+                float maxT = Math::PositiveMax());
   void SetUp(float maxT);
-  void GetTMinMaxRange(Vec3Param localRayStart, Vec3Param localRayDir,
-                       Vec2Param rayStart, Vec2Param rayDir, float& minT, float& maxT);
+  void GetTMinMaxRange(Vec3Param localRayStart,
+                       Vec3Param localRayDir,
+                       Vec2Param rayStart,
+                       Vec2Param rayDir,
+                       float& minT,
+                       float& maxT);
 
   /// Range interface
   void PopFront();
@@ -486,7 +536,8 @@ struct HeightMapRayRange
 /// A range to iterate through all triangles that an aabb should consider
 /// checking collision against. Projects the extents of the aabb onto the
 /// grid to determine which patches and cells to even consider.
-/// Returns a structure containing the local triangle hit and the patch and cell index.
+/// Returns a structure containing the local triangle hit and the patch and cell
+/// index.
 struct HeightMapAabbRange
 {
   struct TriangleInfo
@@ -517,15 +568,15 @@ struct HeightMapAabbRange
 
   HeightMap* mMap;
   bool mSkipNonCollidingCells;
-  //the local and projected aabb info. The non-projected aabb is needed to determine
-  //if a triangle can be skipped (performs the remaining aabb check)
+  // the local and projected aabb info. The non-projected aabb is needed to
+  // determine if a triangle can be skipped (performs the remaining aabb check)
   Vec3 mLocalAabbMin, mLocalAabbMax;
   Vec2 mProjAabbMin, mProjAabbMax;
 
-  //the range of values that need to be searched through
+  // the range of values that need to be searched through
   HeightPatch* mCurrentPatch;
-  PatchIndex mMinPatch,mMaxPatch;
-  CellIndex mMinCell,mMaxCell;
+  PatchIndex mMinPatch, mMaxPatch;
+  CellIndex mMinCell, mMaxCell;
 
   uint mTriangleIndex;
   TriangleInfo mCurrentTriangle;
@@ -540,4 +591,4 @@ struct HeightMapAabbRange
 
 float FeatherInfluence(float distance, float radius, float featherRadius);
 
-}//namespace Zero
+} // namespace Zero

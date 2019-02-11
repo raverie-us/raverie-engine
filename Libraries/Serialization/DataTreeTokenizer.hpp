@@ -1,28 +1,40 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-DeclareEnum17(DataTokenType, None, Enumeration, Identifier, Float, Integer, Hex,
-                             StringLiteral, OpenBracket, CloseBracket,
-                             OpenCurley, CloseCurley, Assignment, Comma, Colon, True, False, Var);
+DeclareEnum17(DataTokenType,
+              None,
+              Enumeration,
+              Identifier,
+              Float,
+              Integer,
+              Hex,
+              StringLiteral,
+              OpenBracket,
+              CloseBracket,
+              OpenCurley,
+              CloseCurley,
+              Assignment,
+              Comma,
+              Colon,
+              True,
+              False,
+              Var);
 
-//--------------------------------------------------------------------------------------- Data Token
+//Data Token
 struct DataToken
 {
-  DataToken() : mType(DataTokenType::None) {}
+  DataToken() : mType(DataTokenType::None)
+  {
+  }
   DataTokenType::Enum mType;
   StringRange mText;
   uint mLineNumber;
 };
 
-//------------------------------------------------------------------------------ Data Tree Tokenizer
+//Data Tree Tokenizer
 class DataTreeTokenizer
 {
 public:
@@ -37,4 +49,4 @@ private:
   StringRange mRange;
 };
 
-}//namespace Zero
+} // namespace Zero

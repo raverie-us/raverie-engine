@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,12 +18,11 @@ public:
   }
 
   // Helper bind for member functions bases filters
-  template<typename type, bool (type::*Func)(DataEntry* entry)>
+  template <typename type, bool (type::*Func)(DataEntry* entry)>
   class BindMethodPtr
   {
   public:
-    BindMethodPtr(type* instance)
-      :mInstance(instance)
+    BindMethodPtr(type* instance) : mInstance(instance)
     {
     }
 
@@ -41,22 +35,22 @@ public:
   };
 
   // Filter the nodes with the give filter functor
-  template<typename filtertype>
+  template <typename filtertype>
   void FilterNodes(filtertype filter, DataEntry* node)
   {
     DataEntry* prev = NULL;
 
     uint childCount = mSource->ChildCount(node);
 
-    for(uint i=0;i<childCount;++i)
+    for (uint i = 0; i < childCount; ++i)
     {
       DataEntry* child = mSource->GetChild(node, i, prev);
 
-      if(filter(child))
+      if (filter(child))
         mFilteredList.PushBack(mSource->ToIndex(child));
 
       uint numbChildren = mSource->ChildCount(child);
-      if(numbChildren > 0)
+      if (numbChildren > 0)
         FilterNodes(filter, child);
 
       prev = child;
@@ -70,7 +64,8 @@ public:
     mSource->GetData(entry, varName, CommonColumns::Name);
 
     String name = varName.Get<String>();
-    int priority = PartialMatch(mFilterString.All(), name.All(), CaseInsensitiveCompare);
+    int priority =
+        PartialMatch(mFilterString.All(), name.All(), CaseInsensitiveCompare);
     return priority != cNoMatch;
   }
 
@@ -82,10 +77,11 @@ public:
 
     // Default is to filter by name
     DataEntry* root = mSource->GetRoot();
-    BindMethodPtr<DataSourceFilter, &DataSourceFilter::FilterByName> nameFilter(this);
+    BindMethodPtr<DataSourceFilter, &DataSourceFilter::FilterByName> nameFilter(
+        this);
     FilterNodes(nameFilter, root);
   }
-  
+
   virtual void SetSource(DataSource* dataSource)
   {
     mSource = dataSource;
@@ -99,10 +95,10 @@ public:
     return this;
   }
 
-  //Safe Indexing
+  // Safe Indexing
   DataEntry* ToEntry(DataIndex index) override
   {
-    if(index == cRootIndex)
+    if (index == cRootIndex)
       return this;
 
     return mSource->ToEntry(index);
@@ -110,7 +106,7 @@ public:
 
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
-    if(dataEntry == this)
+    if (dataEntry == this)
       return cRootIndex;
 
     return mSource->ToIndex(dataEntry);
@@ -123,31 +119,36 @@ public:
 
   uint ChildCount(DataEntry* dataEntry) override
   {
-    if(dataEntry == this)
+    if (dataEntry == this)
       return mFilteredList.Size();
     else
       return 0;
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
     ErrorIf(dataEntry != this, "FilteredDataSource is flat");
     return mSource->ToEntry(mFilteredList[index]);
   }
 
-  //Tree expanding
-  bool IsExpandable(DataEntry* dataEntry) override {return dataEntry == this;}
+  // Tree expanding
+  bool IsExpandable(DataEntry* dataEntry) override
+  {
+    return dataEntry == this;
+  }
 
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
-    if(dataEntry == this)
+    if (dataEntry == this)
     {
       static const String itemIcon("ItemIcon");
       static const String object("Object");
-      if(column == CommonColumns::Icon)
+      if (column == CommonColumns::Icon)
         variant = itemIcon;
 
-      if(column == CommonColumns::Type)
+      if (column == CommonColumns::Type)
         variant = object;
       return;
     }
@@ -155,9 +156,11 @@ public:
     mSource->GetData(dataEntry, variant, column);
   }
 
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
-    if(dataEntry == this)
+    if (dataEntry == this)
       return false;
 
     mSource->SetData(dataEntry, variant, column);
@@ -167,12 +170,11 @@ public:
   bool Remove(DataEntry* dataEntry) override
   {
     // 'this' is not a valid entry 'mSource' would recognize.
-    if(dataEntry == this)
+    if (dataEntry == this)
       return false;
 
     return mSource->Remove(dataEntry);
   }
-
 };
 
-}
+} // namespace Zero

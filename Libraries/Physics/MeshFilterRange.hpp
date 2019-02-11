@@ -1,15 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MeshFilterRange.hpp
-/// Declaration of the MeshFilterRange and MeshPreFilteredRange class. These
-/// ranges are used by any collider that wants to form a filtered range over
-/// a mesh. The PreFilteredRange is for a mesh that already filters due to a
-/// midphase.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -22,10 +11,10 @@ namespace Physics
 /// should be checked for either collision or for a cast.
 struct MeshFilterRange
 {
-  //When performing collision against a mesh, we may need to have multiple
-  //manifolds (one for each triangle). So we also need to differentiate
-  //between the triangles with an id. Therefore, narrow phase needs the
-  //object to test collision against as well as it's id.
+  // When performing collision against a mesh, we may need to have multiple
+  // manifolds (one for each triangle). So we also need to differentiate
+  // between the triangles with an id. Therefore, narrow phase needs the
+  // object to test collision against as well as it's id.
   struct TriangleObject
   {
     uint Index;
@@ -34,7 +23,9 @@ struct MeshFilterRange
 
   typedef Array<uint> IndexArray;
 
-  MeshFilterRange(const Vec3Array* vertices, const IndexArray* indices, const Aabb& aabb);
+  MeshFilterRange(const Vec3Array* vertices,
+                  const IndexArray* indices,
+                  const Aabb& aabb);
 
   void SkipDead();
 
@@ -43,14 +34,14 @@ struct MeshFilterRange
   TriangleObject& Front();
   bool Empty();
 
-  //since we have to return a reference in Front(), we need to store
-  //the TriangleObject internally and modify that.
+  // since we have to return a reference in Front(), we need to store
+  // the TriangleObject internally and modify that.
   TriangleObject obj;
 
   const Vec3Array* mVertices;
   const IndexArray* mIndices;
 
-  ///What triangle is currently at the front of the range.
+  /// What triangle is currently at the front of the range.
   uint mIndex;
 
   Aabb mAabb;
@@ -62,10 +53,10 @@ struct MeshFilterRange
 /// the results since this range will most likely be copied.
 struct MeshPreFilteredRange
 {
-  //When performing collision against a mesh, we may need to have multiple
-  //manifolds (one for each triangle). So we also need to differentiate
-  //between the triangles with an id. Therefore, narrow phase needs the
-  //object to test collision against as well as it's id.
+  // When performing collision against a mesh, we may need to have multiple
+  // manifolds (one for each triangle). So we also need to differentiate
+  // between the triangles with an id. Therefore, narrow phase needs the
+  // object to test collision against as well as it's id.
   struct TriangleObject
   {
     uint Index;
@@ -84,17 +75,17 @@ struct MeshPreFilteredRange
   TriangleObject& Front();
   bool Empty();
 
-  //since we have to return a reference in Front(), we need to store
-  //the TriangleObject internally and modify that.
+  // since we have to return a reference in Front(), we need to store
+  // the TriangleObject internally and modify that.
   TriangleObject obj;
 
   TriangleArray mTriangles;
   IndexArray mIndices;
 
-  ///What triangle is currently at the front of the range.
+  /// What triangle is currently at the front of the range.
   uint mIndex;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

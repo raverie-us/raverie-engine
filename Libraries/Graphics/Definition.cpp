@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Definition.cpp
-/// Implementation of the Display object base definition classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -28,8 +20,8 @@ DefinitionSet::~DefinitionSet()
 
 void DefinitionSet::Unload()
 {
-  forRange(BaseDefinition* definition, DefinitionMap.Values())
-    definition->Unload();
+  forRange(BaseDefinition * definition, DefinitionMap.Values())
+      definition->Unload();
 }
 
 void DefinitionSet::SetParent(DefinitionSet* set)
@@ -40,7 +32,7 @@ void DefinitionSet::SetParent(DefinitionSet* set)
 void DefinitionSet::Append(DefinitionSet* child)
 {
   DefinitionMapType::range r = child->DefinitionMap.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     DefinitionMap.InsertOrError(r.Front().first, r.Front().second);
     r.Front().second->SetParent(this);
@@ -58,13 +50,13 @@ void DefinitionSet::Initialize()
 {
   DefinitionMapType::range r = DefinitionMap.All();
 
-  while(!r.Empty())
+  while (!r.Empty())
   {
     r.Front().second->Initialize();
     r.PopFront();
   }
 
-  if(mParent == nullptr)
+  if (mParent == nullptr)
   {
     DefinitionSetManager::GetInstance()->Main->Append(this);
   }
@@ -73,9 +65,9 @@ void DefinitionSet::Initialize()
 BaseDefinition* DefinitionSet::GetDefinitionOrNull(StringParam id)
 {
   DefinitionMapType::range r = DefinitionMap.Find(id);
-  if(r.Empty())
+  if (r.Empty())
   {
-    if(mParent)
+    if (mParent)
       return mParent->GetDefinitionOrNull(id);
     else
       return nullptr;
@@ -101,9 +93,11 @@ DefinitionSet* DefinitionSet::GetDefinitionSet(StringParam id)
 void DefinitionSet::Serialize(Serializer& stream)
 {
   PolymorphicNode definitionNode;
-  while(stream.GetPolymorphic(definitionNode))
+  while (stream.GetPolymorphic(definitionNode))
   {
-    DefinitionSetManager::CreatorMapType::range r = DefinitionSetManager::GetInstance()->CreatorMap.Find(definitionNode.TypeName);
+    DefinitionSetManager::CreatorMapType::range r =
+        DefinitionSetManager::GetInstance()->CreatorMap.Find(
+            definitionNode.TypeName);
     DefinitionCreator* c = r.Front().second;
     BaseDefinition* def = c->Create();
     def->Serialize(stream);
@@ -113,11 +107,10 @@ void DefinitionSet::Serialize(Serializer& stream)
   }
 }
 
-
 ImplementResourceManager(DefinitionSetManager, DefinitionSet);
 
-DefinitionSetManager::DefinitionSetManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+DefinitionSetManager::DefinitionSetManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   Main = new DefinitionSet();
   AddLoader("DefinitionSet", new TextDataFileLoader<DefinitionSetManager>());
@@ -130,10 +123,10 @@ DefinitionSetManager::DefinitionSetManager(BoundType* resourceType)
 
 DefinitionSetManager::~DefinitionSetManager()
 {
-  //Main definitions are store in other definition sets.
+  // Main definitions are store in other definition sets.
   Main->DefinitionMap.Clear();
   SafeDelete(Main);
   DeleteObjectsInContainer(CreatorMap);
 }
 
-}//namespace Zero
+} // namespace Zero

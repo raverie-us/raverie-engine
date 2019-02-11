@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2013-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------BasicDirectionEffect
 ZilchDefineType(BasicDirectionEffect, builder, type)
 {
   ZeroBindSetup(SetupMode::DefaultSerialization);
@@ -36,22 +30,23 @@ void BasicDirectionEffect::Serialize(Serializer& stream)
 
 void BasicDirectionEffect::DebugDraw()
 {
-  if(!GetDebugDrawEffect())
+  if (!GetDebugDrawEffect())
     return;
 
   // Draw the world space direction vector (normalized)
   PreCalculate(0);
-  Vec3 pos = TransformLocalPointToWorld(Vec3::cZero); 
+  Vec3 pos = TransformLocalPointToWorld(Vec3::cZero);
   // Should this reflect the actual magnitude of the force?
   gDebugDraw->Add(Debug::Line(pos, pos + mWorldForce).HeadSize(0.1f));
 }
 
 void BasicDirectionEffect::PreCalculate(real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
-  // The world space force is constant for all objects passed in so cache this once per iteration
+  // The world space force is constant for all objects passed in so cache this
+  // once per iteration
   mWorldForce = GetWorldDirection() * mStrength;
 }
 
@@ -62,7 +57,7 @@ bool BasicDirectionEffect::GetLocalSpaceDirection() const
 
 void BasicDirectionEffect::SetLocalSpaceDirection(bool state)
 {
-  mForceStates.SetState(BasicForceFlags::LocalSpaceDirection,state);
+  mForceStates.SetState(BasicForceFlags::LocalSpaceDirection, state);
   // Make sure to check for waking objects up on effect change
   CheckWakeUp();
 }
@@ -95,13 +90,12 @@ Vec3 BasicDirectionEffect::GetWorldDirection() const
 {
   Vec3 worldForceDirection = mDirection;
   // If we have a local space direction, calculate the world space direction
-  if(mForceStates.IsSet(BasicForceFlags::LocalSpaceDirection))
+  if (mForceStates.IsSet(BasicForceFlags::LocalSpaceDirection))
     worldForceDirection = TransformLocalDirectionToWorld(worldForceDirection);
   // Always re-normalize the world direction
   return worldForceDirection.AttemptNormalized();
 }
 
-//-------------------------------------------------------------------ForceEffect
 ZilchDefineType(ForceEffect, builder, type)
 {
   ZeroBindComponent();
@@ -116,7 +110,7 @@ ForceEffect::ForceEffect()
 
 void ForceEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   // Apply the force as normal
@@ -124,7 +118,6 @@ void ForceEffect::ApplyEffect(RigidBody* obj, real dt)
   obj->ApplyForceNoWakeUp(force);
 }
 
-//-------------------------------------------------------------------GravityEffect
 ZilchDefineType(GravityEffect, builder, type)
 {
   ZeroBindComponent();
@@ -139,7 +132,7 @@ GravityEffect::GravityEffect()
 
 void GravityEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   Vec3 force = mWorldForce;
@@ -151,17 +144,17 @@ void GravityEffect::ApplyEffect(RigidBody* obj, real dt)
 
 void GravityEffect::ApplyEffect(SpringSystem* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   Vec3 force = mWorldForce;
-  for(uint i = 0; i < obj->mPointMasses.Size(); ++i)
+  for (uint i = 0; i < obj->mPointMasses.Size(); ++i)
   {
     SpringSystem::PointMass& pointMass = obj->mPointMasses[i];
 
-    if(pointMass.mInvMass != real(0.0))
+    if (pointMass.mInvMass != real(0.0))
       pointMass.mForce += force / pointMass.mInvMass;
   }
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,7 +7,6 @@ namespace Zero
 // Forward Declarations.
 class UiWidget;
 
-//----------------------------------------------------------------------- Layout
 /// Layouts are in charge of calling UpdateTransform on all children, regardless
 /// of whether or not they ignore layouts.
 class UiLayout : public Component
@@ -25,9 +19,10 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
-  /// Returns the minimum size that this widget needs to be based on the children.
+  /// Returns the minimum size that this widget needs to be based on the
+  /// children.
   virtual Vec2 Measure(Rectangle& rect) = 0;
-  
+
   /// Update the translation and sizes of all children objects.
   virtual void DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) = 0;
 
@@ -43,7 +38,7 @@ public:
 
   /// Calling this will set a breakpoint before the layout is done.
   void Debug();
-  
+
   /// We're dependent having a Widget.
   UiWidget* mWidget;
 
@@ -60,8 +55,12 @@ protected:
   void UpdateNotInLayout(UiTransformUpdateEvent* e);
 
   /// Helper for shifting widgets based on their alignment in a layout.
-  static void CalculateAlignment(Axis::Type axis, uint alignment, Vec2Param areaSize,
-                                 Vec2Param areaPos, Vec2Param childSize, Vec2Ref childTranslation);
+  static void CalculateAlignment(Axis::Type axis,
+                                 uint alignment,
+                                 Vec2Param areaSize,
+                                 Vec2Param areaPos,
+                                 Vec2Param childSize,
+                                 Vec2Ref childTranslation);
 
   /// Finds the maximum of all the minimum sizes of all child widgets.
   Vec2 MaxMeasure(Rectangle& rect);
@@ -76,7 +75,10 @@ protected:
     bool Empty();
     void PopFront();
     void SkipInvalid();
-    UiFilteredChildren& All() { return *this; }
+    UiFilteredChildren& All()
+    {
+      return *this;
+    }
 
     UiWidget::ChildList::range mRange;
   };
@@ -84,4 +86,4 @@ protected:
   UiFilteredChildren AllWidgetsInLayout();
 };
 
-}//namespace Zero
+} // namespace Zero

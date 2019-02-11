@@ -1,23 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-/// BuildVersion.inl file is updated by the build system based on the latest changeset and the build id files
+/// BuildVersion.inl file is updated by the build system based on the latest
+/// changeset and the build id files
 #include "BuildVersion.inl"
 
-
 #if ZeroRelease
-  #define ZeroConfiguration "Release"
+#  define ZeroConfiguration "Release"
 #elif ZeroDebug
-  #define ZeroConfiguration "Debug"
+#  define ZeroConfiguration "Debug"
 #else
-  #define ZeroConfiguration "Unknown"
+#  define ZeroConfiguration "Unknown"
 #endif
-
 
 namespace Zero
 {
@@ -28,15 +22,18 @@ namespace Zero
 #define WrapHex(a) InnerWrapHex(a)
 #define InnerWrapHex(s) 0x##s##ULL
 
-// Helper to stringify the build id's name conditionally on if there's an experimental branch
+// Helper to stringify the build id's name conditionally on if there's an
+// experimental branch
 #ifdef ZeroExperimentalBranchName
-  #define ZeroBuildIdString() \
-    ZeroExperimentalBranchName "." Stringify(ZeroMajorVersion) "." Stringify(ZeroMinorVersion) "." Stringify(ZeroPatchVersion) "." Stringify(ZeroRevisionId)
+#  define ZeroBuildIdString()                                                          \
+    ZeroExperimentalBranchName                                                         \
+        "." Stringify(ZeroMajorVersion) "." Stringify(ZeroMinorVersion) "." Stringify( \
+            ZeroPatchVersion) "." Stringify(ZeroRevisionId)
 #else
-  #define ZeroBuildIdString() \
-    Stringify(ZeroMajorVersion) "." Stringify(ZeroMinorVersion) "." Stringify(ZeroPatchVersion) "." Stringify(ZeroRevisionId)
+#  define ZeroBuildIdString()                                                  \
+    Stringify(ZeroMajorVersion) "." Stringify(ZeroMinorVersion) "." Stringify( \
+        ZeroPatchVersion) "." Stringify(ZeroRevisionId)
 #endif
-
 
 cstr GetGuidString()
 {
@@ -50,7 +47,8 @@ cstr GetLauncherGuidString()
 
 uint GetLauncherMajorVersion()
 {
-  // Hardcoded to 1 for all legacy versions. The first version on the new server will be 2
+  // Hardcoded to 1 for all legacy versions. The first version on the new server
+  // will be 2
   return 4;
 }
 
@@ -140,13 +138,15 @@ cstr GetPlatformString()
 
 cstr GetBuildVersionName()
 {
-  return ZeroBuildIdString() " " Stringify(ZeroChangeSet) " " ZeroChangeSetDate " " ZeroConfiguration " " ZeroPlatform;
+  return ZeroBuildIdString() " " Stringify(ZeroChangeSet) " " ZeroChangeSetDate
+                                                          " " ZeroConfiguration
+                                                          " " ZeroPlatform;
 }
 
 int GetVersionId(StringParam versionIdFilePath)
 {
   int localVersionId = -99;
-  //make sure the file exists, if it doesn't assume the version is 0
+  // make sure the file exists, if it doesn't assume the version is 0
   //(aka, the lowest and most likely to be replaced)
   if (FileExists(versionIdFilePath))
   {
@@ -162,4 +162,4 @@ int GetVersionId(StringParam versionIdFilePath)
   return localVersionId;
 }
 
-}// namespace Zero
+} // namespace Zero

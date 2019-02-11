@@ -1,43 +1,33 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Resource.cpp
-/// Implementation of the resource system class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 namespace Events
 {
-  DefineEvent(ClearAllAnnotations);
+DefineEvent(ClearAllAnnotations);
 }
 
 ZilchDefineType(SavingEvent, builder, type)
 {
 }
 
-Completion::Completion() :
-  AssociatedResourceId(0),
-  Hidden(false)
+Completion::Completion() : AssociatedResourceId(0), Hidden(false)
 {
 }
 
 Completion::Completion(StringParam name) :
-  Name(name),
-  AssociatedResourceId(0),
-  Hidden(false)
+    Name(name),
+    AssociatedResourceId(0),
+    Hidden(false)
 {
 }
 
 Completion::Completion(StringParam name, StringParam description) :
-  Name(name),
-  Description(description),
-  AssociatedResourceId(0),
-  Hidden(false)
+    Name(name),
+    Description(description),
+    AssociatedResourceId(0),
+    Hidden(false)
 {
 }
 
@@ -131,22 +121,22 @@ StringRange ICodeInspector::GetPreviousKeyword(ICodeEditor* editor)
   StringRange allText = editor->GetAllText();
   StringIterator caretIt = allText.Begin() + (editor->GetCaretPosition() - 1);
 
-  if(caretIt.Data() < allText.Data())
+  if (caretIt.Data() < allText.Data())
     return StringRange();
 
   // First, skip the word that we're currently on
-  while(caretIt.Data() > allText.Data())
+  while (caretIt.Data() > allText.Data())
   {
-    if(UTF8::IsAlphaNumeric(*caretIt))
+    if (UTF8::IsAlphaNumeric(*caretIt))
       --caretIt;
     else
       break;
   }
 
   // Now skip the whitespace that comes before that word
-  while(caretIt.Data() > allText.Data())
+  while (caretIt.Data() > allText.Data())
   {
-    if(UTF8::IsWhiteSpace(*caretIt))
+    if (UTF8::IsWhiteSpace(*caretIt))
       --caretIt;
     else
       break;
@@ -155,9 +145,9 @@ StringRange ICodeInspector::GetPreviousKeyword(ICodeEditor* editor)
   StringIterator keywordEnd = caretIt;
 
   // Loop until we find a non [a-zA-Z0-9]
-  while(caretIt.Data() > allText.Data())
+  while (caretIt.Data() > allText.Data())
   {
-    if(UTF8::IsAlphaNumeric(*caretIt))
+    if (UTF8::IsAlphaNumeric(*caretIt))
       --caretIt;
     else
       break;
@@ -168,7 +158,9 @@ StringRange ICodeInspector::GetPreviousKeyword(ICodeEditor* editor)
   return StringRange(caretIt + 1, keywordEnd + 1);
 }
 
-bool ICodeInspector::IndentOnNewlineWhenLastCharacterIs(ICodeEditor* editor, Rune added, Rune lookFor)
+bool ICodeInspector::IndentOnNewlineWhenLastCharacterIs(ICodeEditor* editor,
+                                                        Rune added,
+                                                        Rune lookFor)
 {
   if (added == '\n')
   {
@@ -196,11 +188,15 @@ bool ICodeInspector::SupportsZeroConnect()
   return false;
 }
 
-void ICodeInspector::AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition)
+void ICodeInspector::AttemptGetDefinition(ICodeEditor* editor,
+                                          size_t cursorPosition,
+                                          CodeDefinition& definition)
 {
 }
 
-void ICodeInspector::FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent)
+void ICodeInspector::FindPositionToGenerateFunction(ICodeEditor* editor,
+                                                    int& positionOut,
+                                                    String& indent)
 {
   positionOut = -1;
 }
@@ -210,7 +206,8 @@ String ICodeInspector::GenerateConnectCallEnd(StringParam functionName)
   return String();
 }
 
-String ICodeInspector::GenerateConnectFunctionStart(StringParam functionName, StringParam eventType)
+String ICodeInspector::GenerateConnectFunctionStart(StringParam functionName,
+                                                    StringParam eventType)
 {
   return String();
 }
@@ -220,7 +217,8 @@ String ICodeInspector::GenerateConnectFunctionEnd()
   return String();
 }
 
-Any ICodeInspector::QueryExpression(StringParam expression, Array<QueryResult>& results)
+Any ICodeInspector::QueryExpression(StringParam expression,
+                                    Array<QueryResult>& results)
 {
   return Any();
 }
@@ -248,7 +246,9 @@ bool ICodeInspector::ToggleBreakpoint(size_t line)
   return SetBreakpoint(line, !HasBreakpoint(line));
 }
 
-bool ICodeInspector::UnindentOnCharacter(ICodeEditor* editor, Rune added, Rune lookFor)
+bool ICodeInspector::UnindentOnCharacter(ICodeEditor* editor,
+                                         Rune added,
+                                         Rune lookFor)
 {
   if (added == lookFor)
   {
@@ -260,14 +260,17 @@ bool ICodeInspector::UnindentOnCharacter(ICodeEditor* editor, Rune added, Rune l
   return false;
 }
 
-void ICodeInspector::AddCompletionsFromMetaType(Array<Completion>& completions, BoundType* type)
+void ICodeInspector::AddCompletionsFromMetaType(Array<Completion>& completions,
+                                                BoundType* type)
 {
-  // This seems slightly counter intuitive, but we actually add everything we find both from docs and from the meta type
-  // We must do docs first because any duplicates will get filtered out in the completion dialog
-  if(ClassDoc* classDoc = Z::gDocumentation->mClassMap.FindValue(type->Name, nullptr))
+  // This seems slightly counter intuitive, but we actually add everything we
+  // find both from docs and from the meta type We must do docs first because
+  // any duplicates will get filtered out in the completion dialog
+  if (ClassDoc* classDoc =
+          Z::gDocumentation->mClassMap.FindValue(type->Name, nullptr))
   {
     // Add all properties the ClassDoc has to the completion list
-    forRange(PropertyDoc* property, classDoc->mProperties.All())
+    forRange(PropertyDoc * property, classDoc->mProperties.All())
     {
       Completion& completion = completions.PushBack();
       completion.Name = property->mName;
@@ -276,7 +279,7 @@ void ICodeInspector::AddCompletionsFromMetaType(Array<Completion>& completions, 
     }
 
     // add all methods the ClassDoc has to the completions list
-    forRange(MethodDoc* method, classDoc->mMethods.All())
+    forRange(MethodDoc * method, classDoc->mMethods.All())
     {
       Completion& completion = completions.PushBack();
       completion.Name = method->mName;
@@ -284,23 +287,25 @@ void ICodeInspector::AddCompletionsFromMetaType(Array<Completion>& completions, 
 
       if (method->mReturnType.Empty())
       {
-        completion.SignaturePathType = BuildString(method->mName, method->mParameters);
+        completion.SignaturePathType =
+            BuildString(method->mName, method->mParameters);
       }
       else
       {
-        completion.SignaturePathType = BuildString(method->mName, method->mParameters, " : ", method->mReturnType);
+        completion.SignaturePathType = BuildString(
+            method->mName, method->mParameters, " : ", method->mReturnType);
       }
     }
   }
 
-  forRange(Property* property, type->GetProperties())
+  forRange(Property * property, type->GetProperties())
   {
     Completion& completion = completions.PushBack();
     completion.Name = property->Name;
     completion.SignaturePathType = property->PropertyType->ToString();
   }
 
-  forRange(Function* method, type->GetFunctions())
+  forRange(Function * method, type->GetFunctions())
   {
     Completion& completion = completions.PushBack();
     completion.Name = method->Name;
@@ -308,7 +313,8 @@ void ICodeInspector::AddCompletionsFromMetaType(Array<Completion>& completions, 
   }
 }
 
-void ICodeInspector::AddCallTipParametersFromArgumentString(CallTip& tip, StringRange arguments, ArgumentOptions::Type options)
+void ICodeInspector::AddCallTipParametersFromArgumentString(
+    CallTip& tip, StringRange arguments, ArgumentOptions::Type options)
 {
   String paramType;
   String paramName;
@@ -316,11 +322,11 @@ void ICodeInspector::AddCallTipParametersFromArgumentString(CallTip& tip, String
 
   StringIterator it = arguments.Begin();
   StringIterator end = arguments.End();
-  for(int i = 0; it < end; ++it, ++i)
+  for (int i = 0; it < end; ++it, ++i)
   {
     Rune r = *it;
 
-    if(r == ' ' || r == ',' || r == ')')
+    if (r == ' ' || r == ',' || r == ')')
     {
       if (!argStart.Empty())
       {
@@ -330,7 +336,7 @@ void ICodeInspector::AddCallTipParametersFromArgumentString(CallTip& tip, String
         {
           if (!paramName.Empty())
             paramType = paramName;
-          
+
           paramName = currentRange;
         }
         else
@@ -364,7 +370,8 @@ void ICodeInspector::AddCallTipParametersFromArgumentString(CallTip& tip, String
   }
 }
 
-void AddCallTipParametersFromArgumentList(CallTip &tip, const Array<ParameterDoc *> &params)
+void AddCallTipParametersFromArgumentList(CallTip& tip,
+                                          const Array<ParameterDoc*>& params)
 {
   for (uint i = 0; i < params.Size(); ++i)
   {
@@ -391,17 +398,19 @@ void AddCallTipFromDocMethod(Array<CallTip>& tips, MethodDoc* method)
   }
 }
 
-void ICodeInspector::AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* owner, Function* function)
+void ICodeInspector::AddCallTipFromMetaMethod(Array<CallTip>& tips,
+                                              BoundType* owner,
+                                              Function* function)
 {
   static const String Void("void");
 
   Array<MethodDoc*>* methodList = nullptr;
 
-  if (ClassDoc* classDoc = Z::gDocumentation->mClassMap.FindValue(owner->Name, NULL))
+  if (ClassDoc* classDoc =
+          Z::gDocumentation->mClassMap.FindValue(owner->Name, NULL))
   {
     methodList = &classDoc->mMethodsMap[function->Name];
   }
-
 
   CallTip& tip = tips.PushBack();
 
@@ -431,7 +440,6 @@ void ICodeInspector::AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* o
   }
 }
 
-//------------------------------------------------------------ Document Resource
 ZilchDefineType(DocumentResource, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cResourceInterface);
@@ -446,7 +454,7 @@ DocumentResource::DocumentResource()
 
 DocumentResource::~DocumentResource()
 {
-  //Remove from the searchable map
+  // Remove from the searchable map
   Z::gResources->TextResources.Erase(this->LoadPath);
 }
 
@@ -457,12 +465,12 @@ void DocumentResource::DocumentSetup(ResourceEntry& entry, bool searchable)
   mContentItem = entry.mLibrarySource;
   mResourceId = entry.mResourceId;
 
-  if(entry.mLibrarySource)
+  if (entry.mLibrarySource)
     LoadPath = entry.mLibrarySource->GetFullPath();
   else
     LoadPath = entry.FullPath;
 
-  if(searchable)
+  if (searchable)
     Z::gResources->TextResources.InsertNoOverwrite(LoadPath, mResourceId);
 }
 
@@ -478,12 +486,12 @@ void DocumentResource::UpdateContentItem(ContentItem* contentItem)
   textResources.InsertNoOverwrite(LoadPath, mResourceId);
 }
 
-
 void DocumentResource::SetAndSaveData(StringRange data)
 {
-  if(mContentItem && Z::gContentSystem->mHistoryEnabled)
+  if (mContentItem && Z::gContentSystem->mHistoryEnabled)
   {
-    String backUpPath = Z::gContentSystem->GetHistoryPath(mContentItem->mLibrary);
+    String backUpPath =
+        Z::gContentSystem->GetHistoryPath(mContentItem->mLibrary);
     BackUpFile(backUpPath, LoadPath);
     WriteStringRangeToFile(LoadPath, data);
   }
@@ -493,8 +501,8 @@ void DocumentResource::SetAndSaveData(StringRange data)
 
 namespace Events
 {
-  DefineEvent(Save);
-  DefineEvent(SaveCheck);
-}
+DefineEvent(Save);
+DefineEvent(SaveCheck);
+} // namespace Events
 
-}//namespace Zero
+} // namespace Zero

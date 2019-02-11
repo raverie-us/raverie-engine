@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                    Route                                        //
-//---------------------------------------------------------------------------------//
+//                                    Route //
 
 /// Network Route
 /// Identifies a set of link targets
@@ -23,7 +16,8 @@ public:
   static const Route None;
 
   /// Constructors
-  Route(RouteMode::Enum mode = RouteMode::Exclude, ReplicatorIdSet targets = ReplicatorIdSet());
+  Route(RouteMode::Enum mode = RouteMode::Exclude,
+        ReplicatorIdSet targets = ReplicatorIdSet());
   Route(RouteMode::Enum mode, ReplicatorId replicatorId);
   Route(ReplicatorId replicatorId);
   Route(ReplicatorLink* replicatorLink);

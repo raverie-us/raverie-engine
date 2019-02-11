@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean.
-/// Copyright 2015, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,13 +7,13 @@ namespace Zero
 // Editor Tags
 namespace Tags
 {
-  DefineTag(Networking);
+DefineTag(Networking);
 }
 
 bool IsValidNetProperty(Property* property)
 {
   // Is read-only?
-  if(property->IsReadOnly())
+  if (property->IsReadOnly())
   {
     // Unsupported property
     return false;
@@ -32,22 +27,22 @@ bool IsValidNetPropertyType(Type* propertyType)
   //    Bitstream can serialize the underlying property type?
   // OR This a cog type?
   // OR This is a cog path type?
-  // (We allow NetObject net properties to serialize these types, but not NetEvents, for now)
-  return BitStreamCanSerializeType(propertyType)
-      || propertyType == ZilchTypeId(Cog)
-      || propertyType == ZilchTypeId(CogPath);
+  // (We allow NetObject net properties to serialize these types, but not
+  // NetEvents, for now)
+  return BitStreamCanSerializeType(propertyType) ||
+         propertyType == ZilchTypeId(Cog) ||
+         propertyType == ZilchTypeId(CogPath);
 }
 bool IsValidNetPeerIdPropertyType(Type* propertyType)
 {
   return propertyType == ZilchTypeId(int);
 }
 
-//---------------------------------------------------------------------------------//
-//                                 Network Types                                   //
-//---------------------------------------------------------------------------------//
+//                                 Network Types //
 
-ComponentPropertyInstanceData::ComponentPropertyInstanceData(String propertyName, Component* component)
-  : mPropertyName(propertyName),
+ComponentPropertyInstanceData::ComponentPropertyInstanceData(
+    String propertyName, Component* component) :
+    mPropertyName(propertyName),
     mComponent(component)
 {
 }
@@ -62,8 +57,9 @@ Variant GetNetChannelAuthorityProperty(const Variant& propertyData)
   ReplicaChannel* replicaChannel = propertyData.GetOrError<ReplicaChannel*>();
 
   // Success
-  // (We wrap the enum in an Any to take advantage of Zilch meta later during serialization
-  // to serialize the enum quantized, using only the bits necessary to represent all enum values)
+  // (We wrap the enum in an Any to take advantage of Zilch meta later during
+  // serialization to serialize the enum quantized, using only the bits
+  // necessary to represent all enum values)
   return Variant(Any(replicaChannel->GetAuthority()));
 }
 void SetNetChannelAuthorityProperty(const Variant& value, Variant& propertyData)
@@ -83,7 +79,7 @@ Variant GetNetObjectNameProperty(const Variant& propertyData)
 {
   // Get associated property instance data
   NetObject* netObject = propertyData.GetOrError<NetObject*>();
-  Cog*       owner     = netObject->GetOwner();
+  Cog* owner = netObject->GetOwner();
 
   // Return the object's name
   return Variant(owner->GetName());
@@ -92,7 +88,7 @@ void SetNetObjectNameProperty(const Variant& value, Variant& propertyData)
 {
   // Get associated property instance data
   NetObject* netObject = propertyData.GetOrError<NetObject*>();
-  Cog*       owner     = netObject->GetOwner();
+  Cog* owner = netObject->GetOwner();
 
   // Set the object's name
   owner->SetName(value.GetOrError<String>());
@@ -106,16 +102,16 @@ Variant GetNetObjectParentProperty(const Variant& propertyData)
 {
   // Get associated property instance data
   NetObject* netObject = propertyData.GetOrError<NetObject*>();
-  Cog*       owner     = netObject->GetOwner();
+  Cog* owner = netObject->GetOwner();
 
   // Get parent
   Cog* parent = owner->GetParent();
-  if(!parent) // Empty?
+  if (!parent) // Empty?
     return Variant(NetObjectId(0));
 
   // Get parent net object
   NetObject* parentNetObject = parent->has(NetObject);
-  if(!parentNetObject) // Unable?
+  if (!parentNetObject) // Unable?
     return Variant(NetObjectId(0));
 
   // Success
@@ -124,29 +120,31 @@ Variant GetNetObjectParentProperty(const Variant& propertyData)
 void SetNetObjectParentProperty(const Variant& value, Variant& propertyData)
 {
   // Get associated property instance data
-  NetObject* netObject     = propertyData.GetOrError<NetObject*>();
-  Cog*       owner         = netObject->GetOwner();
-  Cog*       currentParent = owner->GetParent();
+  NetObject* netObject = propertyData.GetOrError<NetObject*>();
+  Cog* owner = netObject->GetOwner();
+  Cog* currentParent = owner->GetParent();
 
   // Parent set?
   NetObjectId newParentNetObjectId = value.GetOrError<NetObjectId>();
-  if(newParentNetObjectId)
+  if (newParentNetObjectId)
   {
     // Has current parent?
-    if(currentParent)
+    if (currentParent)
     {
       // The new parent is our current parent?
       NetObject* currentParentNetObject = currentParent->has(NetObject);
-      if(currentParentNetObject && (currentParentNetObject->GetNetObjectId() == newParentNetObjectId))
+      if (currentParentNetObject &&
+          (currentParentNetObject->GetNetObjectId() == newParentNetObjectId))
       {
-        // Done (This case needs to be explicitly checked because of internal hierarchies!)
+        // Done (This case needs to be explicitly checked because of internal
+        // hierarchies!)
         return;
       }
     }
 
     // Get net peer
     NetPeer* netPeer = netObject->GetNetPeer();
-    if(!netPeer)
+    if (!netPeer)
     {
       Assert(false);
       return;
@@ -154,31 +152,35 @@ void SetNetObjectParentProperty(const Variant& value, Variant& propertyData)
 
     // Find new parent
     Cog* newParent = netPeer->GetNetObject(newParentNetObjectId);
-    if(!newParent) // Unable?
+    if (!newParent) // Unable?
     {
       // Get net space
       NetSpace* netSpace = netObject->GetNetSpace();
 
       // We are receiving a net game clone?
-      if(netSpace && netPeer->IsReceivingNetGame())
+      if (netSpace && netPeer->IsReceivingNetGame())
       {
         Assert(netPeer->IsClient());
 
-        // Add delayed attachment, will be performed when the parent exists locally
-        netSpace->AddDelayedAttachment(netObject->GetNetObjectId(), newParentNetObjectId);
+        // Add delayed attachment, will be performed when the parent exists
+        // locally
+        netSpace->AddDelayedAttachment(netObject->GetNetObjectId(),
+                                       newParentNetObjectId);
       }
       // We are not receiving a net game clone?
       else
       {
-        DoNotifyWarning("Unable To Set NetObject Parent",
-                      String::Format("There was an error setting the parent of NetObject '%s' - Parent NetObject does not exist locally!",
-                      owner->GetDescription().c_str()));
+        DoNotifyWarning(
+            "Unable To Set NetObject Parent",
+            String::Format("There was an error setting the parent of NetObject "
+                           "'%s' - Parent NetObject does not exist locally!",
+                           owner->GetDescription().c_str()));
       }
       return;
     }
 
     // Parent has changed?
-    if(currentParent != newParent)
+    if (currentParent != newParent)
     {
       // Detach from old parent
       owner->DetachPreserveLocal();
@@ -191,7 +193,7 @@ void SetNetObjectParentProperty(const Variant& value, Variant& propertyData)
   else
   {
     // Has current parent?
-    if(currentParent)
+    if (currentParent)
     {
       // Detach from parent
       owner->DetachPreserveLocal();
@@ -206,13 +208,15 @@ void SetNetObjectParentProperty(const Variant& value, Variant& propertyData)
 Variant GetComponentCogProperty(const Variant& propertyData)
 {
   // Get associated property instance data
-  String     propertyName       = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
-  Component* component          = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
+  String propertyName =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
+  Component* component =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
   BoundType* componentBoundType = ZilchVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return Variant();
 
   // Result
@@ -221,18 +225,23 @@ Variant GetComponentCogProperty(const Variant& propertyData)
 void SetComponentCogProperty(const Variant& value, Variant& propertyData)
 {
   // Get associated property instance data
-  String     propertyName       = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
-  Component* component          = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
+  String propertyName =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
+  Component* component =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
   BoundType* componentBoundType = ZilchVirtualTypeId(component);
-  NetObject* netObject          = component->GetOwner()->has(NetObject);
+  NetObject* netObject = component->GetOwner()->has(NetObject);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return;
 
   // Result
-  SetNetPropertyCogAsNetObjectId(property, component, netObject->GetNetPeer(), value.GetOrError<NetObjectId>());
+  SetNetPropertyCogAsNetObjectId(property,
+                                 component,
+                                 netObject->GetNetPeer(),
+                                 value.GetOrError<NetObjectId>());
 }
 
 //
@@ -242,20 +251,24 @@ void SetComponentCogProperty(const Variant& value, Variant& propertyData)
 Variant GetComponentCogPathProperty(const Variant& propertyData)
 {
   // Get associated property instance data
-  String     propertyName       = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
-  Component* component          = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
+  String propertyName =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
+  Component* component =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
   BoundType* componentBoundType = ZilchVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return Variant();
 
   // Get cog path value
   Any cogPathAny = property->GetValue(component);
-  if(!cogPathAny.IsHoldingValue()) // Unable?
+  if (!cogPathAny.IsHoldingValue()) // Unable?
   {
-    DoNotifyError("NetProperty", "Error getting CogPath NetProperty - Unable to get property instance value");
+    DoNotifyError("NetProperty",
+                  "Error getting CogPath NetProperty - Unable to get property "
+                  "instance value");
     return Variant();
   }
   CogPath* cogPath = cogPathAny.Get<CogPath*>();
@@ -268,20 +281,24 @@ Variant GetComponentCogPathProperty(const Variant& propertyData)
 void SetComponentCogPathProperty(const Variant& value, Variant& propertyData)
 {
   // Get associated property instance data
-  String     propertyName       = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
-  Component* component          = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
+  String propertyName =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
+  Component* component =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
   BoundType* componentBoundType = ZilchVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return;
 
   // Get cog path value
   Any cogPathAny = property->GetValue(component);
-  if(!cogPathAny.IsHoldingValue()) // Unable?
+  if (!cogPathAny.IsHoldingValue()) // Unable?
   {
-    DoNotifyError("NetProperty", "Error setting CogPath NetProperty - Unable to get property instance value");
+    DoNotifyError("NetProperty",
+                  "Error setting CogPath NetProperty - Unable to get property "
+                  "instance value");
     return;
   }
   CogPath* cogPath = cogPathAny.Get<CogPath*>();
@@ -299,13 +316,15 @@ void SetComponentCogPathProperty(const Variant& value, Variant& propertyData)
 Variant GetComponentAnyProperty(const Variant& propertyData)
 {
   // Get associated property instance data
-  String     propertyName       = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
-  Component* component          = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
+  String propertyName =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
+  Component* component =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
   BoundType* componentBoundType = ZilchVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return Variant();
 
   // Get any value
@@ -313,10 +332,12 @@ Variant GetComponentAnyProperty(const Variant& propertyData)
 
   // Attempt to convert basic any value to variant value
   Variant variantValue = ConvertBasicAnyToVariant(anyValue);
-  if(variantValue.IsEmpty())// Unable? (The any's stored type is not a basic native type?)
+  if (variantValue.IsEmpty()) // Unable? (The any's stored type is not a basic
+                              // native type?)
   {
     // Assign the any value itself to the variant value
-    // (Some property types like enums, resources, and bitstream are expected to be wrapped in an any this way)
+    // (Some property types like enums, resources, and bitstream are expected to
+    // be wrapped in an any this way)
     variantValue = anyValue;
   }
 
@@ -326,13 +347,15 @@ Variant GetComponentAnyProperty(const Variant& propertyData)
 void SetComponentAnyProperty(const Variant& value, Variant& propertyData)
 {
   // Get associated property instance data
-  String     propertyName       = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
-  Component* component          = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
+  String propertyName =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
+  Component* component =
+      propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
   BoundType* componentBoundType = ZilchVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
-  if(!property) // Unable?
+  if (!property) // Unable?
     return;
 
   // Get variant value
@@ -340,10 +363,12 @@ void SetComponentAnyProperty(const Variant& value, Variant& propertyData)
 
   // Attempt to convert basic variant value to any value
   Any anyValue = ConvertBasicVariantToAny(variantValue);
-  if(!anyValue.IsHoldingValue())// Unable? (The variant's stored type is not a basic native type?)
+  if (!anyValue.IsHoldingValue()) // Unable? (The variant's stored type is not a
+                                  // basic native type?)
   {
     // Get the any value itself from the variant value
-    // (Some property types like enums, resources, and bitstream are expected to be wrapped in an any this way)
+    // (Some property types like enums, resources, and bitstream are expected to
+    // be wrapped in an any this way)
     anyValue = variantValue.GetOrError<Any>();
   }
 
@@ -357,7 +382,7 @@ void SetComponentAnyProperty(const Variant& value, Variant& propertyData)
 
 BasicNativeType::Enum BasicNetworkToNativeTypeEnum(BasicNetType::Enum value)
 {
-  switch(value)
+  switch (value)
   {
   default:
   case BasicNetType::Other:
@@ -414,7 +439,7 @@ BasicNativeType::Enum BasicNetworkToNativeTypeEnum(BasicNetType::Enum value)
 }
 BasicNetType::Enum BasicNativeToNetworkTypeEnum(BasicNativeType::Enum value)
 {
-  switch(value)
+  switch (value)
   {
   default:
   case BasicNativeType::Unknown:
@@ -474,19 +499,20 @@ bool HasNetPeerIdProperty(Event* event)
 {
   // Get event type
   BoundType* eventType = ZilchVirtualTypeId(event);
-  if(!eventType)
+  if (!eventType)
   {
     Assert(false);
     return false;
   }
 
   // For all properties
-  MemberRange<Property> properties = eventType->GetProperties(Members::InheritedInstanceExtension);
-  forRange(Property* property, properties)
+  MemberRange<Property> properties =
+      eventType->GetProperties(Members::InheritedInstanceExtension);
+  forRange(Property * property, properties)
   {
     // Is a net peer ID property?
-    if(property->HasAttribute(PropertyAttributes::cNetPeerId)
-    && IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
+    if (property->HasAttribute(PropertyAttributes::cNetPeerId) &&
+        IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
       return true;
   }
 
@@ -496,19 +522,20 @@ void SetNetPeerIdProperties(Event* event, NetPeerId netPeerId)
 {
   // Get event type
   BoundType* eventType = ZilchVirtualTypeId(event);
-  if(!eventType)
+  if (!eventType)
   {
     Assert(false);
     return;
   }
 
   // For all properties
-  MemberRange<Property> properties = eventType->GetProperties(Members::InheritedInstanceExtension);
-  forRange(Property* property, properties)
+  MemberRange<Property> properties =
+      eventType->GetProperties(Members::InheritedInstanceExtension);
+  forRange(Property * property, properties)
   {
     // Is a net peer ID property?
-    if(property->HasAttribute(PropertyAttributes::cNetPeerId)
-    && IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
+    if (property->HasAttribute(PropertyAttributes::cNetPeerId) &&
+        IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
     {
       // Set net peer ID
       property->SetValue(event, netPeerId);
@@ -516,17 +543,22 @@ void SetNetPeerIdProperties(Event* event, NetPeerId netPeerId)
   }
 }
 
-void SetNetPropertyCogAsNetObjectId(Property* property, const Any& instance, NetPeer* netPeer, NetObjectId netObjectId)
+void SetNetPropertyCogAsNetObjectId(Property* property,
+                                    const Any& instance,
+                                    NetPeer* netPeer,
+                                    NetObjectId netObjectId)
 {
   // Cog set?
   Cog* cog = nullptr;
-  if(netObjectId)
+  if (netObjectId)
   {
     // Find cog
     cog = netPeer->GetNetObject(netObjectId);
-    if(!cog) // Unable?
+    if (!cog) // Unable?
     {
-      DoNotifyWarning("NetProperty", "Unable to set Cog NetProperty - Network object does not exist locally");
+      DoNotifyWarning("NetProperty",
+                      "Unable to set Cog NetProperty - Network object does not "
+                      "exist locally");
       return;
     }
   }
@@ -534,18 +566,21 @@ void SetNetPropertyCogAsNetObjectId(Property* property, const Any& instance, Net
   // Success
   property->SetValue(instance, cog);
 }
-NetObjectId GetNetPropertyCogAsNetObjectId(Property* property, const Any& instance)
+NetObjectId GetNetPropertyCogAsNetObjectId(Property* property,
+                                           const Any& instance)
 {
   // Get cog value
   Cog* cog = property->GetValue(instance).Get<Cog*>();
-  if(!cog) // Empty?
+  if (!cog) // Empty?
     return NetObjectId(0);
 
   // Get cog net object
   NetObject* cogNetObject = cog->has(NetObject);
-  if(!cogNetObject) // Unable?
+  if (!cogNetObject) // Unable?
   {
-    DoNotifyError("NetProperty", "Error getting Cog NetProperty - Cog being referenced must have a NetObject component");
+    DoNotifyError("NetProperty",
+                  "Error getting Cog NetProperty - Cog being referenced must "
+                  "have a NetObject component");
     return NetObjectId(0);
   }
 
@@ -553,12 +588,10 @@ NetObjectId GetNetPropertyCogAsNetObjectId(Property* property, const Any& instan
   return cogNetObject->GetNetObjectId();
 }
 
-//---------------------------------------------------------------------------------//
-//                                 FamilyTree                                      //
-//---------------------------------------------------------------------------------//
+//                                 FamilyTree //
 
-FamilyTree::FamilyTree()
-  : mFamilyTreeId(0),
+FamilyTree::FamilyTree() :
+    mFamilyTreeId(0),
     mAncestorDisplayName(),
     mAncestorCreateContext(),
     mAncestorReplicaType(),
@@ -567,8 +600,8 @@ FamilyTree::FamilyTree()
   // (Should not actually get called)
   Assert(false);
 }
-FamilyTree::FamilyTree(FamilyTreeId familyTreeId, NetObject* ancestor)
-  : mFamilyTreeId(familyTreeId),
+FamilyTree::FamilyTree(FamilyTreeId familyTreeId, NetObject* ancestor) :
+    mFamilyTreeId(familyTreeId),
     mAncestorDisplayName(ancestor->GetOwner()->GetDescription()),
     mAncestorCreateContext(ancestor->GetCreateContext()),
     mAncestorReplicaType(ancestor->GetReplicaType()),
@@ -584,27 +617,27 @@ FamilyTree::~FamilyTree()
 {
 }
 
-bool FamilyTree::operator ==(const FamilyTree& rhs) const
+bool FamilyTree::operator==(const FamilyTree& rhs) const
 {
   return mFamilyTreeId == rhs.mFamilyTreeId;
 }
-bool FamilyTree::operator !=(const FamilyTree& rhs) const
+bool FamilyTree::operator!=(const FamilyTree& rhs) const
 {
   return mFamilyTreeId != rhs.mFamilyTreeId;
 }
-bool FamilyTree::operator  <(const FamilyTree& rhs) const
+bool FamilyTree::operator<(const FamilyTree& rhs) const
 {
   return mFamilyTreeId < rhs.mFamilyTreeId;
 }
-bool FamilyTree::operator ==(const FamilyTreeId& rhs) const
+bool FamilyTree::operator==(const FamilyTreeId& rhs) const
 {
   return mFamilyTreeId == rhs;
 }
-bool FamilyTree::operator !=(const FamilyTreeId& rhs) const
+bool FamilyTree::operator!=(const FamilyTreeId& rhs) const
 {
   return mFamilyTreeId != rhs;
 }
-bool FamilyTree::operator  <(const FamilyTreeId& rhs) const
+bool FamilyTree::operator<(const FamilyTreeId& rhs) const
 {
   return mFamilyTreeId < rhs;
 }
@@ -627,7 +660,8 @@ bool FamilyTree::AddNetObject(NetObject* netObject)
 bool FamilyTree::RemoveNetObject(NetObject* netObject)
 {
   // Find pointer to net object
-  if(Replica** pointer = mReplicas.FindPointer(static_cast<Replica*>(netObject)))
+  if (Replica** pointer =
+          mReplicas.FindPointer(static_cast<Replica*>(netObject)))
   {
     // Clear net object's family tree ID
     netObject->SetFamilyTreeId(0);
@@ -669,12 +703,11 @@ const ReplicaArray& FamilyTree::GetReplicas() const
 bool FamilyTree::IsEmpty() const
 {
   // For All net objects
-  forRange(Replica* netObject, mReplicas.All())
-    if(netObject) // Is present?
-    {
-      // There is at least one present net object
-      return false;
-    }
+  forRange(Replica * netObject, mReplicas.All()) if (netObject) // Is present?
+  {
+    // There is at least one present net object
+    return false;
+  }
 
   // All net objects are absent
   return true;

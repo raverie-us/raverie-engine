@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Precompiled.hpp
-/// Precompiled header for windows library.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -21,7 +13,7 @@
 
 // Prevent MIN ans MAX macros from being defined.
 #ifndef NOMINMAX
-#define NOMINMAX
+#  define NOMINMAX
 #endif
 
 #include <winsock2.h>
@@ -72,10 +64,10 @@
 #include <GL/GL.h>
 
 #ifdef min
-#undef min
+#  undef min
 #endif
 #ifdef max
-#undef max
+#  undef max
 #endif
 
 #pragma comment(lib, "Psapi.lib")
@@ -93,11 +85,11 @@
 #pragma comment(lib, "Avrt.lib")
 #pragma comment(lib, "hid.lib")
 
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
+#pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-//Undef windows defines that overlap with core functions
+// Undef windows defines that overlap with core functions
 #undef CopyFile
 #undef MoveFile
 #undef DeleteFile
@@ -110,5 +102,5 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "WinUtility.hpp"
 
 #ifdef RunVld
-#include <vld.h>
+#  include <vld.h>
 #endif

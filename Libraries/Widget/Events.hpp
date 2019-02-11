@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Interactive.hpp
-/// Definition of the interactive display object class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,89 +6,88 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(MouseEnterPreview);
-  DeclareEvent(KeyPreview);
-  DeclareEvent(HoverKeyPreview);
-  DeclareEvent(HoverKeyDown);
-  DeclareEvent(HoverKeyUp);
-  DeclareEvent(HoverKeyRepeated);
+DeclareEvent(MouseEnterPreview);
+DeclareEvent(KeyPreview);
+DeclareEvent(HoverKeyPreview);
+DeclareEvent(HoverKeyDown);
+DeclareEvent(HoverKeyUp);
+DeclareEvent(HoverKeyRepeated);
 
-  // Update when mouse is over the object
-  DeclareEvent(MouseUpdate);
+// Update when mouse is over the object
+DeclareEvent(MouseUpdate);
 
-  // Mouse dropped files on a viewport
-  DeclareEvent(MouseFileDrop);
+// Mouse dropped files on a viewport
+DeclareEvent(MouseFileDrop);
 
-  // Mouse move from over an object to any other object including a child
-  DeclareEvent(MouseEnter);
-  DeclareEvent(MouseExit);
+// Mouse move from over an object to any other object including a child
+DeclareEvent(MouseEnter);
+DeclareEvent(MouseExit);
 
-  // Mouse has moved out from the object and all children of object
-  DeclareEvent(MouseEnterHierarchy);
-  DeclareEvent(MouseExitHierarchy);
+// Mouse has moved out from the object and all children of object
+DeclareEvent(MouseEnterHierarchy);
+DeclareEvent(MouseExitHierarchy);
 
-  // Mouse Down or Up on object or child
-  DeclareEvent(MouseDown);
-  DeclareEvent(MouseUp);
+// Mouse Down or Up on object or child
+DeclareEvent(MouseDown);
+DeclareEvent(MouseUp);
 
-  // Named Button Events
-  DeclareEvent(LeftMouseDown);
-  DeclareEvent(LeftMouseUp);
-  DeclareEvent(RightMouseDown);
-  DeclareEvent(RightMouseUp);
-  DeclareEvent(MiddleMouseDown);
-  DeclareEvent(MiddleMouseUp);
-  
-  // Mouse moved on object or child
-  DeclareEvent(MouseMove);
+// Named Button Events
+DeclareEvent(LeftMouseDown);
+DeclareEvent(LeftMouseUp);
+DeclareEvent(RightMouseDown);
+DeclareEvent(RightMouseUp);
+DeclareEvent(MiddleMouseDown);
+DeclareEvent(MiddleMouseUp);
 
-  // Mouse scroll
-  DeclareEvent(MouseScroll);
+// Mouse moved on object or child
+DeclareEvent(MouseMove);
 
-  // Mouse is down and move for the drag distance
-  DeclareEvent(LeftMouseDrag);
-  DeclareEvent(RightMouseDrag);
+// Mouse scroll
+DeclareEvent(MouseScroll);
 
-  // Mouse is down for the hold time
-  DeclareEvent(MouseHold);
+// Mouse is down and move for the drag distance
+DeclareEvent(LeftMouseDrag);
+DeclareEvent(RightMouseDrag);
 
-  // Mouse is over for the hover time
-  DeclareEvent(MouseHover);
+// Mouse is down for the hold time
+DeclareEvent(MouseHold);
 
-  // Mouse button was pressed down and up on a object
-  DeclareEvent(LeftClick);
-  DeclareEvent(RightClick);
-  DeclareEvent(MiddleClick);
+// Mouse is over for the hover time
+DeclareEvent(MouseHover);
 
-  // Mouse Double clicked
-  DeclareEvent(DoubleClick);
+// Mouse button was pressed down and up on a object
+DeclareEvent(LeftClick);
+DeclareEvent(RightClick);
+DeclareEvent(MiddleClick);
 
-  DeclareEvent(MouseDrop);
+// Mouse Double clicked
+DeclareEvent(DoubleClick);
 
-  // Focus on Object
-  DeclareEvent(FocusLost);
-  DeclareEvent(FocusGained);
+DeclareEvent(MouseDrop);
 
-  DeclareEvent(FocusLostHierarchy);
-  DeclareEvent(FocusGainedHierarchy);
+// Focus on Object
+DeclareEvent(FocusLost);
+DeclareEvent(FocusGained);
 
-  // Any focus operation should be canceled
-  DeclareEvent(FocusReset);
+DeclareEvent(FocusLostHierarchy);
+DeclareEvent(FocusGainedHierarchy);
 
-  DeclareEvent(WidgetUpdate);
+// Any focus operation should be canceled
+DeclareEvent(FocusReset);
 
-  DeclareEvent(Activated);
-  DeclareEvent(Deactivated);
+DeclareEvent(WidgetUpdate);
 
-  DeclareEvent(WidgetShown);
+DeclareEvent(Activated);
+DeclareEvent(Deactivated);
 
-  DeclareEvent(OnDestroy);
+DeclareEvent(WidgetShown);
 
-  // Test if this widget should be closed if this event is not handled
-  // the window/widget will close
-  DeclareEvent(Closing);
-}//namespace Events
+DeclareEvent(OnDestroy);
 
+// Test if this widget should be closed if this event is not handled
+// the window/widget will close
+DeclareEvent(Closing);
+} // namespace Events
 
 const uint NamedButtonEvents = 3;
 extern String NamedMouseDown[3];
@@ -108,23 +99,22 @@ class HandleableEvent : public Event
 {
 public:
   ZilchDeclareType(HandleableEvent, TypeCopyMode::ReferenceType);
-  HandleableEvent()
-    :Handled(false){};
-  /// Set to true to signify that you have responded to this event, and that other
-  /// event responders should do nothing.
+  HandleableEvent() : Handled(false){};
+  /// Set to true to signify that you have responded to this event, and that
+  /// other event responders should do nothing.
   bool Handled;
 };
 
 class Widget;
 
-//------------------------------------------------------------------ Focus Event
 class FocusEvent : public Event
 {
 public:
   ZilchDeclareType(FocusEvent, TypeCopyMode::ReferenceType);
 
-  FocusEvent(Widget* focusGained, Widget* focusLost)
-    : ReceivedFocus(focusGained), LostFocus(focusLost)
+  FocusEvent(Widget* focusGained, Widget* focusLost) :
+      ReceivedFocus(focusGained),
+      LostFocus(focusLost)
   {
   }
 
@@ -132,11 +122,12 @@ public:
   Widget* LostFocus;
 };
 
-//----------------------------------------------------------- Dispatch At Params
 class DispatchAtParams
 {
 public:
-  DispatchAtParams() : ObjectHit(false) , Ignore(NULL), BubbleEvent(true) {}
+  DispatchAtParams() : ObjectHit(false), Ignore(NULL), BubbleEvent(true)
+  {
+  }
   bool ObjectHit;
   Vec2 Position;
   String EventId;
@@ -145,8 +136,6 @@ public:
   bool BubbleEvent;
 };
 
-
-//------------------------------------------------------------------ Mouse Event
 /// Mouse events for actions concerning the mouse.
 class MouseEvent : public Event
 {
@@ -177,13 +166,19 @@ public:
   bool Handled;
 
   // Not for use in native code:
-  ///Whether this message was handled by script
+  /// Whether this message was handled by script
   bool HandledEventScript;
 
   bool IsButtonDown(MouseButtons::Enum button);
-  bool IsButtonUp(MouseButtons::Enum button) { return !IsButtonDown(button); }
+  bool IsButtonUp(MouseButtons::Enum button)
+  {
+    return !IsButtonDown(button);
+  }
 
-  Mouse* GetMouse(){return EventMouse;}
+  Mouse* GetMouse()
+  {
+    return EventMouse;
+  }
 
   /// The mouse object
   Mouse* EventMouse;
@@ -198,7 +193,6 @@ public:
   Vec2 StartPosition;
 };
 
-//-------------------------------------------------------------------OsMouseDropEvent
 /// Files have been dropped on a viewport.
 class MouseFileDropEvent : public MouseEvent
 {
@@ -214,4 +208,4 @@ public:
   HandleOf<ArrayString> Files;
 };
 
-}//namespace Zero
+} // namespace Zero

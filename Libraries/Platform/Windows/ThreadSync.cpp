@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ThreadSync.cpp
-/// Implementation of Thread synchronization classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -92,7 +84,6 @@ OsHandle OsEvent::GetHandle()
   return *self;
 }
 
-
 Semaphore::Semaphore()
 {
   mHandle = CreateSemaphore(NULL, 0, MaxSemaphoreCount, NULL);
@@ -100,12 +91,13 @@ Semaphore::Semaphore()
 
 Semaphore::~Semaphore()
 {
-  VerifyWin(CloseHandle(mHandle),"Failed to close Semaphore handle");
+  VerifyWin(CloseHandle(mHandle), "Failed to close Semaphore handle");
 }
 
 void Semaphore::Increment()
 {
-  VerifyWin(ReleaseSemaphore(mHandle, 1, NULL), "Failed to increment semaphore");
+  VerifyWin(ReleaseSemaphore(mHandle, 1, NULL),
+            "Failed to increment semaphore");
 }
 
 void Semaphore::Decrement()
@@ -115,14 +107,14 @@ void Semaphore::Decrement()
 
 void Semaphore::Reset()
 {
-  VerifyWin(CloseHandle(mHandle),"Failed to close Semaphore handle");
+  VerifyWin(CloseHandle(mHandle), "Failed to close Semaphore handle");
   mHandle = CreateSemaphore(NULL, 0, MaxSemaphoreCount, NULL);
 }
 
 void Semaphore::WaitAndDecrement()
 {
   OsInt result = WaitForSingleObject(mHandle, INFINITE);
-  if(result != WAIT_OBJECT_0)
+  if (result != WAIT_OBJECT_0)
   {
   }
 }
@@ -140,22 +132,23 @@ InterprocessMutex::~InterprocessMutex()
   ZeroDestructPrivateData(HANDLE);
 }
 
-void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status,
+                                   const char* mutexName,
+                                   bool failIfAlreadyExists)
 {
   ZeroGetPrivateData(HANDLE);
   *self = CreateMutex(NULL, FALSE, Widen(mutexName).c_str());
 
   DWORD error = GetLastError();
-  if(*self == nullptr)
+  if (*self == nullptr)
     status.SetFailed("Mutex initialization error.", error);
-  else if(failIfAlreadyExists && error == ERROR_ALREADY_EXISTS)
+  else if (failIfAlreadyExists && error == ERROR_ALREADY_EXISTS)
     status.SetFailed("The handle already existed", error);
   else
     status.Succeeded();
 }
 
-CountdownEvent::CountdownEvent()
-  : mCount(0)
+CountdownEvent::CountdownEvent() : mCount(0)
 {
   mWaitEvent.Initialize(true, true);
 }
@@ -185,4 +178,4 @@ void CountdownEvent::Wait()
   mWaitEvent.Wait();
 }
 
-}//namespace Zero
+} // namespace Zero

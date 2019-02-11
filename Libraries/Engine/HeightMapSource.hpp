@@ -1,12 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////////
-/////
-///// \file HeightMapResource.hpp
-///// Declaration of the HeightMap resource.
-/////
-///// Authors: Trevor Sundberg
-///// Copyright 2010-2011, DigiPen Institute of Technology
-/////
-/////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -32,23 +24,25 @@ struct PatchLayer
   uint Size();
   void Allocate();
 
-  //Type of the layer. See PatchLayerType.
+  // Type of the layer. See PatchLayerType.
   uint LayerType;
 
-  //Width and height of the data
+  // Width and height of the data
   uint Width;
   uint Height;
 
-  //Size of each element
+  // Size of each element
   uint ElementSize;
 
-  //Data
+  // Data
   byte* Data;
 };
 
-/// HeightMapSource stores data needed for height maps. Data is stored on PatchData which are indexed by x,y.
-/// Each PatchData stores layers that represent different data. The primary layer is height and paint values
-/// but additional layers can be added to store data like foliage or custom game data.
+/// HeightMapSource stores data needed for height maps. Data is stored on
+/// PatchData which are indexed by x,y. Each PatchData stores layers that
+/// represent different data. The primary layer is height and paint values but
+/// additional layers can be added to store data like foliage or custom game
+/// data.
 class HeightMapSource : public Resource
 {
 public:
@@ -57,11 +51,11 @@ public:
   HeightMapSource();
   ~HeightMapSource();
 
-  //Get or Create data for a particular layer.
+  // Get or Create data for a particular layer.
   PatchLayer* GetLayerData(PatchIndex index, uint layerIndex);
-  //Get or create data for a patch.
+  // Get or create data for a patch.
   PatchData* GetPatchData(PatchIndex index);
-  //Remove a patch.
+  // Remove a patch.
   void RemovePatch(PatchIndex index);
 
   // Save to a data file
@@ -69,7 +63,7 @@ public:
   void Unload() override;
 
   uint mVersion;
-  HashMap<PatchIndex,  PatchData*> mData;
+  HashMap<PatchIndex, PatchData*> mData;
 };
 
 class HeightMapSourceManager : public ResourceManager
@@ -79,4 +73,4 @@ public:
   HeightMapSourceManager(BoundType* resourceType);
 };
 
-}//namespace Zero
+} // namespace Zero

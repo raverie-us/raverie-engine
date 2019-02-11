@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleAnimators.cpp
-/// Implementation of the Particle animators.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------- Linear Particle Animator
 ZilchDefineType(LinearParticleAnimator, builder, type)
 {
   ZeroBindComponent();
@@ -38,7 +29,7 @@ void LinearParticleAnimator::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mForce, Vec3::cZero);
   SerializeNameDefault(mRandomForce, Vec3::cZero);
-  
+
   SerializeNameDefault(mTorque, 0.0f);
   SerializeNameDefault(mGrowth, 0.0f);
   SerializeNameDefault(mDampening, 0.0f);
@@ -56,7 +47,8 @@ LinearParticleAnimator::~LinearParticleAnimator()
   AnimatorList::Unlink(this);
 }
 
-void LinearParticleAnimator::Animate(ParticleList* particleList, float dt,
+void LinearParticleAnimator::Animate(ParticleList* particleList,
+                                     float dt,
                                      Mat4Ref transform)
 {
   Particle* p = particleList->Particles;
@@ -66,7 +58,7 @@ void LinearParticleAnimator::Animate(ParticleList* particleList, float dt,
 
   const uint cNumberOfRandomSamples = 13;
   Vec3 randomForces[cNumberOfRandomSamples];
-  for(uint i = 0; i < cNumberOfRandomSamples; ++i)
+  for (uint i = 0; i < cNumberOfRandomSamples; ++i)
     randomForces[i] = random.PointOnUnitSphere() * mRandomForce;
 
   Vec3 twistVector = mTwist;
@@ -75,60 +67,58 @@ void LinearParticleAnimator::Animate(ParticleList* particleList, float dt,
   uint i = 0;
   i += random.IntRangeInIn(0, 5);
 
-  while(p != NULL)
+  while (p != NULL)
   {
- 
+
     float t = p->Time;
 
-    i =(i + 1) % cNumberOfRandomSamples;
+    i = (i + 1) % cNumberOfRandomSamples;
 
     Vec3 velocity = p->Velocity;
 
-    //Apply constant force
+    // Apply constant force
     velocity += mForce * dt;
 
-    //Apply random force
+    // Apply random force
     velocity += randomForces[i] * dt;
 
-    //Integrate position
+    // Integrate position
     Vec3 position = p->Position;
     position += velocity * dt;
     p->Position = position;
 
-    //Expand size
+    // Expand size
     p->Size += mGrowth * dt;
     p->Size = Math::Max(p->Size, 0.0f);
 
-    //Integrate rotation of particle
+    // Integrate rotation of particle
     p->Rotation += p->RotationalVelocity * dt;
     p->RotationalVelocity = p->RotationalVelocity + mTorque * dt;
 
-    //Twist effect
-    if(twistStrength != 0.0f)
+    // Twist effect
+    if (twistStrength != 0.0f)
     {
       Vec3 toCenter = center - p->Position;
       toCenter.AttemptNormalize();
 
       Vec3 twistMove = Cross(toCenter, twistVector);
       Vec3 inVector = Cross(twistVector, twistMove);
-      velocity +=(twistMove + inVector) * dt * twistStrength;
+      velocity += (twistMove + inVector) * dt * twistStrength;
     }
-    
-    //Damping
+
+    // Damping
     {
       velocity *= Math::Clamp(1.0f - dt * mDampening, 0.0f, 1.0f);
     }
 
-    //Store updated velocity
+    // Store updated velocity
     p->Velocity = velocity;
 
-    //Move to next particle.
+    // Move to next particle.
     p = p->Next;
-
   }
 }
 
-//-------------------------------------------------------------- Particle Wander
 ZilchDefineType(ParticleWander, builder, type)
 {
   ZeroBindComponent();
@@ -162,47 +152,48 @@ ParticleWander::~ParticleWander()
   AnimatorList::Unlink(this);
 }
 
-void ParticleWander::Animate(ParticleList* particleList, float dt,
+void ParticleWander::Animate(ParticleList* particleList,
+                             float dt,
                              Mat4Ref transform)
 {
   Particle* p = particleList->Particles;
   Vec3 center = GetTranslationFrom(transform);
 
-  while(p != NULL)
+  while (p != NULL)
   {
     Vec3 velocity = p->Velocity;
     Vec3 normalizedVel = velocity;
     float l = normalizedVel.AttemptNormalize();
 
-    if(l > 0.0f)
+    if (l > 0.0f)
     {
       normalizedVel /= l;
 
-      //Get the current wander value
+      // Get the current wander value
       float curAngle = p->WanderAngle;
-      curAngle += mGraphicsSpace->mRandom.FloatVariance(mWanderAngle, mWanderAngleVariance) * dt;
+      curAngle += mGraphicsSpace->mRandom.FloatVariance(mWanderAngle,
+                                                        mWanderAngleVariance) *
+                  dt;
 
-      //Get a basis(not consistent varies based on normal)
-      Vec3 a,b;
+      // Get a basis(not consistent varies based on normal)
+      Vec3 a, b;
       Math::GenerateOrthonormalBasis(normalizedVel, &a, &b);
 
       float wanderChange = dt * mWanderStrength;
-      Vec3 change = Math::Cos(curAngle) * wanderChange * a + 
+      Vec3 change = Math::Cos(curAngle) * wanderChange * a +
                     Math::Sin(curAngle) * wanderChange * b;
       velocity += change;
 
-      //Store updated wander velocity
+      // Store updated wander velocity
       p->WanderAngle = curAngle;
       p->Velocity = velocity;
     }
 
-    //Move to next particle.
+    // Move to next particle.
     p = p->Next;
   }
-
 }
 
-//--------------------------------------------------- Particle Gradient Animator
 ZilchDefineType(ParticleColorAnimator, builder, type)
 {
   ZeroBindComponent();
@@ -210,8 +201,10 @@ ZilchDefineType(ParticleColorAnimator, builder, type)
   ZeroBindDependency(ParticleSystem);
   ZeroBindDocumented();
 
-  ZilchBindFieldProperty(mTimeGradient)->Add(new MetaEditorResource(false, true));
-  ZilchBindFieldProperty(mVelocityGradient)->Add(new MetaEditorResource(false, true));
+  ZilchBindFieldProperty(mTimeGradient)
+      ->Add(new MetaEditorResource(false, true));
+  ZilchBindFieldProperty(mVelocityGradient)
+      ->Add(new MetaEditorResource(false, true));
   ZilchBindFieldProperty(mMaxParticleSpeed);
 }
 
@@ -222,8 +215,10 @@ ParticleColorAnimator::~ParticleColorAnimator()
 
 void ParticleColorAnimator::Serialize(Serializer& stream)
 {
-  SerializeNullableResourceNameDefault(mTimeGradient, ColorGradientManager, "FadeInOut");
-  SerializeNullableResourceNameDefault(mVelocityGradient, ColorGradientManager, nullptr);
+  SerializeNullableResourceNameDefault(
+      mTimeGradient, ColorGradientManager, "FadeInOut");
+  SerializeNullableResourceNameDefault(
+      mVelocityGradient, ColorGradientManager, nullptr);
   SerializeNameDefault(mMaxParticleSpeed, 5.0f);
 }
 
@@ -233,32 +228,34 @@ void ParticleColorAnimator::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleColorAnimator::Animate(ParticleList* particleList, float dt,  Mat4Ref transform)
+void ParticleColorAnimator::Animate(ParticleList* particleList,
+                                    float dt,
+                                    Mat4Ref transform)
 {
   // Do nothing if neither gradients exist
   ColorGradient* timeGradient = mTimeGradient;
   ColorGradient* velocityGradient = mVelocityGradient;
 
-  if(timeGradient == nullptr && velocityGradient == nullptr)
+  if (timeGradient == nullptr && velocityGradient == nullptr)
     return;
 
   float maxSpeedSq = mMaxParticleSpeed * mMaxParticleSpeed;
 
   // Iterate over each particle
   Particle* p = particleList->Particles;
-  while(p != NULL)
+  while (p != NULL)
   {
     Vec4 color = Vec4(1);
 
     // Sample time gradient
-    if(timeGradient)
+    if (timeGradient)
     {
       float normalizedT = p->Time / p->Lifetime;
       color *= timeGradient->Sample(normalizedT);
     }
 
     // Sample velocity gradient
-    if(velocityGradient)
+    if (velocityGradient)
     {
       float speedSq = Math::LengthSq(p->Velocity);
       float normalizedT = speedSq / maxSpeedSq;
@@ -272,12 +269,11 @@ void ParticleColorAnimator::Animate(ParticleList* particleList, float dt,  Mat4R
     // Set the final color
     p->Color = color;
 
-    //Move to next particle.
+    // Move to next particle.
     p = p->Next;
   }
 }
 
-//----------------------------------------------------------- Particle Attractor
 ZilchDefineType(ParticleAttractor, builder, type)
 {
   ZeroBindComponent();
@@ -292,7 +288,6 @@ ZilchDefineType(ParticleAttractor, builder, type)
   ZilchBindFieldProperty(mMaxDistance);
 }
 
-
 ParticleAttractor::~ParticleAttractor()
 {
   AnimatorList::Unlink(this);
@@ -300,7 +295,8 @@ ParticleAttractor::~ParticleAttractor()
 
 void ParticleAttractor::Serialize(Serializer& stream)
 {
-  SerializeEnumNameDefault(SystemSpace, mPositionSpace, SystemSpace::LocalSpace);
+  SerializeEnumNameDefault(
+      SystemSpace, mPositionSpace, SystemSpace::LocalSpace);
   SerializeNameDefault(mAttractPosition, Vec3::cZero);
   SerializeNameDefault(mStrength, 1.0f);
   SerializeNameDefault(mMinDistance, 0.0f);
@@ -313,19 +309,20 @@ void ParticleAttractor::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleAttractor::Animate(ParticleList* particleList, float dt,
+void ParticleAttractor::Animate(ParticleList* particleList,
+                                float dt,
                                 Mat4Ref transform)
 {
   Vec3 center = GetTranslationFrom(transform);
   float range = mMaxDistance - mMinDistance;
-  float invRange =(1.0f / range);
+  float invRange = (1.0f / range);
 
   Vec3 attractPosition = mAttractPosition;
   if (mPositionSpace == SystemSpace::LocalSpace)
     attractPosition = Math::TransformPoint(transform, attractPosition);
 
   Particle* particle = particleList->Particles;
-  while(particle != NULL)
+  while (particle != NULL)
   {
     Vec3 toAttractPoint = attractPosition - particle->Position;
     float distance = toAttractPoint.AttemptNormalize();
@@ -340,13 +337,11 @@ void ParticleAttractor::Animate(ParticleList* particleList, float dt,
     velocity += toAttractPoint * mStrength * falloff * dt;
     particle->Velocity = velocity;
 
-    //Move to next particle.
+    // Move to next particle.
     particle = particle->Next;
   }
 }
 
-
-//------------------------------------------------------------- Particle Twister
 ZilchDefineType(ParticleTwister, builder, type)
 {
   ZeroBindComponent();
@@ -362,7 +357,6 @@ ZilchDefineType(ParticleTwister, builder, type)
 
 ParticleTwister::ParticleTwister()
 {
-
 }
 
 ParticleTwister::~ParticleTwister()
@@ -372,7 +366,7 @@ ParticleTwister::~ParticleTwister()
 
 void ParticleTwister::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(mAxis, Vec3(0,1,0));
+  SerializeNameDefault(mAxis, Vec3(0, 1, 0));
   SerializeNameDefault(mStrength, 1.0f);
   SerializeNameDefault(mMinDistance, 0.0f);
   SerializeNameDefault(mMaxDistance, 100.0f);
@@ -384,21 +378,22 @@ void ParticleTwister::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleTwister::Animate(ParticleList* particleList, float dt,
-                                Mat4Ref transform)
+void ParticleTwister::Animate(ParticleList* particleList,
+                              float dt,
+                              Mat4Ref transform)
 {
   Vec3 center = GetTranslationFrom(transform);
   float range = mMaxDistance - mMinDistance;
 
   float invRange = 1.0f;
-  if(range > 0.0f)
+  if (range > 0.0f)
     invRange = (1.0f / range);
 
   Vec3 twistVector = mAxis;
   float strength = mStrength;
 
   Particle* particle = particleList->Particles;
-  while(particle != NULL)
+  while (particle != NULL)
   {
     Vec3 toCenter = center - particle->Position;
     float distance = toCenter.Normalize();
@@ -412,17 +407,15 @@ void ParticleTwister::Animate(ParticleList* particleList, float dt,
 
     Vec3 twistMove = Cross(toCenter, twistVector);
     Vec3 inVector = Cross(twistVector, twistMove);
-    velocity +=(twistMove + inVector) *(dt * strength * falloff);
+    velocity += (twistMove + inVector) * (dt * strength * falloff);
 
     particle->Velocity = velocity;
 
-    //Move to next particle.
+    // Move to next particle.
     particle = particle->Next;
   }
 }
 
-
-//----------------------------------------------------- Particle Collision Plane
 ZilchDefineType(ParticleCollisionPlane, builder, type)
 {
   ZeroBindComponent();
@@ -432,8 +425,10 @@ ZilchDefineType(ParticleCollisionPlane, builder, type)
   ZilchBindFieldProperty(mPlaneSpace);
   ZilchBindFieldProperty(mPlanePosition);
   ZilchBindFieldProperty(mPlaneNormal);
-  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Restitution)
+      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Friction)->Add(
+      new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionPlane::~ParticleCollisionPlane()
@@ -456,14 +451,18 @@ void ParticleCollisionPlane::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ReflectParticle(Particle* particle, Vec3Param planeNormal, float restitution, float friction)
+void ReflectParticle(Particle* particle,
+                     Vec3Param planeNormal,
+                     float restitution,
+                     float friction)
 {
   Vec3 velocity = particle->Velocity;
 
   // Reflect
   velocity = Math::ReflectAcrossPlane(velocity, planeNormal);
 
-  // Split up the velocity so we can apply restitution and friction in different directions
+  // Split up the velocity so we can apply restitution and friction in different
+  // directions
   Vec3 velocityNormal = Math::ProjectOnVector(velocity, planeNormal);
   Vec3 velocityTangent = velocity - velocityNormal;
 
@@ -474,12 +473,13 @@ void ReflectParticle(Particle* particle, Vec3Param planeNormal, float restitutio
   particle->Velocity = velocityNormal + velocityTangent;
 }
 
-void ParticleCollisionPlane::Animate(ParticleList* particleList, float dt, 
+void ParticleCollisionPlane::Animate(ParticleList* particleList,
+                                     float dt,
                                      Mat4Ref transform)
 {
   Vec3 planePosition = mPlanePosition;
   Vec3 planeNormal = mPlaneNormal.AttemptNormalized();
-  if(mPlaneSpace == SystemSpace::LocalSpace)
+  if (mPlaneSpace == SystemSpace::LocalSpace)
   {
     planePosition = Math::TransformPoint(transform, planePosition);
     planeNormal = Math::TransformNormal(transform, planeNormal);
@@ -488,12 +488,12 @@ void ParticleCollisionPlane::Animate(ParticleList* particleList, float dt,
   Plane plane(planeNormal, planePosition);
 
   Particle* particle = particleList->Particles;
-  while(particle != NULL)
+  while (particle != NULL)
   {
     Vec3 position = particle->Position;
 
     float distance = plane.SignedDistanceToPlane(position);
-    if(distance < 0)
+    if (distance < 0)
     {
       // Project the particle back onto the plane
       particle->Position = position + (planeNormal * -distance);
@@ -501,7 +501,7 @@ void ParticleCollisionPlane::Animate(ParticleList* particleList, float dt,
       ReflectParticle(particle, planeNormal, mRestitution, mFriction);
     }
 
-    //Move to next particle.
+    // Move to next particle.
     particle = particle->Next;
   }
 }
@@ -513,7 +513,8 @@ float ParticleCollisionPlane::GetRestitution()
 
 void ParticleCollisionPlane::SetRestitution(float restitution)
 {
-  // Negative numbers can cause a particle to infinitely speed up, causing floating point errors
+  // Negative numbers can cause a particle to infinitely speed up, causing
+  // floating point errors
   mRestitution = Math::Max(0.0f, restitution);
 }
 
@@ -527,7 +528,7 @@ void ParticleCollisionPlane::SetFriction(float friction)
   mFriction = Math::Clamp(friction, 0.0f, 1.0f);
 }
 
-//----------------------------------------------------- Particle Collision Heightmap
+//Heightmap
 ZilchDefineType(ParticleCollisionHeightmap, builder, type)
 {
   ZeroBindComponent();
@@ -535,8 +536,10 @@ ZilchDefineType(ParticleCollisionHeightmap, builder, type)
   ZeroBindDependency(ParticleSystem);
   ZeroBindDocumented();
   ZilchBindFieldProperty(mHeightMap);
-  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Restitution)
+      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  ZilchBindGetterSetterProperty(Friction)->Add(
+      new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionHeightmap::~ParticleCollisionHeightmap()
@@ -551,7 +554,8 @@ void ParticleCollisionHeightmap::Serialize(Serializer& stream)
   SerializeNameDefault(mFriction, 0.3f);
 }
 
-void ParticleCollisionHeightmap::OnAllObjectsCreated(CogInitializer& initializer)
+void ParticleCollisionHeightmap::OnAllObjectsCreated(
+    CogInitializer& initializer)
 {
   mHeightMap.RestoreLink(initializer, this, "HeightMap");
 }
@@ -562,12 +566,14 @@ void ParticleCollisionHeightmap::Initialize(CogInitializer& initializer)
   GetOwner()->has(ParticleSystem)->AddAnimator(this);
 }
 
-void ParticleCollisionHeightmap::Animate(ParticleList* particleList, float dt, Mat4Ref transform)
+void ParticleCollisionHeightmap::Animate(ParticleList* particleList,
+                                         float dt,
+                                         Mat4Ref transform)
 {
   Cog* cog = mHeightMap.GetCog();
   if (cog == nullptr)
     return;
-  
+
   HeightMap* map = cog->has(HeightMap);
   if (map == NULL)
     return;
@@ -582,7 +588,8 @@ void ParticleCollisionHeightmap::Animate(ParticleList* particleList, float dt, M
     Vec3 position = particle->Position;
 
     Vec3 normal;
-    float sampleHeight = map->SampleHeight(position, -Math::PositiveMax(), &normal);
+    float sampleHeight =
+        map->SampleHeight(position, -Math::PositiveMax(), &normal);
     float particleHeight = map->GetWorldPointHeight(position);
     float particleBottom = particleHeight - particle->Size;
 
@@ -596,7 +603,7 @@ void ParticleCollisionHeightmap::Animate(ParticleList* particleList, float dt, M
       ReflectParticle(particle, normal, mRestitution, mFriction);
     }
 
-    //Move to next particle.
+    // Move to next particle.
     particle = particle->Next;
   }
 }
@@ -608,7 +615,8 @@ float ParticleCollisionHeightmap::GetRestitution()
 
 void ParticleCollisionHeightmap::SetRestitution(float restitution)
 {
-  // Negative numbers can cause a particle to infinitely speed up, causing floating point errors
+  // Negative numbers can cause a particle to infinitely speed up, causing
+  // floating point errors
   mRestitution = Math::Max(0.0f, restitution);
 }
 

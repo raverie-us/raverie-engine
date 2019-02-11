@@ -1,31 +1,42 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MetaAction.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+// MIT Licensed (see LICENSE.md).
+#pragma once
 
 namespace Zero
 {
 
 // Easing functions
-DeclareEnum19(EaseType, Linear, QuadIn, QuadOut, QuadInOut, SinIn, SinOut, SinInOut,
-  ElasticIn, ElasticOut, ElasticInOut, BounceIn, BounceOut, BounceInOut,
-  BackIn, BackOut, BackInOut, WarpIn, WarpOut, WarpInOut);
+DeclareEnum19(EaseType,
+              Linear,
+              QuadIn,
+              QuadOut,
+              QuadInOut,
+              SinIn,
+              SinOut,
+              SinInOut,
+              ElasticIn,
+              ElasticOut,
+              ElasticInOut,
+              BounceIn,
+              BounceOut,
+              BounceInOut,
+              BackIn,
+              BackOut,
+              BackInOut,
+              WarpIn,
+              WarpOut,
+              WarpInOut);
 typedef float (*Easer)(float linearT);
 Easer GetEaser(uint easeType);
 
-//------------------------------------------------------------ MetaAnimatePropertyAction
+//MetaAnimatePropertyAction
 
 // Action to animate a property over time
-Action* CreateMetaAnimatePropertyAction(
-  HandleParam object, Property* property, float duration, AnyParam ending, EaseType::Enum easeType);
+Action* CreateMetaAnimatePropertyAction(HandleParam object,
+                                        Property* property,
+                                        float duration,
+                                        AnyParam ending,
+                                        EaseType::Enum easeType);
 
-//------------------------------------------------------------ MetaCallAction
 
 /// Action to call method use Meta
 class MetaCallAction : public Action
@@ -36,4 +47,4 @@ public:
   ActionState::Enum Update(float dt) override;
 };
 
-}
+} // namespace Zero

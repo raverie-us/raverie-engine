@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PhysicsTestBed.cpp
-/// Implementation of the PhysicsTestBed class.
-/// 
-/// Authors: Chris Peters, Joshua Claeys, Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Widget/Command.hpp"
 #include "Widget/CommandBinding.hpp"
@@ -26,7 +18,7 @@ void FixArchetypeTransforms(Editor* editor, Space* space)
 
   Cog* object = selection->GetPrimaryAs<Cog>();
 
-  //UpdateToContent(object, UpdateFlags::Transforms);
+  // UpdateToContent(object, UpdateFlags::Transforms);
 }
 
 void ExportContentPackage(Editor* editor)
@@ -38,9 +30,12 @@ void ExportContentPackage(Editor* editor)
 
 void BindContentCommands(Cog* configCog, CommandManager* commands)
 {
-  commands->AddCommand("ExportContentPackage", BindCommandFunction(ExportContentPackage));
-  commands->AddCommand("ImportContentPackage", BindCommandFunction(ImportContentPackage));
-  commands->AddCommand("FixArchetypeTransforms", BindCommandFunction(FixArchetypeTransforms));
+  commands->AddCommand("ExportContentPackage",
+                       BindCommandFunction(ExportContentPackage));
+  commands->AddCommand("ImportContentPackage",
+                       BindCommandFunction(ImportContentPackage));
+  commands->AddCommand("FixArchetypeTransforms",
+                       BindCommandFunction(FixArchetypeTransforms));
 }
 
-}
+} // namespace Zero

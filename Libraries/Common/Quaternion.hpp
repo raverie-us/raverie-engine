@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Reals.hpp"
@@ -15,12 +10,12 @@
 namespace Math
 {
 
-///Forward declaration
+/// Forward declaration
 struct Matrix3;
 typedef const Matrix3& Mat3Param;
 typedef Matrix3& Mat3Ref;
 
-///Forward declaration
+/// Forward declaration
 struct Matrix4;
 typedef const Matrix4& Mat4Param;
 typedef Matrix4& Mat4Ref;
@@ -31,12 +26,11 @@ typedef Quaternion& QuatRef;
 typedef Quaternion* QuatPtr;
 typedef Quaternion Quat;
 
-//------------------------------------------------------------------- Quaternion
 struct ZeroShared Quaternion
 {
   static const Quaternion cIdentity;
 
-  Quaternion() {};
+  Quaternion(){};
   explicit Quaternion(real x, real y, real z, real w);
 
   real& operator[](uint index);
@@ -100,17 +94,23 @@ struct ZeroShared Quaternion
   /// Return the inverted quaternion.
   static Quaternion Inverted(QuatParam value);
 
-  /// Multiply the two quaternions together. Quaternion multiplication order is right-to-left.
+  /// Multiply the two quaternions together. Quaternion multiplication order is
+  /// right-to-left.
   static Quaternion Multiply(QuatParam lhs, QuatParam rhs);
   /// Multiply the given vector by a quaternion.
   static Vector3 Multiply(QuatParam lhs, Vec3Param rhs);
 
-  /// Linearly interpolate between two quaternions (n-lerp). This should rarely be used over Slerp.
+  /// Linearly interpolate between two quaternions (n-lerp). This should rarely
+  /// be used over Slerp.
   static Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
-  /// Spherical linear interpolation between two quaternions. Used to interpolate between two rotations. Will normalize the inputs.
+  /// Spherical linear interpolation between two quaternions. Used to
+  /// interpolate between two rotations. Will normalize the inputs.
   static Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
-  /// Spherical linear interpolation between two quaternions. Used to interpolate between two rotations. Assumes the inputs are normalized.
-  static Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
+  /// Spherical linear interpolation between two quaternions. Used to
+  /// interpolate between two rotations. Assumes the inputs are normalized.
+  static Quaternion SlerpUnnormalized(QuatParam start,
+                                      QuatParam end,
+                                      real tValue);
   /// Compute the exponential of a quaternion.
   static Quaternion Exponent(QuatParam value);
   /// Compute the logarithm of a quaternion.
@@ -119,7 +119,9 @@ struct ZeroShared Quaternion
   static real AngleBetween(QuatParam a, QuatParam b);
   /// Small angle approximation to rotate a quaternion with an angular
   /// velocity. Equivalent to integrating a rotation.
-  static Quaternion Integrate(QuatParam rotation, Vec3Param angularVelocity, real dt);
+  static Quaternion Integrate(QuatParam rotation,
+                              Vec3Param angularVelocity,
+                              real dt);
 
   real Dot(QuatParam rhs) const;
   real Length() const;
@@ -145,10 +147,11 @@ ZeroShared Quaternion Multiply(QuatParam lhs, QuatParam rhs);
 ZeroShared Vector3 Multiply(QuatParam lhs, Vec3Param rhs);
 ZeroShared Quaternion Lerp(QuatParam start, QuatParam end, real tValue);
 ZeroShared Quaternion Slerp(QuatParam start, QuatParam end, real tValue);
-ZeroShared Quaternion SlerpUnnormalized(QuatParam start, QuatParam end, real tValue);
+ZeroShared Quaternion SlerpUnnormalized(QuatParam start,
+                                        QuatParam end,
+                                        real tValue);
 ZeroShared real AngleBetween(QuatParam a, QuatParam b);
 
-//-------------------------------------------------------------------Legacy
 ZeroShared Quaternion CreateDiagonalizer(Mat3Param matrix);
 
-}// namespace Math
+} // namespace Math

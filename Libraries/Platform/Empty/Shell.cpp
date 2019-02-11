@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -9,11 +6,10 @@ namespace Zero
 
 String gClipboardText;
 
-//-------------------------------------------------------------------- Shell
 Shell::Shell() :
-  mCursor(Cursor::Arrow),
-  mMainWindow(nullptr),
-  mUserData(nullptr)
+    mCursor(Cursor::Arrow),
+    mMainWindow(nullptr),
+    mUserData(nullptr)
 {
 }
 
@@ -136,41 +132,40 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   return mInputDevices;
 }
 
-//-------------------------------------------------------------------- ShellWindow
-ShellWindow::ShellWindow(
-  Shell* shell,
-  StringParam windowName,
-  Math::IntVec2Param clientSize,
-  Math::IntVec2Param monitorClientPos,
-  ShellWindow* parentWindow,
-  WindowStyleFlags::Enum flags) :
-  mShell(shell),
-  mMinClientSize(IntVec2(10, 10)),
-  mParent(parentWindow),
-  mHandle(nullptr),
-  mStyle(flags),
-  mProgress(0),
-  mClientSize(cMinimumMonitorSize),
-  mClientMousePosition(IntVec2(-1, -1)),
-  mUserData(nullptr),
-  mOnClose(nullptr),
-  mOnFocusChanged(nullptr),
-  mOnMouseDropFiles(nullptr),
-  mOnFrozenUpdate(nullptr),
-  mOnClientSizeChanged(nullptr),
-  mOnMinimized(nullptr),
-  mOnRestored(nullptr),
-  mOnTextTyped(nullptr),
-  mOnKeyDown(nullptr),
-  mOnKeyUp(nullptr),
-  mOnMouseDown(nullptr),
-  mOnMouseUp(nullptr),
-  mOnMouseMove(nullptr),
-  mOnMouseScrollY(nullptr),
-  mOnMouseScrollX(nullptr),
-  mOnDevicesChanged(nullptr),
-  mOnRawMouseChanged(nullptr),
-  mOnInputDeviceChanged(nullptr)
+//ShellWindow
+ShellWindow::ShellWindow(Shell* shell,
+                         StringParam windowName,
+                         Math::IntVec2Param clientSize,
+                         Math::IntVec2Param monitorClientPos,
+                         ShellWindow* parentWindow,
+                         WindowStyleFlags::Enum flags) :
+    mShell(shell),
+    mMinClientSize(IntVec2(10, 10)),
+    mParent(parentWindow),
+    mHandle(nullptr),
+    mStyle(flags),
+    mProgress(0),
+    mClientSize(cMinimumMonitorSize),
+    mClientMousePosition(IntVec2(-1, -1)),
+    mUserData(nullptr),
+    mOnClose(nullptr),
+    mOnFocusChanged(nullptr),
+    mOnMouseDropFiles(nullptr),
+    mOnFrozenUpdate(nullptr),
+    mOnClientSizeChanged(nullptr),
+    mOnMinimized(nullptr),
+    mOnRestored(nullptr),
+    mOnTextTyped(nullptr),
+    mOnKeyDown(nullptr),
+    mOnKeyUp(nullptr),
+    mOnMouseDown(nullptr),
+    mOnMouseUp(nullptr),
+    mOnMouseMove(nullptr),
+    mOnMouseScrollY(nullptr),
+    mOnMouseScrollX(nullptr),
+    mOnDevicesChanged(nullptr),
+    mOnRawMouseChanged(nullptr),
+    mOnInputDeviceChanged(nullptr)
 {
 }
 
@@ -323,4 +318,4 @@ void ShellWindow::PlatformSpecificFixup()
 {
 }
 
-}// namespace Zero
+} // namespace Zero

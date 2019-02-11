@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -22,7 +17,10 @@ public:
 
   // Basic text functions.
   void SetText(StringParam text);
-  StringParam GetText(){return mText;}
+  StringParam GetText()
+  {
+    return mText;
+  }
 
   /// Returns the size used.
   void SetMultiLine(bool multiLine);
@@ -36,7 +34,11 @@ public:
   void SizeToContents() override;
   void ChangeDefinition(BaseDefinition* def) override;
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
   RenderFont* mFont;
   Vec4 mFontColor;
@@ -53,7 +55,9 @@ class Label : public Composite
 public:
   ZilchDeclareType(Label, TypeCopyMode::ReferenceType);
 
-  Label(Composite* parent, StringParam style = DefaultTextStyle, StringParam text = String());
+  Label(Composite* parent,
+        StringParam style = DefaultTextStyle,
+        StringParam text = String());
   ~Label();
 
   RenderFont* GetFont();
@@ -72,5 +76,4 @@ public:
   Text* mText;
 };
 
-
-}
+} // namespace Zero

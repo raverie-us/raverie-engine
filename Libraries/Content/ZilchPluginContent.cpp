@@ -1,17 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ZilchPluginContent.cpp
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-  
-//------------------------------------------------------------ ZilchPluginBuilder
+
+//ZilchPluginBuilder
 ZilchDefineType(ZilchPluginBuilder, builder, type)
 {
   ZeroBindComponent();
@@ -23,9 +16,9 @@ String GenerateGuid()
   // This isn't really 'cryptographically random' or anything safe, but it works
   Math::Random rand((uint)GenerateUniqueId64());
   char data[] = "{11111111-1111-1111-1111-111111111111}";
-  for(size_t i = 0; i < sizeof(data); ++i)
+  for (size_t i = 0; i < sizeof(data); ++i)
   {
-    if(data[i] == '1')
+    if (data[i] == '1')
     {
       char letterIndex = (char)rand.IntRangeInEx(0, 16);
       if (letterIndex < 10)
@@ -56,7 +49,9 @@ ZilchPluginBuilder::ZilchPluginBuilder()
 void ZilchPluginBuilder::Rename(StringParam newName)
 {
   DataBuilder::Rename(newName);
-  DoNotifyWarning("Zilch Plugin" , "You must rename the plugin directory and all the contents (projects, solutions, make files, etc)");
+  DoNotifyWarning("Zilch Plugin",
+                  "You must rename the plugin directory and all the contents "
+                  "(projects, solutions, make files, etc)");
 }
 
 String ZilchPluginBuilder::GetSharedLibraryPlatformName()
@@ -65,12 +60,14 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
 
   // This is not currently used because we ensured that Debug/Release builds
   // of the plugins are compatible with both Debug/Release builds of Zero
-  // Note that this relates to linked libraries within the generated project files (plugin templates)
-  // The template projects also generate dynamic libraries with extensions that could include Debug/Release
-  //builder.Append(GetConfigurationString());
-  //builder.Append('-');
+  // Note that this relates to linked libraries within the generated project
+  // files (plugin templates) The template projects also generate dynamic
+  // libraries with extensions that could include Debug/Release
+  // builder.Append(GetConfigurationString());
+  // builder.Append('-');
 
-  // Append the operating system name (or some grouped name for all OSes that support this shared library)
+  // Append the operating system name (or some grouped name for all OSes that
+  // support this shared library)
 #if defined(PLATFORM_WINDOWS)
   builder.Append("Windows_NT");
 #else
@@ -78,7 +75,7 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
 #endif
 
   builder.Append('-');
-  
+
   // Append the target machine architecture
 #if defined(PLATFORM_ARCHITECTURE)
   builder.Append(PLATFORM_ARCHITECTURE);
@@ -90,7 +87,8 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
 String ZilchPluginBuilder::GetSharedLibraryPlatformBuildName()
 {
   String platformName = GetSharedLibraryPlatformName();
-  String platformBuildName = BuildString(platformName, "-", GetRevisionNumberString());
+  String platformBuildName =
+      BuildString(platformName, "-", GetRevisionNumberString());
   return platformBuildName;
 }
 
@@ -98,9 +96,11 @@ String ZilchPluginBuilder::GetSharedLibraryExtension(bool includeDot)
 {
   String extension;
   if (includeDot)
-    extension = BuildString(".", GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
+    extension =
+        BuildString(".", GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
   else
-    extension = BuildString(GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
+    extension =
+        BuildString(GetSharedLibraryPlatformBuildName(), "-zilchPlugin");
   return extension;
 }
 
@@ -119,15 +119,15 @@ void ZilchPluginBuilder::Generate(ContentInitializer& initializer)
 {
   DataBuilder::Generate(initializer);
 
-  if(mSharedLibraryResourceId == 0)
+  if (mSharedLibraryResourceId == 0)
     mSharedLibraryResourceId = GenerateUniqueId64();
 }
 
 void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
 {
   // This must run before the template early out so that we output the data file
-  // to the content output directory and the template plugin stops thinking it needs
-  // to build every time we run Zero.
+  // to the content output directory and the template plugin stops thinking it
+  // needs to build every time we run Zero.
   DataBuilder::BuildContent(buildOptions);
 
   // Don't build the resource template plugin.
@@ -136,11 +136,13 @@ void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
     return;
 
   String sharedLibraryFileName = GetSharedLibraryFileName();
-  String destFile = FilePath::Combine(buildOptions.OutputPath, sharedLibraryFileName);
-  String sourceFile = FilePath::Combine(buildOptions.SourcePath, sharedLibraryFileName);
+  String destFile =
+      FilePath::Combine(buildOptions.OutputPath, sharedLibraryFileName);
+  String sourceFile =
+      FilePath::Combine(buildOptions.SourcePath, sharedLibraryFileName);
 
   // We output a dummy empty shared library so that content won't get mad at us
-  if(!FileExists(sourceFile))
+  if (!FileExists(sourceFile))
   {
     byte value = 0;
     WriteToFile(sourceFile.c_str(), &value, 0);
@@ -158,12 +160,17 @@ void ZilchPluginBuilder::BuildContent(BuildOptions& buildOptions)
 void ZilchPluginBuilder::BuildListing(ResourceListing& listing)
 {
   DataBuilder::BuildListing(listing);
-  
+
   String destFile = GetSharedLibraryFileName();
   static const String LibraryLoaderType("ZilchPluginLibrary");
   uint order = Z::gContentSystem->LoadOrderMap.FindValue(LibraryLoaderType, 10);
-  listing.PushBack(ResourceEntry(order, LibraryLoaderType, Name, destFile, 
-    mSharedLibraryResourceId, this->mOwner, this));
+  listing.PushBack(ResourceEntry(order,
+                                 LibraryLoaderType,
+                                 Name,
+                                 destFile,
+                                 mSharedLibraryResourceId,
+                                 this->mOwner,
+                                 this));
 }
 
 ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
@@ -178,20 +185,24 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
 
   String pluginName = initializer.Name;
   String codeDir = GetCodeDirectory(initializer.Library, pluginName);
-  
+
   // If the directory already exists
-  if(DirectoryExists(codeDir))
+  if (DirectoryExists(codeDir))
   {
-    DoNotifyWarning("Zilch Plugin",
-      String::Format("The directory for the Zilch plugin '%s' already exists, "
-      "therefore we will not create the template project:\n  '%s'\n",
-      pluginName.c_str(), codeDir.c_str()));
+    DoNotifyWarning(
+        "Zilch Plugin",
+        String::Format(
+            "The directory for the Zilch plugin '%s' already exists, "
+            "therefore we will not create the template project:\n  '%s'\n",
+            pluginName.c_str(),
+            codeDir.c_str()));
     return content;
   }
 
   Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
-  String templateDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginTemplate");
+  String templateDir =
+      FilePath::Combine(mainConfig->DataDirectory, "ZilchCustomPluginTemplate");
 
   // Some templates require generated guids which we will create and replace
   static const String ReplaceGuid("{11111111-1111-1111-1111-111111111111}");
@@ -199,16 +210,17 @@ ContentItem* MakeZilchPluginContent(ContentInitializer& initializer)
 
   String includeGuard = pluginName.ToUpper();
   String guid = GenerateGuid();
-  
+
   CreateDirectoryAndParents(codeDir);
-  for(FileRange files(templateDir); !files.Empty(); files.PopFront())
+  for (FileRange files(templateDir); !files.Empty(); files.PopFront())
   {
     String templateFileName = files.Front();
     String templateFile = FilePath::Combine(templateDir, templateFileName);
     String outputFileName = templateFileName.Replace(ReplaceName, pluginName);
     String outputFile = FilePath::Combine(codeDir, outputFileName);
-    
-    // Everything we're writing in this template is string data that required replacements
+
+    // Everything we're writing in this template is string data that required
+    // replacements
     String data = ReadFileIntoString(templateFile.c_str());
 
     // Replace any guids and names inside the template text files
@@ -227,4 +239,4 @@ void CreateZilchPluginContent(ContentSystem* system)
   AddContentComponent<ZilchPluginBuilder>(system);
 }
 
-}
+} // namespace Zero

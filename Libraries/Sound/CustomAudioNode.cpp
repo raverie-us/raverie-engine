@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -17,9 +12,8 @@ DefineEvent(CustomAudioNodeSamplesNeeded);
 
 } // namespace Events
 
-//-------------------------------------------------------------------------- Custom Audio Node Event
+//Custom Audio Node Event
 
-//**************************************************************************************************
 ZilchDefineType(CustomAudioNodeEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -27,9 +21,8 @@ ZilchDefineType(CustomAudioNodeEvent, builder, type)
   ZilchBindField(SamplesNeeded);
 }
 
-//------------------------------------------------------------------------------------- Sound Buffer
+//Sound Buffer
 
-//**************************************************************************************************
 ZilchDefineType(SoundBuffer, builder, type)
 {
   ZeroBindDocumented();
@@ -41,19 +34,16 @@ ZilchDefineType(SoundBuffer, builder, type)
   ZilchBindMethod(AddMicUncompressedData);
 }
 
-//**************************************************************************************************
 void SoundBuffer::AddSampleToBuffer(float value)
 {
   mBuffer.PushBack(Math::Clamp(value, -1.0f, 1.0f));
 }
 
-//**************************************************************************************************
 int SoundBuffer::GetSampleCount()
 {
   return mBuffer.Size();
 }
 
-//**************************************************************************************************
 float SoundBuffer::GetSampleAtIndex(int index)
 {
   if ((unsigned)index < mBuffer.Size())
@@ -62,21 +52,19 @@ float SoundBuffer::GetSampleAtIndex(int index)
     return 0.0f;
 }
 
-//**************************************************************************************************
 void SoundBuffer::Reset()
 {
   mBuffer.Clear();
 }
 
-//**************************************************************************************************
-void SoundBuffer::AddMicUncompressedData(const HandleOf<ArrayClass<float>>& buffer)
+void SoundBuffer::AddMicUncompressedData(
+    const HandleOf<ArrayClass<float>>& buffer)
 {
   mBuffer.Append(buffer->NativeArray.All());
 }
 
-//-------------------------------------------------------------------------------- Custom Audio Node
+//Custom Audio Node
 
-//**************************************************************************************************
 ZilchDefineType(CustomAudioNode, builder, type)
 {
   ZeroBindDocumented();
@@ -92,26 +80,24 @@ ZilchDefineType(CustomAudioNode, builder, type)
   ZeroBindEvent(Events::CustomAudioNodeSamplesNeeded, CustomAudioNodeEvent);
 }
 
-//**************************************************************************************************
 CustomAudioNode::CustomAudioNode(StringParam name, unsigned ID) :
-  SoundNode(name, ID, false, true),
-  mAudioDecoder(nullptr),
-  mWaitingForSamplesThreaded(false),
-  mChannels(1),
-  mTotalSamplesInBuffersThreaded(0),
-  mSamplesInExtraBuffersThreaded(0),
-  mMinimumSamplesNeededInBuffersThreaded(0),
-  mMinimumBufferSize(0)
+    SoundNode(name, ID, false, true),
+    mAudioDecoder(nullptr),
+    mWaitingForSamplesThreaded(false),
+    mChannels(1),
+    mTotalSamplesInBuffersThreaded(0),
+    mSamplesInExtraBuffersThreaded(0),
+    mMinimumSamplesNeededInBuffersThreaded(0),
+    mMinimumBufferSize(0)
 {
   SetMinimumBufferSize();
 }
 
-//**************************************************************************************************
 CustomAudioNode::~CustomAudioNode()
 {
   if (mAudioDecoder)
-    delete mAudioDecoder; 
-  
+    delete mAudioDecoder;
+
   while (!mBufferListThreaded.Empty())
   {
     SampleBuffer& data = mBufferListThreaded.Front();
@@ -120,25 +106,21 @@ CustomAudioNode::~CustomAudioNode()
   }
 }
 
-//**************************************************************************************************
 int CustomAudioNode::GetMinimumBufferSize()
 {
   return mMinimumBufferSize;
 }
 
-//**************************************************************************************************
 int CustomAudioNode::GetSystemSampleRate()
 {
   return AudioConstants::cSystemSampleRate;
 }
 
-//**************************************************************************************************
 int CustomAudioNode::GetChannels()
 {
   return mChannels.Get(AudioThreads::MainThread);
 }
 
-//**************************************************************************************************
 void CustomAudioNode::SetChannels(int channels)
 {
   channels = Math::Clamp(channels, 0, 8);
@@ -146,40 +128,59 @@ void CustomAudioNode::SetChannels(int channels)
   SetMinimumBufferSize();
 }
 
-//**************************************************************************************************
 void CustomAudioNode::SendBuffer(SoundBuffer* buffer)
 {
   if (!buffer)
-    DoNotifyException("Audio Error", "Called SendBuffer on CustomAudioNode with a null SoundBuffer");
+    DoNotifyException(
+        "Audio Error",
+        "Called SendBuffer on CustomAudioNode with a null SoundBuffer");
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&CustomAudioNode::AddBufferThreaded, this, 
-    new SampleBuffer(buffer->mBuffer.Data(), buffer->mBuffer.Size())), this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(
+          &CustomAudioNode::AddBufferThreaded,
+          this,
+          new SampleBuffer(buffer->mBuffer.Data(), buffer->mBuffer.Size())),
+      this);
 }
 
-//**************************************************************************************************
-void CustomAudioNode::SendPartialBuffer(SoundBuffer* buffer, int startAtIndex, int howManySamples)
+void CustomAudioNode::SendPartialBuffer(SoundBuffer* buffer,
+                                        int startAtIndex,
+                                        int howManySamples)
 {
   if (!buffer)
-    DoNotifyException("Audio Error", "Called SendPartialBuffer on CustomAudioNode with a null SoundBuffer");
-  else if (startAtIndex < 0 || ((startAtIndex + howManySamples) >(int)buffer->mBuffer.Size()))
-    DoNotifyException("Audio Error", "SendPartialBuffer parameters exceed size of the SoundBuffer");
+    DoNotifyException(
+        "Audio Error",
+        "Called SendPartialBuffer on CustomAudioNode with a null SoundBuffer");
+  else if (startAtIndex < 0 ||
+           ((startAtIndex + howManySamples) > (int)buffer->mBuffer.Size()))
+    DoNotifyException(
+        "Audio Error",
+        "SendPartialBuffer parameters exceed size of the SoundBuffer");
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&CustomAudioNode::AddBufferThreaded, this,
-    new SampleBuffer(buffer->mBuffer.Data() + startAtIndex, howManySamples)), this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&CustomAudioNode::AddBufferThreaded,
+                    this,
+                    new SampleBuffer(buffer->mBuffer.Data() + startAtIndex,
+                                     howManySamples)),
+      this);
 }
 
-//**************************************************************************************************
-void CustomAudioNode::SendMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData)
+void CustomAudioNode::SendMicUncompressedData(
+    const HandleOf<ArrayClass<float>>& audioData)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&CustomAudioNode::AddBufferThreaded, this,
-    new SampleBuffer(audioData->NativeArray.Data(), audioData->NativeArray.Size())), this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&CustomAudioNode::AddBufferThreaded,
+                    this,
+                    new SampleBuffer(audioData->NativeArray.Data(),
+                                     audioData->NativeArray.Size())),
+      this);
 }
 
-//**************************************************************************************************
-void CustomAudioNode::SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData)
+void CustomAudioNode::SendMicCompressedData(
+    const HandleOf<ArrayClass<byte>>& audioData)
 {
   // If we haven't created the decoder yet, create it
-  if (!mAudioDecoder) 
+  if (!mAudioDecoder)
   {
     mAudioDecoder = new SingleChannelPacketDecoder();
     mAudioDecoder->InitializeDecoder();
@@ -188,16 +189,22 @@ void CustomAudioNode::SendMicCompressedData(const HandleOf<ArrayClass<byte>>& au
   // Decode the compressed data
   float* decodedSamples;
   unsigned sampleCount;
-  mAudioDecoder->DecodePacket(audioData->NativeArray.Data(), audioData->NativeArray.Size(),
-    decodedSamples, sampleCount);
+  mAudioDecoder->DecodePacket(audioData->NativeArray.Data(),
+                              audioData->NativeArray.Size(),
+                              decodedSamples,
+                              sampleCount);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&CustomAudioNode::AddBufferThreaded, this,
-    new SampleBuffer(decodedSamples, sampleCount)), this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&CustomAudioNode::AddBufferThreaded,
+                    this,
+                    new SampleBuffer(decodedSamples, sampleCount)),
+      this);
 }
 
-//**************************************************************************************************
-bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, 
-  ListenerNode* listener, const bool firstRequest)
+bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer,
+                                       const unsigned numberOfChannels,
+                                       ListenerNode* listener,
+                                       const bool firstRequest)
 {
   // If no sample data, check if we need to request more samples and return
   if (mBufferListThreaded.Empty())
@@ -205,8 +212,11 @@ bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned 
     if (!mWaitingForSamplesThreaded)
     {
       mWaitingForSamplesThreaded = true;
-      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&CustomAudioNode::DispatchSamplesEvent, this,
-        mMinimumSamplesNeededInBuffersThreaded * 2), this);
+      Z::gSound->Mixer.AddTaskThreaded(
+          CreateFunctor(&CustomAudioNode::DispatchSamplesEvent,
+                        this,
+                        mMinimumSamplesNeededInBuffersThreaded * 2),
+          this);
     }
     return false;
   }
@@ -217,17 +227,19 @@ bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned 
   unsigned channels = mChannels.Get(AudioThreads::MixThread);
   Array<float> samplesThisFrame(channels);
 
-  for (unsigned i = 0; i < outputBufferSize; i += numberOfChannels, outputBufferPosition += numberOfChannels)
+  for (unsigned i = 0; i < outputBufferSize;
+       i += numberOfChannels, outputBufferPosition += numberOfChannels)
   {
-    memcpy(samplesThisFrame.Data(), samples->mBuffer + (samples->mFrameIndex * channels),
-      sizeof(float) * channels);
+    memcpy(samplesThisFrame.Data(),
+           samples->mBuffer + (samples->mFrameIndex * channels),
+           sizeof(float) * channels);
 
     // Reduce number of samples available
     mTotalSamplesInBuffersThreaded -= channels;
 
     // Advance sample buffer index by the number of samples in this frame
     ++samples->mFrameIndex;
-    
+
     // Check if we've reached the end of this buffer
     if (samples->mFrameIndex * channels >= samples->mBufferSize)
     {
@@ -235,10 +247,11 @@ bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned 
       mBufferListThreaded.PopFront();
       SafeDelete(samples);
 
-      //ResampleFrameIndex = 0;
+      // ResampleFrameIndex = 0;
 
       if (!mBufferListThreaded.Empty())
-        mSamplesInExtraBuffersThreaded -= mBufferListThreaded.Front().mBufferSize;
+        mSamplesInExtraBuffersThreaded -=
+            mBufferListThreaded.Front().mBufferSize;
 
       // Only need to do the following steps if more samples are needed
       if (i + numberOfChannels < outputBufferSize)
@@ -247,8 +260,9 @@ bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned 
         if (mBufferListThreaded.Empty())
         {
           // Set the rest of the output buffer to zero
-          memset(outputBufferPosition + numberOfChannels, 0, sizeof(float) *
-            (outputBufferSize - (i + numberOfChannels)));
+          memset(outputBufferPosition + numberOfChannels,
+                 0,
+                 sizeof(float) * (outputBufferSize - (i + numberOfChannels)));
           mTotalSamplesInBuffersThreaded = 0;
 
           // Stop copying samples
@@ -264,29 +278,36 @@ bool CustomAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned 
 
     // Channels match, can just copy
     if (channels == numberOfChannels)
-      memcpy(outputBufferPosition, samplesThisFrame.Data(), sizeof(float) * channels);
+      memcpy(outputBufferPosition,
+             samplesThisFrame.Data(),
+             sizeof(float) * channels);
     // Copy samples into output buffer, adjusting for channel differences
     else
     {
       AudioFrame frame(samplesThisFrame.Data(), channels);
-      memcpy(outputBufferPosition, frame.GetSamples(numberOfChannels), sizeof(float) * numberOfChannels);
+      memcpy(outputBufferPosition,
+             frame.GetSamples(numberOfChannels),
+             sizeof(float) * numberOfChannels);
     }
   }
 
-  if (!mWaitingForSamplesThreaded && mTotalSamplesInBuffersThreaded <= mMinimumSamplesNeededInBuffersThreaded)
+  if (!mWaitingForSamplesThreaded &&
+      mTotalSamplesInBuffersThreaded <= mMinimumSamplesNeededInBuffersThreaded)
   {
     mWaitingForSamplesThreaded = true;
-    unsigned samplesNeeded = mMinimumSamplesNeededInBuffersThreaded - mTotalSamplesInBuffersThreaded
-      + mMinimumSamplesNeededInBuffersThreaded;
+    unsigned samplesNeeded = mMinimumSamplesNeededInBuffersThreaded -
+                             mTotalSamplesInBuffersThreaded +
+                             mMinimumSamplesNeededInBuffersThreaded;
     samplesNeeded -= samplesNeeded % channels;
-    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&CustomAudioNode::DispatchSamplesEvent, this,
-      samplesNeeded), this);
+    Z::gSound->Mixer.AddTaskThreaded(
+        CreateFunctor(
+            &CustomAudioNode::DispatchSamplesEvent, this, samplesNeeded),
+        this);
   }
 
   return true;
 }
 
-//**************************************************************************************************
 void CustomAudioNode::AddBufferThreaded(SampleBuffer* newBuffer)
 {
   if (!mBufferListThreaded.Empty())
@@ -298,42 +319,44 @@ void CustomAudioNode::AddBufferThreaded(SampleBuffer* newBuffer)
     mWaitingForSamplesThreaded = false;
   else
   {
-    unsigned samplesNeeded = mMinimumSamplesNeededInBuffersThreaded - mTotalSamplesInBuffersThreaded
-      + mMinimumSamplesNeededInBuffersThreaded;
+    unsigned samplesNeeded = mMinimumSamplesNeededInBuffersThreaded -
+                             mTotalSamplesInBuffersThreaded +
+                             mMinimumSamplesNeededInBuffersThreaded;
     samplesNeeded -= samplesNeeded % mChannels.Get(AudioThreads::MixThread);
-    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&CustomAudioNode::DispatchSamplesEvent, this,
-      samplesNeeded), this);
+    Z::gSound->Mixer.AddTaskThreaded(
+        CreateFunctor(
+            &CustomAudioNode::DispatchSamplesEvent, this, samplesNeeded),
+        this);
   }
 }
 
-//**************************************************************************************************
 void CustomAudioNode::SetMinimumBufferSize()
 {
-  mMinimumBufferSize = (unsigned)(AudioConstants::cSystemSampleRate * 0.01f 
-    * mChannels.Get(AudioThreads::MainThread) * 4);
+  mMinimumBufferSize = (unsigned)(AudioConstants::cSystemSampleRate * 0.01f *
+                                  mChannels.Get(AudioThreads::MainThread) * 4);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&CustomAudioNode::mMinimumSamplesNeededInBuffersThreaded,
-    this, mMinimumBufferSize * 3), this);
+  Z::gSound->Mixer.AddTask(
+      CreateFunctor(&CustomAudioNode::mMinimumSamplesNeededInBuffersThreaded,
+                    this,
+                    mMinimumBufferSize * 3),
+      this);
 }
 
-//**************************************************************************************************
 void CustomAudioNode::DispatchSamplesEvent(unsigned samplesNeeded)
 {
   CustomAudioNodeEvent event(samplesNeeded);
   DispatchEvent(Events::CustomAudioNodeSamplesNeeded, &event);
 }
 
-//**************************************************************************************************
-CustomAudioNode::SampleBuffer::SampleBuffer(float* buffer, unsigned size) : 
-  mBuffer(buffer), 
-  mBufferSize(size), 
-  mFrameIndex(0)
+CustomAudioNode::SampleBuffer::SampleBuffer(float* buffer, unsigned size) :
+    mBuffer(buffer),
+    mBufferSize(size),
+    mFrameIndex(0)
 {
   mBuffer = new float[mBufferSize];
   memcpy(mBuffer, buffer, sizeof(float) * mBufferSize);
 }
 
-//**************************************************************************************************
 CustomAudioNode::SampleBuffer::~SampleBuffer()
 {
   delete[] mBuffer;

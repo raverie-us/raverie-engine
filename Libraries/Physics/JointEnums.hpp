@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file JointEnums.hpp
-/// Declaration of the enum containing all joint types.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,24 +7,27 @@ namespace Zero
 namespace JointEnums
 {
 
-//Define an enum that constraints all of the joint types and the total joint count.
+// Define an enum that constraints all of the joint types and the total joint
+// count.
 #define JointType(type) type##Type,
 
-  enum JointTypes
-  {
+enum JointTypes
+{
 #include "JointList.hpp"
-      JointCount
-  };
+  JointCount
+};
 
 #undef JointType
 
-}//namespace JointEnums
+} // namespace JointEnums
 
-// Additionally define JointTypes of the same enum specification zero needs for binding
+// Additionally define JointTypes of the same enum specification zero needs for
+// binding
 namespace JointTypes
 {
 
-//Define an enum that constraints all of the joint types and the total joint count.
+// Define an enum that constraints all of the joint types and the total joint
+// count.
 #define JointType(type) type,
 
 // Declare the actual Enum
@@ -45,13 +40,11 @@ enum Enum
 
 // Define the Names for binding
 #define JointType(type) #type,
-static const cstr Names[] =
-{
+static const cstr Names[] = {
 #include "JointList.hpp"
-  "Size"
-};
+    "Size"};
 #undef JointType
 
-}//namespace JointTypes
+} // namespace JointTypes
 
-}//namespace Zero
+} // namespace Zero

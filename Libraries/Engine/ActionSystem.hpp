@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ActionSystem.hpp
-/// Declaration of the ActionSystem and ActionSpace.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,8 +7,6 @@ namespace Zero
 typedef InList<Actions> ActiveListsType;
 class UpdateEvent;
 
-
-//------------------------------------------------------------------------------
 /// Space component that synchronizes action queues.
 class ActionSpace : public Component
 {
@@ -28,7 +18,7 @@ public:
 
   // Component Interface
   void Initialize(CogInitializer& initializer) override;
-  
+
   // Time Space handler
   void OnActionFrameUpdate(UpdateEvent* updateEvent);
   void OnActionLogicUpdate(UpdateEvent* updateEvent);
@@ -38,4 +28,4 @@ public:
   ActiveListsType ScheduledLists;
 };
 
-}//namespace Zero
+} // namespace Zero

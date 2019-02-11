@@ -1,50 +1,44 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                 MessageChannel                                  //
-//---------------------------------------------------------------------------------//
+//                                 MessageChannel //
 
-MessageChannel::MessageChannel()
-  : mChannelId(0),
+MessageChannel::MessageChannel() :
+    mChannelId(0),
     mTransferMode(TransferMode::Immediate)
 {
 }
-MessageChannel::MessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode)
-  : mChannelId(channelId),
+MessageChannel::MessageChannel(MessageChannelId channelId,
+                               TransferMode::Enum transferMode) :
+    mChannelId(channelId),
     mTransferMode(transferMode)
 {
 }
 
-bool MessageChannel::operator ==(const MessageChannel& rhs) const
+bool MessageChannel::operator==(const MessageChannel& rhs) const
 {
   return GetChannelId() == rhs.GetChannelId();
 }
-bool MessageChannel::operator !=(const MessageChannel& rhs) const
+bool MessageChannel::operator!=(const MessageChannel& rhs) const
 {
   return GetChannelId() != rhs.GetChannelId();
 }
-bool MessageChannel::operator  <(const MessageChannel& rhs) const
+bool MessageChannel::operator<(const MessageChannel& rhs) const
 {
   return GetChannelId() < rhs.GetChannelId();
 }
-bool MessageChannel::operator ==(MessageChannelId rhs) const
+bool MessageChannel::operator==(MessageChannelId rhs) const
 {
   return GetChannelId() == rhs;
 }
-bool MessageChannel::operator !=(MessageChannelId rhs) const
+bool MessageChannel::operator!=(MessageChannelId rhs) const
 {
   return GetChannelId() != rhs;
 }
-bool MessageChannel::operator  <(MessageChannelId rhs) const
+bool MessageChannel::operator<(MessageChannelId rhs) const
 {
   return GetChannelId() < rhs;
 }
@@ -63,16 +57,14 @@ TransferMode::Enum MessageChannel::GetTransferMode() const
   return mTransferMode;
 }
 
-//---------------------------------------------------------------------------------//
-//                                OutMessageChannel                                //
-//---------------------------------------------------------------------------------//
+//                                OutMessageChannel //
 
-OutMessageChannel::OutMessageChannel()
-  : MessageChannel()
+OutMessageChannel::OutMessageChannel() : MessageChannel()
 {
 }
-OutMessageChannel::OutMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode)
-  : MessageChannel(channelId, transferMode)
+OutMessageChannel::OutMessageChannel(MessageChannelId channelId,
+                                     TransferMode::Enum transferMode) :
+    MessageChannel(channelId, transferMode)
 {
 }
 
@@ -85,12 +77,10 @@ MessageSequenceId OutMessageChannel::AcquireNextSequenceId()
   return ++mNextSequenceId;
 }
 
-//---------------------------------------------------------------------------------//
-//                                InMessageChannel                                 //
-//---------------------------------------------------------------------------------//
+//                                InMessageChannel //
 
-InMessageChannel::InMessageChannel()
-  : MessageChannel(),
+InMessageChannel::InMessageChannel() :
+    MessageChannel(),
     mLastSequenceId(0),
     mFragmentedMessages(),
     mMessages(),
@@ -99,8 +89,9 @@ InMessageChannel::InMessageChannel()
     mFinalSequenceId(0)
 {
 }
-InMessageChannel::InMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode)
-  : MessageChannel(channelId, transferMode),
+InMessageChannel::InMessageChannel(MessageChannelId channelId,
+                                   TransferMode::Enum transferMode) :
+    MessageChannel(channelId, transferMode),
     mLastSequenceId(0),
     mFragmentedMessages(),
     mMessages(),
@@ -110,8 +101,8 @@ InMessageChannel::InMessageChannel(MessageChannelId channelId, TransferMode::Enu
 {
 }
 
-InMessageChannel::InMessageChannel(const InMessageChannel& rhs)
-  : MessageChannel(rhs),
+InMessageChannel::InMessageChannel(const InMessageChannel& rhs) :
+    MessageChannel(rhs),
     mLastSequenceId(rhs.mLastSequenceId),
     mFragmentedMessages(rhs.mFragmentedMessages),
     mMessages(rhs.mMessages),
@@ -121,8 +112,8 @@ InMessageChannel::InMessageChannel(const InMessageChannel& rhs)
 {
 }
 
-InMessageChannel::InMessageChannel(MoveReference<InMessageChannel> rhs)
-  : MessageChannel(*rhs),
+InMessageChannel::InMessageChannel(MoveReference<InMessageChannel> rhs) :
+    MessageChannel(*rhs),
     mLastSequenceId(rhs->mLastSequenceId),
     mFragmentedMessages(ZeroMove(rhs->mFragmentedMessages)),
     mMessages(ZeroMove(rhs->mMessages)),
@@ -132,28 +123,29 @@ InMessageChannel::InMessageChannel(MoveReference<InMessageChannel> rhs)
 {
 }
 
-InMessageChannel& InMessageChannel::operator =(const InMessageChannel& rhs)
+InMessageChannel& InMessageChannel::operator=(const InMessageChannel& rhs)
 {
   MessageChannel::operator=(rhs);
-  mLastSequenceId         = rhs.mLastSequenceId;
-  mFragmentedMessages     = rhs.mFragmentedMessages;
-  mMessages               = rhs.mMessages;
-  mMessageSequence        = rhs.mMessageSequence;
-  mClosed                 = rhs.mClosed;
-  mFinalSequenceId        = rhs.mFinalSequenceId;
+  mLastSequenceId = rhs.mLastSequenceId;
+  mFragmentedMessages = rhs.mFragmentedMessages;
+  mMessages = rhs.mMessages;
+  mMessageSequence = rhs.mMessageSequence;
+  mClosed = rhs.mClosed;
+  mFinalSequenceId = rhs.mFinalSequenceId;
 
   return *this;
 }
 
-InMessageChannel& InMessageChannel::operator =(MoveReference<InMessageChannel> rhs)
+InMessageChannel& InMessageChannel::
+operator=(MoveReference<InMessageChannel> rhs)
 {
   MessageChannel::operator=(*rhs);
-  mLastSequenceId         = rhs->mLastSequenceId;
-  mFragmentedMessages     = ZeroMove(rhs->mFragmentedMessages);
-  mMessages               = ZeroMove(rhs->mMessages);
-  mMessageSequence        = ZeroMove(rhs->mMessageSequence);
-  mClosed                 = rhs->mClosed;
-  mFinalSequenceId        = rhs->mFinalSequenceId;
+  mLastSequenceId = rhs->mLastSequenceId;
+  mFragmentedMessages = ZeroMove(rhs->mFragmentedMessages);
+  mMessages = ZeroMove(rhs->mMessages);
+  mMessageSequence = ZeroMove(rhs->mMessageSequence);
+  mClosed = rhs->mClosed;
+  mFinalSequenceId = rhs->mFinalSequenceId;
 
   return *this;
 }
@@ -164,16 +156,19 @@ InMessageChannel& InMessageChannel::operator =(MoveReference<InMessageChannel> r
 
 bool InMessageChannel::IsDuplicate(const Message& message) const
 {
-  // Whole message already acknowledged? (Whether this message is whole or a fragment doesn't matter)
-  if(mMessageSequence.IsDuplicate(message.GetSequenceId()))
+  // Whole message already acknowledged? (Whether this message is whole or a
+  // fragment doesn't matter)
+  if (mMessageSequence.IsDuplicate(message.GetSequenceId()))
     return true;
 
-  // Fragment message already acknowledged? (This specific fragment has already been acknowledged?)
-  if(message.IsFragment())
+  // Fragment message already acknowledged? (This specific fragment has already
+  // been acknowledged?)
+  if (message.IsFragment())
   {
-    ArraySet<FragmentedMessage>::const_iterator iter = mFragmentedMessages.FindIterator(message.GetSequenceId());
-    if(iter != mFragmentedMessages.End())
-      if(iter->IsDuplicate(message))
+    ArraySet<FragmentedMessage>::const_iterator iter =
+        mFragmentedMessages.FindIterator(message.GetSequenceId());
+    if (iter != mFragmentedMessages.End())
+      if (iter->IsDuplicate(message))
         return true;
   }
 
@@ -185,16 +180,17 @@ bool InMessageChannel::Push(MoveReference<Message> message)
   Assert(!IsDuplicate(*message));
 
   // Fragment message already exists as a fragmented message?
-  if(message->IsFragment())
+  if (message->IsFragment())
   {
-    ArraySet<FragmentedMessage>::iterator iter = mFragmentedMessages.FindIterator(message->GetSequenceId());
-    if(iter != mFragmentedMessages.End())
+    ArraySet<FragmentedMessage>::iterator iter =
+        mFragmentedMessages.FindIterator(message->GetSequenceId());
+    if (iter != mFragmentedMessages.End())
     {
       // Add message fragment
       iter->Add(ZeroMove(message));
 
       // Fragmented message now complete?
-      if(iter->IsComplete())
+      if (iter->IsComplete())
       {
         // Reconstruct whole message
         Message wholeMessage = iter->Reconstruct();
@@ -213,12 +209,14 @@ bool InMessageChannel::Push(MoveReference<Message> message)
     }
   }
 
-  // Channel closed? (And if channel is ordered, allow any outstanding messages to proceed as normal)
-  if(mClosed && (GetTransferMode() != TransferMode::Ordered || message->GetSequenceId() > mFinalSequenceId))
+  // Channel closed? (And if channel is ordered, allow any outstanding messages
+  // to proceed as normal)
+  if (mClosed && (GetTransferMode() != TransferMode::Ordered ||
+                  message->GetSequenceId() > mFinalSequenceId))
     return false; // Discard message
 
   // New message?
-  switch(GetTransferMode())
+  switch (GetTransferMode())
   {
   default:
     Assert(false);
@@ -226,7 +224,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
 
   case TransferMode::Sequenced:
     // Out-of-order?
-    if(message->GetSequenceId() < mLastSequenceId)
+    if (message->GetSequenceId() < mLastSequenceId)
       return false; // Discard message
 
   case TransferMode::Immediate:
@@ -236,11 +234,12 @@ bool InMessageChannel::Push(MoveReference<Message> message)
     //
 
     // Fragmented?
-    if(message->IsFragment())
+    if (message->IsFragment())
     {
       // Keep message fragment
       FragmentedMessage fragmentedMessage(ZeroMove(message));
-      ArraySet<FragmentedMessage>::pointer_bool_pair insertResult = mFragmentedMessages.Insert(ZeroMove(fragmentedMessage));
+      ArraySet<FragmentedMessage>::pointer_bool_pair insertResult =
+          mFragmentedMessages.Insert(ZeroMove(fragmentedMessage));
       Assert(insertResult.second); // (Insertion should have succeeded)
     }
     // Whole?
@@ -263,7 +262,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
 Array<Message> InMessageChannel::Release()
 {
   Array<Message> result;
-  switch(GetTransferMode())
+  switch (GetTransferMode())
   {
   default:
     Assert(false);
@@ -276,8 +275,9 @@ Array<Message> InMessageChannel::Release()
 
   case TransferMode::Ordered:
     // Release all verified whole Messages
-    for(ArraySet<Message>::iterator iter = mMessages.Begin(); iter != mMessages.End(); )
-      if(mMessageSequence.IsVerified(iter->GetSequenceId()))
+    for (ArraySet<Message>::iterator iter = mMessages.Begin();
+         iter != mMessages.End();)
+      if (mMessageSequence.IsVerified(iter->GetSequenceId()))
       {
         result.PushBack(ZeroMove(*iter));
         iter = mMessages.Erase(iter);
@@ -302,7 +302,7 @@ void InMessageChannel::Close(MessageSequenceId finalSequenceId)
 
   mMessageSequence.Add(finalSequenceId);
   mFinalSequenceId = finalSequenceId;
-  mClosed          = true;
+  mClosed = true;
 }
 bool InMessageChannel::IsClosed()
 {
@@ -311,10 +311,11 @@ bool InMessageChannel::IsClosed()
 
 bool InMessageChannel::ReadyToDelete() const
 {
-  return mClosed
-      && (GetTransferMode() == TransferMode::Ordered ? mMessageSequence.IsVerified(mFinalSequenceId) : true)
-      && mMessages.Empty()
-      && mFragmentedMessages.Empty();
+  return mClosed &&
+         (GetTransferMode() == TransferMode::Ordered
+              ? mMessageSequence.IsVerified(mFinalSequenceId)
+              : true) &&
+         mMessages.Empty() && mFragmentedMessages.Empty();
 }
 
 } // namespace Zero

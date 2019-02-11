@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file JobSystem.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Because windows...
@@ -15,7 +7,6 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------------- Job
 class Job : public ReferenceCountedEventObject
 {
 public:
@@ -24,13 +15,17 @@ public:
   Job();
   virtual ~Job();
 
-  // Entrant function of the job. If it returns Complete, the job may be destroyed
-  // by the job system. Returning InProgress means the job will not be deleted
-  // (you can call AddJob again from any thread, even on the same job class).
+  // Entrant function of the job. If it returns Complete, the job may be
+  // destroyed by the job system. Returning InProgress means the job will not be
+  // deleted (you can call AddJob again from any thread, even on the same job
+  // class).
   virtual void Execute() = 0;
 
   // Called from a different thread, typically setting a bool to stop
-  virtual int Cancel(){return 0;};
+  virtual int Cancel()
+  {
+    return 0;
+  };
 
 private:
   // This value is incremented by the job system every time we add the job.
@@ -39,14 +34,13 @@ private:
   size_t mRunCount;
 };
 
-//------------------------------------------------------------------- Job System
 class JobSystem : public EventObject
 {
 public:
   typedef JobSystem ZilchSelf;
   JobSystem();
   ~JobSystem();
-  
+
   // Add's a job to be worked on (can be called from any thread).
   // Note that a job can be queued up again after it completes.
   void AddJob(Job* job);
@@ -66,7 +60,7 @@ private:
 
 namespace Z
 {
-  extern JobSystem* gJobs;
+extern JobSystem* gJobs;
 }
 
 } // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -71,8 +66,8 @@ void StickJoint::ComputeInitialConfiguration()
 
 void StickJoint::ComponentAdded(BoundType* typeId, Component* component)
 {
-  Joint::ComponentAdded(typeId,component);
-  if(typeId == ZilchTypeId(JointLimit))
+  Joint::ComponentAdded(typeId, component);
+  if (typeId == ZilchTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = 0;
@@ -81,7 +76,7 @@ void StickJoint::ComponentAdded(BoundType* typeId, Component* component)
 }
 
 void StickJoint::ComputeMoleculeData(MoleculeData& moleculeData)
-{  
+{
   moleculeData.SetUp(&mAnchors, nullptr, this);
   moleculeData.LinearAxes[0] = moleculeData.mAnchors.GetPointDifference();
   moleculeData.LinearAxes[0].AttemptNormalize();
@@ -105,7 +100,7 @@ void StickJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules,sInfo.mAtomCount, moleculeData);
+  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void StickJoint::WarmStart(MoleculeWalker& molecules)
@@ -133,17 +128,19 @@ void StickJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void StickJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint StickJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint StickJoint::GetAtomIndexFilter(uint atomIndex,
+                                    real& desiredConstraintValue) const
 {
   desiredConstraintValue = mLength;
   return LinearAxis;
@@ -179,6 +176,6 @@ void StickJoint::SetLength(real length)
   mLength = length;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

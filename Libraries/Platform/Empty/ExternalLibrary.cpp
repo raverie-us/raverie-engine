@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ExternalLibrary.cpp
-/// Implementation of the ExternalLibrary class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -39,4 +31,4 @@ void* ExternalLibrary::GetFunctionByName(cstr name)
   return nullptr;
 }
 
-}//namespace Zero
+} // namespace Zero

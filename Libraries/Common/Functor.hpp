@@ -1,22 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
-//---------------------------------------------------------------------- Functor
 class Functor
 {
 public:
-  virtual ~Functor() {}
+  virtual ~Functor()
+  {
+  }
   virtual Functor* Execute() = 0;
 };
 
-//------------------------------------------------- Static Function 0 Parameters
 template <typename ReturnType>
 class FunctorStatic0 : public Functor
 {
@@ -31,7 +26,7 @@ public:
 };
 
 template <typename ReturnType>
-Functor* CreateFunctor(ReturnType(*functionPointer)())
+Functor* CreateFunctor(ReturnType (*functionPointer)())
 {
   ErrorIf(functionPointer == nullptr);
 
@@ -40,7 +35,6 @@ Functor* CreateFunctor(ReturnType(*functionPointer)())
   return functor;
 }
 
-//----------------------------------------------- Instance Function 0 Parameters
 template <typename ReturnType, typename InstanceType>
 class FunctorInstance0 : public Functor
 {
@@ -56,7 +50,8 @@ public:
 };
 
 template <typename ReturnType, typename InstanceType>
-Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(), InstanceType* instance)
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(),
+                       InstanceType* instance)
 {
   ErrorIf(instance == nullptr);
 
@@ -66,7 +61,6 @@ Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(), InstanceTy
   return functor;
 }
 
-//----------------------------------------- Instance Const Function 0 Parameters
 template <typename ReturnType, typename InstanceType>
 class FunctorInstanceConst0 : public Functor
 {
@@ -82,7 +76,8 @@ public:
 };
 
 template <typename ReturnType, typename InstanceType>
-Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)() const, InstanceType* instance)
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)() const,
+                       InstanceType* instance)
 {
   ErrorIf(instance == nullptr);
 
@@ -92,7 +87,6 @@ Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)() const, Inst
   return functor;
 }
 
-//-------------------------------------------------- Static Function 1 Parameter
 template <typename ReturnType, typename P0>
 class FunctorStatic1 : public Functor
 {
@@ -118,7 +112,6 @@ Functor* CreateFunctor(ReturnType (*functionPointer)(P0), P0 p0)
   return functor;
 }
 
-//------------------------------------------------ Instance Function 1 Parameter
 template <typename ReturnType, typename InstanceType, typename P0>
 class FunctorInstance1 : public Functor
 {
@@ -135,7 +128,9 @@ public:
 };
 
 template <typename ReturnType, typename InstanceType, typename P0>
-Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0), InstanceType* instance, P0 p0)
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0),
+                       InstanceType* instance,
+                       P0 p0)
 {
   ErrorIf(instance == nullptr);
 
@@ -146,7 +141,6 @@ Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0), Instance
   return functor;
 }
 
-//------------------------------------------ Instance Const Function 1 Parameter
 template <typename ReturnType, typename InstanceType, typename P0>
 class FunctorInstanceConst1 : public Functor
 {
@@ -163,7 +157,9 @@ public:
 };
 
 template <typename ReturnType, typename InstanceType, typename P0>
-Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0) const, InstanceType* instance, P0 p0)
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0) const,
+                       InstanceType* instance,
+                       P0 p0)
 {
   ErrorIf(instance == nullptr);
 
@@ -174,8 +170,6 @@ Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0) const, In
   return functor;
 }
 
-
-//-------------------------------------------------- Static Function 2 Parameter
 template <typename ReturnType, typename P0, typename P1>
 class FunctorStatic2 : public Functor
 {
@@ -203,7 +197,6 @@ Functor* CreateFunctor(ReturnType (*functionPointer)(P0, P1), P0 p0, P1 p1)
   return functor;
 }
 
-//------------------------------------------------ Instance Function 2 Parameter
 template <typename ReturnType, typename InstanceType, typename P0, typename P1>
 class FunctorInstance2 : public Functor
 {
@@ -221,7 +214,10 @@ public:
 };
 
 template <typename ReturnType, typename InstanceType, typename P0, typename P1>
-Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1), InstanceType* instance, P0 p0, P1 p1)
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1),
+                       InstanceType* instance,
+                       P0 p0,
+                       P1 p1)
 {
   ErrorIf(instance == nullptr);
 
@@ -233,7 +229,6 @@ Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1), Inst
   return functor;
 }
 
-//------------------------------------------ Instance Const Function 2 Parameter
 template <typename ReturnType, typename InstanceType, typename P0, typename P1>
 class FunctorInstanceConst2 : public Functor
 {
@@ -251,7 +246,11 @@ public:
 };
 
 template <typename ReturnType, typename InstanceType, typename P0, typename P1>
-Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1) const, InstanceType* instance, P0 p0, P1 p1)
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1)
+                           const,
+                       InstanceType* instance,
+                       P0 p0,
+                       P1 p1)
 {
   ErrorIf(instance == nullptr);
 
@@ -263,8 +262,6 @@ Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1) const
   return functor;
 }
 
-
-//-------------------------------------------------- Static Function 3 Parameter
 template <typename ReturnType, typename P0, typename P1, typename P2>
 class FunctorStatic3 : public Functor
 {
@@ -275,14 +272,15 @@ public:
     return this;
   }
 
-  ReturnType(*mFunctionPointer)(P0, P1, P2);
+  ReturnType (*mFunctionPointer)(P0, P1, P2);
   P0 mP0;
   P1 mP1;
   P2 mP2;
 };
 
 template <typename ReturnType, typename P0, typename P1, typename P2>
-Functor* CreateFunctor(ReturnType(*functionPointer)(P0, P1, P2), P0 p0, P1 p1, P2 p2)
+Functor*
+CreateFunctor(ReturnType (*functionPointer)(P0, P1, P2), P0 p0, P1 p1, P2 p2)
 {
   ErrorIf(functionPointer == nullptr);
 
@@ -294,8 +292,11 @@ Functor* CreateFunctor(ReturnType(*functionPointer)(P0, P1, P2), P0 p0, P1 p1, P
   return functor;
 }
 
-//------------------------------------------------ Instance Function 3 Parameter
-template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
+template <typename ReturnType,
+          typename InstanceType,
+          typename P0,
+          typename P1,
+          typename P2>
 class FunctorInstance3 : public Functor
 {
 public:
@@ -305,15 +306,23 @@ public:
     return this;
   }
 
-  ReturnType(InstanceType::*mFunctionPointer)(P0, P1, P2);
+  ReturnType (InstanceType::*mFunctionPointer)(P0, P1, P2);
   InstanceType* mInstance;
   P0 mP0;
   P1 mP1;
   P2 mP2;
 };
 
-template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
-Functor* CreateFunctor(ReturnType(InstanceType::*functionPointer)(P0, P1, P2), InstanceType* instance, P0 p0, P1 p1, P2 p2)
+template <typename ReturnType,
+          typename InstanceType,
+          typename P0,
+          typename P1,
+          typename P2>
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1, P2),
+                       InstanceType* instance,
+                       P0 p0,
+                       P1 p1,
+                       P2 p2)
 {
   ErrorIf(instance == nullptr);
 
@@ -326,8 +335,11 @@ Functor* CreateFunctor(ReturnType(InstanceType::*functionPointer)(P0, P1, P2), I
   return functor;
 }
 
-//------------------------------------------ Instance Const Function 3 Parameter
-template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
+template <typename ReturnType,
+          typename InstanceType,
+          typename P0,
+          typename P1,
+          typename P2>
 class FunctorInstanceConst3 : public Functor
 {
 public:
@@ -337,19 +349,29 @@ public:
     return this;
   }
 
-  ReturnType(InstanceType::*mFunctionPointer)(P0, P1, P2) const;
+  ReturnType (InstanceType::*mFunctionPointer)(P0, P1, P2) const;
   InstanceType* mInstance;
   P0 mP0;
   P1 mP1;
   P2 mP2;
 };
 
-template <typename ReturnType, typename InstanceType, typename P0, typename P1, typename P2>
-Functor* CreateFunctor(ReturnType(InstanceType::*functionPointer)(P0, P1, P2) const, InstanceType* instance, P0 p0, P1 p1, P2 p2)
+template <typename ReturnType,
+          typename InstanceType,
+          typename P0,
+          typename P1,
+          typename P2>
+Functor* CreateFunctor(ReturnType (InstanceType::*functionPointer)(P0, P1, P2)
+                           const,
+                       InstanceType* instance,
+                       P0 p0,
+                       P1 p1,
+                       P2 p2)
 {
   ErrorIf(instance == nullptr);
 
-  auto functor = new FunctorInstanceConst3<ReturnType, InstanceType, P0, P1, P2>();
+  auto functor =
+      new FunctorInstanceConst3<ReturnType, InstanceType, P0, P1, P2>();
   functor->mFunctionPointer = functionPointer;
   functor->mInstance = instance;
   functor->mP0 = p0;
@@ -358,8 +380,6 @@ Functor* CreateFunctor(ReturnType(InstanceType::*functionPointer)(P0, P1, P2) co
   return functor;
 }
 
-
-//----------------------------------------------- Set Instance Pointer To Member
 template <typename InstanceType, typename MemberType>
 class FunctorInstanceMember : public Functor
 {
@@ -376,7 +396,9 @@ public:
 };
 
 template <typename InstanceType, typename MemberType>
-Functor* CreateFunctor(MemberType InstanceType::*memberPointer, InstanceType* instance, MemberType value)
+Functor* CreateFunctor(MemberType InstanceType::*memberPointer,
+                       InstanceType* instance,
+                       MemberType value)
 {
   ErrorIf(instance == nullptr);
 
@@ -387,7 +409,6 @@ Functor* CreateFunctor(MemberType InstanceType::*memberPointer, InstanceType* in
   return functor;
 }
 
-//------------------------------------------------------------------ Set Pointer
 template <typename PointerType, typename ValueType>
 class FunctorSetPointer : public Functor
 {
@@ -413,7 +434,6 @@ Functor* CreateFunctor(PointerType* pointer, ValueType value)
   return functor;
 }
 
-//---------------------------------------------------------------- Set Reference
 template <typename ReferenceType, typename ValueType>
 Functor* CreateFunctor(ReferenceType& reference, ValueType value)
 {

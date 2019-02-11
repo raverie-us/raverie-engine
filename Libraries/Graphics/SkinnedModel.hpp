@@ -1,12 +1,12 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-/// Renders a mesh using the transform hierarchy of a Skeleton to apply skinning.
+/// Renders a mesh using the transform hierarchy of a Skeleton to apply
+/// skinning.
 class SkinnedModel : public Graphical
 {
 public:
@@ -21,7 +21,9 @@ public:
   // Graphical Interface
   Aabb GetLocalAabb() override;
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
-  void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
+  void ExtractViewData(ViewNode& viewNode,
+                       ViewBlock& viewBlock,
+                       FrameBlock& frameBlock) override;
   bool TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo) override;
 
   // Properties
@@ -31,7 +33,8 @@ public:
   void SetMesh(Mesh* newMesh);
   HandleOf<Mesh> mMesh;
 
-  /// Path to an object with a Skeleton component that will be used for skinning.
+  /// Path to an object with a Skeleton component that will be used for
+  /// skinning.
   CogPath GetSkeletonPath();
   void SetSkeletonPath(CogPath path);
   CogPath mSkeletonPath;
@@ -55,4 +58,4 @@ public:
   Array<uint> mBoneIndexRemap;
 };
 
-}// namespace Zero
+} // namespace Zero

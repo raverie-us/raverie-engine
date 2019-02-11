@@ -1,26 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>::GrammarNode() :
-  mType(GrammarNodeType::Epsilon),
-  mLhs(nullptr),
-  mRhs(nullptr),
-  mOperand(nullptr),
-  mGrammarSet(nullptr),
-  mOrderId(0)
+    mType(GrammarNodeType::Epsilon),
+    mLhs(nullptr),
+    mRhs(nullptr),
+    mOperand(nullptr),
+    mGrammarSet(nullptr),
+    mOrderId(0)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>::~GrammarNode()
 {
@@ -29,9 +22,9 @@ GrammarNode<TokenType>::~GrammarNode()
   DeleteNode(this->mOperand);
 }
 
-//***************************************************************************
 template <typename TokenType>
-GrammarNode<TokenType>& GrammarNode<TokenType>::MakeBinary(GrammarNode& lhs, GrammarNode& rhs, GrammarNodeType::Enum type)
+GrammarNode<TokenType>& GrammarNode<TokenType>::MakeBinary(
+    GrammarNode& lhs, GrammarNode& rhs, GrammarNodeType::Enum type)
 {
   GrammarNode& node = *new GrammarNode();
   node.mType = type;
@@ -40,9 +33,9 @@ GrammarNode<TokenType>& GrammarNode<TokenType>::MakeBinary(GrammarNode& lhs, Gra
   return node;
 }
 
-//***************************************************************************
 template <typename TokenType>
-GrammarNode<TokenType>& GrammarNode<TokenType>::MakeUnary(GrammarNode& operand, GrammarNodeType::Enum type)
+GrammarNode<TokenType>& GrammarNode<TokenType>::MakeUnary(
+    GrammarNode& operand, GrammarNodeType::Enum type)
 {
   GrammarNode& node = *new GrammarNode();
   node.mType = type;
@@ -50,42 +43,36 @@ GrammarNode<TokenType>& GrammarNode<TokenType>::MakeUnary(GrammarNode& operand, 
   return node;
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>& GrammarNode<TokenType>::operator|(GrammarNode& rhs)
 {
   return MakeBinary(*this, rhs, GrammarNodeType::Or);
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>& GrammarNode<TokenType>::operator<<(GrammarNode& rhs)
 {
   return MakeBinary(*this, rhs, GrammarNodeType::Concatenate);
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>& GrammarNode<TokenType>::operator*()
 {
   return MakeUnary(*this, GrammarNodeType::ZeroOrMore);
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>& GrammarNode<TokenType>::operator+()
 {
   return MakeUnary(*this, GrammarNodeType::OneOrMore);
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarNode<TokenType>& GrammarNode<TokenType>::operator~()
 {
   return MakeUnary(*this, GrammarNodeType::Optional);
 }
 
-//***************************************************************************
 template <typename TokenType>
 void GrammarNode<TokenType>::GetRangeSetString(StringBuilder& builder)
 {
@@ -99,7 +86,7 @@ void GrammarNode<TokenType>::GetRangeSetString(StringBuilder& builder)
       builder.Append("anything but ");
   }
 
-  forRange (GrammarRange<TokenType>& range, this->mRanges.All())
+  forRange(GrammarRange<TokenType> & range, this->mRanges.All())
   {
     if (hasEmitted)
       builder.Append(", ");
@@ -111,7 +98,7 @@ void GrammarNode<TokenType>::GetRangeSetString(StringBuilder& builder)
     builder.Append(range.mEndInclusive.ToEscapedString());
   }
 
-  forRange (TokenType& token, this->mSingleTokens.All())
+  forRange(TokenType & token, this->mSingleTokens.All())
   {
     if (hasEmitted)
       builder.Append(", ");
@@ -122,7 +109,6 @@ void GrammarNode<TokenType>::GetRangeSetString(StringBuilder& builder)
   }
 }
 
-//***************************************************************************
 template <typename TokenType>
 String GrammarNode<TokenType>::GetRangeSetString()
 {
@@ -131,7 +117,6 @@ String GrammarNode<TokenType>::GetRangeSetString()
   return builder.ToString();
 }
 
-//***************************************************************************
 template <typename TokenType>
 void GrammarNode<TokenType>::DeleteNode(GrammarNode* node)
 {
@@ -139,16 +124,15 @@ void GrammarNode<TokenType>::DeleteNode(GrammarNode* node)
     delete node;
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarRule<TokenType>::GrammarRule()
 {
   this->mType = GrammarNodeType::Rule;
 }
 
-//***************************************************************************
 template <typename TokenType>
-GrammarRule<TokenType>& GrammarRule<TokenType>::operator |=(GrammarNode<TokenType>& rhs)
+GrammarRule<TokenType>& GrammarRule<TokenType>::
+operator|=(GrammarNode<TokenType>& rhs)
 {
   if (this->mOperand == nullptr)
     this->mOperand = &rhs;
@@ -158,33 +142,32 @@ GrammarRule<TokenType>& GrammarRule<TokenType>::operator |=(GrammarNode<TokenTyp
   return *this;
 }
 
-//***************************************************************************
 template <typename TokenType>
-GrammarRule<TokenType>& GrammarRule<TokenType>::operator%=(GrammarNode<TokenType>& rhs)
+GrammarRule<TokenType>& GrammarRule<TokenType>::
+operator%=(GrammarNode<TokenType>& rhs)
 {
   DeleteNode(this->mOperand);
   this->mOperand = &rhs;
   return *this;
 }
 
-//***************************************************************************
 template <typename TokenType>
-GrammarSet<TokenType>::GrammarSet() :
-  mOrderIdCounter(0)
+GrammarSet<TokenType>::GrammarSet() : mOrderIdCounter(0)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarSet<TokenType>::~GrammarSet()
 {
   // We have to delete all the rule children before the rules themselves
-  // Because the children can point back at the rule (and try to dereference it during destruction)
-  forRange (GrammarRule<TokenType>* rule, this->mRules.Values())
+  // Because the children can point back at the rule (and try to dereference it
+  // during destruction)
+  forRange(GrammarRule<TokenType> * rule, this->mRules.Values())
   {
     GrammarNode<TokenType>::DeleteNode(rule->mOperand);
 
-    forRange(typename GrammarNode<TokenType>::ReplacementPair& pair, rule->mReplacements.All())
+    forRange(typename GrammarNode<TokenType>::ReplacementPair & pair,
+             rule->mReplacements.All())
     {
       GrammarNode<TokenType>::DeleteNode(pair.first);
       delete pair.second;
@@ -194,13 +177,12 @@ GrammarSet<TokenType>::~GrammarSet()
     rule->mOperand = nullptr;
   }
 
-  forRange (GrammarRule<TokenType>* rule, this->mRules.Values())
+  forRange(GrammarRule<TokenType> * rule, this->mRules.Values())
   {
     delete rule;
   }
 }
 
-//***************************************************************************
 template <typename TokenType>
 GrammarRule<TokenType>& GrammarSet<TokenType>::operator[](StringParam name)
 {
@@ -215,35 +197,32 @@ GrammarRule<TokenType>& GrammarSet<TokenType>::operator[](StringParam name)
   return *rule;
 }
 
-//***************************************************************************
 template <typename TokenType>
-void GrammarSet<TokenType>::AddKeyword(StringParam keyword, StringParam ruleName)
+void GrammarSet<TokenType>::AddKeyword(StringParam keyword,
+                                       StringParam ruleName)
 {
   this->mKeywords[keyword] = &(*this)[ruleName];
 }
 
-//***************************************************************************
 template <typename TokenType>
-void GrammarSet<TokenType>::AddKeyword(StringParam keyword, GrammarRule<TokenType>& rule)
+void GrammarSet<TokenType>::AddKeyword(StringParam keyword,
+                                       GrammarRule<TokenType>& rule)
 {
   this->mKeywords[keyword] = &rule;
 }
 
-//***************************************************************************
 template <typename TokenType>
 void GrammarSet<TokenType>::AddIgnore(StringParam ruleName)
 {
   this->mIgnore.Insert(&(*this)[ruleName]);
 }
 
-//***************************************************************************
 template <typename TokenType>
 void GrammarSet<TokenType>::AddIgnore(GrammarRule<TokenType>& rule)
 {
   this->mIgnore.Insert(&rule);
 }
 
-//***************************************************************************
 template <typename T>
 AutoPush<T>::AutoPush(Array<T>& array, const T& value)
 {
@@ -251,107 +230,97 @@ AutoPush<T>::AutoPush(Array<T>& array, const T& value)
   this->mArray = &array;
 }
 
-//***************************************************************************
 template <typename T>
 AutoPush<T>::~AutoPush()
 {
   this->mArray->PopBack();
 }
 
-//***************************************************************************
 template <typename TokenType>
 Capture<TokenType>::Capture() :
-  mParent(nullptr),
-  mStartInclusive(0),
-  mEndExclusive(0)
+    mParent(nullptr),
+    mStartInclusive(0),
+    mEndExclusive(0)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 Capture<TokenType>::~Capture()
 {
-  forRange (Capture* nestedCapture, this->mNestedCaptures.All())
+  forRange(Capture * nestedCapture, this->mNestedCaptures.All())
   {
     delete nestedCapture;
   }
 }
-//***************************************************************************
 template <typename TokenType>
-TokenType Capture<TokenType>::GetFirstToken(StringParam name, const TokenType& failResult)
+TokenType Capture<TokenType>::GetFirstToken(StringParam name,
+                                            const TokenType& failResult)
 {
-  Array<Capture*>* namedCaptures = mNestedCapturesByName.FindPointer(name, nullptr);
-  if(namedCaptures == nullptr || namedCaptures->Empty())
+  Array<Capture*>* namedCaptures =
+      mNestedCapturesByName.FindPointer(name, nullptr);
+  if (namedCaptures == nullptr || namedCaptures->Empty())
     return failResult;
 
   Capture* firstNamedCapture = (*namedCaptures)[0];
 
-  if(firstNamedCapture->mTokens.Empty())
+  if (firstNamedCapture->mTokens.Empty())
     return failResult;
 
   return firstNamedCapture->mTokens[0];
 }
 
-//***************************************************************************
 template <typename TokenType>
 ParseNodeInfo<TokenType>::ParseNodeInfo() :
-  mRule(nullptr),
-  mStartInclusive(0),
-  mEndExclusive(0),
-  mAccepted(false),
-  mFailed(false),
-  mCapture(nullptr)
+    mRule(nullptr),
+    mStartInclusive(0),
+    mEndExclusive(0),
+    mAccepted(false),
+    mFailed(false),
+    mCapture(nullptr)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 ParseNodeInfo<TokenType>::~ParseNodeInfo()
 {
   delete this->mCapture;
 }
 
-//***************************************************************************
 template <typename TokenType>
-TokenType ParseNodeInfo<TokenType>::GetFirstCapturedToken(StringParam name, const TokenType& failResult)
+TokenType ParseNodeInfo<TokenType>::GetFirstCapturedToken(
+    StringParam name, const TokenType& failResult)
 {
-  if(mCapture == nullptr)
+  if (mCapture == nullptr)
     return failResult;
   return mCapture->GetFirstToken(name, failResult);
 }
 
-//***************************************************************************
 template <typename TokenType>
-ParseNode<TokenType>::ParseNode() :
-  mParent(nullptr)
+ParseNode<TokenType>::ParseNode() : mParent(nullptr)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 ParseNode<TokenType>::ParseNode(const ParseNodeInfo<TokenType>& info) :
-  ParseNodeInfo<TokenType>(info),
-  mParent(nullptr)
+    ParseNodeInfo<TokenType>(info),
+    mParent(nullptr)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 ParseNode<TokenType>::~ParseNode()
 {
-  forRange (ParseNode* node, mChildren.All())
-    delete node;
+  forRange(ParseNode * node, mChildren.All()) delete node;
 }
 
-//***************************************************************************
 template <typename TokenType>
-ParseNode<TokenType>& ParseNode<TokenType>::operator=(const ParseNodeInfo<TokenType>& rhs)
+ParseNode<TokenType>& ParseNode<TokenType>::
+operator=(const ParseNodeInfo<TokenType>& rhs)
 {
   *static_cast<ParseNodeInfo<TokenType>*>(this) = rhs;
   return *this;
 }
 
-//***************************************************************************
 template <typename TokenType>
 String ParseNode<TokenType>::GetDebugRepresentation()
 {
@@ -360,7 +329,6 @@ String ParseNode<TokenType>::GetDebugRepresentation()
   return builder.ToString();
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseNode<TokenType>::OutputNode(StringBuilder& builder)
 {
@@ -377,22 +345,21 @@ void ParseNode<TokenType>::OutputNode(StringBuilder& builder)
   }
 }
 
-//***************************************************************************
 template <typename TokenType>
-void ParseNode<TokenType>::GetDebugRepresentation(size_t depth, StringBuilder& builder)
+void ParseNode<TokenType>::GetDebugRepresentation(size_t depth,
+                                                  StringBuilder& builder)
 {
   static const String DebugBar("| ");
   builder.Repeat(depth, DebugBar);
   this->OutputNode(builder);
   builder.Append("\n");
 
-  forRange (ParseNode* child, this->mChildren.All())
+  forRange(ParseNode * child, this->mChildren.All())
   {
     child->GetDebugRepresentation(depth + 1, builder);
   }
 }
 
-//***************************************************************************
 template <typename TokenType>
 String ParseNode<TokenType>::GetGraphRepresentation()
 {
@@ -405,14 +372,14 @@ String ParseNode<TokenType>::GetGraphRepresentation()
   return builder.ToString();
 }
 
-//***************************************************************************
 template <typename TokenType>
-void ParseNode<TokenType>::GetGraphRepresentation(size_t& index, StringBuilder& builder)
+void ParseNode<TokenType>::GetGraphRepresentation(size_t& index,
+                                                  StringBuilder& builder)
 {
   size_t myIndex = index;
   ++index;
 
-  forRange (ParseNode* node, this->mChildren.All())
+  forRange(ParseNode * node, this->mChildren.All())
   {
     builder.Append(String::Format("  %d -> %d;\n", myIndex, index));
     node->GetGraphRepresentation(index, builder);
@@ -424,7 +391,8 @@ void ParseNode<TokenType>::GetGraphRepresentation(size_t& index, StringBuilder& 
 
   if (this->mCapture != nullptr)
   {
-    forRange (Capture<TokenType>* nestedCapture, this->mCapture->mNestedCaptures.All())
+    forRange(Capture<TokenType> * nestedCapture,
+             this->mCapture->mNestedCaptures.All())
     {
       builder.Append(String::Format("  %d -> %d;\n", myIndex, index));
       GetGraphRepresentation(index, builder, nestedCapture);
@@ -432,22 +400,24 @@ void ParseNode<TokenType>::GetGraphRepresentation(size_t& index, StringBuilder& 
   }
 }
 
-//***************************************************************************
 template <typename TokenType>
-void ParseNode<TokenType>::GetGraphRepresentation(size_t& index, StringBuilder& builder, Capture<TokenType>* capture)
+void ParseNode<TokenType>::GetGraphRepresentation(size_t& index,
+                                                  StringBuilder& builder,
+                                                  Capture<TokenType>* capture)
 {
   size_t myIndex = index;
   ++index;
 
-  forRange (Capture<TokenType>* nestedCapture, capture->mNestedCaptures.All())
+  forRange(Capture<TokenType> * nestedCapture, capture->mNestedCaptures.All())
   {
     builder.Append(String::Format("  %d -> %d;\n", myIndex, index));
     GetGraphRepresentation(index, builder, nestedCapture);
   }
 
   bool first = true;
-  builder.Append(String::Format("  %d [label=\"%s(", myIndex, capture->mName.c_str()));
-  forRange (TokenType& capturedToken, capture->mTokens.All())
+  builder.Append(
+      String::Format("  %d [label=\"%s(", myIndex, capture->mName.c_str()));
+  forRange(TokenType & capturedToken, capture->mTokens.All())
   {
     if (first == false)
       builder.Append(' ');
@@ -458,51 +428,42 @@ void ParseNode<TokenType>::GetGraphRepresentation(size_t& index, StringBuilder& 
   builder.Append(")\"];\n");
 }
 
-//***************************************************************************
 template <typename TokenType>
 void EmptyParseHandler<TokenType>::StartRule(GrammarRule<TokenType>* rule)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 void EmptyParseHandler<TokenType>::EndRule(ParseNodeInfo<TokenType>* info)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 void EmptyParseHandler<TokenType>::TokenParsed(ParseNodeInfo<TokenType>* info)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 void EmptyParseHandler<TokenType>::StartParsing()
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 void EmptyParseHandler<TokenType>::EndParsing()
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
-ParseTreeBuilder<TokenType>::ParseTreeBuilder() :
-  mTree(nullptr)
+ParseTreeBuilder<TokenType>::ParseTreeBuilder() : mTree(nullptr)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 ParseTreeBuilder<TokenType>::~ParseTreeBuilder()
 {
   delete this->mTree;
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::CreateRootNode()
 {
@@ -510,7 +471,6 @@ void ParseTreeBuilder<TokenType>::CreateRootNode()
   this->mTree = new ParseNode<TokenType>();
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::Restart()
 {
@@ -519,7 +479,6 @@ void ParseTreeBuilder<TokenType>::Restart()
   this->mTree = nullptr;
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::StartRule(GrammarRule<TokenType>* rule)
 {
@@ -529,7 +488,6 @@ void ParseTreeBuilder<TokenType>::StartRule(GrammarRule<TokenType>* rule)
   this->mTree = node;
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::EndRule(ParseNodeInfo<TokenType>* info)
 {
@@ -550,7 +508,6 @@ void ParseTreeBuilder<TokenType>::EndRule(ParseNodeInfo<TokenType>* info)
   }
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::TokenParsed(ParseNodeInfo<TokenType>* info)
 {
@@ -559,39 +516,34 @@ void ParseTreeBuilder<TokenType>::TokenParsed(ParseNodeInfo<TokenType>* info)
   this->mTree->mChildren.PushBack(node);
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::StartParsing()
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
 void ParseTreeBuilder<TokenType>::EndParsing()
 {
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType>
 ParseError<TokenType, StreamType>::ParseError() :
-  mStack(nullptr),
-  mStream(nullptr),
-  mFailedIndex(0)
+    mStack(nullptr),
+    mStream(nullptr),
+    mFailedIndex(0)
 {
 }
 
-//***************************************************************************
 template <typename TokenType>
-CaptureVariable<TokenType>::CaptureVariable() :
-  mCapture(nullptr)
+CaptureVariable<TokenType>::CaptureVariable() : mCapture(nullptr)
 {
   static const String DefaultVariableName("value");
   this->mName = DefaultVariableName;
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::RecursiveDescentParser()
+RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    RecursiveDescentParser()
 {
   this->mTokenMode = false;
   this->mDebug = false;
@@ -612,15 +564,15 @@ RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::RecursiveDescen
   this->mNonStartedRuleIndex = (size_t)-1;
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::~RecursiveDescentParser()
+RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    ~RecursiveDescentParser()
 {
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::RecursiveDescentParser(const RecursiveDescentParser& rhs)
+RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    RecursiveDescentParser(const RecursiveDescentParser& rhs)
 {
   this->mTokenMode = rhs.mTokenMode;
   this->mDebug = rhs.mDebug;
@@ -644,7 +596,6 @@ RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::RecursiveDescen
   this->mNonStartedRuleIndex = rhs.mNonStartedRuleIndex;
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
 void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::Parse()
 {
@@ -678,7 +629,10 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::Parse()
   else if (this->mTokenMode)
   {
     String nextTokenText = this->mNextToken.ToEscapedString();
-    String message = String::Format("Got an unexpected token '%s' (nothing was parsed and the invalid token will be skipped)", nextTokenText.c_str());
+    String message =
+        String::Format("Got an unexpected token '%s' (nothing was parsed and "
+                       "the invalid token will be skipped)",
+                       nextTokenText.c_str());
     this->SetError(message);
     ++this->mIndex;
   }
@@ -692,9 +646,11 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::Parse()
     this->mParseHandler->EndParsing();
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::ReplaceAndBackup(StringParam text, size_t startInclusive, size_t endExclusive)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    ReplaceAndBackup(StringParam text,
+                     size_t startInclusive,
+                     size_t endExclusive)
 {
   this->mStream->Replace(text, startInclusive, endExclusive);
   this->mIndex = startInclusive;
@@ -706,17 +662,17 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::ReplaceAnd
   this->mNextToken = this->mStream->GetToken(startInclusive);
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::CheckRecursionDepth()
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    CheckRecursionDepth()
 {
   if (this->mDepth > MaxRecursionDepth)
     this->SetErrorAndBackout("Exceeded maximum recursion depth");
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGrammar(GrammarNode<TokenType>* node)
+bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    EvaluateGrammar(GrammarNode<TokenType>* node)
 {
   AutoIncrement depthIncrement(&this->mDepth);
   this->CheckRecursionDepth();
@@ -747,7 +703,8 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
 
     for (size_t i = 0; i < rule->mReplacements.Size(); ++i)
     {
-      Pair<GrammarNode<TokenType>*, ReplacementNode*>& pair = rule->mReplacements[i];
+      Pair<GrammarNode<TokenType>*, ReplacementNode*>& pair =
+          rule->mReplacements[i];
 
       GrammarNode<TokenType>* find = pair.first;
       ReplacementNode* replaceWith = pair.second;
@@ -783,7 +740,8 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
         this->ReplaceAndBackup(replacementText, startInclusive, endExclusive);
 
         // Every time we backup, we restart walking through the replacements
-        // This is because one replacement could have changed the text for another replacement
+        // This is because one replacement could have changed the text for
+        // another replacement
         i = 0;
       }
     }
@@ -800,17 +758,19 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
 
     if (this->ShouldInvokeParseHandler())
     {
-      // If the index is invalid, then we set it to our current index, because this is the first
+      // If the index is invalid, then we set it to our current index, because
+      // this is the first
       if (this->mNonStartedRuleIndex >= this->mNonStartedRules.Size())
         this->mNonStartedRuleIndex = this->mNonStartedRules.Size();
 
-      // We're not going to tell the user that a rule started until we've read at least one token
+      // We're not going to tell the user that a rule started until we've read
+      // at least one token
       this->mNonStartedRules.PushBack(rule);
     }
 
     // Capture nodes always create capture rules
-    // However, rules also implicitly create a capture root (captures don't go beyond rules when parsing)
-    // This is NOT the case when inside replacements
+    // However, rules also implicitly create a capture root (captures don't go
+    // beyond rules when parsing) This is NOT the case when inside replacements
     bool createCaptureNode = (this->IsInReplacement() == false);
     if (createCaptureNode)
     {
@@ -839,8 +799,9 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
       this->mAcceptedRule = static_cast<GrammarRule<TokenType>*>(node);
     }
 
-    // We basically always want to create parse nodes, even if we failed (except when inside replacements)
-    // The only exception is if nothing is parsed, then we pretty much don't want them
+    // We basically always want to create parse nodes, even if we failed (except
+    // when inside replacements) The only exception is if nothing is parsed,
+    // then we pretty much don't want them
     if (this->ShouldInvokeParseHandler())
     {
       this->mNonStartedRules.PopBack();
@@ -849,8 +810,9 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
       bool parsedAnything = (endExclusive != startInclusive);
       if (parsedAnything)
       {
-        // Dispatch the event on the rule that was parsed, as well as on the entire parser itself
-        // Note: The destructor of ParseNodeInfo automatically destroys the capture (if it isn't stolen by the user)
+        // Dispatch the event on the rule that was parsed, as well as on the
+        // entire parser itself Note: The destructor of ParseNodeInfo
+        // automatically destroys the capture (if it isn't stolen by the user)
         ParseNodeInfo<TokenType> toSend;
         toSend.mStartInclusive = startInclusive;
         toSend.mEndExclusive = endExclusive;
@@ -867,9 +829,10 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
     }
     else
     {
-      // Note: In the above case, the destructor of ParseNodeInfo automatically destroys the capture (if it isn't stolen by the user)
-      // Delete the capture node if we had one (if anyone consumed it or stole it, this will be set to null)
-      // For example if the parse node steals it (above)
+      // Note: In the above case, the destructor of ParseNodeInfo automatically
+      // destroys the capture (if it isn't stolen by the user) Delete the
+      // capture node if we had one (if anyone consumed it or stole it, this
+      // will be set to null) For example if the parse node steals it (above)
       delete captureRoot;
     }
 
@@ -894,16 +857,19 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
 
   case GrammarNodeType::Concatenate:
   {
-    // It is only an error if the left hand side does not advance the token stream
+    // It is only an error if the left hand side does not advance the token
+    // stream
     size_t startInclusive = this->mIndex;
     if (this->EvaluateGrammar(node->mLhs) == false)
       return false;
     size_t endExclusive = this->mIndex;
 
-    // The only case in which we can have an error is if this fails, AND we read something on the left side
+    // The only case in which we can have an error is if this fails, AND we read
+    // something on the left side
     bool lhsAdvancedTokenStream = (startInclusive != endExclusive);
 
-    // For error recovery, we keep reading until we succeed or reach the null terminator
+    // For error recovery, we keep reading until we succeed or reach the null
+    // terminator
     for (;;)
     {
       // This handles any backing out done by the lhs, as well as the rhs
@@ -911,53 +877,61 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
       // In token mode we return false (we're done with this token)
       // In parse mode we return true (keep the parse tree)
       if (this->mBackout)
-      return !this->mTokenMode;
+        return !this->mTokenMode;
 
-    // If we parse the right hand side, then we succeeded
-    // NOTE: This may have been after error recovery
-    if (this->EvaluateGrammar(node->mRhs))
-      return true;
+      // If we parse the right hand side, then we succeeded
+      // NOTE: This may have been after error recovery
+      if (this->EvaluateGrammar(node->mRhs))
+        return true;
 
-    // Failing to parse the right side is ok, unless we parsed something on the left hand side
-    // In that case, it's definitely an error
-    if (lhsAdvancedTokenStream == false)
-      return false;
+      // Failing to parse the right side is ok, unless we parsed something on
+      // the left hand side In that case, it's definitely an error
+      if (lhsAdvancedTokenStream == false)
+        return false;
 
-    // If we're in tokenization mode, then this is only an error if we never accepted a token
-    // (we still want to backout because we are finished, however)
-    if (this->mTokenMode && this->mAcceptedRule != nullptr)
-    {
-      // All we do is backout quietly
-      this->mBackout = true;
-      return false;
-    }
-    else
-    {
-      // We're going to print an error message out here
-      // If we're not in token mode, SetError will eat a single token (which may result in the null terminator token)
-      // Because we're in a loop, we'll end up re-running 
-      String nextUnit = this->mNextToken.ToEscapedString();
-
-      if (this->mLastAttemptedAccept != nullptr)
+      // If we're in tokenization mode, then this is only an error if we never
+      // accepted a token (we still want to backout because we are finished,
+      // however)
+      if (this->mTokenMode && this->mAcceptedRule != nullptr)
       {
-        String rangeSet = this->mLastAttemptedAccept->GetRangeSetString();
-        String message = String::Format("Attempted to parse '%s', but instead we got '%s'", rangeSet.c_str(), nextUnit.c_str());
-        this->SetError(message);
+        // All we do is backout quietly
+        this->mBackout = true;
+        return false;
       }
       else
       {
-        String message = String::Format("Attempted to parse a token, but instead we got '%s'", nextUnit.c_str());
-        this->SetError(message);
+        // We're going to print an error message out here
+        // If we're not in token mode, SetError will eat a single token (which
+        // may result in the null terminator token) Because we're in a loop,
+        // we'll end up re-running
+        String nextUnit = this->mNextToken.ToEscapedString();
+
+        if (this->mLastAttemptedAccept != nullptr)
+        {
+          String rangeSet = this->mLastAttemptedAccept->GetRangeSetString();
+          String message =
+              String::Format("Attempted to parse '%s', but instead we got '%s'",
+                             rangeSet.c_str(),
+                             nextUnit.c_str());
+          this->SetError(message);
+        }
+        else
+        {
+          String message = String::Format(
+              "Attempted to parse a token, but instead we got '%s'",
+              nextUnit.c_str());
+          this->SetError(message);
+        }
+
+        ++this->mIndex;
+        this->mNextToken = this->mStream->GetToken(this->mIndex);
+
+        // If we reached the end of the stream, then we obviously failed to
+        // parse (exit out) However, we return true because we want to keep any
+        // parse nodes that may have been created
+        if (this->mNextToken.IsEnd())
+          this->mBackout = true;
       }
-
-      ++this->mIndex;
-      this->mNextToken = this->mStream->GetToken(this->mIndex);
-
-      // If we reached the end of the stream, then we obviously failed to parse (exit out)
-      // However, we return true because we want to keep any parse nodes that may have been created
-      if (this->mNextToken.IsEnd())
-        this->mBackout = true;
-    }
     }
   }
 
@@ -970,10 +944,10 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
     for (;;)
     {
       size_t startInclusive = this->mIndex;
-    bool result = this->EvaluateGrammar(node->mOperand);
-    size_t endExclusive = this->mIndex;
-    if (result == false || startInclusive == endExclusive)
-      break;
+      bool result = this->EvaluateGrammar(node->mOperand);
+      size_t endExclusive = this->mIndex;
+      if (result == false || startInclusive == endExclusive)
+        break;
     }
     return true;
 
@@ -989,7 +963,7 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
   case GrammarNodeType::NotRangeSet:
   {
     bool foundToken = false;
-    forRange (TokenType& token, node->mSingleTokens.All())
+    forRange(TokenType & token, node->mSingleTokens.All())
     {
       if (this->mNextToken == token)
       {
@@ -1000,10 +974,11 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
 
     if (foundToken == false)
     {
-      forRange (GrammarRange<TokenType>& range, node->mRanges.All())
+      forRange(GrammarRange<TokenType> & range, node->mRanges.All())
       {
         // Ranges are generally only going to work with characters
-        if (this->mNextToken >= range.mStartInclusive && this->mNextToken <= range.mEndInclusive)
+        if (this->mNextToken >= range.mStartInclusive &&
+            this->mNextToken <= range.mEndInclusive)
         {
           foundToken = true;
           break;
@@ -1014,7 +989,6 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
     bool success = foundToken;
     if (node->mType == GrammarNodeType::NotRangeSet)
       success = !success;
-
 
     if (this->mDebug)
     {
@@ -1036,9 +1010,11 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
       if (this->ShouldInvokeParseHandler())
       {
         // Inform the user of all the rules that have now started
-        // Note that the non-started rule index may be out of bounds, which indicates it is not valid and there
-        // are no rules to be started
-        for (size_t i = this->mNonStartedRuleIndex; i < this->mNonStartedRules.Size(); ++i)
+        // Note that the non-started rule index may be out of bounds, which
+        // indicates it is not valid and there are no rules to be started
+        for (size_t i = this->mNonStartedRuleIndex;
+             i < this->mNonStartedRules.Size();
+             ++i)
         {
           GrammarRule<TokenType>* rule = this->mNonStartedRules[i];
           this->mParseHandler->StartRule(rule);
@@ -1118,9 +1094,9 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
   }
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateReplacement(ReplacementNode* node, StringBuilder& builder)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    EvaluateReplacement(ReplacementNode* node, StringBuilder& builder)
 {
   switch (node->mType)
   {
@@ -1138,7 +1114,8 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateRe
     {
       Capture<TokenType>* capture = captures[i];
       if (capture != nullptr)
-        builder.Append(this->mStream->GetText(capture->mStartInclusive, capture->mEndExclusive));
+        builder.Append(this->mStream->GetText(capture->mStartInclusive,
+                                              capture->mEndExclusive));
 
       if (node->mRhs != nullptr && i != lastIndex)
         this->EvaluateReplacement(node->mRhs, builder);
@@ -1151,7 +1128,8 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateRe
     Array<Capture<TokenType>*> captures;
     this->EvaluateCapture(node->mCaptureReference, captures);
 
-    CaptureVariable<TokenType>& variable = this->mCaptureVariableStack.PushBack();
+    CaptureVariable<TokenType>& variable =
+        this->mCaptureVariableStack.PushBack();
 
     for (size_t i = 0; i < captures.Size(); ++i)
     {
@@ -1176,9 +1154,10 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateRe
   }
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCapture(CaptureExpressionNode* node, Array<Capture<TokenType>*>& capturesOut)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    EvaluateCapture(CaptureExpressionNode* node,
+                    Array<Capture<TokenType>*>& capturesOut)
 {
   switch (node->mType)
   {
@@ -1188,7 +1167,8 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCa
       break;
 
     Capture<TokenType>* parent = this->mCaptureStack.Back();
-    Array<Capture<TokenType>*>& captures = parent->mNestedCapturesByName[node->mName];
+    Array<Capture<TokenType>*>& captures =
+        parent->mNestedCapturesByName[node->mName];
     if (captures.Empty() == false)
     {
       capturesOut.Append(captures.All());
@@ -1213,9 +1193,10 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCa
     Array<Capture<TokenType>*> captures;
     this->EvaluateCapture(node->mLhs, captures);
 
-    forRange (Capture<TokenType>* capture, captures.All())
+    forRange(Capture<TokenType> * capture, captures.All())
     {
-      Array<Capture<TokenType>*>& nextedCaptures = capture->mNestedCapturesByName[node->mName];
+      Array<Capture<TokenType>*>& nextedCaptures =
+          capture->mNestedCapturesByName[node->mName];
       capturesOut.Append(nextedCaptures.All());
     }
     break;
@@ -1234,7 +1215,8 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCa
     if (endIndexInclusive < 0)
       endIndexInclusive += captures.Size();
 
-    // The index could still be out of bounds (more negative than the size, or greater)
+    // The index could still be out of bounds (more negative than the size, or
+    // greater)
     for (int i = startIndexInclusive; i <= endIndexInclusive; ++i)
     {
       if (i >= 0 && i < (int)capturesOut.Size())
@@ -1276,23 +1258,23 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCa
   }
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::ShouldInvokeParseHandler()
+bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    ShouldInvokeParseHandler()
 {
   return this->mParseHandler && this->IsInReplacement() == false;
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::IsInReplacement()
+bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    IsInReplacement()
 {
   return this->mReplacementDepth != 0;
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::SetError(StringParam error)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::SetError(
+    StringParam error)
 {
   if (this->mStatus.Failed() == false)
   {
@@ -1304,30 +1286,31 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::SetError(S
   }
 }
 
-//***************************************************************************
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::SetErrorAndBackout(StringParam error)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::
+    SetErrorAndBackout(StringParam error)
 {
   this->SetError(error);
   this->mBackout = true;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
 TokenRange<ParseHandlerType>::TokenRange() :
-  mSet(nullptr),
-  mHasRunFirstIteration(false)
+    mSet(nullptr),
+    mHasRunFirstIteration(false)
 {
   this->mSet = nullptr;
   this->mParser.mStream = &this->mStream;
   this->mParser.mTokenMode = true;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
-TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set, GrammarRule<Character>& rule, StringParam input, bool debug) :
-  mSet(&set),
-  mHasRunFirstIteration(false)
+TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set,
+                                         GrammarRule<Character>& rule,
+                                         StringParam input,
+                                         bool debug) :
+    mSet(&set),
+    mHasRunFirstIteration(false)
 {
   this->mParser.mDebug = debug;
   this->mParser.mStream = &this->mStream;
@@ -1336,20 +1319,19 @@ TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set, GrammarRule
   this->mStream.mText = input;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
 TokenRange<ParseHandlerType>::TokenRange(const TokenRange& rhs) :
-  mParser(rhs.mParser),
-  mStream(rhs.mStream),
-  mSet(rhs.mSet),
-  mHasRunFirstIteration(rhs.mHasRunFirstIteration)
+    mParser(rhs.mParser),
+    mStream(rhs.mStream),
+    mSet(rhs.mSet),
+    mHasRunFirstIteration(rhs.mHasRunFirstIteration)
 {
   this->mParser.mStream = &this->mStream;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
-TokenRange<ParseHandlerType>& TokenRange<ParseHandlerType>::operator=(const TokenRange& rhs)
+TokenRange<ParseHandlerType>& TokenRange<ParseHandlerType>::
+operator=(const TokenRange& rhs)
 {
   if (&rhs == this)
     return *this;
@@ -1359,7 +1341,6 @@ TokenRange<ParseHandlerType>& TokenRange<ParseHandlerType>::operator=(const Toke
   return *this;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
 Token TokenRange<ParseHandlerType>::Front()
 {
@@ -1367,16 +1348,17 @@ Token TokenRange<ParseHandlerType>::Front()
   token.mStartInclusive = this->mParser.mStartIndex;
   token.mEndExclusive = this->mParser.mAcceptedIndex;
   token.mStream = &this->mStream;
-  token.mString = token.mStream->GetText(token.mStartInclusive, token.mEndExclusive);
+  token.mString =
+      token.mStream->GetText(token.mStartInclusive, token.mEndExclusive);
 
-  GrammarRule<Character>* keywordRule = this->mSet->mKeywords.FindValue(token.mString, nullptr);
+  GrammarRule<Character>* keywordRule =
+      this->mSet->mKeywords.FindValue(token.mString, nullptr);
   if (keywordRule != nullptr)
     token.mRule = keywordRule;
 
   return token;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
 bool TokenRange<ParseHandlerType>::Empty()
 {
@@ -1392,19 +1374,19 @@ bool TokenRange<ParseHandlerType>::Empty()
   return this->mParser.mEnd;
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
 void TokenRange<ParseHandlerType>::PopFront()
 {
   this->mParser.Parse();
 
-  // While we still have a valid range, and we're finding ignorable tokens (or error tokens)
-  // Then skip them by parsing again
-  while (!this->Empty() && (this->mSet->mIgnore.Contains(this->mParser.mAcceptedRule) || this->mParser.mStatus.Failed()))
+  // While we still have a valid range, and we're finding ignorable tokens (or
+  // error tokens) Then skip them by parsing again
+  while (!this->Empty() &&
+         (this->mSet->mIgnore.Contains(this->mParser.mAcceptedRule) ||
+          this->mParser.mStatus.Failed()))
     this->mParser.Parse();
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
 Token TokenStream<ParseHandlerType>::GetToken(size_t index)
 {
@@ -1420,21 +1402,23 @@ Token TokenStream<ParseHandlerType>::GetToken(size_t index)
   return this->mTokens[index];
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
-StringRange TokenStream<ParseHandlerType>::GetText(size_t startInclusive, size_t endExclusive)
+StringRange TokenStream<ParseHandlerType>::GetText(size_t startInclusive,
+                                                   size_t endExclusive)
 {
   Token& start = this->mTokens[startInclusive];
   Token& end = this->mTokens[endExclusive - 1];
 
   String& text = this->mRange.mStream.mText;
 
-  return text.SubStringFromByteIndices(start.mStartInclusive, end.mEndExclusive - start.mStartInclusive);
+  return text.SubStringFromByteIndices(
+      start.mStartInclusive, end.mEndExclusive - start.mStartInclusive);
 }
 
-//***************************************************************************
 template <typename ParseHandlerType>
-void TokenStream<ParseHandlerType>::Replace(StringParam text, size_t startInclusive, size_t endExclusive)
+void TokenStream<ParseHandlerType>::Replace(StringParam text,
+                                            size_t startInclusive,
+                                            size_t endExclusive)
 {
   if (startInclusive == endExclusive)
     return;
@@ -1443,11 +1427,12 @@ void TokenStream<ParseHandlerType>::Replace(StringParam text, size_t startInclus
   size_t endCharExclusive = this->mTokens[endExclusive - 1].mEndExclusive;
 
   this->mRange.mParser.mEnd = false;
-  this->mRange.mParser.ReplaceAndBackup(text, startCharInclusive, endCharExclusive);
+  this->mRange.mParser.ReplaceAndBackup(
+      text, startCharInclusive, endCharExclusive);
   this->mRange.PopFront();
 
-  // Since we're iteratively building this token stream, just remove everything after the start
-  // Getting a token will rebuild the token stream
+  // Since we're iteratively building this token stream, just remove everything
+  // after the start Getting a token will rebuild the token stream
   this->mTokens.Resize(startInclusive);
 }
-}
+} // namespace Zero

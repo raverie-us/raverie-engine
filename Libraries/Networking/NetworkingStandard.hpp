@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean.
-/// Copyright 2016, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Standard Library Dependencies
@@ -49,27 +44,27 @@ public:
 // NetPeer Forward Declarations
 namespace Zero
 {
-  class BitStreamExtended;
-  class EventBundle;
-  class NetHostRecord;
-  class FamilyTree;
-  class NetHost;
-  class NetProperty;
-  class NetPropertyType;
-  class NetPropertyConfig;
-  class NetPropertyConfigManager;
-  class NetPropertyInfo;
-  class NetChannel;
-  class NetChannelType;
-  class NetChannelConfig;
-  class NetChannelConfigManager;
-  class NetDiscoveryInterface;
-  class NetObject;
-  class NetUser;
-  struct PendingNetUser;
-  class NetSpace;
-  class NetPeer;
-}
+class BitStreamExtended;
+class EventBundle;
+class NetHostRecord;
+class FamilyTree;
+class NetHost;
+class NetProperty;
+class NetPropertyType;
+class NetPropertyConfig;
+class NetPropertyConfigManager;
+class NetPropertyInfo;
+class NetChannel;
+class NetChannelType;
+class NetChannelConfig;
+class NetChannelConfigManager;
+class NetDiscoveryInterface;
+class NetObject;
+class NetUser;
+struct PendingNetUser;
+class NetSpace;
+class NetPeer;
+} // namespace Zero
 
 // NetPeer Includes
 #include "BitStreamExtended.hpp"

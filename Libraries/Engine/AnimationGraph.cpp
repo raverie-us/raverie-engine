@@ -1,22 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationGraph.cpp
-/// Implementation of the AnimationGraph component class.
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2011-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------- Animation Graph
 AnimationGraph::DebugPreviewFunction AnimationGraph::mOnPreviewPressed = NULL;
 AnimationGraph::DebugPreviewFunction AnimationGraph::mOnGraphCreated = NULL;
 
-//******************************************************************************
 ZilchDefineType(AnimationGraph, builder, type)
 {
   ZeroBindComponent();
@@ -45,22 +35,19 @@ ZilchDefineType(AnimationGraph, builder, type)
 
   ZeroBindTag(Tags::Core);
 
-  //ZilchBindMethodProperty(PreviewGraph);
+  // ZilchBindMethodProperty(PreviewGraph);
 }
 
-//******************************************************************************
 AnimationGraph::AnimationGraph()
 {
   mFrameId = 0;
 }
 
-//******************************************************************************
 AnimationGraph::~AnimationGraph()
 {
   DeleteObjectsInContainer(mBlendTracks);
 }
 
-//******************************************************************************
 void AnimationGraph::Serialize(Serializer& stream)
 {
   SerializeName(mActive);
@@ -72,15 +59,14 @@ void AnimationGraph::Serialize(Serializer& stream)
   SerializeNameDefault(mDebugPreviewId, (u64)0);
 }
 
-//******************************************************************************
 void AnimationGraph::OnAllObjectsCreated(CogInitializer& initializer)
 {
-  if(Animation* animation = mAnimation)
+  if (Animation* animation = mAnimation)
   {
-    if(animation != AnimationManager::GetDefault())
+    if (animation != AnimationManager::GetDefault())
     {
       // Only add the component if it doesn't already exist
-      if(GetOwner()->has(SimpleAnimation) == NULL)
+      if (GetOwner()->has(SimpleAnimation) == NULL)
       {
         SimpleAnimation* autoPlay = new SimpleAnimation();
         GetOwner()->AddComponent(autoPlay);
@@ -95,18 +81,17 @@ void AnimationGraph::OnAllObjectsCreated(CogInitializer& initializer)
   }
 }
 
-//******************************************************************************
 void AnimationGraph::Initialize(CogInitializer& initializer)
 {
   ConnectThisTo(initializer.mSpace, Events::LogicUpdate, OnUpdate);
 
-  if(mOnGraphCreated && !GetSpace()->IsEditorMode())
+  if (mOnGraphCreated && !GetSpace()->IsEditorMode())
     mOnGraphCreated(this);
 
-  ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
+  ConnectThisTo(
+      MetaDatabase::GetInstance(), Events::MetaModified, OnMetaModified);
 }
 
-//******************************************************************************
 void AnimationGraph::SetDefaults()
 {
   mActive = true;
@@ -115,7 +100,6 @@ void AnimationGraph::SetDefaults()
   mAnimation = AnimationManager::GetDefault();
 }
 
-//******************************************************************************
 void AnimationGraph::Update(float dt)
 {
   if (mActiveNode)
@@ -132,7 +116,7 @@ void AnimationGraph::Update(float dt)
       ApplyFrame(mActiveNode->mFrameData);
 
     // Dispatch all events from the animation graph
-    forRange(AnimationGraphEvent* eventToSend, eventsToSend.All())
+    forRange(AnimationGraphEvent * eventToSend, eventsToSend.All())
     {
       GetOwner()->DispatchEvent(eventToSend->EventId, eventToSend);
       delete eventToSend;
@@ -146,29 +130,27 @@ void AnimationGraph::Update(float dt)
   }
 }
 
-//******************************************************************************
 void AnimationGraph::OnUpdate(UpdateEvent* e)
 {
   // Do nothing if we aren't active
-  if(!mActive)
+  if (!mActive)
     return;
 
   Update(e->Dt);
 }
 
-//******************************************************************************
 void AnimationGraph::ApplyFrame(AnimationFrame& frame)
 {
-  forRange(BlendTrack* blendTrack, mBlendTracks.Values())
+  forRange(BlendTrack * blendTrack, mBlendTracks.Values())
   {
-    ErrorIf(blendTrack->Index  >= frame.Tracks.Size(), "Frame error");
-    if(blendTrack->Index  < frame.Tracks.Size())
+    ErrorIf(blendTrack->Index >= frame.Tracks.Size(), "Frame error");
+    if (blendTrack->Index < frame.Tracks.Size())
     {
-      AnimationFrameData& frameData = frame.Tracks[ blendTrack->Index ];
-      if(frameData.Active)
+      AnimationFrameData& frameData = frame.Tracks[blendTrack->Index];
+      if (frameData.Active)
       {
         Any& newValue = frameData.Value;
-        if(!blendTrack->Object.IsNull() && newValue.IsHoldingValue())
+        if (!blendTrack->Object.IsNull() && newValue.IsHoldingValue())
           blendTrack->Property->SetValue(blendTrack->Object, newValue);
       }
     }
@@ -178,27 +160,24 @@ void AnimationGraph::ApplyFrame(AnimationFrame& frame)
   }
 }
 
-//******************************************************************************
 void AnimationGraph::OnMetaModified(MetaLibraryEvent* e)
 {
   // The blend tracks store pointers to MetaProperties, and must be deleted
   DeleteObjectsInContainer(mBlendTracks);
 
   // Re-link all active animations
-  if(AnimationNode* root = mActiveNode)
+  if (AnimationNode* root = mActiveNode)
     root->ReLinkAnimations();
 }
 
-//******************************************************************************
 void AnimationGraph::SetActive(bool value)
 {
   mActive = value;
 }
 
-//******************************************************************************
 void AnimationGraph::ForceUpdate()
 {
-  if(mActiveNode)
+  if (mActiveNode)
   {
     AnimationFrame frame;
 
@@ -207,12 +186,11 @@ void AnimationGraph::ForceUpdate()
     eventsToSend.Clear();
 
     mActiveNode = mActiveNode->Update(this, 0.0f, mFrameId++, eventsToSend);
-    if(mActiveNode)
+    if (mActiveNode)
       ApplyFrame(mActiveNode->mFrameData);
   }
 }
 
-//******************************************************************************
 void AnimationGraph::SetTimeScale(float scale)
 {
   ReturnIf(scale < 0.0f, , "TimeScale must be positive.");
@@ -220,25 +198,21 @@ void AnimationGraph::SetTimeScale(float scale)
   mTimeScale = scale;
 }
 
-//******************************************************************************
 float AnimationGraph::GetTimeScale()
 {
   return mTimeScale;
 }
 
-//******************************************************************************
 void AnimationGraph::SetActiveNode(AnimationNode* node)
 {
   mActiveNode = node;
 }
 
-//******************************************************************************
 AnimationNode* AnimationGraph::GetActiveNode()
 {
   return mActiveNode;
 }
 
-//******************************************************************************
 // ExamplePath:  /Stomach/Chest/LArm
 // RootPath:     /
 Cog* ResolveObjectPath(Cog* object, Array<String>& cogNames)
@@ -251,7 +225,8 @@ Cog* ResolveObjectPath(Cog* object, Array<String>& cogNames)
     foundObject = object->FindChildByName(name);
 
     // If we failed to find the object then this could be an error
-    // We'll at least attempt to find the next child by name incase name changes occurred
+    // We'll at least attempt to find the next child by name incase name changes
+    // occurred
     if (foundObject == nullptr)
       continue;
 
@@ -261,104 +236,99 @@ Cog* ResolveObjectPath(Cog* object, Array<String>& cogNames)
   return foundObject;
 }
 
-//******************************************************************************
 void AnimationGraph::SetUpPlayData(Animation* animation, PlayData& playData)
 {
   playData.Clear();
   playData.Resize(animation->mNumberOfTracks);
 
-  //Find all objects this track references
-  forRange(ObjectTrack& track, animation->ObjectTracks.All())
+  // Find all objects this track references
+  forRange(ObjectTrack & track, animation->ObjectTracks.All())
   {
     ObjectTrackPlayData& objectData = playData[track.ObjectTrackId];
     Cog* currentObject = objectData.ObjectHandle;
     Cog* object = ResolveObjectPath(mOwner, track.CogNames);
-    if(object)
+    if (object)
     {
       objectData.ObjectHandle = object;
 
-      //Clear All Per instance data
-      //Find all objects for each sub track of each track
+      // Clear All Per instance data
+      // Find all objects for each sub track of each track
       objectData.mSubTrackPlayData.Clear();
 
-      forRange(PropertyTrack& subTrack, track.PropertyTracks.All())
+      forRange(PropertyTrack & subTrack, track.PropertyTracks.All())
       {
-        PropertyTrackPlayData& subTrackData = objectData.mSubTrackPlayData.PushBack();
+        PropertyTrackPlayData& subTrackData =
+            objectData.mSubTrackPlayData.PushBack();
         subTrackData.mComponent = NULL;
         subTrackData.mKeyframeIndex = 0;
-        subTrack.LinkInstance(objectData.mSubTrackPlayData.Back(), mBlendTracks, track.GetFullPath(), object);
+        subTrack.LinkInstance(objectData.mSubTrackPlayData.Back(),
+                              mBlendTracks,
+                              track.GetFullPath(),
+                              object);
       }
-
     }
     else
     {
-      DebugPrint("Failed to find object in animation track. %s\n", track.GetFullPath().c_str());
+      DebugPrint("Failed to find object in animation track. %s\n",
+                 track.GetFullPath().c_str());
     }
   }
 }
 
-//******************************************************************************
 void AnimationGraph::PreviewGraph()
 {
-  if(mOnPreviewPressed)
+  if (mOnPreviewPressed)
     mOnPreviewPressed(this);
 }
 
-//******************************************************************************
 void AnimationGraph::SetPreviewMode()
 {
   ConnectThisTo(GetSpace(), Events::PreviewUpdate, OnUpdate);
 }
 
-//******************************************************************************
 bool AnimationGraph::IsPlayingInGraph(Animation* animation)
 {
-  if(mActiveNode)
+  if (mActiveNode)
     return mActiveNode->IsPlayingInNode(animation->Name);
   return false;
 }
 
-//******************************************************************************
 void AnimationGraph::PrintGraph()
 {
-  if(mActiveNode)
+  if (mActiveNode)
     mActiveNode->PrintNode(0);
 }
 
-//******************************************************************************
 BasicAnimation* AnimationGraph::CreateBasicNode(Animation* animation,
-                                          AnimationPlayMode::Enum mode)
+                                                AnimationPlayMode::Enum mode)
 {
   if (animation == NULL)
-    DoNotifyException("Null Animation", "Trying to create an animation node but the animation resource is null.");
+    DoNotifyException("Null Animation",
+                      "Trying to create an animation node but the animation "
+                      "resource is null.");
   return new BasicAnimation(this, animation, 0.0f, mode);
 }
 
-//******************************************************************************
 DirectBlend* AnimationGraph::CreateDirectBlendNode()
 {
   return new DirectBlend();
 }
 
-//******************************************************************************
 CrossBlend* AnimationGraph::CreateCrossBlendNode()
 {
   return new CrossBlend();
 }
 
-//******************************************************************************
 SelectiveNode* AnimationGraph::CreateSelectiveNode()
 {
   return new SelectiveNode();
 }
 
-//******************************************************************************
 ChainNode* AnimationGraph::CreateChainNode()
 {
   return new ChainNode();
 }
 
-//------------------------------------------------------------- Simple Animation
 ZilchDefineType(SimpleAnimation, builder, type)
 {
   ZeroBindComponent();
@@ -375,52 +345,46 @@ ZilchDefineType(SimpleAnimation, builder, type)
   ZilchBindMethod(ChainAnimation);
 }
 
-//******************************************************************************
 void SimpleAnimation::Serialize(Serializer& stream)
 {
   SerializeResourceName(mAnimation, AnimationManager);
-  SerializeEnumNameDefault(AnimationPlayMode, mPlayMode, AnimationPlayMode::Loop);
+  SerializeEnumNameDefault(
+      AnimationPlayMode, mPlayMode, AnimationPlayMode::Loop);
 }
 
-//******************************************************************************
 void SimpleAnimation::Initialize(CogInitializer& initializer)
 {
   mAnimGraph = GetOwner()->has(AnimationGraph);
   ReturnIf(mAnimGraph == NULL, , "Missing dependency.");
 
   // Play the animation
-  if(mAnimation)
+  if (mAnimation)
     PlaySingle(mAnimation, mPlayMode);
 }
 
-//******************************************************************************
 Animation* SimpleAnimation::GetAnimation()
 {
   return mAnimation;
 }
 
-//******************************************************************************
 void SimpleAnimation::SetAnimation(Animation* animation)
 {
   PlaySingle(animation, mPlayMode);
   mAnimation = animation;
 }
 
-//******************************************************************************
 AnimationPlayMode::Enum SimpleAnimation::GetPlayMode()
 {
   return mPlayMode;
 }
 
-//******************************************************************************
 void SimpleAnimation::SetPlayMode(AnimationPlayMode::Enum mode)
 {
   mPlayMode = mode;
 }
 
-//******************************************************************************
 AnimationNode* SimpleAnimation::PlaySingle(Animation* animation,
-                                       AnimationPlayMode::Enum playMode)
+                                           AnimationPlayMode::Enum playMode)
 {
   ReturnIf(animation == NULL, NULL, "Invalid animation given.");
   AnimationNode* node = BuildBasic(mAnimGraph, animation, 0, playMode);
@@ -428,12 +392,13 @@ AnimationNode* SimpleAnimation::PlaySingle(Animation* animation,
   return node;
 }
 
-//******************************************************************************
-AnimationNode* SimpleAnimation::DirectBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::DirectBlend(Animation* animation,
+                                            float transitionTime,
+                                            AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
-  if(activeNode && animation)
+  if (activeNode && animation)
   {
     AnimationNode* end = BuildBasic(mAnimGraph, animation, 0.0f, playMode);
     activeNode = BuildDirectBlend(mAnimGraph, activeNode, end, transitionTime);
@@ -444,12 +409,13 @@ AnimationNode* SimpleAnimation::DirectBlend(Animation* animation, float transiti
   return NULL;
 }
 
-//******************************************************************************
-AnimationNode* SimpleAnimation::CrossBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::CrossBlend(Animation* animation,
+                                           float transitionTime,
+                                           AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
-  if(activeNode && animation)
+  if (activeNode && animation)
   {
     AnimationNode* end = BuildBasic(mAnimGraph, animation, 0.0f, playMode);
     activeNode = BuildCrossBlend(mAnimGraph, activeNode, end, transitionTime);
@@ -460,16 +426,18 @@ AnimationNode* SimpleAnimation::CrossBlend(Animation* animation, float transitio
   return NULL;
 }
 
-//******************************************************************************
-AnimationNode* SimpleAnimation::PlayIsolatedAnimation(Animation* animation, Cog* rootBone, AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::PlayIsolatedAnimation(
+    Animation* animation, Cog* rootBone, AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
-  if(activeNode && animation)
+  if (activeNode && animation)
   {
     AnimationNode* isolated = BuildBasic(mAnimGraph, animation, 0.0f, playMode);
-    AnimationNode* blendingTo = BuildDirectBlend(mAnimGraph, activeNode->Clone(), isolated, 0.15f);
-    activeNode = BuildSelectiveNode(mAnimGraph, activeNode, blendingTo, rootBone);
+    AnimationNode* blendingTo =
+        BuildDirectBlend(mAnimGraph, activeNode->Clone(), isolated, 0.15f);
+    activeNode =
+        BuildSelectiveNode(mAnimGraph, activeNode, blendingTo, rootBone);
     mAnimGraph->SetActiveNode(activeNode);
     return activeNode;
   }
@@ -477,12 +445,12 @@ AnimationNode* SimpleAnimation::PlayIsolatedAnimation(Animation* animation, Cog*
   return NULL;
 }
 
-//******************************************************************************
-AnimationNode* SimpleAnimation::ChainAnimation(Animation* animation, AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::ChainAnimation(Animation* animation,
+                                               AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
-  if(activeNode && animation)
+  if (activeNode && animation)
   {
     AnimationNode* b = BuildBasic(mAnimGraph, animation, 0.0f, playMode);
     activeNode = BuildChainNode(mAnimGraph, activeNode, b);
@@ -493,4 +461,4 @@ AnimationNode* SimpleAnimation::ChainAnimation(Animation* animation, AnimationPl
   return NULL;
 }
 
-}//namespace Zero
+} // namespace Zero

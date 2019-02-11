@@ -1,16 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ModalProgess
-ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(Composite* parent, StringParam title, BackgroundTask* progressListener) : ModalStrip(parent)
+ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(
+    Composite* parent, StringParam title, BackgroundTask* progressListener) :
+    ModalStrip(parent)
 {
   mCloseOnComplete = true;
   SetStripHeight(ModalSizeMode::Fixed, Pixels(84));
@@ -37,7 +33,8 @@ ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(Composite* parent, 
 
   // Spacer
   new Spacer(mStripArea);
-  ConnectThisTo(progressListener, Events::BackgroundTaskUpdated, OnProgressUpdated);
+  ConnectThisTo(
+      progressListener, Events::BackgroundTaskUpdated, OnProgressUpdated);
   ConnectThisTo(progressListener, Events::BackgroundTaskCompleted, OnTaskEnded);
   ConnectThisTo(progressListener, Events::BackgroundTaskFailed, OnTaskEnded);
 }
@@ -49,15 +46,15 @@ void ModalBackgroundTaskProgessBar::OnProgressUpdated(BackgroundTaskEvent* e)
 
 void ModalBackgroundTaskProgessBar::OnTaskEnded(BackgroundTaskEvent* e)
 {
-  if(mCloseOnComplete)
+  if (mCloseOnComplete)
     Close();
 }
 
 void ModalBackgroundTaskProgessBar::UpdateProgress(float percentComplete)
 {
   mProgressBar->SetPercentage(percentComplete);
-  if(percentComplete >= 1.0f && mCloseOnComplete)
+  if (percentComplete >= 1.0f && mCloseOnComplete)
     Close();
 }
 
-}//namespace Zero
+} // namespace Zero

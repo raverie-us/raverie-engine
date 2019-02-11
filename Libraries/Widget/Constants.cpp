@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Constants.cpp
-/// Definition of the Widget Ui Constants.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -26,4 +18,4 @@ const String cHighlight = "Highlight";
 const String cDragBox = "DragBox";
 const String Divider = "Divider";
 const String DefaultTextStyle = "Text";
-}
+} // namespace Zero

@@ -1,20 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                   Message                                       //
-//---------------------------------------------------------------------------------//
+//                                   Message //
 
-Message::Message()
-  : mType(0),
+Message::Message() :
+    mType(0),
     mData(),
     mChannelId(0),
     mSequenceId(0),
@@ -25,8 +18,8 @@ Message::Message()
 {
 }
 
-Message::Message(MessageType type, const BitStream& data)
-  : mType(type),
+Message::Message(MessageType type, const BitStream& data) :
+    mType(type),
     mData(data),
     mChannelId(0),
     mSequenceId(0),
@@ -36,8 +29,8 @@ Message::Message(MessageType type, const BitStream& data)
     mIsFinalFragment(false)
 {
 }
-Message::Message(MessageType type, MoveReference<BitStream> data)
-  : mType(type),
+Message::Message(MessageType type, MoveReference<BitStream> data) :
+    mType(type),
     mData(ZeroMove(data)),
     mChannelId(0),
     mSequenceId(0),
@@ -48,8 +41,8 @@ Message::Message(MessageType type, MoveReference<BitStream> data)
 {
 }
 
-Message::Message(MessageType type)
-  : mType(type),
+Message::Message(MessageType type) :
+    mType(type),
     mData(),
     mChannelId(0),
     mSequenceId(0),
@@ -60,8 +53,8 @@ Message::Message(MessageType type)
 {
 }
 
-Message::Message(const BitStream& data)
-  : mType(0),
+Message::Message(const BitStream& data) :
+    mType(0),
     mData(data),
     mChannelId(0),
     mSequenceId(0),
@@ -71,8 +64,8 @@ Message::Message(const BitStream& data)
     mIsFinalFragment(false)
 {
 }
-Message::Message(MoveReference<BitStream> data)
-  : mType(0),
+Message::Message(MoveReference<BitStream> data) :
+    mType(0),
     mData(ZeroMove(data)),
     mChannelId(0),
     mSequenceId(0),
@@ -83,8 +76,8 @@ Message::Message(MoveReference<BitStream> data)
 {
 }
 
-Message::Message(const Message& rhs, bool doNotCopyData)
-  : mType(rhs.mType),
+Message::Message(const Message& rhs, bool doNotCopyData) :
+    mType(rhs.mType),
     mData(),
     mChannelId(rhs.mChannelId),
     mSequenceId(rhs.mSequenceId),
@@ -95,8 +88,8 @@ Message::Message(const Message& rhs, bool doNotCopyData)
 {
   UnusedParameter(doNotCopyData);
 }
-Message::Message(const Message& rhs)
-  : mType(rhs.mType),
+Message::Message(const Message& rhs) :
+    mType(rhs.mType),
     mData(rhs.mData),
     mChannelId(rhs.mChannelId),
     mSequenceId(rhs.mSequenceId),
@@ -107,8 +100,8 @@ Message::Message(const Message& rhs)
 {
 }
 
-Message::Message(MoveReference<Message> rhs)
-  : mType(rhs->mType),
+Message::Message(MoveReference<Message> rhs) :
+    mType(rhs->mType),
     mData(ZeroMove(rhs->mData)),
     mChannelId(rhs->mChannelId),
     mSequenceId(rhs->mSequenceId),
@@ -119,54 +112,54 @@ Message::Message(MoveReference<Message> rhs)
 {
 }
 
-Message& Message::operator =(const Message& rhs)
+Message& Message::operator=(const Message& rhs)
 {
-  mType            = rhs.mType;
-  mData            = rhs.mData;
-  mChannelId       = rhs.mChannelId;
-  mSequenceId      = rhs.mSequenceId;
-  mTimestamp       = rhs.mTimestamp;
-  mIsFragment      = rhs.mIsFragment;
-  mFragmentIndex   = rhs.mFragmentIndex;
+  mType = rhs.mType;
+  mData = rhs.mData;
+  mChannelId = rhs.mChannelId;
+  mSequenceId = rhs.mSequenceId;
+  mTimestamp = rhs.mTimestamp;
+  mIsFragment = rhs.mIsFragment;
+  mFragmentIndex = rhs.mFragmentIndex;
   mIsFinalFragment = rhs.mIsFinalFragment;
 
   return *this;
 }
-Message& Message::operator =(MoveReference<Message> rhs)
+Message& Message::operator=(MoveReference<Message> rhs)
 {
-  mType            = rhs->mType;
-  mData            = ZeroMove(rhs->mData);
-  mChannelId       = rhs->mChannelId;
-  mSequenceId      = rhs->mSequenceId;
-  mTimestamp       = rhs->mTimestamp;
-  mIsFragment      = rhs->mIsFragment;
-  mFragmentIndex   = rhs->mFragmentIndex;
+  mType = rhs->mType;
+  mData = ZeroMove(rhs->mData);
+  mChannelId = rhs->mChannelId;
+  mSequenceId = rhs->mSequenceId;
+  mTimestamp = rhs->mTimestamp;
+  mIsFragment = rhs->mIsFragment;
+  mFragmentIndex = rhs->mFragmentIndex;
   mIsFinalFragment = rhs->mIsFinalFragment;
 
   return *this;
 }
 
-bool Message::operator ==(const Message& rhs) const
+bool Message::operator==(const Message& rhs) const
 {
   return GetSequenceId() == rhs.GetSequenceId();
 }
-bool Message::operator !=(const Message& rhs) const
+bool Message::operator!=(const Message& rhs) const
 {
   return GetSequenceId() != rhs.GetSequenceId();
 }
-bool Message::operator  <(const Message& rhs) const
+bool Message::operator<(const Message& rhs) const
 {
   return GetSequenceId() < rhs.GetSequenceId();
 }
-bool Message::operator ==(MessageSequenceId rhs) const
+bool Message::operator==(MessageSequenceId rhs) const
 {
   return GetSequenceId() == rhs;
 }
-bool Message::operator !=(MessageSequenceId rhs) const
+bool Message::operator!=(MessageSequenceId rhs) const
 {
   return GetSequenceId() != rhs;
 }
-bool Message::operator  <(MessageSequenceId rhs) const
+bool Message::operator<(MessageSequenceId rhs) const
 {
   return GetSequenceId() < rhs;
 }
@@ -240,20 +233,20 @@ Bits Message::GetHeaderBits(bool asFragment) const
   Bits result = MinMessageHeaderBits;
 
   // Timestamped?
-  if(HasTimestamp())
+  if (HasTimestamp())
     result += MessageT;
 
   // Channeled?
-  if(IsChanneled())
+  if (IsChanneled())
     result += MessageC;
 
   // Data?
-  if(HasData())
+  if (HasData())
   {
     result += MessageD;
 
     // Fragmented?
-    if(IsFragment() || asFragment)
+    if (IsFragment() || asFragment)
       result += MessageF;
   }
 
@@ -288,10 +281,12 @@ bool Message::IsFinalFragment() const
 }
 
 template <>
-Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream, Message& message)
+Bits Serialize<Message>(SerializeDirection::Enum direction,
+                        BitStream& bitStream,
+                        Message& message)
 {
   // Write operation?
-  if(direction == SerializeDirection::Write)
+  if (direction == SerializeDirection::Write)
   {
 #if ZeroDebug
     // Get predicted write size
@@ -305,13 +300,15 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
     //
 
     // Write message type
-    Bits bits1 = bitStream.WriteQuantized(message.mType, MessageTypeMin, MessageTypeMax);
+    Bits bits1 =
+        bitStream.WriteQuantized(message.mType, MessageTypeMin, MessageTypeMax);
 
     // Write message sequence ID
     Bits bits2 = bitStream.Write(message.mSequenceId);
 
     // Write message data size
-    Bits bits3 = bitStream.WriteQuantized(message.mData.GetBitsWritten(), MinMessageDataBits, MaxMessageDataBits);
+    Bits bits3 = bitStream.WriteQuantized(
+        message.mData.GetBitsWritten(), MinMessageDataBits, MaxMessageDataBits);
 
     // Write 'Has timestamp?' flag
     bool hasTimestamp = message.HasTimestamp();
@@ -319,10 +316,11 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
 
     // Timestamped?
     Bits bits5 = 0;
-    if(hasTimestamp)
+    if (hasTimestamp)
     {
       // Write timestamp
-      bits5 = bitStream.WriteQuantized(message.mTimestamp, MessageTimestampMin, MessageTimestampMax);
+      bits5 = bitStream.WriteQuantized(
+          message.mTimestamp, MessageTimestampMin, MessageTimestampMax);
     }
 
     // Write 'Is channeled?' flag
@@ -331,7 +329,7 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
 
     // Channeled?
     Bits bits7 = 0;
-    if(isChanneled)
+    if (isChanneled)
     {
       // Write channel ID
       bits7 = bitStream.Write(message.mChannelId);
@@ -342,13 +340,13 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
     Bits bits9 = 0;
     Bits bits10 = 0;
     Bits bitsAppended = 0;
-    if(message.HasData())
+    if (message.HasData())
     {
       // Write 'Is fragment?' flag
       bits8 = bitStream.Write(message.mIsFragment);
 
       // Fragmented?
-      if(message.mIsFragment)
+      if (message.mIsFragment)
       {
         // Write FragmentIndex
         bits9 = bitStream.Write(message.mFragmentIndex);
@@ -383,24 +381,34 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
     //
 
     // Read message type
-    ReturnIf(!bitStream.ReadQuantized(message.mType, MessageTypeMin, MessageTypeMax), 0, "");
+    ReturnIf(
+        !bitStream.ReadQuantized(message.mType, MessageTypeMin, MessageTypeMax),
+        0,
+        "");
 
     // Read message sequence ID
     ReturnIf(!bitStream.Read(message.mSequenceId), 0, "");
 
     // Read message data size
     Bits dataSize = 0;
-    ReturnIf(!bitStream.ReadQuantized(dataSize, MinMessageDataBits, MaxMessageDataBits), 0, "");
+    ReturnIf(!bitStream.ReadQuantized(
+                 dataSize, MinMessageDataBits, MaxMessageDataBits),
+             0,
+             "");
 
     // Read 'Has timestamp?' flag
     bool hasTimestamp;
     ReturnIf(!bitStream.Read(hasTimestamp), 0, "");
 
     // Timestamped?
-    if(hasTimestamp)
+    if (hasTimestamp)
     {
       // Read timestamp
-      ReturnIf(!bitStream.ReadQuantized(message.mTimestamp, MessageTimestampMin, MessageTimestampMax), 0, "");
+      ReturnIf(!bitStream.ReadQuantized(message.mTimestamp,
+                                        MessageTimestampMin,
+                                        MessageTimestampMax),
+               0,
+               "");
     }
 
     // Read 'Is channeled?' flag
@@ -408,20 +416,20 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
     ReturnIf(!bitStream.Read(isChanneled), 0, "");
 
     // Channeled?
-    if(isChanneled)
+    if (isChanneled)
     {
       // Read channel ID
       ReturnIf(!bitStream.Read(message.mChannelId), 0, "");
     }
 
     // Has Data?
-    if(dataSize)
+    if (dataSize)
     {
       // Read 'Is fragment?' flag
       ReturnIf(!bitStream.Read(message.mIsFragment), 0, "");
 
       // Fragmented?
-      if(message.mIsFragment)
+      if (message.mIsFragment)
       {
         // Read FragmentIndex
         ReturnIf(!bitStream.Read(message.mFragmentIndex), 0, "");
@@ -442,12 +450,10 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
   }
 }
 
-//---------------------------------------------------------------------------------//
-//                                 OutMessage                                      //
-//---------------------------------------------------------------------------------//
+//                                 OutMessage //
 
-OutMessage::OutMessage()
-  : Message(),
+OutMessage::OutMessage() :
+    Message(),
     mReliable(false),
     mTransferMode(TransferMode::Immediate),
     mReceiptID(0),
@@ -456,9 +462,16 @@ OutMessage::OutMessage()
     mCreationTime(0)
 {
 }
-OutMessage::OutMessage(MoveReference<Message> message, bool reliable, MessageChannelId channelId, MessageSequenceId sequenceId, TransferMode::Enum transferMode,
-                       MessageReceiptId receiptId, MessagePriority priority, TimeMs lifetime, TimeMs creationTime)
-  : Message(ZeroMove(message)),
+OutMessage::OutMessage(MoveReference<Message> message,
+                       bool reliable,
+                       MessageChannelId channelId,
+                       MessageSequenceId sequenceId,
+                       TransferMode::Enum transferMode,
+                       MessageReceiptId receiptId,
+                       MessagePriority priority,
+                       TimeMs lifetime,
+                       TimeMs creationTime) :
+    Message(ZeroMove(message)),
     mReliable(reliable),
     mTransferMode(transferMode),
     mReceiptID(receiptId),
@@ -466,12 +479,13 @@ OutMessage::OutMessage(MoveReference<Message> message, bool reliable, MessageCha
     mLifetime(lifetime),
     mCreationTime(creationTime)
 {
-  mChannelId  = channelId;
+  mChannelId = channelId;
   mSequenceId = sequenceId;
 }
 
-OutMessage::OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMessageInstead)
-  : Message(ZeroMove(takeThisMessageInstead)),
+OutMessage::OutMessage(const OutMessage& rhs,
+                       MoveReference<Message> takeThisMessageInstead) :
+    Message(ZeroMove(takeThisMessageInstead)),
     mReliable(rhs.mReliable),
     mTransferMode(rhs.mTransferMode),
     mReceiptID(rhs.mReceiptID),
@@ -480,8 +494,8 @@ OutMessage::OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMes
     mCreationTime(rhs.mCreationTime)
 {
 }
-OutMessage::OutMessage(const OutMessage& rhs)
-  : Message(rhs),
+OutMessage::OutMessage(const OutMessage& rhs) :
+    Message(rhs),
     mReliable(rhs.mReliable),
     mTransferMode(rhs.mTransferMode),
     mReceiptID(rhs.mReceiptID),
@@ -491,8 +505,8 @@ OutMessage::OutMessage(const OutMessage& rhs)
 {
 }
 
-OutMessage::OutMessage(MoveReference<OutMessage> rhs)
-  : Message(ZeroMove(static_cast<Message&>(*rhs))),
+OutMessage::OutMessage(MoveReference<OutMessage> rhs) :
+    Message(ZeroMove(static_cast<Message&>(*rhs))),
     mReliable(rhs->mReliable),
     mTransferMode(rhs->mTransferMode),
     mReceiptID(rhs->mReceiptID),
@@ -502,31 +516,32 @@ OutMessage::OutMessage(MoveReference<OutMessage> rhs)
 {
 }
 
-OutMessage& OutMessage::operator =(MoveReference<OutMessage> rhs)
+OutMessage& OutMessage::operator=(MoveReference<OutMessage> rhs)
 {
   Message::operator=(ZeroMove(static_cast<Message&>(*rhs)));
-  mReliable        = rhs->mReliable;
-  mTransferMode    = rhs->mTransferMode;
-  mReceiptID       = rhs->mReceiptID;
-  mPriority        = rhs->mPriority;
-  mLifetime        = rhs->mLifetime;
-  mCreationTime    = rhs->mCreationTime;
+  mReliable = rhs->mReliable;
+  mTransferMode = rhs->mTransferMode;
+  mReceiptID = rhs->mReceiptID;
+  mPriority = rhs->mPriority;
+  mLifetime = rhs->mLifetime;
+  mCreationTime = rhs->mCreationTime;
 
   return *this;
 }
 
-bool OutMessage::operator <(const OutMessage& rhs) const
+bool OutMessage::operator<(const OutMessage& rhs) const
 {
   //
   // Sorted by message type category (protocol > custom), then priority.
-  // Relative chronological ordering is expected to be maintained implicitly by the container.
+  // Relative chronological ordering is expected to be maintained implicitly by
+  // the container.
   //
 
   // Message type category: protocol vs custom?
-  if(!IsCustomType() && rhs.IsCustomType())
+  if (!IsCustomType() && rhs.IsCustomType())
     return false;
   // Message type category: custom vs protocol?
-  else if(IsCustomType() && !rhs.IsCustomType())
+  else if (IsCustomType() && !rhs.IsCustomType())
     return true;
   // Message type category: same? Compare priority
   else
@@ -575,17 +590,17 @@ TimeMs OutMessage::GetLifetime() const
 OutMessage OutMessage::TakeFragment(Bits dataSize)
 {
   // Not already a fragment?
-  if(!mIsFragment)
+  if (!mIsFragment)
   {
     // Make it a fragment
-    mReliable   = true;
+    mReliable = true;
     mIsFragment = true;
   }
 
   //
   // Extract desired message fragment
   //
-  
+
   // Copy this message without it's data
   Message fragment(*this, true);
 
@@ -602,50 +617,49 @@ OutMessage OutMessage::TakeFragment(Bits dataSize)
   return OutMessage(*this, ZeroMove(fragment));
 }
 
-//---------------------------------------------------------------------------------//
-//                              FragmentedMessage                                  //
-//---------------------------------------------------------------------------------//
+//                              FragmentedMessage //
 
-FragmentedMessage::FragmentedMessage()
-  : mFragments(),
-    mFinalFragmentIndex(0)
+FragmentedMessage::FragmentedMessage() : mFragments(), mFinalFragmentIndex(0)
 {
 }
-FragmentedMessage::FragmentedMessage(MoveReference<Message> fragment)
-  : mFragments(),
+FragmentedMessage::FragmentedMessage(MoveReference<Message> fragment) :
+    mFragments(),
     mFinalFragmentIndex(0)
 {
   // Add first fragment
   AddInternal(ZeroMove(fragment));
 }
 
-FragmentedMessage::FragmentedMessage(MoveReference<FragmentedMessage> rhs)
-  : mFragments(ZeroMove(rhs->mFragments)),
+FragmentedMessage::FragmentedMessage(MoveReference<FragmentedMessage> rhs) :
+    mFragments(ZeroMove(rhs->mFragments)),
     mFinalFragmentIndex(rhs->mFinalFragmentIndex)
 {
 }
 
-bool FragmentedMessage::operator ==(const FragmentedMessage& rhs) const
+bool FragmentedMessage::operator==(const FragmentedMessage& rhs) const
 {
-  return mFragments.Front().GetSequenceId() == rhs.mFragments.Front().GetSequenceId();
+  return mFragments.Front().GetSequenceId() ==
+         rhs.mFragments.Front().GetSequenceId();
 }
-bool FragmentedMessage::operator !=(const FragmentedMessage& rhs) const
+bool FragmentedMessage::operator!=(const FragmentedMessage& rhs) const
 {
-  return mFragments.Front().GetSequenceId() != rhs.mFragments.Front().GetSequenceId();
+  return mFragments.Front().GetSequenceId() !=
+         rhs.mFragments.Front().GetSequenceId();
 }
-bool FragmentedMessage::operator  <(const FragmentedMessage& rhs) const
+bool FragmentedMessage::operator<(const FragmentedMessage& rhs) const
 {
-  return mFragments.Front().GetSequenceId() < rhs.mFragments.Front().GetSequenceId();
+  return mFragments.Front().GetSequenceId() <
+         rhs.mFragments.Front().GetSequenceId();
 }
-bool FragmentedMessage::operator ==(MessageSequenceId rhs) const
+bool FragmentedMessage::operator==(MessageSequenceId rhs) const
 {
   return mFragments.Front().GetSequenceId() == rhs;
 }
-bool FragmentedMessage::operator !=(MessageSequenceId rhs) const
+bool FragmentedMessage::operator!=(MessageSequenceId rhs) const
 {
   return mFragments.Front().GetSequenceId() != rhs;
 }
-bool FragmentedMessage::operator  <(MessageSequenceId rhs) const
+bool FragmentedMessage::operator<(MessageSequenceId rhs) const
 {
   return mFragments.Front().GetSequenceId() < rhs;
 }
@@ -664,11 +678,15 @@ void FragmentedMessage::Add(MoveReference<Message> fragment)
   //     Should be a fragment,
   // and Whole Message SequenceNumber should match,
   // and Should not be a duplicate fragment,
-  // and If we have a final fragment, this fragment neither claims to be the final fragment and it's index is less than the final fragment index.
-  Assert(fragment->IsFragment()
-      && fragment->GetSequenceId() == mFragments.Front().GetSequenceId()
-      && !IsDuplicate(*fragment)
-      && (mFinalFragmentIndex != 0 ? (!fragment->IsFinalFragment() && fragment->GetFragmentIndex() < mFinalFragmentIndex) : true));
+  // and If we have a final fragment, this fragment neither claims to be the
+  // final fragment and it's index is less than the final fragment index.
+  Assert(fragment->IsFragment() &&
+         fragment->GetSequenceId() == mFragments.Front().GetSequenceId() &&
+         !IsDuplicate(*fragment) &&
+         (mFinalFragmentIndex != 0
+              ? (!fragment->IsFinalFragment() &&
+                 fragment->GetFragmentIndex() < mFinalFragmentIndex)
+              : true));
 
   // Add fragment
   AddInternal(ZeroMove(fragment));
@@ -676,8 +694,8 @@ void FragmentedMessage::Add(MoveReference<Message> fragment)
 
 bool FragmentedMessage::IsComplete() const
 {
-  return (mFinalFragmentIndex != 0
-      && (mFragments.Size() == (mFinalFragmentIndex + 1).value()));
+  return (mFinalFragmentIndex != 0 &&
+          (mFragments.Size() == (mFinalFragmentIndex + 1).value()));
 }
 
 Message FragmentedMessage::Reconstruct()
@@ -688,7 +706,9 @@ Message FragmentedMessage::Reconstruct()
   Message result(mFragments.Front(), true);
 
   // Append all fragment data in order
-  for(FragmentSet::iterator iter = mFragments.Begin(); iter != mFragments.End(); ++iter)
+  for (FragmentSet::iterator iter = mFragments.Begin();
+       iter != mFragments.End();
+       ++iter)
   {
     Bits bitsWritten = result.mData.AppendAll(iter->mData);
     ErrorIf(bitsWritten != iter->mData.GetBitsWritten());
@@ -698,8 +718,8 @@ Message FragmentedMessage::Reconstruct()
   mFragments.Clear();
 
   // Clear any fragment information on the reconstructed message
-  result.mIsFragment      = false;
-  result.mFragmentIndex   = 0;
+  result.mIsFragment = false;
+  result.mFragmentIndex = 0;
   result.mIsFinalFragment = false;
 
   // Return reconstructed message
@@ -709,7 +729,7 @@ Message FragmentedMessage::Reconstruct()
 void FragmentedMessage::AddInternal(MoveReference<Message> fragment)
 {
   // Add fragment at it's sort (fragment index) position
-  if(fragment->IsFinalFragment())
+  if (fragment->IsFinalFragment())
     mFinalFragmentIndex = fragment->GetFragmentIndex();
   mFragments.Insert(ZeroMove(fragment));
 }

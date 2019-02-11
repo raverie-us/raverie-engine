@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ListControls.hpp
-/// Declaration of the basic ListBox and ComboBox widget data controls.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,16 +8,15 @@ class KeyboardEvent;
 
 namespace Events
 {
-  DeclareEvent(ItemSelected);
-  DeclareEvent(ItemDoubleClicked);
-  DeclareEvent(ListBoxOpened);
-  DeclareEvent(ListEntriesChanged);
-}
+DeclareEvent(ItemSelected);
+DeclareEvent(ItemDoubleClicked);
+DeclareEvent(ListBoxOpened);
+DeclareEvent(ListEntriesChanged);
+} // namespace Events
 
 const int cNoItemSelected = -1;
 
-//--------------------------------------------------------------------- List Box
-///List box widget class.
+/// List box widget class.
 class ListBox : public Composite
 {
 public:
@@ -39,10 +30,16 @@ public:
   Vec2 GetMinSize() override;
 
   void SetSelectedItem(int index, bool message);
-  int GetSelectedItem(){return mSelectedItem;}
+  int GetSelectedItem()
+  {
+    return mSelectedItem;
+  }
   Vec2 GetSizeWithItems(float width, int itemCount);
 
-  uint GetCount(){return mDataSource->GetCount();}
+  uint GetCount()
+  {
+    return mDataSource->GetCount();
+  }
   void HighlightItem(int index);
   void SetDataSource(ListSource* source);
   void EnableDropShadow();
@@ -56,7 +53,7 @@ public:
   void SetBorderColor(Vec4Param color);
   Vec4 GetBorderColor();
 
-  //Events
+  // Events
   void OnScrollUpdate(ObjectEvent* object);
   void OnMouseMove(MouseEvent* event);
   void OnMouseClick(MouseEvent* event);
@@ -91,7 +88,6 @@ public:
   int mHighlightItem;
 };
 
-//-------------------------------------------------------------------- Combo Box
 class ComboBox : public Composite
 {
 public:
@@ -111,10 +107,16 @@ public:
   void SetText(StringParam text);
   void SetScrollToSelected(bool scroll);
 
-  bool IsOpen(){ return mListBox.IsNotNull(); }
+  bool IsOpen()
+  {
+    return mListBox.IsNotNull();
+  }
 
   void SetSelectedItem(int index, bool message);
-  int GetSelectedItem( ) { return mSelectedItem; }
+  int GetSelectedItem()
+  {
+    return mSelectedItem;
+  }
 
   /// Is the the drop down selectable?
   void SetSelectable(bool selectable);
@@ -146,12 +148,11 @@ public:
   bool mAllowSelect;
 };
 
-//------------------------------------------------------------- String Combo Box
 class StringComboBox : public ComboBox
 {
 public:
   ZilchDeclareType(StringComboBox, TypeCopyMode::ReferenceType);
- 
+
   StringComboBox(Composite* parent);
   ~StringComboBox();
 
@@ -170,4 +171,4 @@ private:
   StringSource* mStrings;
 };
 
-}//namespace Zero
+} // namespace Zero

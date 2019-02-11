@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Operation.hpp
-/// Declaration of the Operation classes.
-/// 
-/// Authors: Joshua Claeys, Chris Peters, Ryan Edgemon
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -18,33 +10,37 @@ class OperationQueue;
 class PropertyOperation;
 class ZilchCompileEvent;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
 DeclareEvent(OperationQueued);
 DeclareEvent(OperationUndo);
 DeclareEvent(OperationRedo);
-}
+} // namespace Events
 
-/// Notification about most recent Operation/OperationBatch added to the OperationQueue.
+/// Notification about most recent Operation/OperationBatch added to the
+/// OperationQueue.
 class OperationQueueEvent : public Event
 {
 public:
   ZilchDeclareType(OperationQueueEvent, TypeCopyMode::ReferenceType);
 
-  OperationQueueEvent( ) : mOperation(nullptr) {}
-  OperationQueueEvent(Operation* op) : mOperation(op) {}
+  OperationQueueEvent() : mOperation(nullptr)
+  {
+  }
+  OperationQueueEvent(Operation* op) : mOperation(op)
+  {
+  }
 
   Operation* mOperation;
 };
 
-//--------------------------------------------------- Operation Creation Context
 class OperationCreationContext
 {
 public:
   ~OperationCreationContext();
 
-  /// If the context for the given composition doesn't exist, it will be created for you.
+  /// If the context for the given composition doesn't exist, it will be created
+  /// for you.
   MetaCreationContext* GetContext(MetaComposition* composition);
   void Finalize();
 
@@ -52,30 +48,41 @@ public:
   ContextMap mContexts;
 };
 
-//-------------------------------------------------------------------- Operation
 class Operation;
 
-class OperationLink { public: Link<OperationLink> link; };
+class OperationLink
+{
+public:
+  Link<OperationLink> link;
+};
 
 class Operation : public SafeId32EventObject, public OperationLink
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(Operation, SafeId32EventObject, TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(Operation,
+                                  SafeId32EventObject,
+                                  TypeCopyMode::ReferenceType);
 
-  typedef BaseInList<OperationLink, Operation, &OperationLink::link> OperationList;
+  typedef BaseInList<OperationLink, Operation, &OperationLink::link>
+      OperationList;
   typedef OperationList::range OperationRange;
 
-  Operation() : mParent(nullptr), mQueue(nullptr) {}
+  Operation() : mParent(nullptr), mQueue(nullptr)
+  {
+  }
 
   /// Operation memory management.
   static Memory::Heap* sHeap;
   OverloadedNew();
 
   /// Standard Interface.
-  virtual void Undo()=0;
-  virtual void Redo()=0;
-  
-  virtual OperationRange GetChildren( ) { return OperationRange( ); }
+  virtual void Undo() = 0;
+  virtual void Redo() = 0;
+
+  virtual OperationRange GetChildren()
+  {
+    return OperationRange();
+  }
 
   /// Find the top most ancestor in an Operation hierarchy, if there is one.
   Operation* FindRoot();
@@ -89,13 +96,14 @@ public:
   OperationQueue* mQueue;
 
 private:
-  Operation(const Operation& rhs) {}
+  Operation(const Operation& rhs)
+  {
+  }
 };
 
 typedef Operation::OperationList OperationListType;
 typedef Operation::OperationList::range OperationListRange;
 
-//------------------------------------------------------------------- Meta Proxy
 /// Objects state before modifications
 class MetaProxy
 {
@@ -116,8 +124,12 @@ public:
 
   struct PropertyState
   {
-    PropertyState(){}
-    PropertyState(StringParam name, AnyParam val) : mName(name), mValue(val) {}
+    PropertyState()
+    {
+    }
+    PropertyState(StringParam name, AnyParam val) : mName(name), mValue(val)
+    {
+    }
 
     String mName;
     Any mValue;
@@ -132,31 +144,37 @@ public:
   String mSerializedObject;
 };
 
-//-------------------------------------------------------------- Operation Batch
 class OperationBatch : public Operation
 {
 public:
   ZilchDeclareType(OperationBatch, TypeCopyMode::ReferenceType);
 
-  OperationBatch() : Operation() { mName = "UnnamedBatch"; }
+  OperationBatch() : Operation()
+  {
+    mName = "UnnamedBatch";
+  }
   ~OperationBatch();
-  
+
   /// Operation Interface.
   void Undo() override;
   void Redo() override;
 
-  OperationRange GetChildren( ) override { return BatchedCommands.All(); }
+  OperationRange GetChildren() override
+  {
+    return BatchedCommands.All();
+  }
 
   OperationListType BatchedCommands;
   Array<MetaProxy*> mObjectProxies;
 
 private:
-  OperationBatch(const OperationBatch& rhs) {}
+  OperationBatch(const OperationBatch& rhs)
+  {
+  }
 };
 
 class UndoMap;
 
-//-------------------------------------------------------------- Operation Queue
 class OperationQueue : public ReferenceCountedEventObject
 {
 public:
@@ -170,7 +188,8 @@ public:
 
   void Undo();
   /// If the operation passed in has ancestors, then the Undo will be done on
-  /// all operations before the ancestor root of the hierarchy containing 'allBeforeThis'.
+  /// all operations before the ancestor root of the hierarchy containing
+  /// 'allBeforeThis'.
   bool Undo(Operation* allBeforeThis);
   void Redo();
   /// If the operation passed in has ancestors, then the Redo will be done on
@@ -181,8 +200,8 @@ public:
   void ClearUndo();
   void ClearRedo();
 
-  OperationListRange GetCommands( );
-  OperationListRange GetRedoCommands( );
+  OperationListRange GetCommands();
+  OperationListRange GetRedoCommands();
 
   OperationBatch* ActiveBatch;
   OperationListType BatchStack;
@@ -200,11 +219,13 @@ public:
   /// will be recorded and operations will be properly created when EndBatch
   /// is called on the OperationQueue.
   void SaveObjectState(Cog* object);
-  /// Marks a property on the given component as being modified. This will set the property to it's current value.
+  /// Marks a property on the given component as being modified. This will set
+  /// the property to it's current value.
   void MarkPropertyAsModified(Component* component, StringParam propertyName);
 
   /// Records that the object was created. This will also mark the object
-  /// for any further modifications until EndBatch is called on the OperationQueue.
+  /// for any further modifications until EndBatch is called on the
+  /// OperationQueue.
   void ObjectCreated(Cog* object);
 
   /// Records that the object was destroyed.
@@ -218,36 +239,48 @@ public:
   OperationCreationContext mCreationContexts;
   HashSet<Cog*> mDestroyedObjects;
 
-  //----------------------------------------------------------------------------------- Side Effects
+  //-----------------------------------------------------------------------------------
+  //Side Effects
   static void StartListeningForSideEffects();
   static bool IsListeningForSideEffects();
-  static void RegisterSideEffect(HandleParam object, PropertyPathParam propertyPath, const Any& oldValue);
-  static void RegisterSideEffectProperty(HandleParam object, StringParam propertyName, const Any& oldValue);
+  static void RegisterSideEffect(HandleParam object,
+                                 PropertyPathParam propertyPath,
+                                 const Any& oldValue);
+  static void RegisterSideEffectProperty(HandleParam object,
+                                         StringParam propertyName,
+                                         const Any& oldValue);
   void QueueRegisteredSideEffects();
 
   /// The ObjectLink Component has the property 'ObjectAPath' of type CogPath.
-  /// When you modify the 'ResolvedCog' property on CogPath, it also modifies the Path property.
-  /// We want to make a side effect operation to also modify the Path property.
-  /// However, CogPath cannot store local modifications because we cannot get a safe handle to it
-  /// (it doesn't know what contains it).
+  /// When you modify the 'ResolvedCog' property on CogPath, it also modifies
+  /// the Path property. We want to make a side effect operation to also modify
+  /// the Path property. However, CogPath cannot store local modifications
+  /// because we cannot get a safe handle to it (it doesn't know what contains
+  /// it).
   ///
-  /// When ResolvedCog on CogPath is modified in the editor, the instance is the ObjectLink
-  /// Component, and the value changed is "ObjectAPath/ResolvedCog". When the setter marks the 
-  /// 'Path' property as a side effect, we want it be the same instance with "ObjectAPath/Path" as
-  /// the modified property. Unfortunately, that information is not available within the
+  /// When ResolvedCog on CogPath is modified in the editor, the instance is the
+  /// ObjectLink Component, and the value changed is "ObjectAPath/ResolvedCog".
+  /// When the setter marks the 'Path' property as a side effect, we want it be
+  /// the same instance with "ObjectAPath/Path" as the modified property.
+  /// Unfortunately, that information is not available within the
   /// CogPath::SetResolvedCog setter.
   ///
-  /// SideEffectContext was added for this reason. When the "ObjectAPath/ResolvedCog" is modified,
-  /// it is pushed onto a context stack so that if there is a side effect, it can read from that
-  /// stack and have the correct instance and build the correct path. In this case, what is pushed
-  /// onto the stack is the instance of ObjectLink and "ObjectAPath", allowing the 'Path' side
-  /// effect to be added to the end of the stored path on the stack.
-  static void PushSubPropertyContext(HandleParam object, PropertyPathParam contextPath);
+  /// SideEffectContext was added for this reason. When the
+  /// "ObjectAPath/ResolvedCog" is modified, it is pushed onto a context stack
+  /// so that if there is a side effect, it can read from that stack and have
+  /// the correct instance and build the correct path. In this case, what is
+  /// pushed onto the stack is the instance of ObjectLink and "ObjectAPath",
+  /// allowing the 'Path' side effect to be added to the end of the stored path
+  /// on the stack.
+  static void PushSubPropertyContext(HandleParam object,
+                                     PropertyPathParam contextPath);
   static void PopSubPropertyContext();
 
   struct SideEffectContext
   {
-    SideEffectContext(){}
+    SideEffectContext()
+    {
+    }
     SideEffectContext(HandleParam context, PropertyPathParam path);
 
     Handle mContext;
@@ -262,7 +295,7 @@ public:
 typedef u64 UndoObjectId;
 const UndoObjectId cInvalidUndoObjectId = 0;
 
-//-------------------------------------------------------------------------------------- Undo Handle
+//Undo Handle
 class UndoHandle
 {
 public:
@@ -279,12 +312,12 @@ public:
   template <typename T>
   T Get() const;
 
-  /// If an object was re-created (destroy Cog and undo), call this to update the live object in
-  /// the undo map.
+  /// If an object was re-created (destroy Cog and undo), call this to update
+  /// the live object in the undo map.
   void UpdateObject(HandleParam newObject);
 
 private:
-  /// If we were able to 
+  /// If we were able to
   UndoObjectId mUndoId;
 
   /// If the object type doesn't support being put into the undo map, we can
@@ -299,20 +332,20 @@ T UndoHandle::Get() const
   return GetHandle().Get<T>();
 }
 
-//----------------------------------------------------------------------------------- Undo Handle Of
+//Undo Handle Of
 template <typename T>
 class UndoHandleOf : public UndoHandle
 {
 public:
-  UndoHandleOf() {}
-
-  UndoHandleOf(T* object)
-    : UndoHandle(object)
+  UndoHandleOf()
   {
   }
 
-  UndoHandleOf(const HandleOf<T>& object)
-    : UndoHandle(object)
+  UndoHandleOf(T* object) : UndoHandle(object)
+  {
+  }
+
+  UndoHandleOf(const HandleOf<T>& object) : UndoHandle(object)
   {
   }
 
@@ -322,7 +355,7 @@ public:
   }
 };
 
-//----------------------------------------------------------------------------------------- Undo Map
+//Undo Map
 class UndoMap
 {
 public:
@@ -364,7 +397,7 @@ private:
 
 namespace Z
 {
-  extern UndoMap* gUndoMap;
+extern UndoMap* gUndoMap;
 }
 
-}//namespace Zero
+} // namespace Zero

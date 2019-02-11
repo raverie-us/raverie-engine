@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Composite.cpp
-/// Implementation of the Composite widget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,65 +7,56 @@ namespace Zero
 bool NeedsLayout(Widget& widget)
 {
   return widget.mActive && !widget.mNotInLayout;
-
 }
-//------------------------------------------------------- Filter Layout Children
-//******************************************************************************
 FilterLayoutChildren::FilterLayoutChildren(Composite* widget)
 {
   // Remove all invalid children from the end
   WidgetListRange children = widget->GetChildren();
-  while(!children.Empty() && !NeedsLayout(children.Back()))
+  while (!children.Empty() && !NeedsLayout(children.Back()))
     children.PopBack();
 
   mChildren = children;
   SkipInvalid();
 }
 
-//******************************************************************************
 Widget& FilterLayoutChildren::Front()
 {
   return mChildren.Front();
 }
 
-//******************************************************************************
 WidgetListRange FilterLayoutChildren::All()
 {
   return mChildren;
 }
 
-//******************************************************************************
 bool FilterLayoutChildren::Empty()
 {
   return mChildren.Empty();
 }
 
-//******************************************************************************
 void FilterLayoutChildren::PopFront()
 {
   mChildren.PopFront();
   SkipInvalid();
 }
 
-//******************************************************************************
 void FilterLayoutChildren::SkipInvalid()
 {
-  while(!mChildren.Empty())
+  while (!mChildren.Empty())
   {
-    if(NeedsLayout(mChildren.Front()))
+    if (NeedsLayout(mChildren.Front()))
       return;
 
     mChildren.PopFront();
   }
 }
 
-//-------------------------------------------------------------------- Composite
 ZilchDefineType(Composite, builder, type)
 {
 }
 
-Composite::Composite(Composite* parent, AttachType::Enum attachType)
-  : Widget(parent, attachType)
+Composite::Composite(Composite* parent, AttachType::Enum attachType) :
+    Widget(parent, attachType)
 {
   mLayout = nullptr;
   mMinSize = Vec2(10, 10);
@@ -82,8 +65,9 @@ Composite::Composite(Composite* parent, AttachType::Enum attachType)
 Composite::~Composite()
 {
   SafeDelete(mLayout);
-  ErrorIf(!mChildren.Empty(), "Composite still has children. Something is "\
-                              "wrong with OnDestroy!");
+  ErrorIf(!mChildren.Empty(),
+          "Composite still has children. Something is "
+          "wrong with OnDestroy!");
 }
 
 void Composite::AttachChildWidget(Widget* child, AttachType::Enum attachType)
@@ -100,17 +84,19 @@ void Composite::InternalDetach(Composite* parent, Widget* child)
 
 void Composite::InternalAttach(Composite* parent, Widget* child)
 {
-  ErrorIf(child->mDestroyed, "Widget is being destroyed and is now attaching to another widget.");
-  ErrorIf(parent->mDestroyed, "Widget is attaching to widget that is being destroyed");
+  ErrorIf(child->mDestroyed,
+          "Widget is being destroyed and is now attaching to another widget.");
+  ErrorIf(parent->mDestroyed,
+          "Widget is attaching to widget that is being destroyed");
 
-  if(child->mParent)
+  if (child->mParent)
     InternalDetach(child->GetParent(), child);
 
-  //Set parent and attach
+  // Set parent and attach
   child->mParent = parent;
   parent->mChildren.PushBack(child);
 
-  if(child->mRootWidget != parent->mRootWidget)
+  if (child->mRootWidget != parent->mRootWidget)
     child->ChangeRoot(parent->mRootWidget);
 
   parent->MarkAsNeedsUpdate();
@@ -118,13 +104,13 @@ void Composite::InternalAttach(Composite* parent, Widget* child)
 
 void Composite::ChangeRoot(RootWidget* newRoot)
 {
-  if(mRootWidget == newRoot)
+  if (mRootWidget == newRoot)
     return;
 
   mRootWidget = newRoot;
 
   WidgetListRange children = GetChildren();
-  while(!children.Empty())
+  while (!children.Empty())
   {
     children.Front().ChangeRoot(newRoot);
     children.PopFront();
@@ -169,22 +155,26 @@ void Composite::ShiftOntoScreen(Vec3 offset)
   Vec2 screenSize = this->GetParent()->GetSize();
   Vec2 thisSize = this->GetSize();
 
-  if(offset.y + thisSize.y > screenSize.y)
+  if (offset.y + thisSize.y > screenSize.y)
     offset.y -= (offset.y + thisSize.y) - screenSize.y;
 
-  if(offset.x + thisSize.x > screenSize.x)
+  if (offset.x + thisSize.x > screenSize.x)
     offset.x -= (offset.x + thisSize.x) - screenSize.x;
 
   this->SetTranslation(offset);
 }
 
-void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void Composite::RenderUpdate(ViewBlock& viewBlock,
+                             FrameBlock& frameBlock,
+                             Mat4Param parentTx,
+                             ColorTransform colorTx,
+                             WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
   if (mClipping)
   {
-    WidgetRect rect;// = {mWorldTx.m30, mWorldTx.m31, mSize.x, mSize.y};
+    WidgetRect rect; // = {mWorldTx.m30, mWorldTx.m31, mSize.x, mSize.y};
     rect.X = mWorldTx.m30;
     rect.Y = mWorldTx.m31;
     rect.SizeX = mSize.x;
@@ -192,8 +182,10 @@ void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4P
     WidgetRect newRect;
     newRect.X = Math::Max(clipRect.X, rect.X);
     newRect.Y = Math::Max(clipRect.Y, rect.Y);
-    newRect.SizeX = Math::Min(clipRect.X + clipRect.SizeX, rect.X + rect.SizeX) - newRect.X;
-    newRect.SizeY = Math::Min(clipRect.Y + clipRect.SizeY, rect.Y + rect.SizeY) - newRect.Y;
+    newRect.SizeX =
+        Math::Min(clipRect.X + clipRect.SizeX, rect.X + rect.SizeX) - newRect.X;
+    newRect.SizeY =
+        Math::Min(clipRect.Y + clipRect.SizeY, rect.Y + rect.SizeY) - newRect.Y;
     clipRect = newRect;
     if (clipRect.SizeX <= 0 || clipRect.SizeY <= 0)
       return;
@@ -201,7 +193,7 @@ void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4P
 
   colorTx.ColorMultiply *= mColor;
 
-  forRange (Widget& child, GetChildren())
+  forRange(Widget & child, GetChildren())
   {
     if (child.mActive && child.mVisible && !child.mDestroyed)
       child.RenderUpdate(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
@@ -211,28 +203,28 @@ void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4P
 Widget* Composite::HitTest(Vec2 location, Widget* ignore)
 {
   // Skip inactive object
-  if(InputBlocked())
+  if (InputBlocked())
     return nullptr;
 
-  if(ignore == this)
+  if (ignore == this)
     return nullptr;
 
   // Check for containment
-  if(!CheckClipping(location))
+  if (!CheckClipping(location))
     return nullptr;
 
   WidgetList::iterator it = mChildren.ReverseBegin();
   WidgetList::iterator end = mChildren.ReverseEnd();
-  while(it != end)
+  while (it != end)
   {
     Widget* child = *it;
     Widget* hit = child->HitTest(location, ignore);
-    if(hit)
+    if (hit)
       return hit;
     --it;
   }
 
-  if(!Contains(location))
+  if (!Contains(location))
     return nullptr;
 
   return nullptr;
@@ -241,19 +233,19 @@ Widget* Composite::HitTest(Vec2 location, Widget* ignore)
 void Composite::UpdateTransform()
 {
   // Skip this if we're already on our way out
-  if(mDestroyed)
+  if (mDestroyed)
     return;
 
-  if(mTransformUpdateState == TransformUpdateState::LocalUpdate)
+  if (mTransformUpdateState == TransformUpdateState::LocalUpdate)
   {
-    if(mLayout)
+    if (mLayout)
     {
       DoLayout();
     }
     else
     {
       WidgetListRange children = GetChildren();
-      while(!children.Empty())
+      while (!children.Empty())
       {
         Widget& child = children.Front();
         if (!child.mDestroyed && child.GetActive())
@@ -262,15 +254,15 @@ void Composite::UpdateTransform()
       }
     }
   }
-  else if(mTransformUpdateState == TransformUpdateState::ChildUpdate)
+  else if (mTransformUpdateState == TransformUpdateState::ChildUpdate)
   {
     WidgetListRange children = GetChildren();
-    while(!children.Empty())
+    while (!children.Empty())
     {
       Widget& child = children.Front();
       if (!child.mDestroyed && child.GetActive())
         child.UpdateTransformExternal();
-      
+
       children.PopFront();
     }
   }
@@ -280,7 +272,7 @@ void Composite::UpdateTransform()
 
 void Composite::DispatchDown(StringParam eventId, Event* event)
 {
-  forRange(Widget& widget, mChildren.All())
+  forRange(Widget & widget, mChildren.All())
   {
     widget.DispatchEvent(eventId, event);
     widget.DispatchDown(eventId, event);
@@ -306,20 +298,21 @@ void Composite::SetMinSize(Vec2 newMin)
 Vec2 Composite::Measure(LayoutArea& data)
 {
   // If we're fixed, no need to do anything
-  if(mSizePolicy.XPolicy == SizePolicy::Fixed && mSizePolicy.YPolicy == SizePolicy::Fixed)
+  if (mSizePolicy.XPolicy == SizePolicy::Fixed &&
+      mSizePolicy.YPolicy == SizePolicy::Fixed)
     return mSize;
 
-  //If there is a layout active use it
-  if(mLayout)
+  // If there is a layout active use it
+  if (mLayout)
   {
     Vec2 measureSize = mLayout->Measure(this, data);
-    if(measureSize.x < mMinSize.x)
+    if (measureSize.x < mMinSize.x)
       measureSize.x = mMinSize.x;
-    if(measureSize.y < mMinSize.y)
+    if (measureSize.y < mMinSize.y)
       measureSize.y = mMinSize.y;
-    if(mSizePolicy.XPolicy == SizePolicy::Fixed)
+    if (mSizePolicy.XPolicy == SizePolicy::Fixed)
       measureSize.x = mSize.x;
-    if(mSizePolicy.YPolicy == SizePolicy::Fixed)
+    if (mSizePolicy.YPolicy == SizePolicy::Fixed)
       measureSize.y = mSize.y;
     return measureSize;
   }
@@ -327,28 +320,32 @@ Vec2 Composite::Measure(LayoutArea& data)
     return Widget::Measure(data);
 }
 
-Widget* Find(StringParam name, UiTraversal::Enum traversalType, size_t& index, Widget* parent)
+Widget* Find(StringParam name,
+             UiTraversal::Enum traversalType,
+             size_t& index,
+             Widget* parent)
 {
   // Get itself as a composite
   Composite* composite = parent->GetSelfAsComposite();
 
   // If the parent's type is actually a composite...
-  if(composite != nullptr)
+  if (composite != nullptr)
   {
     // Get the children range iterator
     WidgetListRange children = composite->GetChildren();
 
     // Loop through all the children
-    while(children.Empty() == false)
+    while (children.Empty() == false)
     {
       // Get the current child
       Widget* child = &children.Front();
 
-      // If the name of the child matches... (using whatever comparison we were given)
-      if(child->mName == name)
+      // If the name of the child matches... (using whatever comparison we were
+      // given)
+      if (child->mName == name)
       {
         // If the index is zero, then we hit the one we wanted!
-        if(index == 0)
+        if (index == 0)
         {
           // Return the child!
           return child;
@@ -360,12 +357,13 @@ Widget* Find(StringParam name, UiTraversal::Enum traversalType, size_t& index, W
         }
       }
 
-      // If we got here, then we didn't find the child yet (though we may have found one of the same name, the index must be 0)
-      if(traversalType == UiTraversal::DepthFirst)
+      // If we got here, then we didn't find the child yet (though we may have
+      // found one of the same name, the index must be 0)
+      if (traversalType == UiTraversal::DepthFirst)
       {
         Widget* result = Find(name, traversalType, index, child);
 
-        if(result != nullptr)
+        if (result != nullptr)
         {
           return result;
         }
@@ -374,19 +372,19 @@ Widget* Find(StringParam name, UiTraversal::Enum traversalType, size_t& index, W
       children.PopFront();
     }
 
-
-    // If we got here, then we didn't find the child yet (though we may have found one of the same name, the index must be 0)
-    if(traversalType == UiTraversal::BreadthFirst)
+    // If we got here, then we didn't find the child yet (though we may have
+    // found one of the same name, the index must be 0)
+    if (traversalType == UiTraversal::BreadthFirst)
     {
       // Loop through all the children
-      while(children.Empty() == false)
+      while (children.Empty() == false)
       {
         // Get the current child
         Widget* child = &children.Front();
 
         Widget* result = Find(name, traversalType, index, child);
 
-        if(result != nullptr)
+        if (result != nullptr)
         {
           return result;
         }
@@ -399,28 +397,30 @@ Widget* Find(StringParam name, UiTraversal::Enum traversalType, size_t& index, W
   return nullptr;
 }
 
-//---------------------------------------------------------------------- Helpers
 
 // Find any child widget by name
-Widget* FindWidgetByName(StringParam name, UiTraversal::Enum traversalType, size_t index, Widget* parent)
+Widget* FindWidgetByName(StringParam name,
+                         UiTraversal::Enum traversalType,
+                         size_t index,
+                         Widget* parent)
 {
   return Find(name, traversalType, index, parent);
 }
 
-//-------------------------------------------------------------------------------- Colored Composite
-//**************************************************************************************************
-ColoredComposite::ColoredComposite(Composite* parent, Vec4Param color, AttachType::Enum attachType)
-  : Composite(parent, attachType)
+//Colored Composite
+ColoredComposite::ColoredComposite(Composite* parent,
+                                   Vec4Param color,
+                                   AttachType::Enum attachType) :
+    Composite(parent, attachType)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(color);
 }
 
-//**************************************************************************************************
 void ColoredComposite::UpdateTransform()
 {
   mBackground->SetSize(GetSize());
   Composite::UpdateTransform();
 }
 
-}//namespace Zero
+} // namespace Zero

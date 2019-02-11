@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TcpSocket.hpp
-/// Declaration of the TcpSocket class.
-///
-/// Authors: Trevor Sundberg.
-/// Copyright 2010-2014, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,21 +6,21 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(WebResponseHeadersInternal);
-  DeclareEvent(WebResponsePartialDataInternal);
-  DeclareEvent(WebResponseCompleteInternal);
-  DeclareEvent(WebResponseHeaders);
-  DeclareEvent(WebResponsePartialData);
-  DeclareEvent(WebResponseComplete);
-}
+DeclareEvent(WebResponseHeadersInternal);
+DeclareEvent(WebResponsePartialDataInternal);
+DeclareEvent(WebResponseCompleteInternal);
+DeclareEvent(WebResponseHeaders);
+DeclareEvent(WebResponsePartialData);
+DeclareEvent(WebResponseComplete);
+} // namespace Events
 
 class WebResponseEvent;
 
 /// Runs a single web-request at a time asynchronously.
-/// If a web request is in progress and another is requested, it will cancel the first.
-/// To run multiple requests at a time, create multiple AsyncWebRequests.
-/// The WebResponseComplete event will be sent at the end of a request (even if it fails or errors),
-/// however it may not be sent if Cancel is called.
+/// If a web request is in progress and another is requested, it will cancel the
+/// first. To run multiple requests at a time, create multiple AsyncWebRequests.
+/// The WebResponseComplete event will be sent at the end of a request (even if
+/// it fails or errors), however it may not be sent if Cancel is called.
 class AsyncWebRequest : public ReferenceCountedThreadSafeId32EventObject
 {
 public:
@@ -40,9 +32,10 @@ public:
   /// Destructor cancels any existing request.
   ~AsyncWebRequest();
 
-  /// Run the request on the given url and receive data back in the 'WebResponse' event.
-  /// This will clear any stored data from previous requests, and if StoreData is set
-  /// it will return the entire response as a string (if not it will be empty).
+  /// Run the request on the given url and receive data back in the
+  /// 'WebResponse' event. This will clear any stored data from previous
+  /// requests, and if StoreData is set it will return the entire response as a
+  /// string (if not it will be empty).
   void Run();
 
   /// Returns if the web request is currently running.
@@ -57,7 +50,8 @@ public:
   /// Clears all request data (url, post data, additional headers, etc).
   void ClearRequestData();
 
-  /// Clears any data that was gotten from a response (headers, stored data, progress, etc).
+  /// Clears any data that was gotten from a response (headers, stored data,
+  /// progress, etc).
   void ClearResponseData();
 
   /// Add a header to the web request .
@@ -68,7 +62,7 @@ public:
 
   /// Add a field to a post request.
   void AddField(StringParam name, StringParam content);
- 
+
   /// This should only be called when shutting down the program.
   static void CancelAllActiveRequests();
 
@@ -96,7 +90,8 @@ public:
   /// Array of response headers.
   Array<String> mResponseHeaders;
 
-  /// Contains all data concatenated together from a response (only used when mStoreData is set).
+  /// Contains all data concatenated together from a response (only used when
+  /// mStoreData is set).
   StringBuilder mStoredData;
 
   /// How much data we've downloaded so far in bytes.
@@ -108,7 +103,7 @@ public:
 
   /// Our progress in the web request. Once complete, progress will be 1.
   float mProgress;
-  
+
   /// Type of progress. Some servers don't send the content length,
   /// so we don't know how much we have to download.
   ProgressType::Enum mProgressType;
@@ -119,36 +114,45 @@ public:
 
   /// If this option is set, it means we send events on
   /// the web request thread (during the web request callbacks).
-  /// Set this option before running the request and do not change it afterwards.
-  /// Care must be taken to ensure that no properties or calls are made at the
-  /// same time on another thread (such as the main thread) when using this option.
-  /// For non threaded platforms, this will still be on the main thread.
-  /// The default is false.
+  /// Set this option before running the request and do not change it
+  /// afterwards. Care must be taken to ensure that no properties or calls are
+  /// made at the same time on another thread (such as the main thread) when
+  /// using this option. For non threaded platforms, this will still be on the
+  /// main thread. The default is false.
   bool mSendEventsOnRequestThread;
 
-  /// If this value is non-zero, we will automatically cache a file in a temporary location for this many seconds when the response is OK.
-  /// Subsequent requests to the same URL will automatically return the last cached request.
-  /// If the request fails in any way, then we also return the last cached request even if it's expired.
-  /// Note that this is forced caching, and does not query the url to see if a newer version exists.
-  /// WARNING: This only caches by url, and does NOT use post data or request headers to differentiate a response.
-  /// Note that we will only get the WebResponseComplete event and no headers/partial data if the cache is found.
-  /// Also note that the cache finding is not executed on another thread, so mSendEventsOnRequestThread has no effect.
-  /// Currently can only cache data when StoreData is set to true.
-  /// Default is 0 (no caching).
+  /// If this value is non-zero, we will automatically cache a file in a
+  /// temporary location for this many seconds when the response is OK.
+  /// Subsequent requests to the same URL will automatically return the last
+  /// cached request. If the request fails in any way, then we also return the
+  /// last cached request even if it's expired. Note that this is forced
+  /// caching, and does not query the url to see if a newer version exists.
+  /// WARNING: This only caches by url, and does NOT use post data or request
+  /// headers to differentiate a response. Note that we will only get the
+  /// WebResponseComplete event and no headers/partial data if the cache is
+  /// found. Also note that the cache finding is not executed on another thread,
+  /// so mSendEventsOnRequestThread has no effect. Currently can only cache data
+  /// when StoreData is set to true. Default is 0 (no caching).
   u64 mForceCacheSeconds;
 
 private:
   AsyncWebRequest();
 
-  // If a file in the cache exists, this will send a completed response and return true.
+  // If a file in the cache exists, this will send a completed response and
+  // return true.
   bool SendCompletedCacheResponse(bool ignoreTime);
 
   // Occurs when we receive http headers.
-  static void OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request);
+  static void OnHeadersReceived(const Array<String>& headers,
+                                WebResponseCode::Enum code,
+                                WebRequest* request);
   void OnWebResponseHeadersInternal(WebResponseEvent* event);
 
   // Occurs when we receive data.
-  static void OnDataReceived(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request);
+  static void OnDataReceived(const byte* data,
+                             size_t size,
+                             u64 totalDownloaded,
+                             WebRequest* request);
   void OnWebResponsePartialDataInternal(WebResponseEvent* event);
 
   // Occurs when the web request is complete (can be due to an error).
@@ -161,8 +165,9 @@ private:
   /// on the AsyncWebRequest to ensure we don't receive old events.
   Atomic<uint> mVersion;
 
-  /// We need an intrusive list of all web requests so that when the engine shuts down we can
-  /// cancel all of them (because otheriwse they will keep running and try to use the Z::gDispatch).
+  /// We need an intrusive list of all web requests so that when the engine
+  /// shuts down we can cancel all of them (because otheriwse they will keep
+  /// running and try to use the Z::gDispatch).
   IntrusiveLink(AsyncWebRequest, link);
 
   /// All living / active AsyncWebRequests (and a thread lock to go with it).
@@ -189,8 +194,8 @@ public:
   Array<String> mResponseHeaders;
 
   /// On WebResponsePartialData this will be the chunk of data received.
-  /// On WebResponseComplete, if StoreData is true then this will be the complete
-  /// response from the server, otherwise it will be empty.
+  /// On WebResponseComplete, if StoreData is true then this will be the
+  /// complete response from the server, otherwise it will be empty.
   String mData;
 
   /// How much data we've downloaded so far.
@@ -218,8 +223,8 @@ public:
   uint GetHeaderCount();
 
   /// Reads the Data as if it were a Json document.
-  /// This should only be called on a WebResponseComplete event when StoredData is true.
-  /// The memory returned must be deleted by the user.
+  /// This should only be called on a WebResponseComplete event when StoredData
+  /// is true. The memory returned must be deleted by the user.
   JsonValue* ReadJson(Status& status);
 
 private:
@@ -251,7 +256,8 @@ public:
   /// until the request is completed or cancelled.
   HandleOf<AsyncWebRequest> Run();
 
-  /// Clears any stored data, post data (including files), headers, url, response code, etc.
+  /// Clears any stored data, post data (including files), headers, url,
+  /// response code, etc.
   void Clear();
 
   /// Cancels all active requests.
@@ -267,12 +273,11 @@ public:
   void AddField(StringParam formFieldName, StringParam content);
 
 private:
-
   /// Forward all events that we get.
   void OnForwardEvent(WebResponseEvent* event);
 
-  /// Creates a new request internally, listens for events, and copies data from the last one.
-  /// Returns the previous AsyncWebRequest handle.
+  /// Creates a new request internally, listens for events, and copies data from
+  /// the last one. Returns the previous AsyncWebRequest handle.
   HandleOf<AsyncWebRequest> ReplaceRequest();
 
   /// Walk the active requests and cleanup those that are no longer active.

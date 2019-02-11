@@ -1,27 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MessageBox.cpp
-/// Implementation of the MessageBox class.
-/// 
-/// Authors: Trevor Sundberg, Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 namespace Zero
 {
 
 namespace Events
 {
-  DefineEvent(MessageBoxResult);
-}//namespace Events
+DefineEvent(MessageBoxResult);
+} // namespace Events
 
 ZilchDefineType(MessageBoxEvent, builder, type)
 {
 }
 
 // Create a message box
-MessageBox* MessageBox::Show(StringParam caption, StringParam text, const cstr buttons[])
+MessageBox* MessageBox::Show(StringParam caption,
+                             StringParam text,
+                             const cstr buttons[])
 {
   //// Create a new message box
   Composite* composite = Z::gEditor->GetRootWidget();
@@ -33,7 +27,9 @@ MessageBox* MessageBox::Show(StringParam caption, StringParam text, const cstr b
 }
 
 // Create a message box
-MessageBox* MessageBox::Show(StringParam caption, StringParam text, Array<String>& buttons)
+MessageBox* MessageBox::Show(StringParam caption,
+                             StringParam text,
+                             Array<String>& buttons)
 {
   //// Create a new message box
   Composite* composite = Z::gEditor->GetRootWidget();
@@ -44,7 +40,10 @@ MessageBox* MessageBox::Show(StringParam caption, StringParam text, Array<String
   return dialog;
 }
 
-MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam text, const cstr buttons[])
+MessageBox* MessageBox::Show(Composite* parent,
+                             StringParam caption,
+                             StringParam text,
+                             const cstr buttons[])
 {
   MessageBox* dialog = new MessageBox(parent, caption, text, buttons);
 
@@ -52,7 +51,10 @@ MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam
   return dialog;
 }
 
-Zero::MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons)
+Zero::MessageBox* MessageBox::Show(Composite* parent,
+                                   StringParam caption,
+                                   StringParam text,
+                                   Array<String>& buttons)
 {
   MessageBox* dialog = new MessageBox(parent, caption, text, buttons);
 
@@ -61,11 +63,13 @@ Zero::MessageBox* MessageBox::Show(Composite* parent, StringParam caption, Strin
 }
 
 // Constructor
-MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
-                       const cstr buttons[]) 
-  : Window(parent)
+MessageBox::MessageBox(Composite* parent,
+                       StringParam caption,
+                       StringParam text,
+                       const cstr buttons[]) :
+    Window(parent)
 {
-  //Create a large transparent block to darken and block input on the screen.
+  // Create a large transparent block to darken and block input on the screen.
   mBlock = CreateBlackOut(parent);
   mBlock->MoveToFront();
 
@@ -82,10 +86,11 @@ MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
   mText->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4,4), Thickness::All(4)));
+  buttonRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
 
   const cstr* current = buttons;
-  while(*current != NULL)
+  while (*current != NULL)
   {
     // Create a new button and setup the text
     TextButton* button = new TextButton(buttonRow);
@@ -106,22 +111,26 @@ MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
   // Hide the exit button
   mCloseButton->SetActive(false);
 
-  // Size to the contents of the message box taking our minimums into account vs the content
+  // Size to the contents of the message box taking our minimums into account vs
+  // the content
   Vec2 size = GetMinSize();
   size.x = size.x < cMinMessageBoxWidth ? cMinMessageBoxWidth : size.x;
   size.y = size.y < cMinMessageBoxHeight ? cMinMessageBoxHeight : size.y;
   SetSize(size);
-  
+
   // Center the message box on the window
   CenterToWindow(parent, this, false);
 
   this->TakeFocus();
 }
 
-MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons)
-  : Window(parent)
+MessageBox::MessageBox(Composite* parent,
+                       StringParam caption,
+                       StringParam text,
+                       Array<String>& buttons) :
+    Window(parent)
 {
-  //Create a large transparent block to darken and block input on the screen.
+  // Create a large transparent block to darken and block input on the screen.
   mBlock = CreateBlackOut(parent);
   mBlock->MoveToFront();
 
@@ -138,9 +147,10 @@ MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
   mText->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
+  buttonRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(4, 4), Thickness::All(4)));
 
-  forRange (StringParam current, buttons.All())
+  forRange(StringParam current, buttons.All())
   {
     // Create a new button and setup the text
     TextButton* button = new TextButton(buttonRow);
@@ -159,7 +169,8 @@ MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
   // Hide the exit button
   mCloseButton->SetActive(false);
 
-  // Size to the contents of the message box taking our minimums into account vs the content
+  // Size to the contents of the message box taking our minimums into account vs
+  // the content
   Vec2 size = GetMinSize();
   size.x = size.x < cMinMessageBoxWidth ? cMinMessageBoxWidth : size.x;
   size.y = size.y < cMinMessageBoxHeight ? cMinMessageBoxHeight : size.y;
@@ -167,13 +178,13 @@ MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
 
   // Center the message box on the window
   CenterToWindow(parent, this, false);
-  
+
   this->TakeFocus();
 }
 
 bool MessageBox::TakeFocusOverride()
 {
-  if(mButtons.Size() > 0)
+  if (mButtons.Size() > 0)
     mButtons[0]->TakeFocus();
   return true;
 }
@@ -187,7 +198,7 @@ void MessageBox::OnButtonPressed(ObjectEvent* event)
   result.ButtonName = String();
 
   // Loop through all the buttons we already
-  for(size_t i = 0; i < mButtons.Size(); ++i)
+  for (size_t i = 0; i < mButtons.Size(); ++i)
   {
     // Get the current button
     TextButton* button = mButtons[i];
@@ -215,4 +226,4 @@ void MessageBox::OnDestroy()
   Composite::OnDestroy();
 }
 
-}//namespace Zero
+} // namespace Zero

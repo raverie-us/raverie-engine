@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -64,4 +59,4 @@ ToType PointerCast(FromType from)
   return PointerCastHelper<ToType, FromType>::DoCast(from);
 }
 
-}//namespace Zero
+} // namespace Zero

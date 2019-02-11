@@ -1,20 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ShaderIRAttributeParameter
 class ShaderIRAttributeParameter
 {
 public:
   ShaderIRAttributeParameter();
-  ShaderIRAttributeParameter(Zilch::AttributeParameter& param, Zilch::SyntaxNode* node);
+  ShaderIRAttributeParameter(Zilch::AttributeParameter& param,
+                             Zilch::SyntaxNode* node);
 
   String GetName() const;
   void SetName(StringParam name);
@@ -36,7 +31,8 @@ public:
   Zilch::CodeLocation* GetLocation();
   void SetLocationNode(Zilch::SyntaxNode* node);
 
-  // Return the internal zilch attribute parameter. Mostly exposed for ease of binding.
+  // Return the internal zilch attribute parameter. Mostly exposed for ease of
+  // binding.
   Zilch::AttributeParameter& GetZilchAttributeParameter();
 
 private:
@@ -44,7 +40,6 @@ private:
   Zilch::SyntaxNode* mNode;
 };
 
-//-------------------------------------------------------------------ShaderIRAttribute
 class ShaderIRAttribute
 {
 public:
@@ -58,12 +53,12 @@ public:
   Array<ShaderIRAttributeParameter> mParameters;
   Zilch::SyntaxNode* mNode;
 
-  // Was this attribute created from another (e.g. [Input] implies [AppBuiltInInput]).
-  // Some errors are only valid if the attribute was explicitly declared.
+  // Was this attribute created from another (e.g. [Input] implies
+  // [AppBuiltInInput]). Some errors are only valid if the attribute was
+  // explicitly declared.
   bool mImplicitAttribute;
 };
 
-//-------------------------------------------------------------------ShaderIRAttributeList
 class ShaderIRAttributeList
 {
 public:
@@ -86,7 +81,8 @@ public:
     Range mRange;
   };
 
-  ShaderIRAttribute* AddAttribute(StringParam attributeName, Zilch::AttributeNode* node);
+  ShaderIRAttribute* AddAttribute(StringParam attributeName,
+                                  Zilch::AttributeNode* node);
   NamedRange FindAttributes(StringParam attributeName);
   ShaderIRAttribute* FindFirstAttribute(StringParam attributeName);
   Range All();
@@ -99,4 +95,4 @@ private:
   Array<ShaderIRAttribute> mAttributes;
 };
 
-}//namespace Zero
+} // namespace Zero

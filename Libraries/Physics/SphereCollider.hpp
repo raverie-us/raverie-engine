@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -26,7 +21,8 @@ public:
   void ComputeWorldAabbInternal() override;
   void ComputeWorldBoundingSphereInternal() override;
   real ComputeWorldVolumeInternal() override;
-  void ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia) override;
+  void ComputeLocalInverseInertiaTensor(real mass,
+                                        Mat3Ref localInvInertia) override;
   void Support(Vec3Param direction, Vec3Ptr support) const override;
 
   /// The radius of the sphere in local space (before transform is applied).
@@ -37,7 +33,6 @@ public:
   real GetWorldRadius() const;
 
 private:
-
   static const real mMinAllowedRadius;
   static const real mMaxAllowedRadius;
 
@@ -47,4 +42,4 @@ private:
   real mWorldRadius;
 };
 
-}//namespace Zero
+} // namespace Zero

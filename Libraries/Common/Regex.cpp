@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Regex.cpp
-/// Implementation of the Regex class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include <regex>
@@ -63,7 +55,8 @@ bool Matches::Empty() const
 
 StringRange Matches::operator[](size_t index) const
 {
-  ErrorIf(index >= this->Size(), "Attempting to access an array element out of bounds");
+  ErrorIf(index >= this->Size(),
+          "Attempting to access an array element out of bounds");
   const std::csub_match& subMatch = mPrivate->InternalMatch[index];
   return StringRange(mString, subMatch.first, subMatch.second);
 }
@@ -78,10 +71,10 @@ StringRange Matches::Front() const
 StringRange Matches::Back() const
 {
   ErrorIf(this->Empty(), "Attempting to access an array element out of bounds");
-  const std::csub_match& subMatch = mPrivate->InternalMatch[mPrivate->InternalMatch.size() - 1];
+  const std::csub_match& subMatch =
+      mPrivate->InternalMatch[mPrivate->InternalMatch.size() - 1];
   return StringRange(mString, subMatch.first, subMatch.second);
 }
-
 
 StringRange Matches::Prefix() const
 {
@@ -97,10 +90,13 @@ StringRange Matches::Suffix() const
 
 String Matches::Format(StringRange format) const
 {
-  // Unfortunately we pretty much have to construct an std::string here for the format, and the result is an std::string
-  // I would love to at least make the result just output to a buffer, but I can't figure out how to measure the length of the output
-  // We could possibly create an 'OutputIterator' for StringBuilder that mimics a char* (writes a character on assignment, advances on ++)
-  // It also appears that VS2010 doesn't implement all of the overloads of format
+  // Unfortunately we pretty much have to construct an std::string here for the
+  // format, and the result is an std::string I would love to at least make the
+  // result just output to a buffer, but I can't figure out how to measure the
+  // length of the output We could possibly create an 'OutputIterator' for
+  // StringBuilder that mimics a char* (writes a character on assignment,
+  // advances on ++) It also appears that VS2010 doesn't implement all of the
+  // overloads of format
   std::string stdFormat(format.mBegin, format.mEnd);
   std::string result = mPrivate->InternalMatch.format(stdFormat);
   return String(result.c_str(), result.size());
@@ -111,12 +107,16 @@ void Matches::Format(StringRange format, StringBuilder& builder) const
   // See notes above for optimization ideas
   std::string stdFormat(format.mBegin, format.mEnd);
   std::string result = mPrivate->InternalMatch.format(stdFormat);
-  StringRange range(result.c_str(), result.c_str(), result.c_str() + result.size());
+  StringRange range(
+      result.c_str(), result.c_str(), result.c_str() + result.size());
   builder.Append(range);
 }
 
 // Create a regular expression...
-regex CreateRegex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive, bool optimizeForMatching)
+regex CreateRegex(StringRange regexStr,
+                  RegexFlavor::Enum flavor,
+                  bool caseSensitive,
+                  bool optimizeForMatching)
 {
   // Default flags
   regex::flag_type flags = reg::basic;
@@ -150,9 +150,9 @@ regex CreateRegex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensi
   }
 
   // If we're not case sensitive...
-  if(caseSensitive == false)
+  if (caseSensitive == false)
     flags |= reg::icase;
-  if(optimizeForMatching)
+  if (optimizeForMatching)
     flags |= reg::optimize;
 
   return regex(regexStr.mBegin, regexStr.mEnd, flags);
@@ -164,7 +164,10 @@ Regex::Regex()
   mPrivate = new RegexPrivateData();
 }
 
-Regex::Regex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive, bool optimizeForMatching)
+Regex::Regex(StringRange regexStr,
+             RegexFlavor::Enum flavor,
+             bool caseSensitive,
+             bool optimizeForMatching)
 {
   // Create the private data
   mPrivate = new RegexPrivateData();
@@ -175,7 +178,8 @@ Regex::Regex(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive,
   try
   {
     // Create the regular expression from the given text
-    mPrivate->InternalRegex = CreateRegex(regexStr, flavor, caseSensitive, optimizeForMatching);
+    mPrivate->InternalRegex =
+        CreateRegex(regexStr, flavor, caseSensitive, optimizeForMatching);
   }
   catch (...)
   {
@@ -216,7 +220,9 @@ Regex& Regex::operator=(const Regex& source)
   return *this;
 }
 
-bool Regex::Validate(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSensitive)
+bool Regex::Validate(StringRange regexStr,
+                     RegexFlavor::Enum flavor,
+                     bool caseSensitive)
 {
   try
   {
@@ -230,7 +236,9 @@ bool Regex::Validate(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSe
   }
 }
 
-void Regex::Search(StringRange text, Matches& matches, RegexFlags::Type flags) const
+void Regex::Search(StringRange text,
+                   Matches& matches,
+                   RegexFlags::Type flags) const
 {
   matches.Clear();
   matches.mString = text.mOriginalString;
@@ -238,22 +246,31 @@ void Regex::Search(StringRange text, Matches& matches, RegexFlags::Type flags) c
   reg::match_flag_type translatedFlags = reg::match_default;
   if (flags & RegexFlags::MatchNotNull)
     translatedFlags |= reg::match_not_null;
-  regex_search(text.mBegin, text.mEnd, matches.mPrivate->InternalMatch, mPrivate->InternalRegex, translatedFlags);
+  regex_search(text.mBegin,
+               text.mEnd,
+               matches.mPrivate->InternalMatch,
+               mPrivate->InternalRegex,
+               translatedFlags);
 }
 
 String Regex::Replace(StringRange source, StringRange replaceWith) const
 {
   // Perform the replacement and get the result back
-  string result = regex_replace(string(source.mBegin, source.mEnd), mPrivate->InternalRegex, string(replaceWith.mBegin, replaceWith.mEnd));
-    
+  string result = regex_replace(string(source.mBegin, source.mEnd),
+                                mPrivate->InternalRegex,
+                                string(replaceWith.mBegin, replaceWith.mEnd));
+
   // Return that result as our string type
   return String(result.c_str(), result.size());
 }
 
-String Regex::Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum flavor)
+String Regex::Escape(StringRange input,
+                     EscapeMode::Enum mode,
+                     RegexFlavor::Enum flavor)
 {
   // Error checking
-  ErrorIf(flavor != RegexFlavor::EcmaScript, "No other regex flavors have been implemented yet!");
+  ErrorIf(flavor != RegexFlavor::EcmaScript,
+          "No other regex flavors have been implemented yet!");
 
   // A builder so we can put in escape sequences
   StringBuilder builder;
@@ -262,7 +279,7 @@ String Regex::Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum
   while (input.Empty() == false)
   {
     // Get the current character
-    Rune current  = input.Front();
+    Rune current = input.Front();
 
     // If the current character is a wild card
     if (mode == EscapeMode::Extended && current == '*')
@@ -270,13 +287,15 @@ String Regex::Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum
       // Add the typical regex wild-card notation
       builder.Append("(.*)");
     }
-    else 
+    else
     {
       // If the current character is a symbol...
       if (ispunct(current.value) && current != '_')
       {
-        // If the current character is itself an escape, and we allow input escapes...
-        if (current == '\\' && mode == EscapeMode::Extended && input.SizeInBytes() > 1)
+        // If the current character is itself an escape, and we allow input
+        // escapes...
+        if (current == '\\' && mode == EscapeMode::Extended &&
+            input.SizeInBytes() > 1)
         {
           // Get the next character
           Rune next = *(input.Begin() + 1);
@@ -320,4 +339,4 @@ String Regex::Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum
   // Return the final escaped string
   return builder.ToString();
 }
-}
+} // namespace Zero

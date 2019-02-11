@@ -1,30 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CogRestoreState.cpp
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Object Restore State
-//******************************************************************************
 CogRestoreState::CogRestoreState()
 {
-
 }
 
-//******************************************************************************
 CogRestoreState::CogRestoreState(Cog* cog)
 {
   StoreObjectState(cog);
 }
 
-//******************************************************************************
 void CogRestoreState::StoreObjectState(Object* object)
 {
   Cog* cog = Type::DynamicCast<Cog*>(object);
@@ -33,7 +21,7 @@ void CogRestoreState::StoreObjectState(Object* object)
 
   Space* space = cog->GetSpace();
   mSpaceWasModified = false;
-  if(space)
+  if (space)
     mSpaceWasModified = space->GetModified();
 
   mSpaceWasModified = true; // Temporary until we fix issues with how this works
@@ -47,16 +35,19 @@ void CogRestoreState::StoreObjectState(Object* object)
   StoreChildUndoIds(cog);
 
   // Store the parent if it exists
-  if(Cog* parent = cog->GetParent())
+  if (Cog* parent = cog->GetParent())
     mParent = parent;
 
-  // If this object is an Archetype and a child of another Archetype, it may have modifications
-  // in that Archetype required to create it in the proper state. Apply those modifications
-  // to the object before saving it. These will be cleared later
-  bool appliedArchetypeModifications = CogSerialization::PreProcessForCopy(cog, mCachedModifications);
+  // If this object is an Archetype and a child of another Archetype, it may
+  // have modifications in that Archetype required to create it in the proper
+  // state. Apply those modifications to the object before saving it. These will
+  // be cleared later
+  bool appliedArchetypeModifications =
+      CogSerialization::PreProcessForCopy(cog, mCachedModifications);
 
-  // Create a copy of our local modifications to restore later if pre-process didn't
-  if(appliedArchetypeModifications == false)
+  // Create a copy of our local modifications to restore later if pre-process
+  // didn't
+  if (appliedArchetypeModifications == false)
     mCachedModifications.Cache(object);
 
   // Serialize the object to our buffer
@@ -64,20 +55,19 @@ void CogRestoreState::StoreObjectState(Object* object)
   saver.OpenBuffer();
   saver.SaveInstance(cog);
 
-  // Restore original modifications. This step is extra work when we plan on deleting the object
-  // and could be optimized out
-  if(appliedArchetypeModifications)
+  // Restore original modifications. This step is extra work when we plan on
+  // deleting the object and could be optimized out
+  if (appliedArchetypeModifications)
     CogSerialization::PostProcessAfterCopy(cog, mCachedModifications);
 
   mSerializationBuffer = saver.GetString();
 }
 
-//******************************************************************************
 Object* CogRestoreState::RestoreObject()
 {
   // Can't do anything without the space
   Space* space = mSpace;
-  if(space == NULL)
+  if (space == NULL)
     return nullptr;
 
   CogInitializer initializer(space);
@@ -85,21 +75,21 @@ Object* CogRestoreState::RestoreObject()
   // If the object is still alive, we can assume it was detached
   Cog* object = mObject;
   Cog* oldObject = nullptr;
-  if(object)
+  if (object)
   {
     // Ignore it if it was being destroyed
-    if(object->GetMarkedForDestruction())
+    if (object->GetMarkedForDestruction())
       object = nullptr;
 
     // Destroy the old object
     oldObject = object;
     object = nullptr;
 
-    if(oldObject)
+    if (oldObject)
       oldObject->Destroy();
   }
 
-  if(object == nullptr)
+  if (object == nullptr)
   {
     ErrorIf(mSerializationBuffer.Empty(), "Invalid data buffer.");
 
@@ -107,7 +97,7 @@ Object* CogRestoreState::RestoreObject()
     Status status;
     ObjectLoader loader;
     loader.OpenBuffer(status, mSerializationBuffer);
-    if(status.Failed())
+    if (status.Failed())
     {
       DoNotifyError("Failed to restore object", status.Message);
       return nullptr;
@@ -134,13 +124,13 @@ Object* CogRestoreState::RestoreObject()
 
   LocalModifications* modifications = LocalModifications::GetInstance();
 
-  if(Cog* parent = mParent)
+  if (Cog* parent = mParent)
   {
     // Attach to the old parent
     object->AttachToPreserveLocal(parent);
 
     // The parent object needs to know that we were locally added
-    if(oldObject == nullptr)
+    if (oldObject == nullptr)
       modifications->ChildAdded(parent->has(Hierarchy), object);
   }
 
@@ -159,7 +149,7 @@ Object* CogRestoreState::RestoreObject()
 
   // If the old object was selected, we want to re-insert the new object
   // in the old one's place
-  if(oldObject)
+  if (oldObject)
   {
     MetaSelection::ReplaceInAllSelections(oldObject, object);
 
@@ -169,9 +159,9 @@ Object* CogRestoreState::RestoreObject()
   }
 
   // Update all selections
-  forRange(MetaSelection* selection, MetaSelection::GetAllSelections())
+  forRange(MetaSelection * selection, MetaSelection::GetAllSelections())
   {
-    if(selection->Contains(oldObject))
+    if (selection->Contains(oldObject))
     {
       selection->Replace(oldObject, object);
       selection->FinalSelectionChanged();
@@ -181,41 +171,39 @@ Object* CogRestoreState::RestoreObject()
   return object;
 }
 
-//******************************************************************************
 Cog* CogRestoreState::GetObject()
 {
   return mObject;
 }
 
-//******************************************************************************
 Space* CogRestoreState::GetSpace()
 {
   return mSpace;
 }
 
-//******************************************************************************
 void CogRestoreState::DestroyObject(bool restoreSpaceModifiedState)
 {
   Cog* object = mObject;
   Space* space = mSpace;
 
-  if(object == nullptr || space == nullptr)
+  if (object == nullptr || space == nullptr)
     return;
 
   if (Z::gEngine->IsReadOnly())
   {
-    DoNotifyWarning("Operations", "Cannot destroy objects when in read-only mode");
+    DoNotifyWarning("Operations",
+                    "Cannot destroy objects when in read-only mode");
     return;
   }
 
   // Mark our parent as modified
-  if(Cog* parent = object->GetParent())
+  if (Cog* parent = object->GetParent())
   {
     // Tell the parent that its child was removed
     LocalModifications* modifications = LocalModifications::GetInstance();
     modifications->ChildRemoved(parent->has(Hierarchy), object);
   }
-  
+
   object->Destroy();
 
   if (restoreSpaceModifiedState)
@@ -236,10 +224,9 @@ void CogRestoreState::DestroyObject(bool restoreSpaceModifiedState)
   MetaSelection::RemoveObjectFromAllSelections(object);
 }
 
-//******************************************************************************
 void CogRestoreState::RestoreSpaceModifiedState()
 {
-  if(Space* space = mSpace)
+  if (Space* space = mSpace)
   {
     if (mSpaceWasModified)
       space->MarkModified();
@@ -248,18 +235,17 @@ void CogRestoreState::RestoreSpaceModifiedState()
   }
 }
 
-//******************************************************************************
 void CogRestoreState::StoreChildUndoIds(Cog* object)
 {
   // Store all Components
-  forRange(Component* component, object->GetComponents())
+  forRange(Component * component, object->GetComponents())
   {
     UndoObjectId componentUndoId = Z::gUndoMap->GetUndoId(component);
     mChildUndoIds.PushBack(componentUndoId);
   }
 
   // Store all children
-  forRange(Cog& child, object->GetChildren())
+  forRange(Cog & child, object->GetChildren())
   {
     // Store the object
     UndoObjectId undoId = Z::gUndoMap->GetUndoId(child);
@@ -269,13 +255,13 @@ void CogRestoreState::StoreChildUndoIds(Cog* object)
   }
 }
 
-//******************************************************************************
 void CogRestoreState::RestoreChildUndoIds(Cog* object, uint& childIndex)
 {
   // Update the components
-  forRange(Component* component, object->GetComponents())
+  forRange(Component * component, object->GetComponents())
   {
-    ReturnIf(childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
+    ReturnIf(
+        childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
 
     // Update the undo handle
     UndoObjectId& componentUndoId = mChildUndoIds[childIndex];
@@ -285,9 +271,10 @@ void CogRestoreState::RestoreChildUndoIds(Cog* object, uint& childIndex)
   }
 
   // Update all children
-  forRange(Cog& child, object->GetChildren())
+  forRange(Cog & child, object->GetChildren())
   {
-    ReturnIf(childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
+    ReturnIf(
+        childIndex >= mChildUndoIds.Size(), , "Invalid index in child Id's");
 
     // Update the object
     UndoObjectId& undoId = mChildUndoIds[childIndex];
@@ -299,4 +286,4 @@ void CogRestoreState::RestoreChildUndoIds(Cog* object, uint& childIndex)
   }
 }
 
-}//namespace Zero
+} // namespace Zero

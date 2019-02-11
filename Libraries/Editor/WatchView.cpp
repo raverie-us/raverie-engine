@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ObjectView.cpp
-/// 
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,12 +6,12 @@ namespace Zero
 
 namespace Column
 {
-  const String Icon = "Icon";
-  const String Description = "Description";
-  const String File = "File";
-  const String Line = "Line";
-  const String Library = "Library";
-}
+const String Icon = "Icon";
+const String Description = "Description";
+const String File = "File";
+const String Line = "Line";
+const String Library = "Library";
+} // namespace Column
 
 struct WatchEntry
 {
@@ -30,15 +22,14 @@ struct WatchEntry
   Array<WatchEntry*> Children;
 };
 
-//------------------------------------------------------------------ Data Source
-#define AddEntry(varName, name, value, type, parent) \
-  WatchEntry* varName = new WatchEntry(); \
-  varName->Name = name; \
-  varName->Value = value; \
-  varName->Type = type; \
-  varName->Parent = parent; \
-  if(parent) \
-    parent->Children.PushBack(varName); \
+#define AddEntry(varName, name, value, type, parent)                           \
+  WatchEntry* varName = new WatchEntry();                                      \
+  varName->Name = name;                                                        \
+  varName->Value = value;                                                      \
+  varName->Type = type;                                                        \
+  varName->Parent = parent;                                                    \
+  if (parent)                                                                  \
+    parent->Children.PushBack(varName);                                        \
   mEntries.PushBack(varName);
 
 class WatchViewSource : public DataSource
@@ -51,26 +42,38 @@ public:
     WatchEntry* nullPtr = NULL;
     // Root
     AddEntry(rootEntry, "root", "", "", nullPtr);
-    AddEntry(thisEntry, "this", "0x0cb4ca38 {Position={...} }", "Zero::PlayerController* const", rootEntry);
-    AddEntry(pos, "Position", "{x=5.0999999, y=16.000000, z=7.5000000 ...}", "Math::Vector3", thisEntry);
+    AddEntry(thisEntry,
+             "this",
+             "0x0cb4ca38 {Position={...} }",
+             "Zero::PlayerController* const",
+             rootEntry);
+    AddEntry(pos,
+             "Position",
+             "{x=5.0999999, y=16.000000, z=7.5000000 ...}",
+             "Math::Vector3",
+             thisEntry);
     AddEntry(posX, "x", "5.0999999", "float", pos);
     AddEntry(posY, "y", "16.000000", "float", pos);
     AddEntry(posZ, "z", "7.5000000", "float", pos);
-    AddEntry(thisPosEntry, "this->Position", "{x=5.0999999, y=16.000000, z=7.5000000 ...}", "Math::Vector3", rootEntry);
+    AddEntry(thisPosEntry,
+             "this->Position",
+             "{x=5.0999999, y=16.000000, z=7.5000000 ...}",
+             "Math::Vector3",
+             rootEntry);
     AddEntry(posX2, "x", "5.0999999", "float", thisPosEntry);
     AddEntry(posY2, "y", "16.000000", "float", thisPosEntry);
     AddEntry(posZ2, "z", "7.5000000", "float", thisPosEntry);
   }
 
-  //DataSource Interface
-  
-  //Data base Indexing
+  // DataSource Interface
+
+  // Data base Indexing
   DataEntry* GetRoot() override
   {
     return mEntries[0];
   }
 
-  //Safe Indexing
+  // Safe Indexing
   DataEntry* ToEntry(DataIndex index) override
   {
     return mEntries[(uint)index.Id];
@@ -94,63 +97,67 @@ public:
     return entry->Children.Size();
   }
 
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
     WatchEntry* entry = (WatchEntry*)(dataEntry);
     return entry->Children[index];
   }
 
-  //Tree expanding
+  // Tree expanding
   bool IsExpandable(DataEntry* dataEntry) override
   {
     WatchEntry* entry = (WatchEntry*)(dataEntry);
     return !entry->Children.Empty();
   }
 
-  //Data Base Cell Modification and Inspection
+  // Data Base Cell Modification and Inspection
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     WatchEntry* entry = (WatchEntry*)dataEntry;
-    
+
     static const String ItemIcon("ItemIcon");
     static const String Model("Model");
 
-    if(column == "Icon")
+    if (column == "Icon")
     {
-      if(entry->Children.Empty())
+      if (entry->Children.Empty())
         variant = ItemIcon;
       else
         variant = Model;
     }
-    if(column == "Name")
+    if (column == "Name")
     {
-      variant =  entry->Name;
+      variant = entry->Name;
     }
-    if(column == "Value")
+    if (column == "Value")
     {
       variant = entry->Value;
     }
-    if(column == "Type")
+    if (column == "Type")
     {
       variant = entry->Type;
     }
   }
 
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     WatchEntry* entry = (WatchEntry*)dataEntry;
     bool result = false;
-    if(column == "Name")
+    if (column == "Name")
     {
       entry->Name = variant.Get<String>();
       result = true;
     }
-    if(column == "Value")
+    if (column == "Value")
     {
       entry->Value = variant.Get<String>();
       result = true;
     }
-    if(column == "Type")
+    if (column == "Type")
     {
       entry->Type = variant.Get<String>();
       result = true;
@@ -159,9 +166,7 @@ public:
   }
 };
 
-//------------------------------------------------------------------ Object View
-WatchView::WatchView(Composite* parent)
-  :Composite(parent)
+WatchView::WatchView(Composite* parent) : Composite(parent)
 {
   mTree = new TreeView(this);
   mSource = NULL;
@@ -182,8 +187,8 @@ WatchView::~WatchView()
 
 void WatchView::BuildFormat(TreeFormatting& formatting)
 {
-  formatting.Flags.SetFlag(FormatFlags::ShowHeaders | 
-                           FormatFlags::ShowSeparators | 
+  formatting.Flags.SetFlag(FormatFlags::ShowHeaders |
+                           FormatFlags::ShowSeparators |
                            FormatFlags::ColumnsResizable);
 
   // Icon
@@ -223,4 +228,4 @@ void WatchView::BuildFormat(TreeFormatting& formatting)
   format->Editable = false;
 }
 
-}//namespace Zero
+} // namespace Zero

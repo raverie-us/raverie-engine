@@ -1,8 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 #include "opus.h"
@@ -12,75 +8,83 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//--------------------------------------------------------------------------------- Decoded Packet
+//Decoded Packet
 
-//************************************************************************************************
-DecodedPacket::DecodedPacket(unsigned bufferSize) :
-  mSamples(bufferSize)
+DecodedPacket::DecodedPacket(unsigned bufferSize) : mSamples(bufferSize)
 {
-
 }
 
-//************************************************************************************************
 DecodedPacket::DecodedPacket(const DecodedPacket& copy) :
-  mSamples(MoveReference<Array<float>>(const_cast<DecodedPacket&>(copy).mSamples))
+    mSamples(
+        MoveReference<Array<float>>(const_cast<DecodedPacket&>(copy).mSamples))
 {
-
 }
 
-//************************************************************************************************
 DecodedPacket& DecodedPacket::operator=(const DecodedPacket& other)
 {
-  mSamples = MoveReference<Array<float>>(const_cast<DecodedPacket&>(other).mSamples);
+  mSamples =
+      MoveReference<Array<float>>(const_cast<DecodedPacket&>(other).mSamples);
   return *this;
 }
 
-//--------------------------------------------------------------------------------- Packet Decoder
+//Packet Decoder
 
-//************************************************************************************************
 SingleChannelPacketDecoder::~SingleChannelPacketDecoder()
 {
   if (mDecoder)
     opus_decoder_destroy(mDecoder);
 }
 
-//************************************************************************************************
 void SingleChannelPacketDecoder::InitializeDecoder()
 {
   if (mDecoder)
     opus_decoder_destroy(mDecoder);
 
   int error;
-  mDecoder = opus_decoder_create(cSystemSampleRate, PacketEncoder::cChannels, &error);
+  mDecoder =
+      opus_decoder_create(cSystemSampleRate, PacketEncoder::cChannels, &error);
 }
 
-//************************************************************************************************
-void SingleChannelPacketDecoder::DecodePacket(const byte* packetData, const unsigned dataSize,
-  float*& decodedData, unsigned& numberOfSamples)
+void SingleChannelPacketDecoder::DecodePacket(const byte* packetData,
+                                              const unsigned dataSize,
+                                              float*& decodedData,
+                                              unsigned& numberOfSamples)
 {
   ReturnIf(!mDecoder, , "Tried to decode packet without initializing decoder");
 
-  numberOfSamples = PacketDecoder::DecodePacket(packetData, dataSize, mDecoder, &decodedData);
+  numberOfSamples =
+      PacketDecoder::DecodePacket(packetData, dataSize, mDecoder, &decodedData);
 }
 
-//--------------------------------------------------------------------------------- Packet Decoder
+//Packet Decoder
 
-//************************************************************************************************
-int PacketDecoder::DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder,
-  float** decodedData)
+int PacketDecoder::DecodePacket(const byte* packetData,
+                                unsigned dataSize,
+                                OpusDecoder* decoder,
+                                float** decodedData)
 {
   *decodedData = new float[AudioFileEncoder::cPacketFrames];
-  return opus_decode_float(decoder, packetData, dataSize, *decodedData, AudioFileEncoder::cPacketFrames, 0);
+  return opus_decode_float(decoder,
+                           packetData,
+                           dataSize,
+                           *decodedData,
+                           AudioFileEncoder::cPacketFrames,
+                           0);
 }
 
-//************************************************************************************************
-int PacketDecoder::DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder,
-  float* decodedData)
+int PacketDecoder::DecodePacket(const byte* packetData,
+                                unsigned dataSize,
+                                OpusDecoder* decoder,
+                                float* decodedData)
 {
-  return opus_decode_float(decoder, packetData, dataSize, decodedData, AudioFileEncoder::cPacketFrames, 0);
+  return opus_decode_float(decoder,
+                           packetData,
+                           dataSize,
+                           decodedData,
+                           AudioFileEncoder::cPacketFrames,
+                           0);
 }
 
-//************************************************************************************************
 int PacketDecoder::GetPacketDataSize(const byte* packetHeader)
 {
   // Read in the packet header from the buffer
@@ -94,15 +98,17 @@ int PacketDecoder::GetPacketDataSize(const byte* packetHeader)
     return (int)packHead.Size;
 }
 
-//************************************************************************************************
-unsigned PacketDecoder::OpenAndReadHeader(Status& status, const String& fileName,
-  File* file, FileHeader* header)
+unsigned PacketDecoder::OpenAndReadHeader(Status& status,
+                                          const String& fileName,
+                                          File* file,
+                                          FileHeader* header)
 {
   // Open the file
   file->Open(fileName, FileMode::Read, FileAccessPattern::Sequential);
   if (!file->IsOpen())
   {
-    status.SetFailed(String::Format("Unable to open audio file %s", fileName.c_str()));
+    status.SetFailed(
+        String::Format("Unable to open audio file %s", fileName.c_str()));
     return 0;
   }
 
@@ -111,7 +117,8 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status, const String& fileName
   // Check for an invalid size
   if (size < sizeof(FileHeader))
   {
-    status.SetFailed(String::Format("Unable to read audio file %s", fileName.c_str()));
+    status.SetFailed(
+        String::Format("Unable to read audio file %s", fileName.c_str()));
     return 0;
   }
 
@@ -120,14 +127,17 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status, const String& fileName
   // If the read failed, set the status message and return
   if (status.Failed())
   {
-    status.SetFailed(String::Format("Unable to read from audio file %s", fileName.c_str()));
+    status.SetFailed(
+        String::Format("Unable to read from audio file %s", fileName.c_str()));
     return 0;
   }
 
-  // If this isn't the right type of file, set the failed message, delete the buffer, and return
+  // If this isn't the right type of file, set the failed message, delete the
+  // buffer, and return
   if (header->Name[0] != 'Z' || header->Name[1] != 'E')
   {
-    status.SetFailed(String::Format("Audio file %s is an incorrect format", fileName.c_str()));
+    status.SetFailed(String::Format("Audio file %s is an incorrect format",
+                                    fileName.c_str()));
     return 0;
   }
 
@@ -135,8 +145,9 @@ unsigned PacketDecoder::OpenAndReadHeader(Status& status, const String& fileName
   return (unsigned)size - sizeof(FileHeader);
 }
 
-//************************************************************************************************
-bool PacketDecoder::CreateDecoders(Status& status, OpusDecoder** decoderArray, int howMany)
+bool PacketDecoder::CreateDecoders(Status& status,
+                                   OpusDecoder** decoderArray,
+                                   int howMany)
 {
   int error;
   // Create a decoder for each channel
@@ -148,7 +159,8 @@ bool PacketDecoder::CreateDecoders(Status& status, OpusDecoder** decoderArray, i
     if (error < 0)
     {
       // Set the failed message
-      status.SetFailed(String::Format("Error creating audio decoder: %s", opus_strerror(error)));
+      status.SetFailed(String::Format("Error creating audio decoder: %s",
+                                      opus_strerror(error)));
 
       // Remove any previously created decoders
       for (short j = 0; j < i; ++j)
@@ -164,7 +176,6 @@ bool PacketDecoder::CreateDecoders(Status& status, OpusDecoder** decoderArray, i
   return true;
 }
 
-//************************************************************************************************
 void PacketDecoder::DestroyDecoders(OpusDecoder** decoderArray, int howMany)
 {
   // Destroy each decoder if it exists
@@ -178,9 +189,10 @@ void PacketDecoder::DestroyDecoders(OpusDecoder** decoderArray, int howMany)
   }
 }
 
-//************************************************************************************************
-int PacketDecoder::GetPacketFromMemory(byte* packetDataToWrite, const byte* inputData,
-  unsigned inputDataSize, unsigned* dataIndex)
+int PacketDecoder::GetPacketFromMemory(byte* packetDataToWrite,
+                                       const byte* inputData,
+                                       unsigned inputDataSize,
+                                       unsigned* dataIndex)
 {
   if (!inputData || *dataIndex >= inputDataSize)
     return -1;
@@ -197,16 +209,16 @@ int PacketDecoder::GetPacketFromMemory(byte* packetDataToWrite, const byte* inpu
   return packetDataSize;
 }
 
-//************************************************************************************************
 int ReturnError(ThreadLock* lockObject)
 {
   lockObject->Unlock();
   return -1;
 }
 
-//************************************************************************************************
-int PacketDecoder::GetPacketFromFile(byte* packetDataToWrite, File* inputFile,
-  FilePosition* filePosition, ThreadLock* lockObject)
+int PacketDecoder::GetPacketFromFile(byte* packetDataToWrite,
+                                     File* inputFile,
+                                     FilePosition* filePosition,
+                                     ThreadLock* lockObject)
 {
   if (!inputFile || !inputFile->IsOpen())
     return -1;
@@ -243,38 +255,37 @@ int PacketDecoder::GetPacketFromFile(byte* packetDataToWrite, File* inputFile,
   return packetDataSize;
 }
 
-//----------------------------------------------------------------------------------- File Decoder
+//File Decoder
 
-//************************************************************************************************
 OsInt StartThreadForDecoding(void* data)
 {
   ((AudioFileDecoder*)data)->DecodingLoopThreaded();
   return 0;
 }
 
-//************************************************************************************************
-AudioFileDecoder::AudioFileDecoder(int channels, unsigned samplesPerChannel, FileDecoderCallback callback,
-  void* callbackData) :
-  mChannels(channels),
-  mSamplesPerChannel(samplesPerChannel),
-  mCallback(callback),
-  mCallbackData(callbackData),
-  mShutDownSignal(0)
+AudioFileDecoder::AudioFileDecoder(int channels,
+                                   unsigned samplesPerChannel,
+                                   FileDecoderCallback callback,
+                                   void* callbackData) :
+    mChannels(channels),
+    mSamplesPerChannel(samplesPerChannel),
+    mCallback(callback),
+    mCallbackData(callbackData),
+    mShutDownSignal(0)
 {
   // Set all decoder pointers to null
   memset(mDecoders, 0, sizeof(OpusDecoder*) * cMaxChannels);
 }
 
-//************************************************************************************************
 AudioFileDecoder::~AudioFileDecoder()
 {
   StopDecodingThread();
 }
 
-//************************************************************************************************
 void AudioFileDecoder::DecodeNextSection()
 {
-  // If the system is threaded, increment the semaphore to trigger another decode
+  // If the system is threaded, increment the semaphore to trigger another
+  // decode
   if (ThreadingEnabled)
     DecodingSemaphore.Increment();
   // Otherwise add this object to the list of tasks to be run on update
@@ -282,7 +293,6 @@ void AudioFileDecoder::DecodeNextSection()
     Z::gSound->Mixer.DecodingTasks.PushBack(this);
 }
 
-//************************************************************************************************
 bool AudioFileDecoder::DecodePacketThreaded()
 {
   // Note: This function happens on the decoding thread
@@ -302,7 +312,8 @@ bool AudioFileDecoder::DecodePacketThreaded()
       return false;
 
     // Decode the packet into the buffer for this channel
-    frames = PacketDecoder::DecodePacket(packetData, packetDataSize, mDecoders[i], decodedPackets[i]);
+    frames = PacketDecoder::DecodePacket(
+        packetData, packetDataSize, mDecoders[i], decodedPackets[i]);
 
     ErrorIf(frames < 0, opus_strerror(frames));
   }
@@ -320,7 +331,8 @@ bool AudioFileDecoder::DecodePacketThreaded()
 
       // Samples should be between [-1, +1] but it's possible
       // encoding caused the sample to jump beyond 1
-      ErrorIf(newPacket.mSamples[index] < -2.0f || newPacket.mSamples[index] > 2.0f);
+      ErrorIf(newPacket.mSamples[index] < -2.0f ||
+              newPacket.mSamples[index] > 2.0f);
     }
   }
 
@@ -330,7 +342,6 @@ bool AudioFileDecoder::DecodePacketThreaded()
   return true;
 }
 
-//************************************************************************************************
 void AudioFileDecoder::StartDecodingThread()
 {
   // Start the decoding thread only if threading is enabled
@@ -340,7 +351,6 @@ void AudioFileDecoder::StartDecodingThread()
   }
 }
 
-//************************************************************************************************
 void AudioFileDecoder::StopDecodingThread()
 {
   if (ThreadingEnabled)
@@ -358,28 +368,29 @@ void AudioFileDecoder::StopDecodingThread()
   }
   else
   {
-    // Remove any existing decoding tasks (returns false if value was not found in the array)
+    // Remove any existing decoding tasks (returns false if value was not found
+    // in the array)
     while (Z::gSound->Mixer.DecodingTasks.EraseValue(this))
     {
     }
   }
 }
 
-//************************************************************************************************
 void AudioFileDecoder::ClearData()
 {
   PacketDecoder::DestroyDecoders(mDecoders, mChannels);
 }
 
-//---------------------------------------------------------------------- Decompressed File Decoder
+//Decompressed File Decoder
 
-//************************************************************************************************
-DecompressedDecoder::DecompressedDecoder(Status& status, const String& fileName,
-  FileDecoderCallback callback, void* callbackData) :
-  AudioFileDecoder(0, 0, callback, callbackData),
-  mCompressedData(nullptr),
-  mDataIndex(0),
-  mDataSize(0)
+DecompressedDecoder::DecompressedDecoder(Status& status,
+                                         const String& fileName,
+                                         FileDecoderCallback callback,
+                                         void* callbackData) :
+    AudioFileDecoder(0, 0, callback, callbackData),
+    mCompressedData(nullptr),
+    mDataIndex(0),
+    mDataSize(0)
 {
   // If no valid callback was provided, don't do anything
   if (!callback)
@@ -401,13 +412,11 @@ DecompressedDecoder::DecompressedDecoder(Status& status, const String& fileName,
   StartDecodingThread();
 }
 
-//************************************************************************************************
 DecompressedDecoder::~DecompressedDecoder()
 {
   ClearData();
 }
 
-//************************************************************************************************
 void DecompressedDecoder::DecodingLoopThreaded()
 {
   // Keep looping as long as we are still decoding
@@ -424,7 +433,8 @@ void DecompressedDecoder::DecodingLoopThreaded()
     // Decode a packet and check if we should keep looping
     decoding = DecodePacketThreaded();
 
-    // We need to keep decoding until we get through everything so trigger another packet
+    // We need to keep decoding until we get through everything so trigger
+    // another packet
     if (decoding)
       DecodeNextSection();
   }
@@ -433,24 +443,24 @@ void DecompressedDecoder::DecodingLoopThreaded()
   ClearData();
 }
 
-//************************************************************************************************
 int DecompressedDecoder::GetNextPacket(byte* packetData)
 {
-  return PacketDecoder::GetPacketFromMemory(packetData, mCompressedData, mDataSize, &mDataIndex);
+  return PacketDecoder::GetPacketFromMemory(
+      packetData, mCompressedData, mDataSize, &mDataIndex);
 }
 
-//************************************************************************************************
 void DecompressedDecoder::RunDecodingTask()
 {
   DecodePacketThreaded();
 }
 
-//************************************************************************************************
-void DecompressedDecoder::OpenAndReadFile(Status& status, const String& fileName)
+void DecompressedDecoder::OpenAndReadFile(Status& status,
+                                          const String& fileName)
 {
   File inputFile;
   FileHeader header;
-  mDataSize = PacketDecoder::OpenAndReadHeader(status, fileName, &inputFile, &header);
+  mDataSize =
+      PacketDecoder::OpenAndReadHeader(status, fileName, &inputFile, &header);
   if (mDataSize == 0)
     return;
 
@@ -470,7 +480,6 @@ void DecompressedDecoder::OpenAndReadFile(Status& status, const String& fileName
   mChannels = header.Channels;
 }
 
-//************************************************************************************************
 void DecompressedDecoder::ClearData()
 {
   AudioFileDecoder::ClearData();
@@ -483,20 +492,25 @@ void DecompressedDecoder::ClearData()
   }
 }
 
-//------------------------------------------------------------------------------ Streaming Decoder
+//Streaming Decoder
 
-//************************************************************************************************
-StreamingDecoder::StreamingDecoder(Status& status, File* inputFile, ThreadLock* lock,
-  unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData) :
-  AudioFileDecoder(channels, frames, callback, callbackData),
-  mCompressedData(nullptr),
-  mDataIndex(0),
-  mDataSize(0),
-  mInputFile(inputFile),
-  mFilePosition(sizeof(FileHeader)),
-  mLock(lock)
+StreamingDecoder::StreamingDecoder(Status& status,
+                                   File* inputFile,
+                                   ThreadLock* lock,
+                                   unsigned channels,
+                                   unsigned frames,
+                                   FileDecoderCallback callback,
+                                   void* callbackData) :
+    AudioFileDecoder(channels, frames, callback, callbackData),
+    mCompressedData(nullptr),
+    mDataIndex(0),
+    mDataSize(0),
+    mInputFile(inputFile),
+    mFilePosition(sizeof(FileHeader)),
+    mLock(lock)
 {
-  // If no valid callback was provided or the file is not open, don't do anything
+  // If no valid callback was provided or the file is not open, don't do
+  // anything
   if (!callback || !inputFile->IsOpen())
     return;
 
@@ -507,16 +521,20 @@ StreamingDecoder::StreamingDecoder(Status& status, File* inputFile, ThreadLock* 
   StartDecodingThread();
 }
 
-//************************************************************************************************
-StreamingDecoder::StreamingDecoder(Status& status, byte* inputData, unsigned dataSize,
-  unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData) :
-  AudioFileDecoder(channels, frames, callback, callbackData),
-  mCompressedData(inputData),
-  mDataIndex(0),
-  mDataSize(dataSize),
-  mInputFile(nullptr),
-  mFilePosition(sizeof(FileHeader)),
-  mLock(nullptr)
+StreamingDecoder::StreamingDecoder(Status& status,
+                                   byte* inputData,
+                                   unsigned dataSize,
+                                   unsigned channels,
+                                   unsigned frames,
+                                   FileDecoderCallback callback,
+                                   void* callbackData) :
+    AudioFileDecoder(channels, frames, callback, callbackData),
+    mCompressedData(inputData),
+    mDataIndex(0),
+    mDataSize(dataSize),
+    mInputFile(nullptr),
+    mFilePosition(sizeof(FileHeader)),
+    mLock(nullptr)
 {
   // If no valid callback or data buffer was provided, don't do anything
   if (!callback || !inputData)
@@ -529,7 +547,6 @@ StreamingDecoder::StreamingDecoder(Status& status, byte* inputData, unsigned dat
   StartDecodingThread();
 }
 
-//************************************************************************************************
 void StreamingDecoder::DecodingLoopThreaded()
 {
   // Keep looping as long as we are still decoding
@@ -548,22 +565,21 @@ void StreamingDecoder::DecodingLoopThreaded()
   }
 }
 
-//************************************************************************************************
 int StreamingDecoder::GetNextPacket(byte* packetData)
 {
   if (mCompressedData)
-    return PacketDecoder::GetPacketFromMemory(packetData, mCompressedData, mDataSize, &mDataIndex);
+    return PacketDecoder::GetPacketFromMemory(
+        packetData, mCompressedData, mDataSize, &mDataIndex);
   else
-    return PacketDecoder::GetPacketFromFile(packetData, mInputFile, &mFilePosition, mLock);
+    return PacketDecoder::GetPacketFromFile(
+        packetData, mInputFile, &mFilePosition, mLock);
 }
 
-//************************************************************************************************
 void StreamingDecoder::RunDecodingTask()
 {
   DecodePacketThreaded();
 }
 
-//************************************************************************************************
 void StreamingDecoder::Reset()
 {
   // Stop any current decoding
@@ -577,8 +593,8 @@ void StreamingDecoder::Reset()
   mDataIndex = 0;
   mFilePosition = sizeof(FileHeader);
 
-  // Destroy the current decoders (since they rely on history for decoding, they can't 
-  // continue from the beginning of the file)
+  // Destroy the current decoders (since they rely on history for decoding, they
+  // can't continue from the beginning of the file)
   ClearData();
 
   // Create new decoders

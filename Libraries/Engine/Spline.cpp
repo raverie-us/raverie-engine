@@ -1,22 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-
 namespace Events
 {
 DefineEvent(SplineModified);
 DefineEvent(QuerySpline);
-}//namespace Events
+} // namespace Events
 
- //-------------------------------------------------------------------SplineEvent
 ZilchDefineType(SplineEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -46,7 +39,6 @@ void SplineEvent::SetSpline(Spline* spline)
   mSpline = spline;
 }
 
-//-------------------------------------------------------------------SplineControlPoint
 ZilchDefineType(SplineControlPoint, builder, type)
 {
   ZeroBindDocumented();
@@ -59,7 +51,8 @@ ZilchDefineType(SplineControlPoint, builder, type)
 
   Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
   worldPosition->AddAttribute(DeprecatedAttribute);
-  worldPosition->Description = "This field is deprecated. Use Position instead.";
+  worldPosition->Description =
+      "This field is deprecated. Use Position instead.";
 }
 
 SplineControlPoint::SplineControlPoint()
@@ -72,7 +65,6 @@ SplineControlPoint::SplineControlPoint(Vec3Param position)
   mPosition = position;
 }
 
-//-------------------------------------------------------------------SplineControlPoints
 ZilchDefineType(SplineControlPoints, builder, type)
 {
   ZeroBindDocumented();
@@ -99,12 +91,14 @@ void SplineControlPoints::Add(const SplineControlPoint& controlPoint)
   mOwner->mIsModified = true;
 }
 
-void SplineControlPoints::Insert(int index, const SplineControlPoint& controlPoint)
+void SplineControlPoints::Insert(int index,
+                                 const SplineControlPoint& controlPoint)
 {
   int count = GetCount();
-  if(index >= count)
+  if (index >= count)
   {
-    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format(
+        "Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return;
   }
@@ -116,9 +110,10 @@ void SplineControlPoints::Insert(int index, const SplineControlPoint& controlPoi
 void SplineControlPoints::RemoveAt(int index)
 {
   int count = GetCount();
-  if(index >= count)
+  if (index >= count)
   {
-    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format(
+        "Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return;
   }
@@ -130,9 +125,10 @@ void SplineControlPoints::RemoveAt(int index)
 SplineControlPoint SplineControlPoints::Get(int index) const
 {
   int count = GetCount();
-  if(index >= count)
+  if (index >= count)
   {
-    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format(
+        "Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return Vec3::cZero;
   }
@@ -143,9 +139,10 @@ SplineControlPoint SplineControlPoints::Get(int index) const
 void SplineControlPoints::Set(int index, const SplineControlPoint& value)
 {
   int count = GetCount();
-  if(index >= count)
+  if (index >= count)
   {
-    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format(
+        "Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return;
   }
@@ -164,7 +161,6 @@ int SplineControlPoints::GetCount() const
   return mControlPoints.Size();
 }
 
-//-------------------------------------------------------------------SplineBakedPoint
 ZilchDefineType(SplineBakedPoint, builder, type)
 {
   ZeroBindDocumented();
@@ -177,7 +173,8 @@ ZilchDefineType(SplineBakedPoint, builder, type)
 
   Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
   worldPosition->AddAttribute(DeprecatedAttribute);
-  worldPosition->Description = "This field is deprecated. Use Position instead.";
+  worldPosition->Description =
+      "This field is deprecated. Use Position instead.";
 }
 
 SplineBakedPoint::SplineBakedPoint()
@@ -190,7 +187,6 @@ SplineBakedPoint::SplineBakedPoint(Vec3Param position)
   mPosition = position;
 }
 
-//-------------------------------------------------------------------SplineBakedPoints
 ZilchDefineType(SplineBakedPoints, builder, type)
 {
   ZeroBindDocumented();
@@ -217,9 +213,10 @@ SplineBakedPoint SplineBakedPoints::Get(uint index) const
 {
   mOwner->RebuildIfModified();
   size_t count = GetCount();
-  if(index >= count)
+  if (index >= count)
   {
-    String msg = String::Format("Index %d is invalid. Array only contains %d elements.", index, count);
+    String msg = String::Format(
+        "Index %d is invalid. Array only contains %d elements.", index, count);
     DoNotifyException("Invalid index", msg);
     return Vec3::cZero;
   }
@@ -228,7 +225,6 @@ SplineBakedPoint SplineBakedPoints::Get(uint index) const
   return SplineBakedPoint(position);
 }
 
-//-------------------------------------------------------------------SplineSampleData
 ZilchDefineType(SplineSampleData, builder, type)
 {
   ZeroBindDocumented();
@@ -252,7 +248,6 @@ SplineSampleData::SplineSampleData()
   mTangent = mTangent = Vec3::cZero;
 }
 
-//-------------------------------------------------------------------Spline
 ZilchDefineType(Spline, builder, type)
 {
   ZeroBindDocumented();
@@ -267,11 +262,11 @@ ZilchDefineType(Spline, builder, type)
   ZilchBindGetterProperty(TotalDistance);
   ZilchBindMethod(SampleDistance);
   ZilchBindMethod(SampleNormalized);
-  
+
   ZilchBindMethod(RebuildIfModified);
   ZilchBindMethod(ForceRebuild);
   ZilchBindMethod(DebugDraw);
-  
+
   ZilchBindGetterProperty(ControlPoints);
   ZilchBindGetterProperty(BakedPoints);
 }
@@ -298,7 +293,7 @@ Spline* Spline::Clone() const
   newSpline->SetClosed(GetClosed());
   newSpline->SetSplineType(GetSplineType());
   newSpline->SetError(GetError());
-  for(int i = 0; i < mControlPoints.GetCount(); ++i)
+  for (int i = 0; i < mControlPoints.GetCount(); ++i)
     newSpline->mControlPoints.Add(mControlPoints.Get(i));
   return newSpline;
 }
@@ -333,10 +328,11 @@ real Spline::GetError() const
 void Spline::SetError(real error)
 {
   real minError = real(0.0001);
-  if(error < minError)
+  if (error < minError)
   {
     String msg = String::Format("The error cannot be smaller than %g. "
-      "The error has been clamped.", minError);
+                                "The error has been clamped.",
+                                minError);
     DoNotifyWarning("Error too small", msg);
     error = minError;
   }
@@ -368,7 +364,7 @@ SplineSampleData Spline::SampleNormalized(float time)
 
 void Spline::RebuildIfModified()
 {
-  if(!mIsModified)
+  if (!mIsModified)
     return;
 
   ForceRebuild();
@@ -379,7 +375,7 @@ void Spline::ForceRebuild()
   mIsModified = false;
   mCurve.Clear();
   Vec3Array controlPoints;
-  for(size_t i = 0; i < mControlPoints.mControlPoints.Size(); ++i)
+  for (size_t i = 0; i < mControlPoints.mControlPoints.Size(); ++i)
     controlPoints.PushBack(mControlPoints.mControlPoints[i].mPosition);
   mCurve.AddControlPoints(controlPoints);
   mBakedCurve.Bake(mCurve, mError);
@@ -393,7 +389,7 @@ void Spline::DebugDraw(Vec4Param color)
 {
   RebuildIfModified();
 
-  for(size_t i = 1; i < mBakedCurve.Size(); ++i)
+  for (size_t i = 1; i < mBakedCurve.Size(); ++i)
   {
     Vec3 p0 = mBakedCurve.GetPoint(i - 1).Position;
     Vec3 p1 = mBakedCurve.GetPoint(i).Position;
@@ -414,4 +410,4 @@ SplineBakedPoints* Spline::GetBakedPoints()
   return &mBakedPoints;
 }
 
-}//namespace Zero
+} // namespace Zero

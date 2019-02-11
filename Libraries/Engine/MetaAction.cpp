@@ -1,27 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Action.cpp
-/// Implementation of the action system.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ MetaAnimatePropertyAction
+//MetaAnimatePropertyAction
 
 typedef Any (*Interpolator)(AnyParam starting, AnyParam ending, float t);
 typedef float (*Easer)(float inT);
 
-template<typename type>
+template <typename type>
 Any InterpolateType(AnyParam starting, AnyParam ending, float t)
 {
   type* a = starting.Get<type*>();
-  type* b =   ending.Get<type*>();
+  type* b = ending.Get<type*>();
   return Interpolation::Lerp<type>::Interpolate(*a, *b, t);
 }
 
@@ -30,7 +22,9 @@ Any NoInterpolation(AnyParam starting, AnyParam ending, float t)
   return ending;
 }
 
-#define InterpolatorFor(type) if (typeId == ZilchTypeId(type)) return InterpolateType<type>;
+#define InterpolatorFor(type)                                                  \
+  if (typeId == ZilchTypeId(type))                                             \
+    return InterpolateType<type>;
 
 Interpolator GetInterpolator(Type* typeId)
 {
@@ -48,26 +42,44 @@ Interpolator GetInterpolator(Type* typeId)
 
 Easer GetEaser(uint easeType)
 {
-  switch(easeType)
+  switch (easeType)
   {
-    case EaseType::QuadIn:        return Ease::Quad::In;
-    case EaseType::QuadOut:       return Ease::Quad::Out;
-    case EaseType::QuadInOut:     return Ease::Quad::InOut;
-    case EaseType::SinIn:         return Ease::Sin::In;
-    case EaseType::SinOut:        return Ease::Sin::Out;
-    case EaseType::SinInOut:      return Ease::Sin::InOut;
-    case EaseType::ElasticIn:     return Ease::Elastic::In;
-    case EaseType::ElasticOut:    return Ease::Elastic::Out;
-    case EaseType::ElasticInOut:  return Ease::Elastic::InOut;
-    case EaseType::BounceIn:      return Ease::Bounce::In;
-    case EaseType::BounceOut:     return Ease::Bounce::Out;
-    case EaseType::BounceInOut:   return Ease::Bounce::InOut;
-    case EaseType::BackIn:        return Ease::Back::In;
-    case EaseType::BackOut:       return Ease::Back::Out;
-    case EaseType::BackInOut:     return Ease::Back::InOut;
-    case EaseType::WarpIn:        return Ease::Warp::In;
-    case EaseType::WarpOut:       return Ease::Warp::Out;
-    case EaseType::WarpInOut:     return Ease::Warp::InOut;
+  case EaseType::QuadIn:
+    return Ease::Quad::In;
+  case EaseType::QuadOut:
+    return Ease::Quad::Out;
+  case EaseType::QuadInOut:
+    return Ease::Quad::InOut;
+  case EaseType::SinIn:
+    return Ease::Sin::In;
+  case EaseType::SinOut:
+    return Ease::Sin::Out;
+  case EaseType::SinInOut:
+    return Ease::Sin::InOut;
+  case EaseType::ElasticIn:
+    return Ease::Elastic::In;
+  case EaseType::ElasticOut:
+    return Ease::Elastic::Out;
+  case EaseType::ElasticInOut:
+    return Ease::Elastic::InOut;
+  case EaseType::BounceIn:
+    return Ease::Bounce::In;
+  case EaseType::BounceOut:
+    return Ease::Bounce::Out;
+  case EaseType::BounceInOut:
+    return Ease::Bounce::InOut;
+  case EaseType::BackIn:
+    return Ease::Back::In;
+  case EaseType::BackOut:
+    return Ease::Back::Out;
+  case EaseType::BackInOut:
+    return Ease::Back::InOut;
+  case EaseType::WarpIn:
+    return Ease::Warp::In;
+  case EaseType::WarpOut:
+    return Ease::Warp::Out;
+  case EaseType::WarpInOut:
+    return Ease::Warp::InOut;
   }
   return Ease::Linear::InOut;
 }
@@ -87,7 +99,6 @@ public:
 
   MetaAnimateProperty()
   {
-
   }
 
   ActionState::Enum Update(float dt) override
@@ -96,14 +107,15 @@ public:
     if (mObject.IsNull())
       return ActionState::Completed;
 
-    if(mFlags.IsSet(ActionFlag::Started))
+    if (mFlags.IsSet(ActionFlag::Started))
     {
       // Update time
       mTime += dt;
       float t = mTime / mDuration;
 
       // Cap the at 1.0 to prevent overshooting
-      if(t > 1.0f) t = 1.0f;
+      if (t > 1.0f)
+        t = 1.0f;
 
       // Compute eased value
       float easedT = (*mEaser)(t);
@@ -113,7 +125,7 @@ public:
       mProperty->SetValue(mObject, newValue);
 
       // Check for completion
-      if(t < 1.0f)
+      if (t < 1.0f)
         return ActionState::Running;
       else
         return ActionState::Completed;
@@ -129,8 +141,11 @@ public:
   }
 };
 
-Action* CreateMetaAnimatePropertyAction(HandleParam handle, Property* property,  
-                                        float duration, AnyParam ending, EaseType::Enum ease)
+Action* CreateMetaAnimatePropertyAction(HandleParam handle,
+                                        Property* property,
+                                        float duration,
+                                        AnyParam ending,
+                                        EaseType::Enum ease)
 {
   MetaAnimateProperty* action = new MetaAnimateProperty();
   action->mDuration = duration;
@@ -144,8 +159,6 @@ Action* CreateMetaAnimatePropertyAction(HandleParam handle, Property* property,
 }
 
 
-//------------------------------------------------------------ MetaCallAction
-
 ActionState::Enum MetaCallAction::Update(float dt)
 {
   if (!mDelegate.IsNull())
@@ -153,4 +166,4 @@ ActionState::Enum MetaCallAction::Update(float dt)
   return ActionState::Completed;
 }
 
-}
+} // namespace Zero

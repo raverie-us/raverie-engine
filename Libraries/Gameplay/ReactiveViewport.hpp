@@ -1,5 +1,4 @@
-/// Authors: Nathan Carlson, Chris Peters
-/// Copyright 2010-2016, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -8,7 +7,6 @@ namespace Zero
 class CameraViewport;
 class ReactiveViewport;
 
-//--------------------------------------------------------- Viewport Mouse Event
 /// All mouse events that are forwarded to reactive
 /// components or the space use this event to add extra data
 class ViewportMouseEvent : public MouseEvent
@@ -23,7 +21,10 @@ public:
   Cog* GetHitObject();
   /// Camera viewport that generated this event
   CameraViewport* GetCameraViewport();
-  ReactiveViewport* GetViewport() { return mViewport; }
+  ReactiveViewport* GetViewport()
+  {
+    return mViewport;
+  }
 
   /// The world mouse position on the z plane at depth.
   Vec3 ToWorldZPlane(float worldDepth);
@@ -41,9 +42,11 @@ public:
 
   /// The intersection point with an object. Used with Reactive components.
   Vec3 mHitPosition;
-  /// The normal at the intersection point with an object. Used with Reactive components.
+  /// The normal at the intersection point with an object. Used with Reactive
+  /// components.
   Vec3 mHitNormal;
-  /// The uv texture coordinate at the intersection point, if applicable. Used with Reactive components.
+  /// The uv texture coordinate at the intersection point, if applicable. Used
+  /// with Reactive components.
   Vec2 mHitUv;
   /// The distance away the hit point is. Used with Reactive components.
   float mHitDistance;
@@ -55,7 +58,6 @@ public:
   HandleOf<ReactiveViewport> mViewport;
 };
 
-//------------------------------------------------------------ Reactive Viewport
 class ReactiveViewport : public Viewport
 {
 public:
@@ -63,7 +65,10 @@ public:
   ZilchDeclareType(ReactiveViewport, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport);
+  ReactiveViewport(Composite* parent,
+                   Space* space,
+                   Camera* camera,
+                   CameraViewport* cameraViewport);
 
   /// Needed to reset mouse trap position when viewport resizes.
   void UpdateTransform() override;
@@ -86,7 +91,8 @@ public:
   /// Used to track which object the mouse was over on a down click
   void OnMouseGenericDown(MouseEvent* e);
 
-  /// Checks which object the mouse click ended on to determine whether to forward the click event
+  /// Checks which object the mouse click ended on to determine whether to
+  /// forward the click event
   void OnMouseGenericClick(MouseEvent* e);
 
   /// Updates which object the mouse is currently over.
@@ -120,7 +126,6 @@ public:
   CogId mDownObject;
 };
 
-//------------------------------------------------------------------ Game Widget
 // Game Widget contains viewports and the
 // GameSession object
 class GameWidget : public Composite

@@ -1,70 +1,65 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StringUtility.cpp
-///
-/// 
-/// Authors: Chris Peters
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------- Strings
 bool CaseInsensitiveStringLess(StringParam a, StringParam b)
 {
   StringRange achars = a.All();
   StringRange bchars = b.All();
 
-  while(!achars.Empty() && !bchars.Empty())
+  while (!achars.Empty() && !bchars.Empty())
   {
     Rune aChar = UTF8::ToLower(achars.Front());
     Rune bChar = UTF8::ToLower(bchars.Front());
 
-    if(aChar < bChar)
+    if (aChar < bChar)
       return true;
 
-    if(aChar > bChar)
+    if (aChar > bChar)
       return false;
 
     achars.PopFront();
     bchars.PopFront();
   }
 
-  if(achars.Empty() && !bchars.Empty())
+  if (achars.Empty() && !bchars.Empty())
     return true;
 
   return false;
 }
 
-Pair<StringRange,StringRange> SplitOnLast(StringRange input, Rune delimiter)
+Pair<StringRange, StringRange> SplitOnLast(StringRange input, Rune delimiter)
 {
-  //With empty just return empty String
-  if(input.Empty())
-    return Pair<StringRange,StringRange>(input, input);
+  // With empty just return empty String
+  if (input.Empty())
+    return Pair<StringRange, StringRange>(input, input);
 
   uint numRunes = input.ComputeRuneCount();
 
   StringRange lastOf = input.FindLastOf(delimiter);
 
   // Delim found return string and empty
-  if(lastOf.Empty())
-    return Pair<StringRange,StringRange>(input, StringRange());
-  
-  if(lastOf.SizeInBytes() == 0)
-    return Pair<StringRange, StringRange>(StringRange(), input.SubString(input.Begin(), input.End()));
-  if(lastOf.SizeInBytes() == numRunes - 1)
-    return Pair<StringRange, StringRange>(input.SubString(input.Begin(), input.End()), StringRange());
+  if (lastOf.Empty())
+    return Pair<StringRange, StringRange>(input, StringRange());
 
-  return Pair<StringRange, StringRange>(input.SubString(input.Begin(), lastOf.End()), input.SubString(lastOf.Begin() + 1, lastOf.End()));
+  if (lastOf.SizeInBytes() == 0)
+    return Pair<StringRange, StringRange>(
+        StringRange(), input.SubString(input.Begin(), input.End()));
+  if (lastOf.SizeInBytes() == numRunes - 1)
+    return Pair<StringRange, StringRange>(
+        input.SubString(input.Begin(), input.End()), StringRange());
+
+  return Pair<StringRange, StringRange>(
+      input.SubString(input.Begin(), lastOf.End()),
+      input.SubString(lastOf.Begin() + 1, lastOf.End()));
 }
 
-Pair<StringRange,StringRange> SplitOnFirst(StringRange input, Rune delimiter)
+Pair<StringRange, StringRange> SplitOnFirst(StringRange input, Rune delimiter)
 {
   StringTokenRange tokenRange(input, delimiter);
-  StringRange left =  tokenRange.Front();
+  StringRange left = tokenRange.Front();
   StringRange right = StringRange(left.End(), input.End());
   return Pair<StringRange, StringRange>(left, right);
 }
@@ -74,7 +69,7 @@ StringRange StripBeforeLast(StringRange input, Rune delimiter)
   Pair<StringRange, StringRange> split = SplitOnLast(input, delimiter);
 
   // If the delimiter was not found the second will be empty
-  if(split.second.Empty())
+  if (split.second.Empty())
     return input;
   else
     return split.second;
@@ -109,9 +104,9 @@ char OnlyAlphaNumeric(char c)
     return c;
 }
 
-//******************************************************************************
 // Recursive helper for global string Permute below
-static void PermuteRecursive(char *src, uint start, uint end, Array<String>& perms)
+static void
+PermuteRecursive(char* src, uint start, uint end, Array<String>& perms)
 {
   // finished a permutation, add it to the list
   if (start == end)
@@ -129,32 +124,29 @@ static void PermuteRecursive(char *src, uint start, uint end, Array<String>& per
     // backtrack
     Swap(src[start], src[i]);
   }
-
 }
 
-//******************************************************************************
 void Permute(StringParam src, Array<String>& perms)
 {
   // convert to std string which is char writable
   uint srclen = src.SizeInBytes();
 
   // create a temp buffer on the stack to manipulate src
-  char *buf = (char *)alloca(srclen + 1);
+  char* buf = (char*)alloca(srclen + 1);
   memset(buf, 0, srclen + 1);
 
   // recursively calculate permutations
   PermuteRecursive(buf, 0, srclen, perms);
 }
 
-//******************************************************************************
 void SuperPermute(StringParam src, Array<String>& perms)
 {
   // convert to std string which is char writable
   uint srclen = src.SizeInBytes();
-  const char *csrc = src.c_str();
+  const char* csrc = src.c_str();
 
   // create a temp buffer on the stack to manipulate src
-  char *buf = (char *)alloca(srclen + 1);
+  char* buf = (char*)alloca(srclen + 1);
   memset(buf, 0, srclen + 1);
 
   // push the individual elements of the source
@@ -176,8 +168,6 @@ void SuperPermute(StringParam src, Array<String>& perms)
       }
     }
   }
-
 }
 
-
-}//namespace Zero
+} // namespace Zero

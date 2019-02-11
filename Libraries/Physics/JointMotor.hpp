@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -39,7 +34,8 @@ struct JointMotor : public Component
   bool GetActive() const;
   void SetActive(bool active);
   /// Determines if this motor should move in reverse.
-  /// This is a convenient way to reverse a motor without having to negate the speed.
+  /// This is a convenient way to reverse a motor without having to negate the
+  /// speed.
   bool GetReverse() const;
   void SetReverse(bool reverse);
   /// Signifies what atoms on the joint this affects. For internal use.
@@ -63,4 +59,4 @@ struct JointMotor : public Component
   JointNode* mNode;
 };
 
-}//namespace Zero
+} // namespace Zero

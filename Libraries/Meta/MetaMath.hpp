@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MetaMath.hpp
-/// Includes basic math classes Vector, Matrix, and Quaternion.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,7 @@ typedef Math::EulerAnglesParam EulerAnglesParam;
 
 struct Aabb;
 struct Sphere;
-}
+} // namespace Zero
 
 namespace Zero
 {
@@ -34,17 +26,17 @@ inline float Snap(float input, float snapping)
 inline Vec2 Snap(Vec2Param input, float snapping)
 {
   Vec2 output;
-  output.x = Snap(input.x ,snapping);
-  output.y = Snap(input.y ,snapping);
+  output.x = Snap(input.x, snapping);
+  output.y = Snap(input.y, snapping);
   return output;
 }
 
 inline Vec3 Snap(Vec3Param input, float snapping)
 {
   Vec3 output;
-  output.x = Snap(input.x ,snapping);
-  output.y = Snap(input.y ,snapping);
-  output.z = Snap(input.z ,snapping);
+  output.x = Snap(input.x, snapping);
+  output.y = Snap(input.y, snapping);
+  output.z = Snap(input.z, snapping);
   return output;
 }
 
@@ -75,4 +67,4 @@ String MetaToString(const BoundType* type, const byte* data)
 
 struct Ray;
 
-}//namespace Zero
+} // namespace Zero

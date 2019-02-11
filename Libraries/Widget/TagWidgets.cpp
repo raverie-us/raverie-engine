@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tags.cpp
-/// Implementation of the Tags composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,32 +7,30 @@ namespace Zero
 namespace TagsUi
 {
 const cstr cLocation = "EditorUi/Controls/Tags";
-Tweakable(Vec4, BackgroundColor,   Vec4(0.65,0.65,0.65, 1), cLocation);
-Tweakable(Vec4, SearchIconBgColor, Vec4(1,1,1,1),           cLocation);
-Tweakable(Vec4, SearchIconColor,   Vec4(1,1,1,1),           cLocation);
-Tweakable(Vec4, SearchIconColorRight,   Vec4(1,1,1,1),      cLocation);
-}
+Tweakable(Vec4, BackgroundColor, Vec4(0.65, 0.65, 0.65, 1), cLocation);
+Tweakable(Vec4, SearchIconBgColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SearchIconColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, SearchIconColorRight, Vec4(1, 1, 1, 1), cLocation);
+} // namespace TagsUi
 
 namespace Events
 {
-  DefineEvent(TagDeleted);
-  DefineEvent(TagsModified);
-  DefineEvent(SearchDataModified);
-}
+DefineEvent(TagDeleted);
+DefineEvent(TagsModified);
+DefineEvent(SearchDataModified);
+} // namespace Events
 
 const float cTagHeight = Pixels(17);
 const float cTagPadding = Pixels(3);
 const float cTextBoxHeight = Pixels(20);
 const float cTextBoxPaddingY = Pixels(1);
 
-
 ZilchDefineType(TagEvent, builder, type)
 {
 }
 
-//-------------------------------------------------------------------------- Tag
-//******************************************************************************
-TagLabel::TagLabel(Composite* parent, StringParam name, bool removeable) : Composite(parent)
+TagLabel::TagLabel(Composite* parent, StringParam name, bool removeable) :
+    Composite(parent)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
 
@@ -58,50 +48,44 @@ TagLabel::TagLabel(Composite* parent, StringParam name, bool removeable) : Compo
   ConnectThisTo(mDeleteButton, Events::LeftMouseUp, OnDelete);
 }
 
-//******************************************************************************
 void TagLabel::UpdateTransform()
 {
   mBackground->SetSize(mSize);
   mBackground->SetColor(TagsUi::BackgroundColor);
-  mName->SetTranslation(Pixels(2,0,0));
-  mName->SetSize(mSize - Pixels(16,0));
+  mName->SetTranslation(Pixels(2, 0, 0));
+  mName->SetSize(mSize - Pixels(16, 0));
 
-  mDeleteButton->SetTranslation(Vec3(mSize.x - Pixels(16),Pixels(0),0));
-  mDeleteButton->SetSize(Pixels(16,16));
-  
+  mDeleteButton->SetTranslation(Vec3(mSize.x - Pixels(16), Pixels(0), 0));
+  mDeleteButton->SetSize(Pixels(16, 16));
+
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 Vec2 TagLabel::GetDesiredSize()
 {
   const Vec2 cExtraWidth = Pixels(16, -1);
 
   // Measure the text
   Vec2 textSize = mName->mFont->MeasureText(mName->GetText(), 1.0f);
- 
+
   return textSize + cExtraWidth;
 }
 
-//******************************************************************************
 String TagLabel::GetName()
 {
   return mName->GetText();
 }
 
-//******************************************************************************
 void TagLabel::OnMouseEnterBackground(MouseEvent* e)
 {
   mBackground->SetColor(Vec4(0.91f, 0.478f, 0.196f, 1));
 }
 
-//******************************************************************************
 void TagLabel::OnMouseExitBackground(MouseEvent* e)
 {
   mBackground->SetColor(TagsUi::BackgroundColor);
 }
 
-//******************************************************************************
 void TagLabel::OnDelete(MouseEvent* e)
 {
   if (mRemoveable == false)
@@ -113,8 +97,6 @@ void TagLabel::OnDelete(MouseEvent* e)
   GetDispatcher()->Dispatch(Events::TagDeleted, &tagEvent);
 }
 
-//----------------------------------------------------------------- TagChainBase
-//******************************************************************************
 TagChainBase::TagChainBase(Composite* parent) : Composite(parent)
 {
   const String cDefinitionSet = "Tags";
@@ -128,12 +110,12 @@ struct SortTag
   {
     // Un-removable items always come first
     // If neither are removable, sort by name
-    if(!left->mRemoveable && !right->mRemoveable)
+    if (!left->mRemoveable && !right->mRemoveable)
       return left->GetName() < right->GetName();
 
-    if(!left->mRemoveable)
+    if (!left->mRemoveable)
       return true;
-    else if(!right->mRemoveable)
+    else if (!right->mRemoveable)
       return false;
 
     // If neither are removable, sort by name
@@ -141,52 +123,50 @@ struct SortTag
   }
 };
 
-//******************************************************************************
-bool TagChainBase::AddTag(StringParam tagName, bool removeable, bool sendsEvents)
+bool TagChainBase::AddTag(StringParam tagName,
+                          bool removeable,
+                          bool sendsEvents)
 {
-  if(ContainsTag(tagName))
+  if (ContainsTag(tagName))
     return false;
 
   TagLabel* tag = new TagLabel(this, tagName, removeable);
   ConnectThisTo(tag, Events::TagDeleted, OnTagDeleted);
   mTags.PushBack(tag);
-  if(mSorted)
+  if (mSorted)
     Sort(mTags.All(), SortTag());
   MarkAsNeedsUpdate();
   GetParent()->MarkAsNeedsUpdate();
-  if(sendsEvents)
+  if (sendsEvents)
     Modified();
 
   return true;
 }
 
-//******************************************************************************
 void TagChainBase::GetTags(Array<String>& tags, bool includeNonRemoveable)
 {
   uint tagCount = mTags.Size();
   tags.Resize(tagCount);
-  for(uint i = 0; i < tagCount; ++i)
+  for (uint i = 0; i < tagCount; ++i)
   {
     TagLabel* tag = mTags[i];
-    if(includeNonRemoveable || tag->mRemoveable)
+    if (includeNonRemoveable || tag->mRemoveable)
       tags[i] = tag->GetName();
   }
 }
 
-//******************************************************************************
 void TagChainBase::GetTags(HashSet<String>& tags, bool includeNonRemoveable)
 {
-  forRange(TagLabel* tag, mTags.All())
+  forRange(TagLabel * tag, mTags.All())
   {
-    if(includeNonRemoveable || tag->mRemoveable)
+    if (includeNonRemoveable || tag->mRemoveable)
       tags.Insert(tag->GetName());
   }
 }
 
-//******************************************************************************
 void TagChainBase::ClearTags()
 {
-  forRange(TagLabel* label, mTags.All())
+  forRange(TagLabel * label, mTags.All())
   {
     label->Destroy();
   }
@@ -194,19 +174,17 @@ void TagChainBase::ClearTags()
   mTags.Clear();
 }
 
-//******************************************************************************
 bool TagChainBase::ContainsTag(StringParam tag)
 {
-  forRange(TagLabel* label, mTags.All())
+  forRange(TagLabel * label, mTags.All())
   {
-    if(label->GetName() == tag)
+    if (label->GetName() == tag)
       return true;
   }
 
   return false;
 }
 
-//******************************************************************************
 void TagChainBase::OnTagDeleted(TagEvent* e)
 {
   mTags.EraseValueError(e->mTag);
@@ -215,34 +193,30 @@ void TagChainBase::OnTagDeleted(TagEvent* e)
   Modified();
 }
 
-//******************************************************************************
 void TagChainBase::Modified()
 {
   Event event;
   DispatchBubble(Events::TagsModified, &event);
 }
 
-//--------------------------------------------------------------------- TagChain
-//******************************************************************************
 TagChain::TagChain(Composite* parent) : TagChainBase(parent)
 {
   mBackground = CreateAttached<Element>("TagBoxBackground");
   SetClipping(true);
 }
 
-//******************************************************************************
 void TagChain::UpdateTransform()
 {
   Vec3 cOffset = Pixels(cTagPadding, cTagPadding, 0);
   Vec3 currPos = Vec3::cZero;
 
-  for(uint i = 0; i < mTags.Size(); ++i)
+  for (uint i = 0; i < mTags.Size(); ++i)
   {
     TagLabel* tag = mTags[i];
 
     Vec2 tagSize = tag->GetDesiredSize();
 
-    if(cOffset.x + currPos.x + tagSize.x > mSize.x - cTagPadding)
+    if (cOffset.x + currPos.x + tagSize.x > mSize.x - cTagPadding)
     {
       currPos.x = 0.0f;
       currPos.y += cTagHeight;
@@ -257,23 +231,22 @@ void TagChain::UpdateTransform()
 
   SetSize(Vec2(mSize.x, height));
   mBackground->SetSize(mSize);
-  
+
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 float TagChain::GetDesiredHeight(Vec2Param& sizeConstraint)
 {
   Vec3 cOffset = Pixels(cTagPadding, cTagPadding, 0);
   Vec3 currPos = Vec3::cZero;
 
-  for(uint i = 0; i < mTags.Size(); ++i)
+  for (uint i = 0; i < mTags.Size(); ++i)
   {
     TagLabel* tag = mTags[i];
 
     Vec2 tagSize = tag->GetDesiredSize();
 
-    if(cOffset.x + currPos.x + tagSize.x > sizeConstraint.x - cTagPadding)
+    if (cOffset.x + currPos.x + tagSize.x > sizeConstraint.x - cTagPadding)
     {
       currPos.x = 0.0f;
       currPos.y += cTagHeight;
@@ -285,8 +258,6 @@ float TagChain::GetDesiredHeight(Vec2Param& sizeConstraint)
   return cOffset.y + currPos.y + cTagHeight;
 }
 
-//-------------------------------------------------------------- TagChainTextBox
-//******************************************************************************
 TagChainTextBox::TagChainTextBox(Composite* parent) : TagChainBase(parent)
 {
   mSearchBar = new TextBox(this, "IconTextBox");
@@ -312,21 +283,20 @@ TagChainTextBox::TagChainTextBox(Composite* parent) : TagChainBase(parent)
   SetClipping(true);
 }
 
-//******************************************************************************
 void TagChainTextBox::UpdateTransform()
 {
   Vec3 currTagPos = Vec3::cZero;
 
-  if(mSearchIconSide == SearchIconSide::Left)
+  if (mSearchIconSide == SearchIconSide::Left)
   {
-    mMagnifyingGlass->SetTranslation(Pixels(1,1,0));
+    mMagnifyingGlass->SetTranslation(Pixels(1, 1, 0));
 
     mMagnifyingGlassBg->SetVisible(false);
 
     mSearchBar->SetSize(mSize);
 
     // Offset the tags by the search icon
-    currTagPos = Pixels(28,1,0);
+    currTagPos = Pixels(28, 1, 0);
   }
   else
   {
@@ -336,21 +306,21 @@ void TagChainTextBox::UpdateTransform()
     Vec2 iconSize = mMagnifyingGlass->GetSize();
     Vec3 iconPos(mSize.x - iconSize.x, 0, 0);
 
-    mMagnifyingGlass->SetTranslation(iconPos - Pixels(2,0,0));
-    mMagnifyingGlassBg->SetTranslation(iconPos - Pixels(2,0,0));
+    mMagnifyingGlass->SetTranslation(iconPos - Pixels(2, 0, 0));
+    mMagnifyingGlassBg->SetTranslation(iconPos - Pixels(2, 0, 0));
 
     mSearchBar->SetSize(mSize - Vec2(iconSize.x + Pixels(2), 0));
 
-    currTagPos = Pixels(2,1,0);
+    currTagPos = Pixels(2, 1, 0);
   }
 
-  for(uint i = 0; i < mTags.Size(); ++i)
+  for (uint i = 0; i < mTags.Size(); ++i)
   {
     TagLabel* tag = mTags[i];
 
     Vec2 tagSize = tag->GetDesiredSize();
 
-    if(currTagPos.x + tagSize.x > mSize.x)
+    if (currTagPos.x + tagSize.x > mSize.x)
     {
       currTagPos.x = 0.0f;
       currTagPos.y += cTagHeight;
@@ -371,19 +341,19 @@ Vec2 TagChainTextBox::GetMinSize()
   return Vec2(20, 20);
 }
 
-//******************************************************************************
-bool TagChainTextBox::AddTag(StringParam tagName, bool removeable, 
+bool TagChainTextBox::AddTag(StringParam tagName,
+                             bool removeable,
                              bool sendsEvents)
 {
   // do not add Root tags to search
-  if(tagName == "Root")
+  if (tagName == "Root")
   {
     Error("Attempting to add Root Library Data Entry tag to search");
     return false;
   }
   // Attempt to add the tag
   bool added = TagChainBase::AddTag(tagName, removeable, sendsEvents);
-  if(added)
+  if (added)
   {
     mSearch.ActiveTags.Insert(tagName);
     mSearchBar->SetText(String());
@@ -395,7 +365,6 @@ bool TagChainTextBox::AddTag(StringParam tagName, bool removeable,
   return added;
 }
 
-//******************************************************************************
 void TagChainTextBox::ClearSearch()
 {
   mSearchBar->SetText(String());
@@ -405,11 +374,10 @@ void TagChainTextBox::ClearSearch()
   Refresh();
 }
 
-//******************************************************************************
 void TagChainTextBox::ClearTags()
 {
   // Remove all tags from the active search tags
-  forRange(TagLabel* label, mTags.All())
+  forRange(TagLabel * label, mTags.All())
   {
     mSearch.ActiveTags.Erase(label->GetName());
   }
@@ -417,7 +385,6 @@ void TagChainTextBox::ClearTags()
   TagChainBase::ClearTags();
 }
 
-//******************************************************************************
 void TagChainTextBox::Refresh()
 {
   mSearch.Results.Clear();
@@ -432,21 +399,18 @@ void TagChainTextBox::Refresh()
   GetDispatcher()->Dispatch(Events::SearchDataModified, &event);
 }
 
-//******************************************************************************
 bool TagChainTextBox::TakeFocusOverride()
 {
   mSearchBar->TakeFocus();
   return true;
 }
 
-//******************************************************************************
 void TagChainTextBox::SetSearchIconSide(SearchIconSide::Type side)
 {
   mSearchIconSide = side;
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void TagChainTextBox::OnTagDeleted(TagEvent* e)
 {
   mSearch.ActiveTags.Erase(e->mTagName);
@@ -454,13 +418,12 @@ void TagChainTextBox::OnTagDeleted(TagEvent* e)
   Refresh();
 }
 
-//******************************************************************************
 void TagChainTextBox::OnSearchBoxChanged(Event* e)
 {
   String text = mSearchBar->GetText();
 
   // Only submit if the last character entered was a space
-  if(text.ComputeRuneCount() == 1 && text.Front() == ' ')
+  if (text.ComputeRuneCount() == 1 && text.Front() == ' ')
   {
     mSearchBar->SetText(String());
     return;
@@ -472,10 +435,9 @@ void TagChainTextBox::OnSearchBoxChanged(Event* e)
   mLastSearchText = mSearchBar->GetText();
 }
 
-//******************************************************************************
 void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
 {
-  if(e->Key == Keys::Escape)
+  if (e->Key == Keys::Escape)
   {
     ClearTags();
     mSearchBar->SetText(String());
@@ -487,9 +449,10 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
   }
   // If backspace is pressed and there are no characters, attempt
   // to delete the last tag in the chain
-  else if(e->Key == Keys::Back && mLastSearchText.Empty() && e->State == KeyState::Down)
+  else if (e->Key == Keys::Back && mLastSearchText.Empty() &&
+           e->State == KeyState::Down)
   {
-    if(mTags.Size() > 0)
+    if (mTags.Size() > 0)
     {
       TagLabel* tag = mTags.Back();
       String tagName = tag->GetName();
@@ -497,7 +460,7 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
 
       // Remove a TagElement's search type.
       StringRange end = tagName.FindFirstOf("(");
-      if(!end.Empty())
+      if (!end.Empty())
         tagName = tagName.SubString(tagName.Begin(), end.Begin());
 
       mSearchBar->SetText(tagName);
@@ -511,18 +474,18 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
       e->Handled = true;
     }
   }
-  else if(mAddTagsOnEnter && e->Key == Keys::Enter && !e->GetModifierPressed())
+  else if (mAddTagsOnEnter && e->Key == Keys::Enter && !e->GetModifierPressed())
   {
-    if(!mSearch.Results.Empty())
+    if (!mSearch.Results.Empty())
     {
       // I cannot assume the search index is valid until the tile view
       // data source refactor
       uint searchIndex = mSearchIndex;
-      if(searchIndex >= mSearch.Results.Size())
+      if (searchIndex >= mSearch.Results.Size())
         searchIndex = 0;
       SearchViewResult& result = mSearch.Results[searchIndex];
 
-      if(result.Interface->GetElementType(result) == "Tag")
+      if (result.Interface->GetElementType(result) == "Tag")
       {
         AddTag(result.Name, true);
         mSearchBar->SetText(String());
@@ -537,8 +500,6 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
   }
 }
 
-//-------------------------------------------------------------------- TagEditor
-//******************************************************************************
 TagEditor::TagEditor(Composite* parent) : Composite(parent)
 {
   mIsAnimating = false;
@@ -547,7 +508,7 @@ TagEditor::TagEditor(Composite* parent) : Composite(parent)
   mTagChain->mSorted = true;
 
   Spacer* spacer = new Spacer(this);
-  spacer->SetSize(Pixels(1,1));
+  spacer->SetSize(Pixels(1, 1));
 
   mTextBox = new TextBox(this);
   mTextBox->SetSize(Pixels(100, cTextBoxHeight));
@@ -558,7 +519,6 @@ TagEditor::TagEditor(Composite* parent) : Composite(parent)
   ConnectThisTo(mTextBox, Events::TextEnter, OnSearchBoxSubmitted);
 }
 
-//******************************************************************************
 void TagEditor::UpdateTransform()
 {
   SetAxisSize(SizeAxis::X, mSize.x);
@@ -572,36 +532,32 @@ void TagEditor::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 Vec2 TagEditor::Measure(LayoutArea& data)
 {
   // If animating - defer to the current size rather than the desired height.
-  if(mIsAnimating)
+  if (mIsAnimating)
     return Vec2(data.Size.x, mSize.y);
   else
     return Vec2(data.Size.x, GetDesiredHeight(data.Size));
 }
 
-//******************************************************************************
 float TagEditor::GetDesiredHeight(Vec2Param& sizeConstraint)
 {
   // Add height for the search-box and for padding.
-  return mTagChain->GetDesiredHeight(sizeConstraint) + cTextBoxHeight + cTextBoxPaddingY;
+  return mTagChain->GetDesiredHeight(sizeConstraint) + cTextBoxHeight +
+         cTextBoxPaddingY;
 }
 
-//******************************************************************************
 TagChain* TagEditor::GetTagChain()
 {
   return mTagChain;
 }
 
-//******************************************************************************
 float TagEditor::GetAxisSize(SizeAxis::Enum axis)
 {
   return mSize[axis];
 }
 
-//******************************************************************************
 void TagEditor::SetAxisSize(SizeAxis::Enum axis, float size)
 {
   mSize[axis] = size;
@@ -609,17 +565,15 @@ void TagEditor::SetAxisSize(SizeAxis::Enum axis, float size)
   mTextBox->mSize[axis];
 }
 
-//******************************************************************************
 void TagEditor::SetIsAnimating(bool state)
 {
   mIsAnimating = state;
 }
 
-//******************************************************************************
 void TagEditor::SubmitText(StringParam text)
 {
   Status status;
-  if(!IsValidFilename(text, status))
+  if (!IsValidFilename(text, status))
   {
     DoNotify("Invalid Tag", status.Message, "Warning");
     return;
@@ -630,33 +584,27 @@ void TagEditor::SubmitText(StringParam text)
   Modified();
 }
 
-//******************************************************************************
 void TagEditor::OnSearchBoxChanged(Event* e)
 {
   String text = mTextBox->GetText();
 
-  if(!text.Empty() && text.Back() == ' ')
+  if (!text.Empty() && text.Back() == ' ')
     SubmitText(text);
 }
 
-//******************************************************************************
 void TagEditor::OnSearchBoxSubmitted(Event* e)
 {
   String text = mTextBox->GetText();
 
-  if(!text.Empty())
+  if (!text.Empty())
     SubmitText(text);
 }
 
-//---------------------------------------------------------- Resource Tag Editor
-//******************************************************************************
-ResourceTagEditor::ResourceTagEditor(Composite* parent)
-  : TagEditor(parent)
+ResourceTagEditor::ResourceTagEditor(Composite* parent) : TagEditor(parent)
 {
   ConnectThisTo(mTagChain, Events::TagDeleted, OnTagDeleted);
 }
 
-//******************************************************************************
 void ResourceTagEditor::EditResource(Resource* resource)
 {
   Array<Resource*> resources(1);
@@ -664,7 +612,6 @@ void ResourceTagEditor::EditResource(Resource* resource)
   EditResources(resources);
 }
 
-//******************************************************************************
 void ResourceTagEditor::EditResources(Array<Resource*>& resources)
 {
   mResources.Clear();
@@ -675,7 +622,7 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
   HashMap<String, TagEntry> tagEntries;
 
   // We want to find tags that are shared by all of the given tags
-  forRange(Resource* resource, resources.All())
+  forRange(Resource * resource, resources.All())
   {
     // Add the resource
     mResources.PushBack(resource);
@@ -685,22 +632,22 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
     resource->GetTags(coreTags, userTags);
 
     // Create core tags
-    forRange(String& coreTag, coreTags.All())
+    forRange(String & coreTag, coreTags.All())
     {
       TagEntry* entry = tagEntries.FindPointer(coreTag);
       // Increase the counter if it exists, otherwise Insert it
-      if(entry)
+      if (entry)
         entry->first += 1;
       else
         tagEntries.Insert(coreTag, TagEntry(1, false));
     }
 
     // Create core tags
-    forRange(String& userTag, userTags.All())
+    forRange(String & userTag, userTags.All())
     {
       TagEntry* entry = tagEntries.FindPointer(userTag);
       // Increase the counter if it exists, otherwise Insert it
-      if(entry)
+      if (entry)
         entry->first += 1;
       else
         tagEntries.Insert(userTag, TagEntry(1, true));
@@ -711,8 +658,8 @@ void ResourceTagEditor::EditResources(Array<Resource*>& resources)
   forRange(PairType tagEntry, tagEntries.All())
   {
     TagEntry& entry = tagEntry.second;
-    
-    if(entry.first >= resources.Size())
+
+    if (entry.first >= resources.Size())
       mTagChain->AddTag(tagEntry.first, entry.second, false);
   }
 }
@@ -723,18 +670,17 @@ void ResourceTagEditor::CleanTagEditor()
   mTagChain->ClearTags();
 }
 
-//******************************************************************************
 void ResourceTagEditor::Modified()
 {
   HashSet<String> tags;
   mTagChain->GetTags(tags, false);
 
-  for(uint i = 0; i < mResources.Size(); ++i)
+  for (uint i = 0; i < mResources.Size(); ++i)
   {
     Resource* resource = mResources[i];
 
     // The resource could have been deleted
-    if(!resource)
+    if (!resource)
       continue;
 
     resource->mContentItem->SetTags(tags);
@@ -748,20 +694,19 @@ void ResourceTagEditor::Modified()
   }
 }
 
-//******************************************************************************
 void ResourceTagEditor::OnTagDeleted(TagEvent* e)
 {
-  for(uint i = 0; i < mResources.Size(); ++i)
+  for (uint i = 0; i < mResources.Size(); ++i)
   {
     Resource* resource = mResources[i];
 
     // The resource could have been deleted
-    if(!resource)
+    if (!resource)
       continue;
 
     ContentItem* contentItem = resource->mContentItem;
     ContentTags* contentTags = contentItem->has(ContentTags);
-    if(contentTags)
+    if (contentTags)
     {
       contentTags->mTags.Erase(e->mTagName);
       contentItem->SaveContent();
@@ -775,4 +720,4 @@ void ResourceTagEditor::OnTagDeleted(TagEvent* e)
   }
 }
 
-}// namespace Zero
+} // namespace Zero

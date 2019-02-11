@@ -1,130 +1,129 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//**************************************************************************************************
 ZilchDefineType(ShaderInputs, builder, type)
 {
   ZeroBindDocumented();
   ZilchBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, bool));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, int));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec2));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec3));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec4));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, float));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec2));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec3));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec4));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Mat3));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Mat4));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Texture*));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, bool));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, int));
+  ZilchBindOverloadedMethod(
+      Add, ZilchInstanceOverload(void, String, String, IntVec2));
+  ZilchBindOverloadedMethod(
+      Add, ZilchInstanceOverload(void, String, String, IntVec3));
+  ZilchBindOverloadedMethod(
+      Add, ZilchInstanceOverload(void, String, String, IntVec4));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, float));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, Vec2));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, Vec3));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, Vec4));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, Mat3));
+  ZilchBindOverloadedMethod(Add,
+                            ZilchInstanceOverload(void, String, String, Mat4));
+  ZilchBindOverloadedMethod(
+      Add, ZilchInstanceOverload(void, String, String, Texture*));
   ZilchBindMethod(Remove);
   ZilchBindMethod(Clear);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, bool input)
 {
   Add(fragmentName, inputName, ShaderInputType::Bool, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, int input)
 {
   Add(fragmentName, inputName, ShaderInputType::Int, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, IntVec2 input)
 {
   Add(fragmentName, inputName, ShaderInputType::IntVec2, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, IntVec3 input)
 {
   Add(fragmentName, inputName, ShaderInputType::IntVec3, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, IntVec4 input)
 {
   Add(fragmentName, inputName, ShaderInputType::IntVec4, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, float input)
 {
   Add(fragmentName, inputName, ShaderInputType::Float, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, Vec2 input)
 {
   Add(fragmentName, inputName, ShaderInputType::Vec2, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, Vec3 input)
 {
   Add(fragmentName, inputName, ShaderInputType::Vec3, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, Vec4 input)
 {
   Add(fragmentName, inputName, ShaderInputType::Vec4, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, Mat3 input)
 {
   Add(fragmentName, inputName, ShaderInputType::Mat3, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, Mat4 input)
 {
   Add(fragmentName, inputName, ShaderInputType::Mat4, input);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Add(String fragmentName, String inputName, Texture* input)
 {
   Add(fragmentName, inputName, ShaderInputType::Texture, input);
 }
 
-//**************************************************************************************************
-void ShaderInputs::Add(String fragmentName, String inputName, ShaderInputType::Enum type, AnyParam value)
+void ShaderInputs::Add(String fragmentName,
+                       String inputName,
+                       ShaderInputType::Enum type,
+                       AnyParam value)
 {
-  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  ZilchShaderGenerator* shaderGenerator =
+      Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
-  ShaderInput shaderInput = shaderGenerator->CreateShaderInput(fragmentName, inputName, type, value);
+  ShaderInput shaderInput =
+      shaderGenerator->CreateShaderInput(fragmentName, inputName, type, value);
   if (shaderInput.mShaderInputType != ShaderInputType::Invalid)
     mShaderInputs.Insert(StringPair(fragmentName, inputName), shaderInput);
 }
 
-//**************************************************************************************************
 void ShaderInputs::Remove(String fragmentName, String inputName)
 {
   mShaderInputs.Erase(StringPair(fragmentName, inputName));
 }
 
-//**************************************************************************************************
 void ShaderInputs::Clear()
 {
   mShaderInputs.Clear();
 }
 
 DefineThreadSafeReferenceCountedHandle(GraphicsBlendSettings);
-//**************************************************************************************************
 ZilchDefineType(GraphicsBlendSettings, builder, type)
 {
   ZeroBindDocumented();
@@ -133,8 +132,8 @@ ZilchDefineType(GraphicsBlendSettings, builder, type)
   type->CreatableInScript = true;
 
   // Will probably remove these functions, so don't want them bound
-  //ZilchBindMethod(SetBlendAlpha);
-  //ZilchBindMethod(SetBlendAdditive);
+  // ZilchBindMethod(SetBlendAlpha);
+  // ZilchBindMethod(SetBlendAdditive);
 
   ZilchBindGetterSetterProperty(BlendMode);
   ZilchBindGetterSetterProperty(BlendEquation);
@@ -148,32 +147,27 @@ ZilchDefineType(GraphicsBlendSettings, builder, type)
   BlendSettings::Destructed = &GraphicsBlendSettings::DestructedStatic;
 }
 
-//**************************************************************************************************
 void GraphicsBlendSettings::ConstructedStatic(BlendSettings* settings)
 {
   ((GraphicsBlendSettings*)settings)->ConstructedInstance();
 }
 
-//**************************************************************************************************
 void GraphicsBlendSettings::DestructedStatic(BlendSettings* settings)
 {
   ((GraphicsBlendSettings*)settings)->DestructedInstance();
 }
 
-//**************************************************************************************************
 void GraphicsBlendSettings::ConstructedInstance()
 {
   ConstructThreadSafeReferenceCountedHandle();
 }
 
-//**************************************************************************************************
 void GraphicsBlendSettings::DestructedInstance()
 {
   DestructThreadSafeReferenceCountedHandle();
 }
 
 DefineThreadSafeReferenceCountedHandle(GraphicsDepthSettings);
-//**************************************************************************************************
 ZilchDefineType(GraphicsDepthSettings, builder, type)
 {
   ZeroBindDocumented();
@@ -182,11 +176,11 @@ ZilchDefineType(GraphicsDepthSettings, builder, type)
   type->CreatableInScript = true;
 
   // Will probably remove these functions, so don't want them bound
-  //ZilchBindMethod(SetDepthRead);
-  //ZilchBindMethod(SetDepthWrite);
-  //ZilchBindMethod(SetStencilTestMode);
-  //ZilchBindMethod(SetStencilIncrement);
-  //ZilchBindMethod(SetStencilDecrement);
+  // ZilchBindMethod(SetDepthRead);
+  // ZilchBindMethod(SetDepthWrite);
+  // ZilchBindMethod(SetStencilTestMode);
+  // ZilchBindMethod(SetStencilIncrement);
+  // ZilchBindMethod(SetStencilDecrement);
 
   ZilchBindGetterSetterProperty(DepthMode);
   ZilchBindGetterSetterProperty(DepthCompareFunc);
@@ -211,31 +205,26 @@ ZilchDefineType(GraphicsDepthSettings, builder, type)
   DepthSettings::Destructed = &GraphicsDepthSettings::DestructedStatic;
 }
 
-//**************************************************************************************************
 void GraphicsDepthSettings::ConstructedStatic(DepthSettings* settings)
 {
   ((GraphicsDepthSettings*)settings)->ConstructedInstance();
 }
 
-//**************************************************************************************************
 void GraphicsDepthSettings::DestructedStatic(DepthSettings* settings)
 {
   ((GraphicsDepthSettings*)settings)->DestructedInstance();
 }
 
-//**************************************************************************************************
 void GraphicsDepthSettings::ConstructedInstance()
 {
   ConstructThreadSafeReferenceCountedHandle();
 }
 
-//**************************************************************************************************
 void GraphicsDepthSettings::DestructedInstance()
 {
   DestructThreadSafeReferenceCountedHandle();
 }
 
-//**************************************************************************************************
 ZilchDefineType(GraphicsRenderSettings, builder, type)
 {
   ZeroBindDocumented();
@@ -252,20 +241,17 @@ ZilchDefineType(GraphicsRenderSettings, builder, type)
   ZilchBindGetterSetter(GlobalShaderInputs);
 }
 
-//**************************************************************************************************
 GraphicsRenderSettings::GraphicsRenderSettings()
 {
   ClearAll();
 }
 
-//**************************************************************************************************
 void GraphicsRenderSettings::ClearAll()
 {
   RenderSettings::ClearAll();
   mGlobalShaderInputs = nullptr;
 }
 
-//**************************************************************************************************
 void GraphicsRenderSettings::SetColorTarget(RenderTarget* target)
 {
   if (target == nullptr)
@@ -280,7 +266,6 @@ void GraphicsRenderSettings::SetColorTarget(RenderTarget* target)
   }
 }
 
-//**************************************************************************************************
 void GraphicsRenderSettings::SetDepthTarget(RenderTarget* target)
 {
   if (target == nullptr)
@@ -295,7 +280,6 @@ void GraphicsRenderSettings::SetDepthTarget(RenderTarget* target)
   }
 }
 
-//**************************************************************************************************
 void GraphicsRenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
 {
   if (index >= 8)
@@ -316,31 +300,28 @@ void GraphicsRenderSettings::SetColorTargetMrt(RenderTarget* target, uint index)
   }
 }
 
-//**************************************************************************************************
 GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettings()
 {
   return (GraphicsBlendSettings*)RenderSettings::GetBlendSettings();
 }
 
-//**************************************************************************************************
-void GraphicsRenderSettings::SetBlendSettings(GraphicsBlendSettings* blendSettings)
+void GraphicsRenderSettings::SetBlendSettings(
+    GraphicsBlendSettings* blendSettings)
 {
   RenderSettings::SetBlendSettings(blendSettings);
 }
 
-//**************************************************************************************************
 GraphicsDepthSettings* GraphicsRenderSettings::GetDepthSettings()
 {
   return (GraphicsDepthSettings*)RenderSettings::GetDepthSettings();
 }
 
-//**************************************************************************************************
-void GraphicsRenderSettings::SetDepthSettings(GraphicsDepthSettings* depthSettings)
+void GraphicsRenderSettings::SetDepthSettings(
+    GraphicsDepthSettings* depthSettings)
 {
   RenderSettings::SetDepthSettings(depthSettings);
 }
 
-//**************************************************************************************************
 GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettingsMrt(uint index)
 {
   if (index >= 8)
@@ -352,8 +333,8 @@ GraphicsBlendSettings* GraphicsRenderSettings::GetBlendSettingsMrt(uint index)
   return (GraphicsBlendSettings*)&mBlendSettings[index];
 }
 
-//**************************************************************************************************
-void GraphicsRenderSettings::SetBlendSettingsMrt(GraphicsBlendSettings* blendSettings, uint index)
+void GraphicsRenderSettings::SetBlendSettingsMrt(
+    GraphicsBlendSettings* blendSettings, uint index)
 {
   if (index >= 8)
     return DoNotifyException("Error", "Invalid index. Must be 0-7.");
@@ -361,19 +342,16 @@ void GraphicsRenderSettings::SetBlendSettingsMrt(GraphicsBlendSettings* blendSet
   mBlendSettings[index] = *blendSettings;
 }
 
-//**************************************************************************************************
 ShaderInputs* GraphicsRenderSettings::GetGlobalShaderInputs()
 {
   return mGlobalShaderInputs;
 }
 
-//**************************************************************************************************
 void GraphicsRenderSettings::SetGlobalShaderInputs(ShaderInputs* shaderInputs)
 {
   mGlobalShaderInputs = shaderInputs;
 }
 
-//**************************************************************************************************
 MultiRenderTarget* GraphicsRenderSettings::GetMultiRenderTarget()
 {
   MultiRenderTarget* multiRenderTarget = new MultiRenderTarget(this);
@@ -381,7 +359,6 @@ MultiRenderTarget* GraphicsRenderSettings::GetMultiRenderTarget()
   return multiRenderTarget;
 }
 
-//**************************************************************************************************
 ZilchDefineType(ColorTargetMrt, builder, type)
 {
   ZeroBindDocumented();
@@ -389,15 +366,14 @@ ZilchDefineType(ColorTargetMrt, builder, type)
   ZilchBindMethod(Set);
 }
 
-//**************************************************************************************************
 void ColorTargetMrt::Set(uint index, RenderTarget* colorTarget)
 {
   if (mRenderSettings.IsNull())
-    return DoNotifyException("Error", "Attempting to call member on null object.");
+    return DoNotifyException("Error",
+                             "Attempting to call member on null object.");
   mRenderSettings->SetColorTargetMrt(colorTarget, index);
 }
 
-//**************************************************************************************************
 ZilchDefineType(BlendSettingsMrt, builder, type)
 {
   ZeroBindDocumented();
@@ -406,15 +382,14 @@ ZilchDefineType(BlendSettingsMrt, builder, type)
   ZilchBindMethod(Set);
 }
 
-//**************************************************************************************************
 void BlendSettingsMrt::Set(uint index, GraphicsBlendSettings* blendSettings)
 {
   if (mRenderSettings.IsNull())
-    return DoNotifyException("Error", "Attempting to call member on null object.");
+    return DoNotifyException("Error",
+                             "Attempting to call member on null object.");
   mRenderSettings->SetBlendSettingsMrt(blendSettings, index);
 }
 
-//**************************************************************************************************
 GraphicsBlendSettings* BlendSettingsMrt::Get(uint index)
 {
   if (mRenderSettings.IsNull())
@@ -425,7 +400,6 @@ GraphicsBlendSettings* BlendSettingsMrt::Get(uint index)
   return mRenderSettings->GetBlendSettingsMrt(index);
 }
 
-//**************************************************************************************************
 ZilchDefineType(MultiRenderTarget, builder, type)
 {
   ZeroBindDocumented();
@@ -451,11 +425,11 @@ ZilchDefineType(MultiRenderTarget, builder, type)
   ZilchBindGetterSetter(BlendSettings7);
 }
 
-//**************************************************************************************************
-MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings)
-  : mRenderSettings(renderSettings)
-  , mColorTargetMrt(renderSettings)
-  , mBlendSettingsMrt(renderSettings)
+MultiRenderTarget::MultiRenderTarget(
+    HandleOf<GraphicsRenderSettings> renderSettings) :
+    mRenderSettings(renderSettings),
+    mColorTargetMrt(renderSettings),
+    mBlendSettingsMrt(renderSettings)
 {
 }
 

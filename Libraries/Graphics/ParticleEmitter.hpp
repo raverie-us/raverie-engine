@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ParticleEmitter.hpp
-/// Declaration of the Particle emitter component classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,9 +6,9 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(ParticlesExhausted);
-  DeclareEvent(AllParticlesDead);
-}
+DeclareEvent(ParticlesExhausted);
+DeclareEvent(AllParticlesDead);
+} // namespace Events
 
 /// Particle emitters add new particles to the system and control where
 /// the particles will appear (sphere emitter, mesh emitter, etc)
@@ -34,11 +26,14 @@ public:
   // Particle Emitter Interface
 
   // Emit new particles
-  virtual int EmitParticles(ParticleList* particleList, float dt, 
-                            Mat4Ref transform, Vec3Param velocity, float timeAlive) = 0;
-  
+  virtual int EmitParticles(ParticleList* particleList,
+                            float dt,
+                            Mat4Ref transform,
+                            Vec3Param velocity,
+                            float timeAlive) = 0;
+
   // Reset the number of particles to emit back to EmitCount.
-  virtual void ResetCount() {};
+  virtual void ResetCount(){};
 
   void UpdateLastTranslation();
 
@@ -50,7 +45,6 @@ public:
 
 typedef InList<ParticleEmitter> EmitterList;
 
-//------------------------------------------------- Particle Emitter Common Data
 /// Particle Emitter Shared
 class ParticleEmitterShared : public ParticleEmitter
 {
@@ -64,10 +58,14 @@ public:
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  //Mix in Helpers
-  int GetParticleEmissionCount(ParticleList* particleList, float dt, float timeAlive);
-  Particle* CreateInitializedParticle(ParticleList* particleList, int particle, 
-                                      Mat4Ref transform, Vec3Param emitterVelocity);
+  // Mix in Helpers
+  int GetParticleEmissionCount(ParticleList* particleList,
+                               float dt,
+                               float timeAlive);
+  Particle* CreateInitializedParticle(ParticleList* particleList,
+                                      int particle,
+                                      Mat4Ref transform,
+                                      Vec3Param emitterVelocity);
 
   /// Reset the number of particles to emit back to EmitCount.
   void ResetCount() override;
@@ -120,9 +118,10 @@ public:
   /// Velocity of each particle at start
   Vec3 mStartVelocity;
 
-  /// Velocity of each particle in x horizontal tangent y vertical tangent and z outward tangent.
+  /// Velocity of each particle in x horizontal tangent y vertical tangent and z
+  /// outward tangent.
   Vec3 mTangentVelocity;
-  
+
   /// Random Velocity per particle.
   Vec3 mRandomVelocity;
 
@@ -141,8 +140,8 @@ public:
   /// Note: Particle systems that teleport will emit along the teleport line
   bool mFastMovingEmitter;
 
-  //Internals
-  //Not Read only
+  // Internals
+  // Not Read only
   float mAccumulation;
   float mSample;
   float mEmitRateCurrent;
@@ -150,9 +149,10 @@ public:
   static const float mMaxEmitRate;
 };
 
-//--------------------------------------------------------------------------------- Hide Base Filter
-// This is used to hide properties on ParticleEmitterShared that don't apply to derived
-// particle emitters. This is temporary and should be removed once we refactor particles.
+//Hide Base Filter
+// This is used to hide properties on ParticleEmitterShared that don't apply to
+// derived particle emitters. This is temporary and should be removed once we
+// refactor particles.
 class HideBaseFilter : public MetaPropertyFilter
 {
 public:

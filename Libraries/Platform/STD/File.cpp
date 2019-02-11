@@ -1,15 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-// TODO PLATFORM find and define the max path through C, if not possible move this variable to where it will be possible for other platforms
+// TODO PLATFORM find and define the max path through C, if not possible move
+// this variable to where it will be possible for other platforms
 const int File::PlatformMaxPath = 1024;
 
 struct FilePrivateData
@@ -44,7 +40,6 @@ String FileModeToString(FileMode::Enum fileMode)
   return String();
 }
 
-//------------------------------------------------------------------------- File
 File::File()
 {
   ZeroConstructPrivateData(FilePrivateData);
@@ -67,7 +62,7 @@ long long File::CurrentFileSize()
   ZeroGetPrivateData(FilePrivateData);
   if (!self->IsValidFile())
     return 0;
-  
+
   auto originalPosition = ftell(self->mFileData);
   fseek(self->mFileData, 0, SEEK_END);
   long long size = (long long)ftell(self->mFileData);
@@ -75,10 +70,14 @@ long long File::CurrentFileSize()
   return size;
 }
 
-bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
+bool File::Open(StringParam filePath,
+                FileMode::Enum mode,
+                FileAccessPattern::Enum accessPattern,
+                FileShare::Enum share,
+                Status* status)
 {
   ZeroGetPrivateData(FilePrivateData);
-  
+
   String fileMode = FileModeToString(mode);
   self->mFileData = fopen(filePath.c_str(), fileMode.c_str());
 
@@ -87,7 +86,7 @@ bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::En
     Warn("Failed to open file '%s'.", filePath.c_str());
     return false;
   }
-  
+
   if (mode != FileMode::Read)
     FileModifiedState::BeginFileModified(mFilePath);
 
@@ -126,8 +125,9 @@ void File::Close()
   {
     fclose(self->mFileData);
     self->mFileData = nullptr;
-    
-    // Must come after closing the file because it may need access to the modified date.
+
+    // Must come after closing the file because it may need access to the
+    // modified date.
     if (mFileMode != FileMode::Read)
       FileModifiedState::EndFileModified(mFilePath);
   }
@@ -147,17 +147,21 @@ bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
   ZeroGetPrivateData(FilePrivateData);
   if (!self->IsValidFile())
     return false;
-  
+
   int origin = SEEK_SET;
   switch (rel)
   {
-    case SeekOrigin::Begin: origin = SEEK_SET;
-      break;
-    case SeekOrigin::Current: origin = SEEK_CUR;
-      break;
-    case SeekOrigin::End: origin = SEEK_END;
-      break;
-    default: return false;
+  case SeekOrigin::Begin:
+    origin = SEEK_SET;
+    break;
+  case SeekOrigin::Current:
+    origin = SEEK_CUR;
+    break;
+  case SeekOrigin::End:
+    origin = SEEK_END;
+    break;
+  default:
+    return false;
   }
 
   int ret = fseek(self->mFileData, pos, origin);
@@ -202,7 +206,7 @@ void File::Flush()
   ZeroGetPrivateData(FilePrivateData);
   if (!self->IsValidFile())
     return;
-  
+
   fflush(self->mFileData);
 }
 
@@ -213,7 +217,8 @@ void File::Duplicate(Status& status, File& destinationFile)
 
   if (!self->IsValidFile() || !other->IsValidFile())
   {
-    status.SetFailed("File is not valid. Open a valid file before attempting file operations.");
+    status.SetFailed("File is not valid. Open a valid file before attempting "
+                     "file operations.");
     return;
   }
 
@@ -236,4 +241,4 @@ void File::Duplicate(Status& status, File& destinationFile)
   WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
 }
 
-}//namespace Zero
+} // namespace Zero

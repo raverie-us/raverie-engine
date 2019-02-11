@@ -1,19 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Loading.cpp
-/// 
-///
-/// Authors: Chris Peters, Nathan Carlson
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-LoadingWindow::LoadingWindow(Composite* composite)
-  : Composite(composite, AttachType::Direct)
+LoadingWindow::LoadingWindow(Composite* composite) :
+    Composite(composite, AttachType::Direct)
 {
   mMainText = new Text(this, "NotoSans-Bold", 64);
   mMainText->SetColor(Vec4(1.0f));
@@ -66,7 +58,8 @@ void LoadingWindow::SetLoadingName(StringParam text)
   mMainText->SetText(text);
   mMainText->SizeToContents();
 
-  mPendingText->SetTranslation(mMainText->mTranslation + Vec3(mMainText->mSize.x, 0.0f, 0.0f));
+  mPendingText->SetTranslation(mMainText->mTranslation +
+                               Vec3(mMainText->mSize.x, 0.0f, 0.0f));
 }
 
 void LoadingWindow::OnUpdate(UpdateEvent* event)
@@ -97,4 +90,4 @@ void LoadingWindow::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-}//namespace Zero
+} // namespace Zero

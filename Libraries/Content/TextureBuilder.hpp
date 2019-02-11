@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextureBuilder.hpp
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -54,7 +47,8 @@ public:
   String GetDimensions();
   String mDimensions;
 
-  /// Total data size on hardware accounting for compression and pre-generated mips if applicable.
+  /// Total data size on hardware accounting for compression and pre-generated
+  /// mips if applicable.
   String GetSize();
   String mSize;
 };
@@ -73,7 +67,8 @@ public:
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
-/// Configuration for how an image file should be processed for use as a Texture resource.
+/// Configuration for how an image file should be processed for use as a Texture
+/// resource.
 class TextureBuilder : public BuilderComponent
 {
 public:
@@ -103,16 +98,19 @@ public:
   TextureAddressing::Enum mAddressingY;
   /// How samples should be blended under minification/magnification.
   TextureFiltering::Enum mFiltering;
-  /// Max ratio of anisotropy that filtering will account for at oblique viewing angles.
+  /// Max ratio of anisotropy that filtering will account for at oblique viewing
+  /// angles.
   TextureAnisotropy::Enum mAnisotropy;
   /// If downsampled versions of the texture (mip maps) should be generated.
   TextureMipMapping::Enum mMipMapping;
-  /// If color data should be stored pre-multiplied by alpha, applied before other operations.
+  /// If color data should be stored pre-multiplied by alpha, applied before
+  /// other operations.
   bool mPremultipliedAlpha;
-  /// If color data should be stored in linear color space instead of sRGB color space.
-  /// Important for albedo values used in lighting.
+  /// If color data should be stored in linear color space instead of sRGB color
+  /// space. Important for albedo values used in lighting.
   bool mGammaCorrection;
-  /// Progressively downsamples the image by half the size the specified number of times.
+  /// Progressively downsamples the image by half the size the specified number
+  /// of times.
   int GetHalfScaleCount();
   void SetHalfScaleCount(int halfScaleCount);
   int mHalfScaleCount;
@@ -124,13 +122,12 @@ public:
   ResourceId mResourceId;
 };
 
-//----------------------------------------------------- Height To Normal Builder
-//DeclareEnum2(NormalGeneration, AverageRGB, Alpha);
-//DeclareEnum3(NormalFilter, n3x3, n5x5, dudv);
+// DeclareEnum2(NormalGeneration, AverageRGB, Alpha);
+// DeclareEnum3(NormalFilter, n3x3, n5x5, dudv);
 //
-//class HeightToNormalBuilder : public ContentComponent
+// class HeightToNormalBuilder : public ContentComponent
 //{
-//public:
+// public:
 //  ZeroDeclareType(HeightToNormalBuilder);
 //  static void InitializeMeta(MetaType* meta);
 //  float mBumpiness;

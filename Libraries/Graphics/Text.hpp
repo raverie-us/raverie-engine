@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Text.hpp
-/// Declaration of the display object text class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -24,9 +16,9 @@ public:
   float FontSize;
   RenderFont* mFont;
 
-  //BaseDefinition Interface
+  // BaseDefinition Interface
   void Initialize() override;
   void Serialize(Serializer& stream) override;
 };
 
-}//namespace Zero
+} // namespace Zero

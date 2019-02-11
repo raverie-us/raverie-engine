@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Standard includes
@@ -25,7 +20,7 @@ public:
 };
 
 const Guid cInvalidUniqueId = (Guid)(u64)-1;
-}//namespace Zero
+} // namespace Zero
 
 // Project includes
 #include "NativeTypeConversion.hpp"

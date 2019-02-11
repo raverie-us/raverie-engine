@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file IntVector4.cpp
-///  Implementation of the IntVector4 structure.
-/// 
-///  Authors: Trevor Sundberg
-///  Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
@@ -17,7 +9,6 @@ const IntVector4 IntVector4::cXAxis(1, 0, 0, 0);
 const IntVector4 IntVector4::cYAxis(0, 1, 0, 0);
 const IntVector4 IntVector4::cZAxis(0, 0, 1, 0);
 const IntVector4 IntVector4::cWAxis(0, 0, 0, 1);
-
 
 IntVector4::IntVector4(int x_, int y_, int z_, int w_)
 {
@@ -39,14 +30,12 @@ int IntVector4::operator[](uint index) const
   return array[index];
 }
 
-
 ////////// Unary Operators /////////////////////////////////////////////////////
 
 IntVector4 IntVector4::operator-(void) const
 {
   return IntVector4(-x, -y, -z, -w);
 }
-
 
 ////////// Binary Assignment Operators (reals) /////////////////////////////////
 
@@ -66,7 +55,6 @@ void IntVector4::operator/=(int rhs)
   z /= rhs;
   w /= rhs;
 }
-
 
 ////////// Binary Operators (reals) ////////////////////////////////////////////
 
@@ -133,14 +121,13 @@ void IntVector4::operator*=(IntVec4Param rhs)
 
 void IntVector4::operator/=(IntVec4Param rhs)
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0, 
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0,
           "Vector2 - Division by zero.");
   x /= rhs.x;
   y /= rhs.y;
   z /= rhs.z;
   w /= rhs.w;
 }
-
 
 ////////// Binary Operators (Vectors) //////////////////////////////////////////
 
@@ -154,7 +141,6 @@ IntVector4 IntVector4::operator-(IntVec4Param rhs) const
   return IntVector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 }
 
-
 ////////// Binary Vector Comparisons ///////////////////////////////////////////
 
 bool IntVector4::operator==(IntVec4Param rhs) const
@@ -167,37 +153,24 @@ bool IntVector4::operator!=(IntVec4Param rhs) const
   return !(*this == rhs);
 }
 
-
-BoolVec4 IntVector4::operator< (IntVec4Param rhs) const
+BoolVec4 IntVector4::operator<(IntVec4Param rhs) const
 {
-  return BoolVec4(x < rhs.x,
-                  y < rhs.y,
-                  z < rhs.z,
-                  w < rhs.w);
+  return BoolVec4(x < rhs.x, y < rhs.y, z < rhs.z, w < rhs.w);
 }
 
 BoolVec4 IntVector4::operator<=(IntVec4Param rhs) const
 {
-  return BoolVec4(x <= rhs.x,
-                  y <= rhs.y,
-                  z <= rhs.z,
-                  w <= rhs.w);
+  return BoolVec4(x <= rhs.x, y <= rhs.y, z <= rhs.z, w <= rhs.w);
 }
 
-BoolVec4 IntVector4::operator> (IntVec4Param rhs) const
+BoolVec4 IntVector4::operator>(IntVec4Param rhs) const
 {
-  return BoolVec4(x > rhs.x,
-                  y > rhs.y,
-                  z > rhs.z,
-                  w > rhs.w);
+  return BoolVec4(x > rhs.x, y > rhs.y, z > rhs.z, w > rhs.w);
 }
 
 BoolVec4 IntVector4::operator>=(IntVec4Param rhs) const
 {
-  return BoolVec4(x >= rhs.x,
-                  y >= rhs.y,
-                  z >= rhs.z,
-                  w >= rhs.w);
+  return BoolVec4(x >= rhs.x, y >= rhs.y, z >= rhs.z, w >= rhs.w);
 }
 
 void IntVector4::Set(int x_, int y_, int z_, int w_)
@@ -216,10 +189,9 @@ void IntVector4::ZeroOut(void)
   w = 0;
 }
 
-
 IntVector4 IntVector4::operator/(IntVec4Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0, 
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0,
           "IntVector4 - Division by zero.");
   return IntVector4(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 }
@@ -231,7 +203,7 @@ IntVector4 IntVector4::operator*(IntVec4Param rhs) const
 
 IntVector4 IntVector4::operator%(IntVec4Param rhs) const
 {
-  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0, 
+  ErrorIf(rhs.x == 0 || rhs.y == 0 || rhs.z == 0 || rhs.w == 0,
           "IntVector4 - Mod by zero.");
   return IntVector4(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 }
@@ -243,7 +215,8 @@ IntVector4 operator*(int lhs, IntVec4Param rhs)
 
 IntVector4 Abs(IntVec4Param vec)
 {
-  return IntVector4(Math::Abs(vec.x), Math::Abs(vec.y), Math::Abs(vec.z), Math::Abs(vec.w));
+  return IntVector4(
+      Math::Abs(vec.x), Math::Abs(vec.y), Math::Abs(vec.z), Math::Abs(vec.w));
 }
 
 IntVector4 Min(IntVec4Param lhs, IntVec4Param rhs)
@@ -267,52 +240,34 @@ int Dot(IntVec4Param lhs, IntVec4Param rhs)
   return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 }
 
-IntVector4  IntVector4::operator~() const
+IntVector4 IntVector4::operator~() const
 {
-  return IntVector4(~x,
-                    ~y,
-                    ~z,
-                    ~w);
+  return IntVector4(~x, ~y, ~z, ~w);
 }
 
-IntVector4  IntVector4::operator<< (IntVec4Param rhs) const
+IntVector4 IntVector4::operator<<(IntVec4Param rhs) const
 {
-  return IntVector4(x << rhs.x,
-                    y << rhs.y,
-                    z << rhs.z,
-                    w << rhs.w);
+  return IntVector4(x << rhs.x, y << rhs.y, z << rhs.z, w << rhs.w);
 }
 
-IntVector4  IntVector4::operator>> (IntVec4Param rhs) const
+IntVector4 IntVector4::operator>>(IntVec4Param rhs) const
 {
-  return IntVector4(x >> rhs.x,
-                    y >> rhs.y,
-                    z >> rhs.z,
-                    w >> rhs.w);
+  return IntVector4(x >> rhs.x, y >> rhs.y, z >> rhs.z, w >> rhs.w);
 }
 
-IntVector4  IntVector4::operator|  (IntVec4Param rhs) const
+IntVector4 IntVector4::operator|(IntVec4Param rhs) const
 {
-  return IntVector4(x | rhs.x,
-                    y | rhs.y,
-                    z | rhs.z,
-                    w | rhs.w);
+  return IntVector4(x | rhs.x, y | rhs.y, z | rhs.z, w | rhs.w);
 }
 
-IntVector4  IntVector4::operator^  (IntVec4Param rhs) const
+IntVector4 IntVector4::operator^(IntVec4Param rhs) const
 {
-  return IntVector4(x ^ rhs.x,
-                    y ^ rhs.y,
-                    z ^ rhs.z,
-                    w ^ rhs.w);
+  return IntVector4(x ^ rhs.x, y ^ rhs.y, z ^ rhs.z, w ^ rhs.w);
 }
 
-IntVector4  IntVector4::operator&  (IntVec4Param rhs) const
+IntVector4 IntVector4::operator&(IntVec4Param rhs) const
 {
-  return IntVector4(x & rhs.x,
-                    y & rhs.y,
-                    z & rhs.z,
-                    w & rhs.w);
+  return IntVector4(x & rhs.x, y & rhs.y, z & rhs.z, w & rhs.w);
 }
 
 IntVector4& IntVector4::operator<<=(IntVec4Param rhs)
@@ -333,7 +288,7 @@ IntVector4& IntVector4::operator>>=(IntVec4Param rhs)
   return *this;
 }
 
-IntVector4& IntVector4::operator|= (IntVec4Param rhs)
+IntVector4& IntVector4::operator|=(IntVec4Param rhs)
 {
   x |= rhs.x;
   y |= rhs.y;
@@ -342,7 +297,7 @@ IntVector4& IntVector4::operator|= (IntVec4Param rhs)
   return *this;
 }
 
-IntVector4& IntVector4::operator^= (IntVec4Param rhs)
+IntVector4& IntVector4::operator^=(IntVec4Param rhs)
 {
   x ^= rhs.x;
   y ^= rhs.y;
@@ -351,7 +306,7 @@ IntVector4& IntVector4::operator^= (IntVec4Param rhs)
   return *this;
 }
 
-IntVector4& IntVector4::operator&= (IntVec4Param rhs)
+IntVector4& IntVector4::operator&=(IntVec4Param rhs)
 {
   x &= rhs.x;
   y &= rhs.y;
@@ -360,4 +315,4 @@ IntVector4& IntVector4::operator&= (IntVec4Param rhs)
   return *this;
 }
 
-}// namespace Math
+} // namespace Math

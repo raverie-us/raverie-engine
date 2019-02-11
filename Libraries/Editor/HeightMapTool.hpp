@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Ryan Edgemon
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -20,9 +15,13 @@ class HeightPatchUndoRedo;
 class WeightMapUndoRedo;
 
 /// Declaration of all tools
-DeclareEnum5(HeightTool, CreateDestroy, RaiseLower, SmoothSharpen, Flatten, WeightPainter);
+DeclareEnum5(HeightTool,
+             CreateDestroy,
+             RaiseLower,
+             SmoothSharpen,
+             Flatten,
+             WeightPainter);
 
-//---------------------------------------------------------- Height Map Sub Tool
 class HeightMapSubTool : public Object
 {
 public:
@@ -30,19 +29,25 @@ public:
   ZilchDeclareType(HeightMapSubTool, TypeCopyMode::ReferenceType);
 
   /// Virtual destructor
-  virtual ~HeightMapSubTool(){}
+  virtual ~HeightMapSubTool()
+  {
+  }
 
   virtual bool LeftMouseDown(HeightMap* map, ViewportMouseEvent* e);
-  virtual void LeftMouseMove(HeightMap* map, ViewportMouseEvent* e){}
+  virtual void LeftMouseMove(HeightMap* map, ViewportMouseEvent* e)
+  {
+  }
   virtual bool LeftMouseUp(HeightMap* map, ViewportMouseEvent* e);
   virtual bool MouseScroll(HeightMap* map, ViewportMouseEvent* e);
-  virtual void Refresh(HeightMap* map){}
+  virtual void Refresh(HeightMap* map)
+  {
+  }
 
-  /// Draws the tool (has its own implementation to draw the cells that will be affected)
+  /// Draws the tool (has its own implementation to draw the cells that will be
+  /// affected)
   virtual void Draw(HeightMap* map);
 
 public:
-
   /// A pointer back to our owner
   HeightMapTool* mOwner;
 
@@ -50,7 +55,6 @@ public:
   Vec2 mLocalToolPosition;
 };
 
-//----------------------------------------------------- Height Manipulation Tool
 /// An abstract tool for any sort of height map manipulation
 class HeightManipulationTool : public HeightMapSubTool
 {
@@ -77,32 +81,35 @@ public:
   void SetFeatherRadius(float value);
 
 protected:
-
   /// Apply a particular function to a cell query (such as adjusting height)
   /// The mode that is passed in tells us what input the user was giving us
-  virtual void ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e) = 0;
+  virtual void ApplyToCells(HeightMapCellRange& range,
+                            ViewportMouseEvent* e) = 0;
 
   /// Perform the cell query, and returns if the query grabbed anything
   void PerformQuery(HeightMap* map, ViewportMouseEvent* e);
 
   /// Tell anyone who wants to know when the radius changes
-  virtual void OnRadiusChanged(){}
+  virtual void OnRadiusChanged()
+  {
+  }
 
 public:
   /// The radius of the tool
   float mRadius;
 
-  /// The feather radius (controls how soft the edges are in addition to the main radius)
+  /// The feather radius (controls how soft the edges are in addition to the
+  /// main radius)
   float mFeatherRadius;
 
-  /// Stores required information to perform an undo or redo of any manipulation tool operation.
+  /// Stores required information to perform an undo or redo of any manipulation
+  /// tool operation.
   HeightMapUndoRedo* mOperation;
 
   /// Stores required information to record brush strokes for undo/redo
   HashMap<HeightMap*, HeightMapStateManager> mAlteredMaps;
 };
 
-//------------------------------------------------------------- Raise/Lower Tool
 /// A tool for raising and lowering the height map
 class RaiseLowerTool : public HeightManipulationTool
 {
@@ -117,7 +124,6 @@ public:
   void ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent* e) override;
 
 public:
-
   /// The amount of strength used when raising or lowering the height map
   float mStrength;
 
@@ -125,7 +131,6 @@ public:
   bool mRelative;
 };
 
-//---------------------------------------------------------- Smooth/Sharpen Tool
 /// A tool for smoothing or sharpening the height map
 class SmoothSharpenTool : public HeightManipulationTool
 {
@@ -145,7 +150,6 @@ public:
   void DetermineSamples(HeightMap* map);
 
 private:
-
   /// Smooths the query
   void Smooth(HeightMapCellRange& range);
 
@@ -153,11 +157,11 @@ private:
   void Sharpen(HeightMapCellRange& range);
 
 public:
-
   /// The amount of strength used in smoothing or sharpening
   float mStrength;
 
-  /// How many uniform samples we make when smoothing (high values will go slow!)
+  /// How many uniform samples we make when smoothing (high values will go
+  /// slow!)
   int mUniformSamples;
 
   /// How many random samples we make when smoothing
@@ -173,7 +177,6 @@ public:
   Math::Random mRandom;
 };
 
-//----------------------------------------------------------------- Flatten Tool
 /// A tool for flattening out areas of the height map
 class FlattenTool : public HeightManipulationTool
 {
@@ -191,14 +194,16 @@ public:
   bool LeftMouseDown(HeightMap* map, ViewportMouseEvent* e) override;
 
 public:
-
-  /// The amount of strength used to flatten [0, 1] where 0 is no strength, 1 is full strength
+  /// The amount of strength used to flatten [0, 1] where 0 is no strength, 1 is
+  /// full strength
   float mStrength;
 
-  /// The height that we want to flatten to (usually sampled and not set directly)
+  /// The height that we want to flatten to (usually sampled and not set
+  /// directly)
   float mHeight;
 
-  /// The plane normal that we flatten the height map to (straight up means flat)
+  /// The plane normal that we flatten the height map to (straight up means
+  /// flat)
   Vec3 mSlopeNormal;
 
   /// Flattens the height map to the point where clicked
@@ -208,8 +213,6 @@ public:
   bool mSampleNormal;
 };
 
-
-//---------------------------------------------------------- Create/Destroy Tool
 /// A tool for creating or destroying patches of the terrain
 class CreateDestroyTool : public HeightMapSubTool
 {
@@ -227,7 +230,6 @@ public:
   void Draw(HeightMap* map) override;
 
 public:
-
   /// The height that we create the patch at
   float mBaseHeight;
 
@@ -240,11 +242,11 @@ public:
   /// The large the perlin noise is allowed to make the terrain
   float mPerlinAmplitude;
 
-  /// Stores required information to perform an undo or redo of a create or destroy operation.
+  /// Stores required information to perform an undo or redo of a create or
+  /// destroy operation.
   HeightPatchUndoRedo* mOperation;
 };
 
-//---------------------------------------------------------- WeightPainter Tool
 
 /// Declaration of WeightPainter texture channels
 DeclareEnum4(HeightTextureSelect, Texture0, Texture1, Texture2, Texture3);
@@ -277,7 +279,6 @@ public:
   WeightMapUndoRedo* mOperation;
 };
 
-//-------------------------------------------------------- HeightMapMouseCapture
 
 class HeightMapMouseCapture : public MouseManipulation
 {
@@ -288,7 +289,7 @@ public:
   HandleOf<HeightMapTool> mHeightMapTool;
 
   HeightMapMouseCapture(Mouse* mouse, Viewport* Viewport, HeightMapTool* tool);
-  virtual ~HeightMapMouseCapture( );
+  virtual ~HeightMapMouseCapture();
 
   // Named MouseEvent Handlers
   void OnMouseUp(MouseEvent* event) override;
@@ -298,57 +299,58 @@ public:
   void OnMouseMove(MouseEvent* event) override;
 };
 
-//-------------------------------------------------------------- Height Map Tool
 /// Declaration debug index type
 DeclareEnum2(CellIndexType, Local, Absoulte)
 
-/// <Commands>
-///   <command name = "CreateDestroy">
-///     <shortcut> Shift + 1 </shortcut>
-///     <description>
-///       Set the HeightMapTool's sub-tool to the CreateDestroy tool.
-///     </description>
-///   </command>
-///   <command name = "RaiseLower">
-///     <shortcut> Shift + 2 </shortcut>
-///     <description>
-///       Set the HeightMapTool's sub-tool to the RaiseLower tool.
-///     </description>
-///   </command>
-///   <command name = "SmoothSharpen">
-///     <shortcut> Shift + 3 </shortcut>
-///     <description>
-///       Set the HeightMapTool's sub-tool to the SmoothSharpen tool.
-///     </description>
-///   </command>
-///   <command name = "Flatten">
-///     <shortcut> Shift + 4 </shortcut>
-///     <description>
-///       Set the HeightMapTool's sub-tool to the Flatten tool.
-///     </description>
-///   </command>
-///   <command name = "WeightPainter">
-///     <shortcut> Shift + 5 </shortcut>
-///     <description>
-///       Set the HeightMapTool's sub-tool to the WeightPainter tool.
-///     </description>
-///   </command>
-///   <command name = "ResizeBrush">
-///     <shortcut> Shift + MouseScroll </shortcut>
-///     <description>
-///       Resize the brush size up or down depending on the scroll direction.
-///     </description>
-///   </command>
-///   <command name = "SubToolCommands">
-///     <shortcut> Shift + LeftClick/LeftDrag </shortcut>
-///     <description>
-///       CreateDestroy:\Destroy patches instead of creating them.\ \
-///       RaiseLower:\Lower height map with the brush instead of raising it.\ \
-///       SmoothSharpen:\Sharpen height map with the brush instead of smoothing it.
-///     </description>
-///   </command>
-/// </Commands>
-class HeightMapTool : public Component
+    /// <Commands>
+    ///   <command name = "CreateDestroy">
+    ///     <shortcut> Shift + 1 </shortcut>
+    ///     <description>
+    ///       Set the HeightMapTool's sub-tool to the CreateDestroy tool.
+    ///     </description>
+    ///   </command>
+    ///   <command name = "RaiseLower">
+    ///     <shortcut> Shift + 2 </shortcut>
+    ///     <description>
+    ///       Set the HeightMapTool's sub-tool to the RaiseLower tool.
+    ///     </description>
+    ///   </command>
+    ///   <command name = "SmoothSharpen">
+    ///     <shortcut> Shift + 3 </shortcut>
+    ///     <description>
+    ///       Set the HeightMapTool's sub-tool to the SmoothSharpen tool.
+    ///     </description>
+    ///   </command>
+    ///   <command name = "Flatten">
+    ///     <shortcut> Shift + 4 </shortcut>
+    ///     <description>
+    ///       Set the HeightMapTool's sub-tool to the Flatten tool.
+    ///     </description>
+    ///   </command>
+    ///   <command name = "WeightPainter">
+    ///     <shortcut> Shift + 5 </shortcut>
+    ///     <description>
+    ///       Set the HeightMapTool's sub-tool to the WeightPainter tool.
+    ///     </description>
+    ///   </command>
+    ///   <command name = "ResizeBrush">
+    ///     <shortcut> Shift + MouseScroll </shortcut>
+    ///     <description>
+    ///       Resize the brush size up or down depending on the scroll
+    ///       direction.
+    ///     </description>
+    ///   </command>
+    ///   <command name = "SubToolCommands">
+    ///     <shortcut> Shift + LeftClick/LeftDrag </shortcut>
+    ///     <description>
+    ///       CreateDestroy:\Destroy patches instead of creating them.\ \
+///       RaiseLower:\Lower height map with the brush instead of raising
+    ///       it.\ \ SmoothSharpen:\Sharpen height map with the brush instead of
+    ///       smoothing it.
+    ///     </description>
+    ///   </command>
+    /// </Commands>
+    class HeightMapTool : public Component
 {
 public:
   /// Meta Initialization.
@@ -375,7 +377,7 @@ public:
   void OnLeftMouseUpAddHeightMapWidget(MouseEvent* e);
 
   void DebugDraw() override;
-  void DrawDebugIndexes( );
+  void DrawDebugIndexes();
 
   void CreateHeightMap();
 
@@ -387,10 +389,11 @@ public:
   void SetCurrentTool(HeightTool::Enum tool);
 
 private:
-
   /// Tells the sub-tool where the current mouse position is at
   /// Returns true if the mouse intersects the map, false otherwise
-  bool SetupLocalPosition(HeightMap* map, Viewport* viewport, ViewportMouseEvent* e);
+  bool SetupLocalPosition(HeightMap* map,
+                          Viewport* viewport,
+                          ViewportMouseEvent* e);
 
   /// Sets the selection to a new selection
   void SetEditingMap(CogId cog, HeightMap* map);
@@ -401,7 +404,7 @@ private:
 
   HandleOf<HeightMapMouseCapture> mMouseCapture;
 
-  ///Debug Options
+  /// Debug Options
   bool mShowPatchIndex;
   bool mShowCellIndex;
   CellIndexType::Enum mCellIndexType;
@@ -419,4 +422,4 @@ private:
   CogId mSelection;
 };
 
-}//namespace Zero
+} // namespace Zero

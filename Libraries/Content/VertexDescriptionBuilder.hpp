@@ -1,7 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +11,9 @@ public:
   ~VertexDescriptionBuilder();
 
   FixedVertexDescription& SetupDescriptionFromMesh(aiMesh* mesh);
-  void AddAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count);
+  void AddAttribute(VertexSemantic::Enum semantic,
+                    VertexElementType::Enum type,
+                    byte count);
   byte GetElementSize(VertexElementType::Type type);
   FixedVertexDescription GetDescription();
 
@@ -25,4 +24,4 @@ private:
   FixedVertexDescription mVertexDescription;
 };
 
-}// namespace Zero
+} // namespace Zero

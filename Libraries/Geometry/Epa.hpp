@@ -1,22 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Epa.hpp
-/// Interface for the expanding polytope algorithm.
-///
-/// Authors: Nathan Carlson
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Intersection
 {
 
-//-------------------------------------------------------------------------- Epa
 class Epa
 {
 public:
-
   void Init(const Simplex& simplex);
   Vec3 GetClosestFaceNormal(void);
   float GetClosestDistance(void);
@@ -27,15 +17,20 @@ public:
   void DrawDebug(void);
 
 private:
-
   struct Edge
   {
-    Edge(void) {}
-    Edge(unsigned i0, unsigned i1) : p0(i0), p1(i1) {}
+    Edge(void)
+    {
+    }
+    Edge(unsigned i0, unsigned i1) : p0(i0), p1(i1)
+    {
+    }
     bool operator==(const Edge& other) const
     {
-      if (p0 == other.p0 && p1 == other.p1) return true;
-      if (p0 == other.p1 && p1 == other.p0) return true;
+      if (p0 == other.p0 && p1 == other.p1)
+        return true;
+      if (p0 == other.p1 && p1 == other.p0)
+        return true;
       return false;
     }
     unsigned p0, p1;
@@ -43,8 +38,12 @@ private:
 
   struct Face
   {
-    Face(void) {}
-    Face(unsigned i0, unsigned i1, unsigned i2) : p0(i0), p1(i1), p2(i2) {}
+    Face(void)
+    {
+    }
+    Face(unsigned i0, unsigned i1, unsigned i2) : p0(i0), p1(i1), p2(i2)
+    {
+    }
     unsigned p0, p1, p2;
     Vec3 normal;
   };
@@ -64,4 +63,4 @@ private:
   unsigned mStep;
 };
 
-}// namespace Intersection
+} // namespace Intersection

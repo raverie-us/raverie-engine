@@ -1,13 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include <Windows.h>
 #include "../Windows/WString.hpp"
 #define AT_FDCWD -100
-#define	R_OK 0x04
+#define R_OK 0x04
 #define S_ISDIR(dir) true
 #define ZeroAllPermissions (0777)
 
@@ -91,12 +86,16 @@ int mkdir(const char* dirPath, uint chmod)
 void realpath(const char* path, char* buffer)
 {
   Zero::String normalizedPath = Zero::FilePath::Normalize(path);
-  size_t copySize = Math::Min(normalizedPath.SizeInBytes(), (size_t)Zero::File::MaxPath);
+  size_t copySize =
+      Math::Min(normalizedPath.SizeInBytes(), (size_t)Zero::File::MaxPath);
   memcpy(buffer, normalizedPath.c_str(), copySize);
   buffer[copySize] = 0;
 }
 
-int utimensat(int dirfd, const char* pathname, const struct timespec times[2], int flags)
+int utimensat(int dirfd,
+              const char* pathname,
+              const struct timespec times[2],
+              int flags)
 {
   FILE* touch = fopen(pathname, "ab+");
   if (touch)

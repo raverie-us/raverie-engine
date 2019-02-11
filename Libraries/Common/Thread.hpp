@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Thread.hpp
-/// Declaration of the Thread class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -30,9 +22,12 @@ public:
   bool IsValid();
 
   // Initializes the thread but does not run it.
-  bool Initialize(EntryFunction entryFunction, void* instance, StringParam threadName);
+  bool Initialize(EntryFunction entryFunction,
+                  void* instance,
+                  StringParam threadName);
 
-  // Close the thread handle. The thread should have been shut down before calling this function.
+  // Close the thread handle. The thread should have been shut down before
+  // calling this function.
   void Close();
 
   // Block waiting for the thread to complete.
@@ -67,7 +62,7 @@ public:
 
   // Template Helper for creating Entry Functions
   // From member functions
-  template<typename classType, OsInt (classType::*MemberFunction)()>
+  template <typename classType, OsInt (classType::*MemberFunction)()>
   static OsInt ObjectEntryCreator(void* objectInstance)
   {
     classType* object = (classType*)objectInstance;
@@ -80,4 +75,4 @@ private:
   ZeroDeclarePrivateData(Thread, 20);
 };
 
-}//namespace Zero
+} // namespace Zero

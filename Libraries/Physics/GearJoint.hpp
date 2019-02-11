@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -83,13 +78,15 @@ struct GearJoint : public Joint
 
   enum BoundType
   {
-    RevJoint, RevJoint2d, PrismJoint, PrismJoint2d
+    RevJoint,
+    RevJoint2d,
+    PrismJoint,
+    PrismJoint2d
   };
 
   struct JointUnion
   {
-    union
-    {
+    union {
       Joint* mJoint;
       RevoluteJoint* mRevolute;
       RevoluteJoint2d* mRevolute2d;
@@ -111,8 +108,8 @@ struct GearJoint : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::GearJoint GearJoint;
 
-}//namespace Zero
+} // namespace Zero

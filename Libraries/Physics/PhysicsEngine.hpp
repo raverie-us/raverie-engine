@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +9,7 @@ namespace Physics
 
 class CollisionManager;
 
-}//namespace Physics
+} // namespace Physics
 
 class PhysicsSpace;
 System* CreatePhysicsSystem();
@@ -50,7 +45,7 @@ private:
   void RemoveSpace(PhysicsSpace* space);
 
   Physics::CollisionManager* mCollisionManager;
-  
+
   /// All active spaces
   SpaceList mSpaces;
 
@@ -58,4 +53,4 @@ public:
   Memory::Heap* mHeap;
 };
 
-}//namespace Zero
+} // namespace Zero

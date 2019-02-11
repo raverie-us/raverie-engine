@@ -1,44 +1,34 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 namespace Events
 {
-  DefineEvent(OsMouseUp);
-  DefineEvent(OsMouseDown);
-  DefineEvent(OsMouseMove);
-  DefineEvent(OsMouseScroll);
-  DefineEvent(OsKeyDown);
-  DefineEvent(OsKeyUp);
-  DefineEvent(OsKeyRepeated);
-  DefineEvent(OsKeyTyped);
-  DefineEvent(OsDeviceChanged);
-  DefineEvent(OsResized);
-  DefineEvent(OsMoved);
-  DefineEvent(OsClose);
-  DefineEvent(OsFocusGained);
-  DefineEvent(OsFocusLost);
-  DefineEvent(OsPaint);
-  DefineEvent(OsMouseFileDrop);
-  DefineEvent(OsWindowMinimized);
-  DefineEvent(OsWindowRestored);
-  DefineEvent(OsWindowBorderHitTest);
-}//namespace Events
+DefineEvent(OsMouseUp);
+DefineEvent(OsMouseDown);
+DefineEvent(OsMouseMove);
+DefineEvent(OsMouseScroll);
+DefineEvent(OsKeyDown);
+DefineEvent(OsKeyUp);
+DefineEvent(OsKeyRepeated);
+DefineEvent(OsKeyTyped);
+DefineEvent(OsDeviceChanged);
+DefineEvent(OsResized);
+DefineEvent(OsMoved);
+DefineEvent(OsClose);
+DefineEvent(OsFocusGained);
+DefineEvent(OsFocusLost);
+DefineEvent(OsPaint);
+DefineEvent(OsMouseFileDrop);
+DefineEvent(OsWindowMinimized);
+DefineEvent(OsWindowRestored);
+DefineEvent(OsWindowBorderHitTest);
+} // namespace Events
 
-const String cOsKeyboardEventsFromState[] =
-{
-  Events::OsKeyUp,
-  Events::OsKeyDown,
-  Events::OsKeyRepeated
-};
+const String cOsKeyboardEventsFromState[] = {
+    Events::OsKeyUp, Events::OsKeyDown, Events::OsKeyRepeated};
 
-//-------------------------------------------------------------------OsWindow
 ZilchDefineType(OsWindow, builder, type)
 {
   ZilchBindGetterSetterProperty(MonitorClientPosition);
@@ -46,14 +36,15 @@ ZilchDefineType(OsWindow, builder, type)
   ZilchBindGetterSetterProperty(ClientSize);
   ZilchBindGetterProperty(Parent);
   // Seems to be problematic to expose because they can set some dangerous stuff
-  //ZilchBindGetterSetterProperty(Style);
+  // ZilchBindGetterSetterProperty(Style);
   ZilchBindGetterSetterProperty(Visible);
   ZilchBindSetter(Title);
   ZilchBindGetterSetterProperty(State);
 
   ZilchBindMethod(HasFocus);
-  // Currently behaves weird when called from script when the window doesn't have focus
-  //ZilchBindMethod(TakeFocus);
+  // Currently behaves weird when called from script when the window doesn't
+  // have focus
+  // ZilchBindMethod(TakeFocus);
   ZilchBindSetter(MouseCapture);
   ZilchBindGetterSetter(MouseTrap);
 
@@ -61,19 +52,23 @@ ZilchDefineType(OsWindow, builder, type)
   ZilchBindMethod(ClientToMonitor);
 }
 
-OsWindow::OsWindow(
-  OsShell* shell,
-  StringParam windowName,
-  IntVec2Param clientSize,
-  IntVec2Param monitorClientPos,
-  OsWindow* parentWindow,
-  WindowStyleFlags::Enum flags) :
-  mWindow(&shell->mShell, windowName, clientSize, monitorClientPos, parentWindow ? &parentWindow->mWindow : nullptr, flags),
-  mOsInputHook(nullptr),
-  mBlockUserInput(false),
-  mMouseTrapped(false),
-  mCustomMouseTrapClientPosition(IntVec2(0, 0)),
-  mUseCustomMouseTrapClientPosition(false)
+OsWindow::OsWindow(OsShell* shell,
+                   StringParam windowName,
+                   IntVec2Param clientSize,
+                   IntVec2Param monitorClientPos,
+                   OsWindow* parentWindow,
+                   WindowStyleFlags::Enum flags) :
+    mWindow(&shell->mShell,
+            windowName,
+            clientSize,
+            monitorClientPos,
+            parentWindow ? &parentWindow->mWindow : nullptr,
+            flags),
+    mOsInputHook(nullptr),
+    mBlockUserInput(false),
+    mMouseTrapped(false),
+    mCustomMouseTrapClientPosition(IntVec2(0, 0)),
+    mUseCustomMouseTrapClientPosition(false)
 {
   mWindow.mUserData = this;
 
@@ -97,7 +92,8 @@ OsWindow::OsWindow(
   mWindow.mOnHitTest = &ShellWindowOnHitTest;
   mWindow.mOnInputDeviceChanged = &ShellWindowOnInputDeviceChanged;
 
-  // Since we're creating the main window, do a single scan for input devices (they rely on a main window)
+  // Since we're creating the main window, do a single scan for input devices
+  // (they rely on a main window)
   if (flags & WindowStyleFlags::MainWindow)
     shell->ScanInputDevices();
 }
@@ -248,7 +244,8 @@ void OsWindow::SetMouseTrap(bool mouseTrapped)
   }
 }
 
-void OsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition, bool useCustomPosition)
+void OsWindow::SetMouseTrapClientPosition(IntVec2 clientPosition,
+                                          bool useCustomPosition)
 {
   mCustomMouseTrapClientPosition = clientPosition;
   mUseCustomMouseTrapClientPosition = useCustomPosition;
@@ -345,7 +342,9 @@ void OsWindow::SendWindowEvent(OsWindowEvent& event, bool simulated)
   DispatchEvent(event.EventId, &event);
 }
 
-void OsWindow::FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, KeyboardEvent& keyEvent)
+void OsWindow::FillKeyboardEvent(Keys::Enum key,
+                                 KeyState::Enum keyState,
+                                 KeyboardEvent& keyEvent)
 {
   Shell* shell = mWindow.mShell;
   keyEvent.Key = key;
@@ -357,7 +356,9 @@ void OsWindow::FillKeyboardEvent(Keys::Enum key, KeyState::Enum keyState, Keyboa
   keyEvent.SpacePressed = shell->IsKeyDown(Keys::Space);
 }
 
-void OsWindow::FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mouseButton, OsMouseEvent& mouseEvent)
+void OsWindow::FillMouseEvent(IntVec2Param clientPosition,
+                              MouseButtons::Enum mouseButton,
+                              OsMouseEvent& mouseEvent)
 {
   Shell* shell = mWindow.mShell;
   mouseEvent.Window = this;
@@ -366,11 +367,16 @@ void OsWindow::FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mo
   mouseEvent.AltPressed = shell->IsKeyDown(Keys::Alt);
   mouseEvent.CtrlPressed = shell->IsKeyDown(Keys::Control);
   mouseEvent.ShiftPressed = shell->IsKeyDown(Keys::Shift);
-  mouseEvent.ButtonDown[MouseButtons::Left] = shell->IsMouseDown(MouseButtons::Left);
-  mouseEvent.ButtonDown[MouseButtons::Right] = shell->IsMouseDown(MouseButtons::Right);
-  mouseEvent.ButtonDown[MouseButtons::Middle] = shell->IsMouseDown(MouseButtons::Middle);
-  mouseEvent.ButtonDown[MouseButtons::XOneBack] = shell->IsMouseDown(MouseButtons::XOneBack);
-  mouseEvent.ButtonDown[MouseButtons::XTwoForward] = shell->IsMouseDown(MouseButtons::XTwoForward);
+  mouseEvent.ButtonDown[MouseButtons::Left] =
+      shell->IsMouseDown(MouseButtons::Left);
+  mouseEvent.ButtonDown[MouseButtons::Right] =
+      shell->IsMouseDown(MouseButtons::Right);
+  mouseEvent.ButtonDown[MouseButtons::Middle] =
+      shell->IsMouseDown(MouseButtons::Middle);
+  mouseEvent.ButtonDown[MouseButtons::XOneBack] =
+      shell->IsMouseDown(MouseButtons::XOneBack);
+  mouseEvent.ButtonDown[MouseButtons::XTwoForward] =
+      shell->IsMouseDown(MouseButtons::XTwoForward);
   mouseEvent.ButtonDown[MouseButtons::None] = 0;
   mouseEvent.MouseButton = mouseButton;
 }
@@ -399,7 +405,9 @@ void OsWindow::ShellWindowOnFocusChanged(bool activated, ShellWindow* window)
   self->SendWindowEvent(focusEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition, const Array<String>& files, ShellWindow* window)
+void OsWindow::ShellWindowOnMouseDropFiles(Math::IntVec2Param clientPosition,
+                                           const Array<String>& files,
+                                           ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
 
@@ -417,7 +425,8 @@ void OsWindow::ShellWindowOnFrozenUpdate(ShellWindow* window)
   Z::gEngine->Update();
 }
 
-void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, ShellWindow* window)
+void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize,
+                                              ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsWindowEvent sizeEvent;
@@ -428,7 +437,7 @@ void OsWindow::ShellWindowOnClientSizeChanged(Math::IntVec2Param clientSize, She
 void OsWindow::ShellWindowOnMinimized(ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
-  Event event; 
+  Event event;
   self->DispatchEvent(Events::OsWindowMinimized, &event);
 }
 
@@ -447,16 +456,22 @@ void OsWindow::ShellWindowOnTextTyped(Rune rune, ShellWindow* window)
   self->SendKeyboardTextEvent(textEvent, false);
 }
 
-void OsWindow::ShellWindowOnKeyDown(Keys::Enum key, uint osKey, bool repeated, ShellWindow* window)
+void OsWindow::ShellWindowOnKeyDown(Keys::Enum key,
+                                    uint osKey,
+                                    bool repeated,
+                                    ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   KeyboardEvent keyEvent;
   keyEvent.OsKey = osKey;
-  self->FillKeyboardEvent(key, repeated ? KeyState::Repeated : KeyState::Down, keyEvent);
+  self->FillKeyboardEvent(
+      key, repeated ? KeyState::Repeated : KeyState::Down, keyEvent);
   self->SendKeyboardEvent(keyEvent, false);
 }
 
-void OsWindow::ShellWindowOnKeyUp(Keys::Enum key, uint osKey, ShellWindow* window)
+void OsWindow::ShellWindowOnKeyUp(Keys::Enum key,
+                                  uint osKey,
+                                  ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   KeyboardEvent keyEvent;
@@ -465,7 +480,9 @@ void OsWindow::ShellWindowOnKeyUp(Keys::Enum key, uint osKey, ShellWindow* windo
   self->SendKeyboardEvent(keyEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseDown(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window)
+void OsWindow::ShellWindowOnMouseDown(Math::IntVec2Param clientPosition,
+                                      MouseButtons::Enum button,
+                                      ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
@@ -474,7 +491,9 @@ void OsWindow::ShellWindowOnMouseDown(Math::IntVec2Param clientPosition, MouseBu
   self->SendMouseEvent(mouseEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButtons::Enum button, ShellWindow* window)
+void OsWindow::ShellWindowOnMouseUp(Math::IntVec2Param clientPosition,
+                                    MouseButtons::Enum button,
+                                    ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
@@ -483,7 +502,8 @@ void OsWindow::ShellWindowOnMouseUp(Math::IntVec2Param clientPosition, MouseButt
   self->SendMouseEvent(mouseEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWindow* window)
+void OsWindow::ShellWindowOnMouseMove(Math::IntVec2Param clientPosition,
+                                      ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
 
@@ -492,7 +512,7 @@ void OsWindow::ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWi
   OsMouseEvent mouseEvent;
   self->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
   mouseEvent.EventId = Events::OsMouseMove;
-  
+
   // If the mouse is trapped, move it back to the trap position.
   // Or, mark that it's already there.
   if (self->mMouseTrapped)
@@ -519,12 +539,14 @@ void OsWindow::ShellWindowOnMouseMove(Math::IntVec2Param clientPosition, ShellWi
   }
 
   self->SendMouseEvent(mouseEvent, false);
-  
+
   // Constantly set the cursor to the last cursor that was set
   shell->SetMouseCursor(shell->GetMouseCursor());
 }
 
-void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window)
+void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition,
+                                         float scrollAmount,
+                                         ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
@@ -534,7 +556,9 @@ void OsWindow::ShellWindowOnMouseScrollY(Math::IntVec2Param clientPosition, floa
   self->SendMouseEvent(mouseEvent, false);
 }
 
-void OsWindow::ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition, float scrollAmount, ShellWindow* window)
+void OsWindow::ShellWindowOnMouseScrollX(Math::IntVec2Param clientPosition,
+                                         float scrollAmount,
+                                         ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   OsMouseEvent mouseEvent;
@@ -551,8 +575,9 @@ void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)
   // DeactivateAll because joysticks may have been removed in device changed
   Z::gJoysticks->DeactivateAll();
 
-  const Array<PlatformInputDevice>& devices = window->mShell->ScanInputDevices();
-  forRange(PlatformInputDevice& device, devices)
+  const Array<PlatformInputDevice>& devices =
+      window->mShell->ScanInputDevices();
+  forRange(PlatformInputDevice & device, devices)
   {
     // Tell the Joysticks system that a Joystick is present
     Z::gJoysticks->AddJoystickDevice(device);
@@ -561,13 +586,15 @@ void OsWindow::ShellWindowOnDevicesChanged(ShellWindow* window)
   Z::gJoysticks->JoysticksChanged();
 }
 
-void OsWindow::ShellWindowOnRawMouseChanged(Math::IntVec2Param movement, ShellWindow* window)
+void OsWindow::ShellWindowOnRawMouseChanged(Math::IntVec2Param movement,
+                                            ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
   Z::gMouse->mRawMovement += ToVec2(movement);
 }
 
-WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientPosition, ShellWindow* window)
+WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(
+    Math::IntVec2Param clientPosition, ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
 
@@ -578,15 +605,19 @@ WindowBorderArea::Enum OsWindow::ShellWindowOnHitTest(Math::IntVec2Param clientP
   return event.mWindowBorderArea;
 }
 
-void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint buttons, const Array<uint>& axes, const DataBlock& data, ShellWindow* window)
+void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device,
+                                               uint buttons,
+                                               const Array<uint>& axes,
+                                               const DataBlock& data,
+                                               ShellWindow* window)
 {
   OsWindow* self = (OsWindow*)window->mUserData;
 
   Joystick* joystick = Z::gJoysticks->GetJoystickByDevice(device.mDeviceHandle);
-  ReturnIf(
-    joystick == nullptr,,
-    "Unable to find a joystick by the device handle "
-    "(should have been found in ShellWindowOnDevicesChanged)");
+  ReturnIf(joystick == nullptr,
+           ,
+           "Unable to find a joystick by the device handle "
+           "(should have been found in ShellWindowOnDevicesChanged)");
 
   joystick->RawSetButtons(buttons);
 
@@ -594,7 +625,8 @@ void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint
   {
     if (i >= device.mAxes.Size())
     {
-      Error("We should be getting the same number of axes as was registered with the device, unless an error occurred");
+      Error("We should be getting the same number of axes as was registered "
+            "with the device, unless an error occurred");
       break;
     }
 
@@ -604,19 +636,16 @@ void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint
     else
       joystick->RawSetAxis(i, axes[i]);
   }
-  
+
   // Tell everyone we updated this joystick
   joystick->SignalUpdated();
 }
 
-//-------------------------------------------------------------------OsWindowEvent
 ZilchDefineType(OsWindowEvent, builder, type)
 {
 }
 
-OsWindowEvent::OsWindowEvent() :
-  Window(nullptr),
-  ClientSize(IntVec2::cZero)
+OsWindowEvent::OsWindowEvent() : Window(nullptr), ClientSize(IntVec2::cZero)
 {
 }
 
@@ -625,7 +654,6 @@ void OsWindowEvent::Serialize(Serializer& stream)
   SerializeNameDefault(EventId, String());
 }
 
-//-------------------------------------------------------------------OsMouseEvent
 ZilchDefineType(OsMouseEvent, builder, type)
 {
 }
@@ -645,7 +673,7 @@ void OsMouseEvent::Clear()
   CtrlPressed = false;
   MouseButton = MouseButton;
   IsMouseAtTrapPosition = false;
-  for(uint i = 0; i < MouseButtons::Size; ++i)
+  for (uint i = 0; i < MouseButtons::Size; ++i)
     ButtonDown[i] = false;
 }
 
@@ -661,13 +689,14 @@ void OsMouseEvent::Serialize(Serializer& stream)
 
   SerializeEnumNameDefault(MouseButtons, MouseButton, MouseButtons::None);
 
-  static_assert(sizeof(bool) == sizeof(byte), "For this trick work the size must be the same");
+  static_assert(sizeof(bool) == sizeof(byte),
+                "For this trick work the size must be the same");
   bool& LeftButton = (bool&)ButtonDown[MouseButtons::Left];
   bool& RightButton = (bool&)ButtonDown[MouseButtons::Right];
   bool& MiddleButton = (bool&)ButtonDown[MouseButtons::Middle];
   bool& XOneBackButton = (bool&)ButtonDown[MouseButtons::XOneBack];
   bool& XTwoForwardButton = (bool&)ButtonDown[MouseButtons::XTwoForward];
-  
+
   SerializeNameDefault(LeftButton, false);
   SerializeNameDefault(RightButton, false);
   SerializeNameDefault(MiddleButton, false);
@@ -675,19 +704,17 @@ void OsMouseEvent::Serialize(Serializer& stream)
   SerializeNameDefault(XTwoForwardButton, false);
 }
 
-//-------------------------------------------------------------------OsWindowBorderHitTest
 ZilchDefineType(OsWindowBorderHitTest, builder, type)
 {
 }
 
 OsWindowBorderHitTest::OsWindowBorderHitTest() :
-  Window(nullptr),
-  ClientPosition(IntVec2::cZero),
-  mWindowBorderArea(WindowBorderArea::None)
+    Window(nullptr),
+    ClientPosition(IntVec2::cZero),
+    mWindowBorderArea(WindowBorderArea::None)
 {
 }
 
-//-------------------------------------------------------------------OsMouseDropEvent
 ZilchDefineType(OsMouseDropEvent, builder, type)
 {
 }
@@ -698,4 +725,4 @@ void OsMouseDropEvent::Serialize(Serializer& stream)
   SerializeName(Files);
 }
 
-}//namespace Zero
+} // namespace Zero

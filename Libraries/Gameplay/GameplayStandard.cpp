@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "IndexedHalfEdgeMesh.hpp"
@@ -23,11 +18,10 @@ ZilchDefineRange(IndexedHalfEdgeMeshEdgeArray::RangeType);
 ZilchDefineRange(IndexedHalfEdgeFaceEdgeIndexArray::RangeType);
 ZilchDefineRange(IndexedHalfEdgeMeshFaceArray::RangeType);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(GameplayLibrary)
 {
   builder.CreatableInScriptDefault = false;
-  
+
   // Enums
   ZilchInitializeEnumAs(BrowserModifiers, "WebBrowserModifiers");
   ZilchInitializeEnum(OrientationBases);
@@ -35,10 +29,14 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeEnum(PathFinderStatus);
 
   // Ranges
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType, "IndexedHalfEdgeMeshVertexArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType, "IndexedHalfEdgeMeshEdgeArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType,
+                         "IndexedHalfEdgeMeshVertexArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType,
+                         "IndexedHalfEdgeMeshEdgeArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType,
+                         "IndexedHalfEdgeFaceEdgeIndexArrayRange");
+  ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType,
+                         "IndexedHalfEdgeMeshFaceArrayRange");
 
   // Events
   ZilchInitializeType(MouseEvent);
@@ -108,7 +106,6 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void GameplayLibrary::Initialize()
 {
   BuildStaticLibrary();
@@ -119,7 +116,6 @@ void GameplayLibrary::Initialize()
   WebBrowserManager::Initialize();
 }
 
-//**************************************************************************************************
 void GameplayLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();

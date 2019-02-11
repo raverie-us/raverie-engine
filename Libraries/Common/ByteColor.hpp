@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ByteColor.hpp
-/// Declaration of the ByteColor used for debugging and basic color constants.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Math.hpp"
 #include "Typedefs.hpp"
@@ -21,59 +13,63 @@ typedef Vector4 Vec4;
 namespace CS
 {
 
-  //DirectX ARGB
-  //const uint AlphaOffset = 24;
-  //const uint AlphaMask = static_cast<uint>(0xff << AlphaOffset);
+// DirectX ARGB
+// const uint AlphaOffset = 24;
+// const uint AlphaMask = static_cast<uint>(0xff << AlphaOffset);
 
-  //const uint RedOffset = 16;
-  //const uint RedMask = static_cast<uint>(0xff << RedOffset);
+// const uint RedOffset = 16;
+// const uint RedMask = static_cast<uint>(0xff << RedOffset);
 
-  //const uint GreenOffset = 8;
-  //const uint GreenMask = static_cast<uint>(0xff << GreenOffset);
+// const uint GreenOffset = 8;
+// const uint GreenMask = static_cast<uint>(0xff << GreenOffset);
 
-  //const uint BlueOffset = 0;
-  //const uint BlueMask = static_cast<uint>(0xff << BlueOffset);
+// const uint BlueOffset = 0;
+// const uint BlueMask = static_cast<uint>(0xff << BlueOffset);
 
+// OpenGl ABGR
+const uint MaxByte = 0xff;
+const uint AlphaOffset = 24;
+const uint AlphaMask = MaxByte << AlphaOffset;
 
-  //OpenGl ABGR
-  const uint MaxByte = 0xff;
-  const uint AlphaOffset = 24;
-  const uint AlphaMask = MaxByte << AlphaOffset;
+const uint BlueOffset = 16;
+const uint BlueMask = MaxByte << BlueOffset;
 
-  const uint BlueOffset = 16;
-  const uint BlueMask = MaxByte << BlueOffset;
+const uint GreenOffset = 8;
+const uint GreenMask = MaxByte << GreenOffset;
 
-  const uint GreenOffset = 8;
-  const uint GreenMask = MaxByte << GreenOffset;
+const uint RedOffset = 0;
+const uint RedMask = MaxByte << RedOffset;
 
-  const uint RedOffset = 0;
-  const uint RedMask = MaxByte << RedOffset;
+const float InvFactor = 1.0f / 255.0f;
+} // namespace CS
 
-  const float InvFactor = 1.0f / 255.0f;
-}
+#define ByteColorRGBA(r, g, b, a)                                              \
+  ((ByteColor)((((a)&CS::MaxByte) << CS::AlphaOffset) |                        \
+               (((r)&CS::MaxByte) << CS::RedOffset) |                          \
+               (((g)&CS::MaxByte) << CS::GreenOffset) |                        \
+               ((b)&CS::MaxByte) << CS::BlueOffset))
 
-#define ByteColorRGBA(r,g,b,a) \
-  ((ByteColor)((((a)&CS::MaxByte)<<CS::AlphaOffset)|(((r)&CS::MaxByte)<<CS::RedOffset)|(((g)&CS::MaxByte)<<CS::GreenOffset)|((b)&CS::MaxByte)<<CS::BlueOffset))
-
-#define FloatColorRGBA(r,g,b,a) \
-  Math::Vec4(float(r) * CS::InvFactor, float(g) * CS::InvFactor, float(b) * CS::InvFactor, float(a) * CS::InvFactor)
+#define FloatColorRGBA(r, g, b, a)                                             \
+  Math::Vec4(float(r) * CS::InvFactor,                                         \
+             float(g) * CS::InvFactor,                                         \
+             float(b) * CS::InvFactor,                                         \
+             float(a) * CS::InvFactor)
 
 inline Math::Vec4 ToFloatColor(ByteColor color)
 {
   return Math::Vec4(
-    float(((color)&CS::RedMask)>>CS::RedOffset)*CS::InvFactor,
-    float(((color)&CS::GreenMask)>>CS::GreenOffset)*CS::InvFactor,
-    float(((color)&CS::BlueMask)>>CS::BlueOffset)*CS::InvFactor,
-    float(((color)&CS::AlphaMask)>>CS::AlphaOffset)*CS::InvFactor);
+      float(((color)&CS::RedMask) >> CS::RedOffset) * CS::InvFactor,
+      float(((color)&CS::GreenMask) >> CS::GreenOffset) * CS::InvFactor,
+      float(((color)&CS::BlueMask) >> CS::BlueOffset) * CS::InvFactor,
+      float(((color)&CS::AlphaMask) >> CS::AlphaOffset) * CS::InvFactor);
 }
 
 inline ByteColor ToByteColor(Math::Vec4 color)
 {
-  return ByteColorRGBA(
-    byte(Math::Round(color.x * 255.f)),
-    byte(Math::Round(color.y * 255.f)),
-    byte(Math::Round(color.z * 255.f)),
-    byte(Math::Round(color.w * 255.f)));
+  return ByteColorRGBA(byte(Math::Round(color.x * 255.f)),
+                       byte(Math::Round(color.y * 255.f)),
+                       byte(Math::Round(color.z * 255.f)),
+                       byte(Math::Round(color.w * 255.f)));
 }
 
 inline float GetHdrFromColor(Math::Vec4 color)
@@ -109,7 +105,7 @@ inline ByteColor ToPastelColor(ByteColor color)
 inline ByteColor MultiplyByteColor(ByteColor color, float p)
 {
   Math::Vec4 floatColor = ToFloatColor(color);
-  floatColor*= p;
+  floatColor *= p;
   return ToByteColor(floatColor);
 }
 
@@ -142,23 +138,23 @@ inline Math::Vec4 HSVToFloatColor(float H, float S, float V, float alpha = 1.0f)
   float x = chroma * (1.0f - Math::Abs(Math::FMod(HPrime, 2.0f) - 1.0f));
 
   Math::Vec4 color;
-  if(HPrime < 1)
+  if (HPrime < 1)
     color = Math::Vec4(chroma, x, 0, 0);
-  else if(HPrime < 2)
+  else if (HPrime < 2)
     color = Math::Vec4(x, chroma, 0, 0);
-  else if(HPrime < 3)
+  else if (HPrime < 3)
     color = Math::Vec4(0, chroma, x, 0);
-  else if(HPrime < 4)
+  else if (HPrime < 4)
     color = Math::Vec4(0, x, chroma, 0);
-  else if(HPrime < 5)
+  else if (HPrime < 5)
     color = Math::Vec4(x, 0, chroma, 0);
-  else if(HPrime <= 6)
+  else if (HPrime <= 6)
     color = Math::Vec4(chroma, 0, x, 0);
   else
-    color = Math::Vec4(0,0,0,0);
+    color = Math::Vec4(0, 0, 0, 0);
 
   float m = V - chroma;
-  return color + Math::Vec4(m,m,m,alpha);
+  return color + Math::Vec4(m, m, m, alpha);
 }
 
 // Hue [0,1]
@@ -178,24 +174,24 @@ inline Math::Vec4 FloatColorToHSV(float r, float g, float b, float alpha = 1.0f)
 
   // Calculate Hue
   float hue;
-  if(chroma == 0.0f)
+  if (chroma == 0.0f)
   {
     hue = 0;
   }
   else
   {
-    if(max == r)
-      hue =(g - b) / chroma;
-    else if(max == g)
+    if (max == r)
+      hue = (g - b) / chroma;
+    else if (max == g)
       hue = ((b - r) / chroma) + 2.0f;
-    else //max == b
+    else // max == b
       hue = ((r - g) / chroma) + 4.0f;
   }
 
   hue *= (60.0f / 360.0f);
 
   // Wrap the hue around
-  if(hue < 0.0f)
+  if (hue < 0.0f)
     hue += 1.0f;
 
   // Calculate the value (or lightness)
@@ -203,7 +199,7 @@ inline Math::Vec4 FloatColorToHSV(float r, float g, float b, float alpha = 1.0f)
 
   // Calculate Saturation
   float saturation;
-  if(value == 0.0f)
+  if (value == 0.0f)
     saturation = 0.0f;
   else
     saturation = chroma / value;
@@ -218,24 +214,25 @@ inline Math::Vec4 FloatColorToHSV(Math::Vec4Param rgb)
 
 namespace EditorColor
 {
-  const ByteColor Red = ByteColorRGBA(128,  66,  66, 255);
-  const ByteColor Green = ByteColorRGBA(56, 158,  56, 255);
-  const ByteColor Blue = ByteColorRGBA(66,  66, 138, 255);
-  const ByteColor Yellow = ByteColorRGBA(250, 204,   4, 255);
+const ByteColor Red = ByteColorRGBA(128, 66, 66, 255);
+const ByteColor Green = ByteColorRGBA(56, 158, 56, 255);
+const ByteColor Blue = ByteColorRGBA(66, 66, 138, 255);
+const ByteColor Yellow = ByteColorRGBA(250, 204, 4, 255);
 
-  const ByteColor NeutralGray= ByteColorRGBA(115, 115, 115, 255);
+const ByteColor NeutralGray = ByteColorRGBA(115, 115, 115, 255);
 
-  const ByteColor Gray0 = ByteColorRGBA(128, 128, 128, 255);
-  const ByteColor Gray1 = ByteColorRGBA(106, 106, 106, 255);
-  const ByteColor Gray2 = ByteColorRGBA(92,  92,  92, 255);
-  const ByteColor Gray3 = ByteColorRGBA(71,  71,  71, 255);
+const ByteColor Gray0 = ByteColorRGBA(128, 128, 128, 255);
+const ByteColor Gray1 = ByteColorRGBA(106, 106, 106, 255);
+const ByteColor Gray2 = ByteColorRGBA(92, 92, 92, 255);
+const ByteColor Gray3 = ByteColorRGBA(71, 71, 71, 255);
 
-  const ByteColor TextBlack = ByteColorRGBA(0,   0,   0, 128);
-}
+const ByteColor TextBlack = ByteColorRGBA(0, 0, 0, 128);
+} // namespace EditorColor
 
 namespace Color
 {
-#define DefineColor(name, r, g, b, a) const ByteColor name = ByteColorRGBA(r,g,b,a);
+#define DefineColor(name, r, g, b, a)                                          \
+  const ByteColor name = ByteColorRGBA(r, g, b, a);
 #include "ColorDefinitions.hpp"
 #undef DefineColor
-}
+} // namespace Color

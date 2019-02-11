@@ -1,10 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance,
+                    HINSTANCE hPrevInstance,
+                    PWSTR pCmdLine,
+                    int nCmdShow)
 {
   using namespace Zero;
   int argc = 0;
@@ -19,7 +19,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
   return PlatformMain(gCommandLineArguments);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance,
+                   HINSTANCE hPrevInstance,
+                   PSTR pCmdLine,
+                   int nCmdShow)
 {
   using namespace Zero;
   int argc = 0;

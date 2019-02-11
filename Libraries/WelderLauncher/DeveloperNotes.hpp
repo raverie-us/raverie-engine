@@ -1,19 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-/// Represents information about a template project for the user. This may reside locally or on the server.
+/// Represents information about a template project for the user. This may
+/// reside locally or on the server.
 class DeveloperNotes
 {
 public:
-
   void Serialize(Serializer& stream);
 
   String mFileName;
@@ -21,4 +16,4 @@ public:
   String mDate;
 };
 
-}//namespace Zero
+} // namespace Zero

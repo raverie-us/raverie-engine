@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "curl.h"
 
@@ -15,9 +10,7 @@ namespace Zero
 {
 struct WebRequestPrivateData
 {
-  WebRequestPrivateData() :
-    mCurl(nullptr),
-    mTotalDownloaded(0)
+  WebRequestPrivateData() : mCurl(nullptr), mTotalDownloaded(0)
   {
   }
 
@@ -28,10 +21,14 @@ struct WebRequestPrivateData
   bool mCalledReceivedHeaders;
 };
 
-static size_t OnWebRequestHeaderReceived(char* data, size_t size, size_t nitems, void* request)
+static size_t OnWebRequestHeaderReceived(char* data,
+                                         size_t size,
+                                         size_t nitems,
+                                         void* request)
 {
   WebRequest* self = (WebRequest*)request;
-  WebRequestPrivateData& privateData = *(WebRequestPrivateData*)self->mPrivateData;
+  WebRequestPrivateData& privateData =
+      *(WebRequestPrivateData*)self->mPrivateData;
   CURL*& curl = privateData.mCurl;
 
   // Returning 0 cancels the request.
@@ -43,7 +40,8 @@ static size_t OnWebRequestHeaderReceived(char* data, size_t size, size_t nitems,
   // Split the headers by the standard HTTP \r\n.
   String strData(data, totalSize);
 
-  // Ignore the HTTP line in the headers (it's a header, but not a Name:Value header).
+  // Ignore the HTTP line in the headers (it's a header, but not a Name:Value
+  // header).
   if (strData.StartsWith("HTTP/"))
     return totalSize;
 
@@ -52,15 +50,17 @@ static size_t OnWebRequestHeaderReceived(char* data, size_t size, size_t nitems,
   static const String cHttpNewline("\r\n");
   Array<String> headers;
   forRange(StringRange singleHeader, strData.Split(cHttpNewline))
-    privateData.mHeaders.PushBack(singleHeader);
+      privateData.mHeaders.PushBack(singleHeader);
 
   return totalSize;
 }
 
-static size_t OnWebRequestDataReceived(char* data, size_t size, size_t nmemb, void* request)
+static size_t
+OnWebRequestDataReceived(char* data, size_t size, size_t nmemb, void* request)
 {
   WebRequest* self = (WebRequest*)request;
-  WebRequestPrivateData& privateData = *(WebRequestPrivateData*)self->mPrivateData;
+  WebRequestPrivateData& privateData =
+      *(WebRequestPrivateData*)self->mPrivateData;
   CURL*& curl = privateData.mCurl;
 
   // Returning 0 cancels the request.
@@ -73,18 +73,21 @@ static size_t OnWebRequestDataReceived(char* data, size_t size, size_t nmemb, vo
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 
     if (self->mOnHeadersReceived)
-      self->mOnHeadersReceived(privateData.mHeaders, (WebResponseCode::Enum)responseCode, self);
+      self->mOnHeadersReceived(
+          privateData.mHeaders, (WebResponseCode::Enum)responseCode, self);
 
     privateData.mCalledReceivedHeaders = true;
   }
 
-  // Currently this occurs on the main thread, so its safe for us to just directly send data
+  // Currently this occurs on the main thread, so its safe for us to just
+  // directly send data
   size_t totalSize = size * nmemb;
 
   privateData.mTotalDownloaded += (u64)totalSize;
 
   if (self->mOnDataReceived)
-    self->mOnDataReceived((byte*)data, totalSize, privateData.mTotalDownloaded, self);
+    self->mOnDataReceived(
+        (byte*)data, totalSize, privateData.mTotalDownloaded, self);
 
   // Return how much data we consumed
   return totalSize;
@@ -93,7 +96,8 @@ static size_t OnWebRequestDataReceived(char* data, size_t size, size_t nmemb, vo
 OsInt WebRequestThread(void* request)
 {
   WebRequest* self = (WebRequest*)request;
-  WebRequestPrivateData& privateData = *(WebRequestPrivateData*)self->mPrivateData;
+  WebRequestPrivateData& privateData =
+      *(WebRequestPrivateData*)self->mPrivateData;
   privateData.mTotalDownloaded = 0;
   privateData.mHeaders.Clear();
   privateData.mCalledReceivedHeaders = false;
@@ -149,8 +153,8 @@ OsInt WebRequestThread(void* request)
   // Any extra headers we add to the request (or override)
   curl_slist* headerList = nullptr;
 
-  forRange(StringParam header, self->mAdditionalRequestHeaders)
-    headerList = curl_slist_append(headerList, header.c_str());
+  forRange(StringParam header, self->mAdditionalRequestHeaders) headerList =
+      curl_slist_append(headerList, header.c_str());
 
   // We grab post data out here to keep it alive for the entire curl call.
   String postData = self->GetPostDataWithBoundaries();
@@ -177,14 +181,16 @@ OsInt WebRequestThread(void* request)
   errorBuffer[0] = '\0';
   curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuffer);
 
-  // Perform the request and grab the return code (callbacks occur at this time).
+  // Perform the request and grab the return code (callbacks occur at this
+  // time).
   CURLcode result = curl_easy_perform(curl);
   if (result != CURLE_OK)
   {
     if (strlen(errorBuffer) != 0)
       status.SetFailed(errorBuffer);
     else
-      status.SetFailed(String::Format("Curl error %d: %s", (int)result, curl_easy_strerror(result)));
+      status.SetFailed(String::Format(
+          "Curl error %d: %s", (int)result, curl_easy_strerror(result)));
   }
 
   // Release the header list back to CURL
@@ -199,11 +205,11 @@ OsInt WebRequestThread(void* request)
 }
 
 WebRequest::WebRequest() :
-  mOnHeadersReceived(nullptr),
-  mOnDataReceived(nullptr),
-  mOnComplete(nullptr),
-  mUserData(nullptr),
-  mCancel(false)
+    mOnHeadersReceived(nullptr),
+    mOnDataReceived(nullptr),
+    mOnComplete(nullptr),
+    mUserData(nullptr),
+    mCancel(false)
 {
   ZeroConstructPrivateData(WebRequestPrivateData);
 }

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,18 +8,18 @@ class KeyboardEvent;
 
 namespace Events
 {
-  DeclareEvent(KeyUp);
-  DeclareEvent(KeyDown);
-  DeclareEvent(KeyRepeated);
-  DeclareEvent(TextTyped);
-}
+DeclareEvent(KeyUp);
+DeclareEvent(KeyDown);
+DeclareEvent(KeyRepeated);
+DeclareEvent(TextTyped);
+} // namespace Events
 
 extern const String cKeyboardEventsFromState[3];
 
-/// Set all of the default key names. Should be called once before the Keys enum is bound
+/// Set all of the default key names. Should be called once before the Keys enum
+/// is bound
 void SetUpKeyNames();
 
-//-------------------------------------------------------------------Keyboard
 /// Keyboard representing the physical keyboard.
 class Keyboard : public ExplicitSingleton<Keyboard, EventObject>
 {
@@ -41,7 +36,8 @@ public:
     KeyNotHeld
   };
 
-  /// Is any key in the 'Keys' enum down (not including 'Keys::Unknown', e.g. PrintScreen).
+  /// Is any key in the 'Keys' enum down (not including 'Keys::Unknown', e.g.
+  /// PrintScreen).
   bool IsAnyKeyDown();
 
   /// Excluding Ctrl, Shift, and Alt - is any key in the 'Keys' enum down
@@ -78,8 +74,8 @@ public:
   /// Returns input String if key is not found.
   String ToSymbol(StringParam keyName);
 
-  /// Counterpart to 'ToSymbol'.  Converts a key's name or symbol to the key value.
-  /// Returns Keys::Unknown if key is not found.
+  /// Counterpart to 'ToSymbol'.  Converts a key's name or symbol to the key
+  /// value. Returns Keys::Unknown if key is not found.
   Keys::Enum ToKey(StringParam key);
 
   void Update();
@@ -91,8 +87,6 @@ public:
   byte States[Keys::KeyMax];
 };
 
-
-//--------------------------------------------------------------- Keyboard Event
 
 DeclareEnum3(KeyState, Up, Down, Repeated);
 
@@ -138,8 +132,9 @@ public:
   Keyboard* mKeyboard;
 };
 
-//------------------------------------------------------------------- KeyboardTextEvent
-/// Gives the actual key value being typed. For example, holding Shift + 'a' will give 'A'.
+//KeyboardTextEvent
+/// Gives the actual key value being typed. For example, holding Shift + 'a'
+/// will give 'A'.
 class KeyboardTextEvent : public Event
 {
 public:
@@ -147,8 +142,7 @@ public:
 
   KeyboardTextEvent();
 
-  KeyboardTextEvent(uint runeCode)
-    : mRune(runeCode), mHandled(false) {};
+  KeyboardTextEvent(uint runeCode) : mRune(runeCode), mHandled(false){};
 
   void Serialize(Serializer& stream);
 
@@ -156,4 +150,4 @@ public:
   bool mHandled;
 };
 
-}//namespace Zero
+} // namespace Zero

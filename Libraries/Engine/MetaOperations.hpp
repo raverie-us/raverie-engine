@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MetaOperations.hpp
-/// Operations on meta.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,38 +8,51 @@ namespace Zero
 class ObjectRestoreState;
 
 /// Changes the property to the given value and queues the operation.
-void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object,
-                            PropertyPathParam property, AnyParam newValue);
+void ChangeAndQueueProperty(OperationQueue* queue,
+                            HandleParam object,
+                            PropertyPathParam property,
+                            AnyParam newValue);
 
 /// Removes the component and queues the operation.
-bool QueueRemoveComponent(OperationQueue* queue, HandleParam object,
-                          BoundType* componentMeta, bool ignoreDependencies = false);
+bool QueueRemoveComponent(OperationQueue* queue,
+                          HandleParam object,
+                          BoundType* componentMeta,
+                          bool ignoreDependencies = false);
 /// Queues a component remove operation with the given serialized component.
-void QueueRemoveComponent(OperationQueue* queue, HandleParam object,
-                          BoundType* componentMeta, StringParam componentData,
+void QueueRemoveComponent(OperationQueue* queue,
+                          HandleParam object,
+                          BoundType* componentMeta,
+                          StringParam componentData,
                           uint componentIndex);
 
 /// Adds the component of the given name and queues the operation.
-bool QueueAddComponent(OperationQueue* queue, HandleParam object,
+bool QueueAddComponent(OperationQueue* queue,
+                       HandleParam object,
                        BoundType* componentType);
 
 /// Queues the already added component.
-void QueueAddComponent(OperationQueue* queue, HandleParam object,
+void QueueAddComponent(OperationQueue* queue,
+                       HandleParam object,
                        HandleParam component);
 
 /// Moves the component to before the given index.
-void QueueMoveComponent(OperationQueue* queue, HandleParam object,
-                        HandleParam component, uint index);
+void QueueMoveComponent(OperationQueue* queue,
+                        HandleParam object,
+                        HandleParam component,
+                        uint index);
 
-void MarkPropertyAsModified(OperationQueue* queue, HandleParam object,
+void MarkPropertyAsModified(OperationQueue* queue,
+                            HandleParam object,
                             PropertyPathParam propertyPath);
 
-void RevertProperty(OperationQueue* queue, HandleParam object,
+void RevertProperty(OperationQueue* queue,
+                    HandleParam object,
                     PropertyPathParam propertyPath);
-void RestoreLocallyRemovedChild(OperationQueue* queue, HandleParam parent, ObjectState::ChildId& childId);
+void RestoreLocallyRemovedChild(OperationQueue* queue,
+                                HandleParam parent,
+                                ObjectState::ChildId& childId);
 void RestoreChildOrder(OperationQueue* queue, HandleParam object);
 
-//--------------------------------------------------------------- Meta Operation
 class MetaOperation : public Operation
 {
 public:
@@ -62,29 +67,31 @@ public:
   Any mUndoClientData;
 };
 
-//----------------------------------------------------------- Property Operation
 class PropertyOperation : public MetaOperation
 {
 public:
   ZilchDeclareType(PropertyOperation, TypeCopyMode::ReferenceType);
 
-  PropertyOperation(HandleParam object, PropertyPathParam property,
-                    AnyParam before, AnyParam after);
+  PropertyOperation(HandleParam object,
+                    PropertyPathParam property,
+                    AnyParam before,
+                    AnyParam after);
   ~PropertyOperation();
 
   /// Operation Interface.
   void Undo() override;
   void Redo() override;
 
-  /// Property operations are created before the value is set for side affect actions. Because of
-  /// this, the 'after' value is not valid until after this operations construction. Before the
-  /// operation is actually put in the operation queue, this will be called to query for
-  /// the value after.
+  /// Property operations are created before the value is set for side affect
+  /// actions. Because of this, the 'after' value is not valid until after this
+  /// operations construction. Before the operation is actually put in the
+  /// operation queue, this will be called to query for the value after.
   void UpdateValueAfter();
 
 private:
-  /// When scripts change, the types in 'mValueBefore' and 'mValueAfter' could be deleted.
-  /// We need to update them to either the new types, or null them out.
+  /// When scripts change, the types in 'mValueBefore' and 'mValueAfter' could
+  /// be deleted. We need to update them to either the new types, or null them
+  /// out.
   void OnScriptsCompiled(ZilchCompileEvent* e);
   void OnMetaRemoved(MetaLibraryEvent* e);
 
@@ -94,7 +101,6 @@ private:
   bool mPropertyWasModified;
 };
 
-//---------------------------------------------------------- Component Operation
 DeclareEnum2(ComponentOperation, Add, Remove);
 
 class AddRemoveComponentOperation : public MetaOperation
@@ -117,7 +123,8 @@ public:
   void ComponentAdded(HandleParam object);
   void ComponentRemoved(HandleParam object);
 
-  // Temporary, for use in Material re-initialization. Should not be used elsewhere.
+  // Temporary, for use in Material re-initialization. Should not be used
+  // elsewhere.
   bool mNotifyModified;
 
 private:
@@ -140,7 +147,6 @@ private:
   ObjectState* mRemovedObjectState;
 };
 
-//----------------------------------------------------- Move Component Operation
 class MoveComponentOperation : public MetaOperation
 {
 public:
@@ -166,12 +172,12 @@ private:
   bool mWasOrderLocallyModified;
 };
 
-//--------------------------------------------- Mark Property Modified Operation
 class MarkPropertyModifiedOperation : public MetaOperation
 {
 public:
   /// Constructor.
-  MarkPropertyModifiedOperation(HandleParam object, PropertyPathParam propertyPath);
+  MarkPropertyModifiedOperation(HandleParam object,
+                                PropertyPathParam propertyPath);
 
   /// Operation Interface.
   void Undo() override;
@@ -182,7 +188,6 @@ public:
   PropertyPath mPropertyPath;
 };
 
-//---------------------------------------------------- Revert Property Operation
 class RevertPropertyOperation : public MetaOperation
 {
 public:
@@ -197,7 +202,6 @@ public:
   PropertyPath mPropertyToRevert;
 };
 
-//------------------------------------------------------ Restore Child Operation
 class RestoreChildOperation : public MetaOperation
 {
 public:
@@ -212,7 +216,6 @@ public:
   ObjectState::ChildId mChildId;
 };
 
-//------------------------------------------------ Restore Child Order Operation
 class RestoreChildOrderOperation : public MetaOperation
 {
 public:
@@ -229,4 +232,4 @@ public:
   ObjectRestoreState* mRestoreState;
 };
 
-}//namespace Zero
+} // namespace Zero

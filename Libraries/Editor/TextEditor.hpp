@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextEditor.hpp
-/// Declaration of the TextEditor Widget.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Scintilla
@@ -14,16 +6,16 @@ namespace Scintilla
 struct SCNotification;
 class SurfaceImpl;
 struct SelectionRange;
-}//namespace Scintilla
+} // namespace Scintilla
 
 namespace Zero
 {
 
 namespace Events
 {
-  DeclareEvent(CharacterAdded);
-  DeclareEvent(TextEditorModified);
-}//namespace Events
+DeclareEvent(CharacterAdded);
+DeclareEvent(TextEditorModified);
+} // namespace Events
 
 class ScintillaZero;
 class KeyboardTextEvent;
@@ -34,7 +26,6 @@ class TextEditorConfig;
 class TextEditorHotspot;
 class ScintillaWidget;
 
-//------------------------------------------------------------ Text Editor Event
 class TextEditorEvent : public Event
 {
 public:
@@ -47,22 +38,22 @@ DeclareEnum3(LinePosition, Beginning, Middle, End);
 // CustomIndicator is always last.
 DeclareEnum7(Lexer, Text, Cpp, Python, Console, Shader, Zilch, SpirV);
 
-DeclareEnum13(IndicatorStyle, Plain,
-                              Squiggle,
-                              Tt,
-                              Diagonal,
-                              Strike,
-                              Hidden,
-                              Box,
-                              Roundbox,
-                              Straightbox,
-                              Dash,
-                              Dots,
-                              Squigglelow,
-                              Dotbox);
+DeclareEnum13(IndicatorStyle,
+              Plain,
+              Squiggle,
+              Tt,
+              Diagonal,
+              Strike,
+              Hidden,
+              Box,
+              Roundbox,
+              Straightbox,
+              Dash,
+              Dots,
+              Squigglelow,
+              Dotbox);
 
-//------------------------------------------------------------------ Text Editor
-///Text editor widget.
+/// Text editor widget.
 class TextEditor : public BaseScrollArea
 {
 public:
@@ -73,102 +64,103 @@ public:
 
   //------------------------------------------------------------ Style
 
-  //Select the lexer which preforms syntax highlighting and auto completion.
+  // Select the lexer which preforms syntax highlighting and auto completion.
   void SetLexer(uint lexer);
 
-  //Select a color scheme.
+  // Select a color scheme.
   void SetColorScheme(ColorScheme& scheme);
   void SetCommonLexerStyles(ColorScheme& scheme);
 
   void SetTextStyle(uint pos, uint length, uint style);
 
   //------------------------------------------------------------ Info
-  //Get the length of the document.
+  // Get the length of the document.
   int GetLength();
 
-  //Get the number of lines in this document.
+  // Get the number of lines in this document.
   int GetLineCount();
 
-  //Get the number of lines, including the the additional lines that would
-  //fit in the client over-scroll area.  Note: The over-scroll area does not
-  //contain editable, numbered text lines.
+  // Get the number of lines, including the the additional lines that would
+  // fit in the client over-scroll area.  Note: The over-scroll area does not
+  // contain editable, numbered text lines.
   int GetClientLineCount();
 
-  //Has the document been modified?
+  // Has the document been modified?
   bool IsModified();
 
-  //Read Only prevents all modification.
+  // Read Only prevents all modification.
   void SetReadOnly(bool value);
   bool GetReadOnly();
 
-  //Set whether backspace unindents or not
+  // Set whether backspace unindents or not
   void SetBackspaceUnindents(bool value);
 
-  //Get how much a given line is indented
+  // Get how much a given line is indented
   int GetLineIndentation(int line);
 
   //------------------------------------------------------------ Location
 
-  //Get/set the current position of the cursor.
+  // Get/set the current position of the cursor.
   int GetCurrentPosition();
   void SetCurrentPosition(int pos);
 
-  //Get current line of the cursor.
+  // Get current line of the cursor.
   int GetCurrentLine();
 
-  //Goes to a position scrolling it into view.
+  // Goes to a position scrolling it into view.
   void GoToPosition(int position);
 
-  //Goes to a line scrolling it into view.
+  // Goes to a line scrolling it into view.
   void GoToLine(int line);
 
-  //Scrolls the view until the line is visible
+  // Scrolls the view until the line is visible
   void MakePositionVisible(int position);
   void MakeLineVisible(int line);
 
-  //Get the line that the text position is on.
+  // Get the line that the text position is on.
   int GetLineFromPosition(int position);
 
-  //Get the text position of the beginning of a line.
+  // Get the text position of the beginning of a line.
   int GetPositionFromLine(int line);
 
-  //Get the length of the line.
+  // Get the length of the line.
   int GetLineLength(int line);
 
-  //Get/set the width of a tab (as a multiple of spaces).
+  // Get/set the width of a tab (as a multiple of spaces).
   int GetTabWidth();
   void SetTabWidth(int width);
 
-  //Returns a string that is either a tab character, or the number of spaces based on tab width
+  // Returns a string that is either a tab character, or the number of spaces
+  // based on tab width
   String GetTabStyleAsString();
 
-  //Get the start/end position of a word within the given position
+  // Get the start/end position of a word within the given position
   int GetWordStartPosition(int position, bool onlyWordCharacters = true);
   int GetWordEndPosition(int position, bool onlyWordCharacters = true);
 
-  //Get the start positions of the words at every caret
+  // Get the start positions of the words at every caret
   void GetAllWordStartPositions(Array<int>& startPositions);
 
-  //Get the locations of every caret
+  // Get the locations of every caret
   void GetAllCaretPositions(Array<int>& caretPositions);
 
   void AdvanceCaretsToEnd();
 
   //------------------------------------------------------------ Selection
 
-  //Get the start of the selection.
+  // Get the start of the selection.
   int GetSelectionStart();
 
-  //Get end of selection.
+  // Get end of selection.
   int GetSelectionEnd();
 
-  //Goto line and select region.
+  // Goto line and select region.
   void GotoAndSelect(int start, int end);
 
-  //Select a range of text
+  // Select a range of text
   void Select(int start, int end);
 
-  //Set the selection
+  // Set the selection
   void SetSelectionStartAndLength(int start, int length = 0);
 
   LinePosition::Enum GetLinePositionInfo();
@@ -185,55 +177,58 @@ public:
 
   //------------------------------------------------------------ Modification
 
-  //Clear all text
+  // Clear all text
   void ClearAll();
 
-  //This command clears any saved undo or redo history.
-  //It also sets the save point to the start of the undo buffer,
-  //so the document will appear to be unmodified.
+  // This command clears any saved undo or redo history.
+  // It also sets the save point to the start of the undo buffer,
+  // so the document will appear to be unmodified.
   void ClearUndo();
 
-  //Set that current state of the document is unmodified.
+  // Set that current state of the document is unmodified.
   void SetSavePoint();
 
-  //Set all text in the document.
+  // Set all text in the document.
   void SetAllText(StringRange text, bool sendEvents = true);
   StringRange GetAllText();
 
-  //Replace the main selection
+  // Replace the main selection
   void ReplaceSelection(StringParam text, bool sendEvents = true);
 
-  //Insert and remove text at specific location
+  // Insert and remove text at specific location
   void InsertText(int pos, const char* text);
   void RemoveRange(int pos, int length);
 
-  //Append text works in read only
+  // Append text works in read only
   void Append(StringRange text);
 
   Array<StringRange> GetSelections();
   void BlockComment(cstr comment);
 
-  //Queing up undo actions
+  // Queing up undo actions
   void StartUndo();
   void EndUndo();
 
-  void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
+  void InsertAutoCompleteText(const char* text,
+                              int length,
+                              int removeCount,
+                              int charOffset);
 
   //------------------------------------------------------------ Annotations
 
-  //Set an annotation.
+  // Set an annotation.
   void SetAnnotation(int lineNumber, StringParam message, bool goToLine = true);
-  //Clear all annotations
+  // Clear all annotations
   void ClearAnnotations();
 
   //------------------------------------------------------------ Indicators
 
   // The maximum number of supported indicators (what the index is for)
   static const int MaxIndicators = 32;
-  //Set the position of an indicator
+  // Set the position of an indicator
   void SetIndicatorStart(int index, int start);
   void SetIndicatorEnd(int index, int end);
-  //Set the style of an indicator
+  // Set the style of an indicator
   void SetIndicatorStyle(int index, IndicatorStyle::Enum style);
 
   //------------------------------------------------------------ Markers
@@ -287,7 +282,8 @@ public:
 
   void OnUpdate(UpdateEvent* event);
 
-  // Update text body highlights and scroll well indicators for cursors & highlights.
+  // Update text body highlights and scroll well indicators for cursors &
+  // highlights.
   void UpdateTextMatchHighlighting();
 
   // Create/Populate scroll-well indicators associated with this TextEditor.
@@ -303,31 +299,39 @@ public:
   Vec3 GetScreenPositionFromCursor(int cursor);
   int GetCursorFromScreenPosition(Vec2Param screenPos);
   void UpdateTransform();
-  
+
   void UpdateArea(ScrollUpdate::Enum type);
   void UseTextEditorConfig();
   TextEditorConfig* GetConfig();
   virtual void UpdateConfig(TextEditorConfig* config);
   void UpdateMargins(ColorScheme& scheme);
 
-  //Scroll Area Functions
+  // Scroll Area Functions
   Vec2 GetClientSize() override;
-  void SetClientSize(Vec2 newSize)override{};
+  void SetClientSize(Vec2 newSize) override{};
 
   void GetText(int start, int end, char* buffer, int bufferSize);
   String GetText(int start, int end);
   int GetRuneAt(int position);
-  //Event Processing
+  // Event Processing
   intptr_t SendEditor(unsigned int Msg, u64 wParam = 0, s64 lParam = 0);
-  void SetAStyle(int style, ByteColor fore, ByteColor back, int size = 0, cstr face = 0);
-  //Send to derived classes
+  void SetAStyle(
+      int style, ByteColor fore, ByteColor back, int size = 0, cstr face = 0);
+  // Send to derived classes
   virtual void OnNotify(Scintilla::SCNotification& scn);
 
-  virtual void BreakpointsClicked(int line, int position) {}
+  virtual void BreakpointsClicked(int line, int position)
+  {
+  }
 
-  virtual ICodeEditor* GetCodeEditor() { return nullptr; }
+  virtual ICodeEditor* GetCodeEditor()
+  {
+    return nullptr;
+  }
 
-  virtual void ScriptError(ScriptEvent* event) {}
+  virtual void ScriptError(ScriptEvent* event)
+  {
+  }
 
   //------------------------------------------------------------ Members
 
@@ -342,31 +346,31 @@ public:
 
   uint mTime;
   uint mTickTime;
-  //Used to block events when setting text.
+  // Used to block events when setting text.
   bool mSendEvents;
-  //Line numbers
+  // Line numbers
   bool mLineNumbers;
   bool mLineNumberMargin;
   int mTotalMargins;
-  //Break point margin
+  // Break point margin
   bool mBreakpoints;
-  //Folding margin
+  // Folding margin
   bool mFolding;
-  //Several code paths (per frame) can cause indicators to update.
-  //But, it only needs to happen once per frame as updating indicators
-  //requires a texture upload.
+  // Several code paths (per frame) can cause indicators to update.
+  // But, it only needs to happen once per frame as updating indicators
+  // requires a texture upload.
   bool mIndicatorsRequireUpdate;
-  //Highlight all instances of text matching the current selection.
+  // Highlight all instances of text matching the current selection.
   bool mTextMatchHighlighting;
-  //Highlight mode is either partial text, or whole text.
+  // Highlight mode is either partial text, or whole text.
   bool mHighlightPartialTextMatch;
-  //Current font Size
+  // Current font Size
   int mFontSize;
-  //The lexer we're using
+  // The lexer we're using
   Lexer::Enum mLexer;
-  //Color Scheme
+  // Color Scheme
   String mColorSchemeName;
-  //Active hotspots
+  // Active hotspots
   Array<TextEditorHotspot*> mHotspots;
 
   PixelBuffer* mIndicators;
@@ -375,9 +379,11 @@ public:
   //------------------------------------------------------------ Protected
 
 protected:
-  virtual void OnFocusIn() {}
-  virtual void OnFocusOut() {};
+  virtual void OnFocusIn()
+  {
+  }
+  virtual void OnFocusOut(){};
   virtual void OnKeyDown(KeyboardEvent* event);
 };
 
-}//namespace Zero
+} // namespace Zero

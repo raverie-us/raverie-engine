@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -18,11 +13,11 @@ DeclareTag(Component);
 class CogInitializer;
 struct AttachmentInfo;
 
-//---------------------------------------------------------------------------- Transform Update Info
+//Transform Update Info
 struct TransformUpdateInfo
 {
   TransformUpdateInfo()
-  { 
+  {
     mTransform = NULL;
     mDelta.SetIdentity();
   }
@@ -35,7 +30,7 @@ struct TransformUpdateInfo
   Transform* mTransform;
 };
 
-//---------------------------------------------------------------------------------------- Component
+//Component
 /// A component is an atomic piece of functionality that is composed into a Cog
 /// to form game objects.
 class Component : public Object
@@ -51,70 +46,99 @@ public:
 
   /// Constructor / Destructor.
   Component();
-  virtual ~Component() {}
+  virtual ~Component()
+  {
+  }
 
   /// Save / loading to stream.
-  virtual void Serialize(Serializer& stream) {}
+  virtual void Serialize(Serializer& stream)
+  {
+  }
 
   /// See Composition for the order of initialization
   /// Initialize the component. Activating it in the space.
-  virtual void Initialize(CogInitializer& initializer) {}
-  virtual void OnAllObjectsCreated(CogInitializer& initializer) {}
-  virtual void ScriptInitialize(CogInitializer& initializer) {}
+  virtual void Initialize(CogInitializer& initializer)
+  {
+  }
+  virtual void OnAllObjectsCreated(CogInitializer& initializer)
+  {
+  }
+  virtual void ScriptInitialize(CogInitializer& initializer)
+  {
+  }
 
   /// Deletes the object. This allows the component to be responsible
   /// for its own cleanup, such as in the case of script components
   virtual void Delete();
 
-  /// Get the Cog this Component is owned by (not the parent of this composition).
+  /// Get the Cog this Component is owned by (not the parent of this
+  /// composition).
   Cog* GetOwner() const;
 
-  /// This is to guard from Zilch Components accessing the owner inside property setters during
-  /// serialization. The owner used to be null, but had to be set for something in CogPath.
-  /// This getter is bound to script (as 'Owner'), and it only returns the owner if the
-  /// Cog is initialized.
-  /// Get the Cog this Component is owned by (not the parent of this composition).
+  /// This is to guard from Zilch Components accessing the owner inside property
+  /// setters during serialization. The owner used to be null, but had to be set
+  /// for something in CogPath. This getter is bound to script (as 'Owner'), and
+  /// it only returns the owner if the Cog is initialized. Get the Cog this
+  /// Component is owned by (not the parent of this composition).
   Cog* GetOwnerScript() const;
 
   /// The Space where the object is located.
   Space* GetSpace();
 
-  /// Get the object named 'LevelSettings', a special object where we can put components for our level
+  /// Get the object named 'LevelSettings', a special object where we can put
+  /// components for our level
   Cog* GetLevelSettings();
 
   /// Get the GameSession that owns us and our space
   GameSession* GetGameSession();
 
-  ///Returns the parent objects event tracker.
+  /// Returns the parent objects event tracker.
   EventReceiver* GetReceiver();
   EventDispatcher* GetDispatcher();
 
   /// Returns whether or not the owning Cog is initialized.
   bool IsInitialized();
 
-  ///Special function for transform updating from editor.
-  virtual void TransformUpdate(TransformUpdateInfo& info) {}
+  /// Special function for transform updating from editor.
+  virtual void TransformUpdate(TransformUpdateInfo& info)
+  {
+  }
 
-  ///Signal that the Cog has been attached to another Cog.
-  virtual void AttachTo(AttachmentInfo& info) {}
+  /// Signal that the Cog has been attached to another Cog.
+  virtual void AttachTo(AttachmentInfo& info)
+  {
+  }
 
-  ///Signal that the Cog has been detached from another Cog.
-  virtual void Detached(AttachmentInfo& info) {}
+  /// Signal that the Cog has been detached from another Cog.
+  virtual void Detached(AttachmentInfo& info)
+  {
+  }
 
   /// Should this component be serialized?
-  virtual bool ShouldSerialize() {return true;}
+  virtual bool ShouldSerialize()
+  {
+    return true;
+  }
 
   /// Component added to composition
-  virtual void ComponentAdded(BoundType* typeId, Component* component) {}
+  virtual void ComponentAdded(BoundType* typeId, Component* component)
+  {
+  }
 
   /// Component removed from composition.
-  virtual void ComponentRemoved(BoundType* typeId, Component* component) {}
+  virtual void ComponentRemoved(BoundType* typeId, Component* component)
+  {
+  }
 
-  ///Base debug draw for a component. Special for the each type of component.
-  virtual void DebugDraw() {}
+  /// Base debug draw for a component. Special for the each type of component.
+  virtual void DebugDraw()
+  {
+  }
 
   /// Set component defaults
-  virtual void SetDefaults() {}
+  virtual void SetDefaults()
+  {
+  }
 
   /// Description functions
   void WriteDescription(StringBuilder& builder);
@@ -122,21 +146,32 @@ public:
 
   /// Event functionality.
   virtual void DispatchEvent(StringParam eventId, Event* event);
-  EventDispatcher* GetDispatcherObject() { return GetDispatcher(); }
-  EventReceiver* GetReceiverObject() { return GetReceiver(); }
+  EventDispatcher* GetDispatcherObject()
+  {
+    return GetDispatcher();
+  }
+  EventReceiver* GetReceiverObject()
+  {
+    return GetReceiver();
+  }
 
   /// Get Pointer for Disconnection
-  virtual void* GetEventThisObject() { return this; }
+  virtual void* GetEventThisObject()
+  {
+    return this;
+  }
 
   /// Each component has a pointer back to the base owning composition.
   Cog* mOwner;
 
 private:
   /// Only Cogs can destroy their Components.
-  virtual void OnDestroy(uint flags = 0) {}
+  virtual void OnDestroy(uint flags = 0)
+  {
+  }
 };
 
-//------------------------------------------------------------------------- Component Handle Manager
+//Component Handle Manager
 class ComponentHandleData : public CogHandleData
 {
 public:
@@ -146,24 +181,30 @@ public:
 class ComponentHandleManager : public HandleManager
 {
 public:
-  ComponentHandleManager(ExecutableState* state) : HandleManager(state) {}
+  ComponentHandleManager(ExecutableState* state) : HandleManager(state)
+  {
+  }
 
   // HandleManager interface
-  void Allocate(BoundType* type, Handle& handleToInitialize, size_t customFlags) override;
-  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
+  void Allocate(BoundType* type,
+                Handle& handleToInitialize,
+                size_t customFlags) override;
+  void ObjectToHandle(const byte* object,
+                      BoundType* type,
+                      Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
   void Delete(const Handle& handle) override;
 };
 
-//--------------------------------------------------------------------------------- Component Handle
+//Component Handle
 template <typename ComponentType>
 class ComponentHandle : public HandleOf<ComponentType>
 {
 public:
   Cog* GetOwner()
   {
-    if(ComponentType* component = *this)
+    if (ComponentType* component = *this)
       return component->GetOwner();
     return nullptr;
   }
@@ -177,4 +218,4 @@ public:
   using Handle::operator=;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,15 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-inline static void LogAudioIoError(Zero::StringParam message, Zero::String* savedMessage = nullptr)
+inline static void LogAudioIoError(Zero::StringParam message,
+                                   Zero::String* savedMessage = nullptr)
 {
   ZPrint(message.c_str());
   if (savedMessage)
@@ -20,13 +16,14 @@ class SDLAudioDevice
 {
 public:
   SDLAudioDevice() :
-    mDeviceID(0),
-    mSampleRate(0),
-    mChannels(0),
-    mCallback(nullptr),
-    mCallbackData(nullptr),
-    mType(StreamTypes::Output)
-  {}
+      mDeviceID(0),
+      mSampleRate(0),
+      mChannels(0),
+      mCallback(nullptr),
+      mCallbackData(nullptr),
+      mType(StreamTypes::Output)
+  {
+  }
 
   SDL_AudioDeviceID mDeviceID;
   unsigned mSampleRate;
@@ -40,14 +37,15 @@ public:
 class AudioIoSdlData
 {
 public:
-  AudioIoSdlData() {}
+  AudioIoSdlData()
+  {
+  }
 
   SDLAudioDevice Streams[StreamTypes::Size];
 };
 
-//--------------------------------------------------------------------- Audio Input Output using SDL
+//Input Output using SDL
 
-//**************************************************************************************************
 void SDLCallback(void* data, uint8* buffer, int lengthInBytes)
 {
   SDLAudioDevice& device = *((SDLAudioDevice*)data);
@@ -64,28 +62,24 @@ void SDLCallback(void* data, uint8* buffer, int lengthInBytes)
   }
 }
 
-//**************************************************************************************************
 AudioInputOutput::AudioInputOutput()
 {
   PlatformData = new AudioIoSdlData();
 }
 
-//**************************************************************************************************
 AudioInputOutput::~AudioInputOutput()
 {
   delete (AudioIoSdlData*)PlatformData;
 }
 
-//**************************************************************************************************
 StreamStatus::Enum AudioInputOutput::InitializeAPI(Zero::String* resultMessage)
 {
   ZPrint("Initializing SDL Audio\n");
   return StreamStatus::Initialized;
 }
 
-//**************************************************************************************************
-StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStream,
-  Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::InitializeStream(
+    StreamTypes::Enum whichStream, Zero::String* resultMessage)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
   if (whichStream == StreamTypes::Output)
@@ -123,8 +117,12 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   return StreamStatus::DeviceProblem;
 #endif
 
-  data.mDeviceID = SDL_OpenAudioDevice(nullptr, capture, &want, &have, 
-    SDL_AUDIO_ALLOW_CHANNELS_CHANGE || SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+  data.mDeviceID = SDL_OpenAudioDevice(nullptr,
+                                       capture,
+                                       &want,
+                                       &have,
+                                       SDL_AUDIO_ALLOW_CHANNELS_CHANGE ||
+                                           SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
 
   if (data.mDeviceID == 0)
   {
@@ -143,14 +141,16 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   ZPrint("Channels    : %d\n", data.mChannels);
   ZPrint("Sample rate : %d\n", data.mSampleRate);
 
-  ZPrint("Audio %s stream successfully initialized\n", data.mStreamTypeName.c_str());
+  ZPrint("Audio %s stream successfully initialized\n",
+         data.mStreamTypeName.c_str());
 
   return StreamStatus::Initialized;
 }
 
-//**************************************************************************************************
 StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
-  Zero::String* resultMessage, IOCallbackType* callback, void* callbackData)
+                                                 Zero::String* resultMessage,
+                                                 IOCallbackType* callback,
+                                                 void* callbackData)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
 
@@ -167,14 +167,16 @@ StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
   }
   else
   {
-    LogAudioIoError(String::Format("Unable to start audio %s stream\n", data.mStreamTypeName.c_str()), resultMessage);
-    
+    LogAudioIoError(String::Format("Unable to start audio %s stream\n",
+                                   data.mStreamTypeName.c_str()),
+                    resultMessage);
+
     return StreamStatus::Uninitialized;
   }
 }
 
-//**************************************************************************************************
-StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream,
+                                                Zero::String* resultMessage)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
 
@@ -187,46 +189,41 @@ StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Z
   }
   else
   {
-    ZPrint("Unable to stop audio %s stream: not open\n", data.mStreamTypeName.c_str());
+    ZPrint("Unable to stop audio %s stream: not open\n",
+           data.mStreamTypeName.c_str());
   }
 
   return StreamStatus::Stopped;
 }
 
-//**************************************************************************************************
 void AudioInputOutput::ShutDownAPI()
 {
   ZPrint("SDL Audio was shut down\n");
 }
 
-//**************************************************************************************************
 unsigned AudioInputOutput::GetStreamChannels(StreamTypes::Enum whichStream)
 {
   return ((AudioIoSdlData*)PlatformData)->Streams[whichStream].mChannels;
 }
 
-//**************************************************************************************************
 unsigned AudioInputOutput::GetStreamSampleRate(StreamTypes::Enum whichStream)
 {
   return ((AudioIoSdlData*)PlatformData)->Streams[whichStream].mSampleRate;
 }
 
-//**************************************************************************************************
 float AudioInputOutput::GetBufferSizeMultiplier()
 {
   return 0.04f;
 }
 
-//--------------------------------------------------------------------------------------- MIDI Input
+//MIDI Input
 
-//**************************************************************************************************
 MidiInput::MidiInput()
 {
 }
 
-//**************************************************************************************************
 MidiInput::~MidiInput()
 {
 }
 
-}
+} // namespace Zero

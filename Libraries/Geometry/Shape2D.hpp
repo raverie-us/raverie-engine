@@ -1,12 +1,4 @@
-  ///////////////////////////////////////////////////////////////////////////////
-  ///
-  /// \file Shape2D.hpp
-  /// Declaration of the Shape2D class.
-  /// 
-  /// Authors: Joshua Claeys
-  /// Copyright 2012, DigiPen Institute of Technology
-  ///
-  //////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 class Polygon;
 
-//--------------------------------------------------------------------- Shape 2D
 class Shape2D
 {
 public:
@@ -45,11 +36,11 @@ public:
   /// Removes all contours in the shape.
   void Clear();
 
-  static bool Subtract(const Shape2D& shapeA, 
-                       const Shape2D& shapeB, 
+  static bool Subtract(const Shape2D& shapeA,
+                       const Shape2D& shapeB,
                        Array<Shape2D>* outputs);
 
-  static bool Union(const Shape2D& shapeA, 
+  static bool Union(const Shape2D& shapeA,
                     const Shape2D& shapeB,
                     Array<Shape2D>* outputs);
 
@@ -69,14 +60,21 @@ public:
   void Grow(real distance, bool beaking);
 
   /// Debug Draw.
-  void DebugDraw(ByteColor color, bool filled, 
-                 bool triangleEdges = false, float depth = 0.0f);
-  void DebugDraw(ByteColor color, Mat4Param transform, bool filled, 
-                 bool triangleEdges = false, float depth = 0.0f);
+  void DebugDraw(ByteColor color,
+                 bool filled,
+                 bool triangleEdges = false,
+                 float depth = 0.0f);
+  void DebugDraw(ByteColor color,
+                 Mat4Param transform,
+                 bool filled,
+                 bool triangleEdges = false,
+                 float depth = 0.0f);
 
   /// Draws the triangles of the shape.
   void DrawTriangles(ByteColor color, bool borders = false, float depth = 0.0f);
-  void DrawTriangles(ByteColor color, Mat4Param transform, bool borders = false, 
+  void DrawTriangles(ByteColor color,
+                     Mat4Param transform,
+                     bool borders = false,
                      float depth = 0.0f);
 
   //----------------------------------------------------------------------- Info
@@ -96,7 +94,8 @@ public:
   void GetTriangleIndices(Array<uint>* indices);
 
   /// Triangulates the mesh and fills out the given array of indices.
-  void GetTriangleIndices(Array<Vec2>& vertices, Array<uint>& contours, 
+  void GetTriangleIndices(Array<Vec2>& vertices,
+                          Array<uint>& contours,
                           Array<uint>* indices);
 
   /// Calculates the barycenter (point average) of the shape.
@@ -107,7 +106,7 @@ public:
   /// Returns whether or not the given point is inside the polygon.
   bool ContainsPoint(Vec2Param point);
 
-   //Remove edges with length smaller than vCalibration
+  // Remove edges with length smaller than vCalibration
   void Calibrate(const float& vCalibration);
 
   /// Validates the Shape and throws an error if it's invalid.
@@ -117,12 +116,29 @@ public:
   //------------------------------------------------------------------- Indexing
   struct Index
   {
-    Index() : Contour(-1), Vertex(-1) {}
-    Index(int contour, int vertex) : Contour(contour), Vertex(vertex) {}
-    bool operator==(const Index& rhs){return (Contour == rhs.Contour && Vertex == rhs.Vertex);}
-    bool operator!=(const Index& rhs){return !(*this == rhs);}
-    bool IsValid() { return Contour != -1 && Vertex != -1; }
-    void Invalidate() { Contour = -1; Vertex = -1; }
+    Index() : Contour(-1), Vertex(-1)
+    {
+    }
+    Index(int contour, int vertex) : Contour(contour), Vertex(vertex)
+    {
+    }
+    bool operator==(const Index& rhs)
+    {
+      return (Contour == rhs.Contour && Vertex == rhs.Vertex);
+    }
+    bool operator!=(const Index& rhs)
+    {
+      return !(*this == rhs);
+    }
+    bool IsValid()
+    {
+      return Contour != -1 && Vertex != -1;
+    }
+    void Invalidate()
+    {
+      Contour = -1;
+      Vertex = -1;
+    }
 
     int Contour;
     int Vertex;
@@ -168,9 +184,8 @@ public:
 void BuildShapesFromContours(const ContourArray& contours,
                              Array<Shape2D>* shapes);
 
-//---------------------------------------------------------------------- Helpers
 /// Transforms the shape by the given matrix.
 void TransformShape(Mat4Param matrix, Shape2D* shape);
 void TransformShape(Mat3Param matrix, Shape2D* shape);
 
-}//namespace Zero
+} // namespace Zero

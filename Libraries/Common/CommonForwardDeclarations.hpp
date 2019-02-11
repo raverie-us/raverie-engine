@@ -1,7 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,4 +13,4 @@ typedef const String& StringParam;
 typedef const String& StringRef;
 typedef const StringRange& StringRangeParam;
 
-}// namespace Zero
+} // namespace Zero

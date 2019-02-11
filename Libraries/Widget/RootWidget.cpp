@@ -1,32 +1,27 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file RootWidget.cpp
-/// Implementation of the RootWidget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 namespace Zero
 {
 
 namespace Interaction
 {
-  const cstr cLocation = "EditorUi/Interaction";
-  Tweakable(float, MouseHoldTime, 0.1f, cLocation);
-  Tweakable(float, MouseHoverTime, 0.2f, cLocation);
-  Tweakable(float, DoubleClickTime, 0.3f, cLocation);
-  Tweakable(float, MouseDragDistance, 8.0f, cLocation);
-  Tweakable(bool, DebugMouseInteraction, false, cLocation);
-  Tweakable(bool, DebugMouseEvents, false, cLocation);
-}
+const cstr cLocation = "EditorUi/Interaction";
+Tweakable(float, MouseHoldTime, 0.1f, cLocation);
+Tweakable(float, MouseHoverTime, 0.2f, cLocation);
+Tweakable(float, DoubleClickTime, 0.3f, cLocation);
+Tweakable(float, MouseDragDistance, 8.0f, cLocation);
+Tweakable(bool, DebugMouseInteraction, false, cLocation);
+Tweakable(bool, DebugMouseEvents, false, cLocation);
+} // namespace Interaction
 
 namespace RootWidgetUi
 {
-  const cstr cLocation = "EditorUi/";
-  Tweakable(Vec4, ClearColor, ToFloatColor(ByteColorRGBA(46,  46,  46, 255)), cLocation);
-}
+const cstr cLocation = "EditorUi/";
+Tweakable(Vec4,
+          ClearColor,
+          ToFloatColor(ByteColorRGBA(46, 46, 46, 255)),
+          cLocation);
+} // namespace RootWidgetUi
 
 ZilchDefineType(RootWidget, builder, type)
 {
@@ -35,8 +30,7 @@ ZilchDefineType(RootWidget, builder, type)
   ZeroBindEvent(Events::Closing, HandleableEvent);
 }
 
-RootWidget::RootWidget(OsWindow* osWindow)
-  : Composite(NULL)
+RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
 {
   WidgetManager::GetInstance()->RootWidgets.PushBack(this);
 
@@ -54,7 +48,7 @@ RootWidget::RootWidget(OsWindow* osWindow)
   mOsWindow = osWindow;
   mDragged = false;
 
-  if(Z::EditorDebugFeatures)
+  if (Z::EditorDebugFeatures)
   {
     mDebuggerOverlay = new ColorBlock(this);
     mDebuggerOverlay->SetColor(Vec4(0, 0, 0, 0.4f));
@@ -73,7 +67,8 @@ RootWidget::RootWidget(OsWindow* osWindow)
   ConnectThisTo(osWindow, Events::OsMouseUp, OnOsMouseUp);
   ConnectThisTo(osWindow, Events::OsMouseMove, OnOsMouseMoved);
 
-  ConnectThisTo(osWindow, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
+  ConnectThisTo(
+      osWindow, Events::OsWindowBorderHitTest, OnOsWindowBorderHitTest);
 
   ConnectThisTo(osWindow, Events::OsMouseScroll, OnOsMouseScroll);
 
@@ -94,7 +89,8 @@ RootWidget::RootWidget(OsWindow* osWindow)
   ConnectThisTo(Z::gEngine, Events::DebuggerResume, OnDebuggerResume);
 
   ConnectThisTo(Z::gEngine->has(TimeSystem), "UiUpdate", OnUiUpdate);
-  ConnectThisTo(Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
+  ConnectThisTo(
+      Z::gEngine->has(GraphicsEngine), "UiRenderUpdate", OnUiRenderUpdate);
 }
 
 RootWidget::~RootWidget()
@@ -111,7 +107,10 @@ void RootWidget::OnUiUpdate(UpdateEvent* event)
   MouseUpdate(event->Dt);
 }
 
-void LineSegment(StreamedVertexArray& streamedVertices, Vec3Param p0, Vec3Param p1, Vec4Param color)
+void LineSegment(StreamedVertexArray& streamedVertices,
+                 Vec3Param p0,
+                 Vec3Param p1,
+                 Vec4Param color)
 {
   StreamedVertex start(p0, Vec2::cZero, color);
   StreamedVertex end(p1, Vec2::cZero, color);
@@ -119,29 +118,40 @@ void LineSegment(StreamedVertexArray& streamedVertices, Vec3Param p0, Vec3Param 
   streamedVertices.PushBack(end);
 }
 
-void DrawBoxAround(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor color)
+void DrawBoxAround(StreamedVertexArray& streamedVertices,
+                   ViewNode& lineNode,
+                   Widget* widget,
+                   ByteColor color)
 {
   WidgetRect screenRect = widget->GetScreenRect();
 
-  Vec3 topLeft  = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.TopLeft()));
-  Vec3 topRight = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.TopRight()));
-  Vec3 botLeft  = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.BottomLeft()));
-  Vec3 botRight = Math::TransformPoint(lineNode.mLocalToView, ToVector3(screenRect.BottomRight()));
+  Vec3 topLeft = Math::TransformPoint(lineNode.mLocalToView,
+                                      ToVector3(screenRect.TopLeft()));
+  Vec3 topRight = Math::TransformPoint(lineNode.mLocalToView,
+                                       ToVector3(screenRect.TopRight()));
+  Vec3 botLeft = Math::TransformPoint(lineNode.mLocalToView,
+                                      ToVector3(screenRect.BottomLeft()));
+  Vec3 botRight = Math::TransformPoint(lineNode.mLocalToView,
+                                       ToVector3(screenRect.BottomRight()));
 
   Vec4 color4 = ToFloatColor(color);
 
-  LineSegment(streamedVertices, topLeft,  topRight, color4);
-  LineSegment(streamedVertices, topLeft,  botLeft , color4);
-  LineSegment(streamedVertices, botLeft,  botRight, color4);
+  LineSegment(streamedVertices, topLeft, topRight, color4);
+  LineSegment(streamedVertices, topLeft, botLeft, color4);
+  LineSegment(streamedVertices, botLeft, botRight, color4);
   LineSegment(streamedVertices, topRight, botRight, color4);
 }
 
-void DrawChain(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
+void DrawChain(StreamedVertexArray& streamedVertices,
+               ViewNode& lineNode,
+               Widget* widget,
+               ByteColor base,
+               ByteColor parents)
 {
-  if(widget)
+  if (widget)
   {
     Widget* parent = widget->GetParent();
-    while(parent != NULL)
+    while (parent != NULL)
     {
       DrawBoxAround(streamedVertices, lineNode, parent, parents);
       parent = parent->GetParent();
@@ -164,28 +174,37 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   ViewBlock& viewBlock = renderQueues.mViewBlocks.PushBack();
   frameBlock.mRenderQueues = &renderQueues;
 
-  Mat4 translation; translation.Translate(mSize.x * -0.5f, mSize.y * -0.5f, 0.0f);
-  Mat4 scale; scale.Scale(1.0f, -1.0f, 1.0f);
+  Mat4 translation;
+  translation.Translate(mSize.x * -0.5f, mSize.y * -0.5f, 0.0f);
+  Mat4 scale;
+  scale.Scale(1.0f, -1.0f, 1.0f);
   viewBlock.mWorldToView = scale * translation;
-  BuildOrthographicTransformZero(viewBlock.mViewToPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
+  BuildOrthographicTransformZero(
+      viewBlock.mViewToPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
 
   Mat4 apiPerspective;
-  Z::gRenderer->BuildOrthographicTransform(apiPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
-  viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
+  Z::gRenderer->BuildOrthographicTransform(
+      apiPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
+  viewBlock.mZeroPerspectiveToApiPerspective =
+      apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   RenderUpdate(viewBlock, frameBlock, Mat4::cIdentity, colorTx, clipRect);
 
   // Interaction debug draw
-  if(Interaction::DebugMouseInteraction)
+  if (Interaction::DebugMouseInteraction)
   {
-    StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
-    ViewNode& lineNode = AddRenderNodes(viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
+    StreamedVertexArray& streamedVertices =
+        frameBlock.mRenderQueues->mStreamedVertices;
+    ViewNode& lineNode = AddRenderNodes(
+        viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
     lineNode.mStreamedVertexType = PrimitiveType::Lines;
 
     DrawChain(streamedVertices, lineNode, mOver, Color::Red, Color::Firebrick);
-    DrawChain(streamedVertices, lineNode, mFocus, Color::Blue, Color::LightBlue);
+    DrawChain(
+        streamedVertices, lineNode, mFocus, Color::Blue, Color::LightBlue);
 
-    lineNode.mStreamedVertexCount = streamedVertices.Size() - lineNode.mStreamedVertexStart;
+    lineNode.mStreamedVertexCount =
+        streamedVertices.Size() - lineNode.mStreamedVertexStart;
   }
 
   IndexRange& indexRange = viewBlock.mRenderGroupRanges.PushBack();
@@ -198,17 +217,23 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   renderTaskRange.mTaskIndex = renderTasks.mRenderTaskBuffer.mCurrentIndex;
   renderTaskRange.mTaskCount = 0;
 
-  HandleOf<RenderTarget> renderTarget = Z::gEngine->has(GraphicsEngine)->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
+  HandleOf<RenderTarget> renderTarget =
+      Z::gEngine->has(GraphicsEngine)
+          ->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
 
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(renderTarget);
   renderSettings.mBlendSettings[0].SetBlendAlpha();
   renderSettings.mScissorMode = ScissorMode::Enabled;
 
-  BoundType* defaultRenderPass = MetaDatabase::GetInstance()->FindType("ColorOutput");
-  ReturnIf(defaultRenderPass == nullptr,, "We expected to have a type defined called ColorOutput");
+  BoundType* defaultRenderPass =
+      MetaDatabase::GetInstance()->FindType("ColorOutput");
+  ReturnIf(defaultRenderPass == nullptr,
+           ,
+           "We expected to have a type defined called ColorOutput");
 
-  HandleOf<MaterialBlock> renderPassHandle = ZilchAllocate(MaterialBlock, defaultRenderPass);
+  HandleOf<MaterialBlock> renderPassHandle =
+      ZilchAllocate(MaterialBlock, defaultRenderPass);
   MaterialBlock& renderPass = renderPassHandle;
 
   Material* spriteMaterial = MaterialManager::FindOrNull("AlphaSprite");
@@ -216,7 +241,8 @@ void RootWidget::OnUiRenderUpdate(Event* event)
 
   {
     Pair<u64, uint> key((u64)spriteMaterial->mResourceId, shaderInputsId);
-    IndexRange range = spriteMaterial->AddShaderInputs(renderTasks.mShaderInputs, renderTasks.mShaderInputsVersion);
+    IndexRange range = spriteMaterial->AddShaderInputs(
+        renderTasks.mShaderInputs, renderTasks.mShaderInputsVersion);
     renderTasks.mShaderInputRanges.Insert(key, range);
   }
   {
@@ -227,7 +253,8 @@ void RootWidget::OnUiRenderUpdate(Event* event)
 
   RenderTaskHelper helper(renderTasks.mRenderTaskBuffer);
   helper.AddRenderTaskClearTarget(renderSettings, mClearColor, 0, 0, 0xFF);
-  helper.AddRenderTaskRenderPass(renderSettings, 0, defaultRenderPass->Name, shaderInputsId);
+  helper.AddRenderTaskRenderPass(
+      renderSettings, 0, defaultRenderPass->Name, shaderInputsId);
 
   ScreenViewport viewport = {0, 0, (int)mSize.x, (int)mSize.y};
   helper.AddRenderTaskBackBufferBlit(renderTarget, viewport);
@@ -245,21 +272,21 @@ void RootWidget::OnManagerUpdate(UpdateEvent* event)
 void RootWidget::UpdateTransform()
 {
   Vec2 size = ToVec2(mOsWindow->GetClientSize());
-  if(mSize != size)
+  if (mSize != size)
   {
     WindowState::Type windowState = GetOsWindow()->GetState();
 
     // Do not resize when minimized
-    if(windowState == WindowState::Minimized)
+    if (windowState == WindowState::Minimized)
       return;
 
     WidgetListRange children = GetChildren();
-    if(!children.Empty())
+    if (!children.Empty())
       children.Front().SetSize(size);
     SetTranslationAndSize(Vec3(0, 0, 0), size);
   }
 
-  if(Z::EditorDebugFeatures)
+  if (Z::EditorDebugFeatures)
   {
     mDebuggerOverlay->MoveToFront();
     mDebuggerText->MoveToFront();
@@ -277,12 +304,12 @@ void RootWidget::Refresh()
 
 float LargestAxis(Vec2 dragMovemvent)
 {
-  return Math::Max( Math::Abs(dragMovemvent.x), Math::Abs(dragMovemvent.y));
+  return Math::Max(Math::Abs(dragMovemvent.x), Math::Abs(dragMovemvent.y));
 }
 
 void PrintTreeR(Widget* widget)
 {
-  if(widget != NULL)
+  if (widget != NULL)
   {
     PrintTreeR(widget->mParent);
     ZPrint("%s/", widget->GetDebugName().c_str());
@@ -300,16 +327,16 @@ Widget* LowestCommonAncestor(Widget* objectA, Widget* objectB)
   HashSet<Widget*> parents;
 
   Widget* aChain = objectA;
-  while(aChain != NULL)
+  while (aChain != NULL)
   {
     parents.Insert(aChain);
     aChain = aChain->GetParent();
   }
 
   Widget* bChain = objectB;
-  while(bChain != NULL)
+  while (bChain != NULL)
   {
-    if(parents.Contains(bChain))
+    if (parents.Contains(bChain))
       return bChain;
     bChain = bChain->GetParent();
   }
@@ -324,36 +351,43 @@ void RootWidget::OnOsResize(OsWindowEvent* sizeChange)
 
 void RootWidget::OnOsPaint(OsWindowEvent* sizeChange)
 {
-//  DrawContext* context = Z::gGraphics->mDrawContext;
-//  mRenderTask->Perform(context, 0);
+  //  DrawContext* context = Z::gGraphics->mDrawContext;
+  //  mRenderTask->Perform(context, 0);
 }
 
 // When events occur on sub objects like mouse enter/exit it is useful to
 // have events that are only sent when the mouse leaves the object and all
 // children (MouseExitHierarchy). This function sends the correct events to
-// the base objects and up the trees to the lowest common ancestor of the object.
+// the base objects and up the trees to the lowest common ancestor of the
+// object.
 void SendHierarchyEvents(cstr op,
-  Widget* oldObject, Widget* newObject,
-  Event* outEvent, Event* inEvent,
-  StringParam outEventName, StringParam inEventName,
-  StringParam outHierarchyName, StringParam inHierarchyName,
-  uint flag, uint hierarchyFlag)
+                         Widget* oldObject,
+                         Widget* newObject,
+                         Event* outEvent,
+                         Event* inEvent,
+                         StringParam outEventName,
+                         StringParam inEventName,
+                         StringParam outHierarchyName,
+                         StringParam inHierarchyName,
+                         uint flag,
+                         uint hierarchyFlag)
 {
 
   // Find the lowest common ancestor this object will
   // will stop the bubble of the hierarchy events so
   Widget* lca = LowestCommonAncestor(newObject, oldObject);
 
-  if(Interaction::DebugMouseInteraction)
+  if (Interaction::DebugMouseInteraction)
   {
-    ZPrint("%s %s -> %s , Lca %s\n", op,
-      oldObject ? oldObject->GetDebugName().c_str() : "None",
-      newObject ? newObject->GetDebugName().c_str() : "None",
-      lca ? lca->GetDebugName().c_str() : "None" );
+    ZPrint("%s %s -> %s , Lca %s\n",
+           op,
+           oldObject ? oldObject->GetDebugName().c_str() : "None",
+           newObject ? newObject->GetDebugName().c_str() : "None",
+           lca ? lca->GetDebugName().c_str() : "None");
   }
 
   // Send the out event on the old object
-  if(oldObject)
+  if (oldObject)
   {
     oldObject->DispatchBubble(outEventName, outEvent);
     oldObject->mFlags.ClearFlag(flag);
@@ -362,7 +396,7 @@ void SendHierarchyEvents(cstr op,
   // Now send the out hierarchy event up the old tree
   // until the lowest common ancestor
   Widget* oldChain = oldObject;
-  while(oldChain != lca)
+  while (oldChain != lca)
   {
     oldChain->mFlags.ClearFlag(hierarchyFlag);
     oldChain->DispatchEvent(outHierarchyName, outEvent);
@@ -370,7 +404,7 @@ void SendHierarchyEvents(cstr op,
   }
 
   // Send the in event on the new object
-  if(newObject)
+  if (newObject)
   {
     newObject->DispatchBubble(inEventName, inEvent);
     newObject->mFlags.SetFlag(flag);
@@ -379,33 +413,38 @@ void SendHierarchyEvents(cstr op,
   // Now send the out hierarchy event up the new tree
   // until the lowest common ancestor
   Widget* newChain = newObject;
-  while(newChain != lca)
+  while (newChain != lca)
   {
     newChain->DispatchEvent(inHierarchyName, inEvent);
     newChain->mFlags.SetFlag(hierarchyFlag);
     newChain = newChain->GetParent();
   }
-
 }
 
 void RootWidget::RootChangeFocus(Widget* newFocus, FocusMode::Type focusMode)
 {
   Widget* oldFocus = mFocus;
   MarkAsNeedsUpdate();
-  //Do not change it the object is already the focus object
-  if(oldFocus != newFocus)
+  // Do not change it the object is already the focus object
+  if (oldFocus != newFocus)
   {
     // Send the Focus to the Hierarchy
     FocusEvent focusEvent(newFocus, oldFocus);
 
-    if(Interaction::DebugMouseInteraction)
+    if (Interaction::DebugMouseInteraction)
       ZPrint("Focus Change %s\n", FocusMode::Names[focusMode]);
 
-
-    SendHierarchyEvents("Focus", oldFocus, newFocus, &focusEvent, &focusEvent,
-      Events::FocusLost, Events::FocusGained,
-      Events::FocusLostHierarchy, Events::FocusGainedHierarchy,
-      DisplayFlags::Focus, DisplayFlags::FocusHierarchy);
+    SendHierarchyEvents("Focus",
+                        oldFocus,
+                        newFocus,
+                        &focusEvent,
+                        &focusEvent,
+                        Events::FocusLost,
+                        Events::FocusGained,
+                        Events::FocusLostHierarchy,
+                        Events::FocusGainedHierarchy,
+                        DisplayFlags::Focus,
+                        DisplayFlags::FocusHierarchy);
 
     // Store the current focus object
     mFocus = newFocus;
@@ -419,7 +458,7 @@ void RootWidget::FocusReset()
 
   FocusEvent focusEvent(focusObject, NULL);
 
-  if(focusObject)
+  if (focusObject)
     focusObject->DispatchBubble(Events::FocusReset, &focusEvent);
 }
 
@@ -441,7 +480,7 @@ OsWindow* RootWidget::GetOsWindow()
 void RootWidget::RootSoftTakeFocus(Widget* newFocus)
 {
   Widget* oldFocus = mFocus;
-  if(oldFocus == NULL || mFocusMode == FocusMode::Soft)
+  if (oldFocus == NULL || mFocusMode == FocusMode::Soft)
   {
     RootChangeFocus(newFocus, FocusMode::Soft);
   }
@@ -449,7 +488,7 @@ void RootWidget::RootSoftTakeFocus(Widget* newFocus)
 
 void RootWidget::RootRemoveFocus(Widget* widget)
 {
-  if(!widget->HasFocus())
+  if (!widget->HasFocus())
     return;
 
   // Move up one level
@@ -460,9 +499,9 @@ void RootWidget::RootRemoveFocus(Widget* widget)
   mFocusMode = FocusMode::Soft;
 
   // Find the nearest valid widget
-  while(widget)
+  while (widget)
   {
-    if(!widget->mDestroyed)
+    if (!widget->mDestroyed)
     {
       widget->SoftTakeFocus();
       return;
@@ -475,25 +514,26 @@ void RootWidget::RootCaptureMouse(Widget* widget)
 {
   mOsWindow->SetMouseCapture(true);
   mCaptured = widget;
-  //need to set the down object to the capture widget
-  //so that drags are only sent to the captured widget
+  // need to set the down object to the capture widget
+  // so that drags are only sent to the captured widget
   mDown = widget;
 
-  if(Interaction::DebugMouseInteraction)
+  if (Interaction::DebugMouseInteraction)
   {
     ZPrint("Mouse Captured ");
     PrintPath(widget);
   }
 
-  //Capture also takes key board focus
+  // Capture also takes key board focus
   RootChangeFocus(widget, FocusMode::Hard);
 }
 
 void RootWidget::RootReleaseMouseCapture(Widget* object)
 {
   // If the widget releasing capture is being destroyed then we need to use the
-  // handle id to check for equality since the handle would otherwise give a null pointer.
-  if(WidgetHandleManager::HandleToId(mCaptured) == object->mId)
+  // handle id to check for equality since the handle would otherwise give a
+  // null pointer.
+  if (WidgetHandleManager::HandleToId(mCaptured) == object->mId)
   {
     mCaptured = nullptr;
     mOsWindow->SetMouseCapture(false);
@@ -503,17 +543,17 @@ void RootWidget::RootReleaseMouseCapture(Widget* object)
 void RootWidget::MouseUpdate(float dt)
 {
   // Not on this window
-  if(Z::gMouse->mActiveWindow != this->mOsWindow)
+  if (Z::gMouse->mActiveWindow != this->mOsWindow)
     return;
 
   // Get the object the mouse is over
   Widget* hoverObject = mOver;
 
   // Captured objects should intercept everything
-  if(Widget* captured = mCaptured)
+  if (Widget* captured = mCaptured)
     hoverObject = captured;
 
-  if(hoverObject)
+  if (hoverObject)
   {
     mHoverTime += dt;
 
@@ -522,21 +562,21 @@ void RootWidget::MouseUpdate(float dt)
     mouseEvent.Source = hoverObject;
     mouseEvent.Position = Z::gMouse->mClientPosition;
 
-    for(uint i=0;i<MouseButtons::Size;++i)
+    for (uint i = 0; i < MouseButtons::Size; ++i)
       mouseEvent.mButtonDown[i] = Z::gMouse->mButtonDown[i];
 
-    if(mHoverTime > Interaction::MouseHoverTime)
+    if (mHoverTime > Interaction::MouseHoverTime)
     {
       mHoverTime = -Math::PositiveMax();
       hoverObject->DispatchBubble(Events::MouseHover, &mouseEvent);
     }
 
-    if(mAnyMouseDown)
+    if (mAnyMouseDown)
     {
       mHoldTime += dt;
 
       // Mouse is being held down update hold time
-      if(mHoldTime > Interaction::MouseHoldTime)
+      if (mHoldTime > Interaction::MouseHoldTime)
       {
         // Reset hold time
         mHoldTime = -Math::PositiveMax();
@@ -560,12 +600,12 @@ void RootWidget::OnOsKeyDown(KeyboardEvent* keyboardEvent)
 
   Widget* focusObject = mFocus;
 
-  if(focusObject)
+  if (focusObject)
   {
     // Allow higher level logic to block keyboard events
     focusObject->DispatchBubble(Events::KeyPreview, keyboardEvent);
 
-    if(keyboardEvent->Handled)
+    if (keyboardEvent->Handled)
       return;
 
     // Send out the general key down
@@ -577,14 +617,14 @@ void RootWidget::OnOsKeyDown(KeyboardEvent* keyboardEvent)
 void RootWidget::OnOsKeyUp(KeyboardEvent* event)
 {
   Widget* focusObject = mFocus;
-  if(focusObject)
+  if (focusObject)
     focusObject->DispatchBubble(Events::KeyUp, event);
 }
 
 void RootWidget::OnOsKeyTyped(KeyboardTextEvent* textEvent)
 {
   Widget* focusObject = mFocus;
-  if(focusObject)
+  if (focusObject)
     focusObject->DispatchBubble(Events::TextTyped, textEvent);
 }
 
@@ -617,20 +657,19 @@ void RootWidget::BuildMouseEvent(MouseEvent& event, OsMouseEvent* mouseEvent)
   event.Source = NULL;
   event.Position = ToVec2(mouseEvent->ClientPosition);
   event.Scroll = mouseEvent->ScrollMovement;
-  event.Movement = Vec2(0,0);
+  event.Movement = Vec2(0, 0);
   event.AltPressed = mouseEvent->AltPressed;
   event.ShiftPressed = mouseEvent->ShiftPressed;
   event.CtrlPressed = mouseEvent->CtrlPressed;
 
-  for(uint i = 0; i < MouseButtons::Size; ++i)
+  for (uint i = 0; i < MouseButtons::Size; ++i)
     event.mButtonDown[i] = Z::gMouse->mButtonDown[i];
 }
-
 
 Widget* RootWidget::UpdateMousePosition(OsMouseEvent* osmouseEvent)
 {
   Widget* captureObject = mCaptured;
-  if(captureObject)
+  if (captureObject)
     return captureObject;
 
   Widget* oldOverObject = mOver;
@@ -638,7 +677,7 @@ Widget* RootWidget::UpdateMousePosition(OsMouseEvent* osmouseEvent)
   Widget* newOverObject = HitTest(ToVec2(osmouseEvent->ClientPosition), NULL);
 
   // Has the mouse moved over a new object?
-  if(newOverObject != oldOverObject)
+  if (newOverObject != oldOverObject)
   {
     MouseEvent mouseEventOut;
     BuildMouseEvent(mouseEventOut, osmouseEvent);
@@ -649,11 +688,16 @@ Widget* RootWidget::UpdateMousePosition(OsMouseEvent* osmouseEvent)
     mouseEventIn.Source = newOverObject;
 
     SendHierarchyEvents("Over",
-      oldOverObject, newOverObject,
-      &mouseEventOut, &mouseEventIn,
-      Events::MouseExit, Events::MouseEnter,
-      Events::MouseExitHierarchy, Events::MouseEnterHierarchy,
-      DisplayFlags::MouseOver, DisplayFlags::MouseOverHierarchy);
+                        oldOverObject,
+                        newOverObject,
+                        &mouseEventOut,
+                        &mouseEventIn,
+                        Events::MouseExit,
+                        Events::MouseEnter,
+                        Events::MouseExitHierarchy,
+                        Events::MouseEnterHierarchy,
+                        DisplayFlags::MouseOver,
+                        DisplayFlags::MouseOverHierarchy);
 
     mOver = newOverObject;
     mHoverTime = 0;
@@ -673,11 +717,12 @@ Widget* PreviousSibling(Widget* object, bool ignoreInactive)
 
   Widget* prev = (Widget*)WidgetList::Prev(object);
 
-  // If we're ignoring inactive objects, keep looking while the previous sibling is inactive
+  // If we're ignoring inactive objects, keep looking while the previous sibling
+  // is inactive
   while (ignoreInactive && prev != parent->mChildren.End() && !prev->mActive)
     prev = (Widget*)WidgetList::Prev(prev);
 
-  if(prev != parent->mChildren.End())
+  if (prev != parent->mChildren.End())
     return prev;
 
   return nullptr;
@@ -693,7 +738,8 @@ Widget* NextSibling(Widget* object, bool ignoreInactive)
 
   Widget* next = (Widget*)WidgetList::Next(object);
 
-  // If we're ignoring inactive objects, keep looking while the next sibling is inactive
+  // If we're ignoring inactive objects, keep looking while the next sibling is
+  // inactive
   while (ignoreInactive && next != parent->mChildren.End() && !next->mActive)
     next = (Widget*)WidgetList::Next(next);
 
@@ -749,13 +795,14 @@ Widget* GetNext(Widget* object, bool ignoreInactive)
   Composite* c = object->GetSelfAsComposite();
   if (c && !c->mChildren.Empty())
   {
-    // If not ignoring inactive objects or the first child is active, return the first child
+    // If not ignoring inactive objects or the first child is active, return the
+    // first child
     if (!ignoreInactive || c->mChildren.Front().mActive)
       return &c->mChildren.Front();
     else
     {
       // Return the first active child
-      forRange(Widget& child, c->mChildren.All())
+      forRange(Widget & child, c->mChildren.All())
       {
         if (child.mActive)
           return &child;
@@ -770,10 +817,10 @@ Widget* GetNext(Widget* object, bool ignoreInactive)
 
   // Loop until the root or a parent has a sibling
   Widget* parent = object->GetParent();
-  while(parent != nullptr)
+  while (parent != nullptr)
   {
     Widget* parentSibling = NextSibling(parent, ignoreInactive);
-    if(parentSibling)
+    if (parentSibling)
       return parentSibling;
     else
       parent = parent->GetParent();
@@ -784,14 +831,15 @@ Widget* GetNext(Widget* object, bool ignoreInactive)
 
 void FindNextFocus(Widget* object, FocusDirection::Enum direction)
 {
-  while(object != nullptr)
+  while (object != nullptr)
   {
-    object = direction == FocusDirection::Forward ? GetNext(object, true) : GetPrevious(object, true);
+    object = direction == FocusDirection::Forward ? GetNext(object, true)
+                                                  : GetPrevious(object, true);
 
-    if(object && object->mActive)
+    if (object && object->mActive)
     {
       bool focusTaken = object->TryTakeFocus();
-      if(focusTaken)
+      if (focusTaken)
         return;
     }
   }
@@ -799,33 +847,39 @@ void FindNextFocus(Widget* object, FocusDirection::Enum direction)
 
 void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 {
-  if(Interaction::DebugMouseEvents)
-    ZPrint("Mouse Move %d, %d \n", osMouseEvent->ClientPosition.x, osMouseEvent->ClientPosition.y);
+  if (Interaction::DebugMouseEvents)
+    ZPrint("Mouse Move %d, %d \n",
+           osMouseEvent->ClientPosition.x,
+           osMouseEvent->ClientPosition.y);
 
   UpdateMouseButtons(osMouseEvent);
 
   Vec2 mouseMovement = Vec2::cZero;
-  if(Z::gMouse->GetTrapped())
+  if (Z::gMouse->GetTrapped())
   {
     OsWindow* window = osMouseEvent->Window;
-    if(window)
-      mouseMovement = ToVec2(osMouseEvent->ClientPosition - window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
+    if (window)
+      mouseMovement = ToVec2(
+          osMouseEvent->ClientPosition -
+          window->MonitorToClient(window->GetMouseTrapMonitorPosition()));
   }
   else
   {
-    mouseMovement = ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
+    mouseMovement =
+        ToVec2(osMouseEvent->ClientPosition) - Z::gMouse->mClientPosition;
   }
 
   Z::gMouse->mClientPosition = ToVec2(osMouseEvent->ClientPosition);
   Z::gMouse->mCursorMovement = mouseMovement;
 
-  if(Interaction::DebugMouseEvents)
+  if (Interaction::DebugMouseEvents)
     ZPrint("Mouse Moved by %f, %f \n", mouseMovement.x, mouseMovement.y);
 
   // We must update the mScreenPostion above before exiting out
-  // Normally we ignore mouse movements due to the 'mouse trapped' feature (moving to center over and over)
-  // but we need to at least update the mouse's screen position (which should have moved to the center)
-  if(osMouseEvent->IsMouseAtTrapPosition)
+  // Normally we ignore mouse movements due to the 'mouse trapped' feature
+  // (moving to center over and over) but we need to at least update the mouse's
+  // screen position (which should have moved to the center)
+  if (osMouseEvent->IsMouseAtTrapPosition)
     return;
 
   // Find the widget the mouse is over
@@ -833,7 +887,7 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
   // the down object
   Widget* targetObject = UpdateMousePosition(osMouseEvent);
 
-  if(targetObject == NULL)
+  if (targetObject == NULL)
     return;
 
   MouseDragEvent mouseEvent;
@@ -846,7 +900,7 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 
   // Send the mouse move
   //   - Note: this will be the captured object if there is one.
-  if(targetObject == captured)
+  if (targetObject == captured)
     captured->DispatchEvent(Events::MouseMove, &mouseEvent);
   else
     targetObject->DispatchBubble(Events::MouseMove, &mouseEvent);
@@ -859,10 +913,10 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
   bool stateBeforeObjectDownDrag = mouseEvent.Handled;
 
   // Don't send a mouse drag if something is already captured
-  
-  if(mAnyMouseDown && downObject && captured == nullptr)
+
+  if (mAnyMouseDown && downObject && captured == nullptr)
   {
-    if(Interaction::DebugMouseInteraction)
+    if (Interaction::DebugMouseInteraction)
     {
       ZPrint("Dragging ");
       PrintPath(downObject);
@@ -874,11 +928,11 @@ void RootWidget::OnOsMouseMoved(OsMouseEvent* osMouseEvent)
 
     // mDragged prevents sending more than one drag message
     // to a widget
-    if(LargestAxis(mDragMovement) >= downObject->mDragDistance && !mDragged)
+    if (LargestAxis(mDragMovement) >= downObject->mDragDistance && !mDragged)
     {
-      if(Z::gMouse->mButtonDown[MouseButtons::Left])
+      if (Z::gMouse->mButtonDown[MouseButtons::Left])
         downObject->DispatchBubble(Events::LeftMouseDrag, &mouseEvent);
-      else if(Z::gMouse->mButtonDown[MouseButtons::Right])
+      else if (Z::gMouse->mButtonDown[MouseButtons::Right])
         downObject->DispatchBubble(Events::RightMouseDrag, &mouseEvent);
 
       mDragged = true;
@@ -897,7 +951,7 @@ void RootWidget::OnOsMouseScroll(OsMouseEvent* osMouseEvent)
 {
   UpdateMouseButtons(osMouseEvent);
   Widget* overObject = UpdateMousePosition(osMouseEvent);
-  if(overObject == NULL)
+  if (overObject == NULL)
     return;
 
   MouseEvent mouseEvent;
@@ -910,7 +964,7 @@ void RootWidget::OnOsMouseScroll(OsMouseEvent* osMouseEvent)
 void RootWidget::UpdateMouseButtons(OsMouseEvent* mouseEvent)
 {
   mAnyMouseDown = false;
-  for(uint i = 0; i < MouseButtons::Size; ++i)
+  for (uint i = 0; i < MouseButtons::Size; ++i)
   {
     Z::gMouse->mButtonDown[i] = mouseEvent->ButtonDown[i];
     mAnyMouseDown = mAnyMouseDown || Z::gMouse->mButtonDown[i];
@@ -925,13 +979,15 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
 
   Widget* targetObject = UpdateMousePosition(osMouseEvent);
 
-  if(targetObject == NULL)
+  if (targetObject == NULL)
     return;
 
-  if(Interaction::DebugMouseEvents)
-    ZPrint("Mouse %s %s\n", MouseButtons::Names[button], buttonDown ? "IsDown" : "IsUp");
+  if (Interaction::DebugMouseEvents)
+    ZPrint("Mouse %s %s\n",
+           MouseButtons::Names[button],
+           buttonDown ? "IsDown" : "IsUp");
 
-  if(Interaction::DebugMouseInteraction)
+  if (Interaction::DebugMouseInteraction)
   {
     ZPrint("Over ");
     PrintPath(targetObject);
@@ -942,7 +998,7 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
   mouseEvent.ButtonDown = buttonDown;
   mouseEvent.Source = targetObject;
 
-  if(buttonDown)
+  if (buttonDown)
   {
     // Change focus to clicked widget
     RootChangeFocus(targetObject, targetObject->mTakeFocusMode);
@@ -957,16 +1013,17 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
     // A click is generated only if the mouse goes
     // down and up on the same object
     Widget* mouseDownObject = mDown;
-    if(mouseDownObject == targetObject && button < NamedButtonEvents)
+    if (mouseDownObject == targetObject && button < NamedButtonEvents)
       targetObject->DispatchBubble(NamedMouseClick[button], &mouseEvent);
 
     // Check for double click conditions
     bool buttonsAreTheSame = mLastClickButton == button;
-    bool distanceIsSmall = LargestAxis(mouseEvent.Position - mLastClickPosition) < 4.0f;
+    bool distanceIsSmall =
+        LargestAxis(mouseEvent.Position - mLastClickPosition) < 4.0f;
     bool doubleClickTime = mTimeSinceLastClick < Interaction::DoubleClickTime;
 
     mouseEvent.Handled = false;
-    if(buttonsAreTheSame && distanceIsSmall && doubleClickTime)
+    if (buttonsAreTheSame && distanceIsSmall && doubleClickTime)
       targetObject->DispatchBubble(Events::DoubleClick, &mouseEvent);
 
     // Update state for double clicks
@@ -979,16 +1036,16 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
   String mouseEventName = buttonDown ? Events::MouseDown : Events::MouseUp;
 
   Widget* captured = mCaptured;
-  if(captured)
+  if (captured)
     captured->DispatchEvent(mouseEventName, &mouseEvent);
   else
     targetObject->DispatchBubble(mouseEventName, &mouseEvent);
 
   // Send out named mouse event
   String* namedMouseEvents = buttonDown ? NamedMouseDown : NamedMouseUp;
-  if(button < NamedButtonEvents)
+  if (button < NamedButtonEvents)
   {
-    if(captured)
+    if (captured)
       captured->DispatchEvent(namedMouseEvents[button], &mouseEvent);
     else
       targetObject->DispatchBubble(namedMouseEvents[button], &mouseEvent);
@@ -998,7 +1055,7 @@ void RootWidget::OnOsMouseButton(OsMouseEvent* osMouseEvent, bool buttonDown)
 void RootWidget::OnOsMouseDrop(OsMouseDropEvent* mouseDrop)
 {
   Widget* targetObject = UpdateMousePosition(mouseDrop);
-  if(targetObject == NULL)
+  if (targetObject == NULL)
     return;
 
   MouseEvent mouseEvent;
@@ -1034,7 +1091,7 @@ void RootWidget::OnClose(OsWindowEvent* windowEvent)
 {
   HandleableEvent event;
   this->DispatchEvent(Events::Closing, &event);
-  if(!event.Handled)
+  if (!event.Handled)
     this->Destroy();
 }
 
@@ -1046,11 +1103,13 @@ void RootWidget::OnDebuggerPause(Event* event)
 
 void RootWidget::OnDebuggerResume(Event* event)
 {
-  // We don't immediately disable the debugger overlay because we want all Os messages
-  // to be processed by the overlay before fully resuming (prevents lots of ghost mouse clicks and weird effects)
+  // We don't immediately disable the debugger overlay because we want all Os
+  // messages to be processed by the overlay before fully resuming (prevents
+  // lots of ghost mouse clicks and weird effects)
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(new ActionDelayOnce());
-  seq->Add(new CallAction<RootWidget, &RootWidget::OnDebuggerResumeDelay>(this));
+  seq->Add(
+      new CallAction<RootWidget, &RootWidget::OnDebuggerResumeDelay>(this));
 }
 
 void RootWidget::OnDebuggerResumeDelay()
@@ -1059,4 +1118,4 @@ void RootWidget::OnDebuggerResumeDelay()
   mDebuggerText->SetActive(false);
 }
 
-}//namespace Zero
+} // namespace Zero

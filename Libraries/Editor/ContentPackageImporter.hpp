@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentPackageWidget.hpp
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +10,6 @@ class TagEditor;
 class TreeEvent;
 struct ContentImporterSource;
 
-//------------------------------------------------------------- Content Importer
 class ContentImporter : public Composite
 {
 public:
@@ -67,4 +59,4 @@ private:
 
 void ImportContentPackage();
 
-}//namespace Zero
+} // namespace Zero

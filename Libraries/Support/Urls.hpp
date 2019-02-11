@@ -1,18 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
-
 
 namespace Zero
 {
 
 // This is a central place for all our online locations.
-// The term 'User' means that the link goes to a user facing site. Ends with a '/' for concatenating reasons.
-// The term 'Api' means that it goes to an online script and is typically parsed. Does NOT end with a '/'.
+// The term 'User' means that the link goes to a user facing site. Ends with a
+// '/' for concatenating reasons. The term 'Api' means that it goes to an online
+// script and is typically parsed. Does NOT end with a '/'.
 namespace Urls
 {
 extern const cstr cUserZeroHub;
@@ -37,6 +32,6 @@ extern const cstr cApiLauncherTemplates;
 extern const cstr cApiLauncherBuilds;
 extern const cstr cUserDevNotes;
 extern const cstr cApiDevNotes;
-}
+} // namespace Urls
 
-}//namespace Zero
+} // namespace Zero

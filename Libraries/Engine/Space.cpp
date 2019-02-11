@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Space.cpp
-/// Implementation of the Space component class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,13 +6,14 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(SpaceLevelLoaded);
-  DefineEvent(SpaceModified);
-  DefineEvent(SpaceObjectsChanged);
-  DefineEvent(SpaceDestroyed);
-}//namespace Events
+DefineEvent(SpaceLevelLoaded);
+DefineEvent(SpaceModified);
+DefineEvent(SpaceObjectsChanged);
+DefineEvent(SpaceDestroyed);
+} // namespace Events
 
-Memory::Pool* Space::sCogLists = new Memory::Pool("CogLists", Memory::GetNamedHeap("CogList"), sizeof(NameCogList), 64);
+Memory::Pool* Space::sCogLists = new Memory::Pool(
+    "CogLists", Memory::GetNamedHeap("CogList"), sizeof(NameCogList), 64);
 
 ZilchDefineType(Space, builder, type)
 {
@@ -94,8 +87,8 @@ bool Space::IsPreviewMode()
 
 bool Space::IsEditorOrPreviewMode()
 {
-  return mCreationFlags.IsSet(CreationFlags::Editing)
-      || mCreationFlags.IsSet(CreationFlags::Preview);
+  return mCreationFlags.IsSet(CreationFlags::Editing) ||
+         mCreationFlags.IsSet(CreationFlags::Preview);
 }
 
 Cog* Space::Clone()
@@ -125,8 +118,8 @@ void Space::Initialize(CogInitializer& initializer)
 }
 
 uint Space::GetCreationFlags()
-{ 
-  return mCreationFlags.U32Field; 
+{
+  return mCreationFlags.U32Field;
 }
 
 void Space::AddObject(Cog* cog)
@@ -134,7 +127,7 @@ void Space::AddObject(Cog* cog)
   ++mCogsInSpace;
   mCogList.PushBack(cog);
 
-  if(cog->mHierarchyParent == nullptr)
+  if (cog->mHierarchyParent == nullptr)
   {
     mRoots.PushBack(cog);
     ++mRootCount;
@@ -174,7 +167,6 @@ void Space::RemoveFromNameMap(Cog* cog, StringParam name)
   }
 }
 
-//------------------------------------------------------------ Creation
 
 Cog* Space::CreateAt(StringParam source, Transform* transform)
 {
@@ -187,7 +179,9 @@ Cog* Space::CreateAt(StringParam source, Transform* transform)
   return CreateAt(source, translation, Math::ToQuaternion(rotation));
 }
 
-Cog* Space::CreateAt(StringParam source, Vec3Param position, QuatParam rotation,
+Cog* Space::CreateAt(StringParam source,
+                     Vec3Param position,
+                     QuatParam rotation,
                      Vec3Param scale)
 {
   CogCreationContext context(this, source);
@@ -196,11 +190,11 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position, QuatParam rotation,
   initializer.Context = &context;
   Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
 
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   Transform* transform = cog->has(Transform);
-  if(transform)
+  if (transform)
   {
     transform->SetTranslation(position);
     transform->SetRotation(Normalized(rotation));
@@ -221,11 +215,11 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position, QuatParam rotation)
   initializer.Context = &context;
   Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
 
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   Transform* transform = cog->has(Transform);
-  if(transform)
+  if (transform)
   {
     transform->SetTranslation(position);
     transform->SetRotation(Normalized(rotation));
@@ -245,11 +239,11 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position, Vec3Param scale)
   initializer.Context = &context;
   Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
 
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   Transform* transform = cog->has(Transform);
-  if(transform)
+  if (transform)
   {
     transform->SetTranslation(position);
     Quat rotation = transform->GetRotation();
@@ -271,11 +265,11 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position)
   CogInitializer initializer(this);
   initializer.Context = &context;
   Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   Transform* transform = cog->has(Transform);
-  if(transform)
+  if (transform)
   {
     transform->SetTranslation(position);
     Quat rotation = transform->GetRotation();
@@ -283,7 +277,7 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position)
     transform->SetRotation(rotation);
   }
 
-  cog->Initialize(initializer); 
+  cog->Initialize(initializer);
   initializer.AllCreated();
 
   return cog;
@@ -291,7 +285,7 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position)
 
 Cog* Space::Create(Archetype* archetype)
 {
-  if(archetype == nullptr)
+  if (archetype == nullptr)
   {
     DoNotifyException("Space", "Cannot create an invalid or null Archetype.");
     return nullptr;
@@ -301,7 +295,9 @@ Cog* Space::Create(Archetype* archetype)
   if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    DoNotifyException("Space",
+                      "Cannot create a Cog in a Space that is being destroyed. "
+                      "Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -310,7 +306,7 @@ Cog* Space::Create(Archetype* archetype)
 
 Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
 {
-  if(archetype == nullptr)
+  if (archetype == nullptr)
   {
     DoNotifyException("Space", "Cannot create an invalid or null Archetype.");
     return nullptr;
@@ -319,7 +315,9 @@ Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
   if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    DoNotifyException("Space",
+                      "Cannot create a Cog in a Space that is being destroyed. "
+                      "Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -329,10 +327,12 @@ Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
 Cog* Space::CreateNamed(StringParam source, StringParam name)
 {
   // Space is being destroyed?
-  if(this->GetMarkedForDestruction())
+  if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    DoNotifyException("Space",
+                      "Cannot create a Cog in a Space that is being destroyed. "
+                      "Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -341,10 +341,10 @@ Cog* Space::CreateNamed(StringParam source, StringParam name)
   CogInitializer initializer(this);
   initializer.Context = &context;
   Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
-  if(!name.Empty())
+  if (!name.Empty())
     cog->SetName(name);
 
   cog->Initialize(initializer);
@@ -353,25 +353,28 @@ Cog* Space::CreateNamed(StringParam source, StringParam name)
   return cog;
 }
 
-
 Cog* Space::CreateLink(Archetype* archetype, Cog* objectA, Cog* objectB)
 {
-  if(archetype == nullptr)
+  if (archetype == nullptr)
     return nullptr;
 
   return CreateNamedLink(archetype->ResourceIdName, objectA, objectB);
 }
 
-Cog* Space::CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* objectB)
+Cog* Space::CreateNamedLink(StringParam archetypeName,
+                            Cog* objectA,
+                            Cog* objectB)
 {
-  if(objectA == nullptr || objectB == nullptr)
+  if (objectA == nullptr || objectB == nullptr)
     return nullptr;
 
   // Space is being destroyed?
-  if(this->GetMarkedForDestruction())
+  if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    DoNotifyException("Space",
+                      "Cannot create a Cog in a Space that is being destroyed. "
+                      "Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
@@ -379,14 +382,15 @@ Cog* Space::CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* object
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), archetypeName, &context);
+  Cog* cog =
+      Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), archetypeName, &context);
 
-  if(cog == nullptr)
+  if (cog == nullptr)
     return nullptr;
 
   // Set up the object link
   ObjectLink* link = cog->has(ObjectLink);
-  if(link)
+  if (link)
   {
     link->SetCogAInternal(objectA);
     link->SetCogBInternal(objectB);
@@ -398,14 +402,13 @@ Cog* Space::CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* object
   return cog;
 }
 
-//------------------------------------------------------------ Destroying 
 
 void Space::DestroyAll()
 {
   range r = mCogList.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
-    if(!r.Front().mFlags.IsSet(CogFlags::Persistent))
+    if (!r.Front().mFlags.IsSet(CogFlags::Persistent))
       r.Front().ForceDestroy();
     r.PopFront();
   }
@@ -414,9 +417,9 @@ void Space::DestroyAll()
 void Space::DestroyAllFromLevel()
 {
   range r = mCogList.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
-    if(r.Front().mFlags.IsSet(CogFlags::CreatedFromLevel))
+    if (r.Front().mFlags.IsSet(CogFlags::CreatedFromLevel))
       r.Front().Destroy();
     r.PopFront();
   }
@@ -424,7 +427,7 @@ void Space::DestroyAllFromLevel()
 
 void Space::Destroy()
 {
-  if(!mFlags.IsSet(CogFlags::Protected))
+  if (!mFlags.IsSet(CogFlags::Protected))
   {
     ForceDestroy();
   }
@@ -432,14 +435,14 @@ void Space::Destroy()
 
 void Space::ForceDestroy()
 {
-  //let people know this space was destroyed
+  // let people know this space was destroyed
   if (!GetMarkedForDestruction())
   {
     ObjectEvent e(this);
     GetDispatcher()->Dispatch(Events::SpaceDestroyed, &e);
   }
   range r = mCogList.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     r.Front().ForceDestroy();
     r.PopFront();
@@ -449,18 +452,18 @@ void Space::ForceDestroy()
 
 void Space::SaveLevelFile(StringParam filename)
 {
-  if(Level* pendingLoad = mPendingLevel)
+  if (Level* pendingLoad = mPendingLevel)
   {
     ErrorIf(pendingLoad != nullptr, "Can not save while level is loading.");
     return;
   }
-  
+
   // Open the file for write
   Status status;
   ObjectSaver saver;
   saver.Open(status, filename.c_str());
 
-  if(status.Succeeded())
+  if (status.Succeeded())
   {
     CogSavingContext context;
     saver.SetSerializationContext(&context);
@@ -471,31 +474,30 @@ void Space::SaveLevelFile(StringParam filename)
   }
 }
 
-void Space::SerializeObjectsToSpace(CogInitializer& initializer, 
-                                    CogCreationContext& context, 
+void Space::SerializeObjectsToSpace(CogInitializer& initializer,
+                                    CogCreationContext& context,
                                     Serializer& loader)
 {
   bool hadCogs = loader.Start("Cogs", "cogs", StructureType::Object);
 
   uint numberOfObjects = 0;
   loader.ArraySize(numberOfObjects);
-  for(uint i = 0; i < numberOfObjects; ++i)
+  for (uint i = 0; i < numberOfObjects; ++i)
   {
     Cog* cog = Z::gFactory->BuildFromStream(&context, loader);
-    if(cog == nullptr)
+    if (cog == nullptr)
     {
       Error("Cog failed to be created!");
-      //abort serialization.
+      // abort serialization.
       return;
     }
 
     cog->Initialize(initializer);
-    //On all objects created called after all objects
-    //are initialized.
+    // On all objects created called after all objects
+    // are initialized.
   }
 
-
-  if(hadCogs)
+  if (hadCogs)
     loader.End("Cogs", StructureType::Object);
 }
 
@@ -544,11 +546,11 @@ Cog* Space::FindLastObjectByName(StringParam name)
 Cog* Space::FindFirstRootObjectByName(StringParam name)
 {
   NameCogList* nameList = mNameMap.FindValue(name, nullptr);
-  if(nameList)
+  if (nameList)
   {
-    forRange(Cog& cog, nameList->All())
+    forRange(Cog & cog, nameList->All())
     {
-      if(cog.GetParent() == nullptr)
+      if (cog.GetParent() == nullptr)
         return &cog;
     }
   }
@@ -558,11 +560,11 @@ Cog* Space::FindFirstRootObjectByName(StringParam name)
 Cog* Space::FindLastRootObjectByName(StringParam name)
 {
   NameCogList* nameList = mNameMap.FindValue(name, nullptr);
-  if(nameList)
+  if (nameList)
   {
-    forRange(Cog& cog, nameList->ReverseAll())
+    forRange(Cog & cog, nameList->ReverseAll())
     {
-      if(cog.GetParent() == nullptr)
+      if (cog.GetParent() == nullptr)
         return &cog;
     }
   }
@@ -571,23 +573,24 @@ Cog* Space::FindLastRootObjectByName(StringParam name)
 
 void Space::LoadLevelAdditive(Level* level)
 {
-  // Set the level redundantly because AddObjectsFromLevel can send out an event.
+  // Set the level redundantly because AddObjectsFromLevel can send out an
+  // event.
   mLevelLoaded = level;
   mLevelLoaded = AddObjectsFromLevel(level);
 }
 
 void Space::LoadLevelFile(StringParam filePath)
 {
-  //Enable in debug for level loading (object initialization, etc)
+  // Enable in debug for level loading (object initialization, etc)
   FpuExceptionsEnablerDebug();
   TimerBlock block("Loaded level");
 
   // Load from Level file
   Status status;
   UniquePointer<Serializer> stream(GetLoaderStreamFile(status, filePath));
-  if(stream)
+  if (stream)
   {
-    //Read Level Node
+    // Read Level Node
     PolymorphicNode node;
     stream->GetPolymorphic(node);
 
@@ -596,50 +599,55 @@ void Space::LoadLevelFile(StringParam filePath)
     String fileName = FilePath::GetFileName(filePath);
 
     MarkNotModified();
-    ZPrintFilter(Filter::DefaultFilter, "Level file '%s' was loaded.\n", fileName.c_str());
+    ZPrintFilter(Filter::DefaultFilter,
+                 "Level file '%s' was loaded.\n",
+                 fileName.c_str());
     stream->EndPolymorphic();
   }
   else
   {
-    String message = String::Format("Failed to load level file '%s'", filePath.c_str());
+    String message =
+        String::Format("Failed to load level file '%s'", filePath.c_str());
     DoNotifyError("Load Failed", message);
   }
 
   ObjectEvent e(this);
   this->GetDispatcher()->Dispatch(Events::SpaceLevelLoaded, &e);
-
 }
 
 Level* Space::AddObjectsFromLevel(Level* level)
 {
   // Space is being destroyed?
-  if(this->GetMarkedForDestruction())
+  if (this->GetMarkedForDestruction())
   {
     // Don't allow objects to be created
-    DoNotifyException("Space", "Cannot create a Cog in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    DoNotifyException("Space",
+                      "Cannot create a Cog in a Space that is being destroyed. "
+                      "Check the MarkedForDestruction property on the Space.");
     return nullptr;
   }
 
   // Begin Loading Level
   mIsLoadingLevel = true;
 
-  //Enable in debug for level loading (object initialization, etc)
+  // Enable in debug for level loading (object initialization, etc)
   FpuExceptionsEnablerDebug();
 
   PushErrorContextObject("Loading level", level);
 
   TimerBlock block("Loaded level");
 
-  if(level)
+  if (level)
   {
     String levelPath = level->GetLoadPath();
-    String levelMessage = String::Format("Loading Level From File %s", levelPath.c_str());
+    String levelMessage =
+        String::Format("Loading Level From File %s", levelPath.c_str());
     PushErrorContext(levelMessage.c_str());
 
     Status status;
     ObjectLoader stream;
 
-    if(level->mCacheTree != nullptr)
+    if (level->mCacheTree != nullptr)
     {
       stream.SetRoot(level->mCacheTree);
     }
@@ -650,7 +658,7 @@ Level* Space::AddObjectsFromLevel(Level* level)
 
     if (status.Succeeded())
     {
-      //Read Level Node
+      // Read Level Node
       PolymorphicNode node;
       stream.GetPolymorphic(node);
 
@@ -661,7 +669,9 @@ Level* Space::AddObjectsFromLevel(Level* level)
     }
     else
     {
-      String message = String::Format("Failed to load level '%s' %s", level->Name.c_str(), status.Message.c_str());
+      String message = String::Format("Failed to load level '%s' %s",
+                                      level->Name.c_str(),
+                                      status.Message.c_str());
       DoNotifyErrorWithContext(message);
       mIsLoadingLevel = false;
       return nullptr;
@@ -689,7 +699,7 @@ Space::range Space::AddObjectsFromStream(StringParam source, Serializer& loader)
 
   loader.SetSerializationContext(static_cast<void*>(&context));
 
-  //Create the CogInitializer and set the owner.
+  // Create the CogInitializer and set the owner.
   CogInitializer initializer(this);
   initializer.Context = &context;
   initializer.mLevel = source;
@@ -702,28 +712,34 @@ Space::range Space::AddObjectsFromStream(StringParam source, Serializer& loader)
 void Space::LoadLevel(Level* level)
 {
   // Space is being destroyed?
-  if(this->GetMarkedForDestruction())
+  if (this->GetMarkedForDestruction())
   {
     // Don't allow levels to be loaded
-    DoNotifyException("Space", "Cannot load a Level in a Space that is being destroyed. Check the MarkedForDestruction property on the Space.");
+    DoNotifyException("Space",
+                      "Cannot load a Level in a Space that is being destroyed. "
+                      "Check the MarkedForDestruction property on the Space.");
     return;
   }
 
-  if(Level* pendingLoad = mPendingLevel)
+  if (Level* pendingLoad = mPendingLevel)
   {
-    ZPrintFilter(Filter::DefaultFilter, "Already loading level '%s'\n", pendingLoad->ResourceIdName.c_str());
+    ZPrintFilter(Filter::DefaultFilter,
+                 "Already loading level '%s'\n",
+                 pendingLoad->ResourceIdName.c_str());
     return;
   }
 
-  if(level == nullptr)
+  if (level == nullptr)
   {
     ZPrintFilter(Filter::DefaultFilter, "Failed to find level.\n");
     return;
   }
 
-  if(!mLevelLoaded)
+  if (!mLevelLoaded)
   {
-    ZPrintFilter(Filter::DefaultFilter, "Loading level '%s' directly.\n", level->Name.c_str());
+    ZPrintFilter(Filter::DefaultFilter,
+                 "Loading level '%s' directly.\n",
+                 level->Name.c_str());
 
     // No level has ever been loaded into this space. This is when a space has
     // just been created and no important objects are loaded.
@@ -732,21 +748,24 @@ void Space::LoadLevel(Level* level)
   }
   else
   {
-    ZPrintFilter(Filter::DefaultFilter, "Loading level '%s' delayed.\n", level->Name.c_str());
+    ZPrintFilter(Filter::DefaultFilter,
+                 "Loading level '%s' delayed.\n",
+                 level->Name.c_str());
 
     // Add all objects to the destroy list
     DestroyAll();
 
-    // There is a issue when a level is loaded where all objects from the current space
-    // will exist with and interfere with the new objects due to delayed destruction.
-    // Wait one frame for the previous objects to be destroyed then load the level.
+    // There is a issue when a level is loaded where all objects from the
+    // current space will exist with and interfere with the new objects due to
+    // delayed destruction. Wait one frame for the previous objects to be
+    // destroyed then load the level.
     mPendingLevel = level;
   }
 }
 
 void Space::LoadPendingLevel()
 {
-  if(Level* level = mPendingLevel)
+  if (Level* level = mPendingLevel)
   {
     LoadLevelAdditive(level);
     mPendingLevel = nullptr;
@@ -756,13 +775,13 @@ void Space::LoadPendingLevel()
 void Space::ReloadLevel()
 {
   Level* level = mLevelLoaded;
-  if(level)
+  if (level)
     LoadLevel(level);
 }
 
 void Space::MarkModified()
 {
-  if(!mModified)
+  if (!mModified)
   {
     mModified = true;
 
@@ -773,7 +792,7 @@ void Space::MarkModified()
 
 void Space::MarkNotModified()
 {
-  if(mModified)
+  if (mModified)
   {
     mModified = false;
 
@@ -784,7 +803,7 @@ void Space::MarkNotModified()
 
 void Space::CheckForChangedObjects()
 {
-  if(mObjectsChanged)
+  if (mObjectsChanged)
   {
     mObjectsChanged = false;
 
@@ -806,17 +825,17 @@ bool Space::GetModified()
 void Space::SetName(StringParam newName)
 {
   Cog::SetName(newName);
-  if(GameSession* gameSession = GetGameSession())
+  if (GameSession* gameSession = GetGameSession())
     gameSession->InternalRenamed(this);
 }
 
 Level* Space::GetCurrentLevel()
 {
   Level* level = mLevelLoaded;
-  if(level)
+  if (level)
     return level;
   else
     return nullptr;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MainPropertyView.hpp
-/// 
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,7 +15,6 @@ class MultiPropertyInterface;
 class OperationQueue;
 class ResourcePropertyView;
 
-//----------------------------------------------------------- Main Property View
 class MainPropertyView : public Composite
 {
 public:
@@ -31,7 +22,8 @@ public:
   ZilchDeclareType(MainPropertyView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  MainPropertyView(Composite* parent, MetaSelection* selection,
+  MainPropertyView(Composite* parent,
+                   MetaSelection* selection,
                    OperationQueue* queue);
   ~MainPropertyView();
 
@@ -87,7 +79,7 @@ private:
   /// The history of objects selected.
   SelectionHistory* mSelectionHistory;
 
-  /// Used when the property grid is displaying different objects than 
+  /// Used when the property grid is displaying different objects than
   /// what's in the actual selection history (archetypes, content items, etc..).
   HandleOf<MetaSelection> mSpecialEdit;
 
@@ -115,4 +107,4 @@ private:
   HandleOf<Widget> mPreviewTile;
 };
 
-}//namespace Zero
+} // namespace Zero

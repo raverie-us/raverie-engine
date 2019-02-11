@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -8,11 +7,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ResourceListItemAdded);
-  DefineEvent(ResourceListItemRemoved);
-}
+DefineEvent(ResourceListItemAdded);
+DefineEvent(ResourceListItemRemoved);
+} // namespace Events
 
-//**************************************************************************************************
 ZilchDefineType(ResourceListEvent, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
@@ -24,41 +22,36 @@ bool GraphicsResourceList::mRenderGroupSerializedExpanded = false;
 bool GraphicsResourceList::mRenderGroupRuntimeExpanded = false;
 bool GraphicsResourceList::mChildRenderGroupListExpanded = false;
 
-//**************************************************************************************************
-GraphicsResourceList::GraphicsResourceList(Resource* owner)
-  : mReadOnly(false)
-  , mOwner(owner)
-  , mExpanded(nullptr)
-  , mListItemCallback(nullptr)
+GraphicsResourceList::GraphicsResourceList(Resource* owner) :
+    mReadOnly(false),
+    mOwner(owner),
+    mExpanded(nullptr),
+    mListItemCallback(nullptr)
 {
 }
 
-//**************************************************************************************************
 GraphicsResourceList::GraphicsResourceList(const GraphicsResourceList& rhs)
 {
   mResourceIdNames = rhs.mResourceIdNames;
 }
 
-//**************************************************************************************************
-GraphicsResourceList& GraphicsResourceList::operator=(const GraphicsResourceList& graphicsResourceList)
+GraphicsResourceList& GraphicsResourceList::
+operator=(const GraphicsResourceList& graphicsResourceList)
 {
   mResourceIdNames = graphicsResourceList.mResourceIdNames;
   return *this;
 }
 
-//**************************************************************************************************
 Array<String>::range GraphicsResourceList::GetIdNames()
 {
   return mResourceIdNames.All();
 }
 
-//**************************************************************************************************
 uint GraphicsResourceList::GetResourceIndex(StringParam resourceIdName)
 {
   return mResourceIdNames.FindIndex(resourceIdName);
 }
 
-//**************************************************************************************************
 void GraphicsResourceList::CheckForAddition(Status& status, Resource* resource)
 {
   // If id part is not up to date this will query incorrectly
@@ -66,7 +59,6 @@ void GraphicsResourceList::CheckForAddition(Status& status, Resource* resource)
     status.SetFailed("Resource already added.");
 }
 
-//**************************************************************************************************
 void GraphicsResourceList::AddResource(StringParam resourceIdName, uint index)
 {
   if (index <= mResourceIdNames.Size())
@@ -79,7 +71,6 @@ void GraphicsResourceList::AddResource(StringParam resourceIdName, uint index)
   DispatchEvent(Events::ResourceListItemAdded, &event);
 }
 
-//**************************************************************************************************
 void GraphicsResourceList::RemoveResource(StringParam resourceIdName)
 {
   if (mResourceIdNames.EraseValue(resourceIdName))
@@ -90,7 +81,6 @@ void GraphicsResourceList::RemoveResource(StringParam resourceIdName)
   }
 }
 
-//**************************************************************************************************
 ZilchDefineType(RenderGroupList, builder, type)
 {
   ZeroBindDocumented();
@@ -100,19 +90,15 @@ ZilchDefineType(RenderGroupList, builder, type)
   ZilchBindMethod(All);
 }
 
-//**************************************************************************************************
-RenderGroupList::RenderGroupList(Resource* owner)
-  : GraphicsResourceList(owner)
+RenderGroupList::RenderGroupList(Resource* owner) : GraphicsResourceList(owner)
 {
 }
 
-//**************************************************************************************************
 String RenderGroupList::GetResourceTypeName()
 {
   return "RenderGroup";
 }
 
-//**************************************************************************************************
 void RenderGroupList::Add(RenderGroup& renderGroup)
 {
   if (mReadOnly)
@@ -129,7 +115,6 @@ void RenderGroupList::Add(RenderGroup& renderGroup)
   AddResource(renderGroup.ResourceIdName);
 }
 
-//**************************************************************************************************
 void RenderGroupList::Remove(RenderGroup& renderGroup)
 {
   if (mReadOnly)
@@ -144,11 +129,10 @@ void RenderGroupList::Remove(RenderGroup& renderGroup)
   RemoveResource(renderGroup.ResourceIdName);
 }
 
-//**************************************************************************************************
 Array<HandleOf<RenderGroup>> RenderGroupList::All()
 {
   Array<HandleOf<RenderGroup>> resources;
-  forRange (String idName, mResourceIdNames.All())
+  forRange(String idName, mResourceIdNames.All())
   {
     RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(idName);
     if (renderGroup != nullptr)
@@ -158,18 +142,15 @@ Array<HandleOf<RenderGroup>> RenderGroupList::All()
   return resources;
 }
 
-//**************************************************************************************************
 ZilchDefineType(ChildRenderGroupList, builder, type)
 {
 }
 
-//**************************************************************************************************
-ChildRenderGroupList::ChildRenderGroupList(Resource* owner)
-  : RenderGroupList(owner)
+ChildRenderGroupList::ChildRenderGroupList(Resource* owner) :
+    RenderGroupList(owner)
 {
 }
 
-//**************************************************************************************************
 void ChildRenderGroupList::CheckForAddition(Status& status, Resource* resource)
 {
   GraphicsResourceList::CheckForAddition(status, resource);
@@ -189,7 +170,8 @@ void ChildRenderGroupList::CheckForAddition(Status& status, Resource* resource)
   // Already assigned a parent.
   if (RenderGroup* parentGroup = renderGroup->GetParentRenderGroup())
   {
-    status.SetFailed(String::Format("RenderGroup is already a child of '%s'.", parentGroup->Name.c_str()));
+    status.SetFailed(String::Format("RenderGroup is already a child of '%s'.",
+                                    parentGroup->Name.c_str()));
     return;
   }
 
@@ -201,7 +183,6 @@ void ChildRenderGroupList::CheckForAddition(Status& status, Resource* resource)
   }
 }
 
-//**************************************************************************************************
 ZilchDefineType(MaterialList, builder, type)
 {
   ZeroBindDocumented();
@@ -211,19 +192,15 @@ ZilchDefineType(MaterialList, builder, type)
   ZilchBindMethod(All);
 }
 
-//**************************************************************************************************
-MaterialList::MaterialList(Resource* owner)
-  : GraphicsResourceList(owner)
+MaterialList::MaterialList(Resource* owner) : GraphicsResourceList(owner)
 {
 }
 
-//**************************************************************************************************
 String MaterialList::GetResourceTypeName()
 {
   return "Material";
 }
 
-//**************************************************************************************************
 void MaterialList::Add(Material& material)
 {
   if (mReadOnly)
@@ -240,7 +217,6 @@ void MaterialList::Add(Material& material)
   AddResource(material.ResourceIdName);
 }
 
-//**************************************************************************************************
 void MaterialList::Remove(Material& material)
 {
   if (mReadOnly)
@@ -255,11 +231,10 @@ void MaterialList::Remove(Material& material)
   RemoveResource(material.ResourceIdName);
 }
 
-//**************************************************************************************************
 Array<HandleOf<Material>> MaterialList::All()
 {
   Array<HandleOf<Material>> resources;
-  forRange (String idName, mResourceIdNames.All())
+  forRange(String idName, mResourceIdNames.All())
   {
     Material* material = MaterialManager::Instance->FindOrNull(idName);
     if (material != nullptr)
@@ -269,10 +244,9 @@ Array<HandleOf<Material>> MaterialList::All()
   return resources;
 }
 
-//**************************************************************************************************
 void ResourceListAdd(Material* material)
 {
-  forRange (String& resourceIdName, material->mSerializedList.GetIdNames())
+  forRange(String & resourceIdName, material->mSerializedList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
     if (renderGroup != nullptr)
@@ -280,10 +254,9 @@ void ResourceListAdd(Material* material)
   }
 }
 
-//**************************************************************************************************
 void ResourceListAdd(RenderGroup* renderGroup)
 {
-  forRange (String& resourceIdName, renderGroup->mSerializedList.GetIdNames())
+  forRange(String & resourceIdName, renderGroup->mSerializedList.GetIdNames())
   {
     Material* material = MaterialManager::FindOrNull(resourceIdName);
     if (material != nullptr)
@@ -291,10 +264,9 @@ void ResourceListAdd(RenderGroup* renderGroup)
   }
 }
 
-//**************************************************************************************************
 void ResourceListRemove(Material* material)
 {
-  forRange (RenderGroup* renderGroup, material->mActiveResources.All())
+  forRange(RenderGroup * renderGroup, material->mActiveResources.All())
   {
     if (renderGroup != nullptr)
       ResourceListResourceRemoved(material, renderGroup);
@@ -302,10 +274,9 @@ void ResourceListRemove(Material* material)
   material->mActiveResources.Clear();
 }
 
-//**************************************************************************************************
 void ResourceListRemove(RenderGroup* renderGroup)
 {
-  forRange (Material* material, renderGroup->mActiveResources.All())
+  forRange(Material * material, renderGroup->mActiveResources.All())
   {
     if (material != nullptr)
       ResourceListResourceRemoved(renderGroup, material);
@@ -313,54 +284,58 @@ void ResourceListRemove(RenderGroup* renderGroup)
   renderGroup->mActiveResources.Clear();
 }
 
-//**************************************************************************************************
 void ResourceListResolveReferences(Material* material)
 {
   // Find any entries in serialized list that previously didn't exist
-  forRange (String& resourceIdName, material->mSerializedList.GetIdNames())
+  forRange(String & resourceIdName, material->mSerializedList.GetIdNames())
   {
     RenderGroup* renderGroup = RenderGroupManager::FindOrNull(resourceIdName);
     if (renderGroup != nullptr)
     {
-      // If this resource is not in the runtime list of the found resource then this is a newly added resource
-      if (renderGroup->mReferencedByList.mResourceIdNames.Contains(material->ResourceIdName) == false)
+      // If this resource is not in the runtime list of the found resource then
+      // this is a newly added resource
+      if (renderGroup->mReferencedByList.mResourceIdNames.Contains(
+              material->ResourceIdName) == false)
         ResourceListResourceAdded(material, renderGroup, &resourceIdName);
     }
   }
 }
 
-//**************************************************************************************************
 void ResourceListResolveReferences(RenderGroup* renderGroup)
 {
   // Find any entries in serialized list that previously didn't exist
-  forRange (String& resourceIdName, renderGroup->mSerializedList.GetIdNames())
+  forRange(String & resourceIdName, renderGroup->mSerializedList.GetIdNames())
   {
     Material* material = MaterialManager::FindOrNull(resourceIdName);
     if (material != nullptr)
     {
-      // If this resource is not in the runtime list of the found resource then this is a newly added resource
-      if (material->mReferencedByList.mResourceIdNames.Contains(renderGroup->ResourceIdName) == false)
+      // If this resource is not in the runtime list of the found resource then
+      // this is a newly added resource
+      if (material->mReferencedByList.mResourceIdNames.Contains(
+              renderGroup->ResourceIdName) == false)
         ResourceListResourceAdded(renderGroup, material, &resourceIdName);
     }
   }
 }
 
-//**************************************************************************************************
 void ResolveRenderGroupHierarchy(RenderGroup* renderGroup)
 {
-  // For valid entries the idName is reassigned to resolve resource renames or new resources
-  // matching an old entry by name. Also sets internal pointers in case it's newly resolved.
-  // Redundantly setting is okay.
+  // For valid entries the idName is reassigned to resolve resource renames or
+  // new resources matching an old entry by name. Also sets internal pointers in
+  // case it's newly resolved. Redundantly setting is okay.
 
   // Resolve parent if valid.
-  RenderGroup* parentGroup = RenderGroupManager::Instance->FindOrNull(renderGroup->mParentRenderGroup);
+  RenderGroup* parentGroup =
+      RenderGroupManager::Instance->FindOrNull(renderGroup->mParentRenderGroup);
   if (parentGroup != nullptr && !renderGroup->IsSubRenderGroup(parentGroup))
   {
     renderGroup->mParentRenderGroup = parentGroup->ResourceIdName;
     renderGroup->SetParentInternal(parentGroup);
   }
 
-  for (size_t i = 0; i < renderGroup->mChildRenderGroups.mResourceIdNames.Size(); ++i)
+  for (size_t i = 0;
+       i < renderGroup->mChildRenderGroups.mResourceIdNames.Size();
+       ++i)
   {
     // Resolve child if valid.
     String& idName = renderGroup->mChildRenderGroups.mResourceIdNames[i];
@@ -373,12 +348,11 @@ void ResolveRenderGroupHierarchy(RenderGroup* renderGroup)
   }
 }
 
-//**************************************************************************************************
 void ResolveRenderGroupHierarchies()
 {
   Array<Resource*> renderGroups;
   RenderGroupManager::Instance->EnumerateResources(renderGroups);
-  forRange (Resource* resource, renderGroups.All())
+  forRange(Resource * resource, renderGroups.All())
   {
     RenderGroup* group = (RenderGroup*)resource;
     ResolveRenderGroupHierarchy(group);

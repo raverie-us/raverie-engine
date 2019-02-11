@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -16,4 +11,4 @@ void DeveloperNotes::Serialize(Serializer& stream)
   SerializeNameDefault(mDate, String());
 }
 
-}//namespace Zero
+} // namespace Zero

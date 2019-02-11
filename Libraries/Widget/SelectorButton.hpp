@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SelectorButton.hpp
-/// Declaration of the SelectorButton control.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,7 +7,6 @@ namespace Zero
 class ObjectEvent;
 class TextButton;
 
-//-------------------------------------------------------------- Selector Button
 /// Sends Events::ItemSelected when the selection has changed.
 class SelectorButton : public Composite
 {
@@ -37,13 +28,16 @@ public:
   void SetSelectedItem(int index, bool sendEvent);
   int GetSelectedItem();
 
-  /// Are the values being displayed selectable? 
+  /// Are the values being displayed selectable?
   void SetSelectable(bool selectable);
 
   /// Get the index of the Button being hovered over by the mouse
-  int GetHoverItem( ) { return mHoverItem; }
+  int GetHoverItem()
+  {
+    return mHoverItem;
+  }
 
-  ListSource* GetDataSource( );
+  ListSource* GetDataSource();
 
   void CreateButton(StringParam name);
 
@@ -65,4 +59,4 @@ public:
   bool mAllowSelect;
 };
 
-}//namespace Zero
+} // namespace Zero

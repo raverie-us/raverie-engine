@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextContent.hpp
-/// Declaration of the Script content classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -23,19 +15,17 @@ public:
   TextContent();
 };
 
-
 class BaseTextBuilder : public DirectBuilderComponent
 {
 public:
   ZilchDeclareType(BaseTextBuilder, TypeCopyMode::ReferenceType);
 
   void Generate(ContentInitializer& initializer) override;
-  BaseTextBuilder(uint order, StringParam extension, StringParam resourceName)
-    :DirectBuilderComponent(order, extension, resourceName) 
+  BaseTextBuilder(uint order, StringParam extension, StringParam resourceName) :
+      DirectBuilderComponent(order, extension, resourceName)
   {
   }
 };
-
 
 const String TextResourceName = "Text";
 const String TextExtension = ".txt";
@@ -46,13 +36,13 @@ class TextBuilder : public BaseTextBuilder
 public:
   ZilchDeclareType(TextBuilder, TypeCopyMode::ReferenceType);
 
-  void SetDefaults(){}
-  TextBuilder()
-    :BaseTextBuilder(15, TextExtension, TextResourceName) 
+  void SetDefaults()
+  {
+  }
+  TextBuilder() : BaseTextBuilder(15, TextExtension, TextResourceName)
   {
   }
 };
-
 
 const String ZilchScriptResourceName = "ZilchScript";
 
@@ -62,10 +52,15 @@ class ZilchScriptBuilder : public BaseTextBuilder
 public:
   ZilchDeclareType(ZilchScriptBuilder, TypeCopyMode::ReferenceType);
 
-  void SetDefaults(){}
+  void SetDefaults()
+  {
+  }
 
-  ZilchScriptBuilder()
-    :BaseTextBuilder(15, FileExtensionManager::GetZilchScriptTypeEntry()->GetDefaultExtensionWithDot(), ZilchScriptResourceName) 
+  ZilchScriptBuilder() :
+      BaseTextBuilder(15,
+                      FileExtensionManager::GetZilchScriptTypeEntry()
+                          ->GetDefaultExtensionWithDot(),
+                      ZilchScriptResourceName)
   {
   }
 };
@@ -75,14 +70,20 @@ class ZilchFragmentBuilder : public BaseTextBuilder
 public:
   ZilchDeclareType(ZilchFragmentBuilder, TypeCopyMode::ReferenceType);
 
-  void SetDefaults(){}
+  void SetDefaults()
+  {
+  }
 
   ZilchFragmentBuilder()
-    // Increase the load order to 9 so that these load before materials
-    // (since a material may need the block created from this fragment)
-    :BaseTextBuilder(9, FileExtensionManager::GetZilchFragmentTypeEntry()->GetDefaultExtensionWithDot(), "ZilchFragment")
+      // Increase the load order to 9 so that these load before materials
+      // (since a material may need the block created from this fragment)
+      :
+      BaseTextBuilder(9,
+                      FileExtensionManager::GetZilchFragmentTypeEntry()
+                          ->GetDefaultExtensionWithDot(),
+                      "ZilchFragment")
   {
   }
 };
 
-}//Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextResource.hpp
-/// Implementation of simple text resource.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -18,12 +10,11 @@ TextBlock::TextBlock()
 
 TextBlock::~TextBlock()
 {
-
 }
 
 StringRange TextBlock::LoadTextData()
 {
-  if(Text.Empty())
+  if (Text.Empty())
     Text = ReadFileIntoString(LoadPath.c_str());
   return Text.All();
 }
@@ -31,14 +22,14 @@ StringRange TextBlock::LoadTextData()
 void TextBlock::Save(StringParam filename)
 {
   LoadPath = filename;
-  //Write the data out to the file
+  // Write the data out to the file
   WriteStringRangeToFile(filename, Text);
 }
 
 ZilchDefineType(TextBlock, builder, type)
 {
   ZilchBindGetterProperty(Text);
-  
+
   ZeroBindDocumented();
 }
 
@@ -57,10 +48,12 @@ void TextBlock::ReloadData(StringRange data)
 {
   Text = data;
 
-  //Resource has been modified. Some objects (SpriteTextBlock) may need to reload data.
+  // Resource has been modified. Some objects (SpriteTextBlock) may need to
+  // reload data.
   ResourceEvent event;
   event.EventResource = this;
-  TextBlockManager::GetInstance()->DispatchEvent(Events::ResourceModified, &event);
+  TextBlockManager::GetInstance()->DispatchEvent(Events::ResourceModified,
+                                                 &event);
 }
 
 String TextBlock::GetFormat()
@@ -97,14 +90,15 @@ class TextBlockLoader : public ResourceLoader
 
 ImplementResourceManager(TextBlockManager, TextBlock);
 
-TextBlockManager::TextBlockManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+TextBlockManager::TextBlockManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("Text", new TextBlockLoader());
   DefaultResourceName = "DefaultTextBlock";
   mCanDuplicate = true;
   mCanAddFile = true;
-  mOpenFileFilters.PushBack(FileDialogFilter("All Text Blocks", "*.txt;*.data"));
+  mOpenFileFilters.PushBack(
+      FileDialogFilter("All Text Blocks", "*.txt;*.data"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.txt"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.data"));
   mCanReload = true;
@@ -112,4 +106,4 @@ TextBlockManager::TextBlockManager(BoundType* resourceType)
   mExtension = "txt";
 }
 
-}
+} // namespace Zero

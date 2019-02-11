@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file WidgetEvents.hpp
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,20 +6,19 @@ namespace Zero
 
 namespace Events
 {
-  // Focus on Object
-  DeclareEvent(UiFocusGainedPreview);
-  DeclareEvent(UiFocusGained);
-  DeclareEvent(UiFocusLost);
+// Focus on Object
+DeclareEvent(UiFocusGainedPreview);
+DeclareEvent(UiFocusGained);
+DeclareEvent(UiFocusLost);
 
-  DeclareEvent(UiFocusLostHierarchy);
-  DeclareEvent(UiFocusGainedHierarchy);
+DeclareEvent(UiFocusLostHierarchy);
+DeclareEvent(UiFocusGainedHierarchy);
 
-  // Any focus operation should be canceled. This happens when 
-  DeclareEvent(UiFocusReset);
+// Any focus operation should be canceled. This happens when
+DeclareEvent(UiFocusReset);
 
-}//namespace Events
+} // namespace Events
 
-//------------------------------------------------------------------ Focus Event
 class UiFocusEvent : public Event
 {
 public:
@@ -39,11 +31,12 @@ public:
   /// The object that is gaining focus.
   HandleOf<UiWidget> mReceivedFocus;
 
-  /// The object that has lost focus, or will lose focus (in the case of preview).
+  /// The object that has lost focus, or will lose focus (in the case of
+  /// preview).
   HandleOf<UiWidget> mLostFocus;
 
   /// On UiFocusGainedPreview, allows you to cancel the focus gain.
   bool mCancelFocus;
 };
 
-}//namespace Zero
+} // namespace Zero

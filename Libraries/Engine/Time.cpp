@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Time.cpp
-/// Implementation of time system and time space component.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,23 +6,25 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(SystemLogicUpdate);
-  DefineEvent(FrameUpdate);
-  DefineEvent(GraphicsFrameUpdate);
-  DefineEvent(LogicUpdate);
-  DefineEvent(PreviewUpdate);
-  DefineEvent(EngineUpdate);
-  DefineEvent(EngineDebuggerUpdate);
-  DefineEvent(EngineShutdown);
-  DefineEvent(ActionFrameUpdate);
-  DefineEvent(ActionLogicUpdate);
-}
+DefineEvent(SystemLogicUpdate);
+DefineEvent(FrameUpdate);
+DefineEvent(GraphicsFrameUpdate);
+DefineEvent(LogicUpdate);
+DefineEvent(PreviewUpdate);
+DefineEvent(EngineUpdate);
+DefineEvent(EngineDebuggerUpdate);
+DefineEvent(EngineShutdown);
+DefineEvent(ActionFrameUpdate);
+DefineEvent(ActionLogicUpdate);
+} // namespace Events
 
 const float cFixedDt = (1.0f / 60.0f);
 
-System* CreateTimeSystem(){ return new TimeSystem();}
+System* CreateTimeSystem()
+{
+  return new TimeSystem();
+}
 
-//----------------------------------------------------------------- Update Event
 ZilchDefineType(UpdateEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -39,12 +33,17 @@ ZilchDefineType(UpdateEvent, builder, type)
   ZilchBindFieldProperty(RealTimePassed);
 }
 
-UpdateEvent::UpdateEvent(float dt, float realDt, float timePassed, float realTimePassed)
-  : Dt(dt), RealDt(realDt), TimePassed(timePassed), RealTimePassed(realTimePassed)
+UpdateEvent::UpdateEvent(float dt,
+                         float realDt,
+                         float timePassed,
+                         float realTimePassed) :
+    Dt(dt),
+    RealDt(realDt),
+    TimePassed(timePassed),
+    RealTimePassed(realTimePassed)
 {
 }
 
-//-------------------------------------------------------------------Time Space
 ZilchDefineType(TimeSpace, builder, type)
 {
   ZeroBindComponent();
@@ -78,7 +77,7 @@ ZilchDefineType(TimeSpace, builder, type)
 TimeSpace::TimeSpace()
 {
   mTimeSystem = NULL;
-  
+
   mPaused = false;
   mFrame = 0;
 
@@ -111,14 +110,14 @@ void TimeSpace::Initialize(CogInitializer& initializer)
 
 float TimeSpace::GetDtOrZero()
 {
-  if(GetGloballyPaused())
+  if (GetGloballyPaused())
     return 0.0f;
   return mScaledClampedDt;
 }
 
 bool TimeSpace::GetGloballyPaused()
 {
-  if(GameSession* gameSession = this->GetGameSession())
+  if (GameSession* gameSession = this->GetGameSession())
     return mPaused || gameSession->mPaused;
   return mPaused;
 }
@@ -135,27 +134,28 @@ void TimeSpace::SetTimeScale(float timeScale)
 
 void TimeSpace::Update(float dt)
 {
-  //Enable for logic update loop only in debug
+  // Enable for logic update loop only in debug
   FpuExceptionsEnablerDebug();
 
   Space* space = GetSpace();
 
-  // If this is a preview space and we're sending out update (should include any special preview update)
-  // we don't want notifications to happen which we're previewing, as its very annoying to the user
+  // If this is a preview space and we're sending out update (should include any
+  // special preview update) we don't want notifications to happen which we're
+  // previewing, as its very annoying to the user
   NotificationCallback notify = nullptr;
-  if(space->IsPreviewMode())
+  if (space->IsPreviewMode())
     notify = IgnoreDoNotify;
   TemporaryDoNotifyOverride doNotifyOverride(notify);
   Array<NotificationCallback>& cb = Z::gNotifyCallbackStack;
   space->CheckForChangedObjects();
 
-  //push on id of this space for the debug drawer so anyone who debug
-  //draws will by default be in the correct space.
-  //Debug::DefaultConfig config;
-  //config.SpaceId(this->GetOwner()->GetId().Id);
+  // push on id of this space for the debug drawer so anyone who debug
+  // draws will by default be in the correct space.
+  // Debug::DefaultConfig config;
+  // config.SpaceId(this->GetOwner()->GetId().Id);
   Debug::ActiveDrawSpace drawSpace(GetOwner()->GetId().Id);
 
-  mRealDt = dt;  
+  mRealDt = dt;
 
   if (mTimeMode == TimeMode::FixedFrametime)
   {
@@ -184,7 +184,8 @@ void TimeSpace::Update(float dt)
     mScaledClampedTimePassed += mScaledClampedDt;
 
     EventDispatcher* dispatcher = GetOwner()->GetDispatcher();
-    UpdateEvent updateEvent(mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
+    UpdateEvent updateEvent(
+        mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
 
     {
       ProfileScopeTree("FrameUpdate", "TimeSystem", Color::PaleGoldenrod);
@@ -192,22 +193,23 @@ void TimeSpace::Update(float dt)
     }
 
     {
-      ProfileScopeTree("ActionFrameUpdateEvent", "TimeSystem", Color::BlueViolet);
+      ProfileScopeTree(
+          "ActionFrameUpdateEvent", "TimeSystem", Color::BlueViolet);
       dispatcher->Dispatch(Events::ActionFrameUpdate, &updateEvent);
     }
 
-    if(space->IsPreviewMode())
+    if (space->IsPreviewMode())
     {
       ProfileScopeTree("PreviewUpdateEvent", "TimeSystem", Color::Gainsboro);
       dispatcher->Dispatch(Events::PreviewUpdate, &updateEvent);
     }
 
-    if(!GetGloballyPaused())
+    if (!GetGloballyPaused())
       Step();
 
     {
-      //ProfileScopeTree("GraphicsFrameUpdate", "TimeSystem", Color::SkyBlue);
-      //dispatcher->Dispatch(Events::GraphicsFrameUpdate, &updateEvent);
+      // ProfileScopeTree("GraphicsFrameUpdate", "TimeSystem", Color::SkyBlue);
+      // dispatcher->Dispatch(Events::GraphicsFrameUpdate, &updateEvent);
     }
   }
 }
@@ -225,7 +227,8 @@ void TimeSpace::SetPaused(bool state)
 void TimeSpace::Step()
 {
   EventDispatcher* dispatcher = GetOwner()->GetDispatcher();
-  UpdateEvent updateEvent(mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
+  UpdateEvent updateEvent(
+      mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
 
   {
     ProfileScopeTree("SystemLogicUpdate", "TimeSystem", Color::RoyalBlue);
@@ -238,7 +241,8 @@ void TimeSpace::Step()
   }
 
   {
-    ProfileScopeTree("ActionLogicUpdateEvent", "TimeSystem", Color::BlanchedAlmond);
+    ProfileScopeTree(
+        "ActionLogicUpdateEvent", "TimeSystem", Color::BlanchedAlmond);
     dispatcher->Dispatch(Events::ActionLogicUpdate, &updateEvent);
   }
 }
@@ -253,7 +257,6 @@ void TimeSpace::SetTimeMode(TimeMode::Enum value)
   mTimeMode = value;
 }
 
-//-------------------------------------------------------------------Time System
 ZilchDefineType(TimeSystem, builder, type)
 {
 }
@@ -279,7 +282,6 @@ TimeSystem::TimeSystem()
 
 TimeSystem::~TimeSystem()
 {
-
 }
 
 void TimeSystem::Update(bool debugger)
@@ -288,12 +290,12 @@ void TimeSystem::Update(bool debugger)
   float dt = (float)mTimer.TimeDelta();
 
   // The frame rate is normally limited by graphics vertical sync
-  // but on some systems the vertical sync is disabled by the driver or the user.
-  // Instead of wastefully drawing at maximum speed this try to sleep for the 
-  // the rest of the frame. This reduces heat and power use on laptops.
+  // but on some systems the vertical sync is disabled by the driver or the
+  // user. Instead of wastefully drawing at maximum speed this try to sleep for
+  // the the rest of the frame. This reduces heat and power use on laptops.
   if (mLimitFrameRate)
   {
-    //ProfileScopeTree("Limiter", "Engine", Color::Green);
+    // ProfileScopeTree("Limiter", "Engine", Color::Green);
     const int limitError = 1;
     const int limitframeTimeMs = int(1.0f / float(mFrameRate) * 1000.0f);
     int frameTime = int(dt * 1000.0f) + limitError;
@@ -366,4 +368,4 @@ void TimeSystem::OnProjectCogModified(Event* event)
   }
 }
 
-}//namespace Zero
+} // namespace Zero

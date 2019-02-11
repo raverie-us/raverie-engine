@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,18 +10,35 @@ template <typename EnumType>
 class ByteEnum
 {
 public:
-  ByteEnum() {}
-  ByteEnum(EnumType value) : mValue(value) {}
-  ByteEnum& operator=(EnumType value) {mValue = value; return *this;}
+  ByteEnum()
+  {
+  }
+  ByteEnum(EnumType value) : mValue(value)
+  {
+  }
+  ByteEnum& operator=(EnumType value)
+  {
+    mValue = value;
+    return *this;
+  }
 
-  operator EnumType() const { return (const EnumType)mValue; }
+  operator EnumType() const
+  {
+    return (const EnumType)mValue;
+  }
 
   byte mValue;
 };
 
-#define DeclareByteEnumGetSet(enumType, name)         \
-  ByteEnum<enumType> m##name;                         \
-  enumType Get##name() { return m##name; }            \
-  void Set##name(enumType value) { m##name = value; }
+#define DeclareByteEnumGetSet(enumType, name)                                  \
+  ByteEnum<enumType> m##name;                                                  \
+  enumType Get##name()                                                         \
+  {                                                                            \
+    return m##name;                                                            \
+  }                                                                            \
+  void Set##name(enumType value)                                               \
+  {                                                                            \
+    m##name = value;                                                           \
+  }
 
 } // namespace Zero

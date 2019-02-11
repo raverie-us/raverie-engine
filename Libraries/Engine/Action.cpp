@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Action.cpp
-/// Implementation of the action system.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -49,7 +41,6 @@ void Action::Cancel()
   mFlags.SetFlag(ActionFlag::NotActive);
 }
 
-//------------------------------------------------------------ Action Support
 
 void RemoveAndDecRef(InActionList& list, Action* action)
 {
@@ -61,7 +52,9 @@ void RemoveAndDecRef(InActionList& list, Action* action)
 
 void AddToListAndIncRef(InActionList& list, Action* action)
 {
-  ReturnIf(action->mFlags.IsSet(ActionFlag::Linked),,"Invalid Add. Action is already on a list.");
+  ReturnIf(action->mFlags.IsSet(ActionFlag::Linked),
+           ,
+           "Invalid Add. Action is already on a list.");
   action->mFlags.SetFlag(ActionFlag::Linked);
   list.PushBack(action);
   action->AddReference();
@@ -71,7 +64,7 @@ void ReleaseActions(InActionList& list)
 {
   // Iterator safe release all actions
   InList<Action>::iterator actionIt = list.Begin();
-  for(;actionIt!=list.End();)
+  for (; actionIt != list.End();)
   {
     Action* action = actionIt;
     ++actionIt;
@@ -83,14 +76,14 @@ void ReleaseActions(InActionList& list)
 void CancelActions(InActionList& list)
 {
   InList<Action>::iterator actionIt = list.Begin();
-  for(;actionIt!=list.End();++actionIt)
+  for (; actionIt != list.End(); ++actionIt)
     actionIt->Cancel();
 }
 
 ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
 {
   InList<Action>::iterator actionIt = list.Begin();
-  for(;actionIt!=list.End();)
+  for (; actionIt != list.End();)
   {
     Action* action = actionIt;
 
@@ -100,7 +93,7 @@ ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
 
     // Action are only removed from lists in this function
     // this prevents modification during iteration errors
-    if(action->mFlags.IsSet(ActionFlag::NotActive))
+    if (action->mFlags.IsSet(ActionFlag::NotActive))
     {
       // Remove from list
       RemoveAndDecRef(list, action);
@@ -110,11 +103,11 @@ ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
     // Update the action
     ActionState::Enum state = action->Update(dt);
 
-    if(state != ActionState::Completed)
+    if (state != ActionState::Completed)
     {
       // Blocking action list stop on first non completed
       // action
-      if(blocking)
+      if (blocking)
         return ActionState::Running;
     }
     else
@@ -130,21 +123,18 @@ ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
     }
   }
 
-  if(list.Empty())
+  if (list.Empty())
     return ActionState::Completed;
   else
     return ActionState::Running;
 }
 
 
-//------------------------------------------------------------ ActionSet
-
 ZilchDefineType(ActionSet, builder, type)
 {
   ZeroBindDocumented();
 }
 
-//------------------------------------------------------------ Actions
 
 ZilchDefineType(Actions, builder, type)
 {
@@ -162,7 +152,7 @@ Actions::~Actions()
 {
   ReleaseActions(mLogicActions);
   ReleaseActions(mFrameActions);
-  if(mActive)
+  if (mActive)
     mSpace->ActiveLists.Erase(this);
 }
 
@@ -179,14 +169,14 @@ void Actions::Add(Action* action)
 
 void Actions::Add(Action* action, ActionExecuteMode::Enum mode)
 {
-  if(!mActive)
+  if (!mActive)
   {
     // Activate this action object so it gets updates
     mSpace->ActiveLists.PushBack(this);
     mActive = true;
   }
 
-  if(mode == ActionExecuteMode::FrameUpdate)
+  if (mode == ActionExecuteMode::FrameUpdate)
     AddToListAndIncRef(mFrameActions, action);
   else
     AddToListAndIncRef(mLogicActions, action);
@@ -204,23 +194,22 @@ ActionState::Enum Actions::Update(float dt)
 
 void Actions::Update(float dt, float realDt, ActionExecuteMode::Enum mode)
 {
-  if(mRealTime)
+  if (mRealTime)
     dt = realDt;
 
-  if(mode == ActionExecuteMode::FrameUpdate)
+  if (mode == ActionExecuteMode::FrameUpdate)
     ProcessActions(mFrameActions, dt, false);
   else
     ProcessActions(mLogicActions, dt, false);
-  
+
   // Remove from list for update efficiency
-  if(IsEmpty())
+  if (IsEmpty())
   {
     mSpace->ActiveLists.Erase(this);
     mActive = false;
   }
 }
 
-//------------------------------------------------------------ ActionGroup
 
 ZilchDefineType(ActionGroup, builder, type)
 {
@@ -229,7 +218,6 @@ ZilchDefineType(ActionGroup, builder, type)
 
 ActionGroup::ActionGroup()
 {
-
 }
 
 ActionGroup::ActionGroup(Object* object, ActionExecuteMode::Enum mode)
@@ -263,7 +251,6 @@ void ActionGroup::CancelOverride()
   CancelActions(mActions);
 }
 
-//------------------------------------------------------------ ActionSequence
 
 ZilchDefineType(ActionSequence, builder, type)
 {
@@ -272,7 +259,6 @@ ZilchDefineType(ActionSequence, builder, type)
 
 ActionSequence::ActionSequence()
 {
-
 }
 
 ActionSequence::ActionSequence(Object* object, ActionExecuteMode::Enum mode)
@@ -307,4 +293,4 @@ ActionState::Enum ActionSequence::Update(float dt)
   return ProcessActions(mActions, dt, true);
 }
 
-}
+} // namespace Zero

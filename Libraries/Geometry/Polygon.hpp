@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Polygon.hpp
-/// Declaration of the Polygon class.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012, DigiPen Institute of Technology
-///
-//////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,6 @@ namespace Zero
 
 DeclareEnum3(ShapeSegResult, None, Point, Segment);
 
-//---------------------------------------------------------------------- Polygon
 class Polygon
 {
 public:
@@ -61,7 +52,7 @@ public:
   /// Grows the polygon by the given distance and stores the result in
   /// the given output polygon.
   void Grow(real distance, bool beaking, Polygon* output);
-  
+
   /// Grows the polygon by the given distance.
   void Grow(real distance, bool beaking);
 
@@ -76,7 +67,7 @@ public:
 
   /// Forces the polygon to be counter clockwise.
   void MakeCounterClockwise();
-  
+
   /// Forces the polygon to be clockwise.
   void MakeClockwise();
 
@@ -108,7 +99,7 @@ public:
   /// Constructs the axis-aligned bounding box of the polygon.
   Aabb GetBoundingBox();
 
-  ///Returns the bisector of the given vectors.
+  /// Returns the bisector of the given vectors.
   Vec2 GetBisector(Vec2Param v0, Vec2Param v1);
 
   /// Returns whether or not the given point is inside the polygon.
@@ -125,8 +116,12 @@ public:
   bool Validate(Array<String>& errors) const;
 
   /// Debug draw.
-  void DebugDraw(ByteColor color, bool windingOrder = false, float depth = 0.0f);
-  void DebugDraw(ByteColor color, Mat4Param transform, bool windingOrder = false,
+  void DebugDraw(ByteColor color,
+                 bool windingOrder = false,
+                 float depth = 0.0f);
+  void DebugDraw(ByteColor color,
+                 Mat4Param transform,
+                 bool windingOrder = false,
                  float depth = 0.0f);
   void DebugDrawFilled(ByteColor color, Mat4Param transform) const;
 
@@ -145,22 +140,26 @@ public:
     Edge Front();
     void PopFront();
     bool Empty();
-    range& All() { return *this; }
+    range& All()
+    {
+      return *this;
+    }
 
   private:
     uint mCurrIndex;
     Polygon& mPolygon;
   };
 
-//----------------------------------------------------------------------- Data
+  //----------------------------------------------------------------------- Data
 public:
   /// Each vertex in the polygon.
   Array<Vec2> mData;
 };
 
-//---------------------------------------------------------------------- Helpers
-ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segmentEndA,
-                                         Vec2Param segmentStartB, Vec2Param segmentEndB, 
+ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA,
+                                         Vec2Param segmentEndA,
+                                         Vec2Param segmentStartB,
+                                         Vec2Param segmentEndB,
                                          Vec2 intersectionPoints[2]);
 
 float PolygonQuantizeFloat(float value);
@@ -169,5 +168,4 @@ float PolygonQuantizeFloat(float value);
 void TransformPolygon(Mat4Param matrix, Polygon* polygon);
 void TransformPolygon(Mat3Param matrix, Polygon* polygon);
 
-} //namespace Geometry
-
+} // namespace Zero

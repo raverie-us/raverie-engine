@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PopUp.hpp
-/// Declaration of the PopUp.
-///
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,7 +9,7 @@ extern const String cPopUpLight;
 
 namespace Events
 {
-  DeclareEvent(PopUpClosed);
+DeclareEvent(PopUpClosed);
 }
 
 /// Composite with a background and drop shadow
@@ -28,13 +20,13 @@ public:
   FloatingComposite(Composite* parent, StringParam className = cPopUpNormal);
 
   void UpdateTransform() override;
-  //Fade in the PopUp
+  // Fade in the PopUp
   void FadeIn(float time = 0.1f);
-  //Fade out the PopUp
+  // Fade out the PopUp
   void FadeOut(float time = 0.1f);
   void Slide(Vec3Param offset, float time);
 
-  //Internals
+  // Internals
   Element* mBorder;
   Element* mBackground;
   Element* mDropShadow;
@@ -42,21 +34,23 @@ public:
 
 DeclareEnum3(PopUpCloseMode, MouseOutTarget, MouseDistance, DisableClose);
 
-///A Floating Pop Up Mix in class.
+/// A Floating Pop Up Mix in class.
 class PopUp : public FloatingComposite
 {
 public:
   ZilchDeclareType(PopUp, TypeCopyMode::ReferenceType);
   /// Popup will attach to the root widget of the target and disappear if
   /// the mouse moves outside the target, or the mouse moves away from the popup
-  PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className = cPopUpNormal);
+  PopUp(Widget* target,
+        PopUpCloseMode::Enum popCloseMode,
+        StringParam className = cPopUpNormal);
 
-  //Position the PopUp below the mouse.
+  // Position the PopUp below the mouse.
   void SetBelowMouse(Mouse* mouse, Vec2 offset);
-  //Shift to be visible on screen
+  // Shift to be visible on screen
   virtual void ShiftOntoScreen(Vec3 offset);
 
-  //Events
+  // Events
   void OnMouseMove(MouseEvent* event);
   void OnKeyDown(KeyboardEvent* event);
   virtual void OnFocusOut(FocusEvent* event);
@@ -64,10 +58,10 @@ public:
   virtual void OnAnyGained(FocusEvent* event);
   void OnTargetMouseExit(MouseEvent* event);
 
-  //Internals
+  // Internals
   bool mMoved;
   PopUpCloseMode::Enum mCloseMode;
   HandleOf<Widget> mTarget;
 };
 
-}//namespace Zero
+} // namespace Zero

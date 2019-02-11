@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -32,7 +27,7 @@ struct PositionJoint : public Joint
   DeclareAnchorAccessors(PositionJoint, mAnchors);
 
   PositionJoint();
-  
+
   // Component Interface
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -64,8 +59,8 @@ struct PositionJoint : public Joint
   static JointInfo sInfo;
 };
 
-}//namespace Physics
+} // namespace Physics
 
 typedef Physics::PositionJoint PositionJoint;
 
-}//namespace Zero
+} // namespace Zero

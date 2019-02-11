@@ -1,15 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
   Linear Constraint:
   Let i correspond the 3 basis vectors formed from the shock axis and two
-  orthonormal vectors (t1,t2) to the shock axis where 
+  orthonormal vectors (t1,t2) to the shock axis where
   i = 0 -> t1, i = 1 -> t2, i = 2 -> shock axis
   Ci   : dot(p2 - p1,i) = 0
   Ci   : dot(c2 + r2 - c1 - r1,i) = 0
@@ -21,7 +16,7 @@
 
   Angular Constraint:
   Let i correspond the 3 basis vectors formed from the motor axis and two
-  orthonormal vectors (t1,t2) to the motor axis where 
+  orthonormal vectors (t1,t2) to the motor axis where
   i = 0 -> t1, i = 1 -> t2, i = 2 -> motor axis
   Let i correspond to the x,y,z axes
   Ci   : theta2_i - theta1_i = 0
@@ -100,7 +95,7 @@ void WheelJoint::ComputeInitialConfiguration()
   // The axis can't do anything on the z axis, so make sure to remove that
   real length = axis.AttemptNormalize();
   // If we got an invalid axis then just use the y axis...
-  if(length == real(0.0))
+  if (length == real(0.0))
     axis = Vec3::cYAxis;
   SetWorldShockAxis(axis);
   SetWorldAxis(axis);
@@ -108,8 +103,8 @@ void WheelJoint::ComputeInitialConfiguration()
 
 void WheelJoint::ComponentAdded(BoundType* typeId, Component* component)
 {
-  Joint::ComponentAdded(typeId,component);
-  if(typeId == ZilchTypeId(JointLimit))
+  Joint::ComponentAdded(typeId, component);
+  if (typeId == ZilchTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -122,7 +117,7 @@ void WheelJoint::ComputeMoleculeData(MoleculeData& moleculeData)
   WorldAxisAtom worldAxes(mAxes, GetCollider(0), GetCollider(1));
   WorldAxisAtom worldShockAxes(mShockAxes, GetCollider(0), GetCollider(1));
   moleculeData.SetUp(&mAnchors, nullptr, &mAxes, this);
-  
+
   moleculeData.SetLinearBasis(worldShockAxes.mWorldAxes[0]);
   moleculeData.SetAngularBasis(moleculeData.mAxes[0]);
 }
@@ -132,7 +127,10 @@ void WheelJoint::UpdateAtoms()
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  UpdateAtomsFragment(this, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
+  UpdateAtomsFragment(this,
+                      sInfo.mAtomCount,
+                      moleculeData,
+                      DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 uint WheelJoint::MoleculeCount() const
@@ -145,7 +143,11 @@ void WheelJoint::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
+  ComputeMoleculesFragment(this,
+                           molecules,
+                           sInfo.mAtomCount,
+                           moleculeData,
+                           DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 void WheelJoint::WarmStart(MoleculeWalker& molecules)
@@ -173,12 +175,16 @@ void WheelJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
+  ComputePositionMoleculesFragment(this,
+                                   molecules,
+                                   sInfo.mAtomCount,
+                                   moleculeData,
+                                   DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 void WheelJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
@@ -191,12 +197,13 @@ void WheelJoint::DebugDraw()
   DrawAxisAtomFragment(mShockAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint WheelJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint WheelJoint::GetAtomIndexFilter(uint atomIndex,
+                                    real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 3)
+  if (atomIndex < 3)
     return LinearAxis;
-  else if(atomIndex < 6)
+  else if (atomIndex < 6)
     return AngularAxis;
   return 0;
 }
@@ -234,7 +241,7 @@ void WheelJoint::SetShockAxis(Vec3Param axis)
 Vec3 WheelJoint::GetWorldShockAxis() const
 {
   Collider* collider = GetCollider(0);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return Vec3::cZero;
 
   return JointHelpers::BodyToWorldR(collider, mShockAxes.mBodyAxes[0]);
@@ -243,19 +250,19 @@ Vec3 WheelJoint::GetWorldShockAxis() const
 void WheelJoint::SetWorldShockAxis(Vec3Param axis)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "ShockAxis", GetShockAxis());
 
-  if(axis == Vec3::cZero)
+  if (axis == Vec3::cZero)
     return;
 
   Collider* collider = GetCollider(0);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return;
 
   mShockAxes.mBodyAxes[0] = JointHelpers::WorldToBodyR(collider, axis);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

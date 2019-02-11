@@ -1,72 +1,67 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
-  /// Component to store the copyright info of a content item.
-  class ContentCopyright : public ContentComponent
-  {
-  public:
-    ZilchDeclareType(ContentCopyright, TypeCopyMode::ReferenceType);
+/// Component to store the copyright info of a content item.
+class ContentCopyright : public ContentComponent
+{
+public:
+  ZilchDeclareType(ContentCopyright, TypeCopyMode::ReferenceType);
 
-    String Owner;
-    String Date;
+  String Owner;
+  String Date;
 
-    void Serialize(Serializer& stream);
-  };
+  void Serialize(Serializer& stream);
+};
 
-  /// Stores the history in mercurial of this content item.
-  class ContentHistory : public ContentComponent
-  {
-  public:
-    ZilchDeclareType(ContentHistory, TypeCopyMode::ReferenceType);
+/// Stores the history in mercurial of this content item.
+class ContentHistory : public ContentComponent
+{
+public:
+  ZilchDeclareType(ContentHistory, TypeCopyMode::ReferenceType);
 
-    Array<Revision> mRevisions;
+  Array<Revision> mRevisions;
 
-    void Initialize(ContentComposition* item);
-  };
+  void Initialize(ContentComposition* item);
+};
 
-  /// Stores any user notes about the content item.
-  class ContentNotes : public ContentComponent
-  {
-  public:
-    ZilchDeclareType(ContentNotes, TypeCopyMode::ReferenceType);
+/// Stores any user notes about the content item.
+class ContentNotes : public ContentComponent
+{
+public:
+  ZilchDeclareType(ContentNotes, TypeCopyMode::ReferenceType);
 
-    String Notes;
+  String Notes;
 
-    void Serialize(Serializer& stream);
-  };
+  void Serialize(Serializer& stream);
+};
 
-  /// Stores any options for the content item that will effect the item's
-  /// uses in editor vs in game.
-  class ContentEditorOptions : public ContentComponent
-  {
-  public:
-    ZilchDeclareType(ContentEditorOptions, TypeCopyMode::ReferenceType);
+/// Stores any options for the content item that will effect the item's
+/// uses in editor vs in game.
+class ContentEditorOptions : public ContentComponent
+{
+public:
+  ZilchDeclareType(ContentEditorOptions, TypeCopyMode::ReferenceType);
 
-    void Serialize(Serializer& stream) override;
-    void Initialize(ContentComposition* item) override;
-    
-    bool mShowInEditor;
-  };
+  void Serialize(Serializer& stream) override;
+  void Initialize(ContentComposition* item) override;
 
-  /// When added 
-  class ResourceTemplate : public ContentComponent
-  {
-  public:
-    ZilchDeclareType(ResourceTemplate, TypeCopyMode::ReferenceType);
+  bool mShowInEditor;
+};
 
-    void Serialize(Serializer& stream);
+/// When added
+class ResourceTemplate : public ContentComponent
+{
+public:
+  ZilchDeclareType(ResourceTemplate, TypeCopyMode::ReferenceType);
 
-    String mDisplayName;
-    String mDescription;
-    uint mSortWeight;
-    String mCategory;
-    uint mCategorySortWeight;
-  };
-}
+  void Serialize(Serializer& stream);
+
+  String mDisplayName;
+  String mDescription;
+  uint mSortWeight;
+  String mCategory;
+  uint mCategorySortWeight;
+};
+} // namespace Zero

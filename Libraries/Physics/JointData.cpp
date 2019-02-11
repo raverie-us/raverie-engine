@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -34,10 +29,13 @@ JointVelocity::JointVelocity()
 
 JointVelocity::JointVelocity(Joint* joint)
 {
-  JointHelpers::GetVelocities(joint,*this);
+  JointHelpers::GetVelocities(joint, *this);
 }
 
-JointVelocity::JointVelocity(Vec3Param v0, Vec3Param w0, Vec3Param v1, Vec3Param w1)
+JointVelocity::JointVelocity(Vec3Param v0,
+                             Vec3Param w0,
+                             Vec3Param v1,
+                             Vec3Param w1)
 {
   Linear[0] = v0;
   Angular[0] = w0;
@@ -53,7 +51,7 @@ JointMass::JointMass()
 
 JointMass::JointMass(Joint* joint)
 {
-  JointHelpers::GetMasses(joint,*this);
+  JointHelpers::GetMasses(joint, *this);
 }
 
 Jacobian::Jacobian()
@@ -64,7 +62,10 @@ Jacobian::Jacobian()
   Angular[1].ZeroOut();
 };
 
-Jacobian::Jacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1)
+Jacobian::Jacobian(Vec3Param linear0,
+                   Vec3Param angular0,
+                   Vec3Param linear1,
+                   Vec3Param angular1)
 {
   Linear[0] = linear0;
   Angular[0] = angular0;
@@ -72,7 +73,10 @@ Jacobian::Jacobian(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec
   Angular[1] = angular1;
 }
 
-void Jacobian::Set(Vec3Param linear0, Vec3Param angular0, Vec3Param linear1, Vec3Param angular1)
+void Jacobian::Set(Vec3Param linear0,
+                   Vec3Param angular0,
+                   Vec3Param linear1,
+                   Vec3Param angular1)
 {
   Linear[0] = linear0;
   Angular[0] = angular0;
@@ -92,18 +96,27 @@ real Jacobian::ComputeMass(Mass M0, Mat3Param I0, Mass M1, Mat3Param I1) const
 
 real Jacobian::ComputeMass(JointMass& masses)
 {
-  return ComputeMass(masses.mInvMass[0], masses.InverseInertia[0], masses.mInvMass[1], masses.InverseInertia[1]);
+  return ComputeMass(masses.mInvMass[0],
+                     masses.InverseInertia[0],
+                     masses.mInvMass[1],
+                     masses.InverseInertia[1]);
 }
 
-real Jacobian::ComputeJV(Vec3Param v0, Vec3Param w0, Vec3Param v1, Vec3Param w1) const
+real Jacobian::ComputeJV(Vec3Param v0,
+                         Vec3Param w0,
+                         Vec3Param v1,
+                         Vec3Param w1) const
 {
-  return Math::Dot(Linear[0], v0) + Math::Dot(Angular[0], w0) + 
+  return Math::Dot(Linear[0], v0) + Math::Dot(Angular[0], w0) +
          Math::Dot(Linear[1], v1) + Math::Dot(Angular[1], w1);
 }
 
 real Jacobian::ComputeJV(const JointVelocity& velocities)
 {
-  return ComputeJV(velocities.Linear[0], velocities.Angular[0], velocities.Linear[1], velocities.Angular[1]);
+  return ComputeJV(velocities.Linear[0],
+                   velocities.Angular[0],
+                   velocities.Linear[1],
+                   velocities.Angular[1]);
 }
 
 Jacobian Jacobian::operator-() const
@@ -111,7 +124,7 @@ Jacobian Jacobian::operator-() const
   return Jacobian(-Linear[0], -Angular[0], -Linear[1], -Angular[1]);
 }
 
-}//namespace Physics
+} // namespace Physics
 
 JointNode::JointNode()
 {
@@ -124,25 +137,25 @@ JointNode::JointNode()
 
 JointNode::~JointNode()
 {
-  if(mLimit)
+  if (mLimit)
     mLimit->mNode = nullptr;
-  if(mMotor)
+  if (mMotor)
     mMotor->mNode = nullptr;
-  if(mSpring)
+  if (mSpring)
     mSpring->mNode = nullptr;
-  if(mConfigOverride)
+  if (mConfigOverride)
     mConfigOverride->mNode = nullptr;
 }
 
 void JointNode::Destroy()
 {
-  if(mLimit)
+  if (mLimit)
     mLimit->GetOwner()->RemoveComponent(mLimit);
-  if(mMotor)
+  if (mMotor)
     mMotor->GetOwner()->RemoveComponent(mMotor);
-  if(mSpring)
+  if (mSpring)
     mSpring->GetOwner()->RemoveComponent(mSpring);
-  if(mConfigOverride)
+  if (mConfigOverride)
     mConfigOverride->GetOwner()->RemoveComponent(mConfigOverride);
 }
 
@@ -164,4 +177,4 @@ bool JointNode::SpringIndexActive(uint atomIndex)
   return mSpring != nullptr && mSpring->GetAtomIndexActive(flag);
 }
 
-}//namespace Zero
+} // namespace Zero

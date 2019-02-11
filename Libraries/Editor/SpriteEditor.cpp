@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SpriteEditor.cpp
-///
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,22 +7,27 @@ namespace Zero
 // All of this should be switched over to the data driven tweakable system
 namespace SpriteTileViewUi
 {
-  // Grey
-  static Vec4 BorderColor = ToFloatColor(ByteColorRGBA(142, 142, 142, 0));
-  // Faded light blue
-  static Vec4 SelectedBorderColor = ToFloatColor(ByteColorRGBA(63, 169, 245, 255));
-  static Vec4 MouseOverBorderColor = ToFloatColor(ByteColorRGBA(63, 169, 245, 255));
-  // Tile sizes
-  static float MinTileSize = 60.0f;
-  static float MaxTileSize = 500.0f;
-}
+// Grey
+static Vec4 BorderColor = ToFloatColor(ByteColorRGBA(142, 142, 142, 0));
+// Faded light blue
+static Vec4 SelectedBorderColor =
+    ToFloatColor(ByteColorRGBA(63, 169, 245, 255));
+static Vec4 MouseOverBorderColor =
+    ToFloatColor(ByteColorRGBA(63, 169, 245, 255));
+// Tile sizes
+static float MinTileSize = 60.0f;
+static float MaxTileSize = 500.0f;
+} // namespace SpriteTileViewUi
 
 UvRect ComputeTextureRect(IntRect pixelRect, Vec2 textureSize)
 {
   Vec2 inverseTextureSize = Vec2(1.0f, 1.0f) / textureSize;
   UvRect texRect;
-  texRect.TopLeft = Vec2(float(pixelRect.X), float(pixelRect.Y)) * inverseTextureSize;
-  texRect.BotRight = texRect.TopLeft + Vec2(float(pixelRect.SizeX), float(pixelRect.SizeY)) * inverseTextureSize;
+  texRect.TopLeft =
+      Vec2(float(pixelRect.X), float(pixelRect.Y)) * inverseTextureSize;
+  texRect.BotRight =
+      texRect.TopLeft +
+      Vec2(float(pixelRect.SizeX), float(pixelRect.SizeY)) * inverseTextureSize;
   return texRect;
 }
 
@@ -46,30 +43,29 @@ u32 GetNextPowerOfTwo(u32 value)
   return value;
 }
 
-//------------------------------------------------------------ SpriteFrameLayout
 
 IntVec2 FindBestSquareFit(uint frameSizeX, uint frameSizeY, uint frameCount)
 {
   uint rows = 1;
   uint bestFit = uint(-1);
   IntVec2 bestFitDim = IntVec2(frameCount, 1);
-  while(rows < frameCount)
+  while (rows < frameCount)
   {
     // Need the number of columns
     // integer ceiling
     uint colsNeeded = frameCount / rows;
-    if(frameCount % rows != 0)
+    if (frameCount % rows != 0)
       ++colsNeeded;
 
     uint finalHeight = rows * frameSizeY;
     uint finalWidth = colsNeeded * frameSizeX;
     uint newFit = Math::Abs(int(finalWidth - finalHeight));
 
-    if(newFit < bestFit)
+    if (newFit < bestFit)
     {
       // Found a better fit
       bestFit = newFit;
-      bestFitDim =  IntVec2(rows, colsNeeded);
+      bestFitDim = IntVec2(rows, colsNeeded);
     }
 
     ++rows;
@@ -78,7 +74,9 @@ IntVec2 FindBestSquareFit(uint frameSizeX, uint frameSizeY, uint frameCount)
   return bestFitDim;
 }
 
-SpriteFrameLayout::SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY)
+SpriteFrameLayout::SpriteFrameLayout(uint frameCount,
+                                     uint frameSizeX,
+                                     uint frameSizeY)
 {
   TotalSize.X = 0;
   TotalSize.Y = 0;
@@ -93,7 +91,8 @@ SpriteFrameLayout::SpriteFrameLayout(uint frameCount, uint frameSizeX, uint fram
   TotalSize.SizeY = FramesPerCol * FrameSizeY;
 }
 
-SpriteFrameLayout::SpriteFrameLayout(uint frameCount, uint frameSizeX, uint frameSizeY, uint sizeX, uint sizeY)
+SpriteFrameLayout::SpriteFrameLayout(
+    uint frameCount, uint frameSizeX, uint frameSizeY, uint sizeX, uint sizeY)
 {
   TotalSize.X = 0;
   TotalSize.Y = 0;
@@ -115,15 +114,14 @@ IntRect SpriteFrameLayout::GetFrame(uint frameIndex)
   return rect;
 }
 
-//------------------------------------------------------------ Origin
 
 void ComputeOrigins(Array<Vec2>& origins, int frameSizeX, int frameSizeY)
 {
   origins.PushBack(Vec2(0, 0));
-  origins.PushBack(Vec2(frameSizeX/2.0f, frameSizeY/2.0f));
+  origins.PushBack(Vec2(frameSizeX / 2.0f, frameSizeY / 2.0f));
   origins.PushBack(Vec2(0, 0));
   origins.PushBack(Vec2(0, (real)frameSizeY));
-  origins.PushBack(Vec2(frameSizeX/2.0f, (real)frameSizeY));
+  origins.PushBack(Vec2(frameSizeX / 2.0f, (real)frameSizeY));
 }
 
 Vec2 ComputeOrigin(SpriteOrigin::Enum origin, int frameSizeX, int frameSizeY)
@@ -133,21 +131,22 @@ Vec2 ComputeOrigin(SpriteOrigin::Enum origin, int frameSizeX, int frameSizeY)
   return origins[origin];
 }
 
-SpriteOrigin::Enum ComputeOrigin(Vec2 currentOrigin, int frameSizeX, int frameSizeY)
+SpriteOrigin::Enum ComputeOrigin(Vec2 currentOrigin,
+                                 int frameSizeX,
+                                 int frameSizeY)
 {
   Array<Vec2> origins;
   ComputeOrigins(origins, frameSizeX, frameSizeY);
 
   SpriteOrigin::Enum origin = SpriteOrigin::Custom;
-  for(uint i=1;i<SpriteOrigin::Size;++i)
+  for (uint i = 1; i < SpriteOrigin::Size; ++i)
   {
-    if(currentOrigin == origins[i])
+    if (currentOrigin == origins[i])
       origin = (SpriteOrigin::Enum)i;
   }
   return origin;
 }
 
-//------------------------------------------------------------ SpriteFrame
 ZilchDefineType(SpriteFrame, builder, type)
 {
   // These are owned by the SpriteDataSource and can't be returned to script
@@ -164,7 +163,8 @@ SpriteFrame::SpriteFrame()
 
 SpriteFrame::SpriteFrame(SpriteFrame& spriteFrame)
 {
-  AllocateFrame(spriteFrame.mFrameIndex, spriteFrame.mFrameImage, spriteFrame.mFrameRect);
+  AllocateFrame(
+      spriteFrame.mFrameIndex, spriteFrame.mFrameImage, spriteFrame.mFrameRect);
 }
 
 SpriteFrame::~SpriteFrame()
@@ -172,20 +172,32 @@ SpriteFrame::~SpriteFrame()
 }
 
 // Allocate a texture to display a sprite frame
-void SpriteFrame::AllocateFrame(uint frameIndex, Image& sourceImage, IntRect sourceRect)
+void SpriteFrame::AllocateFrame(uint frameIndex,
+                                Image& sourceImage,
+                                IntRect sourceRect)
 {
   mFrameTexture = NULL;
 
   mFrameIndex = frameIndex;
 
-  uint textureSize = GetNextPowerOfTwo( Math::Max(sourceRect.SizeX, sourceRect.SizeY) );;
+  uint textureSize =
+      GetNextPowerOfTwo(Math::Max(sourceRect.SizeX, sourceRect.SizeY));
+  ;
 
-  IntRect localFrameRect = {0,0, sourceRect.SizeX, sourceRect.SizeY};
+  IntRect localFrameRect = {0, 0, sourceRect.SizeX, sourceRect.SizeY};
   mFrameRect = localFrameRect;
-  mTexRect = ComputeTextureRect(localFrameRect, Vec2(float(textureSize), float(textureSize)));
+  mTexRect = ComputeTextureRect(localFrameRect,
+                                Vec2(float(textureSize), float(textureSize)));
   mFrameImage.Allocate(textureSize, textureSize);
 
-  CopyImage(&mFrameImage, &sourceImage, 0, 0, sourceRect.X, sourceRect.Y, sourceRect.SizeX, sourceRect.SizeY);
+  CopyImage(&mFrameImage,
+            &sourceImage,
+            0,
+            0,
+            sourceRect.X,
+            sourceRect.Y,
+            sourceRect.SizeX,
+            sourceRect.SizeY);
 
   mFrameTexture = Texture::CreateRuntime();
   mFrameTexture->Upload(mFrameImage);
@@ -194,19 +206,16 @@ void SpriteFrame::AllocateFrame(uint frameIndex, Image& sourceImage, IntRect sou
 SpriteFrame* GetSpriteFrame(Widget* sidget)
 {
   Widget* widget = sidget->GetParent();
-  while(widget && !ZilchVirtualTypeId(widget)->IsA(ZilchTypeId(SpriteFrame)))
+  while (widget && !ZilchVirtualTypeId(widget)->IsA(ZilchTypeId(SpriteFrame)))
     widget = widget->GetParent();
-  return (SpriteFrame*)widget;  
+  return (SpriteFrame*)widget;
 }
 
-//------------------------------------------------------------ SpritePreview
 ZilchDefineType(SpritePreview, builder, type)
 {
-
 }
 
-SpritePreview::SpritePreview(Composite* parent)
-  :Composite(parent)
+SpritePreview::SpritePreview(Composite* parent) : Composite(parent)
 {
   mPreviewFrame = new TextureView(this);
   mBackground = new TextureView(this);
@@ -223,12 +232,11 @@ SpritePreview::SpritePreview(Composite* parent)
 
 SpritePreview::~SpritePreview()
 {
-
 }
 
 void SpritePreview::SetCurrentFrame(int frame)
 {
-  if(mFrames.Empty())
+  if (mFrames.Empty())
     return;
   mCurrentFrame = frame % mFrames.Size();
   UpdateFrame();
@@ -238,7 +246,8 @@ void SpritePreview::UpdateFrame()
 {
   mCurrentFrame = mCurrentFrame % mFrames.Size();
   mPreviewFrame->SetTexture(mFrames[mCurrentFrame].mTexture);
-  mPreviewFrame->SetUv(mFrames[mCurrentFrame].mUvRect.TopLeft, mFrames[mCurrentFrame].mUvRect.BotRight);
+  mPreviewFrame->SetUv(mFrames[mCurrentFrame].mUvRect.TopLeft,
+                       mFrames[mCurrentFrame].mUvRect.BotRight);
   mPreviewFrame->SetSize(mSize);
   mBackground->SetSize(mSize);
   mBackground->SetUv(Vec2(0, 0), (mSize / 2.0f) / 8.0f);
@@ -247,13 +256,13 @@ void SpritePreview::UpdateFrame()
 void SpritePreview::OnUpdate(UpdateEvent* updateEvent)
 {
   // Update animation
-  if(mFrames.Empty())
+  if (mFrames.Empty())
     return;
   mT += updateEvent->RealDt;
   float frameTime = 0.0f;
-  if(mFramesPerSecond > 0.0f)
+  if (mFramesPerSecond > 0.0f)
     frameTime = (1.0f / mFramesPerSecond);
-  if(mAnimating && mT > frameTime)
+  if (mAnimating && mT > frameTime)
   {
     mCurrentFrame += 1;
     mT = 0.0f;
@@ -267,13 +276,15 @@ void SpritePreview::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//------------------------------------------------------------------------ Sprite Preview Widget
-SpritePreviewWidget::SpritePreviewWidget(SpriteFrame* spriteFrame, Composite* parent)
-  : PreviewWidget(parent)
+//Sprite Preview Widget
+SpritePreviewWidget::SpritePreviewWidget(SpriteFrame* spriteFrame,
+                                         Composite* parent) :
+    PreviewWidget(parent)
 {
   mTextureView = new TextureView(this);
   mTextureView->SetTexture(spriteFrame->mFrameTexture);
-  mTextureView->SetUv(spriteFrame->mTexRect.TopLeft, spriteFrame->mTexRect.BotRight);
+  mTextureView->SetUv(spriteFrame->mTexRect.TopLeft,
+                      spriteFrame->mTexRect.BotRight);
 
   mBackground = new TextureView(this);
   mBackground->SetTexture(TextureManager::Find("AlphaBackground"));
@@ -289,9 +300,12 @@ void SpritePreviewWidget::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//------------------------------------------------------------------------ Sprite Tile View Widget
-SpriteTileViewWidget::SpriteTileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex)
- : TileViewWidget(parent, tileView, tileWidget, dataIndex)
+//Sprite Tile View Widget
+SpriteTileViewWidget::SpriteTileViewWidget(Composite* parent,
+                                           TileView* tileView,
+                                           PreviewWidget* tileWidget,
+                                           DataIndex dataIndex) :
+    TileViewWidget(parent, tileView, tileWidget, dataIndex)
 {
   mContentMargins = Thickness(1.5f, 1.5f, 2.5f, 2.5f);
 }
@@ -301,9 +315,9 @@ void SpriteTileViewWidget::OnMouseHover(MouseEvent* event)
   // do nothing, we don't want the popup
 }
 
-// We do not currently support multi-select actions in the sprite editor and this 
-// event handler intercepts and overrides the default tile view widget behavior until
-// the actions support multi-select
+// We do not currently support multi-select actions in the sprite editor and
+// this event handler intercepts and overrides the default tile view widget
+// behavior until the actions support multi-select
 void SpriteTileViewWidget::OnMouseClick(MouseEvent* event)
 {
   if (event->Handled)
@@ -312,8 +326,13 @@ void SpriteTileViewWidget::OnMouseClick(MouseEvent* event)
   Select(true);
 }
 
-//------------------------------------------------------------------------ Sprite Frame Tile View
-TileViewWidget* SpriteFrameTileView::CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance /*= PreviewImportance::None*/)
+//Sprite Frame Tile View
+TileViewWidget* SpriteFrameTileView::CreateTileViewWidget(
+    Composite* parent,
+    StringParam name,
+    HandleParam instance,
+    DataIndex index,
+    PreviewImportance::Enum minImportance /*= PreviewImportance::None*/)
 {
   if (SpriteFrame* frame = instance.Get<SpriteFrame*>())
   {
@@ -322,7 +341,6 @@ TileViewWidget* SpriteFrameTileView::CreateTileViewWidget(Composite* parent, Str
   }
   return nullptr;
 }
-
 
 void SpriteFrameTileView::OnMouseScroll(MouseEvent* event)
 {
@@ -355,15 +373,13 @@ void SpriteFrameTileView::OnMouseScroll(MouseEvent* event)
 
 void SpriteFrameTileView::OnLeftMouseDrag(MouseDragEvent* e)
 {
-  // do nothing, in the sprite editor we do not currently support frame operations
-  // for multiple selected frames
+  // do nothing, in the sprite editor we do not currently support frame
+  // operations for multiple selected frames
 }
 
-//------------------------------------------------------------------------ Sprite Data Source
-SpriteDataSource::SpriteDataSource()
-  : mRoot()
+//Sprite Data Source
+SpriteDataSource::SpriteDataSource() : mRoot()
 {
-
 }
 
 SpriteDataSource::~SpriteDataSource()
@@ -481,7 +497,9 @@ uint SpriteDataSource::ChildCount(DataEntry* dataEntry)
   return 0;
 }
 
-DataEntry* SpriteDataSource::GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)
+DataEntry* SpriteDataSource::GetChild(DataEntry* dataEntry,
+                                      uint index,
+                                      DataEntry* prev)
 {
   if (dataEntry == &mRoot)
     return mSpriteFrames[index];
@@ -493,7 +511,9 @@ bool SpriteDataSource::IsExpandable(DataEntry* dataEntry)
   return false;
 }
 
-void SpriteDataSource::GetData(DataEntry* dataEntry, Any& variant, StringParam column)
+void SpriteDataSource::GetData(DataEntry* dataEntry,
+                               Any& variant,
+                               StringParam column)
 {
   SpriteFrame* entry = (SpriteFrame*)dataEntry;
   if (column == CommonColumns::Name)
@@ -502,13 +522,15 @@ void SpriteDataSource::GetData(DataEntry* dataEntry, Any& variant, StringParam c
     variant = entry;
 }
 
-bool SpriteDataSource::SetData(DataEntry* dataEntry, const Any& variant, StringParam column)
+bool SpriteDataSource::SetData(DataEntry* dataEntry,
+                               const Any& variant,
+                               StringParam column)
 {
   Error("Sprite Editor: Did this get hit?");
   return false;
 }
 
-//------------------------------------------------------------------------ Sprite Source Editor
+//Sprite Source Editor
 ZilchDefineType(SpriteSourceEditor, builder, type)
 {
   ZilchBindGetterSetterProperty(SpriteName);
@@ -519,7 +541,7 @@ ZilchDefineType(SpriteSourceEditor, builder, type)
 
   ZilchBindFieldProperty(mLooping);
 
-  ZilchBindGetterSetterProperty(Sampling); 
+  ZilchBindGetterSetterProperty(Sampling);
   ZilchBindGetterSetterProperty(FrameRate);
   ZilchBindFieldProperty(mPixelsPerUnit);
 
@@ -534,17 +556,18 @@ ZilchDefineType(SpriteSourceEditor, builder, type)
   ZilchBindGetterSetterProperty(PreviewAnimation);
 }
 
-SpriteSourceEditor::SpriteSourceEditor(Composite* parent)
-  :Composite(parent)
+SpriteSourceEditor::SpriteSourceEditor(Composite* parent) : Composite(parent)
 {
-  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
+  this->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness::cZero));
 
   Composite* top = new Composite(this);
   top->SetLayout(CreateRowLayout());
   top->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
 
   Composite* bottom = new Composite(this);
-  bottom->SetLayout(CreateStackLayout(LayoutDirection::RightToLeft, Pixels(4, 4), Thickness(4, 4, 4, 4)));
+  bottom->SetLayout(CreateStackLayout(
+      LayoutDirection::RightToLeft, Pixels(4, 4), Thickness(4, 4, 4, 4)));
 
   Composite* left = new Composite(top);
   left->SetSizing(SizeAxis::X, SizePolicy::Flex, 35);
@@ -562,14 +585,15 @@ SpriteSourceEditor::SpriteSourceEditor(Composite* parent)
   right->SetLayout(CreateStackLayout());
 
   Composite* buttonRow = new Composite(right);
-  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
+  buttonRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
 
   mTileView = new SpriteFrameTileView(right);
   mTileView->SetActive(true);
   mTileView->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
   mTileView->SetDataSource(&mSpriteData);
   mTileView->SetItemSizePercent(0.5f);
-  
+
   // Events for interacting with the sprite frames
   ConnectThisTo(&mSpriteData, Events::DataSelected, OnSelection);
   ConnectThisTo(&mSpriteData, Events::DataActivated, OnSelectionActivated);
@@ -593,7 +617,7 @@ SpriteSourceEditor::SpriteSourceEditor(Composite* parent)
   mPreview = new SpritePreview(left);
   mPreview->SetSizing(SizeAxis::Y, SizePolicy::Flex, 20);
 
-  //Frames
+  // Frames
   textButton = new TextButton(buttonRow);
   textButton->SetText("Add Frame");
   ConnectThisTo(textButton, Events::ButtonPressed, OnAddFrame);
@@ -613,11 +637,11 @@ SpriteSourceEditor::SpriteSourceEditor(Composite* parent)
   textButton = new TextButton(buttonRow);
   textButton->SetText("Move Frame Down");
   ConnectThisTo(textButton, Events::ButtonPressed, OnMoveFrameDown);
-  
+
   textButton = new TextButton(buttonRow);
   textButton->SetText("Export All Frames");
   ConnectThisTo(textButton, Events::ButtonPressed, OnExportAllFrames);
-  
+
   textButton = new TextButton(bottom);
   textButton->SetText("Close");
   ConnectThisTo(textButton, Events::ButtonPressed, OnClosePressed);
@@ -629,7 +653,8 @@ SpriteSourceEditor::SpriteSourceEditor(Composite* parent)
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyRepeated, OnKeyDown);
 
-  //listen for when a sprite source is removed in case it's the one we're editing
+  // listen for when a sprite source is removed in case it's the one we're
+  // editing
   SpriteSourceManager* spriteManager = SpriteSourceManager::GetInstance();
   ConnectThisTo(spriteManager, Events::ResourceRemoved, OnSpriteSourceRemoved);
 
@@ -687,7 +712,7 @@ SpriteSourceEditor::~SpriteSourceEditor()
 void SpriteSourceEditor::SetSpriteName(StringParam name)
 {
   Status status;
-  if(!IsValidFilename(name, status))
+  if (!IsValidFilename(name, status))
   {
     DoNotifyWarning("Invalid Sprite Name", status.Message);
     return;
@@ -717,7 +742,7 @@ void SpriteSourceEditor::SetCurrentFrame(int frameIndex)
 
 void SpriteSourceEditor::SetFrameRate(float frameRate)
 {
-  if(frameRate > 0.001f)
+  if (frameRate > 0.001f)
   {
     mFrameRate = frameRate;
     mPreview->mFramesPerSecond = frameRate;
@@ -762,7 +787,7 @@ SpriteFrame* SpriteSourceEditor::GetSelectedFrame()
 void SpriteSourceEditor::RemoveSelectedFrame()
 {
   SpriteFrame* selectFrame = GetSelectedFrame();
-  if(selectFrame)
+  if (selectFrame)
   {
     size_t lastSelectedIndex = selectFrame->mFrameIndex;
     // remove the sprite from the data source and refresh the tile view
@@ -771,18 +796,19 @@ void SpriteSourceEditor::RemoveSelectedFrame()
     // select the last index we were on or the end if we removed the last frame
     DataEntry* entry = mSpriteData.GetSpriteFrame(lastSelectedIndex);
     SetTileSelection(mSpriteData.ToIndex(entry));
-    // update the animation preview so we are no longer referencing a freed pointer (the sprite frame)
+    // update the animation preview so we are no longer referencing a freed
+    // pointer (the sprite frame)
     UpdatePreview();
   }
 }
 
 void SpriteSourceEditor::ChangedSelectedFrame(int direction)
 {
-  if(direction < 0)
+  if (direction < 0)
     direction = mSpriteData.Size() - 1;
 
   SpriteFrame* selectFrame = GetSelectedFrame();
-  if(selectFrame)
+  if (selectFrame)
     SetTileSelection(mSpriteData.ToIndex(selectFrame));
 }
 
@@ -795,12 +821,12 @@ void SpriteSourceEditor::RefreshTileView()
 void SpriteSourceEditor::MoveFrame(int direction)
 {
   SpriteFrame* selectFrame = GetSelectedFrame();
-  if(selectFrame)
+  if (selectFrame)
   {
     int nextLocation = selectFrame->mFrameIndex + direction;
-    if(nextLocation < 0)
+    if (nextLocation < 0)
       return;
-    if(nextLocation >= int(mSpriteData.Size()))
+    if (nextLocation >= int(mSpriteData.Size()))
       return;
 
     SpriteFrame* nextFrame = mSpriteData.GetSpriteFrame(nextLocation);
@@ -830,16 +856,23 @@ void SpriteSourceEditor::ConvertToSpriteSheet(Image& output)
   SpriteFrameLayout frameLayout(mSpriteData.Size(), mFrameSizeX, mFrameSizeY);
   output.Allocate(frameLayout.TotalSize.SizeX, frameLayout.TotalSize.SizeY);
 
-  forRange(SpriteFrame* frame, mSpriteData.All())
+  forRange(SpriteFrame * frame, mSpriteData.All())
   {
     IntRect frameRect = frameLayout.GetFrame(frame->mFrameIndex);
-    CopyImage(&output, &frame->mFrameImage, frameRect.X, frameRect.Y, 0,0, mFrameSizeX, mFrameSizeY);
+    CopyImage(&output,
+              &frame->mFrameImage,
+              frameRect.X,
+              frameRect.Y,
+              0,
+              0,
+              mFrameSizeX,
+              mFrameSizeY);
   }
 }
 
 void SpriteSourceEditor::OnDoubleClickFrame(MouseEvent* event)
 {
-  //Edit the frame on double click
+  // Edit the frame on double click
   SpriteFrame* spriteFrame = GetSpriteFrame(event->Source);
   EditFrameImage(spriteFrame->mFrameIndex);
 }
@@ -852,15 +885,16 @@ void SpriteSourceEditor::OnSaveToSprite(Event* event)
 
 void SpriteSourceEditor::OnAddFrame(Event* event)
 {
-  if(!mSpriteData.Size())
+  if (!mSpriteData.Size())
     return;
   SpriteFrame* frameToCopy = GetSelectedFrame();
 
-  if(frameToCopy == NULL)
+  if (frameToCopy == NULL)
     frameToCopy = mSpriteData.Back();
 
   // Create the frame
-  CreateSpriteFrame(mSpriteData.Size(), frameToCopy->mFrameImage, frameToCopy->mFrameRect);
+  CreateSpriteFrame(
+      mSpriteData.Size(), frameToCopy->mFrameImage, frameToCopy->mFrameRect);
 
   UpdatePreview();
 }
@@ -878,18 +912,26 @@ void SpriteSourceEditor::OnMoveFrameDown(Event* event)
 void SpriteSourceEditor::OnExportAllFrames(Event* event)
 {
   SpriteSource* spriteSource = mSpriteSource;
-  
+
   // save out each sprite frame as its own image
-  forRange(SpriteFrame* spriteFrame, mSpriteData.All())
+  forRange(SpriteFrame * spriteFrame, mSpriteData.All())
   {
     // Copy frame into image
     IntRect frameRect = spriteFrame->mFrameRect;
     Image buffer;
     buffer.Allocate(frameRect.SizeX, frameRect.SizeY);
-    CopyImage(&buffer, &spriteFrame->mFrameImage, 0, 0, frameRect.X, frameRect.Y, frameRect.SizeX, frameRect.SizeY);
+    CopyImage(&buffer,
+              &spriteFrame->mFrameImage,
+              0,
+              0,
+              frameRect.X,
+              frameRect.Y,
+              frameRect.SizeX,
+              frameRect.SizeY);
 
     // Save it to a file in temp
-    String name = BuildString(spriteSource->Name, "_", ToString(spriteFrame->mFrameIndex), ".png");
+    String name = BuildString(
+        spriteSource->Name, "_", ToString(spriteFrame->mFrameIndex), ".png");
     String fullPath = FilePath::Combine(mEditDirectory, name);
     Status status;
     SaveImage(status, fullPath, &buffer, ImageSaveFormat::Png);
@@ -901,9 +943,10 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
 
 void SpriteSourceEditor::OnSpriteSourceRemoved(ResourceEvent* event)
 {
-  //if the sprite source that was removed is the one we're editing then close this window
-  //(set active to false so we don't get 1 extra frame of logic running)
-  if(event->EventResource == mSpriteSource)
+  // if the sprite source that was removed is the one we're editing then close
+  // this window (set active to false so we don't get 1 extra frame of logic
+  //running)
+  if (event->EventResource == mSpriteSource)
   {
     SetActive(false);
     CloseTabContaining(this);
@@ -918,22 +961,22 @@ void SpriteSourceEditor::OnEditFrame(Event* event)
 void SpriteSourceEditor::OnKeyDown(KeyboardEvent* event)
 {
   // Keyboard shortcuts
-  if(event->CtrlPressed)
+  if (event->CtrlPressed)
   {
-    if(event->Key == Keys::Right)
+    if (event->Key == Keys::Right)
       MoveFrame(1);
-    if(event->Key == Keys::Left)
+    if (event->Key == Keys::Left)
       MoveFrame(-1);
   }
   else
   {
-    if(event->Key == Keys::Right)
+    if (event->Key == Keys::Right)
       ChangedSelectedFrame(1);
-    if(event->Key == Keys::Left)
+    if (event->Key == Keys::Left)
       ChangedSelectedFrame(-1);
   }
 
-  if(event->Key == Keys::Delete)
+  if (event->Key == Keys::Delete)
   {
     RemoveSelectedFrame();
   }
@@ -946,7 +989,6 @@ void SpriteSourceEditor::OnRemoveFrame(Event* event)
 
 void SpriteSourceEditor::OnAddFrameFiles(Event* event)
 {
-
 }
 
 void SpriteSourceEditor::OnClosePressed(Event* event)
@@ -982,7 +1024,6 @@ void SpriteSourceEditor::OnConvertToAnimation(Event* event)
 
 void SpriteSourceEditor::OnImportFrames(Event* event)
 {
-
 }
 
 void SpriteSourceEditor::OnSelection(DataEvent* event)
@@ -997,8 +1038,8 @@ void SpriteSourceEditor::OnSelectionActivated(DataEvent* event)
 
 bool ValidateImage(IntRect expectedSize, Image& newImage)
 {
-  if(expectedSize.SizeY != newImage.Height ||
-    expectedSize.SizeX != newImage.Width)
+  if (expectedSize.SizeY != newImage.Height ||
+      expectedSize.SizeX != newImage.Width)
   {
     DoNotifyWarning("Reload Error", "Sprites can not be resized externally");
     return false;
@@ -1009,9 +1050,9 @@ bool ValidateImage(IntRect expectedSize, Image& newImage)
 void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
 {
   SpriteFrame* frameEdited = mEditFrames.FindValue(event->FileName, NULL);
-  if(frameEdited != NULL)
+  if (frameEdited != NULL)
   {
-    //Load the image
+    // Load the image
     String fullPath = FilePath::Combine(mEditDirectory, event->FileName);
     Image newImage;
     Status status;
@@ -1021,18 +1062,18 @@ void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
     IntRect oldFrameRect = frameEdited->mFrameRect;
 
     // Prevent external edit
-    if(!ValidateImage(oldFrameRect, newImage))
+    if (!ValidateImage(oldFrameRect, newImage))
       return;
 
     // Reload frame
-    frameEdited->AllocateFrame(frameEdited->mFrameIndex, newImage, frameEdited->mFrameRect);
+    frameEdited->AllocateFrame(
+        frameEdited->mFrameIndex, newImage, frameEdited->mFrameRect);
 
     UpdatePreview();
   }
 
-
   // Check if this is a file for the whole sprite animation/sheet
-  if(mSheetEdit == event->FileName)
+  if (mSheetEdit == event->FileName)
   {
 
     // Load the image
@@ -1046,10 +1087,10 @@ void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
     IntRect sheetRect = frameLayout.TotalSize;
 
     // Prevent external resize
-    if(!ValidateImage(sheetRect, newImage))
+    if (!ValidateImage(sheetRect, newImage))
       return;
 
-    //Reload all frames
+    // Reload all frames
     LoadFramesFromSheet(newImage, mSpriteData.Size());
 
     UpdatePreview();
@@ -1067,7 +1108,7 @@ void SpriteSourceEditor::EditFrameImage(DataIndex frameIndex)
 
   SpriteSource* spriteSource = mSpriteSource;
 
-  if(spriteSource == NULL)
+  if (spriteSource == NULL)
     return;
 
   SpriteFrame* spriteFrame = (SpriteFrame*)mSpriteData.ToEntry(frameIndex);
@@ -1076,13 +1117,21 @@ void SpriteSourceEditor::EditFrameImage(DataIndex frameIndex)
   IntRect frameRect = spriteFrame->mFrameRect;
   Image buffer;
   buffer.Allocate(frameRect.SizeX, frameRect.SizeY);
-  CopyImage(&buffer, &spriteFrame->mFrameImage, 0, 0, frameRect.X, frameRect.Y, frameRect.SizeX, frameRect.SizeY);
+  CopyImage(&buffer,
+            &spriteFrame->mFrameImage,
+            0,
+            0,
+            frameRect.X,
+            frameRect.Y,
+            frameRect.SizeX,
+            frameRect.SizeY);
 
   // Generate a unique name for this sprite frame in the
   // form of ResourceId_Frame_#
   String idString = ToString(spriteSource->mResourceId);
-  String tempFile = String::Format("%s_Frame%d.png", idString.c_str(), spriteFrame->mFrameIndex);
-  String fullPath = FilePath::Combine(mEditDirectory,  tempFile);
+  String tempFile = String::Format(
+      "%s_Frame%d.png", idString.c_str(), spriteFrame->mFrameIndex);
+  String fullPath = FilePath::Combine(mEditDirectory, tempFile);
 
   // Save this file to a png file
   Status status;
@@ -1097,7 +1146,7 @@ void SpriteSourceEditor::EditFrameImage(DataIndex frameIndex)
 
 void SpriteSourceEditor::InvalidateEdits()
 {
-  //Clear all other frame edits
+  // Clear all other frame edits
   mEditFrames.Clear();
   mSheetEdit.Clear();
 }
@@ -1114,8 +1163,7 @@ void SpriteSourceEditor::OnMouseDown(MouseEvent* event)
 
 void SpriteSourceEditor::ClearFrames()
 {
-  forRange(SpriteFrame* frame, mSpriteData.All())
-    delete frame;
+  forRange(SpriteFrame * frame, mSpriteData.All()) delete frame;
   mSpriteData.ClearFrames();
   mEditFrames.Clear();
 }
@@ -1124,17 +1172,22 @@ void SpriteSourceEditor::UpdatePreview()
 {
   // Update all the frames on the preview sprite
   mPreview->mFrames.Clear();
-  TextureFiltering::Enum filtering = mSampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
-  for(uint i=0;i<mSpriteData.Size();++i)
+  TextureFiltering::Enum filtering = mSampling == SpriteSampling::Nearest
+                                         ? TextureFiltering::Nearest
+                                         : TextureFiltering::Bilinear;
+  for (uint i = 0; i < mSpriteData.Size(); ++i)
   {
     mSpriteData[i]->mFrameTexture->mFiltering = filtering;
     Z::gEngine->has(GraphicsEngine)->AddTexture(mSpriteData[i]->mFrameTexture);
-    TextureArea area = { mSpriteData[i]->mTexRect, mSpriteData[i]->mFrameTexture};
+    TextureArea area = {mSpriteData[i]->mTexRect,
+                        mSpriteData[i]->mFrameTexture};
     mPreview->mFrames.PushBack(area);
   }
 }
 
-void SpriteSourceEditor::CreateSpriteFrame(uint frameIndex, Image& image, IntRect rect)
+void SpriteSourceEditor::CreateSpriteFrame(uint frameIndex,
+                                           Image& image,
+                                           IntRect rect)
 {
   // Create a sprite frame
   SpriteFrame* frame = new SpriteFrame();
@@ -1143,13 +1196,18 @@ void SpriteSourceEditor::CreateSpriteFrame(uint frameIndex, Image& image, IntRec
   mTileView->MarkAsNeedsUpdate();
 }
 
-void SpriteSourceEditor::LoadFramesFromSheet(Image& sourceImage, uint frameCount)
+void SpriteSourceEditor::LoadFramesFromSheet(Image& sourceImage,
+                                             uint frameCount)
 {
   mSpriteData.ClearFrames();
 
-  SpriteFrameLayout frameLayout(frameCount, mFrameSizeX, mFrameSizeY, sourceImage.Width, sourceImage.Height);
+  SpriteFrameLayout frameLayout(frameCount,
+                                mFrameSizeX,
+                                mFrameSizeY,
+                                sourceImage.Width,
+                                sourceImage.Height);
 
-  for(uint i=0;i<frameCount;++i)
+  for (uint i = 0; i < frameCount; ++i)
   {
     IntRect rect = frameLayout.GetFrame(i);
     CreateSpriteFrame(i, sourceImage, rect);
@@ -1163,16 +1221,18 @@ void SpriteSourceEditor::SaveToSpriteSource()
   InvalidateEdits();
 
   SpriteSource* spriteSource = mSpriteSource;
-  if(spriteSource == NULL)
+  if (spriteSource == NULL)
     return;
-  
+
   // Check for resource not Writable
   if (!spriteSource->IsWritable())
   {
-    DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
+    DeveloperConfig* devConfig =
+        Z::gEngine->GetConfigCog()->has(DeveloperConfig);
     if (devConfig == NULL || !devConfig->mCanModifyReadOnlyResources)
     {
-      DoNotifyWarning("Resource is not writable", "Resource is a protected or built in resource.");
+      DoNotifyWarning("Resource is not writable",
+                      "Resource is a protected or built in resource.");
       return;
     }
   }
@@ -1189,11 +1249,12 @@ void SpriteSourceEditor::SaveToSpriteSource()
   SaveImage(status, sourceFile, &output, ImageSaveFormat::Png);
 
   // Check to see if the resource was renamed
-  if(spriteSource->Name != mSpriteName)
+  if (spriteSource->Name != mSpriteName)
     RenameResource(spriteSource, mSpriteName);
   sourceFile = spriteSource->mContentItem->GetFullPath();
 
-  SpriteSourceBuilder* builder = spriteSource->mContentItem->has(SpriteSourceBuilder);
+  SpriteSourceBuilder* builder =
+      spriteSource->mContentItem->has(SpriteSourceBuilder);
 
   // Update data
   builder->FrameCount = mSpriteData.Size();
@@ -1259,7 +1320,7 @@ void SpriteSourceEditor::EditSpriteSource(SpriteSource* spriteSource)
   Image sourceImage;
   Status status;
   spriteSource->LoadSourceImage(status, &sourceImage);
-  if(status.Succeeded())
+  if (status.Succeeded())
     LoadFramesFromSheet(sourceImage, frameCount);
 
   mSpriteProperties->SetObject(this);
@@ -1276,9 +1337,10 @@ void EditSprite(SpriteSource* spriteSource)
   window->SetTitle("Sprite Source Editor");
   window->SetSize(Pixels(800, 600));
   Vec3 offsetCenter = GetCenterPosition(Z::gEditor, window);
-  window->SetTranslationAndSize(offsetCenter + Pixels(0, -1000, 0), Pixels(800, 600));
+  window->SetTranslationAndSize(offsetCenter + Pixels(0, -1000, 0),
+                                Pixels(800, 600));
   editor->EditSpriteSource(spriteSource);
   CenterToWindow(Z::gEditor, window, true);
 }
 
-}
+} // namespace Zero

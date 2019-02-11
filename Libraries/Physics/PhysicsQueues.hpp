@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,9 +7,9 @@ namespace Zero
 namespace Physics
 {
 
-///A queue for a Cog. Is associated with a set of actions for
-///both the collider and rigid body on a cog. Will automatically be
-///delete when the associated collider and body remove ownership.
+/// A queue for a Cog. Is associated with a set of actions for
+/// both the collider and rigid body on a cog. Will automatically be
+/// delete when the associated collider and body remove ownership.
 struct PhysicsQueue
 {
   PhysicsQueue();
@@ -27,29 +22,30 @@ struct PhysicsQueue
   BroadPhaseAction mBroadPhaseAction;
 
   friend struct PhysicsNodeManager;
-  friend class  Zero::PhysicsNode;
+  friend class Zero::PhysicsNode;
 
   void Validate();
-  ///Empty the actions
+  /// Empty the actions
   void Empty();
 
-  ///Helper for the BroadPhase action. Fills out the batch structures for what
-  ///needs to be changed in BroadPhase.
-  void ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& dynamicBatch, Collider* collider);
+  /// Helper for the BroadPhase action. Fills out the batch structures for what
+  /// needs to be changed in BroadPhase.
+  void ProcessQueue(BroadPhaseBatch& staticBatch,
+                    BroadPhaseBatch& dynamicBatch,
+                    Collider* collider);
   void ColliderToBroadPhaseData(Collider* collider, BroadPhaseData& data);
 
   void MarkUnQueued();
-  
 
   TransformAction mTransformAction;
   MassAction mMassAction;
-  
-  ///The proxy needs to be stored on the queue since the object will
-  ///already be deleted by the time the queue is processed and we need proxy to
-  ///remove the object from BroadPhase.
+
+  /// The proxy needs to be stored on the queue since the object will
+  /// already be deleted by the time the queue is processed and we need proxy to
+  /// remove the object from BroadPhase.
   BroadPhaseProxy mProxy;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

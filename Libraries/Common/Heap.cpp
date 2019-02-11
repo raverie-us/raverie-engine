@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Heap.cpp
-/// Implementation of the Heap Allocator.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,9 +6,7 @@ namespace Zero
 namespace Memory
 {
 
-//------------------------------------------------------------------------- Heap
-Heap::Heap(cstr name, Graph* parent)
-  : Graph(name, parent)
+Heap::Heap(cstr name, Graph* parent) : Graph(name, parent)
 {
   //
 }
@@ -39,5 +29,5 @@ void Heap::Print(size_t tabs, size_t flags)
   PrintHelper(tabs, flags, "Heap");
 }
 
-}//namespace Memory
-}//namespace Zero
+} // namespace Memory
+} // namespace Zero

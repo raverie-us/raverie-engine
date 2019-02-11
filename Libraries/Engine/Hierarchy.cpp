@@ -1,27 +1,20 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Hierarchy.cpp
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------------------------- Events
+//Events
 namespace Events
 {
-  DefineEvent(Attached);
-  DefineEvent(Detached);
-  DefineEvent(ChildAttached);
-  DefineEvent(ChildDetached);
-  DefineEvent(ChildrenOrderChanged);
-}// namespace Events
+DefineEvent(Attached);
+DefineEvent(Detached);
+DefineEvent(ChildAttached);
+DefineEvent(ChildDetached);
+DefineEvent(ChildrenOrderChanged);
+} // namespace Events
 
-//---------------------------------------------------------------------------------- Hierarchy Event
+//Hierarchy Event
 ZilchDefineType(HierarchyEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -38,66 +31,61 @@ ZilchDefineType(HierarchyComposition, builder, type)
 {
 }
 
-//---------------------------------------------------------------------------------------- Hierarchy
-//-------------------------------------------------------------------- Hierarchy
+//Hierarchy
 ZilchDefineType(Hierarchy, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDocumented();
   ZilchBindGetter(Children);
 
-  if(cBindCogChildrenReverseRange)
+  if (cBindCogChildrenReverseRange)
     ZilchBindGetter(ChildrenReversed);
 
   type->AddAttribute(ObjectAttributes::cHidden);
   type->Add(new HierarchyComposition());
 }
 
-//**************************************************************************************************
 Hierarchy::Hierarchy()
 {
-
 }
 
-//**************************************************************************************************
 Hierarchy::~Hierarchy()
 {
   HierarchyList::range range = Children.All();
-  while(!range.Empty())
+  while (!range.Empty())
   {
     Cog* current = &range.Front();
     range.PopFront();
 
-    //Queue up cog for destruction.
+    // Queue up cog for destruction.
     current->Destroy();
 
-    //Destroy all the components directly so components are destroyed
-    //in depth first order (children then parents) but do not
-    //destroy the cog because the factory destroy list has a direct
-    //pointer to the cog.
+    // Destroy all the components directly so components are destroyed
+    // in depth first order (children then parents) but do not
+    // destroy the cog because the factory destroy list has a direct
+    // pointer to the cog.
     current->DeleteComponents();
   }
 }
 
-//**************************************************************************************************
 void Hierarchy::Serialize(Serializer& stream)
 {
-  if(stream.GetMode() == SerializerMode::Saving)
+  if (stream.GetMode() == SerializerMode::Saving)
   {
     CogSerialization::SaveHierarchy(stream, this);
   }
   else
   {
-    CogCreationContext* context = static_cast<CogCreationContext*>(stream.GetSerializationContext());
+    CogCreationContext* context =
+        static_cast<CogCreationContext*>(stream.GetSerializationContext());
     CogSerialization::LoadHierarchy(stream, context, this);
   }
 }
 
-//**************************************************************************************************
 void Hierarchy::Initialize(CogInitializer& initializer)
 {
   HierarchyList::range r = Children.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     initializer.mParent = this->GetOwner();
 
@@ -109,30 +97,27 @@ void Hierarchy::Initialize(CogInitializer& initializer)
   initializer.mParent = NULL;
 }
 
-//**************************************************************************************************
 void Hierarchy::OnAllObjectsCreated(CogInitializer& initializer)
 {
-  //Do not need to call children handled by CogInitializer CreationList
+  // Do not need to call children handled by CogInitializer CreationList
 }
 
-//**************************************************************************************************
 void Hierarchy::OnDestroy(uint flags)
 {
   HierarchyList::range range = Children.All();
-  while(!range.Empty())
+  while (!range.Empty())
   {
     Cog* current = &range.Front();
     range.PopFront();
-    
+
     current->OnDestroy();
   }
 }
 
-//**************************************************************************************************
 void Hierarchy::TransformUpdate(TransformUpdateInfo& info)
 {
   HierarchyList::range r = Children.All();
-  while(!r.Empty())
+  while (!r.Empty())
   {
     Cog* cog = &r.Front();
     cog->TransformUpdate(info);
@@ -140,49 +125,44 @@ void Hierarchy::TransformUpdate(TransformUpdateInfo& info)
   }
 }
 
-//**************************************************************************************************
 void Hierarchy::AttachTo(AttachmentInfo& info)
 {
   HierarchyList::range children = Children.All();
-  for(; !children.Empty(); children.PopFront())
+  for (; !children.Empty(); children.PopFront())
   {
     Cog* child = &children.Front();
     Cog::ComponentRange range = child->GetComponents();
-    for(;!range.Empty();range.PopFront())
+    for (; !range.Empty(); range.PopFront())
       range.Front()->AttachTo(info);
   }
 }
 
-//**************************************************************************************************
 void Hierarchy::Detached(AttachmentInfo& info)
 {
   HierarchyList::range children = Children.All();
-  for(; !children.Empty(); children.PopFront())
+  for (; !children.Empty(); children.PopFront())
   {
     Cog* child = &children.Front();
     Cog::ComponentRange range = child->GetComponents();
-    for(;!range.Empty();range.PopFront())
+    for (; !range.Empty(); range.PopFront())
       range.Front()->Detached(info);
   }
 }
 
-//**************************************************************************************************
 HierarchyList::range Hierarchy::GetChildren()
 {
   return Children.All();
 }
 
-//**************************************************************************************************
 HierarchyList::reverse_range Hierarchy::GetChildrenReversed()
 {
   return Children.ReverseAll();
 }
 
-//**************************************************************************************************
 void Hierarchy::DestroyChildren()
 {
   HierarchyList::range range = Children.All();
-  while(!range.Empty())
+  while (!range.Empty())
   {
     Cog* current = &range.Front();
     range.PopFront();
@@ -190,31 +170,26 @@ void Hierarchy::DestroyChildren()
   }
 }
 
-//---------------------------------------------------------------------------- Hierarchy Composition
-//**************************************************************************************************
+//Hierarchy Composition
 HierarchyComposition::HierarchyComposition() : MetaComposition(ZilchTypeId(Cog))
 {
-  
 }
 
-//**************************************************************************************************
 uint HierarchyComposition::GetComponentCount(HandleParam instance)
 {
   Hierarchy* hierarchy = instance.Get<Hierarchy*>(GetOptions::AssertOnNull);
   uint count = 0;
-  forRange(Cog& child, hierarchy->GetChildren())
-    ++count;
+  forRange(Cog & child, hierarchy->GetChildren())++ count;
   return count;
 }
 
-//**************************************************************************************************
 Handle HierarchyComposition::GetComponentAt(HandleParam instance, uint index)
 {
   Hierarchy* hierarchy = instance.Get<Hierarchy*>(GetOptions::AssertOnNull);
   uint currIndex = 0;
-  forRange(Cog& child, hierarchy->GetChildren())
+  forRange(Cog & child, hierarchy->GetChildren())
   {
-    if(currIndex == index)
+    if (currIndex == index)
       return Handle(&child);
     ++currIndex;
   }
@@ -222,8 +197,9 @@ Handle HierarchyComposition::GetComponentAt(HandleParam instance, uint index)
   return Handle();
 }
 
-//**************************************************************************************************
-bool HierarchyComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
+bool HierarchyComposition::CanAddComponent(HandleParam owner,
+                                           BoundType* typeToAdd,
+                                           AddInfo* info)
 {
   if (typeToAdd == ZilchTypeId(Cog))
     return true;
@@ -231,7 +207,6 @@ bool HierarchyComposition::CanAddComponent(HandleParam owner, BoundType* typeToA
   return false;
 }
 
-//**************************************************************************************************
 void RelativeAttach(Transform* child, Transform* parent)
 {
   Mat4 childMatrix = child->GetWorldMatrix();
@@ -246,7 +221,7 @@ void RelativeAttach(Transform* child, Transform* parent)
   Mat3 rotation;
   Vec3 translation;
 
-  local.Decompose(&scale, &shear, &rotation, & translation);
+  local.Decompose(&scale, &shear, &rotation, &translation);
 
   child->SetRotation(Math::ToQuaternion(rotation));
   child->SetScale(scale);
@@ -254,4 +229,4 @@ void RelativeAttach(Transform* child, Transform* parent)
   child->GetOwner()->AttachToPreserveLocal(parent->GetOwner());
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -34,31 +29,34 @@ void TorqueEffect::Serialize(Serializer& stream)
 
 void TorqueEffect::DebugDraw()
 {
-  if(!GetDebugDrawEffect())
+  if (!GetDebugDrawEffect())
     return;
 
   PreCalculate(0);
   Vec3 torqueAxis = mWorldTorqueAxis;
   Vec3 torqueCenter = TransformLocalPointToWorld(Vec3::cZero);
-  
+
   // Get an animating time
   real t = GetAnimationTime(GetOwner());
 
-  // Include the strength? If the strength is include we have to only use positive strength values to update t.
-  // Negative values should flip the axis (otherwise the arrow-heads will be backwards).
+  // Include the strength? If the strength is include we have to only use
+  // positive strength values to update t. Negative values should flip the axis
+  // (otherwise the arrow-heads will be backwards).
   torqueAxis *= (real)Math::Sign(mTorqueStrength);
   t *= Math::Abs(mTorqueStrength);
-  
-  // Hard-code the animation radius at 1 (could use the object's cylinder's radius?)
+
+  // Hard-code the animation radius at 1 (could use the object's cylinder's
+  // radius?)
   real radius = 1;
   // Draw a ring that has 3 sub-divisions
   DrawRing(torqueCenter, torqueAxis, radius, 3, t, Color::White);
-  gDebugDraw->Add(Debug::Line(torqueCenter, torqueCenter + torqueAxis).HeadSize(0.1f));
+  gDebugDraw->Add(
+      Debug::Line(torqueCenter, torqueCenter + torqueAxis).HeadSize(0.1f));
 }
 
 void TorqueEffect::PreCalculate(real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   mWorldTorqueAxis = GetWorldTorqueAxis();
@@ -66,7 +64,7 @@ void TorqueEffect::PreCalculate(real dt)
 
 void TorqueEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   Vec3 torque = mWorldTorqueAxis * mTorqueStrength;
@@ -80,7 +78,7 @@ bool TorqueEffect::GetLocalTorque() const
 
 void TorqueEffect::SetLocalTorque(bool state)
 {
-  mTorqueStates.SetState(TorqueFlags::LocalTorque,state);
+  mTorqueStates.SetState(TorqueFlags::LocalTorque, state);
   CheckWakeUp();
 }
 
@@ -109,10 +107,10 @@ void TorqueEffect::SetTorqueAxis(Vec3Param axis)
 Vec3 TorqueEffect::GetWorldTorqueAxis() const
 {
   Vec3 worldTorqueAxis = mTorqueAxis;
-  if(mTorqueStates.IsSet(TorqueFlags::LocalTorque))
+  if (mTorqueStates.IsSet(TorqueFlags::LocalTorque))
     worldTorqueAxis = TransformLocalDirectionToWorld(worldTorqueAxis);
   // Always re-normalize the world axis
   return worldTorqueAxis.AttemptNormalized();
 }
 
-}//namespace Zero
+} // namespace Zero

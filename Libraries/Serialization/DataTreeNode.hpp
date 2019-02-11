@@ -1,18 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DataTreeNode.hpp
-/// Declaration of the data tree used for serialization.
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-namespace Memory{class Pool;}
+namespace Memory
+{
+class Pool;
+}
 
 // Forward Declarations
 class DataNode;
@@ -36,8 +31,8 @@ DeclareEnum4(PatchResolveMethod,
              // cannot be resolved (because they were removed) and we still
              // want to create a fallback object in its place. We want to patch
              // Transform properties so that it's in the same place, but
-             // we don't want to add or remove Components as it may 
-             //PatchPropertiesOnly,
+             // we don't want to add or remove Components as it may
+             // PatchPropertiesOnly,
              // Remove the node that was supposed to inherit
              RemoveNode,
              // Loading
@@ -47,13 +42,12 @@ DeclareEnum4(PatchResolveMethod,
 typedef PatchResolveMethod::Enum (*ResolveInheritedData)(StringRange inheritId,
                                                          DataNode*& result);
 
-//---------------------------------------------------------------------- Context
 struct DataTreeContext
 {
   DataTreeContext()
   {
-     Error = false;
-     PatchRequired = false;
+    Error = false;
+    PatchRequired = false;
   }
 
   bool Error;
@@ -63,13 +57,11 @@ struct DataTreeContext
   DataTreeLoader* Loader;
 };
 
-DeclareEnum4(ParseErrorCodes, 
-             FileError,
-             ParsingError, 
-             StructureError,
-             PatchError);
+DeclareEnum4(
+    ParseErrorCodes, FileError, ParsingError, StructureError, PatchError);
 
-DeclareEnum5(PatchState, None, 
+DeclareEnum5(PatchState,
+             None,
              // The value of this node was directly patched
              SelfPatched,
              // This node was locally added
@@ -85,17 +77,17 @@ DeclareEnum2(DependencyAction,
 
 DeclareEnum2(DataNodeType, Object, Value);
 
-DeclareBitField5(DataNodeFlags, 
-                 // If set, this node should be added to the final tree during patching.
-                 LocallyAdded,
-                 ChildOrderOverride,
-                 Property,
-                 Array,
-                 Enumeration);
+DeclareBitField5(
+    DataNodeFlags,
+    // If set, this node should be added to the final tree during patching.
+    LocallyAdded,
+    ChildOrderOverride,
+    Property,
+    Array,
+    Enumeration);
 
-//-------------------------------------------------------------------- Data Node
 // The data tree is a kind of generic tree data structure for storing data
-// loaded from structured text files (xml, JSON, custom). 
+// loaded from structured text files (xml, JSON, custom).
 /// Base class for all data tree nodes.
 class DataNode
 {
@@ -118,13 +110,15 @@ public:
   /// Get the parent node in the tree.
   DataNode* GetParent();
 
-  /// Attaches this node to the given parent node. Removes it from the old parent.
+  /// Attaches this node to the given parent node. Removes it from the old
+  /// parent.
   void AttachTo(DataNode* newParent);
-  
+
   /// Detaches ourself from our parent.
   void Detach();
-  
-  /// Detaches the old child, and attaches the new child in the same place as the old.
+
+  /// Detaches the old child, and attaches the new child in the same place as
+  /// the old.
   void ReplaceChild(DataNode* oldChild, DataNode* newChild);
 
   /// Moves the given child in-front of the given location.
@@ -144,7 +138,9 @@ public:
   DataNode* FindChildWithTypeName(StringRange typeName);
   /// The 'foundDuplicate' is to notify whomever is using this that there
   /// were multiple objects with the same type name.
-  DataNode* FindChildWithTypeName(StringRange typeName, StringRange name, bool& foundDuplicate);
+  DataNode* FindChildWithTypeName(StringRange typeName,
+                                  StringRange name,
+                                  bool& foundDuplicate);
   DataNode* FindChildWithUniqueNodeId(Guid childId);
 
   void AddAttribute(StringParam name, StringParam value);
@@ -160,8 +156,8 @@ public:
   void Patch(DataNode* patchNode, DataTreeContext& c);
   void SetPatchStateRecursive(PatchState::Enum state);
 
-  /// Places this node after the given sibling node. If null is passed in, it will place
-  /// this node at the front of the children.
+  /// Places this node after the given sibling node. If null is passed in, it
+  /// will place this node at the front of the children.
   void PlaceAfterSibling(DataNode* sibling);
 
   /// Flags.
@@ -219,7 +215,11 @@ public:
   Guid mUniqueNodeId;
 };
 
-bool ReadDataSet(Status& status, StringRange data, StringParam source,
-                 DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot);
+bool ReadDataSet(Status& status,
+                 StringRange data,
+                 StringParam source,
+                 DataTreeLoader* loader,
+                 uint* fileVersion,
+                 DataNode* fileRoot);
 
-}//namespace Zero
+} // namespace Zero

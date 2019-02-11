@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------- File Save State
 class ZeroShared FileModifiedState
 {
 public:
@@ -35,4 +29,4 @@ private:
   TimeType mLastCleanup;
 };
 
-}//namespace Zero
+} // namespace Zero

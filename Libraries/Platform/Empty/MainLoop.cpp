@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -33,4 +30,4 @@ void StopMainLoop()
   gStopMainLoop = true;
 }
 
-}// namespace Zero
+} // namespace Zero

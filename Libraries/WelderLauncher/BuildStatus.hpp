@@ -1,22 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DeclareEvent(BuildSelected);
-  DeclareEvent(BuildStateChanged);
-}
+DeclareEvent(BuildSelected);
+DeclareEvent(BuildStateChanged);
+} // namespace Events
 
-//------------------------------------------------------------------ Build Event
 class LauncherBuildEvent : public Event
 {
 public:
@@ -25,7 +18,6 @@ public:
   ZeroBuild* mBuild;
 };
 
-//----------------------------------------------------------------- Build Status
 class BuildStatusView : public Composite
 {
 public:
@@ -47,7 +39,8 @@ public:
   /// Updates the install state text.
   void UpdateInstallState();
 
-  /// When the install state of the build has changed, we want to update the text.
+  /// When the install state of the build has changed, we want to update the
+  /// text.
   void OnBuildStateChanged(Event*);
 
   Text* mBuildText;
@@ -56,7 +49,6 @@ public:
   ZeroBuild* mBuild;
 };
 
-//------------------------------------------------------------------- Build List
 class BuildList : public Composite
 {
 public:
@@ -64,8 +56,10 @@ public:
   typedef BuildList ZilchSelf;
 
   /// Constructor.
-  BuildList(Composite* parent, VersionSelector* versionSelector,
-            ZeroBuild* selected, bool installedOnly);
+  BuildList(Composite* parent,
+            VersionSelector* versionSelector,
+            ZeroBuild* selected,
+            bool installedOnly);
 
   /// Composite Interface.
   void UpdateTransform() override;
@@ -99,7 +93,6 @@ public:
   VersionSelector* mVersionSelector;
 };
 
-//--------------------------------------------------------------- Build Selector
 class BuildSelector : public Composite
 {
 public:
@@ -107,7 +100,8 @@ public:
   typedef BuildSelector ZilchSelf;
 
   /// Constructor.
-  BuildSelector(Composite* parent, VersionSelector* versionSelector,
+  BuildSelector(Composite* parent,
+                VersionSelector* versionSelector,
                 ZeroBuild* version = nullptr);
 
   /// Composite Interface.
@@ -115,7 +109,8 @@ public:
 
   /// Sets the current version to display.
   void SetBuild(ZeroBuild* version);
-  /// This version should only be called when we're setting the build for a project where there's no backing build
+  /// This version should only be called when we're setting the build for a
+  /// project where there's no backing build
   void SetBuild(const BuildId& buildId);
 
   /// Returns the currently selected version.
@@ -149,7 +144,7 @@ public:
   /// An arrow to the right of the current build.
   Element* mArrow;
 
-  /// When the build list is opened, there will be a background 
+  /// When the build list is opened, there will be a background
   Element* mBackground;
   Element* mBorder;
 
@@ -159,12 +154,11 @@ public:
   VersionSelector* mVersionSelector;
 };
 
-//------------------------------------------------------------------- Tweakables
 namespace BuildColors
 {
-  DeclareTweakable(Vec4, Installed);
-  DeclareTweakable(Vec4, NotInstalled);
-  DeclareTweakable(Vec4, Deprecated);
-}
+DeclareTweakable(Vec4, Installed);
+DeclareTweakable(Vec4, NotInstalled);
+DeclareTweakable(Vec4, Deprecated);
+} // namespace BuildColors
 
-}//namespace Zero
+} // namespace Zero

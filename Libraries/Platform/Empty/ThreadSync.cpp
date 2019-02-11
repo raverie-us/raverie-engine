@@ -1,12 +1,8 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//----------------------------------------------------------- Thread Lock
 struct ThreadLockPrivateData
 {
 };
@@ -27,8 +23,6 @@ void ThreadLock::Unlock()
 {
 }
 
-
-//----------------------------------------------------------- Os Event
 OsEvent::OsEvent()
 {
 }
@@ -62,7 +56,6 @@ OsHandle OsEvent::GetHandle()
   return nullptr;
 }
 
-//----------------------------------------------------------- Semaphore
 Semaphore::Semaphore()
 {
 }
@@ -95,7 +88,9 @@ InterprocessMutex::~InterprocessMutex()
 {
 }
 
-void InterprocessMutex::Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists)
+void InterprocessMutex::Initialize(Status& status,
+                                   const char* mutexName,
+                                   bool failIfAlreadyExists)
 {
 }
 
@@ -115,4 +110,4 @@ void CountdownEvent::Wait()
 {
 }
 
-}//namespace Zero
+} // namespace Zero

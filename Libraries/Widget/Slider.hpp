@@ -1,30 +1,20 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Slider.hpp
-///  Declaration of the basic Widget system controls.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------------
 namespace Events
 {
-  /// Called before any manipulation or change happens so that it can be
-  /// queried for the old value for undo/redo.
-  DeclareEvent(SliderManipulationStarted);
-  /// The value has been changed, but it's not the final commit.
-  DeclareEvent(SliderIncrementalChange);
-  /// The value change is final.
-  DeclareEvent(SliderChanged);
-}//namespace Events
+/// Called before any manipulation or change happens so that it can be
+/// queried for the old value for undo/redo.
+DeclareEvent(SliderManipulationStarted);
+/// The value has been changed, but it's not the final commit.
+DeclareEvent(SliderIncrementalChange);
+/// The value change is final.
+DeclareEvent(SliderChanged);
+} // namespace Events
 
-//------------------------------------------------------------------ ProgressBar
 class ProgressBar : public Composite
 {
 public:
@@ -68,10 +58,9 @@ protected:
   Element* mBackground;
 };
 
-//----------------------------------------------------------------------- Slider
 DeclareEnum3(SliderType, Number, Percentage, Degree);
 
-///Slider control for a simple slide bar.
+/// Slider control for a simple slide bar.
 class Slider : public Composite
 {
 public:
@@ -145,7 +134,7 @@ private:
   TextBox* mEditTextBox;
 
   /// It's valid for the value to be outside of the min and max range.
-  float mValue; 
+  float mValue;
 
   /// The min and max values
   float mMinValue;
@@ -158,4 +147,4 @@ private:
   SliderType::Type mType;
 };
 
-}//namespace Zero
+} // namespace Zero

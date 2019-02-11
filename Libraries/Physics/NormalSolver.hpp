@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,10 +10,10 @@ namespace Physics
 struct Manifold;
 struct MoleculeWalker;
 
-///A solver that allows each object to solve itself. This allows joints and 
-///contacts to change each iteration (such as contacts changing friction bounds).
-///The normal solver stores all in a separate list so it can avoid calling
-///virtual functions and call each class' implementation directly.
+/// A solver that allows each object to solve itself. This allows joints and
+/// contacts to change each iteration (such as contacts changing friction
+/// bounds). The normal solver stores all in a separate list so it can avoid
+/// calling virtual functions and call each class' implementation directly.
 class NormalSolver : public IConstraintSolver
 {
 public:
@@ -42,13 +37,13 @@ public:
   void BatchEvents() override;
 
 private:
-  typedef InList<Joint,&Joint::SolverLink> JointList;
-  typedef InList<Contact,&Contact::SolverLink> ContactList;
+  typedef InList<Joint, &Joint::SolverLink> JointList;
+  typedef InList<Contact, &Contact::SolverLink> ContactList;
   typedef Array<ConstraintMolecule> MoleculeList;
 
-  //Declare a InList for each joint type.
-#define JointType(type) \
-  typedef BaseInList<Joint,type,&Joint::SolverLink> type##List; \
+  // Declare a InList for each joint type.
+#define JointType(type)                                                        \
+  typedef BaseInList<Joint, type, &Joint::SolverLink> type##List;              \
   type##List m##type##List;
 
 #include "JointList.hpp"
@@ -61,7 +56,6 @@ private:
   MoleculeList mMolecules;
 };
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
-
+} // namespace Zero

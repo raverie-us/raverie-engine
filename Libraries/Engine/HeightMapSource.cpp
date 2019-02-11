@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-///  \file HeightMapResource.cpp
-///  Implementation of the HeightMap resource.
-///
-///  Authors: Trevor Sundberg
-///  Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -27,7 +19,7 @@ PatchLayer::PatchLayer()
 
 PatchLayer::~PatchLayer()
 {
-  if(Data)
+  if (Data)
     zDeallocate(Data);
 }
 
@@ -38,7 +30,7 @@ uint PatchLayer::Size()
 
 void PatchLayer::Allocate()
 {
-  if(Data == nullptr)
+  if (Data == nullptr)
     Data = (byte*)zAllocate(Size());
 }
 
@@ -65,7 +57,7 @@ PatchLayer* HeightMapSource::GetLayerData(PatchIndex index, uint layerIndex)
 {
   PatchData* data = GetPatchData(index);
   PatchLayer* layer = data->Layers.FindValue(layerIndex, nullptr);
-  if(layer == nullptr)
+  if (layer == nullptr)
   {
     layer = new PatchLayer();
     layer->LayerType = layerIndex;
@@ -77,7 +69,7 @@ PatchLayer* HeightMapSource::GetLayerData(PatchIndex index, uint layerIndex)
 PatchData* HeightMapSource::GetPatchData(PatchIndex index)
 {
   PatchData* data = mData.FindValue(index, nullptr);
-  if(data == nullptr)
+  if (data == nullptr)
   {
     data = new PatchData();
     data->Index = index;
@@ -89,7 +81,7 @@ PatchData* HeightMapSource::GetPatchData(PatchIndex index)
 void HeightMapSource::RemovePatch(PatchIndex index)
 {
   PatchData* data = mData.FindValue(index, nullptr);
-  if(data)
+  if (data)
   {
     delete data;
     mData.Erase(index);
@@ -98,7 +90,7 @@ void HeightMapSource::RemovePatch(PatchIndex index)
 
 struct HeightMapSourceLoadPattern
 {
-  template<typename readerType>
+  template <typename readerType>
   static void Load(HeightMapSource* heightMapSource, readerType& file)
   {
     uint numberOfPatches = 0;
@@ -109,10 +101,10 @@ struct HeightMapSourceLoadPattern
 
     heightMapSource->mVersion = version;
 
-    //Read data for each patch
-    for(uint i=0;i<numberOfPatches;++i)
+    // Read data for each patch
+    for (uint i = 0; i < numberOfPatches; ++i)
     {
-      PatchData * data = new PatchData();
+      PatchData* data = new PatchData();
       file.Read(data->Index.x);
       file.Read(data->Index.y);
 
@@ -120,7 +112,7 @@ struct HeightMapSourceLoadPattern
 
       file.Read(numberOfLayers);
 
-      for(uint l=0;l<numberOfLayers;++l)
+      for (uint l = 0; l < numberOfLayers; ++l)
       {
         // Read data for each layer
         PatchLayer* layer = new PatchLayer();
@@ -146,13 +138,13 @@ struct HeightMapSourceLoadPattern
     file.Write(heightMapSource->mVersion);
     file.Write(u32(heightMapSource->mData.Size()));
 
-    forRange(PatchData* data,  heightMapSource->mData.Values())
+    forRange(PatchData * data, heightMapSource->mData.Values())
     {
       file.Write(data->Index.x);
       file.Write(data->Index.y);
       file.Write(u32(data->Layers.Size()));
 
-      forRange(PatchLayer* layer,  data->Layers.Values())
+      forRange(PatchLayer * layer, data->Layers.Values())
       {
         file.Write(layer->LayerType);
         file.Write(layer->Width);
@@ -168,12 +160,14 @@ struct HeightMapSourceLoadPattern
 
 ImplementResourceManager(HeightMapSourceManager, HeightMapSource);
 
-HeightMapSourceManager::HeightMapSourceManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+HeightMapSourceManager::HeightMapSourceManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   this->mNoFallbackNeeded = true;
   mExtension = "bin";
-  AddLoader("HeightMapSource", new ChunkFileLoader<HeightMapSourceManager, HeightMapSourceLoadPattern>());
+  AddLoader("HeightMapSource",
+            new ChunkFileLoader<HeightMapSourceManager,
+                                HeightMapSourceLoadPattern>());
 }
 
 void HeightMapSource::Save(StringParam filename)
@@ -188,4 +182,4 @@ void HeightMapSource::Unload()
   DeleteObjectsInContainer(mData);
 }
 
-}//namespace Zero
+} // namespace Zero

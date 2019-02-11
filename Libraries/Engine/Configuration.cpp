@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Configuration.cpp
-/// Implementation of the Configuration Classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,10 +7,8 @@ namespace Zero
 namespace Events
 {
 DefineEvent(RecentProjectsUpdated);
-}//namespace Events
+} // namespace Events
 
-
-//------------------------------------------------------------------ Main Config
 bool MainConfig::sConfigCanSave = true;
 
 ZilchDefineType(MainConfig, builder, type)
@@ -52,7 +42,6 @@ void MainConfig::Serialize(Serializer& stream)
   SerializeNameDefault(ApplicationName, String());
 }
 
-//---------------------------------------------------------------- Editor Config
 ZilchDefineType(EditorConfig, builder, type)
 {
   ZeroBindComponent();
@@ -69,7 +58,6 @@ void EditorConfig::Serialize(Serializer& stream)
   SerializeNameDefault(ZeroHubUsername, String());
 }
 
-//--------------------------------------------------------------- Content Config
 ZilchDefineType(ContentConfig, builder, type)
 {
   ZeroBindComponent();
@@ -86,8 +74,6 @@ void ContentConfig::Serialize(Serializer& stream)
   SerializeNameDefault(HistoryEnabled, true);
 }
 
-
-//------------------------------------------------------------------ User Config
 ZilchDefineType(UserConfig, builder, type)
 {
   ZeroBindComponent();
@@ -98,10 +84,8 @@ ZilchDefineType(UserConfig, builder, type)
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
-UserConfig::UserConfig()
-  :LoggedIn(false)
+UserConfig::UserConfig() : LoggedIn(false)
 {
-
 }
 
 void UserConfig::Serialize(Serializer& stream)
@@ -115,7 +99,6 @@ void UserConfig::Serialize(Serializer& stream)
   SerializeNameDefault(LastAcceptedEulaHash, (u64)0);
 }
 
-//------------------------------------------------------------- Developer Config
 ZilchDefineType(DeveloperConfig, builder, type)
 {
   ZeroBindComponent();
@@ -138,7 +121,7 @@ void DeveloperConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mGenericFlags, HashSet<String>());
 }
 
-//------------------------------------------------------------------ ZilchPluginConfig
+//ZilchPluginConfig
 ZilchDefineType(ZilchPluginConfig, builder, type)
 {
   ZeroBindComponent();
@@ -161,7 +144,6 @@ void ZilchPluginConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mAttemptedIdeToolsInstall, false);
 }
 
-//----------------------------------------------------------- Text Editor Config
 ZilchDefineType(TextEditorConfig, builder, type)
 {
   ZeroBindComponent();
@@ -187,13 +169,18 @@ void TextEditorConfig::Serialize(Serializer& stream)
 {
   // This has to be done since the original values were serialized as garbage
   // (didn't use SerializeNameDefault, and had no constructor / SetDefaults)
-  // Therefore we had to tell it to serialize as another name, so we never pulled from the incorrectly saved data
-  // Eventually when we roll a new config, these should be changed back to just SerializeNameDefault
+  // Therefore we had to tell it to serialize as another name, so we never
+  // pulled from the incorrectly saved data Eventually when we roll a new
+  // config, these should be changed back to just SerializeNameDefault
   stream.SerializeFieldDefault("ShowWhiteSpace2", ShowWhiteSpace, true);
-  stream.SerializeFieldDefault("ConfidentAutoCompleteOnSymbols6", ConfidentAutoCompleteOnSymbols, true);
-  stream.SerializeFieldDefault("LocalWordCompletion", LocalWordCompletion, true);
-  stream.SerializeFieldDefault("KeywordAndTypeCompletion", KeywordAndTypeCompletion, true);
-  stream.SerializeFieldDefault("AutoCompleteOnEnter6", AutoCompleteOnEnter, true);
+  stream.SerializeFieldDefault(
+      "ConfidentAutoCompleteOnSymbols6", ConfidentAutoCompleteOnSymbols, true);
+  stream.SerializeFieldDefault(
+      "LocalWordCompletion", LocalWordCompletion, true);
+  stream.SerializeFieldDefault(
+      "KeywordAndTypeCompletion", KeywordAndTypeCompletion, true);
+  stream.SerializeFieldDefault(
+      "AutoCompleteOnEnter6", AutoCompleteOnEnter, true);
   SerializeNameDefault(FontSize, uint(13));
   SerializeNameDefault(ColorScheme, String("DarkZero"));
   SerializeNameDefault(LineNumbers, true);
@@ -203,65 +190,60 @@ void TextEditorConfig::Serialize(Serializer& stream)
   SerializeEnumNameDefault(TabWidth, TabWidth, TabWidth::TwoSpaces);
 }
 
-//-------------------------------------------------------------- Recent Projects
 uint RecentProjects::mAbsoluteMaxRecentProjects = 50;
 
-//******************************************************************************
 ZilchDefineType(RecentProjects, builder, type)
 {
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
 }
 
-//******************************************************************************
 void RecentProjects::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mMaxRecentProjects, 20u);
   SerializeNameDefault(mRecentProjects, mRecentProjects);
 }
 
-//******************************************************************************
 void RecentProjects::Initialize(CogInitializer& initializer)
 {
   RemoveMissingProjects();
 }
 
-//******************************************************************************
 void RecentProjects::AddRecentProject(StringParam file, bool sendsEvent)
 {
   // See if we can make room for this project if needed
   RemoveMissingProjects();
 
-  // If we already contain the file being added then don't remove or add anything
-  if(mRecentProjects.Contains(file) == false)
+  // If we already contain the file being added then don't remove or add
+  // anything
+  if (mRecentProjects.Contains(file) == false)
   {
     // If we've hit the limit of recent projects, remove the oldest project
-    if(mRecentProjects.Size() >= mAbsoluteMaxRecentProjects)
+    if (mRecentProjects.Size() >= mAbsoluteMaxRecentProjects)
       RemoveRecentProject(GetOldestProject());
 
     mRecentProjects.Insert(file);
   }
 
-  if(sendsEvent)
+  if (sendsEvent)
   {
     Event toSend;
     DispatchEvent(Events::RecentProjectsUpdated, &toSend);
   }
 }
 
-//******************************************************************************
-void RecentProjects::RemoveRecentProject(StringParam projectFile, bool sendsEvent)
+void RecentProjects::RemoveRecentProject(StringParam projectFile,
+                                         bool sendsEvent)
 {
   mRecentProjects.Erase(projectFile);
 
-  if(sendsEvent)
+  if (sendsEvent)
   {
     Event toSend;
     DispatchEvent(Events::RecentProjectsUpdated, &toSend);
   }
 }
 
-//******************************************************************************
 class FileTimeSorter
 {
 public:
@@ -271,7 +253,6 @@ public:
   }
 };
 
-//******************************************************************************
 void RecentProjects::GetProjectsByDate(Array<String>& projects)
 {
   // Make sure to remove all missing projects first
@@ -287,11 +268,10 @@ void RecentProjects::GetProjectsByDate(Array<String>& projects)
   // Sort the projects on when they were last opened.
   Sort(projects.All(), FileTimeSorter());
   // Only give them that max number of projects they request
-  if(projects.Size() > mMaxRecentProjects)
+  if (projects.Size() > mMaxRecentProjects)
     projects.Resize(mMaxRecentProjects);
 }
 
-//******************************************************************************
 void RecentProjects::CopyProjects(RecentProjects* source)
 {
   mRecentProjects = source->mRecentProjects;
@@ -299,13 +279,11 @@ void RecentProjects::CopyProjects(RecentProjects* source)
   RemoveMissingProjects();
 }
 
-//******************************************************************************
 size_t RecentProjects::GetRecentProjectsCount() const
 {
   return mRecentProjects.Size();
 }
 
-//******************************************************************************
 String RecentProjects::GetOldestProject()
 {
   String oldestProject;
@@ -313,12 +291,12 @@ String RecentProjects::GetOldestProject()
   forRange(String currProjectPath, mRecentProjects.All())
   {
     TimeType currTime = 0;
-    
+
     // Missing projects are considered old
-    if(FileExists(currProjectPath))
+    if (FileExists(currProjectPath))
       currTime = GetFileModifiedTime(currProjectPath);
 
-    if(currTime < time)
+    if (currTime < time)
     {
       time = currTime;
       oldestProject = currProjectPath;
@@ -328,8 +306,8 @@ String RecentProjects::GetOldestProject()
   return oldestProject;
 }
 
-//******************************************************************************
-void RecentProjects::UpdateMaxNumberOfProjects(uint maxRecentProjects, bool sendsEvent)
+void RecentProjects::UpdateMaxNumberOfProjects(uint maxRecentProjects,
+                                               bool sendsEvent)
 {
   mMaxRecentProjects = maxRecentProjects;
 
@@ -337,17 +315,16 @@ void RecentProjects::UpdateMaxNumberOfProjects(uint maxRecentProjects, bool send
   RemoveMissingProjects();
 
   // Remove all older projects until we reach the limit
-  while(mRecentProjects.Size() > mAbsoluteMaxRecentProjects)
+  while (mRecentProjects.Size() > mAbsoluteMaxRecentProjects)
     RemoveRecentProject(GetOldestProject());
 
-  if(sendsEvent)
+  if (sendsEvent)
   {
     Event toSend;
     DispatchEvent(Events::RecentProjectsUpdated, &toSend);
   }
 }
 
-//******************************************************************************
 void RecentProjects::RemoveMissingProjects()
 {
   HashSet<String> recentProjects(mRecentProjects);
@@ -355,18 +332,18 @@ void RecentProjects::RemoveMissingProjects()
 
   forRange(String project, recentProjects.All())
   {
-    if(FileExists(project))
+    if (FileExists(project))
       mRecentProjects.Insert(project);
   }
 }
 
-//------------------------------------------------------------------- Build Info
 
 cstr cConfigFileName = "ConfigurationV6.data";
 
 String GetConfigFile(StringParam applicationName)
 {
-  return FilePath::Combine(GetUserDocumentsDirectory(), applicationName, cConfigFileName);
+  return FilePath::Combine(
+      GetUserDocumentsDirectory(), applicationName, cConfigFileName);
 }
 
 void SaveConfig(Cog* configCog)
@@ -377,7 +354,8 @@ void SaveConfig(Cog* configCog)
   MainConfig* config = configCog->has(MainConfig);
   String applicationName = config->ApplicationName;
   String fileName = GetConfigFile(applicationName);
-  String configDirectory = FilePath::Combine(GetUserDocumentsDirectory(), applicationName);
+  String configDirectory =
+      FilePath::Combine(GetUserDocumentsDirectory(), applicationName);
   CreateDirectoryAndParents(configDirectory);
   String configFile = FilePath::Combine(configDirectory, cConfigFileName);
 
@@ -387,7 +365,7 @@ void SaveConfig(Cog* configCog)
   ErrorIf(status.Failed(), "Failed to save config file");
   saver.SaveInstance(configCog);
 
-  //SaveToDataFile(*configCog, configFile);
+  // SaveToDataFile(*configCog, configFile);
 }
 
 void RemoveConfig(Cog* config)
@@ -397,13 +375,15 @@ void RemoveConfig(Cog* config)
   DeleteFile(configFile);
 }
 
-Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSettings& settings)
+Cog* LoadConfig(StringParam applicationName,
+                bool useDefault,
+                ZeroStartupSettings& settings)
 {
   ZPrint("Build Version: %s\n", GetBuildVersionName());
 
   ZPrint("Loading configuration for %s...\n", applicationName.c_str());
 
-  //Get Paths
+  // Get Paths
   String appCacheDirectory = GetUserLocalDirectory();
   String documentDirectory = GetUserDocumentsDirectory();
   String applicationDirectory = GetApplicationDirectory();
@@ -418,23 +398,24 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
 
   // Locations to look for the config file.
   // Some of them are absolute, some are relative to the working directory.
-  String searchConfigPaths[] =
-  {
-    // The user config.
-    configFile,
-    // Into the source directory's Data directory.
-    FilePath::Combine(sourceDirectory, cDataDirectory, cDefaultConfigFile),
-    // In the application directory.
-    FilePath::Combine(applicationDirectory, cDefaultConfigFile),
-    // In the working directory.
-    cDefaultConfigFile,
-    // Into the application/Data directory.
-    FilePath::Combine(applicationDirectory, cDataDirectory, cDefaultConfigFile),
-    // Into the working/Data directory.
-    FilePath::Combine(cDataDirectory, cDefaultConfigFile),
+  String searchConfigPaths[] = {
+      // The user config.
+      configFile,
+      // Into the source directory's Data directory.
+      FilePath::Combine(sourceDirectory, cDataDirectory, cDefaultConfigFile),
+      // In the application directory.
+      FilePath::Combine(applicationDirectory, cDefaultConfigFile),
+      // In the working directory.
+      cDefaultConfigFile,
+      // Into the application/Data directory.
+      FilePath::Combine(
+          applicationDirectory, cDataDirectory, cDefaultConfigFile),
+      // Into the working/Data directory.
+      FilePath::Combine(cDataDirectory, cDefaultConfigFile),
   };
 
-  const size_t searchconfigPathsCount = sizeof(searchConfigPaths) / sizeof(*searchConfigPaths);
+  const size_t searchconfigPathsCount =
+      sizeof(searchConfigPaths) / sizeof(*searchConfigPaths);
   for (size_t i = 0; i < searchconfigPathsCount; ++i)
   {
     // Skip the user config if we're only going to use a default config.
@@ -444,22 +425,26 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
     StringParam path = searchConfigPaths[i];
     if (FileExists(path))
     {
-      configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), path, 0, nullptr);
+      configCog =
+          Z::gFactory->Create(Z::gEngine->GetEngineSpace(), path, 0, nullptr);
 
       // Make sure we successfully created the config Cog from the data file.
       if (configCog != nullptr)
       {
         userConfigExists = (i == 0);
-        ZPrintFilter(Filter::DefaultFilter, "Using config '%s'.\n", path.c_str());
+        ZPrintFilter(
+            Filter::DefaultFilter, "Using config '%s'.\n", path.c_str());
         break;
       }
     }
   }
 
-  if(configCog == nullptr)
+  if (configCog == nullptr)
   {
-    String msg = BuildString("Failed to find or open the configuration file, '", cConfigFileName,
-      "', in the working directory or application directory");
+    String msg =
+        BuildString("Failed to find or open the configuration file, '",
+                    cConfigFileName,
+                    "', in the working directory or application directory");
     FatalEngineError(msg.c_str());
 
     return nullptr;
@@ -471,17 +456,19 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
   mainConfig->mConfigDidNotExist = !userConfigExists;
   mainConfig->ApplicationDirectory = applicationDirectory;
   mainConfig->SourceDirectory = sourceDirectory;
-  mainConfig->DataDirectory = FilePath::Combine(mainConfig->SourceDirectory, cDataDirectory);
-  
+  mainConfig->DataDirectory =
+      FilePath::Combine(mainConfig->SourceDirectory, cDataDirectory);
+
   if (settings.mEmbeddedPackage)
   {
-    mainConfig->DataDirectory = FilePath::Combine(settings.mEmbeddedWorkingDirectory, cDataDirectory);
+    mainConfig->DataDirectory =
+        FilePath::Combine(settings.mEmbeddedWorkingDirectory, cDataDirectory);
   }
 
-  if(!userConfigExists)
+  if (!userConfigExists)
   {
-    //Set the application name this allows different native programs
-    //to have different config files.
+    // Set the application name this allows different native programs
+    // to have different config files.
     mainConfig->ApplicationName = applicationName;
     SaveConfig(configCog);
   }
@@ -509,4 +496,4 @@ String FindSourceDirectory()
   return GetApplicationDirectory();
 }
 
-}//namespace Zero
+} // namespace Zero

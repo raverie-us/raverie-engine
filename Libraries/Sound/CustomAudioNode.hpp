@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -12,24 +7,24 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(CustomAudioNodeSamplesNeeded);
+DeclareEvent(CustomAudioNodeSamplesNeeded);
 }
 
-//-------------------------------------------------------------------------- Custom Audio Node Event
+//Custom Audio Node Event
 
 class CustomAudioNodeEvent : public Event
 {
 public:
   ZilchDeclareType(CustomAudioNodeEvent, TypeCopyMode::ReferenceType);
 
-  CustomAudioNodeEvent(unsigned samples) :
-    SamplesNeeded(samples)
-  {}
+  CustomAudioNodeEvent(unsigned samples) : SamplesNeeded(samples)
+  {
+  }
 
   unsigned SamplesNeeded;
 };
 
-//------------------------------------------------------------------------------------- Sound Buffer
+//Sound Buffer
 
 /// Used with a CustomAudioNode to play audio data directly
 class SoundBuffer : public ReferenceCountedObject
@@ -45,15 +40,15 @@ public:
   float GetSampleAtIndex(int index);
   /// Removes all data from the buffer and resets it.
   void Reset();
-  /// Takes the AudioData from a MicrophoneUncompressedFloatData event and adds all of 
-  /// the audio samples to the buffer
+  /// Takes the AudioData from a MicrophoneUncompressedFloatData event and adds
+  /// all of the audio samples to the buffer
   void AddMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData);
 
-// Internals
+  // Internals
   Zero::Array<float> mBuffer;
 };
 
-//-------------------------------------------------------------------------------- Custom Audio Node
+//Custom Audio Node
 
 /// Uses a SoundBuffer to send audio data directly to the audio engine
 class CustomAudioNode : public SoundNode
@@ -64,7 +59,8 @@ public:
   CustomAudioNode(StringParam name, unsigned ID);
   ~CustomAudioNode();
 
-  /// The minimum number of samples that should be sent when a NeedMoreSamples event is received.
+  /// The minimum number of samples that should be sent when a NeedMoreSamples
+  /// event is received.
   int GetMinimumBufferSize();
   /// The sample rate currently being used by the audio system.
   int GetSystemSampleRate();
@@ -74,17 +70,22 @@ public:
   /// Sends a buffer of audio samples to the audio system for output.
   void SendBuffer(SoundBuffer* buffer);
   /// Sends a partial buffer of audio samples to the audio system for output.
-  void SendPartialBuffer(SoundBuffer* buffer, int startAtIndex, int howManySamples);
-  /// Takes the AudioData from a MicrophoneUncompressedFloatData event and sends all of 
-  /// the audio samples to the audio engine for output
+  void SendPartialBuffer(SoundBuffer* buffer,
+                         int startAtIndex,
+                         int howManySamples);
+  /// Takes the AudioData from a MicrophoneUncompressedFloatData event and sends
+  /// all of the audio samples to the audio engine for output
   void SendMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData);
-  /// Takes the AudioData from a MicrophoneCompressedByteData event, decompresses the data,
-  /// and sends all of the audio samples to the audio engine for output
+  /// Takes the AudioData from a MicrophoneCompressedByteData event,
+  /// decompresses the data, and sends all of the audio samples to the audio
+  /// engine for output
   void SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
-    ListenerNode* listener, const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer,
+                        const unsigned numberOfChannels,
+                        ListenerNode* listener,
+                        const bool firstRequest) override;
 
   class SampleBuffer
   {
@@ -114,5 +115,4 @@ private:
   unsigned mMinimumBufferSize;
 };
 
-
-}
+} // namespace Zero

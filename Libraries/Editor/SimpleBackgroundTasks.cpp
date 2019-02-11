@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Josh Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------DirectorySizeJob
 DirectorySizeJob::DirectorySizeJob(StringParam directory)
 {
   mDirectory = directory;
@@ -18,7 +12,6 @@ DirectorySizeJob::DirectorySizeJob(StringParam directory)
   mCurrentSize = 0;
 }
 
-//******************************************************************************
 void DirectorySizeJob::Execute()
 {
   ComputeSizeRecursive(mDirectory);
@@ -26,43 +19,40 @@ void DirectorySizeJob::Execute()
   UpdateProgress(GetName(), 1.0, HumanReadableFileSize(mCurrentSize));
 }
 
-//******************************************************************************
 void DirectorySizeJob::ComputeSizeRecursive(StringParam dir)
 {
   FileRange range(dir);
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     // If we've been canceled then stop
-    if(mState == BackgroundTaskState::Canceled)
+    if (mState == BackgroundTaskState::Canceled)
       break;
 
     FileEntry entry = range.FrontEntry();
     String filePath = FilePath::Combine(entry.mPath, entry.mFileName);
     // If this is a directory then recurse
-    if(DirectoryExists(filePath))
+    if (DirectoryExists(filePath))
       ComputeSizeRecursive(filePath);
     else
       mCurrentSize += entry.mSize;
 
     // Send progress every so often
     ++mUpdateCounter;
-    if(mUpdateCounter >= mUpdateFrequency)
+    if (mUpdateCounter >= mUpdateFrequency)
     {
       mUpdateCounter = 0;
-      // There's not really a good way to know how many files there is so I can't
-      // give an actual progress percent (only the current size)
+      // There's not really a good way to know how many files there is so I
+      // can't give an actual progress percent (only the current size)
       UpdateProgress(GetName(), 0, HumanReadableFileSize(mCurrentSize));
     }
   }
 }
 
-//******************************************************************************
 ExecuteProcessTaskJob::ExecuteProcessTaskJob(StringParam process)
 {
   mProcess = process;
 }
 
-//******************************************************************************
 void ExecuteProcessTaskJob::Execute()
 {
   TextStreamDebugPrint debugPrint;
@@ -77,4 +67,4 @@ void ExecuteProcessTaskJob::Execute()
   UpdateProgress(name, 1.0f);
 }
 
-}//namespace Zero
+} // namespace Zero

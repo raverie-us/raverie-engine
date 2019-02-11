@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Widget.hpp
-/// Declaration of the base widget class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,14 +6,12 @@ namespace Zero
 
 typedef Widget Element;
 
-//------------------------------------------------------------------ Draw Params
 struct DrawParams
 {
   uint FrameId;
   GraphicsEngine* System;
 };
 
-//-------------------------------------------------------------- Color Transform
 struct ColorTransform
 {
   Vec4 ColorMultiply;
@@ -31,17 +21,17 @@ DeclareEnum2(FocusDirection, Forward, Backwards);
 
 DeclareEnum2(DisplayOrigin, TopLeft, Center);
 
-DeclareBitField4(DisplayFlags, 
-  // Mouse is over object
-  MouseOver, 
-  // Mouse is over object or child  has focus
-  MouseOverHierarchy, 
-  // Object has focus
-  Focus,
-  // Object has focus or child has focus
-  FocusHierarchy);
+DeclareBitField4(DisplayFlags,
+                 // Mouse is over object
+                 MouseOver,
+                 // Mouse is over object or child  has focus
+                 MouseOverHierarchy,
+                 // Object has focus
+                 Focus,
+                 // Object has focus or child has focus
+                 FocusHierarchy);
 
-//Focus Modes
+// Focus Modes
 // Soft focus is focus that can be taken away by soft focus
 // or hard focus. Usually activated when the mouse moves into some ui and
 // it wants to listen to keyboard key presses.
@@ -49,8 +39,7 @@ DeclareBitField4(DisplayFlags,
 // other ui would not want to steal focus just by the mouse moving in them.
 DeclareEnum2(FocusMode, Soft, Hard);
 
-//----------------------------------------------------------------------- Docker
-///Docker class is used to dock widgets.
+/// Docker class is used to dock widgets.
 class Docker
 {
 public:
@@ -59,23 +48,30 @@ public:
   virtual void Zoom(Widget* widget){};
   virtual void Show(Widget* widget){};
   virtual void WidgetDestroyed(Widget* widget){};
-  virtual bool StartManipulation(Widget* widget, DockMode::Enum direction) { return false; }
-  virtual WindowBorderArea::Enum GetWindowBorderArea(Widget* widget, DockMode::Enum direction) { return WindowBorderArea::None; }
-  virtual ~Docker() {}
+  virtual bool StartManipulation(Widget* widget, DockMode::Enum direction)
+  {
+    return false;
+  }
+  virtual WindowBorderArea::Enum GetWindowBorderArea(Widget* widget,
+                                                     DockMode::Enum direction)
+  {
+    return WindowBorderArea::None;
+  }
+  virtual ~Docker()
+  {
+  }
 };
 
-//------------------------------------------------------------------------------
 namespace TransformUpdateState
 {
-  enum Enum
-  {
-    Updated,
-    ChildUpdate,
-    LocalUpdate
-  };
-}//namespace TransformUpdateState
+enum Enum
+{
+  Updated,
+  ChildUpdate,
+  LocalUpdate
+};
+} // namespace TransformUpdateState
 
-//------------------------------------------------------------------ Size Policy
 DeclareEnum2(SizeAxis, X, Y);
 
 // Fixed - fixed widget size
@@ -95,20 +91,23 @@ public:
     Size = Vec2::cZero;
   }
 
-  SizePolicies(SizePolicy::Enum xpolicy, SizePolicy::Enum ypolicy)
-    :XPolicy(xpolicy), YPolicy(ypolicy), Size(Vec2::cZero)
+  SizePolicies(SizePolicy::Enum xpolicy, SizePolicy::Enum ypolicy) :
+      XPolicy(xpolicy),
+      YPolicy(ypolicy),
+      Size(Vec2::cZero)
   {
     XPolicy = xpolicy;
     YPolicy = ypolicy;
   }
 
-  SizePolicies(SizePolicy::Enum xyPolicy)
-    : XPolicy(xyPolicy), YPolicy(xyPolicy), Size(Vec2::cZero)
+  SizePolicies(SizePolicy::Enum xyPolicy) :
+      XPolicy(xyPolicy),
+      YPolicy(xyPolicy),
+      Size(Vec2::cZero)
   {
   }
 
-  union
-  {
+  union {
     struct
     {
       SizePolicy::Enum XPolicy;
@@ -120,19 +119,23 @@ public:
   Vec2 Size;
 };
 
-DeclareEnum2(AttachType,
-  // Normal attachment may get redirected to client widget (ScrollArea etc)
-  Normal,
-  // Attach as direct child
-  Direct);
+DeclareEnum2(
+    AttachType,
+    // Normal attachment may get redirected to client widget (ScrollArea etc)
+    Normal,
+    // Attach as direct child
+    Direct);
 
-//----------------------------------------------------------------------- Widget
 class WidgetHandleManager : public HandleManager
 {
 public:
-  WidgetHandleManager(ExecutableState* state) : HandleManager(state) {}
+  WidgetHandleManager(ExecutableState* state) : HandleManager(state)
+  {
+  }
 
-  void ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize) override;
+  void ObjectToHandle(const byte* object,
+                      BoundType* type,
+                      Handle& handleToInitialize) override;
   byte* HandleToObject(const Handle& handle) override;
   void Delete(const Handle& handle) override;
   bool CanDelete(const Handle& handle) override;
@@ -143,8 +146,8 @@ public:
 /// Widget UI base class. Widget is the base class for all user interface system
 /// objects. It is an atomic piece of UI functionality most of which are visible
 /// like tool bars or buttons. Two major types of object inherit from widget:
-/// Composite classes which can contain other widgets, and the control classes 
-/// which implements different UI functionality like button, listbox, etc. 
+/// Composite classes which can contain other widgets, and the control classes
+/// which implements different UI functionality like button, listbox, etc.
 class Widget : public EventObject
 {
 public:
@@ -175,20 +178,32 @@ public:
   bool GetGlobalActive();
 
   /// Translation of the widget relative to it's parent
-  Vec3 GetTranslation(){return mTranslation;}
+  Vec3 GetTranslation()
+  {
+    return mTranslation;
+  }
   void SetTranslation(Vec3 newTranslation);
 
   /// Size of the widget
-  Vec2 GetSize(){return mSize;}
+  Vec2 GetSize()
+  {
+    return mSize;
+  }
   void SetSize(Vec2 newSize);
-  
+
   /// Sizing
   void SetSizing(SizeAxis::Enum axis, SizePolicy::Enum policy, float size);
   void SetSizing(SizePolicy::Enum policy, Vec2Param size);
   void SetSizing(SizePolicy::Enum policy, float size);
 
-  SizePolicies GetSizePolicy() { return mSizePolicy; }
-  void SetSizePolicy(SizePolicies newPolicy) { mSizePolicy = newPolicy; }
+  SizePolicies GetSizePolicy()
+  {
+    return mSizePolicy;
+  }
+  void SetSizePolicy(SizePolicies newPolicy)
+  {
+    mSizePolicy = newPolicy;
+  }
   virtual void SizeToContents();
 
   // Get the minimum size needs for this widget to be useful
@@ -198,12 +213,15 @@ public:
   void SetTranslationAndSize(Vec3 newTranslation, Vec2 newSize);
 
   /// Color tint applied to this widget and it's children
-  Vec4 GetColor(){return mColor;}
+  Vec4 GetColor()
+  {
+    return mColor;
+  }
   void SetColor(Vec4Param color);
 
   /// Dispatch an event to this widget and all ancestors
   void DispatchBubble(StringParam eventId, Event* event);
-  virtual void DispatchDown(StringParam eventId, Event* event) {};
+  virtual void DispatchDown(StringParam eventId, Event* event){};
 
   // Focus
   void TakeFocus();
@@ -223,29 +241,41 @@ public:
   void SetClipping(bool clipping);
   bool GetClipping();
 
-  // Compute a 0-based index of how many parents and siblings we are in front of. 
-  // This is not used anywhere in the widget system, but can be used
-  // for WebBrowser and other similar z-index properties.
+  // Compute a 0-based index of how many parents and siblings we are in front
+  // of. This is not used anywhere in the widget system, but can be used for
+  // WebBrowser and other similar z-index properties.
   int GetZIndex();
 
-  template<typename type>
-  type* CreateAttached(StringParam name){return (type*)CreateAttachedGeneric(name);}
+  template <typename type>
+  type* CreateAttached(StringParam name)
+  {
+    return (type*)CreateAttachedGeneric(name);
+  }
   Element* CreateAttachedGeneric(StringParam name);
 
-  //Tree
+  // Tree
   RootWidget* GetRootWidget();
 
   void UpdateTransformExternal();
   virtual void UpdateTransform();
   virtual Widget* HitTest(Vec2 screenPoint, Widget* skip);
-  virtual void ChangeRoot(RootWidget* newRoot){ mRootWidget = newRoot; }
-  Composite* GetParent() { return mParent; }
-  virtual Composite* GetSelfAsComposite() { return NULL; }
+  virtual void ChangeRoot(RootWidget* newRoot)
+  {
+    mRootWidget = newRoot;
+  }
+  Composite* GetParent()
+  {
+    return mParent;
+  }
+  virtual Composite* GetSelfAsComposite()
+  {
+    return NULL;
+  }
   bool IsAncestorOf(Widget* child);
   void MoveToFront();
   void MoveToBack();
 
-  //Coordinates
+  // Coordinates
   WidgetRect GetRectInParent();
   WidgetRect GetLocalRect() const;
   WidgetRect GetScreenRect() const;
@@ -256,14 +286,23 @@ public:
   Vec3 GetScreenPosition() const;
   bool Contains(Vec2 screenPoint);
 
-  //Layout functions
+  // Layout functions
   virtual Thickness GetBorderThickness();
   virtual Vec2 Measure(LayoutArea& data);
-  bool GetNotInLayout(){ return mNotInLayout; }
-  void SetNotInLayout(bool value) { mNotInLayout = value; }
+  bool GetNotInLayout()
+  {
+    return mNotInLayout;
+  }
+  void SetNotInLayout(bool value)
+  {
+    mNotInLayout = value;
+  }
 
-  //Style functions
-  DefinitionSet* GetDefinitionSet(){return mDefSet;}
+  // Style functions
+  DefinitionSet* GetDefinitionSet()
+  {
+    return mDefSet;
+  }
   virtual void ChangeDefinition(BaseDefinition* set);
 
   void CaptureMouse();
@@ -276,34 +315,66 @@ public:
   virtual void ScreenCaptureBackBuffer(Image& image);
   void ScreenCaptureBackBuffer(Image& image, WidgetRect& subViewport);
 
-  //Docking
-  DockMode::Enum GetDockMode() { return mCurDockMode; }
+  // Docking
+  DockMode::Enum GetDockMode()
+  {
+    return mCurDockMode;
+  }
   virtual void SetDockMode(DockMode::Enum dock);
   void SetDockArea(DockArea::Enum dockArea);
-  Docker* GetDocker() { return mDocker; }
+  Docker* GetDocker()
+  {
+    return mDocker;
+  }
   void SetDocker(Docker* docker);
 
   bool IsMouseOver();
   void MarkAsNeedsUpdate(bool local = true);
   void NeedsRedraw();
-  TransformUpdateState::Enum GetTransformUpdateState(){return mTransformUpdateState;}
+  TransformUpdateState::Enum GetTransformUpdateState()
+  {
+    return mTransformUpdateState;
+  }
 
-  void SetHideOnClose(bool value) { mHideOnClose = value; }
+  void SetHideOnClose(bool value)
+  {
+    mHideOnClose = value;
+  }
   void SetInteractive(bool value);
-  bool GetVisible() { return mVisible; }
-  void SetVisible(bool visible) { mVisible = visible; }
+  bool GetVisible()
+  {
+    return mVisible;
+  }
+  void SetVisible(bool visible)
+  {
+    mVisible = visible;
+  }
 
-  virtual void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params){};
+  virtual void Draw(DisplayRender* render,
+                    Mat4Param parentTx,
+                    ColorTransform& colorTx,
+                    DrawParams& params){};
   virtual void DispatchAt(DispatchAtParams& params);
 
-  virtual void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
-  ViewNode& AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture);
-  void CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType);
+  virtual void RenderUpdate(ViewBlock& viewBlock,
+                            FrameBlock& frameBlock,
+                            Mat4Param parentTx,
+                            ColorTransform colorTx,
+                            WidgetRect clipRect);
+  ViewNode& AddRenderNodes(ViewBlock& viewBlock,
+                           FrameBlock& frameBlock,
+                           WidgetRect clipRect,
+                           Texture* texture);
+  void CreateRenderData(ViewBlock& viewBlock,
+                        FrameBlock& frameBlock,
+                        WidgetRect clipRect,
+                        Array<StreamedVertex>& vertices,
+                        PrimitiveType::Enum primitiveType);
 
-//Internals
+  // Internals
   IntrusiveLink(Widget, mWidgetLink);
 
-  //Used for sorting layout
+  // Used for sorting layout
   u64 mId;
   BitField<DisplayFlags::Enum> mFlags;
   SizePolicies mSizePolicy;
@@ -351,5 +422,4 @@ private:
   virtual bool TakeFocusOverride();
 };
 
-
-}//namespace Zero
+} // namespace Zero

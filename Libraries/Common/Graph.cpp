@@ -1,21 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Graph.cpp
-/// Implementation of the Memory Graph.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-
 #ifdef UseMemoryDebugger
-#include "Allocations.hpp" //@ignore (for the compactor turning this into a single hpp/cpp)
+#  include "Allocations.hpp" //@ignore (for the compactor turning this into a single hpp/cpp)
 #endif
 
 #ifdef UseMemoryTracker
-#include "Allocations.hpp" //@ignore (for the compactor turning this into a single hpp/cpp)
+#  include "Allocations.hpp" //@ignore (for the compactor turning this into a single hpp/cpp)
 #endif
 
 namespace Zero
@@ -49,22 +40,24 @@ byte* BufferLocation = StaticMemoryGraphBuffer;
 
 MemPtr zStaticAllocate(size_t size)
 {
-  //Static Memory graph nodes and other static objects
-  //are allocated from a fixed size buffer this allows them to have controlled 
-  //or optional initialization and prevents them from showing up in leaks
-  ErrorIf(BufferLocation + size >= StaticMemoryGraphBuffer + cStaticMemoryBufferSize,
-    "Allocated too many memory graph objects. Increase cStaticMemoryBufferSize.");
+  // Static Memory graph nodes and other static objects
+  // are allocated from a fixed size buffer this allows them to have controlled
+  // or optional initialization and prevents them from showing up in leaks
+  ErrorIf(BufferLocation + size >=
+              StaticMemoryGraphBuffer + cStaticMemoryBufferSize,
+          "Allocated too many memory graph objects. Increase "
+          "cStaticMemoryBufferSize.");
   byte* current = BufferLocation;
-  BufferLocation+=size;
-  //DebugPrint("Max Static Memory %d\n", uint(BufferLocation - StaticMemoryGraphBuffer));
+  BufferLocation += size;
+  // DebugPrint("Max Static Memory %d\n", uint(BufferLocation -
+  // StaticMemoryGraphBuffer));
   return current;
 }
 
 namespace Memory
 {
-//------------------------------------------------------------------------ Stats
-Stats::Stats()
-  : Allocations(0),
+Stats::Stats() :
+    Allocations(0),
     Active(0),
     BytesAllocated(0),
     BytesDedicated(0),
@@ -74,22 +67,22 @@ Stats::Stats()
 
 #define VisitByName(name) vistor(#name, name)
 
-template<typename Vistor>
+template <typename Vistor>
 void Stats::Visit(Vistor& vistor, size_t flags)
 {
-  if(flags & ShowActive)
+  if (flags & ShowActive)
     VisitByName(Active);
 
-  if(flags & ShowCount)
+  if (flags & ShowCount)
     VisitByName(Allocations);
 
-  if(flags & ShowBytes)
+  if (flags & ShowBytes)
     VisitByName(BytesAllocated);
 
-  if(flags & ShowDedicated)
+  if (flags & ShowDedicated)
     VisitByName(BytesDedicated);
 
-  if(flags & ShowPeak)
+  if (flags & ShowPeak)
     VisitByName(PeakAllocated);
 }
 
@@ -104,7 +97,6 @@ void Stats::Accumulate(const Stats& right)
   PeakAllocated += right.PeakAllocated;
 }
 
-
 Root* Root::RootGraph = nullptr;
 Heap* Root::GloblHeap = nullptr;
 Heap* Root::StaticHeap = nullptr;
@@ -117,17 +109,17 @@ void Shutdown()
 
 void Root::Shutdown()
 {
-  //Only delete the root
-  //the root graph node will delete all child graph
-  //nodes and clean up memory.
-  if(RootGraph != nullptr)
+  // Only delete the root
+  // the root graph node will delete all child graph
+  // nodes and clean up memory.
+  if (RootGraph != nullptr)
   {
     delete RootGraph;
     RootGraph = nullptr;
   }
 }
 
-void DumpMemoryDebuggerStats(cstr projectName) 
+void DumpMemoryDebuggerStats(cstr projectName)
 {
 #ifdef UseMemoryDebugger
   BuildVerySleepyStats_ActiveAllocations(projectName);
@@ -142,7 +134,7 @@ void Root::Initialize()
   InitializeMemory();
 #endif
 
-  if(RootGraph == nullptr)
+  if (RootGraph == nullptr)
   {
     RootGraph = new Root("Root", nullptr);
     StaticHeap = new Heap("Static", RootGraph);
@@ -173,8 +165,9 @@ const size_t tabSize = 2;
 
 void Root::PrintAll()
 {
-  if(RootGraph)
-    Root::RootGraph->PrintGraph(Stats::ShowBytes | Stats::ShowTotal | Stats::ShowActive);
+  if (RootGraph)
+    Root::RootGraph->PrintGraph(Stats::ShowBytes | Stats::ShowTotal |
+                                Stats::ShowActive);
 }
 
 class VistPrinter
@@ -195,24 +188,22 @@ public:
   }
 };
 
-Graph::Graph(cstr name, Graph* parent)
-  : Name(name),
-  mParent(parent)
+Graph::Graph(cstr name, Graph* parent) : Name(name), mParent(parent)
 {
-  if(parent != nullptr)
+  if (parent != nullptr)
     parent->Children.PushBack(this);
 }
 
 void Graph::PrintHeader(size_t flags)
 {
-  //DebugPrint("%-*s", maxTabs*tabSize, "Name" );
+  // DebugPrint("%-*s", maxTabs*tabSize, "Name" );
 
   VistNamePrinter p;
 
-  if(flags & Stats::ShowLocal)
+  if (flags & Stats::ShowLocal)
     mData.Visit(p, flags);
 
-  if(flags & Stats::ShowTotal)
+  if (flags & Stats::ShowTotal)
     mData.Visit(p, flags);
 
   DebugPrint("\n");
@@ -221,7 +212,7 @@ void Graph::PrintHeader(size_t flags)
 void Graph::CleanUp()
 {
   InListBaseLink<Graph>::range sub = Children.All();
-  while(!sub.Empty())
+  while (!sub.Empty())
   {
     sub.Front().CleanUp();
     sub.PopFront();
@@ -239,18 +230,18 @@ void Graph::PrintHelper(size_t tabs, size_t flags, cstr /*name*/)
   DebugPrint("%*s%-*s", tabWidth, "", nameWidth, Name.c_str());
   VistPrinter p;
 
-  if(flags & Stats::ShowLocal)
+  if (flags & Stats::ShowLocal)
     mData.Visit(p, flags);
 
-  if(flags & Stats::ShowTotal)
+  if (flags & Stats::ShowTotal)
     total.Visit(p, flags);
 
   DebugPrint("\n");
 
   InListBaseLink<Graph>::range sub = Children.All();
-  while(!sub.Empty())
+  while (!sub.Empty())
   {
-    sub.Front().Print(tabs+1, flags);
+    sub.Front().Print(tabs + 1, flags);
     sub.PopFront();
   }
 }
@@ -259,7 +250,7 @@ void Graph::Compute(Stats& data)
 {
   data.Accumulate(mData);
   InListBaseLink<Graph>::range sub = Children.All();
-  while(!sub.Empty())
+  while (!sub.Empty())
   {
     sub.Front().Compute(data);
     sub.PopFront();
@@ -290,7 +281,7 @@ Heap* GetNamedHeap(cstr name)
   Graph* current = Root::RootGraph;
   Graph* parent = nullptr;
   StringRange token = name;
-  while(!tokens.Empty() && current != nullptr)
+  while (!tokens.Empty() && current != nullptr)
   {
     parent = current;
     current = nullptr;
@@ -298,14 +289,14 @@ Heap* GetNamedHeap(cstr name)
     InListBaseLink<Graph>::range managers = parent->Children.All();
 
     token = tokens.Front();
-    while(!managers.Empty())
+    while (!managers.Empty())
     {
-      if(managers.Front().Name.c_str() == token)
+      if (managers.Front().Name.c_str() == token)
         current = &managers.Front();
       managers.PopFront();
     }
 
-    if(current == nullptr)
+    if (current == nullptr)
       current = new Heap(token.Data(), parent);
 
     tokens.PopFront();
@@ -314,6 +305,6 @@ Heap* GetNamedHeap(cstr name)
   return (Heap*)current;
 }
 
-}//namespace Memory
+} // namespace Memory
 
-}//namespace Zero
+} // namespace Zero

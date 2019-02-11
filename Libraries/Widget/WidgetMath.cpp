@@ -1,20 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file WidgetMath.cpp
-///  Implementation of the basic Widget layout helpers.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------- Rect
 
-const WidgetRect WidgetRect::cZero = WidgetRect::CenterAndSize(Vec2(0,0), Vec2(0,0));
+const WidgetRect WidgetRect::cZero =
+    WidgetRect::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 
 WidgetRect WidgetRect::PointAndSize(Vec2Param point, Vec2Param size)
 {
@@ -51,9 +43,9 @@ WidgetRect WidgetRect::MinAndMax(Vec2Param min, Vec2Param max)
 bool WidgetRect::operator==(RectParam rhs) const
 {
   bool result = Math::Abs(X - rhs.X) < Math::Epsilon();
-  result &= Math::Abs(Y - rhs.Y) < Math::Epsilon( );
-  result &= Math::Abs(SizeX - rhs.SizeX) < Math::Epsilon( );
-  result &= Math::Abs(SizeY - rhs.SizeY) < Math::Epsilon( );
+  result &= Math::Abs(Y - rhs.Y) < Math::Epsilon();
+  result &= Math::Abs(SizeX - rhs.SizeX) < Math::Epsilon();
+  result &= Math::Abs(SizeY - rhs.SizeY) < Math::Epsilon();
 
   return result;
 }
@@ -82,19 +74,21 @@ void WidgetRect::Expand(const WidgetRect& other)
 
 bool WidgetRect::Contains(Vec2Param point) const
 {
-  if(point.x < X) return false;
-  if(point.x > X + SizeX) return false;
-  if(point.y < Y) return false;
-  if(point.y > Y + SizeY) return false;
+  if (point.x < X)
+    return false;
+  if (point.x > X + SizeX)
+    return false;
+  if (point.y < Y)
+    return false;
+  if (point.y > Y + SizeY)
+    return false;
   return true;
 }
 
 bool WidgetRect::Overlap(const WidgetRect& other) const
 {
-  bool nooverlap = (X > other.X + other.SizeX) || 
-                   (Y > other.Y + other.SizeY) ||
-                   (other.X > X + SizeX) || 
-                   (other.Y > Y + SizeY);
+  bool nooverlap = (X > other.X + other.SizeX) || (Y > other.Y + other.SizeY) ||
+                   (other.X > X + SizeX) || (other.Y > Y + SizeY);
 
   return !nooverlap;
 }
@@ -116,7 +110,7 @@ void PlaceWithRect(const WidgetRect& rect, Widget* widget)
 void PlaceCenterToRect(const WidgetRect& rect, Widget* widget, Vec2Param offset)
 {
   Vec2 translation = rect.TopLeft();
-  if(widget->mOrigin == DisplayOrigin::Center)
+  if (widget->mOrigin == DisplayOrigin::Center)
     translation += rect.GetSize() * 0.5f;
   else
     translation += (rect.GetSize() * 0.5f) - (widget->GetSize() * 0.5f);
@@ -190,11 +184,10 @@ Mat4 Invert2D(Mat4Param mat)
   return inverted;
 }
 
-
 Vec2 ExpandSizeByThickness(Thickness thickness, Vec2Param size)
 {
   Vec2 addBorder(thickness.Left + thickness.Right,
-               thickness.Top + thickness.Bottom);
+                 thickness.Top + thickness.Bottom);
   return addBorder + size;
 }
 
@@ -208,4 +201,4 @@ WidgetRect RemoveThicknessRect(Thickness thickness, Vec2Param size)
   return r;
 }
 
-}
+} // namespace Zero

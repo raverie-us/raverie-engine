@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentStandard.hpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Common/CommonStandard.hpp"
@@ -32,7 +25,7 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} // namespace Zero
 
 // Our includes
 #include "FileExtensionManager.hpp"

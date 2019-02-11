@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -41,7 +36,8 @@ Zero::String UrlParamDecode(StringParam string)
       // make sure moving forward 2 characters is within the string
       if ((it + 3) < end)
       {
-        // create a substring of the next two characters should they both be hex numbers
+        // create a substring of the next two characters should they both be hex
+        // numbers
         Rune nextRune1 = *(it + 1);
         Rune nextRune2 = *(it + 2);
         if (IsHex(nextRune1) && IsHex(nextRune2))
@@ -60,7 +56,8 @@ Zero::String UrlParamDecode(StringParam string)
         }
       }
     }
-    // falls back on the runes value in all cases of it not being an encoded value
+    // falls back on the runes value in all cases of it not being an encoded
+    // value
     builder << rune;
   }
 

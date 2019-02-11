@@ -1,18 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Action.hpp
-/// Declaration of the action system.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-DeclareBitField5(ActionFlag, Started, Completed, NotActive, Linked, Schedulable);
+DeclareBitField5(
+    ActionFlag, Started, Completed, NotActive, Linked, Schedulable);
 
 DeclareEnum2(ActionExecuteMode, LogicUpdate, FrameUpdate);
 DeclareEnum2(ActionState, Running, Completed);
@@ -25,10 +18,10 @@ public:
 
   IntrusiveLink(Action, link);
 
-  //Flags
+  // Flags
   BitField<ActionFlag::Enum> mFlags;
 
-  virtual ActionState::Enum Update(float dt)=0;
+  virtual ActionState::Enum Update(float dt) = 0;
 
   /// Cancel the action and all child actions.
   void Cancel();
@@ -80,7 +73,10 @@ public:
 
   void Update(float dt, float rdt, ActionExecuteMode::Enum mode);
   void Add(Action* action, ActionExecuteMode::Enum mode);
-  void SetRealTime(bool value){mRealTime = value;}
+  void SetRealTime(bool value)
+  {
+    mRealTime = value;
+  }
 
 private:
   ActionSpace* mSpace;
@@ -98,10 +94,11 @@ public:
 
   ActionGroup();
   ~ActionGroup();
-  ActionGroup(Object* object, ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
+  ActionGroup(Object* object,
+              ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
 
   void Add(Action* action) override;
-  ActionState::Enum  Update(float dt) override;
+  ActionState::Enum Update(float dt) override;
   void CancelOverride() override;
   bool IsEmpty() override;
 
@@ -109,7 +106,8 @@ private:
   InActionList mActions;
 };
 
-/// A group of actions that run in serial. The first child action will block the second from running and so on.
+/// A group of actions that run in serial. The first child action will block the
+/// second from running and so on.
 class ActionSequence : public ActionSet
 {
 public:
@@ -117,10 +115,11 @@ public:
 
   ActionSequence();
   ~ActionSequence();
-  ActionSequence(Object* object, ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
+  ActionSequence(Object* object,
+                 ActionExecuteMode::Enum mode = ActionExecuteMode::LogicUpdate);
 
   void Add(Action* action) override;
-  ActionState::Enum  Update(float dt) override;
+  ActionState::Enum Update(float dt) override;
   void CancelOverride() override;
   bool IsEmpty() override;
 
@@ -128,4 +127,4 @@ private:
   InActionList mActions;
 };
 
-}
+} // namespace Zero

@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file DataTree.hpp
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +7,6 @@ namespace Zero
 class DataNode;
 class DataObject;
 
-//------------------------------------------------------------- Data Tree Loader
 class DataTreeLoader : public SerializerBuilder<DataTreeLoader>
 {
 public:
@@ -30,11 +22,13 @@ public:
 
   /// Load a data tree from a StringRange. The 'source' parameter is used
   /// to make error messages more helpful.
-  bool OpenBuffer(Status& status, StringRange data, StringRange source = "text buffer");
+  bool OpenBuffer(Status& status,
+                  StringRange data,
+                  StringRange source = "text buffer");
 
   /// Release the data tree and file memory.
   void Close() override;
-  
+
   /// Reset the tree so it can serialize to cogs again
   void Reset();
 
@@ -51,23 +45,33 @@ public:
   void SetNext(DataNode* node);
   void SetRoot(DataNode* node);
 
-  /// Takes ownership of the first child of the file root. Primarily used in data tree patching.
+  /// Takes ownership of the first child of the file root. Primarily used in
+  /// data tree patching.
   DataNode* TakeOwnershipOfFirstRoot();
 
   String DebugLocation() override;
 
-  bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
+  bool StringField(cstr typeName,
+                   cstr fieldName,
+                   StringRange& stringRange) override;
 
   /// Array Serialization
-  bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType simpleTypeId,
-                  uint numberOfElements, uint sizeOftype) override;
+  bool ArrayField(cstr typeName,
+                  cstr fieldName,
+                  byte* data,
+                  ArrayType simpleTypeId,
+                  uint numberOfElements,
+                  uint sizeOftype) override;
   void ArraySize(uint& arraySize) override;
 
   /// Enum Serialization
-  bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) override;
+  bool EnumField(cstr enumTypeName,
+                 cstr fieldName,
+                 uint& enumValue,
+                 BoundType* type) override;
 
   /// Fundamental Serialization
-  template<typename type>
+  template <typename type>
   bool FundamentalType(type& value)
   {
     if (GetCurrent() != NULL)
@@ -80,7 +84,7 @@ public:
 
   virtual PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId,
                                                         DataNode*& result);
-  /// Returns whether or not the 
+  /// Returns whether or not the
   virtual DependencyAction::Enum ResolveDependencies(DataNode* parent,
                                                      DataNode* newChild,
                                                      DataNode** toReplace,
@@ -91,8 +95,8 @@ public:
   DataAttributes mRootAttributes;
 
   /// If set to false, data inheritance will be ignored. This was added because
-  /// Archetypes need to load the file just to look at the root node's inheritance id,
-  /// the rest of the tree doesn't matter.
+  /// Archetypes need to load the file just to look at the root node's
+  /// inheritance id, the rest of the tree doesn't matter.
   bool mIgnoreDataInheritance;
 
 protected:
@@ -102,7 +106,6 @@ protected:
   DataNode* mNext;
   void PushChildOnStack();
   void PopStack();
-
 };
 
-}//namespace Zero
+} // namespace Zero

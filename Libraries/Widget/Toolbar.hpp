@@ -1,19 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ToolBar.hpp
-/// Declaration of the Toolbar classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 DeclareEnum2(ToolBarMode, Dockable, Fixed);
 
-//------------------------------------------------------------- Command Sub Item
 class ToolBarGroupPopUp;
 class CommandSubItem : public Composite
 {
@@ -36,7 +27,6 @@ public:
   ToolBarGroupPopUp* mPopUp;
 };
 
-//--------------------------------------------------------- Tool Bar Group Popup
 class ToolBarGroup;
 class ToolBarGroupPopUp : public PopUp
 {
@@ -46,7 +36,6 @@ public:
   Array<CommandSubItem*> mCommandWidgets;
 };
 
-//--------------------------------------------------------------- Tool Bar Group
 class CommandSubItem;
 class ToolBarGroup : public Composite
 {
@@ -68,7 +57,6 @@ public:
   HandleOf<ToolBarGroupPopUp> mPopUp;
 };
 
-//---------------------------------------------------------------- Tool Bar Area
 class ToolBarArea : public Composite
 {
 public:
@@ -76,7 +64,6 @@ public:
   void UpdateTransform() override;
 };
 
-//--------------------------------------------------------------------- Tool Bar
 class ToolBar : public Composite
 {
 public:
@@ -88,7 +75,10 @@ public:
   void DoLayout() override;
   void UpdateTransform() override;
 
-  void SetMode(ToolBarMode::Type mode){mToolBarMode = mode;}
+  void SetMode(ToolBarMode::Type mode)
+  {
+    mToolBarMode = mode;
+  }
   void OnMouseDown(MouseEvent* event);
 
   void AddCommand(Command* command, Command* secondaryCommand);
@@ -103,4 +93,4 @@ private:
   ToolBarMode::Type mToolBarMode;
 };
 
-}// namespace Zero
+} // namespace Zero

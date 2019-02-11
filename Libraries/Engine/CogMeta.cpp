@@ -1,21 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------- Cog Serialization Filter
-//**************************************************************************************************
+//Serialization Filter
 ZilchDefineType(CogSerializationFilter, builder, type)
 {
 }
 
-//**************************************************************************************************
 bool CogSerializationFilter::ShouldSerialize(Object* object)
 {
   bool isCog = !ZilchVirtualTypeId(object)->IsA(ZilchTypeId(Cog));
@@ -24,38 +17,37 @@ bool CogSerializationFilter::ShouldSerialize(Object* object)
   return CogSerialization::ShouldSave(object);
 }
 
-//------------------------------------------------------------------------------ Cog Meta Operations
-//**************************************************************************************************
+//Cog Meta Operations
 ZilchDefineType(CogMetaOperations, builder, type)
 {
 }
 
-//**************************************************************************************************
 u64 CogMetaOperations::GetUndoHandleId(HandleParam object)
 {
   Cog* cog = object.Get<Cog*>();
   return cog->mObjectId.ToUint64();
 }
 
-//**************************************************************************************************
 Any CogMetaOperations::GetUndoData(HandleParam object)
 {
   Cog* cog = object.Get<Cog*>();
   ReturnIf(cog == nullptr, Any(), "Invalid Cog given.");
 
-  // This could be a component on the game session, so we can't assume it has a Space
+  // This could be a component on the game session, so we can't assume it has a
+  // Space
   if (Space* space = cog->GetSpace())
   {
     return true; // Temporary until we fix issues with how this works
-    //return space->GetModified();
+    // return space->GetModified();
   }
 
-  // Doesn't matter what we return because we won't do anything with it when we get it back
+  // Doesn't matter what we return because we won't do anything with it when we
+  // get it back
   return nullptr;
 }
 
-//**************************************************************************************************
-void CogMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
+void CogMetaOperations::ObjectModified(HandleParam object,
+                                       bool intermediateChange)
 {
   Cog* cog = object.Get<Cog*>(GetOptions::AssertOnNull);
   if (Space* space = cog->GetSpace())
@@ -64,7 +56,7 @@ void CogMetaOperations::ObjectModified(HandleParam object, bool intermediateChan
     space->ChangedObjects();
   }
 
-  if(!intermediateChange)
+  if (!intermediateChange)
   {
     Cog* root = cog->FindRootArchetype();
     if (root && root->InArchetypeDefinitionMode())
@@ -80,12 +72,12 @@ void CogMetaOperations::ObjectModified(HandleParam object, bool intermediateChan
   MetaOperations::ObjectModified(object, intermediateChange);
 }
 
-//**************************************************************************************************
 void CogMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
 {
   Cog* cog = object.Get<Cog*>(GetOptions::AssertOnNull);
 
-  // This could be a component on the game session, so we can't assume it has a Space
+  // This could be a component on the game session, so we can't assume it has a
+  // Space
   if (Space* space = cog->GetSpace())
   {
     bool wasSpaceModified = undoData.Get<bool>();
@@ -96,21 +88,19 @@ void CogMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
   }
 }
 
-//**************************************************************************************************
 ObjectRestoreState* CogMetaOperations::GetRestoreState(HandleParam object)
 {
   Cog* cog = object.Get<Cog*>(GetOptions::AssertOnNull);
   return new CogRestoreState(cog->FindNearestArchetypeContext());
 }
 
-//------------------------------------------------------------------------ Cog Meta Data Inheritance
-//**************************************************************************************************
+//Meta Data Inheritance
 ZilchDefineType(CogMetaDataInheritance, builder, type)
 {
 }
 
-//**************************************************************************************************
-String CogMetaDataInheritance::GetInheritId(HandleParam instance, InheritIdContext::Enum context)
+String CogMetaDataInheritance::GetInheritId(HandleParam instance,
+                                            InheritIdContext::Enum context)
 {
   ReturnIf(!instance.StoredType->IsA(ZilchTypeId(Cog)), "", "Expected Cog");
 
@@ -126,8 +116,8 @@ String CogMetaDataInheritance::GetInheritId(HandleParam instance, InheritIdConte
   return String();
 }
 
-//**************************************************************************************************
-void CogMetaDataInheritance::SetInheritId(HandleParam instance, StringParam inheritId)
+void CogMetaDataInheritance::SetInheritId(HandleParam instance,
+                                          StringParam inheritId)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
 
@@ -135,7 +125,6 @@ void CogMetaDataInheritance::SetInheritId(HandleParam instance, StringParam inhe
   cog->SetArchetype(archetype);
 }
 
-//**************************************************************************************************
 Guid CogMetaDataInheritance::GetUniqueId(HandleParam instance)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
@@ -148,21 +137,20 @@ Guid CogMetaDataInheritance::GetUniqueId(HandleParam instance)
   return childId;
 }
 
-//**************************************************************************************************
 void CogMetaDataInheritance::Revert(HandleParam instance)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
   cog->RevertToArchetype();
 }
 
-//**************************************************************************************************
-bool CogMetaDataInheritance::CanPropertyBeReverted(HandleParam, PropertyPathParam)
+bool CogMetaDataInheritance::CanPropertyBeReverted(HandleParam,
+                                                   PropertyPathParam)
 {
   return true;
 }
 
-//**************************************************************************************************
-void CogMetaDataInheritance::RevertProperty(HandleParam instance, PropertyPathParam propertyPath)
+void CogMetaDataInheritance::RevertProperty(HandleParam instance,
+                                            PropertyPathParam propertyPath)
 {
   MetaDataInheritance::RevertProperty(instance, propertyPath);
 
@@ -182,8 +170,8 @@ void CogMetaDataInheritance::RevertProperty(HandleParam instance, PropertyPathPa
   }
 }
 
-//**************************************************************************************************
-void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent, ObjectState::ChildId childId)
+void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent,
+                                                 ObjectState::ChildId childId)
 {
   MetaDataInheritance::RestoreRemovedChild(parent, childId);
 
@@ -203,9 +191,9 @@ void CogMetaDataInheritance::RestoreRemovedChild(HandleParam parent, ObjectState
   }
 }
 
-//**************************************************************************************************
-void CogMetaDataInheritance::SetPropertyModified(HandleParam instance, PropertyPathParam propertyPath,
-  bool state)
+void CogMetaDataInheritance::SetPropertyModified(HandleParam instance,
+                                                 PropertyPathParam propertyPath,
+                                                 bool state)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
 
@@ -215,20 +203,17 @@ void CogMetaDataInheritance::SetPropertyModified(HandleParam instance, PropertyP
     space->MarkModified();
 }
 
-//**************************************************************************************************
 void CogMetaDataInheritance::RebuildObject(HandleParam instance)
 {
   Cog* cog = instance.Get<Cog*>(GetOptions::AssertOnNull);
   ArchetypeRebuilder::RebuildCog(cog->FindNearestArchetypeContext());
 }
 
-//------------------------------------------------------------------------------- Cog Meta Transform
-//**************************************************************************************************
+//Cog Meta Transform
 ZilchDefineType(CogMetaTransform, builder, type)
 {
 }
 
-//**************************************************************************************************
 MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
 {
   Cog* cog = object.Get<Cog*>();
@@ -239,7 +224,7 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
 
   // Try to get a transform or object link
   Transform* transform = cog->has(Transform);
-  if(transform != nullptr)
+  if (transform != nullptr)
   {
     instanceHandle = transform;
     type = ZilchTypeId(Transform);
@@ -247,14 +232,14 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
   else
   {
     ObjectLink* objectLink = cog->has(ObjectLink);
-    if(objectLink != nullptr)
+    if (objectLink != nullptr)
     {
       instanceHandle = objectLink;
       type = ZilchTypeId(ObjectLink);
     }
   }
 
-  if(type == nullptr)
+  if (type == nullptr)
     return MetaTransformInstance();
 
   MetaTransformInstance instance(instanceHandle);
@@ -280,49 +265,46 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
   return instance;
 }
 
-//-------------------------------------------------------------------------- Cog Archetype Extension
-//**************************************************************************************************
+//Archetype Extension
 ZilchDefineType(CogArchetypeExtension, builder, type)
 {
 }
 
-//--------------------------------------------------------------------------------- Cog Meta Display
-//**************************************************************************************************
+//Cog Meta Display
 ZilchDefineType(CogMetaDisplay, builder, type)
 {
 }
 
-//**************************************************************************************************
 String CogMetaDisplay::GetName(HandleParam object)
 {
   Cog* cog = (Cog*)object.Dereference();
 
-  if(!cog->GetName().Empty())
+  if (!cog->GetName().Empty())
     return cog->GetName();
 
-  if(Archetype* archetype = cog->GetArchetype())
+  if (Archetype* archetype = cog->GetArchetype())
     return String::Format("(%s)[%d]", archetype->Name.c_str(), cog->GetId().Id);
   else
-    return String::Format("(%s)[%d]", ZilchTypeId(Cog)->Name.c_str(), cog->GetId().Id);
+    return String::Format(
+        "(%s)[%d]", ZilchTypeId(Cog)->Name.c_str(), cog->GetId().Id);
 }
 
-//**************************************************************************************************
 String CogMetaDisplay::GetDebugText(HandleParam object)
 {
   return GetName(object);
 }
 
-//--------------------------------------------------------------------------------- Cog Meta Display
+//Cog Meta Display
 bool CogMetaSerialization::sSaveContextIds = true;
 
-//**************************************************************************************************
 ZilchDefineType(CogMetaSerialization, builder, type)
 {
 }
 
-//**************************************************************************************************
-bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType, cstr fieldName,
-                                                      Any& value, Serializer& serializer)
+bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType,
+                                                      cstr fieldName,
+                                                      Any& value,
+                                                      Serializer& serializer)
 {
   Cog* cog = value.Get<Cog*>();
   ReturnIf(cog == nullptr, false, "Cog should never be null here");
@@ -332,8 +314,8 @@ bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType, c
   return true;
 }
 
-//**************************************************************************************************
-void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* saver)
+void CogMetaSerialization::AddCustomAttributes(HandleParam object,
+                                               TextSaver* saver)
 {
   if (sSaveContextIds == false)
     return;
@@ -342,10 +324,11 @@ void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* sa
 
   if (Cog* cog = object.Get<Cog*>())
   {
-    CogSavingContext* context = static_cast<CogSavingContext*>(saver->GetSerializationContext());
+    CogSavingContext* context =
+        static_cast<CogSavingContext*>(saver->GetSerializationContext());
     CogId id = cog->GetId();
 
-    if(context && id != cInvalidCogId)
+    if (context && id != cInvalidCogId)
     {
       uint linkId = context->ToContextId(id.Id);
       saver->SaveAttribute(sContextId, ToString(linkId));
@@ -353,12 +336,10 @@ void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* sa
   }
 }
 
-//**************************************************************************************************
 ZilchDefineType(CogArchetypePropertyFilter, builder, type)
 {
 }
 
-//**************************************************************************************************
 bool CogArchetypePropertyFilter::Filter(Member* prop, HandleParam instance)
 {
   Cog* cog = instance.Get<Cog*>();
@@ -367,4 +348,4 @@ bool CogArchetypePropertyFilter::Filter(Member* prop, HandleParam instance)
   return true;
 }
 
-}//namespace Zero
+} // namespace Zero

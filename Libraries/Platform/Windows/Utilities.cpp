@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Utilities.cpp
-/// Implementation of the Utilities class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -57,17 +49,17 @@ u64 GetMacAddress()
 {
   static u64 macAddress = 0;
 
-  if(macAddress == 0)
+  if (macAddress == 0)
   {
     IP_ADAPTER_INFO adapterInfoBuffer[16];
     OsInt sizeOfBuffer = sizeof(adapterInfoBuffer);
     OsInt status = GetAdaptersInfo(adapterInfoBuffer, &sizeOfBuffer);
 
     u64 address = 0;
-    for(uint i=0;i<5;++i)
+    for (uint i = 0; i < 5; ++i)
     {
       u64 val = adapterInfoBuffer[0].Address[5 - i];
-      val = val << i*8;
+      val = val << i * 8;
       address += val;
     }
 
@@ -76,7 +68,6 @@ u64 GetMacAddress()
 
   return macAddress;
 }
-
 
 // Debug break (only if a debugger is attached)
 bool DebugBreak()
@@ -94,12 +85,12 @@ bool DebugBreak()
 
 void EnableMemoryLeakChecking(int breakOnAllocation)
 {
-  //Set the leak checking flag
+  // Set the leak checking flag
   int tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
   tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
   _CrtSetDbgFlag(tmpDbgFlag);
 
-  //If a valid break alloc provided set the breakAlloc
+  // If a valid break alloc provided set the breakAlloc
   if (breakOnAllocation != -1)
     _CrtSetBreakAlloc(breakOnAllocation);
 }
@@ -127,8 +118,13 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   ZPrint("%s\n", message.c_str());
 
   // Output the command line
-  String commandLine = String::Format("ErrorDialog.exe \"%s\" \"%s\" \"%s:%d\" %s",
-    message.c_str(), expression.c_str(), errorData.File, errorData.Line, "Default");
+  String commandLine =
+      String::Format("ErrorDialog.exe \"%s\" \"%s\" \"%s:%d\" %s",
+                     message.c_str(),
+                     expression.c_str(),
+                     errorData.File,
+                     errorData.Line,
+                     "Default");
 
   // Create a structure to facilitating starting of a process
   STARTUPINFO startUpInfo;
@@ -139,17 +135,17 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   memset(&processInfo, 0, sizeof(processInfo));
 
   // Start the child process.
-  BOOL result = CreateProcess(
-    NULL,                 // No module name (use command line)
-    (LPTSTR)Widen(commandLine).c_str(),  // Command line
-    NULL,                 // Process handle not inheritable
-    NULL,                 // Thread handle not inheritable
-    FALSE,                // Set handle inheritance to FALSE
-    CREATE_NO_WINDOW,     // Creation flags
-    NULL,                 // Use parent's environment block
-    NULL,                 // Use parent's starting directory
-    &startUpInfo,         // Pointer to STARTUPINFO structure
-    &processInfo);
+  BOOL result =
+      CreateProcess(NULL, // No module name (use command line)
+                    (LPTSTR)Widen(commandLine).c_str(), // Command line
+                    NULL,             // Process handle not inheritable
+                    NULL,             // Thread handle not inheritable
+                    FALSE,            // Set handle inheritance to FALSE
+                    CREATE_NO_WINDOW, // Creation flags
+                    NULL,             // Use parent's environment block
+                    NULL,             // Use parent's starting directory
+                    &startUpInfo,     // Pointer to STARTUPINFO structure
+                    &processInfo);
 
   // If we failed to start the process...
   if (!result)
@@ -158,7 +154,8 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 
     // Show a message box instead
     message = BuildString(message, "\nWould you like to continue?");
-    int result = MessageBoxA(NULL, message.c_str(), "Error", MB_YESNO | MB_ICONEXCLAMATION);
+    int result = MessageBoxA(
+        NULL, message.c_str(), "Error", MB_YESNO | MB_ICONEXCLAMATION);
 
     // Trigger a break point
     return result == IDNO;
@@ -206,23 +203,39 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 
 cwstr windowsVerbNames[] = {NULL, L"open", L"edit", L"run"};
 
-bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenFile(Status& status,
+                    cstr file,
+                    uint verb,
+                    cstr parameters,
+                    cstr workingDirectory)
 {
-  HINSTANCE success = ShellExecute(NULL, windowsVerbNames[verb], Widen(file).c_str(), Widen(parameters).c_str(), Widen(workingDirectory).c_str(), TRUE);
-  
+  HINSTANCE success = ShellExecute(NULL,
+                                   windowsVerbNames[verb],
+                                   Widen(file).c_str(),
+                                   Widen(parameters).c_str(),
+                                   Widen(workingDirectory).c_str(),
+                                   TRUE);
+
   const HINSTANCE shellSucceed = (HINSTANCE)32;
-  if(success > shellSucceed)
+  if (success > shellSucceed)
     return true;
 
   int errorCode = (int)GetLastError();
   String errorString = ToErrorString(errorCode);
-  String message = String::Format("Failed to execute shell command with file '%s'. %s", file, errorString.c_str());
+  String message =
+      String::Format("Failed to execute shell command with file '%s'. %s",
+                     file,
+                     errorString.c_str());
   status.SetFailed(message, errorCode);
 
   return false;
 }
 
-bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenNetworkFile(Status& status,
+                           cstr file,
+                           uint verb,
+                           cstr parameters,
+                           cstr workingDirectory)
 {
   return SystemOpenFile(status, file, verb, parameters, workingDirectory);
 }
@@ -231,14 +244,12 @@ String GetEnvironmentalVariable(StringParam variable)
 {
   char* envVarValue = getenv(variable.c_str());
 
-  if(envVarValue)
+  if (envVarValue)
     return envVarValue;
   else
     return String();
-
 }
 
-//---------------------------------------------------------------- Memory Status 
 void GetMemoryStatus(MemoryInfo& data)
 {
   size_t pageRegion = 0;
@@ -246,32 +257,34 @@ void GetMemoryStatus(MemoryInfo& data)
   while (foundPage)
   {
     MEMORY_BASIC_INFORMATION memoryInfo;
-    //VirtualQueryEx return the size of the MEMORY_BASIC_INFORMATION if it 
-    //succeeds or zero if no more pages are found.
-    foundPage = VirtualQueryEx(GetCurrentProcess(), (void*)pageRegion,
-      &memoryInfo, sizeof(memoryInfo));
-    if(foundPage)
+    // VirtualQueryEx return the size of the MEMORY_BASIC_INFORMATION if it
+    // succeeds or zero if no more pages are found.
+    foundPage = VirtualQueryEx(GetCurrentProcess(),
+                               (void*)pageRegion,
+                               &memoryInfo,
+                               sizeof(memoryInfo));
+    if (foundPage)
     {
-      if(memoryInfo.State & MEM_FREE)
+      if (memoryInfo.State & MEM_FREE)
       {
         data.Free += memoryInfo.RegionSize;
       }
       else
       {
-        if(memoryInfo.State & MEM_RESERVE)
+        if (memoryInfo.State & MEM_RESERVE)
           data.Reserve += memoryInfo.RegionSize;
 
-        if(memoryInfo.State & MEM_COMMIT)
+        if (memoryInfo.State & MEM_COMMIT)
           data.Commit += memoryInfo.RegionSize;
       }
 
-      //Move past this region to find another page.
+      // Move past this region to find another page.
       pageRegion += memoryInfo.RegionSize;
     }
   }
 }
 
-typedef void (WINAPI *GetNativeSystemInfoPtr)(LPSYSTEM_INFO);
+typedef void(WINAPI* GetNativeSystemInfoPtr)(LPSYSTEM_INFO);
 
 String GetVersionString()
 {
@@ -283,27 +296,28 @@ String GetVersionString()
 
   osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
-  // The function 'GetVersionEx' still works on Windows 8.1 but is deprecated, so if the build
-  // is made on windows 8.1 this can often cause errors
+  // The function 'GetVersionEx' still works on Windows 8.1 but is deprecated,
+  // so if the build is made on windows 8.1 this can often cause errors
 #pragma warning(push)
-#pragma warning(disable: 4996)
-  BOOL bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*) &osvi);
+#pragma warning(disable : 4996)
+  BOOL bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*)&osvi);
 #pragma warning(pop)
 
   StringBuilder builder;
 
-  if(!bOsVersionInfoEx) return String();
+  if (!bOsVersionInfoEx)
+    return String();
 
   // Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
   // This gets more information to determine 64bit vs 32bit but
   // is only available on later versions.
 
-  GetNativeSystemInfoPtr pGNSI = (GetNativeSystemInfoPtr) GetProcAddress(
-    GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
+  GetNativeSystemInfoPtr pGNSI = (GetNativeSystemInfoPtr)GetProcAddress(
+      GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
 
-  if(pGNSI != NULL)
+  if (pGNSI != NULL)
     pGNSI(&si);
-  else 
+  else
     GetSystemInfo(&si);
 
   if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4)
@@ -324,9 +338,9 @@ String GetVersionString()
 
     if (osvi.dwMajorVersion == 6)
     {
-      if(osvi.dwMinorVersion == 0)
+      if (osvi.dwMinorVersion == 0)
       {
-        if(osvi.wProductType == VER_NT_WORKSTATION)
+        if (osvi.wProductType == VER_NT_WORKSTATION)
           builder << "Windows Vista ";
         else
           builder << "Windows Server 2008 ";
@@ -334,7 +348,7 @@ String GetVersionString()
 
       if (osvi.dwMinorVersion == 1)
       {
-        if(osvi.wProductType == VER_NT_WORKSTATION)
+        if (osvi.wProductType == VER_NT_WORKSTATION)
           builder << "Windows 7 ";
         else
           builder << "Windows Server 2008 R2 ";
@@ -359,14 +373,14 @@ String GetVersionString()
 
     if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2)
     {
-      if(GetSystemMetrics(SM_SERVERR2))
+      if (GetSystemMetrics(SM_SERVERR2))
         builder << "Windows Server 2003 R2";
       else if (osvi.wSuiteMask & VER_SUITE_STORAGE_SERVER)
         builder << "Windows Storage Server 2003";
       else if (osvi.wSuiteMask & VER_SUITE_WH_SERVER)
         builder << "Windows Home Server";
-      else if(osvi.wProductType == VER_NT_WORKSTATION &&
-        si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_AMD64)
+      else if (osvi.wProductType == VER_NT_WORKSTATION &&
+               si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
         builder << "Windows XP Professional x64 Edition";
       else
         builder << "Windows Server 2003";
@@ -375,8 +389,8 @@ String GetVersionString()
     if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1)
     {
       builder << "Windows XP ";
-      if(osvi.wSuiteMask & VER_SUITE_PERSONAL)
-        builder <<  "Home Edition";
+      if (osvi.wSuiteMask & VER_SUITE_PERSONAL)
+        builder << "Home Edition";
       else
         builder << "Professional";
     }
@@ -397,13 +411,13 @@ String GetVersionString()
 
     if (osvi.dwMajorVersion >= 6)
     {
-      if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_AMD64)
+      if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
         builder << ", 64-bit";
-      else if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_INTEL)
+      else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
         builder << ", 32-bit";
     }
 
-    return builder.ToString(); 
+    return builder.ToString();
   }
 
   else
@@ -412,7 +426,7 @@ String GetVersionString()
   }
 }
 
-}
+} // namespace Os
 
 u64 GenerateUniqueId64()
 {
@@ -423,33 +437,33 @@ u64 GenerateUniqueId64()
     return deterministicId;
   }
 
-  //Get the mac address of the machine
+  // Get the mac address of the machine
   static u64 cachedMacAdress = (Os::GetMacAddress() << 16);
 
   u64 newId = cachedMacAdress;
 
-  ///Get the low part of the performance counter
+  /// Get the low part of the performance counter
   LARGE_INTEGER performanceCounter;
   BOOL status = QueryPerformanceCounter(&performanceCounter);
   u64 lowCount = performanceCounter.LowPart;
 
-  //Get the current system time (since 1970)
+  // Get the current system time (since 1970)
   time_t systemTimeT;
   time(&systemTimeT);
 
   u64 systemTime = systemTimeT;
 
-  //combine the two time parts
-  u64 lowId =  (u64(systemTime) << 32) | (lowCount);
+  // combine the two time parts
+  u64 lowId = (u64(systemTime) << 32) | (lowCount);
 
-  //Keep incrementing the low value
+  // Keep incrementing the low value
   static uint shiftCount = 0;
-  ++shiftCount;  
+  ++shiftCount;
   lowId += shiftCount;
 
-  //Or it with the mac part
+  // Or it with the mac part
   newId ^= lowId;
 
   return newId;
 }
-}
+} // namespace Zero

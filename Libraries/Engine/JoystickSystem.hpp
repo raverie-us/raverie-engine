@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file JoystickSystem.hpp
-/// Declaration of the JoystickSystem classes.
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,14 +11,14 @@ class RawControlMapping;
 
 namespace Events
 {
-  DeclareEvent(JoystickUpdated);
-  DeclareEvent(JoystickButtonDown);
-  DeclareEvent(JoystickButtonUp);
+DeclareEvent(JoystickUpdated);
+DeclareEvent(JoystickButtonDown);
+DeclareEvent(JoystickButtonUp);
 
-  DeclareEvent(JoystickFound);
-  DeclareEvent(JoystickLost);
-  DeclareEvent(JoysticksChanged);
-}
+DeclareEvent(JoystickFound);
+DeclareEvent(JoystickLost);
+DeclareEvent(JoysticksChanged);
+} // namespace Events
 
 class RawAxis
 {
@@ -46,11 +38,9 @@ public:
   bool CanBeDisabled;
 };
 
-
 class RawButton
 {
 public:
-  
   void Serialize(Serializer& stream);
 
   String Name;
@@ -110,7 +100,8 @@ public:
   /// Queries an axes and returns a value between [-1, 1].
   /// The valid range of axes is between 0 and 'GetMaxAxes'.
   /// If the axis is not valid, then the value returned is 0.
-  /// If the axis is disabled, then the value returned is Joystick.DisabledValue.
+  /// If the axis is disabled, then the value returned is
+  /// Joystick.DisabledValue.
   float GetAxisValue(int index);
 
   /// A value that means a joystick axis is invalid. For example
@@ -153,21 +144,21 @@ public:
   void RawSetButtons(uint newStates);
 
 private:
-
   /// Clears out the joystick the joystick state when the controller is inactive
   void InactiveClear();
 
 private:
-  /// The control mapping tells us which axes are which and holds the min/max of the raw values.
-  /// If we're directly reading from a raw buffer, the control mapping also tells us the
-  /// offset/size/bits that we read from the buffer
+  /// The control mapping tells us which axes are which and holds the min/max of
+  /// the raw values. If we're directly reading from a raw buffer, the control
+  /// mapping also tells us the offset/size/bits that we read from the buffer
   RawControlMapping* mRawMapping;
 
   /// The OS device handle that's sending input
   OsHandle mDeviceHandle;
 
-  /// The guid allows us to mostly uniquely identify joysticks, so that when a joystick is
-  /// unplugged and then plugged back in, we can map it back to the same joystick
+  /// The guid allows us to mostly uniquely identify joysticks, so that when a
+  /// joystick is unplugged and then plugged back in, we can map it back to the
+  /// same joystick
   Guid mHardwareGuid;
 
   /// The name of the joystick
@@ -176,7 +167,8 @@ private:
   /// Tells us if the controller is turned on and plugged in
   bool mIsActive;
 
-  /// If set, this means we're currently calibrating the controller and updating the control mapping
+  /// If set, this means we're currently calibrating the controller and updating
+  /// the control mapping
   bool mAutoCalibrate;
 
   /// All the values of the axes for this joystick [-1, 1] (includes hats)
@@ -207,7 +199,8 @@ public:
   // Get a range of joystick objects
   JoystickDeviceRange GetJoysticks();
 
-  /// Creates the joystick system and attempts to acquire any available joysticks
+  /// Creates the joystick system and attempts to acquire any available
+  /// joysticks
   Joysticks();
 
   /// Shutdown the system and free any joystick captures
@@ -217,8 +210,8 @@ public:
   void DeactivateAll();
   void AddJoystickDevice(const PlatformInputDevice& device);
   void JoysticksChanged();
+
 private:
-  
   JoystickDeviceMap mDeviceToJoystick;
   JoystickGuidMap mGuidToJoystick;
 };
@@ -228,4 +221,4 @@ namespace Z
 extern Joysticks* gJoysticks;
 }
 
-}
+} // namespace Zero

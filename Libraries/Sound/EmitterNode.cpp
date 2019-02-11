@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -12,40 +7,38 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//------------------------------------------------------------------------ Emitter Data Per Listener
+//Emitter Data Per Listener
 
-//**************************************************************************************************
 EmitterDataPerListener::EmitterDataPerListener() :
-  mPreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
-  mDirectionalVolume(1.0f),
-  mUseLowPass(false)
+    mPreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
+    mDirectionalVolume(1.0f),
+    mUseLowPass(false)
 {
   memset(mPreviousGains, 0, sizeof(float) * cMaxChannels);
 }
 
-//------------------------------------------------------------------------------------- Emitter Node
+//Emitter Node
 
-//**************************************************************************************************
 ZilchDefineType(EmitterNode, builder, type)
 {
-
 }
 
-//**************************************************************************************************
-EmitterNode::EmitterNode(StringParam name, const unsigned ID, Math::Vec3Param position, 
-    Math::Vec3Param velocity) :
-  SoundNode(name, ID, true, false),
-  mPosition(position),
-  mVelocity(velocity),
-  mFacingDirection(1.0f, 0.0f, 0.0f),
-  mPausing(false),
-  mPaused(false),
-  mDirectionalAngleRadians(0.0f)
+EmitterNode::EmitterNode(StringParam name,
+                         const unsigned ID,
+                         Math::Vec3Param position,
+                         Math::Vec3Param velocity) :
+    SoundNode(name, ID, true, false),
+    mPosition(position),
+    mVelocity(velocity),
+    mFacingDirection(1.0f, 0.0f, 0.0f),
+    mPausing(false),
+    mPaused(false),
+    mDirectionalAngleRadians(0.0f)
 {
-  PanningObject.Initialize(Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MainThread));
+  PanningObject.Initialize(
+      Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MainThread));
 }
 
-//**************************************************************************************************
 void EmitterNode::SetPausedThreaded(bool paused)
 {
   // If we should be paused and currently are not
@@ -63,31 +56,32 @@ void EmitterNode::SetPausedThreaded(bool paused)
   }
 }
 
-//**************************************************************************************************
-void EmitterNode::SetPositionThreaded(const Math::Vec3 newPosition, const Math::Vec3 newVelocity)
+void EmitterNode::SetPositionThreaded(const Math::Vec3 newPosition,
+                                      const Math::Vec3 newVelocity)
 {
   mVelocity = newVelocity;
   mPosition = newPosition;
 }
 
-//**************************************************************************************************
 void EmitterNode::SetForwardDirectionThreaded(const Math::Vec3 forwardDirection)
 {
   mFacingDirection = forwardDirection;
 }
 
-//**************************************************************************************************
-void EmitterNode::SetDirectionalAngleThreaded(const float angleInDegrees, const float reducedVolume)
+void EmitterNode::SetDirectionalAngleThreaded(const float angleInDegrees,
+                                              const float reducedVolume)
 {
   // Store half angle, in radians
   mDirectionalAngleRadians = Math::DegToRad(angleInDegrees) * 0.5f;
 
-  DirectionalInterpolator.SetValues(1.0f, reducedVolume, Math::cPi - mDirectionalAngleRadians);
+  DirectionalInterpolator.SetValues(
+      1.0f, reducedVolume, Math::cPi - mDirectionalAngleRadians);
 }
 
-//**************************************************************************************************
-bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, 
-  ListenerNode* listener, const bool firstRequest)
+bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
+                                   const unsigned numberOfChannels,
+                                   ListenerNode* listener,
+                                   const bool firstRequest)
 {
   // If paused, do nothing
   if (mPaused)
@@ -99,7 +93,8 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numb
   if (!AccumulateInputSamples(bufferSize, numberOfChannels, listener))
     return false;
 
-  // If only one channel of output or no listener, no spatialization, so just return
+  // If only one channel of output or no listener, no spatialization, so just
+  // return
   if (numberOfChannels == 1 || !listener)
   {
     // Move the input samples to the output buffer
@@ -108,7 +103,8 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numb
   }
 
   // Get the relative position between emitter and listener
-  Math::Vec3 relativePosition = listener->GetRelativePositionThreaded(mPosition);
+  Math::Vec3 relativePosition =
+      listener->GetRelativePositionThreaded(mPosition);
 
   // If necessary, add new listener data
   if (!DataPerListener.FindPointer(listener))
@@ -117,10 +113,15 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numb
   // Save reference for ease of use
   EmitterDataPerListener& listenerData = *DataPerListener[listener];
 
-  // Check if the listener or emitter has moved (don't care about up/down changes)
+  // Check if the listener or emitter has moved (don't care about up/down
+  // changes)
   bool valuesChanged = false;
-  if (!IsWithinLimit(relativePosition.x, listenerData.mPreviousRelativePosition.x, cMinimumPositionChange)
-    || !IsWithinLimit(relativePosition.z, listenerData.mPreviousRelativePosition.z, cMinimumPositionChange))
+  if (!IsWithinLimit(relativePosition.x,
+                     listenerData.mPreviousRelativePosition.x,
+                     cMinimumPositionChange) ||
+      !IsWithinLimit(relativePosition.z,
+                     listenerData.mPreviousRelativePosition.z,
+                     cMinimumPositionChange))
   {
     CalculateData(&listenerData, relativePosition, listener, numberOfChannels);
     valuesChanged = true;
@@ -131,14 +132,17 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numb
 
   // Apply low pass filter to output (if turned on)
   if (listenerData.mUseLowPass)
-    listenerData.LowPass.ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), 
-      numberOfChannels, bufferSize);
+    listenerData.LowPass.ProcessBuffer(mInputSamplesThreaded.Data(),
+                                       outputBuffer->Data(),
+                                       numberOfChannels,
+                                       bufferSize);
   // Otherwise move the input into the output buffer
   else
     outputBuffer->Swap(mInputSamplesThreaded);
 
   // Adjust each frame with gain values
-  BufferRange outputRange1 = outputBuffer->All(), outputRange2 = outputBuffer->All();
+  BufferRange outputRange1 = outputBuffer->All(),
+              outputRange2 = outputBuffer->All();
   for (unsigned i = 0; i < bufferSize; i += numberOfChannels)
   {
     float volume = 1.0f;
@@ -171,8 +175,9 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numb
 
       // If the gain values changed, interpolate from old to new value
       if (valuesChanged)
-        multiplier += (listenerData.mGainValues[j] - listenerData.mPreviousGains[j]) 
-          * ((float)i / (float)bufferSize);
+        multiplier +=
+            (listenerData.mGainValues[j] - listenerData.mPreviousGains[j]) *
+            ((float)i / (float)bufferSize);
 
       outputRange2.Front() += monoValue * multiplier;
     }
@@ -180,14 +185,15 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numb
 
   // If gain values changed, copy new ones to previous values
   if (valuesChanged)
-    memcpy(listenerData.mPreviousGains, listenerData.mGainValues, sizeof(float) * cMaxChannels);
+    memcpy(listenerData.mPreviousGains,
+           listenerData.mGainValues,
+           sizeof(float) * cMaxChannels);
 
   AddBypassThreaded(outputBuffer);
 
   return true;
 }
 
-//**************************************************************************************************
 void EmitterNode::RemoveListenerThreaded(SoundEvent* event)
 {
   ListenerNode* listener = (ListenerNode*)event->mPointer;
@@ -201,9 +207,10 @@ void EmitterNode::RemoveListenerThreaded(SoundEvent* event)
   }
 }
 
-//**************************************************************************************************
-void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& relativePosition, 
-  ListenerNode* listener, const unsigned numberOfChannels)
+void EmitterNode::CalculateData(EmitterDataPerListener* data,
+                                const Math::Vec3& relativePosition,
+                                ListenerNode* listener,
+                                const unsigned numberOfChannels)
 {
   // Save reference for ease of use
   EmitterDataPerListener& listenerData = *data;
@@ -214,18 +221,21 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& 
   // Get the squared length
   float distanceSq = relativePosition2D.LengthSq();
 
-  // Check if the emitter should be limited by direction 
+  // Check if the emitter should be limited by direction
   if (mDirectionalAngleRadians > 0.0f)
   {
     // Get the emitter's facing direction relative to the listener
-    Math::Vec3 relativeFacing = listener->GetRelativeFacingThreaded(mFacingDirection);
+    Math::Vec3 relativeFacing =
+        listener->GetRelativeFacingThreaded(mFacingDirection);
     // Get the relative angle (facing should always be normalized)
-    float angle = Math::ArcCos(Math::Dot(relativePosition.Normalized(), relativeFacing));
+    float angle =
+        Math::ArcCos(Math::Dot(relativePosition.Normalized(), relativeFacing));
 
-    // If the angle to the listener is greater than the emitter's angle, reduce volume
+    // If the angle to the listener is greater than the emitter's angle, reduce
+    // volume
     if (angle > mDirectionalAngleRadians)
-      listenerData.mDirectionalVolume = DirectionalInterpolator.ValueAtDistance(angle
-        - mDirectionalAngleRadians);
+      listenerData.mDirectionalVolume = DirectionalInterpolator.ValueAtDistance(
+          angle - mDirectionalAngleRadians);
   }
   else
     listenerData.mDirectionalVolume = 1.0f;
@@ -235,22 +245,30 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& 
   {
     // Get the angle to the listener
     float angle = Math::ArcTan2(relativePosition.z, -relativePosition.x);
-    // Translate this to a percentage of a quarter circle (this value should be 1.0 when the 
-    // emitter is directly behind the listener and 0.0 when off to the side)
+    // Translate this to a percentage of a quarter circle (this value should
+    // be 1.0 when the emitter is directly behind the listener and 0.0 when off
+    // to the side)
     float percent = Math::Abs(angle) / (Math::cPi / 2.0f);
 
-    // The low pass cutoff frequency ranges from min to max depending on the angle
-    // percentage, using a squared curve
-    float frequency = cLowPassCutoffBase + (cLowPassCutoffAdditional * percent * percent);
+    // The low pass cutoff frequency ranges from min to max depending on the
+    // angle percentage, using a squared curve
+    float frequency =
+        cLowPassCutoffBase + (cLowPassCutoffAdditional * percent * percent);
 
-    // Check if the difference between this frequency and the last frequency used is large
-    if (!IsWithinLimit(frequency, listenerData.LowPass.GetCutoffFrequency(), cMaxLowPassDifference))
+    // Check if the difference between this frequency and the last frequency
+    // used is large
+    if (!IsWithinLimit(frequency,
+                       listenerData.LowPass.GetCutoffFrequency(),
+                       cMaxLowPassDifference))
     {
-      // Set frequency to be only maxDifferenceAllowed away from the last frequency used
+      // Set frequency to be only maxDifferenceAllowed away from the last
+      // frequency used
       if (frequency > listenerData.LowPass.GetCutoffFrequency())
-        frequency = listenerData.LowPass.GetCutoffFrequency() + cMaxLowPassDifference;
+        frequency =
+            listenerData.LowPass.GetCutoffFrequency() + cMaxLowPassDifference;
       else
-        frequency = listenerData.LowPass.GetCutoffFrequency() - cMaxLowPassDifference;
+        frequency =
+            listenerData.LowPass.GetCutoffFrequency() - cMaxLowPassDifference;
     }
 
     // Set the cutoff frequency on the low pass filter
@@ -261,7 +279,8 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& 
   else
   {
     // Make sure the cutoff frequency is set to the maximum value
-    listenerData.LowPass.SetCutoffFrequency(cLowPassCutoffBase + cLowPassCutoffAdditional);
+    listenerData.LowPass.SetCutoffFrequency(cLowPassCutoffBase +
+                                            cLowPassCutoffAdditional);
 
     listenerData.mUseLowPass = false;
   }
@@ -270,7 +289,8 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& 
   if (numberOfChannels != PanningObject.GetNumberOfChannels())
     PanningObject.Initialize(numberOfChannels);
 
-  PanningObject.ComputeGains(relativePosition2D, 0.0f, listenerData.mGainValues);
+  PanningObject.ComputeGains(
+      relativePosition2D, 0.0f, listenerData.mGainValues);
 }
 
 } // namespace Zero

@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Image.hpp
-/// Declaration of the image based display object classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------------
 enum CoordinateMode
 {
   cPixels,
@@ -29,8 +20,7 @@ enum eImageMode
   cSlice,
 };
 
-//------------------------------------------------------------------------------
-///Definition object for SlicedImage;
+/// Definition object for SlicedImage;
 class SlicedDefinition : public BaseDefinition
 {
 public:
@@ -52,8 +42,7 @@ public:
   bool Sliced;
 };
 
-//------------------------------------------------------------------------------
-///Definition object for SubImage.
+/// Definition object for SubImage.
 class ImageDefinition : public SlicedDefinition
 {
 public:
@@ -64,4 +53,4 @@ public:
   void Serialize(Serializer& stream) override;
 };
 
-}//namespace Zero
+} // namespace Zero

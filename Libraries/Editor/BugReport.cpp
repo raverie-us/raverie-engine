@@ -1,7 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Trevor Sundberg, Joshua Davis
-/// Copyright 2010-2016, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -9,8 +6,8 @@ namespace Zero
 
 namespace Events
 {
-	DefineEvent(BugReporterResponse);
-}//namespace Events
+DefineEvent(BugReporterResponse);
+} // namespace Events
 
 ZilchDefineType(BugReporter, builder, type)
 {
@@ -20,8 +17,7 @@ ZilchDefineType(BugReporterResponse, builder, type)
 {
 }
 
-BugReporter::BugReporter(Composite* parent) :
-  Composite(parent)
+BugReporter::BugReporter(Composite* parent) : Composite(parent)
 {
   mSent = false;
   this->SetLayout(CreateStackLayout());
@@ -58,7 +54,8 @@ BugReporter::BugReporter(Composite* parent) :
   new Label(this, cText, "Include File:");
 
   auto fileRow = new Composite(this);
-  fileRow->SetLayout(CreateStackLayout(LayoutDirection::RightToLeft, Vec2::cZero, Thickness::cZero));
+  fileRow->SetLayout(CreateStackLayout(
+      LayoutDirection::RightToLeft, Vec2::cZero, Thickness::cZero));
 
   mBrowse = new TextButton(fileRow);
   mBrowse->SetText("Browse...");
@@ -119,7 +116,7 @@ void BugReporter::Reset()
 void BugReporter::OnBrowse(Event* event)
 {
   // Set up the callback for when project file is selected
-  const String CallBackEvent = "FolderCallback"; 
+  const String CallBackEvent = "FolderCallback";
   if (!GetDispatcher()->IsConnected(CallBackEvent, this))
   {
     ConnectThisTo(this, CallBackEvent, OnBrowseSelected);
@@ -154,7 +151,9 @@ void BugReporter::OnUpdate(UpdateEvent* event)
 
     if (!imageOnClipboard)
     {
-      DoNotifyWarning("Bug Reporter", "There is no image on the clipboard, or the image type is not recognized (Bitmap, Dib, Tiff)");
+      DoNotifyWarning("Bug Reporter",
+                      "There is no image on the clipboard, or the image type "
+                      "is not recognized (Bitmap, Dib, Tiff)");
       mIncludeClipboardImage->SetChecked(false);
     }
   }
@@ -196,7 +195,9 @@ void BugReporter::OnSend(Event* event)
   job->mRepro = mRepro->GetAllText();
   job->mIncludedFile = mIncludeFile->GetText();
 
-  job->mReportType = mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]->mButtonText->GetText();
+  job->mReportType =
+      mSelectorButton->mButtons[mSelectorButton->GetSelectedItem()]
+          ->mButtonText->GetText();
 
   OsShell* shell = Z::gEngine->has(OsShell);
 
@@ -213,7 +214,7 @@ void BugReporter::OnSend(Event* event)
   if (mIncludeProject->GetChecked())
   {
     Cog* projectCog = Z::gEditor->mProject;
-    if(projectCog)
+    if (projectCog)
     {
       ProjectSettings* project = projectCog->has(ProjectSettings);
       String projectFile = GenerateTempFile(project->ProjectName, ".zip");
@@ -224,7 +225,8 @@ void BugReporter::OnSend(Event* event)
   }
 
   // Start the blocking here (we end it in the web request).
-  // There should never be any code path where we don't hit the web response / end.
+  // There should never be any code path where we don't hit the web response /
+  // end.
   SendBlockingTaskStart("Reporting");
   Z::gJobs->AddJob(job);
 
@@ -258,7 +260,7 @@ void BugReportJob::Execute()
   request.AddField("BuildVersionName", GetBuildVersionName());
 
   ProjectSettings* project = mProject.has(ProjectSettings);
-  if(project)
+  if (project)
   {
     String projectDirectory = project->ProjectFolder;
 
@@ -271,30 +273,30 @@ void BugReportJob::Execute()
     request.AddFile(BuildString("File", ToString(fileCount)), mFileName);
   }
 
-  if(!mIncludedFile.Empty())
+  if (!mIncludedFile.Empty())
   {
     ++fileCount;
     request.AddFile(BuildString("File", ToString(fileCount)), mIncludedFile);
   }
 
-  if(mClipboardImage.Data != NULL)
+  if (mClipboardImage.Data != NULL)
   {
     String fileName = GenerateTempFile("ClipboardImage", ".png");
     Status status;
     SaveImage(status, fileName, &mClipboardImage, ImageSaveFormat::Png);
-    if(status.Succeeded())
+    if (status.Succeeded())
     {
       ++fileCount;
       request.AddFile(BuildString("File", ToString(fileCount)), fileName);
     }
   }
 
-  if(mScreenshot.Data != NULL)
+  if (mScreenshot.Data != NULL)
   {
     String fileName = GenerateTempFile("Screenshot", ".png");
     Status status;
     SaveImage(status, fileName, &mScreenshot, ImageSaveFormat::Png);
-    if(status.Succeeded())
+    if (status.Succeeded())
     {
       ++fileCount;
       request.AddFile(BuildString("File", ToString(fileCount)), fileName);
@@ -315,10 +317,11 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
   SendBlockingTaskFinish();
 
   // Check if http response indicates fail or success.
-  // Waypoint returns the following on success of both filing the task and uploading associated files:
-  // "Success: T%taskId% | %Title% successfully added to phabricator"
-  // Waypoint returns the following on failure of either filing the task or uploading associated files:
-  // "HTTP %ErrorCode% Upload Failed: %Error Message%"
+  // Waypoint returns the following on success of both filing the task and
+  // uploading associated files: "Success: T%taskId% | %Title% successfully
+  // added to phabricator" Waypoint returns the following on failure of either
+  // filing the task or uploading associated files: "HTTP %ErrorCode% Upload
+  // Failed: %Error Message%"
   String response = event->mData;
   if (response.StartsWith("Success:"))
   {
@@ -327,12 +330,14 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
     Matches taskIdMatches;
     taskIdRegex.Search(response, taskIdMatches);
 
-    // If there are no task Id's in the response then direct to user to the latest bug reports
+    // If there are no task Id's in the response then direct to user to the
+    // latest bug reports
     if (taskIdMatches.Empty())
     {
       String message = String::Format(
-        "ZeroHub returned success, but did not include a TaskID. Please visit %s to find your task, or contact a ZeroHub administrator.",
-        Urls::cUserLatestIssues);
+          "ZeroHub returned success, but did not include a TaskID. Please "
+          "visit %s to find your task, or contact a ZeroHub administrator.",
+          Urls::cUserLatestIssues);
       DoNotifyWarning("Bug Reporter", message);
       return;
     }
@@ -348,19 +353,21 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
     // Notify the user that their bug was submitted successfully
     DoNotify("Bug Reporter", notifyBuilder.ToString(), "Disk");
   }
-  // If the response does not start with "Success:" then it failed, in which case the server response is returned to the user.
+  // If the response does not start with "Success:" then it failed, in which
+  // case the server response is returned to the user.
   else
   {
     DoNotifyWarning("Bug Reporter", response);
 
-    // Open the browser to the bug report form if the bug reporter failed to file the bug from the editor
+    // Open the browser to the bug report form if the bug reporter failed to
+    // file the bug from the editor
     Z::gEditor->ShowBrowser(Urls::cUserReportIssue, "Bug Report Form");
   }
 
-  // We kept ourselves alive until the request was done by adding a reference count.
-  // Free that count here now since the request is done. (See the end of Execute).
+  // We kept ourselves alive until the request was done by adding a reference
+  // count. Free that count here now since the request is done. (See the end of
+  // Execute).
   Release();
 }
 
-
-}//namespace Zero
+} // namespace Zero

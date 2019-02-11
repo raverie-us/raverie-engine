@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AabbTreeNode.cpp
-/// Implementation of the AabbNode struct.
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 namespace Zero
 {
@@ -50,19 +42,20 @@ bool AabbNode<ClientDataType>::IsLeaf() const
 template <typename ClientDataType>
 void SerializeNode(Serializer& stream, AabbNode<ClientDataType>& node)
 {
-  //Serialize the Aabb
+  // Serialize the Aabb
   stream.SerializeField("AabbMin", node.mAabb.mMin);
   stream.SerializeField("AabbMax", node.mAabb.mMax);
-  //Client data
+  // Client data
   stream.SerializeField("ClientData", node.mClientData);
 }
 
 // SerializeNode is a function and cannot specialize on a pointer type
-//template <typename ClientDataType>
-//void SerializeNode<ClientDataType*>(Serializer& stream, AabbNode<ClientDataType*>& node)
+// template <typename ClientDataType>
+// void SerializeNode<ClientDataType*>(Serializer& stream,
+// AabbNode<ClientDataType*>& node)
 //{
 //  ErrorIf(true, "Cannot Serialize a Static Aabb-Tree with client data "
 //                "of pointer type.");
 //}
 
-}//namespace Zero
+} // namespace Zero

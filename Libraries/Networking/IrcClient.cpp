@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file IrcClient.cpp
-/// Implementation of the IrcClient class.
-///
-/// Authors: Trevor Sundberg.
-/// Copyright 2010-2011, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,29 +6,28 @@ namespace Zero
 
 namespace
 {
-  Math::Random gRandom;
+Math::Random gRandom;
 }
 
 namespace Events
 {
-  DefineEvent(ChatMessageOfTheDay);
-  DefineEvent(ChatReady);
-  DefineEvent(ChatChannelEvent);
-  DefineEvent(ChatUserEvent);
-  DefineEvent(ChatMessage);
-  DefineEvent(ChatNotice);
-  DefineEvent(ChatNews);
-  DefineEvent(ChatNameChange);
-  DefineEvent(ChatChannelNames);
-}
+DefineEvent(ChatMessageOfTheDay);
+DefineEvent(ChatReady);
+DefineEvent(ChatChannelEvent);
+DefineEvent(ChatUserEvent);
+DefineEvent(ChatMessage);
+DefineEvent(ChatNotice);
+DefineEvent(ChatNews);
+DefineEvent(ChatNameChange);
+DefineEvent(ChatChannelNames);
+} // namespace Events
 
 ZilchDefineType(IrcClient, builder, type)
 {
 }
 
 // Constructor
-IrcClient::IrcClient() :
-  mSocket("Irc")
+IrcClient::IrcClient() : mSocket("Irc")
 {
   // We aren't ready until we connect and get the MOTD
   mReady = false;
@@ -45,7 +36,8 @@ IrcClient::IrcClient() :
   ConnectThisTo(&mSocket, Events::ReceivedData, ReceivedData);
   ConnectThisTo(&mSocket, Events::ConnectionCompleted, ConnectionCompleted);
 
-  ConnectThisTo(&mSocket, Events::ConnectionFailed, ConnectionFailedOrDisconnected);
+  ConnectThisTo(
+      &mSocket, Events::ConnectionFailed, ConnectionFailedOrDisconnected);
   ConnectThisTo(&mSocket, Events::Disconnected, ConnectionFailedOrDisconnected);
   ConnectThisTo(&mSocket, Events::SocketError, SocketError);
 }
@@ -82,7 +74,7 @@ void IrcClient::Send(const char* format, ...)
   va_list va;
   va_start(va, format);
 
-  // Create a string from the given format 
+  // Create a string from the given format
   String data;
   data = String::FormatArgs(format, va);
 
@@ -228,7 +220,7 @@ void IrcClient::HandleCommand(const CommandInfo& info)
     auto channel = info.Data.Arguments[1];
 
     auto request = mNameRequests.FindValue(channel, nullptr);
-    
+
     // If we have a pending name request...
     if (request != nullptr)
     {
@@ -262,7 +254,7 @@ void IrcClient::Disconnect()
 String FilterNewLines(StringRange text)
 {
   StringBuilder builder;
-  for (;!text.Empty(); text.PopFront())
+  for (; !text.Empty(); text.PopFront())
   {
     Rune r = text.Front();
 
@@ -331,14 +323,21 @@ void IrcClient::ConnectionFailedOrDisconnected(ConnectionEvent* event)
   // Forward the event
   mReady = false;
   this->DispatchEvent(event->EventId, event);
-  DoNotifyWarning("Irc Client", "The connection failed or you were disconnected from the IRC server. Use the 'Chat' command to reconnect");
+  DoNotifyWarning("Irc Client",
+                  "The connection failed or you were disconnected from the IRC "
+                  "server. Use the 'Chat' command to reconnect");
 }
 
 void IrcClient::SocketError(TextErrorEvent* event)
 {
   // Forward the event
   this->DispatchEvent(event->EventId, event);
-  DoNotifyWarning("Irc Client", BuildString("An error occurred: ", event->Text, ". If you were disconnected, use the 'Chat' command to reconnect"));
+  DoNotifyWarning(
+      "Irc Client",
+      BuildString(
+          "An error occurred: ",
+          event->Text,
+          ". If you were disconnected, use the 'Chat' command to reconnect"));
 }
 
 // Occurs when we connect to the remote server
@@ -358,14 +357,17 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
   // A temporary object that represents a parsed incoming command
   CommandInfo command;
 
-  //Null terminated the buffer
+  // Null terminated the buffer
   event->Data.PushBack('\0');
 
   // Get the data stream
   const char* stream = (const char*)event->Data.Data();
 
   // Loop until we hit the NULL terminator
-  while (stream != nullptr && (stream - (const char*)event->Data.Data()) < (long)event->Data.Size() && *stream != '\0')
+  while (stream != nullptr &&
+         (stream - (const char*)event->Data.Data()) <
+             (long)event->Data.Size() &&
+         *stream != '\0')
   {
     // Read the first character
     if (*stream == ':')
@@ -389,7 +391,8 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
       // Create a string that represents the host name
       command.From = String(fromStart, stream);
 
-      // Now try and find a '!' inside the host name which designates that one part of the host is a nickname / identity
+      // Now try and find a '!' inside the host name which designates that one
+      // part of the host is a nickname / identity
       const char* identEnd = strchr(fromStart, '!');
 
       // If we didn't find anything, just use the whole host as the identity
@@ -417,7 +420,7 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
 
       // Create a string to represent the command
       command.Command = String(commandStart, stream);
-        
+
       // Increment the stream past the space
       ++stream;
 
@@ -457,14 +460,16 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
       }
       else
       {
-        // Otherwise, create a string that only extends to just before the content
+        // Otherwise, create a string that only extends to just before the
+        // content
         String arguments = String(dataStream, content);
 
         // Increment the content pointer to go past the ':'
         ++content;
 
         // Create the content string (everything past the arguments)
-        command.Data.Content = String(content, dataStream + command.Data.All.SizeInBytes());
+        command.Data.Content =
+            String(content, dataStream + command.Data.All.SizeInBytes());
 
         // Get a pointer to the first argument
         const char* currentArg = arguments.c_str();
@@ -472,7 +477,8 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
         // While we didn't hit a NULL pointer
         while (*currentArg != '\0')
         {
-          // Read to the end of the argument (there should always be a ' ' at the end of all the arguments)
+          // Read to the end of the argument (there should always be a ' ' at
+          // the end of all the arguments)
           const char* currentArgEnd = strchr(currentArg, ' ');
 
           // If for some reason we didn't find a space at the end...
@@ -494,9 +500,11 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
       HandleCommand(command);
     }
     // If we got a ping
-    else if (stream[0] == 'P' && stream[1] == 'I' && stream[2] == 'N' && stream[3] == 'G')
+    else if (stream[0] == 'P' && stream[1] == 'I' && stream[2] == 'N' &&
+             stream[3] == 'G')
     {
-      // Create the pong reply and send it out (we just reply with the data we were given)
+      // Create the pong reply and send it out (we just reply with the data we
+      // were given)
       String reply(strchr(stream, ':'), strchr(stream, '\n') + 1);
       Send("PONG %s", reply.c_str());
 
@@ -532,4 +540,4 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
   }
 }
 
-}
+} // namespace Zero

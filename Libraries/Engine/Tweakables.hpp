@@ -1,23 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tweakables.hpp
-/// Provides an easy way to bind constants to be tweaked in the editor.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-
-//----------------------------------------------------------- TweakableNode Type
 class TweakableProperty
 {
 public:
-  virtual ~TweakableProperty() {}
+  virtual ~TweakableProperty()
+  {
+  }
   virtual void Serialize(DataTreeLoader& loader) = 0;
 };
 
@@ -25,7 +17,11 @@ template <typename PropertyType>
 class TweakablePropertyType : public TweakableProperty
 {
 public:
-  TweakablePropertyType(PropertyType* value, StringParam name) : mValue(value), mName(name) {}
+  TweakablePropertyType(PropertyType* value, StringParam name) :
+      mValue(value),
+      mName(name)
+  {
+  }
 
   void Serialize(DataTreeLoader& loader) override
   {
@@ -36,11 +32,9 @@ public:
   String mName;
 };
 
-//---------------------------------------------------------------- TweakableNode
 class TweakableNode : public EventObject
 {
 public:
-
   /// Constructor.
   TweakableNode(StringParam typeName);
   virtual ~TweakableNode();
@@ -62,7 +56,6 @@ public:
   HashMap<String, TweakableProperty*> mProperties;
 };
 
-//------------------------------------------------------------------- Tweakables
 class Tweakables : public TweakableNode
 {
 public:
@@ -73,8 +66,10 @@ public:
   /// Searches the path for the correct parent and binds the
   /// tweakable as a MetaProperty.
   template <typename PropertyType>
-  void RegisterTweakable(PropertyType* value, PropertyType& defaultValue,
-                         cstr name, cstr location);
+  void RegisterTweakable(PropertyType* value,
+                         PropertyType& defaultValue,
+                         cstr name,
+                         cstr location);
 
   /// Initializes the Tweakables system.
   static void Initialize();
@@ -95,10 +90,9 @@ public:
   typedef void (*TweakableModifiedCallback)();
   static TweakableModifiedCallback sModifiedCallback;
 
-  //LibraryRef mLibrary;
+  // LibraryRef mLibrary;
 };
 
-//-------------------------------------------------------- TweakablesComposition
 class TweakablesComposition : public MetaComposition
 {
 public:
@@ -111,8 +105,7 @@ public:
   BoundType* GetComponentMeta(StringParam name);
 };
 
-//----------------------------------------------------------------- TweakableVar
-template<typename type>
+template <typename type>
 class TweakableVar
 {
 public:
@@ -122,16 +115,15 @@ public:
   type mValue;
 };
 
-//----------------------------------------------------------------------- Macros
-#define Tweakable(type, name, defaultValue, location) TweakableVar<type> name(defaultValue, #name, location);
+#define Tweakable(type, name, defaultValue, location)                          \
+  TweakableVar<type> name(defaultValue, #name, location);
 #define DeclareTweakable(type, name) extern TweakableVar<type> name;
 
-//------------------------------------------------------------ Global Tweakables
 namespace Z
 {
-  extern Tweakables* gTweakables;
-}//namespace Z
+extern Tweakables* gTweakables;
+} // namespace Z
 
 #include "Tweakables.inl"
 
-}//namespace Zero
+} // namespace Zero

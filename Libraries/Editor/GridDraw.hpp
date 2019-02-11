@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GridDraw.hpp
-/// Declaration of the GridDraw class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -37,18 +29,17 @@ public:
   bool mActive;
 
 private:
-
   static void DrawLine();
   void Draw();
-public:
 
+public:
   /// Is the grid offset by half a unit?
   bool mHalfCellOffset;
 
   /// The deltas in the grid (how far apart we draw grid lines)
   float mCellSize;
 
-  /// Changes the line color to 
+  /// Changes the line color to
   bool mDrawAxisOrigins;
 
   /// Always draw the grid in editor (not just when it's selected)
@@ -59,7 +50,7 @@ public:
 
   /// Color of grid lines
   Vec4 mGridColor;
-  
+
   // Color of highlighted grid lines
   Vec4 mGridHighlight;
 
@@ -73,7 +64,6 @@ public:
   int mLines;
 
   AxisDirection::Enum mAxis;
-
 };
 
-}//namespace Zero
+} // namespace Zero

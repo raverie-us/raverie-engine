@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,7 +6,7 @@ namespace Zero
 
 ZilchDefineType(Environment, builder, type)
 {
-  // This is created once at startup and exists for the entirety of 
+  // This is created once at startup and exists for the entirety of
   // the application so it's safe to bind as a raw pointer.
   type->HandleManager = ZilchManagerId(PointerManager);
 
@@ -50,7 +45,8 @@ void Environment::SetCommandLineArguments(const Array<String>& commandLineArgs)
 
 bool Environment::ParseCommandLine()
 {
-  return ParseCommandLineStringArray(mParsedCommandLineArguments, mCommandLineArguments);
+  return ParseCommandLineStringArray(mParsedCommandLineArguments,
+                                     mCommandLineArguments);
 }
 
 void Environment::BuildCommandLine()
@@ -67,4 +63,4 @@ void Environment::BuildCommandLine()
   mCommandLine = builder.ToString();
 }
 
-}//namespace Zero
+} // namespace Zero

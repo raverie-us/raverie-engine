@@ -1,17 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ZeroAllocator.hpp
-/// Allocator that can be used in STL containers.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
-///Allocator to bind Zero memory management to STL.
+/// Allocator to bind Zero memory management to STL.
 template <class T>
-class Zallocator 
+class Zallocator
 {
 public:
   typedef T value_type;
@@ -22,7 +14,8 @@ public:
   typedef size_t size_type;
   typedef ptrdiff_t difference_type;
 
-  template <class U> struct rebind
+  template <class U>
+  struct rebind
   {
     typedef Zallocator<U> other;
   };
@@ -37,13 +30,25 @@ public:
     return &value;
   }
 
-  Zallocator() { }
-  ~Zallocator() { }
-  Zallocator(const Zallocator&) { }
-  Zallocator& operator=(const Zallocator&) { return *this; }
-  template <class U> Zallocator(const Zallocator<U>&) { }
+  Zallocator()
+  {
+  }
+  ~Zallocator()
+  {
+  }
+  Zallocator(const Zallocator&)
+  {
+  }
+  Zallocator& operator=(const Zallocator&)
+  {
+    return *this;
+  }
+  template <class U>
+  Zallocator(const Zallocator<U>&)
+  {
+  }
 
-  //Max number of elements
+  // Max number of elements
   size_type MaxSize() const
   {
     return std::numeric_limits<std::size_t>::max() / sizeof(T);
@@ -52,8 +57,11 @@ public:
   // This allocates the memory for num elements of type T
   pointer allocate(size_type num)
   {
-    if (num == 0) { return nullptr; }
-    if (num > MaxSize()) 
+    if (num == 0)
+    {
+      return nullptr;
+    }
+    if (num > MaxSize())
     {
       throw std::length_error("Zallocator Too Many Elements");
     }
@@ -77,7 +85,7 @@ public:
 
   void Construct(pointer p, const T& value)
   {
-    new(static_cast<void*>(p)) T(value);
+    new (static_cast<void*>(p)) T(value);
   }
 
   void Destroy(pointer p)
@@ -93,7 +101,7 @@ bool operator==(const Zallocator<T1>&, const Zallocator<T2>&)
 }
 
 template <class T1, class T2>
-bool operator!= (const Zallocator<T1>&, const Zallocator<T2>&)
+bool operator!=(const Zallocator<T1>&, const Zallocator<T2>&)
 {
   return false;
 }

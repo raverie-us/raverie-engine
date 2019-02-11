@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentLibrary.hpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,7 +13,7 @@ class ContentLibrary : public Object
 {
 public:
   ZilchDeclareType(ContentLibrary, TypeCopyMode::ReferenceType);
-  
+
   ContentLibrary();
   ~ContentLibrary();
 
@@ -40,7 +32,7 @@ public:
   // Source control type for this content library;
   String SourceControlType;
 
-  // Save content library file. 
+  // Save content library file.
   // Does not save contained content items meta or data.
   void Save();
 
@@ -50,13 +42,22 @@ public:
   // Load content library file.
   bool Load();
 
-  //Get output path.
+  // Get output path.
   String GetOutputPath();
 
-  //Library Protection
-  bool GetReadOnly() { return mReadOnly; }
-  bool GetWritable() { return !mReadOnly; }
-  void SetReadOnly(bool value) { mReadOnly = value; }
+  // Library Protection
+  bool GetReadOnly()
+  {
+    return mReadOnly;
+  }
+  bool GetWritable()
+  {
+    return !mReadOnly;
+  }
+  void SetReadOnly(bool value)
+  {
+    mReadOnly = value;
+  }
 
   // Find a content item by file name (Not the full path).
   ContentItem* FindContentItemByFileName(StringParam filename);
@@ -65,14 +66,16 @@ public:
   void BuildContent(BuildOptions& buildOptions);
   void BuildListing(ResourceListing& listing);
 
-  //Resources in this library hashed by unique file id
+  // Resources in this library hashed by unique file id
   typedef HashMap<String, ContentItem*> ContentMapType;
 
-  ContentMapType::valuerange GetContentItems(){return ContentItems.Values();}
+  ContentMapType::valuerange GetContentItems()
+  {
+    return ContentItems.Values();
+  }
 
 private:
-
-  //Internals
+  // Internals
   // Add a content item to this library.
   void AddContentItem(ContentItem* contentItem);
   // Remove a content item from this library.
@@ -87,4 +90,4 @@ private:
   friend class ContentSystem;
 };
 
-}//namespace Zero
+} // namespace Zero

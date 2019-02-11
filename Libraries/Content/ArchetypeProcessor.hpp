@@ -1,7 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -10,7 +7,8 @@ namespace Zero
 class ArchetypeProcessor
 {
 public:
-  ArchetypeProcessor(GeneratedArchetype* generatedArchetype, HierarchyDataMap& hierarchyData);
+  ArchetypeProcessor(GeneratedArchetype* generatedArchetype,
+                     HierarchyDataMap& hierarchyData);
 
   void BuildSceneGraph(String rootNode);
   SceneGraphNode* BuildSceneNodes(HierarchyData nodeData);
@@ -21,4 +19,4 @@ public:
   HierarchyDataMap& mHierarchyDataMap;
 };
 
-}// namespace Zero
+} // namespace Zero

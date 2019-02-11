@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MouseCapture.hpp
-/// Declaration of the MouseCapture Component.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,16 +6,15 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(MouseDragStart);
-  DeclareEvent(MouseDragMove);
-  DeclareEvent(MouseDragUpdate);
-  DeclareEvent(MouseDragEnd);
-}
+DeclareEvent(MouseDragStart);
+DeclareEvent(MouseDragMove);
+DeclareEvent(MouseDragUpdate);
+DeclareEvent(MouseDragEnd);
+} // namespace Events
 
 class MouseEvent;
 class ViewportMouseEvent;
 
-//----------------------------------------------------------- Mouse Manipulation
 class MouseCapture : public Component
 {
 public:

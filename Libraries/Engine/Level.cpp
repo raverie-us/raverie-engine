@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -53,7 +48,7 @@ String Level::GetLoadPath()
 {
   // If valid content item (editor mode)
   // always use the content item path
-  if(mContentItem)
+  if (mContentItem)
     LoadPath = mContentItem->GetFullPath();
   return LoadPath;
 }
@@ -63,41 +58,44 @@ void Level::SaveSpace(Space* space)
   SafeDelete(mCacheTree);
 
   // If the space has a level load pending do not save.
-  if(Level* pending = space->mPendingLevel)
+  if (Level* pending = space->mPendingLevel)
   {
-    DoNotifyError("Saving Error", "Attempted to save level file while loading.");
+    DoNotifyError("Saving Error",
+                  "Attempted to save level file while loading.");
     return;
   }
 
   // If the space has a different level loaded then this level.
   Level* loadedLevel = space->mLevelLoaded;
-  if(loadedLevel != this)
+  if (loadedLevel != this)
   {
     DoNotifyError("Saving Error", "Space has not loaded this level.");
     return;
   }
 
-  if(!IsWritable())
+  if (!IsWritable())
   {
     DoNotifyError("Saving Error", "Can not save to read only default level.");
     return;
   }
 
-  // When saving levels in the editor change the resource to directly point at the file. 
-  // Normally it loads from the built content directory.
-  if(mContentItem)
+  // When saving levels in the editor change the resource to directly point at
+  // the file. Normally it loads from the built content directory.
+  if (mContentItem)
   {
     String filename = mContentItem->GetFullPath();
     this->LoadPath = filename;
   }
 
   // Auto back up level files
-  BackUpFile( Z::gContentSystem->GetHistoryPath(mContentItem->mLibrary), mContentItem->GetFullPath() );
+  BackUpFile(Z::gContentSystem->GetHistoryPath(mContentItem->mLibrary),
+             mContentItem->GetFullPath());
 
   // Save level to file
   space->SaveLevelFile(this->LoadPath);
 
-  ZPrintFilter(Filter::ResourceFilter, "Saved level file '%s'.\n", Name.c_str());
+  ZPrintFilter(
+      Filter::ResourceFilter, "Saved level file '%s'.\n", Name.c_str());
 
   // No longer modified
   space->MarkNotModified();
@@ -110,8 +108,8 @@ void Level::LoadSpace(Space* space)
 
 ImplementResourceManager(LevelManager, Level);
 
-LevelManager::LevelManager(BoundType* resourceType)
-  :ResourceManager(resourceType)
+LevelManager::LevelManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("Level", new LevelLoader());
   mCanCreateNew = true;
@@ -125,11 +123,11 @@ LevelManager::LevelManager(BoundType* resourceType)
 void LevelManager::ClearCachedLevels()
 {
   LevelManager* manager = LevelManager::GetInstance();
-  forRange(Resource* resource, manager->AllResources())
+  forRange(Resource * resource, manager->AllResources())
   {
     Level* level = static_cast<Level*>(resource);
     SafeDelete(level->mCacheTree);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

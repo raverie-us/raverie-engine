@@ -1,24 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean.
-/// Copyright 2015, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-/// Translates the specified variant into the target type (if possible) and returns the result, else Variant().
-Variant TranslateVariant(const Variant& originalValue, BasicNetType::Enum targetBasicNetType)
+/// Translates the specified variant into the target type (if possible) and
+/// returns the result, else Variant().
+Variant TranslateVariant(const Variant& originalValue,
+                         BasicNetType::Enum targetBasicNetType)
 {
   // Get original and target native types
   NativeType* originalNativeType = originalValue.GetNativeType();
-  NativeType* targetNativeType   = GetNativeTypeByConstantId((NativeTypeId)BasicNetworkToNativeTypeEnum(targetBasicNetType));
+  NativeType* targetNativeType = GetNativeTypeByConstantId(
+      (NativeTypeId)BasicNetworkToNativeTypeEnum(targetBasicNetType));
 
   // Either the original or target native type is not a basic type?
-  if(originalNativeType == nullptr
-  || targetNativeType   == nullptr)
+  if (originalNativeType == nullptr || targetNativeType == nullptr)
   {
     // (We can only convert between basic native types)
     return Variant();
@@ -35,9 +32,7 @@ Variant TranslateVariant(const Variant& originalValue, BasicNetType::Enum target
   return resultValue;
 }
 
-//---------------------------------------------------------------------------------//
-//                                 NetProperty                                     //
-//---------------------------------------------------------------------------------//
+//                                 NetProperty //
 
 ZilchDefineType(NetProperty, builder, type)
 {
@@ -55,8 +50,10 @@ ZilchDefineType(NetProperty, builder, type)
   ZilchBindGetterProperty(LastChangeTimePassed);
 }
 
-NetProperty::NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData)
-  : ReplicaProperty(name, netPropertyType, propertyData)
+NetProperty::NetProperty(const String& name,
+                         NetPropertyType* netPropertyType,
+                         const Variant& propertyData) :
+    ReplicaProperty(name, netPropertyType, propertyData)
 {
 }
 
@@ -75,7 +72,8 @@ const String& NetProperty::GetName() const
 
 NetPropertyType* NetProperty::GetNetPropertyType() const
 {
-  return static_cast<NetPropertyType*>(ReplicaProperty::GetReplicaPropertyType());
+  return static_cast<NetPropertyType*>(
+      ReplicaProperty::GetReplicaPropertyType());
 }
 
 NetChannel* NetProperty::GetNetChannel() const
@@ -87,7 +85,7 @@ float NetProperty::GetLastChangeTimestamp() const
 {
   // Get last change timestamp
   TimeMs timestamp = ReplicaProperty::GetLastChangeTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
   return TimeMsToFloatSeconds(timestamp);
@@ -97,7 +95,7 @@ float NetProperty::GetLastChangeTimePassed() const
 {
   // Get replicator
   Replicator* replicator = ReplicaProperty::GetReplicator();
-  if(!replicator) // Unable?
+  if (!replicator) // Unable?
     return 0;
 
   // Get current time
@@ -105,17 +103,16 @@ float NetProperty::GetLastChangeTimePassed() const
 
   // Get last change timestamp
   TimeMs timestamp = ReplicaProperty::GetLastChangeTimestamp();
-  if(timestamp == cInvalidMessageTimestamp) // Invalid?
+  if (timestamp == cInvalidMessageTimestamp) // Invalid?
     return 0;
 
-  // Compute time passed since last change (duration between now and last change timestamp)
+  // Compute time passed since last change (duration between now and last change
+  // timestamp)
   TimeMs timePassed = (now - timestamp);
   return TimeMsToFloatSeconds(timePassed);
 }
 
-//---------------------------------------------------------------------------------//
-//                               NetPropertyType                                   //
-//---------------------------------------------------------------------------------//
+//                               NetPropertyType //
 
 ZilchDefineType(NetPropertyType, builder, type)
 {
@@ -133,8 +130,13 @@ ZilchDefineType(NetPropertyType, builder, type)
   ZilchBindMethod(SetConfig);
 }
 
-NetPropertyType::NetPropertyType(const String& name, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn)
-  : ReplicaPropertyType(name, nativeType, serializeValueFn, getValueFn, setValueFn)
+NetPropertyType::NetPropertyType(const String& name,
+                                 NativeType* nativeType,
+                                 SerializeValueFn serializeValueFn,
+                                 GetValueFn getValueFn,
+                                 SetValueFn setValueFn) :
+    ReplicaPropertyType(
+        name, nativeType, serializeValueFn, getValueFn, setValueFn)
 {
   ResetConfig();
 }
@@ -159,7 +161,7 @@ const String& NetPropertyType::GetName() const
 void NetPropertyType::ResetConfig()
 {
   // Not valid yet?
-  if(!IsValid())
+  if (!IsValid())
   {
     // Set non-runtime config options
     SetDeltaThreshold();
@@ -190,36 +192,39 @@ void NetPropertyType::SetConfig(NetPropertyConfig* netPropertyConfig)
   BasicNetType::Enum configBasicNetType = netPropertyConfig->GetBasicNetType();
 
   // Non-arithmetic type?
-  if(configBasicNetType == BasicNetType::Other
-  || configBasicNetType == BasicNetType::Boolean
-  || configBasicNetType == BasicNetType::String)
+  if (configBasicNetType == BasicNetType::Other ||
+      configBasicNetType == BasicNetType::Boolean ||
+      configBasicNetType == BasicNetType::String)
     return; // Unable to translate
 
   // Get our network property type
-  BasicNetType::Enum ourBasicNetType = BasicNativeToNetworkTypeEnum((BasicNativeType::Enum)ReplicaPropertyType::GetNativeTypeId());
+  BasicNetType::Enum ourBasicNetType = BasicNativeToNetworkTypeEnum(
+      (BasicNativeType::Enum)ReplicaPropertyType::GetNativeTypeId());
 
   // Non-arithmetic type?
-  if(ourBasicNetType == BasicNetType::Other
-  || ourBasicNetType == BasicNetType::Boolean
-  || ourBasicNetType == BasicNetType::String)
+  if (ourBasicNetType == BasicNetType::Other ||
+      ourBasicNetType == BasicNetType::Boolean ||
+      ourBasicNetType == BasicNetType::String)
     return; // Unable to translate
 
   // Not valid yet?
-  if(!IsValid())
+  if (!IsValid())
   {
     // Get config variant property types
-    Variant deltaThreshold       = netPropertyConfig->mDeltaThreshold;
+    Variant deltaThreshold = netPropertyConfig->mDeltaThreshold;
     Variant quantizationRangeMin = netPropertyConfig->mQuantizationRangeMin;
     Variant quantizationRangeMax = netPropertyConfig->mQuantizationRangeMax;
-    Variant snapThreshold        = netPropertyConfig->mSnapThreshold;
+    Variant snapThreshold = netPropertyConfig->mSnapThreshold;
 
     // Need to translate config variant property types?
-    if(ourBasicNetType != configBasicNetType)
+    if (ourBasicNetType != configBasicNetType)
     {
-      deltaThreshold       = TranslateVariant(deltaThreshold,       ourBasicNetType);
-      quantizationRangeMin = TranslateVariant(quantizationRangeMin, ourBasicNetType);
-      quantizationRangeMax = TranslateVariant(quantizationRangeMax, ourBasicNetType);
-      snapThreshold        = TranslateVariant(snapThreshold,        ourBasicNetType);
+      deltaThreshold = TranslateVariant(deltaThreshold, ourBasicNetType);
+      quantizationRangeMin =
+          TranslateVariant(quantizationRangeMin, ourBasicNetType);
+      quantizationRangeMax =
+          TranslateVariant(quantizationRangeMax, ourBasicNetType);
+      snapThreshold = TranslateVariant(snapThreshold, ourBasicNetType);
     }
 
     // Set non-runtime config options
@@ -232,71 +237,115 @@ void NetPropertyType::SetConfig(NetPropertyConfig* netPropertyConfig)
     SetQuantizationRangeMax(quantizationRangeMax);
     SetUseInterpolation(netPropertyConfig->mUseInterpolation);
     SetInterpolationCurve(netPropertyConfig->mInterpolationCurve);
-    SetSampleTimeOffset(FloatSecondsToTimeMs(netPropertyConfig->mSampleTimeOffset));
-    SetExtrapolationLimit(FloatSecondsToTimeMs(netPropertyConfig->mExtrapolationLimit));
+    SetSampleTimeOffset(
+        FloatSecondsToTimeMs(netPropertyConfig->mSampleTimeOffset));
+    SetExtrapolationLimit(
+        FloatSecondsToTimeMs(netPropertyConfig->mExtrapolationLimit));
     SetUseConvergence(netPropertyConfig->mUseConvergence);
     SetActiveConvergenceWeight(netPropertyConfig->mActiveConvergenceWeight);
-    SetRestingConvergenceDuration(FloatSecondsToTimeMs(netPropertyConfig->mRestingConvergenceDuration));
+    SetRestingConvergenceDuration(
+        FloatSecondsToTimeMs(netPropertyConfig->mRestingConvergenceDuration));
     SetConvergenceInterval(netPropertyConfig->mConvergenceInterval);
     SetSnapThreshold(snapThreshold);
   }
 
   // Set runtime config options
-  SetNotifyOnConvergenceStateChange(netPropertyConfig->mEventOnConvergenceStateChange);
+  SetNotifyOnConvergenceStateChange(
+      netPropertyConfig->mEventOnConvergenceStateChange);
 }
 
-//---------------------------------------------------------------------------------//
-//                              NetPropertyConfig                                  //
-//---------------------------------------------------------------------------------//
+//                              NetPropertyConfig //
 
 // Variant Configuration Helper Macros
-#define DefineVariantGetSetForArithmeticTypes(property)                                                                                                                                                 \
-DefineVariantGetSetForType(property, Integer,       int,        int(DefaultInt##property));                                                                                                             \
-DefineVariantGetSetForType(property, DoubleInteger, s64,        s64(DefaultInt##property));                                                                                                             \
-DefineVariantGetSetForType(property, Integer2,      Integer2,   Integer2(DefaultInt##property, DefaultInt##property));                                                                                  \
-DefineVariantGetSetForType(property, Integer3,      Integer3,   Integer3(DefaultInt##property, DefaultInt##property, DefaultInt##property));                                                            \
-DefineVariantGetSetForType(property, Integer4,      Integer4,   Integer4(DefaultInt##property, DefaultInt##property, DefaultInt##property, DefaultInt##property));                                      \
-DefineVariantGetSetForType(property, Real,          float,      float(DefaultFloat##property));                                                                                                         \
-DefineVariantGetSetForType(property, DoubleReal,    double,     double(DefaultFloat##property));                                                                                                        \
-DefineVariantGetSetForType(property, Real2,         Real2,      Real2(float(DefaultFloat##property), float(DefaultFloat##property)));                                                                   \
-DefineVariantGetSetForType(property, Real3,         Real3,      Real3(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));                                    \
-DefineVariantGetSetForType(property, Real4,         Real4,      Real4(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));     \
-DefineVariantGetSetForType(property, Quaternion,    Quaternion, Quaternion(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)))
+#define DefineVariantGetSetForArithmeticTypes(property)                        \
+  DefineVariantGetSetForType(                                                  \
+      property, Integer, int, int(DefaultInt##property));                      \
+  DefineVariantGetSetForType(                                                  \
+      property, DoubleInteger, s64, s64(DefaultInt##property));                \
+  DefineVariantGetSetForType(                                                  \
+      property,                                                                \
+      Integer2,                                                                \
+      Integer2,                                                                \
+      Integer2(DefaultInt##property, DefaultInt##property));                   \
+  DefineVariantGetSetForType(property,                                         \
+                             Integer3,                                         \
+                             Integer3,                                         \
+                             Integer3(DefaultInt##property,                    \
+                                      DefaultInt##property,                    \
+                                      DefaultInt##property));                  \
+  DefineVariantGetSetForType(property,                                         \
+                             Integer4,                                         \
+                             Integer4,                                         \
+                             Integer4(DefaultInt##property,                    \
+                                      DefaultInt##property,                    \
+                                      DefaultInt##property,                    \
+                                      DefaultInt##property));                  \
+  DefineVariantGetSetForType(                                                  \
+      property, Real, float, float(DefaultFloat##property));                   \
+  DefineVariantGetSetForType(                                                  \
+      property, DoubleReal, double, double(DefaultFloat##property));           \
+  DefineVariantGetSetForType(                                                  \
+      property,                                                                \
+      Real2,                                                                   \
+      Real2,                                                                   \
+      Real2(float(DefaultFloat##property), float(DefaultFloat##property)));    \
+  DefineVariantGetSetForType(property,                                         \
+                             Real3,                                            \
+                             Real3,                                            \
+                             Real3(float(DefaultFloat##property),              \
+                                   float(DefaultFloat##property),              \
+                                   float(DefaultFloat##property)));            \
+  DefineVariantGetSetForType(property,                                         \
+                             Real4,                                            \
+                             Real4,                                            \
+                             Real4(float(DefaultFloat##property),              \
+                                   float(DefaultFloat##property),              \
+                                   float(DefaultFloat##property),              \
+                                   float(DefaultFloat##property)));            \
+  DefineVariantGetSetForType(property,                                         \
+                             Quaternion,                                       \
+                             Quaternion,                                       \
+                             Quaternion(float(DefaultFloat##property),         \
+                                        float(DefaultFloat##property),         \
+                                        float(DefaultFloat##property),         \
+                                        float(DefaultFloat##property)))
 
-#define DefineVariantGetSetForType(property, typeName, type, defaultValue)         \
-void NetPropertyConfig::Set##property##typeName(type value)                        \
-{                                                                                  \
-  m##property = value;                                                             \
-}                                                                                  \
-type NetPropertyConfig::Get##property##typeName() const                            \
-{                                                                                  \
-  return m##property.GetOrDefault<type>(defaultValue);                             \
-}
+#define DefineVariantGetSetForType(property, typeName, type, defaultValue)     \
+  void NetPropertyConfig::Set##property##typeName(type value)                  \
+  {                                                                            \
+    m##property = value;                                                       \
+  }                                                                            \
+  type NetPropertyConfig::Get##property##typeName() const                      \
+  {                                                                            \
+    return m##property.GetOrDefault<type>(defaultValue);                       \
+  }
 
-#define BindVariantGetSetForArithmeticTypes(property) \
-BindVariantGetSetForType(property, Integer);          \
-BindVariantGetSetForType(property, DoubleInteger);    \
-BindVariantGetSetForType(property, Integer2);         \
-BindVariantGetSetForType(property, Integer3);         \
-BindVariantGetSetForType(property, Integer4);         \
-BindVariantGetSetForType(property, Real);             \
-BindVariantGetSetForType(property, DoubleReal);       \
-BindVariantGetSetForType(property, Real2);            \
-BindVariantGetSetForType(property, Real3);            \
-BindVariantGetSetForType(property, Real4);            \
-BindVariantGetSetForType(property, Quaternion)
+#define BindVariantGetSetForArithmeticTypes(property)                          \
+  BindVariantGetSetForType(property, Integer);                                 \
+  BindVariantGetSetForType(property, DoubleInteger);                           \
+  BindVariantGetSetForType(property, Integer2);                                \
+  BindVariantGetSetForType(property, Integer3);                                \
+  BindVariantGetSetForType(property, Integer4);                                \
+  BindVariantGetSetForType(property, Real);                                    \
+  BindVariantGetSetForType(property, DoubleReal);                              \
+  BindVariantGetSetForType(property, Real2);                                   \
+  BindVariantGetSetForType(property, Real3);                                   \
+  BindVariantGetSetForType(property, Real4);                                   \
+  BindVariantGetSetForType(property, Quaternion)
 
-#define BindVariantGetSetForType(property, typeName)                                 \
-ZilchBindGetterSetterProperty(property##typeName)->Add(new PropertyFilter##typeName)
+#define BindVariantGetSetForType(property, typeName)                           \
+  ZilchBindGetterSetterProperty(property##typeName)                            \
+      ->Add(new PropertyFilter##typeName)
 
-#define DefinePropertyFilterForType(typeName)                                             \
-ZilchDefineType(PropertyFilter##typeName, builder, type)                                  \
-{                                                                                         \
-}                                                                                         \
-bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)                 \
-{                                                                                         \
-  return (instance.Get<NetPropertyConfig*>()->mBasicNetType == BasicNetType::typeName); \
-}
+#define DefinePropertyFilterForType(typeName)                                  \
+  ZilchDefineType(PropertyFilter##typeName, builder, type)                     \
+  {                                                                            \
+  }                                                                            \
+  bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)    \
+  {                                                                            \
+    return (instance.Get<NetPropertyConfig*>()->mBasicNetType ==               \
+            BasicNetType::typeName);                                           \
+  }
 
 // Variant Configuration Property Filters
 DefinePropertyFilterForType(Other);
@@ -318,9 +367,10 @@ ZilchDefineType(PropertyFilterMultiPrimitiveTypes, builder, type)
 {
 }
 
-bool PropertyFilterMultiPrimitiveTypes::Filter(Member* prop, HandleParam instance)
+bool PropertyFilterMultiPrimitiveTypes::Filter(Member* prop,
+                                               HandleParam instance)
 {
-  switch(instance.Get<NetPropertyConfig*>()->mBasicNetType)
+  switch (instance.Get<NetPropertyConfig*>()->mBasicNetType)
   {
   default:
   case BasicNetType::Other:
@@ -347,9 +397,10 @@ ZilchDefineType(PropertyFilterFloatingPointTypes, builder, type)
 {
 }
 
-bool PropertyFilterFloatingPointTypes::Filter(Member* prop, HandleParam instance)
+bool PropertyFilterFloatingPointTypes::Filter(Member* prop,
+                                              HandleParam instance)
 {
-  switch(instance.Get<NetPropertyConfig*>()->mBasicNetType)
+  switch (instance.Get<NetPropertyConfig*>()->mBasicNetType)
   {
   default:
   case BasicNetType::Other:
@@ -378,7 +429,7 @@ ZilchDefineType(PropertyFilterArithmeticTypes, builder, type)
 
 bool PropertyFilterArithmeticTypes::Filter(Member* prop, HandleParam instance)
 {
-  switch(instance.Get<NetPropertyConfig*>()->mBasicNetType)
+  switch (instance.Get<NetPropertyConfig*>()->mBasicNetType)
   {
   default:
   case BasicNetType::Other:
@@ -413,28 +464,44 @@ ZilchDefineType(NetPropertyConfig, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 
   // Bind data members
-  ZilchBindGetterSetterProperty(BasicNetType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(UseDeltaThreshold)->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(BasicNetType)
+      ->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  ZilchBindGetterSetterProperty(UseDeltaThreshold)
+      ->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(DeltaThreshold);
-  ZilchBindGetterSetterProperty(SerializationMode)->Add(new PropertyFilterMultiPrimitiveTypes);
-  ZilchBindGetterSetterProperty(UseHalfFloats)->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)->Add(new PropertyFilterFloatingPointTypes);
-  ZilchBindGetterSetterProperty(UseQuantization)->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(SerializationMode)
+      ->Add(new PropertyFilterMultiPrimitiveTypes);
+  ZilchBindGetterSetterProperty(UseHalfFloats)
+      ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
+      ->Add(new PropertyFilterFloatingPointTypes);
+  ZilchBindGetterSetterProperty(UseQuantization)
+      ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
+      ->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(QuantizationRangeMin);
   BindVariantGetSetForArithmeticTypes(QuantizationRangeMax);
-  ZilchBindGetterSetterProperty(UseInterpolation)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(InterpolationCurve)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(SampleTimeOffset)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(ExtrapolationLimit)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(UseConvergence)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(EventOnConvergenceStateChange)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(ActiveConvergenceWeight)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(RestingConvergenceDuration)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(ConvergenceInterval)->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(UseInterpolation)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(InterpolationCurve)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(SampleTimeOffset)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(ExtrapolationLimit)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(UseConvergence)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(EventOnConvergenceStateChange)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(ActiveConvergenceWeight)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(RestingConvergenceDuration)
+      ->Add(new PropertyFilterArithmeticTypes);
+  ZilchBindGetterSetterProperty(ConvergenceInterval)
+      ->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(SnapThreshold);
 }
 
-NetPropertyConfig::NetPropertyConfig()
-  : mBasicNetType(BasicNetType::Other),
+NetPropertyConfig::NetPropertyConfig() :
+    mBasicNetType(BasicNetType::Other),
     mUseDeltaThreshold(false),
     mDeltaThreshold(),
     mSerializationMode(SerializationMode::All),
@@ -466,13 +533,17 @@ void NetPropertyConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mUseDeltaThreshold, false);
   auto localTempVariant = Variant(DefaultFloatDeltaThreshold);
   SerializeNameDefault(mDeltaThreshold, localTempVariant);
-  SerializeEnumNameDefault(SerializationMode, mSerializationMode, SerializationMode::All);
+  SerializeEnumNameDefault(
+      SerializationMode, mSerializationMode, SerializationMode::All);
   SerializeNameDefault(mUseHalfFloats, false);
   SerializeNameDefault(mUseQuantization, false);
-  SerializeNameDefault(mQuantizationRangeMin, Variant(DefaultFloatQuantizationRangeMin));
-  SerializeNameDefault(mQuantizationRangeMax, Variant(DefaultFloatQuantizationRangeMax));
+  SerializeNameDefault(mQuantizationRangeMin,
+                       Variant(DefaultFloatQuantizationRangeMin));
+  SerializeNameDefault(mQuantizationRangeMax,
+                       Variant(DefaultFloatQuantizationRangeMax));
   SerializeNameDefault(mUseInterpolation, false);
-  SerializeEnumNameDefault(Math::CurveType, mInterpolationCurve, Math::CurveType::CatmullRom);
+  SerializeEnumNameDefault(
+      Math::CurveType, mInterpolationCurve, Math::CurveType::CatmullRom);
   SerializeNameDefault(mSampleTimeOffset, float(0.1));
   SerializeNameDefault(mExtrapolationLimit, float(1));
   SerializeNameDefault(mUseConvergence, false);
@@ -483,9 +554,10 @@ void NetPropertyConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mSnapThreshold, Variant(DefaultFloatSnapThreshold));
 
   // Loading?
-  if(stream.GetMode() == SerializerMode::Loading)
+  if (stream.GetMode() == SerializerMode::Loading)
   {
-    // Translate read in variant properties, just in case their types don't match our target type
+    // Translate read in variant properties, just in case their types don't
+    // match our target type
     TranslateVariantProperties();
   }
 }
@@ -502,16 +574,18 @@ const String& NetPropertyConfig::GetName() const
 void NetPropertyConfig::TranslateVariantProperties()
 {
   // Non-arithmetic type?
-  if(mBasicNetType == BasicNetType::Other
-  || mBasicNetType == BasicNetType::Boolean
-  || mBasicNetType == BasicNetType::String)
+  if (mBasicNetType == BasicNetType::Other ||
+      mBasicNetType == BasicNetType::Boolean ||
+      mBasicNetType == BasicNetType::String)
     return; // Unable to translate
 
   // Translate variant properties
-  mDeltaThreshold       = TranslateVariant(mDeltaThreshold,       mBasicNetType);
-  mQuantizationRangeMin = TranslateVariant(mQuantizationRangeMin, mBasicNetType);
-  mQuantizationRangeMax = TranslateVariant(mQuantizationRangeMax, mBasicNetType);
-  mSnapThreshold        = TranslateVariant(mSnapThreshold,        mBasicNetType);
+  mDeltaThreshold = TranslateVariant(mDeltaThreshold, mBasicNetType);
+  mQuantizationRangeMin =
+      TranslateVariant(mQuantizationRangeMin, mBasicNetType);
+  mQuantizationRangeMax =
+      TranslateVariant(mQuantizationRangeMax, mBasicNetType);
+  mSnapThreshold = TranslateVariant(mSnapThreshold, mBasicNetType);
 }
 
 //
@@ -533,7 +607,7 @@ void NetPropertyConfig::SetUseDeltaThreshold(bool useDeltaThreshold)
   mUseDeltaThreshold = useDeltaThreshold;
 
   // Not using delta threshold?
-  if(!mUseDeltaThreshold)
+  if (!mUseDeltaThreshold)
     SetUseQuantization(false); // Disable quantization
 }
 bool NetPropertyConfig::GetUseDeltaThreshold() const
@@ -543,7 +617,8 @@ bool NetPropertyConfig::GetUseDeltaThreshold() const
 
 DefineVariantGetSetForArithmeticTypes(DeltaThreshold);
 
-void NetPropertyConfig::SetSerializationMode(SerializationMode::Enum serializationMode)
+void NetPropertyConfig::SetSerializationMode(
+    SerializationMode::Enum serializationMode)
 {
   mSerializationMode = serializationMode;
 }
@@ -557,7 +632,7 @@ void NetPropertyConfig::SetUseHalfFloats(bool useHalfFloats)
   mUseHalfFloats = useHalfFloats;
 
   // Using half floats?
-  if(mUseHalfFloats)
+  if (mUseHalfFloats)
     SetUseQuantization(false); // Disable quantization
 }
 bool NetPropertyConfig::GetUseHalfFloats() const
@@ -570,7 +645,7 @@ void NetPropertyConfig::SetUseQuantization(bool useQuantization)
   mUseQuantization = useQuantization;
 
   // Using quantization?
-  if(mUseQuantization)
+  if (mUseQuantization)
   {
     SetUseDeltaThreshold(true); // Enable delta threshold
     SetUseHalfFloats(false);    // Disable half floats
@@ -594,7 +669,8 @@ bool NetPropertyConfig::GetUseInterpolation() const
   return mUseInterpolation;
 }
 
-void NetPropertyConfig::SetInterpolationCurve(Math::CurveType::Enum interpolationCurve)
+void NetPropertyConfig::SetInterpolationCurve(
+    Math::CurveType::Enum interpolationCurve)
 {
   mInterpolationCurve = interpolationCurve;
 }
@@ -630,7 +706,8 @@ bool NetPropertyConfig::GetUseConvergence() const
   return mUseConvergence;
 }
 
-void NetPropertyConfig::SetEventOnConvergenceStateChange(bool eventOnConvergenceStateChange)
+void NetPropertyConfig::SetEventOnConvergenceStateChange(
+    bool eventOnConvergenceStateChange)
 {
   mEventOnConvergenceStateChange = eventOnConvergenceStateChange;
 }
@@ -639,7 +716,8 @@ bool NetPropertyConfig::GetEventOnConvergenceStateChange() const
   return mEventOnConvergenceStateChange;
 }
 
-void NetPropertyConfig::SetActiveConvergenceWeight(float activeConvergenceWeight)
+void NetPropertyConfig::SetActiveConvergenceWeight(
+    float activeConvergenceWeight)
 {
   mActiveConvergenceWeight = activeConvergenceWeight;
 }
@@ -648,7 +726,8 @@ float NetPropertyConfig::GetActiveConvergenceWeight() const
   return mActiveConvergenceWeight;
 }
 
-void NetPropertyConfig::SetRestingConvergenceDuration(float restingConvergenceDuration)
+void NetPropertyConfig::SetRestingConvergenceDuration(
+    float restingConvergenceDuration)
 {
   mRestingConvergenceDuration = restingConvergenceDuration;
 }
@@ -675,15 +754,14 @@ DefineVariantGetSetForArithmeticTypes(SnapThreshold);
 #undef BindVariantGetSetForType
 #undef DefinePropertyFilterForType
 
-//---------------------------------------------------------------------------------//
-//                           NetPropertyConfigManager                              //
-//---------------------------------------------------------------------------------//
+//                           NetPropertyConfigManager //
 
 ImplementResourceManager(NetPropertyConfigManager, NetPropertyConfig);
-NetPropertyConfigManager::NetPropertyConfigManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+NetPropertyConfigManager::NetPropertyConfigManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
-  AddLoader("NetPropertyConfig", new TextDataFileLoader<NetPropertyConfigManager>());
+  AddLoader("NetPropertyConfig",
+            new TextDataFileLoader<NetPropertyConfigManager>());
   mCategory = "Networking";
   mCanAddFile = true;
   mOpenFileFilters.PushBack(FileDialogFilter("*.NetPropertyConfig.data"));
@@ -693,9 +771,7 @@ NetPropertyConfigManager::NetPropertyConfigManager(BoundType* resourceType)
   mExtension = DataResourceExtension;
 }
 
-//---------------------------------------------------------------------------------//
-//                               NetPropertyInfo                                   //
-//---------------------------------------------------------------------------------//
+//                               NetPropertyInfo //
 
 ZilchDefineType(NetPropertyInfo, builder, type)
 {
@@ -707,41 +783,43 @@ ZilchDefineType(NetPropertyInfo, builder, type)
 
   // Bind property interface
   ZilchBindCustomGetterPropertyAs(GetComponentName, "Component");
-  ZilchBindCustomGetterPropertyAs(GetPropertyName,  "Property");
+  ZilchBindCustomGetterPropertyAs(GetPropertyName, "Property");
   ZilchBindGetterSetterProperty(NetChannelConfig);
   ZilchBindGetterSetterProperty(NetPropertyConfig);
 }
 
-NetPropertyInfo::NetPropertyInfo()
-  : mComponentType(nullptr),
+NetPropertyInfo::NetPropertyInfo() :
+    mComponentType(nullptr),
     mPropertyName(),
     mNetChannelConfig(),
     mNetPropertyConfig()
 {
 }
-NetPropertyInfo::NetPropertyInfo(BoundType* componentType, StringParam propertyName)
-  : mComponentType(componentType),
+NetPropertyInfo::NetPropertyInfo(BoundType* componentType,
+                                 StringParam propertyName) :
+    mComponentType(componentType),
     mPropertyName(propertyName),
-    mNetChannelConfig(NetChannelConfigManager::GetInstance()->FindOrNull("Default")),
-    mNetPropertyConfig(NetPropertyConfigManager::GetInstance()->FindOrNull("Default"))
+    mNetChannelConfig(
+        NetChannelConfigManager::GetInstance()->FindOrNull("Default")),
+    mNetPropertyConfig(
+        NetPropertyConfigManager::GetInstance()->FindOrNull("Default"))
 {
 }
 
-bool NetPropertyInfo::operator ==(const NetPropertyInfo& rhs) const
+bool NetPropertyInfo::operator==(const NetPropertyInfo& rhs) const
 {
-  return mComponentType == rhs.mComponentType
-      && mPropertyName  == rhs.mPropertyName;
+  return mComponentType == rhs.mComponentType &&
+         mPropertyName == rhs.mPropertyName;
 }
-bool NetPropertyInfo::operator !=(const NetPropertyInfo& rhs) const
+bool NetPropertyInfo::operator!=(const NetPropertyInfo& rhs) const
 {
   return !(*this == rhs);
 }
-bool NetPropertyInfo::operator ==(const Pair<BoundType*, String>& rhs) const
+bool NetPropertyInfo::operator==(const Pair<BoundType*, String>& rhs) const
 {
-  return mComponentType == rhs.first
-      && mPropertyName  == rhs.second;
+  return mComponentType == rhs.first && mPropertyName == rhs.second;
 }
-bool NetPropertyInfo::operator !=(const Pair<BoundType*, String>& rhs) const
+bool NetPropertyInfo::operator!=(const Pair<BoundType*, String>& rhs) const
 {
   return !(*this == rhs);
 }
@@ -755,15 +833,18 @@ void NetPropertyInfo::Serialize(Serializer& stream)
   // Serialize target component name
   String componentName = GetComponentName();
   stream.SerializeFieldDefault("ComponentName", componentName, String());
-  if(stream.GetMode() == SerializerMode::Loading) // Is loading?
-    SetComponentName(componentName); // Set component type from the name we loaded
+  if (stream.GetMode() == SerializerMode::Loading) // Is loading?
+    SetComponentName(
+        componentName); // Set component type from the name we loaded
 
   // Serialize target property name
   SerializeNameDefault(mPropertyName, String());
 
   // Serialize net channel and property config resources
-  SerializeResourceNameDefault(mNetChannelConfig, NetChannelConfigManager, "Default");
-  SerializeResourceNameDefault(mNetPropertyConfig, NetPropertyConfigManager, "Default");
+  SerializeResourceNameDefault(
+      mNetChannelConfig, NetChannelConfigManager, "Default");
+  SerializeResourceNameDefault(
+      mNetPropertyConfig, NetPropertyConfigManager, "Default");
 }
 
 void NetPropertyInfo::SetDefaults()

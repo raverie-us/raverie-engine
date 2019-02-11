@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -8,7 +7,7 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(GraphicalSort);
+DeclareEvent(GraphicalSort);
 }
 
 // GraphicalEntryData is everything that GraphicalEntry needs to perform its
@@ -32,7 +31,8 @@ public:
 // to render Graphicals. This class must stay very small so that sorting is as
 // fast as possible. The final set of entries is used to populate data from the
 // Graphicals in already sorted order.
-/// Represents a Graphical that has been identified as visible from broadphase. Used for sorting.
+/// Represents a Graphical that has been identified as visible from broadphase.
+/// Used for sorting.
 class GraphicalEntry
 {
 public:
@@ -66,14 +66,24 @@ public:
   ZilchDeclareType(GraphicalSortEvent, TypeCopyMode::ReferenceType);
 
   /// Range of Graphicals that can have their sort values set.
-  GraphicalEntryRange GetGraphicalEntries() { return mGraphicalEntries; }
+  GraphicalEntryRange GetGraphicalEntries()
+  {
+    return mGraphicalEntries;
+  }
   GraphicalEntryRange mGraphicalEntries;
 
   /// The RenderGroup that this event is being sent for.
-  RenderGroup* GetRenderGroup() { return mRenderGroup; }
+  RenderGroup* GetRenderGroup()
+  {
+    return mRenderGroup;
+  }
   RenderGroup* mRenderGroup;
 };
 
-s32 GetGraphicalSortValue(Graphical& graphical, GraphicalSortMethod::Enum sortMethod, Vec3 pos, Vec3 camPos, Vec3 camDir);
+s32 GetGraphicalSortValue(Graphical& graphical,
+                          GraphicalSortMethod::Enum sortMethod,
+                          Vec3 pos,
+                          Vec3 camPos,
+                          Vec3 camDir);
 
 } // namespace Zero

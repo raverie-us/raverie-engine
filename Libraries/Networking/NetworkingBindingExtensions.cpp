@@ -1,19 +1,16 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------- Meta Net Property
+//Meta Net Property
 ZilchDefineType(MetaNetProperty, builder, type)
 {
-  ZilchBindField(mNetPropertyConfig)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(mNetChannelConfig)->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindField(mNetPropertyConfig)
+      ->AddAttribute(PropertyAttributes::cOptional);
+  ZilchBindField(mNetChannelConfig)
+      ->AddAttribute(PropertyAttributes::cOptional);
 }
 
-}//namespace Zero
+} // namespace Zero

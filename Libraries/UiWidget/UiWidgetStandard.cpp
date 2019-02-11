@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -20,13 +15,13 @@ ZilchDefineEnum(UiDockMode);
 ZilchDefineEnum(UiFocusDirection);
 ZilchDefineEnum(UiStackLayoutDirection);
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(UiWidgetLibrary)
 {
   builder.CreatableInScriptDefault = false;
-  
+
   // Ranges
-  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange, "UiWidgetRange");
+  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange,
+                         "UiWidgetRange");
 
   // Enums
   ZilchInitializeEnum(UiSizePolicy);
@@ -52,17 +47,15 @@ ZilchDefineStaticLibrary(UiWidgetLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void UiWidgetLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 }
 
-//**************************************************************************************************
 void UiWidgetLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

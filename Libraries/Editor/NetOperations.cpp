@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 // Includes
@@ -17,42 +12,51 @@ namespace Zero
 // NetPropertyInfo Operations
 //
 
-//******************************************************************************
-void AddNetPropertyInfo(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName)
+void AddNetPropertyInfo(OperationQueue* queue,
+                        NetObject* netObject,
+                        BoundType* componentType,
+                        StringParam propertyName)
 {
   // Create and perform the Add NetPropertyInfo operation
-  Operation* op = new AddRemoveNetPropertyInfoOperation(netObject, componentType, propertyName, NetPropertyInfoAction::Add);
+  Operation* op = new AddRemoveNetPropertyInfoOperation(
+      netObject, componentType, propertyName, NetPropertyInfoAction::Add);
   op->Redo();
   queue->Queue(op);
 }
 
-//******************************************************************************
-void RemoveNetPropertyInfo(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName)
+void RemoveNetPropertyInfo(OperationQueue* queue,
+                           NetObject* netObject,
+                           BoundType* componentType,
+                           StringParam propertyName)
 {
   // Create and perform the Remove NetPropertyInfo operation
-  Operation* op = new AddRemoveNetPropertyInfoOperation(netObject, componentType, propertyName, NetPropertyInfoAction::Remove);
+  Operation* op = new AddRemoveNetPropertyInfoOperation(
+      netObject, componentType, propertyName, NetPropertyInfoAction::Remove);
   op->Redo();
   queue->Queue(op);
 }
 
-//******************************************************************************
-void SetNetPropertyInfoChannel(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName,
-                                 NetChannelConfig* netChannelConfig)
+void SetNetPropertyInfoChannel(OperationQueue* queue,
+                               NetObject* netObject,
+                               BoundType* componentType,
+                               StringParam propertyName,
+                               NetChannelConfig* netChannelConfig)
 {
   // Create and perform the Set NetPropertyInfo Channel operation
-  Operation* op = new SetNetPropertyInfoChannelOperation(netObject, componentType, propertyName, netChannelConfig);
+  Operation* op = new SetNetPropertyInfoChannelOperation(
+      netObject, componentType, propertyName, netChannelConfig);
   op->Redo();
   queue->Queue(op);
 }
 
-//---------------------------------------------------------------------------------//
-//                      AddRemoveNetPropertyInfoOperation                          //
-//---------------------------------------------------------------------------------//
+//                      AddRemoveNetPropertyInfoOperation //
 
-//******************************************************************************
-AddRemoveNetPropertyInfoOperation::AddRemoveNetPropertyInfoOperation(NetObject* netObject, BoundType* componentType, StringParam propertyName,
-                                                                     NetPropertyInfoAction::Enum action)
-  : mComponentType(componentType),
+AddRemoveNetPropertyInfoOperation::AddRemoveNetPropertyInfoOperation(
+    NetObject* netObject,
+    BoundType* componentType,
+    StringParam propertyName,
+    NetPropertyInfoAction::Enum action) :
+    mComponentType(componentType),
     mPropertyName(propertyName),
     mAction(action)
 
@@ -60,12 +64,13 @@ AddRemoveNetPropertyInfoOperation::AddRemoveNetPropertyInfoOperation(NetObject* 
   ErrorIf(netObject->GetOwner() == nullptr, "NetObject doesn't have an Owner");
 
   String opType;
-  if(action == NetPropertyInfoAction::Add)
+  if (action == NetPropertyInfoAction::Add)
     opType = BuildString("Add NetPropertyInfo \"", propertyName, "\" to ");
   else
     opType = BuildString("Remove NetPropertyInfo \"", propertyName, "\" from ");
 
-  mName = BuildString("\"", opType, "\"", CogDisplayName(netObject->GetOwner()), "\"");
+  mName = BuildString(
+      "\"", opType, "\"", CogDisplayName(netObject->GetOwner()), "\"");
 
   // Set undo object handle
   mObjectHandle = netObject->GetOwner();
@@ -75,27 +80,27 @@ AddRemoveNetPropertyInfoOperation::AddRemoveNetPropertyInfoOperation(NetObject* 
 // Operation Interface
 //
 
-//******************************************************************************
 void AddRemoveNetPropertyInfoOperation::Undo()
 {
   // Add if we're undoing a remove operation
   // Remove if we're undoing an add operation
-  NetPropertyInfoAction::Enum action = (mAction == NetPropertyInfoAction::Remove) ? NetPropertyInfoAction::Add
-                                                                                  : NetPropertyInfoAction::Remove;
+  NetPropertyInfoAction::Enum action =
+      (mAction == NetPropertyInfoAction::Remove)
+          ? NetPropertyInfoAction::Add
+          : NetPropertyInfoAction::Remove;
 
   // Perform net property info action
   SetNetPropertyInfo(action);
 }
 
-//******************************************************************************
 void AddRemoveNetPropertyInfoOperation::Redo()
 {
   // Perform net property info action
   SetNetPropertyInfo(mAction);
 }
 
-//******************************************************************************
-void AddRemoveNetPropertyInfoOperation::SetNetPropertyInfo(NetPropertyInfoAction::Enum action)
+void AddRemoveNetPropertyInfoOperation::SetNetPropertyInfo(
+    NetPropertyInfoAction::Enum action)
 {
   // Get Cog from handle
   Cog* object = mObjectHandle;
@@ -103,15 +108,19 @@ void AddRemoveNetPropertyInfoOperation::SetNetPropertyInfo(NetPropertyInfoAction
 
   // Get NetObject from Cog
   NetObject* netObject = object->has(NetObject);
-  ReturnIf(netObject == nullptr, , "Object doesn't have net object for redo. "
-                                   "Operation queue is invalid.");
+  ReturnIf(netObject == nullptr,
+           ,
+           "Object doesn't have net object for redo. "
+           "Operation queue is invalid.");
 
   // Adding a net property info?
-  if(action == NetPropertyInfoAction::Add)
+  if (action == NetPropertyInfoAction::Add)
   {
     // Add net property info
-    NetPropertyInfo* netProperty = netObject->AddNetPropertyInfo(mComponentType, mPropertyName);
-    ReturnIf(netProperty == nullptr, , "Unable to add net property info for redo.");
+    NetPropertyInfo* netProperty =
+        netObject->AddNetPropertyInfo(mComponentType, mPropertyName);
+    ReturnIf(
+        netProperty == nullptr, , "Unable to add net property info for redo.");
   }
   // Removing a net property info?
   else
@@ -121,14 +130,14 @@ void AddRemoveNetPropertyInfoOperation::SetNetPropertyInfo(NetPropertyInfoAction
   }
 }
 
-//---------------------------------------------------------------------------------//
-//                      SetNetPropertyInfoChannelOperation                         //
-//---------------------------------------------------------------------------------//
+//                      SetNetPropertyInfoChannelOperation //
 
-//******************************************************************************
-SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannelOperation(NetObject* netObject, BoundType* componentType, StringParam propertyName,
-                                                                       NetChannelConfig* netChannelConfig)
-  : mComponentType(componentType),
+SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannelOperation(
+    NetObject* netObject,
+    BoundType* componentType,
+    StringParam propertyName,
+    NetChannelConfig* netChannelConfig) :
+    mComponentType(componentType),
     mPropertyName(propertyName),
     mLastNetChannelConfig(),
     mCurrentNetChannelConfig()
@@ -138,13 +147,17 @@ SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannelOperation(NetObject
   String objectName = CogDisplayName(netObject->GetOwner());
   String propertyRef = BuildString(componentType->Name, propertyName);
 
-  mName = BuildString(objectName, ".NetObject.NetPropertyInfo.", propertyRef, ".NetChannelConfig");
+  mName = BuildString(objectName,
+                      ".NetObject.NetPropertyInfo.",
+                      propertyRef,
+                      ".NetChannelConfig");
 
   // Set undo object handle
   mObjectHandle = netObject->GetOwner();
 
   // Set last and current channel config values
-  NetPropertyInfo* netPropertyInfo = netObject->GetNetPropertyInfo(componentType, propertyName);
+  NetPropertyInfo* netPropertyInfo =
+      netObject->GetNetPropertyInfo(componentType, propertyName);
   mLastNetChannelConfig = netPropertyInfo->mNetChannelConfig;
   mCurrentNetChannelConfig = netChannelConfig;
 }
@@ -153,22 +166,20 @@ SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannelOperation(NetObject
 // Operation Interface
 //
 
-//******************************************************************************
 void SetNetPropertyInfoChannelOperation::Undo()
 {
   // Set last channel config
   SetNetPropertyInfoChannel(mLastNetChannelConfig);
 }
 
-//******************************************************************************
 void SetNetPropertyInfoChannelOperation::Redo()
 {
   // Set current channel config
   SetNetPropertyInfoChannel(mCurrentNetChannelConfig);
 }
 
-//******************************************************************************
-void SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannel(NetChannelConfig* netChannelConfig)
+void SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannel(
+    NetChannelConfig* netChannelConfig)
 {
   // Get Cog from handle
   Cog* object = mObjectHandle.Get<Cog*>();
@@ -176,11 +187,14 @@ void SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannel(NetChannelCon
 
   // Get NetObject from Cog
   NetObject* netObject = object->has(NetObject);
-  ReturnIf(netObject == nullptr, , "Object doesn't have net object for redo. "
-                                   "Operation queue is invalid.");
+  ReturnIf(netObject == nullptr,
+           ,
+           "Object doesn't have net object for redo. "
+           "Operation queue is invalid.");
 
   // Get net property info
-  NetPropertyInfo* netPropertyInfo = netObject->GetNetPropertyInfo(mComponentType, mPropertyName);
+  NetPropertyInfo* netPropertyInfo =
+      netObject->GetNetPropertyInfo(mComponentType, mPropertyName);
 
   // Set net channel config resource
   netPropertyInfo->mNetChannelConfig = netChannelConfig;
@@ -189,4 +203,4 @@ void SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannel(NetChannelCon
   object->GetSpace()->MarkModified();
 }
 
-}//namespace Zero
+} // namespace Zero

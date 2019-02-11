@@ -1,31 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 namespace Events
 {
-  DeclareEvent(CurrentInputDeviceChanged);
-  DeclareEvent(DebuggerPause);
-  DeclareEvent(DebuggerResume);
-  DeclareEvent(DebuggerPauseUpdate);
-  DeclareEvent(LoadingStart);
-  DeclareEvent(LoadingProgress);
-  DeclareEvent(LoadingFinish);
-  DeclareEvent(BlockingTaskStart);
-  DeclareEvent(BlockingTaskFinish);
-}//namespace Events
+DeclareEvent(CurrentInputDeviceChanged);
+DeclareEvent(DebuggerPause);
+DeclareEvent(DebuggerResume);
+DeclareEvent(DebuggerPauseUpdate);
+DeclareEvent(LoadingStart);
+DeclareEvent(LoadingProgress);
+DeclareEvent(LoadingFinish);
+DeclareEvent(BlockingTaskStart);
+DeclareEvent(BlockingTaskFinish);
+} // namespace Events
 
 DeclareEnum4(InputDevice, Keyboard, Mouse, Gamepad, Joystick);
 
-//-------------------------------------------------------------------Engine
-/// The engine Contains all the systems in the game. The engine is used to update
-/// all system and query for other services.
+/// The engine Contains all the systems in the game. The engine is used to
+/// update all system and query for other services.
 class Engine : public EngineObject
 {
 public:
@@ -44,7 +38,7 @@ public:
   void Update();
   /// Terminate the game engine loop.
   void Terminate();
- 
+
   /// Creates an instance of a game session based on the current project
   GameSession* CreateGameSession();
   /// Creates an instance of a game session using an archetype
@@ -58,13 +52,14 @@ public:
 
   /// Adds a new system to the engine.
   void AddSystem(System* system);
-  /// Adds a system as a child 'component'. Internal and should rarely be externally called.
+  /// Adds a system as a child 'component'. Internal and should rarely be
+  /// externally called.
   void AddSystemInterface(BoundType* typeId, System* component);
-  /// Get a component on the engine by system's TypeId. 
+  /// Get a component on the engine by system's TypeId.
   /// This will return null if the system is not found.
   System* QueryComponentId(BoundType* typeId);
   /// Type safe way of accessing system/services.
-  template<typename type>
+  template <typename type>
   type* Has();
   /// Destroy all systems in reverse order that they were added.
   void DestroySystems();
@@ -84,10 +79,15 @@ public:
 
   void LoadingStart();
   /// Update engine while doing blocking operations.
-  void LoadingUpdate(StringParam operation, StringParam currentTask, StringParam progress, ProgressType::Enum progressType, float percentage = 0.0f);
+  void LoadingUpdate(StringParam operation,
+                     StringParam currentTask,
+                     StringParam progress,
+                     ProgressType::Enum progressType,
+                     float percentage = 0.0f);
   void LoadingFinish();
 
-  /// The input device that the user last used (pressed buttons, moved sticks or triggers, etc...)
+  /// The input device that the user last used (pressed buttons, moved sticks or
+  /// triggers, etc...)
   InputDevice::Enum GetCurrentInputDevice();
   void SetCurrentInputDevice(InputDevice::Enum device);
 
@@ -109,12 +109,13 @@ public:
   // If engine has resources for display of loading
   bool mHaveLoadingResources;
 
-  // If we're currently debugging scripts which means we have a special very limited update.
+  // If we're currently debugging scripts which means we have a special very
+  // limited update.
   bool mIsDebugging;
 
   static bool sInLauncher;
-private:
 
+private:
   friend class Space;
   friend class EngineMetaComposition;
   friend class GameSession;
@@ -138,14 +139,15 @@ private:
 
   GameSessionArray mGameSessions;
 
-  /// Is the engine currently running. Used to shutdown the engine on the next frame.
+  /// Is the engine currently running. Used to shutdown the engine on the next
+  /// frame.
   bool mEngineActive;
 
-  /// Do we automatically shutdown the engine when it is no longer active (terminated)?
+  /// Do we automatically shutdown the engine when it is no longer active
+  /// (terminated)?
   bool mAutoShutdown;
 };
 
-//-------------------------------------------------------------------EngineMetaComposition
 class EngineMetaComposition : public MetaComposition
 {
 public:
@@ -159,13 +161,12 @@ public:
 };
 
 /// Typed based interface for accessing systems.
-template<typename type>
+template <typename type>
 type* Engine::Has()
 {
   return static_cast<type*>(QueryComponentId(ZilchTypeId(type)));
 }
 
-//-------------------------------------------------------------------InputDeviceEvent
 /// An event to inform which input device is being used by the user.
 class InputDeviceEvent : public Event
 {
@@ -183,7 +184,7 @@ void FatalEngineError(cstr format, ...);
 // Global Access
 namespace Z
 {
-  extern Engine* gEngine;
+extern Engine* gEngine;
 }
 
-}//namespace Zero
+} // namespace Zero

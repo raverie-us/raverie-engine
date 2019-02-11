@@ -1,33 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file PixelBuffer.cpp
-///  Implementation of the PixelBuffer class.
-///
-/// Authors: Benjamin Strukus, Trevor Sundberg
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 PixelBuffer::PixelBuffer() :
-  Width(0),
-  Height(0),
-  Total(0),
-  Data(nullptr),
-  MaxMipLevel(-1),
-  Image(Texture::CreateRuntime())
+    Width(0),
+    Height(0),
+    Total(0),
+    Data(nullptr),
+    MaxMipLevel(-1),
+    Image(Texture::CreateRuntime())
 {
 }
 
 PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) :
-  Width(rhs->Width),
-  Height(rhs->Height),
-  Total(rhs->Total),
-  Data(rhs->Data),
-  MaxMipLevel(rhs->MaxMipLevel),
-  Image(rhs->Image)
+    Width(rhs->Width),
+    Height(rhs->Height),
+    Total(rhs->Total),
+    Data(rhs->Data),
+    MaxMipLevel(rhs->MaxMipLevel),
+    Image(rhs->Image)
 {
   rhs->Width = 0;
   rhs->Height = 0;
@@ -38,25 +30,34 @@ PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) :
 }
 
 PixelBuffer::PixelBuffer(ByteColor clearColor, uint width, uint height) :
-  Width(width),
-  Height(height),
-  Total(width * height),
-  Data(new ByteColor[Total]),
-  MaxMipLevel(-1),
-  Image(Texture::CreateRuntime())
+    Width(width),
+    Height(height),
+    Total(width * height),
+    Data(new ByteColor[Total]),
+    MaxMipLevel(-1),
+    Image(Texture::CreateRuntime())
 {
   Clear(clearColor);
 
-  Image->Upload(width, height, TextureFormat::RGBA8, (byte*)Data, Total * sizeof(ByteColor));
+  Image->Upload(width,
+                height,
+                TextureFormat::RGBA8,
+                (byte*)Data,
+                Total * sizeof(ByteColor));
 }
 
 PixelBuffer::~PixelBuffer()
 {
-  delete [] Data;
+  delete[] Data;
   Data = nullptr;
 }
 
-void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool clearNewContents, ByteColor clearColor, bool Upload)
+void PixelBuffer::Resize(uint width,
+                         uint height,
+                         bool copyOldContents,
+                         bool clearNewContents,
+                         ByteColor clearColor,
+                         bool Upload)
 {
   Total = width * height;
   ByteColor* oldData = Data;
@@ -128,10 +129,11 @@ void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool cle
 
   delete[] oldData;
 
-  if(Upload)
+  if (Upload)
   {
     uint dataSize = width * height * sizeof(ByteColor);
-    Image->Upload(width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
+    Image->Upload(
+        width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
   }
 }
 
@@ -143,7 +145,7 @@ IntVec2 PixelBuffer::GetSize()
 // Clear the pixel buffer
 void PixelBuffer::Clear(ByteColor color)
 {
-  for(uint i = 0; i < Total; ++i)
+  for (uint i = 0; i < Total; ++i)
   {
     Data[i] = color;
   }
@@ -156,23 +158,25 @@ void PixelBuffer::Clear(byte grayScaleColor)
 }
 
 // Set a color on an area of pixels in the buffer.
-void PixelBuffer::FillRect(Vec2Param topLeft, Vec2Param bottomRight, ByteColor color)
+void PixelBuffer::FillRect(Vec2Param topLeft,
+                           Vec2Param bottomRight,
+                           ByteColor color)
 {
   uint index = Width * (uint)topLeft.y + (uint)topLeft.x;
   ReturnIf(index >= Total, , "TopLeft coordinate out of PixelBuffer bounds.");
 
   index = Width * (uint)bottomRight.y + (uint)bottomRight.x;
-  ReturnIf(index >= Total, , "BottomRight coordinate out of PixelBuffer bounds.");
+  ReturnIf(
+      index >= Total, , "BottomRight coordinate out of PixelBuffer bounds.");
 
-  for(int y = (int)topLeft.y; y <= bottomRight.y; ++y)
+  for (int y = (int)topLeft.y; y <= bottomRight.y; ++y)
   {
-    for(int x = (int)topLeft.x; x <= bottomRight.x; ++x)
+    for (int x = (int)topLeft.x; x <= bottomRight.x; ++x)
     {
       index = Width * y + x;
       Data[index] = color;
     }
   }
-
 }
 
 // Set a pixel in the buffer.
@@ -226,7 +230,11 @@ void PixelBuffer::GetCoordinates(uint index, uint* x, uint* y)
 // Upload the image data
 void PixelBuffer::Upload()
 {
-  Image->Upload(Width, Height, TextureFormat::RGBA8, (byte*)Data, Total * sizeof(ByteColor));
+  Image->Upload(Width,
+                Height,
+                TextureFormat::RGBA8,
+                (byte*)Data,
+                Total * sizeof(ByteColor));
 }
 
 void PixelBuffer::SetAll(byte* data)
@@ -235,4 +243,4 @@ void PixelBuffer::SetAll(byte* data)
   Upload();
 }
 
-}//namespace Zero
+} // namespace Zero

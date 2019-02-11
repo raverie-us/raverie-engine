@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file RichAnimation.hpp
-/// This file Contains classes that serve as a duplicate structure for
-/// animations, adding functionality to make editing them easier.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -30,18 +21,18 @@ const KeyFrameId cInvalidKeyFrameId = (KeyFrameId)-1;
 // Events
 namespace Events
 {
-  // Sent on the individual tracks and onto the RichAnimation.
-  DeclareEvent(KeyFrameAdded);
-  DeclareEvent(KeyFrameModified);
-  DeclareEvent(KeyFrameDeleted);
+// Sent on the individual tracks and onto the RichAnimation.
+DeclareEvent(KeyFrameAdded);
+DeclareEvent(KeyFrameModified);
+DeclareEvent(KeyFrameDeleted);
 
-  // Sent on the rich animation whenever a track is added / removed.
-  DeclareEvent(TrackAdded);
-  DeclareEvent(TrackDeleted);
+// Sent on the rich animation whenever a track is added / removed.
+DeclareEvent(TrackAdded);
+DeclareEvent(TrackDeleted);
 
-  // Sent on the AnimationData when any data is modified on the animation.
-  DeclareEvent(AnimationModified);
-}
+// Sent on the AnimationData when any data is modified on the animation.
+DeclareEvent(AnimationModified);
+} // namespace Events
 
 // Helpers
 String ComponentNameFromPath(StringParam propertyPath);
@@ -49,7 +40,6 @@ String PropertyNameFromPath(StringParam propertyPath);
 String GetPropertyPath(HandleParam object, Property* property);
 String GetObjectPath(Cog* object, Cog* root);
 
-//-------------------------------------------------------------- Key Frame Event
 /// Sent when a key frame is added, modified, or deleted.
 class KeyFrameEvent : public Event
 {
@@ -58,7 +48,6 @@ public:
   KeyFrame* mKeyFrame;
 };
 
-//------------------------------------------------------------------ Track Event
 /// Sent when an animation track is added or deleted.
 class TrackEvent : public Event
 {
@@ -67,7 +56,6 @@ public:
   TrackNode* mTrack;
 };
 
-//------------------------------------------------------------------- Track Info
 class KeyFrame : public EventObject
 {
 public:
@@ -80,7 +68,7 @@ public:
 
   /// Duplicates this key frame at the given time and returns the new key frame.
   KeyFrame* Duplicate(float newTime);
-  
+
   /// Time.
   void SetTime(float time);
   float GetTime();
@@ -95,7 +83,7 @@ public:
   void SetTangentOut(Vec2Param tangent);
   Vec2 GetTangentOut();
   void SetTangents(Vec2Param tangentIn, Vec2Param tangentOut);
-  
+
   Vec2 GetGraphPosition();
 
   /// The track that this key frame belongs to.
@@ -131,7 +119,6 @@ private:
   TrackNode* mParent;
 };
 
-//------------------------------------------------------------------- Track Node
 DeclareEnum5(TrackType, Object, Component, Property, SubProperty, Invalid);
 
 class TrackNode : public EventObject
@@ -142,8 +129,12 @@ public:
 
   /// Constructors.
   TrackNode();
-  TrackNode(StringParam name, StringParam path, TrackType::Enum type,
-            BoundType* targetMeta, TrackNode* parent, RichAnimation* richAnim);
+  TrackNode(StringParam name,
+            StringParam path,
+            TrackType::Enum type,
+            BoundType* targetMeta,
+            TrackNode* parent,
+            RichAnimation* richAnim);
   ~TrackNode();
 
   /// Serialized the track to the given stream.
@@ -151,7 +142,7 @@ public:
   /// Only needs to be called on things that were constructed using
   /// the default constructor.
   void Initialize(RichAnimation* richAnimation, TrackNode* parent);
-  
+
   void Modified();
 
   /// Renames the track. Can only be used on Object Tracks.
@@ -287,7 +278,6 @@ public:
   Vec4 mDisplayColor;
 };
 
-//--------------------------------------------------------------- Rich Animation
 class RichAnimation : public EventObject
 {
 public:
@@ -300,25 +290,33 @@ public:
   /// ContentComponent Interface.
   void Serialize(Serializer& stream);
   void Initialize();
-  
+
   /// Bakes the RichAnimation to the Animation.
   void BakeToAnimation(Animation* animation);
 
   /// Finds a child object with the given path.
-  TrackNode* GetObjectTrack(TrackNode* root, StringTokenRange pathRange, 
-                            String currPath, bool createNew = true);
+  TrackNode* GetObjectTrack(TrackNode* root,
+                            StringTokenRange pathRange,
+                            String currPath,
+                            bool createNew = true);
   TrackNode* GetObjectTrack(StringRange path, bool createNew = true);
-  TrackNode* GetPropertyTrack(TrackNode* objectTrack, StringParam path,
-                              BoundType* targetMeta, bool createNew = true);
+  TrackNode* GetPropertyTrack(TrackNode* objectTrack,
+                              StringParam path,
+                              BoundType* targetMeta,
+                              bool createNew = true);
 
   /// Searches the direct children of the given track
   TrackNode* GetDirectChildTrack(TrackNode* parent, StringParam path);
-  TrackNode* GetComponentTrack(TrackNode* objectTrack, StringParam component,
-                               BoundType* targetMeta, bool createNew = true);
+  TrackNode* GetComponentTrack(TrackNode* objectTrack,
+                               StringParam component,
+                               BoundType* targetMeta,
+                               bool createNew = true);
 
-  TrackNode* GetPropertyTrack(Cog* object, Cog* animGraphObject,
-                             BoundType* componentType, StringParam propertyName,
-                             bool createNew = true);
+  TrackNode* GetPropertyTrack(Cog* object,
+                              Cog* animGraphObject,
+                              BoundType* componentType,
+                              StringParam propertyName,
+                              bool createNew = true);
 
   /// Returns a key frame from the given id.
   KeyFrame* GetKeyFrame(TrackKeyFrameId id);
@@ -328,7 +326,7 @@ public:
 
   /// Adds the given track to be tracked.
   void RegisterTrack(TrackNode* track);
-  
+
   /// Sample tolerance.
   void SetSampleTolerance(float tolerance);
   float GetSampleTolerance();
@@ -346,7 +344,10 @@ public:
     TrackNode* Front();
     void PopFront();
     bool Empty();
-    range& All() { return *this; }
+    range& All()
+    {
+      return *this;
+    }
 
   private:
     /// Reentrant pre-order n-dimensional tree traversal.
@@ -405,7 +406,6 @@ private:
   HashSet<KeyFrame*> mDirtyKeyFrames;
 };
 
-//------------------------------------------------------- Rich Animation Builder
 class RichAnimationBuilder : public DirectBuilderComponent
 {
 public:
@@ -424,4 +424,4 @@ public:
   String mPreviewArchetype;
 };
 
-}//namespace Zero
+} // namespace Zero

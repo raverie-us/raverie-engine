@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file HotKeyEditor.hpp
-/// Declaration of the HotKey Editor class.
-///
-/// Authors: Ryan Edgemon
-/// Copyright 2015-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,7 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(CommandRenamed);
+DeclareEvent(CommandRenamed);
 }
 
 class TreeView;
@@ -29,9 +21,13 @@ class ResourceLibraryDataSource;
 class BindingConflictEvent;
 class ModalConfirmEvent;
 
-//------------------------------------------------------------- CommandEntry ---
-DeclareEnum6(CommandCompare, IsCogCommand, IsNotCogCommand,
-  CommandName, CommandBinding, CommandTags, None);
+DeclareEnum6(CommandCompare,
+             IsCogCommand,
+             IsNotCogCommand,
+             CommandName,
+             CommandBinding,
+             CommandTags,
+             None);
 
 struct CommandEntry
 {
@@ -68,26 +64,27 @@ struct CommandEntry
 
 typedef Array<CommandEntry> CommandSet;
 
-//----------------------------------------------------------- HotKeyCommands ---
 class HotKeyCommands : public ExplicitSingleton<HotKeyCommands, DataSource>
 {
 public:
   ZilchDeclareType(HotKeyCommands, TypeCopyMode::ReferenceType);
 
-  HotKeyCommands( );
+  HotKeyCommands();
 
   void CopyCommandData(Array<Command*>& commands);
 
   void AddCommand(Command* command, bool checkForDuplicate = false);
   void RemoveCommand(Command* command);
 
-  DataEntry* GetRoot( ) override;
+  DataEntry* GetRoot() override;
 
   DataEntry* ToEntry(DataIndex index) override;
   DataIndex ToIndex(DataEntry* dataEntry) override;
 
   DataEntry* Parent(DataEntry* dataEntry) override;
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override;
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override;
 
   uint ChildCount(DataEntry* dataEntry) override;
 
@@ -95,7 +92,9 @@ public:
   bool IsExpandable(DataEntry* dataEntry) override;
 
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override;
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override;
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override;
 
   bool Remove(DataEntry* dataEntry) override;
 
@@ -103,7 +102,6 @@ public:
   CommandSet mCommand;
 };
 
-//------------------------------------------------------------- HotKeyEditor ---
 class HotKeyEditor : public Composite
 {
 public:
@@ -123,14 +121,14 @@ public:
   HotKeyEditor(Composite* parent);
   void BuildFormat(TreeFormatting& formatting);
 
-  void UpdateTransform( ) override;
-  void Refresh( );
+  void UpdateTransform() override;
+  void Refresh();
 
-  void DisplayResource( );
- 
-  bool TakeFocusOverride( ) override;
+  void DisplayResource();
 
-  void AutoClose( );
+  bool TakeFocusOverride() override;
+
+  void AutoClose();
   void OnCancel(SearchViewEvent* event);
 
   void OnScriptsCompiled(Event* event);
@@ -140,14 +138,17 @@ public:
   void OnCommandRightClick(TreeEvent* event);
 
   void UpdateIndexes(int start = 0);
-  void Sort(bool updateIndexes, CommandCompare::Enum sortBy = CommandCompare::CommandName);
+  void Sort(bool updateIndexes,
+            CommandCompare::Enum sortBy = CommandCompare::CommandName);
 
   void OnCogCommandSort(MouseEvent* event);
   void OnCommandNameSort(MouseEvent* event);
   void OnCommandBindingSort(MouseEvent* event);
   void OnCommandTagsSort(MouseEvent* event);
-  
-  void CreateCommandHeaderToolTip(Widget* source, StringParam sortName, Vec4Param color);
+
+  void CreateCommandHeaderToolTip(Widget* source,
+                                  StringParam sortName,
+                                  Vec4Param color);
 
   void OnMouseEnterIconHeader(MouseEvent* event);
   void OnMouseEnterCommandHeader(MouseEvent* event);
@@ -164,17 +165,17 @@ public:
   void OnGlobalCommandUpdated(CommandUpdateEvent* event);
 
   void OnRenamedCommand(ObjectEvent* event);
-  void OnAddCommand(MouseEvent* event);  /// Add button call back
-  void OnCommandSetSelected(ObjectEvent* event);  /// ComboBox (set dropdown) call back
+  void OnAddCommand(MouseEvent* event); /// Add button call back
+  void OnCommandSetSelected(
+      ObjectEvent* event); /// ComboBox (set dropdown) call back
 
-  void OnConfirmBindingOverwrite(BindingConflictEvent *event);
+  void OnConfirmBindingOverwrite(BindingConflictEvent* event);
 
   void OnModalOption(ModalConfirmEvent* event);
   void OnModalClosed(ModalConfirmEvent* event);
 
-
 public:
-  static HashMap<unsigned, String> sKeyMap;  // <Keys::Enum, "CommandName">
+  static HashMap<unsigned, String> sKeyMap; // <Keys::Enum, "CommandName">
 
   bool mCogCommandSortToggle;
 
@@ -193,7 +194,6 @@ public:
   HotKeyCommands* mHotKeys;
 };
 
-//------------------------------------------------------------ HotKeyBinding ---
 class HotKeyBinding : public Object
 {
 public:
@@ -205,14 +205,16 @@ public:
 
   String mString;
 
-  HotKeyBinding(unsigned m1, unsigned m2, unsigned mk, StringParam bindStr)
-    : mModifier1(m1), mModifier2(m2), mMainKey(mk), mString(bindStr) {}
-
+  HotKeyBinding(unsigned m1, unsigned m2, unsigned mk, StringParam bindStr) :
+      mModifier1(m1),
+      mModifier2(m2),
+      mMainKey(mk),
+      mString(bindStr)
+  {
+  }
 };
 
-//------------------------------------------------------------------------------
 
-void RegisterHotKeyEditors( );
+void RegisterHotKeyEditors();
 
-
-}//namespace Zero
+} // namespace Zero

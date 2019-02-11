@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2013-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------PointForceEffect
 ZilchDefineType(BasicPointEffect, builder, type)
 {
   ZeroBindSetup(SetupMode::DefaultSerialization);
@@ -19,15 +13,19 @@ ZilchDefineType(BasicPointEffect, builder, type)
   ZilchBindGetterSetterProperty(MaxDistance)->ZeroSerialize(real(5));
   ZilchBindGetterSetterProperty(StrengthAtMin)->ZeroSerialize(real(1));
   ZilchBindGetterSetterProperty(StrengthAtMax)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(LocalPositionOffset)->ZeroSerialize(Vec3::cZero);
-  ZilchBindGetterSetterProperty(InterpolationType)->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
-  ZilchBindGetterSetterProperty(EndCondition)->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
+  ZilchBindGetterSetterProperty(LocalPositionOffset)
+      ->ZeroSerialize(Vec3::cZero);
+  ZilchBindGetterSetterProperty(InterpolationType)
+      ->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
+  ZilchBindGetterSetterProperty(EndCondition)
+      ->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
 }
 
 BasicPointEffect::BasicPointEffect()
 {
-  // Min/Max need to be initialized to the same values as serialization to avoid any 
-  // clamping logic happening during serialization since properties are individually set instead of batch set.
+  // Min/Max need to be initialized to the same values as serialization to avoid
+  // any clamping logic happening during serialization since properties are
+  // individually set instead of batch set.
   mMinDistance = 1;
   mMaxDistance = 5;
   mMinStrength = 0;
@@ -45,7 +43,7 @@ void BasicPointEffect::Serialize(Serializer& stream)
 
 void BasicPointEffect::DebugDraw()
 {
-  if(!GetDebugDrawEffect())
+  if (!GetDebugDrawEffect())
     return;
 
   // Update the world-space application point. This could be called via script
@@ -61,7 +59,8 @@ void BasicPointEffect::DebugDraw()
   // Get a signed normalize force for both the min and max distances
   real minForce = GetForceStrenthAtDistance(mMinDistance);
   real maxForce = GetForceStrenthAtDistance(mMaxDistance);
-  // Get the scaled min/max force length taking into account distance between the two values
+  // Get the scaled min/max force length taking into account distance between
+  // the two values
   GetPenumbraDebugDrawValues(minDistance, maxDistance, minForce, maxForce);
 
   // Draw arrows given spherical coordinates
@@ -70,13 +69,13 @@ void BasicPointEffect::DebugDraw()
 
   size_t phiCount = sizeof(phiDegrees) / sizeof(real);
   size_t thetaCount = sizeof(thetaDegrees) / sizeof(real);
-  for(size_t phiIndex = 0; phiIndex < phiCount; ++phiIndex)
+  for (size_t phiIndex = 0; phiIndex < phiCount; ++phiIndex)
   {
     real phi = Math::DegToRad(phiDegrees[phiIndex]);
     real sinPhi = Math::Sin(phi);
     real cosPhi = Math::Cos(phi);
 
-    for(size_t thetaIndex = 0; thetaIndex < thetaCount; ++thetaIndex)
+    for (size_t thetaIndex = 0; thetaIndex < thetaCount; ++thetaIndex)
     {
       real theta = Math::DegToRad(thetaDegrees[thetaIndex]);
       real sinTheta = Math::Sin(theta);
@@ -84,17 +83,21 @@ void BasicPointEffect::DebugDraw()
 
       Vec3 dir(sinPhi * cosTheta, cosPhi, sinPhi * sinTheta);
 
-      Vec3 minPos = mWorldPoint + dir* minDistance;
-      Vec3 maxPos = mWorldPoint + dir* maxDistance;
-      gDebugDraw->Add(Debug::Line(minPos, minPos + dir* minForce).HeadSize(0.1f).Color(Color::Red));
-      gDebugDraw->Add(Debug::Line(maxPos, maxPos + dir* maxForce).HeadSize(0.1f).Color(Color::Green));
+      Vec3 minPos = mWorldPoint + dir * minDistance;
+      Vec3 maxPos = mWorldPoint + dir * maxDistance;
+      gDebugDraw->Add(Debug::Line(minPos, minPos + dir * minForce)
+                          .HeadSize(0.1f)
+                          .Color(Color::Red));
+      gDebugDraw->Add(Debug::Line(maxPos, maxPos + dir * maxForce)
+                          .HeadSize(0.1f)
+                          .Color(Color::Green));
     }
   }
 }
 
 void BasicPointEffect::PreCalculate(real dt)
 {
-  if(!GetActive())
+  if (!GetActive())
     return;
 
   ComputeApplicationPoint();
@@ -108,23 +111,24 @@ void BasicPointEffect::ComputeApplicationPoint()
 
 float BasicPointEffect::GetForceStrenthAtDistance(float distance)
 {
-  // If we're beyond the max distance and we're set to have no effect beyond it then
-  // return 0 (maybe rework this so we can return false or something later)
-  if(distance > mMaxDistance && mPointFlags.IsSet(PointFlags::NoEffect))
+  // If we're beyond the max distance and we're set to have no effect beyond it
+  // then return 0 (maybe rework this so we can return false or something later)
+  if (distance > mMaxDistance && mPointFlags.IsSet(PointFlags::NoEffect))
     return 0;
 
   // Otherwise, we will always apply a force, just have to figure out how much.
   // If we are below the min distance, we always use the min strength value.
-  if(distance < mMinDistance)
+  if (distance < mMinDistance)
     return mMinStrength * mOutwardDirectionScalar;
 
-  // Otherwise, we want to interpolate between the min and the max with whatever interpolation type.
-  
+  // Otherwise, we want to interpolate between the min and the max with whatever
+  // interpolation type.
+
   // Calculate the interpolation time
   real t = (distance - mMinDistance) / (mMaxDistance - mMinDistance);
   // If we clamp to the max distance, make sure that we clamp the t value to
   // [0,1], otherwise we just interpolate as normal (this can go negative)
-  if(mPointFlags.IsSet(PointFlags::ClampToMax))
+  if (mPointFlags.IsSet(PointFlags::ClampToMax))
     t = Math::Clamp(t, real(0), real(1));
   // Compute the force strength by interpolating between the min/max strength
   float forceStrength = GetStrengthValue(t);
@@ -133,7 +137,8 @@ float BasicPointEffect::GetForceStrenthAtDistance(float distance)
 
 Vec3 BasicPointEffect::GetForceAppliedAtPoint(Vec3Param point)
 {
-  // Calculate the normalized vector to the center point as well as the distance from the center point
+  // Calculate the normalized vector to the center point as well as the distance
+  // from the center point
   Vec3 toCenter = point - mWorldPoint;
   real distance = toCenter.AttemptNormalize();
 
@@ -150,7 +155,7 @@ Vec3 BasicPointEffect::CalculateInwardForce(RigidBody* obj)
 real BasicPointEffect::GetStrengthValue(real t)
 {
   // If we're quadratically interpolating, just square the interpolation value
-  if(mPointFlags.IsSet(PointFlags::QuadraticInterpolation))
+  if (mPointFlags.IsSet(PointFlags::QuadraticInterpolation))
     t *= t;
 
   // Interpolate between the min/max strengths
@@ -165,18 +170,21 @@ real BasicPointEffect::GetMinDistance()
 void BasicPointEffect::SetMinDistance(real distance)
 {
   // Make sure the min distance is not negative
-  if(distance < 0)
+  if (distance < 0)
   {
-    DoNotifyWarning("Invalid distance", "Cannot set the min distance to less than zero"
-      " or greater than or equal to the max distance");
+    DoNotifyWarning("Invalid distance",
+                    "Cannot set the min distance to less than zero"
+                    " or greater than or equal to the max distance");
     distance = real(0);
   }
 
-  // Check to make sure that min < max. If so, clamp the distance to the max it can be.
-  if(distance >= mMaxDistance)
+  // Check to make sure that min < max. If so, clamp the distance to the max it
+  // can be.
+  if (distance >= mMaxDistance)
   {
-    DoNotifyWarning("Invalid distance", "Cannot set the min distance to "
-      "greater than or equal to the max distance");
+    DoNotifyWarning("Invalid distance",
+                    "Cannot set the min distance to "
+                    "greater than or equal to the max distance");
     distance = mMaxDistance - real(.001f);
   }
   mMinDistance = distance;
@@ -191,11 +199,13 @@ real BasicPointEffect::GetMaxDistance()
 
 void BasicPointEffect::SetMaxDistance(real distance)
 {
-  // Check to make sure that min < max. If so, clamp the distance to the min it can be.
-  if(distance <= mMinDistance)
+  // Check to make sure that min < max. If so, clamp the distance to the min it
+  // can be.
+  if (distance <= mMinDistance)
   {
-    DoNotifyWarning("Invalid distance", "Cannot set the max distance to "
-      "less than or equal to the min distance");
+    DoNotifyWarning("Invalid distance",
+                    "Cannot set the max distance to "
+                    "less than or equal to the min distance");
     distance = mMinDistance + real(.001f);
   }
   mMaxDistance = distance;
@@ -243,24 +253,26 @@ PhysicsEffectEndCondition::Enum BasicPointEffect::GetEndCondition()
 {
   // Convert the bitfield representation of our end condition to the enum value
   PhysicsEffectEndCondition::Enum state = PhysicsEffectEndCondition::NoEffect;
-  if(mPointFlags.IsSet(PointFlags::ContinueFalloff))
+  if (mPointFlags.IsSet(PointFlags::ContinueFalloff))
     state = PhysicsEffectEndCondition::ContinueFalloff;
-  else if(mPointFlags.IsSet(PointFlags::NoEffect))
+  else if (mPointFlags.IsSet(PointFlags::NoEffect))
     state = PhysicsEffectEndCondition::NoEffect;
-  else if(mPointFlags.IsSet(PointFlags::ClampToMax))
+  else if (mPointFlags.IsSet(PointFlags::ClampToMax))
     state = PhysicsEffectEndCondition::ClampToMax;
   return state;
 }
 
-void BasicPointEffect::SetEndCondition(PhysicsEffectEndCondition::Enum condition)
+void BasicPointEffect::SetEndCondition(
+    PhysicsEffectEndCondition::Enum condition)
 {
   // Convert the enum representation of our end condition to the bitfield
-  mPointFlags.ClearFlag(PointFlags::ContinueFalloff | PointFlags::NoEffect | PointFlags::ClampToMax);
-  if(condition == PhysicsEffectEndCondition::NoEffect)
+  mPointFlags.ClearFlag(PointFlags::ContinueFalloff | PointFlags::NoEffect |
+                        PointFlags::ClampToMax);
+  if (condition == PhysicsEffectEndCondition::NoEffect)
     mPointFlags.SetFlag(PointFlags::NoEffect);
-  else if(condition == PhysicsEffectEndCondition::ContinueFalloff)
+  else if (condition == PhysicsEffectEndCondition::ContinueFalloff)
     mPointFlags.SetFlag(PointFlags::ContinueFalloff);
-  else if(condition == PhysicsEffectEndCondition::ClampToMax)
+  else if (condition == PhysicsEffectEndCondition::ClampToMax)
     mPointFlags.SetFlag(PointFlags::ClampToMax);
   // Make sure to wake-up objects if we do that on effect change
   CheckWakeUp();
@@ -269,27 +281,28 @@ void BasicPointEffect::SetEndCondition(PhysicsEffectEndCondition::Enum condition
 PhysicsEffectInterpolationType::Enum BasicPointEffect::GetInterpolationType()
 {
   // Convert the bitfield representation of our interpolation to the enum value
-  PhysicsEffectInterpolationType::Enum state = PhysicsEffectInterpolationType::Linear;
-  if(mPointFlags.IsSet(PointFlags::LinearInterpolation))
+  PhysicsEffectInterpolationType::Enum state =
+      PhysicsEffectInterpolationType::Linear;
+  if (mPointFlags.IsSet(PointFlags::LinearInterpolation))
     state = PhysicsEffectInterpolationType::Linear;
-  else if(mPointFlags.IsSet(PointFlags::QuadraticInterpolation))
+  else if (mPointFlags.IsSet(PointFlags::QuadraticInterpolation))
     state = PhysicsEffectInterpolationType::Quadratic;
   return state;
 }
 
-void BasicPointEffect::SetInterpolationType(PhysicsEffectInterpolationType::Enum type)
+void BasicPointEffect::SetInterpolationType(
+    PhysicsEffectInterpolationType::Enum type)
 {
   // Convert the enum representation of our interpolation to the bitfield
   mPointFlags.ClearFlag(PointFlags::LinearInterpolation);
-  if(type == PhysicsEffectInterpolationType::Linear)
+  if (type == PhysicsEffectInterpolationType::Linear)
     mPointFlags.SetFlag(PointFlags::LinearInterpolation);
-  else if(type == PhysicsEffectInterpolationType::Quadratic)
+  else if (type == PhysicsEffectInterpolationType::Quadratic)
     mPointFlags.SetFlag(PointFlags::QuadraticInterpolation);
   // Make sure to wake-up objects if we do that on effect change
   CheckWakeUp();
 }
 
-//-------------------------------------------------------------------PointForceEffect
 ZilchDefineType(PointForceEffect, builder, type)
 {
   ZeroBindComponent();
@@ -307,7 +320,7 @@ PointForceEffect::PointForceEffect()
 
 void PointForceEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(GetActive() == false)
+  if (GetActive() == false)
     return;
 
   // Calculate and apply the force
@@ -315,7 +328,6 @@ void PointForceEffect::ApplyEffect(RigidBody* obj, real dt)
   obj->ApplyForceNoWakeUp(force);
 }
 
-//-------------------------------------------------------------------PointGravityEffect
 ZilchDefineType(PointGravityEffect, builder, type)
 {
   ZeroBindComponent();
@@ -333,7 +345,7 @@ PointGravityEffect::PointGravityEffect()
 
 void PointGravityEffect::ApplyEffect(RigidBody* obj, real dt)
 {
-  if(GetActive() == false)
+  if (GetActive() == false)
     return;
 
   Vec3 force = CalculateInwardForce(obj);
@@ -342,4 +354,4 @@ void PointGravityEffect::ApplyEffect(RigidBody* obj, real dt)
   obj->ApplyForceNoWakeUp(scaledForce);
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ScriptEditor.hpp
-/// Declaration of the ScriptEditor Widget.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -18,7 +10,7 @@ class WindowTabEvent;
 
 namespace Events
 {
-  DeclareEvent(AutoCompleteItemDoubleClicked);
+DeclareEvent(AutoCompleteItemDoubleClicked);
 }
 
 class DocumentEditor : public TextEditor
@@ -28,7 +20,7 @@ public:
 
   DocumentEditor(Composite* parent);
   ~DocumentEditor();
-  
+
   void FocusWindow();
   void CloseWindow();
 
@@ -83,7 +75,7 @@ public:
   ZilchDeclareType(AutoCompletePopUp, TypeCopyMode::ReferenceType);
 
   AutoCompletePopUp(Widget* source);
-  
+
   void SetCompletions(Array<Completion>& completions);
   void PartialTextChanged(StringParam partial);
 
@@ -124,7 +116,7 @@ public:
   void UpdateTip();
   void OnPrevious(MouseEvent* event);
   void OnNext(MouseEvent* event);
-  
+
   Element* mPreviousTip;
   Text* mOverloadIndex;
   Element* mNextTip;
@@ -160,21 +152,29 @@ public:
   AutoCompletePopUp* GetAutoComplete();
   ICodeInspector* GetCodeInspector();
   bool AttemptFinishAutoComplete(UserCompletion::Enum mode);
-  void ShowAutoComplete(Array<Completion>& tips, int cursorOffset, CompletionConfidence::Enum confidence);
+  void ShowAutoComplete(Array<Completion>& tips,
+                        int cursorOffset,
+                        CompletionConfidence::Enum confidence);
   void AttemptAddLocalWordCompletions(Array<Completion>& completionsOut);
   void AttemptAddKeywordAndTypeCompletions(Array<Completion>& completionsOut);
-  String ReplaceTabRuneWithOurTabStyle(StringParam text, StringParam perLineIndent = String());
+  String ReplaceTabRuneWithOurTabStyle(StringParam text,
+                                       StringParam perLineIndent = String());
   ToolTip* ShowToolTip(StringParam text);
   ToolTip* ShowToolTip(StringParam text, Vec3Param screenPos);
   void HideToolTip();
-  bool GetCompleteZeroConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut);
+  bool GetCompleteZeroConnectInfo(String& eventNameOut,
+                                  String& indentOut,
+                                  int& functionPositionOut);
   bool CanCompleteZeroConnect();
   bool AutoCompleteZeroConnect();
 
   // ICodeEditor interface
-  void ShowAutoComplete(Array<Completion>& tips, CompletionConfidence::Enum confidence) override;
+  void ShowAutoComplete(Array<Completion>& tips,
+                        CompletionConfidence::Enum confidence) override;
   void HideAutoComplete() override;
-  void ShowCallTips(Array<CallTip>& tips, StringParam functionName, size_t parameterIndex) override;
+  void ShowCallTips(Array<CallTip>& tips,
+                    StringParam functionName,
+                    size_t parameterIndex) override;
   void HideCallTips() override;
   StringRange GetAllText() override;
   DocumentResource* GetDocumentResource() override;
@@ -191,7 +191,10 @@ public:
   // TextEditor Interface
   void OnFocusIn() override;
   void OnFocusOut() override;
-  ICodeEditor* GetCodeEditor() override { return this; }
+  ICodeEditor* GetCodeEditor() override
+  {
+    return this;
+  }
   void BreakpointsClicked(int line, int position) override;
   void ScriptError(ScriptEvent* event) override;
 
@@ -211,7 +214,8 @@ public:
   CodeLocation mLastLocation;
 };
 
-ScriptEditor* CreateScriptEditor(Composite* parent, ResourceDocument* scriptDocument);
+ScriptEditor* CreateScriptEditor(Composite* parent,
+                                 ResourceDocument* scriptDocument);
 DocumentEditor* CreateDocumentEditor(Composite* parent, Document* document);
 
-}
+} // namespace Zero

@@ -1,26 +1,24 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-ArchetypeProcessor::ArchetypeProcessor(GeneratedArchetype* generatedArchetype, HierarchyDataMap& hierarchyData)
-  : mGeneratedArchetype(generatedArchetype),
+ArchetypeProcessor::ArchetypeProcessor(GeneratedArchetype* generatedArchetype,
+                                       HierarchyDataMap& hierarchyData) :
+    mGeneratedArchetype(generatedArchetype),
     mHierarchyDataMap(hierarchyData)
 {
-
 }
 
 void ArchetypeProcessor::BuildSceneGraph(String rootNode)
 {
-  // We will go through the hierarchy building our scene graph starting with the root
-  // All assimp scenes have their root named RootNode
+  // We will go through the hierarchy building our scene graph starting with the
+  // root All assimp scenes have their root named RootNode
   HierarchyData nodeData = mHierarchyDataMap[rootNode];
-  
-  // these nodes represent the hierarchy of the cogs that will construct an archetype on import
+
+  // these nodes represent the hierarchy of the cogs that will construct an
+  // archetype on import
   mSceneSource.Name = rootNode;
   mSceneSource.Root = BuildSceneNodes(nodeData);
 }
@@ -37,11 +35,14 @@ SceneGraphNode* ArchetypeProcessor::BuildSceneNodes(HierarchyData nodeData)
   graphNode->NodeName = nodeData.mNodeName;
 
   Mat3 rotation;
-  nodeData.mLocalTransform.Decompose(&(graphNode->Scale), &rotation, &(graphNode->Translation));
+  nodeData.mLocalTransform.Decompose(
+      &(graphNode->Scale), &rotation, &(graphNode->Translation));
   graphNode->Rotation = Math::ToQuaternion(rotation);
 
-  graphNode->Translation = Math::TransformPoint(transform, graphNode->Translation);
-  graphNode->Rotation = changeOfBasis * graphNode->Rotation * changeOfBasis.Inverted();
+  graphNode->Translation =
+      Math::TransformPoint(transform, graphNode->Translation);
+  graphNode->Rotation =
+      changeOfBasis * graphNode->Rotation * changeOfBasis.Inverted();
 
   graphNode->IsSkeletonRoot = nodeData.mIsSkeletonRoot;
 
@@ -68,8 +69,9 @@ SceneGraphNode* ArchetypeProcessor::BuildSceneNodes(HierarchyData nodeData)
 
 void ArchetypeProcessor::ExportSceneGraph(String filename, String outputPath)
 {
-  String graphFile = FilePath::CombineWithExtension(outputPath, filename, ".graph.data");
+  String graphFile =
+      FilePath::CombineWithExtension(outputPath, filename, ".graph.data");
   SaveToDataFile(mSceneSource, graphFile);
 }
 
-}// namespace Zero
+} // namespace Zero

@@ -1,14 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
-namespace Memory{class Pool;}
+namespace Memory
+{
+class Pool;
+}
 
 namespace Physics
 {
@@ -22,8 +20,8 @@ public:
   ContactManager();
   ~ContactManager();
 
-  /// Gets the existing contact for this manifold or creates a new one if none exists.
-  /// Used when a collision has been detected.
+  /// Gets the existing contact for this manifold or creates a new one if none
+  /// exists. Used when a collision has been detected.
   Contact* AddManifold(Manifold& manifold);
   /// Used when a collision no longer should exist.
   void RemoveManifold(Manifold* manifold);
@@ -34,8 +32,8 @@ public:
   void DestroyContacts();
 
   PhysicsSpace* mSpace;
+
 private:
-  
   typedef InList<Contact, &Contact::SolverLink> ContactList;
   ContactList mContactsToDestroy;
 
@@ -47,6 +45,6 @@ private:
 Contact* ContactAlreadyExistsNew(Manifold* manifold);
 Contact* ContactAlreadyExistsDebug(Manifold* manifold);
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

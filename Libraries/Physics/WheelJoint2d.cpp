@@ -1,15 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
   Linear Constraint:
   Let i correspond the 3 basis vectors formed from the shock axis and two
-  orthonormal vectors (t1,t2) to the shock axis where 
+  orthonormal vectors (t1,t2) to the shock axis where
   i = 0 -> t1, i = 1 -> t2, i = 2 -> shock axis
   Ci   : dot(p2 - p1,i) = 0
   Ci   : dot(c2 + r2 - c1 - r1,i) = 0
@@ -21,7 +16,7 @@
 
   Angular Constraint:
   Let i correspond the 3 basis vectors formed from the motor axis and two
-  orthonormal vectors (t1,t2) to the motor axis where 
+  orthonormal vectors (t1,t2) to the motor axis where
   i = 0 -> t1, i = 1 -> t2, i = 2 -> motor axis
   Let i correspond to the x,y,z axes
   Ci   : theta2_i - theta1_i = 0
@@ -85,7 +80,7 @@ void WheelJoint2d::OnAllObjectsCreated(CogInitializer& initializer)
   Joint::OnAllObjectsCreated(initializer);
 
   JointSpring* spring = GetOwner()->has(JointSpring);
-  if(spring == nullptr)
+  if (spring == nullptr)
   {
     spring = new JointSpring();
     GetOwner()->AddComponent(spring);
@@ -107,7 +102,7 @@ void WheelJoint2d::ComputeInitialConfiguration()
   axis.z = real(0.0);
   real length = axis.AttemptNormalize();
   // If we got an invalid axis then just use the y axis...
-  if(length == real(0.0))
+  if (length == real(0.0))
     axis = Vec3::cYAxis;
   SetWorldShockAxis(axis);
 }
@@ -119,15 +114,16 @@ void WheelJoint2d::ComputeMoleculeData(MoleculeData& moleculeData)
   worldShockAxes.mWorldAxes[0].z = 0;
   worldShockAxes.mWorldAxes[0].AttemptNormalize();
   moleculeData.LinearAxes[1] = worldShockAxes.mWorldAxes[0];
-  moleculeData.LinearAxes[0] = Math::Cross(moleculeData.LinearAxes[1], Vec3::cZAxis);
+  moleculeData.LinearAxes[0] =
+      Math::Cross(moleculeData.LinearAxes[1], Vec3::cZAxis);
   moleculeData.AngularAxes[0] = Vec3::cZAxis;
   moleculeData.Set2dBases(this);
 }
 
 void WheelJoint2d::ComponentAdded(BoundType* typeId, Component* component)
 {
-  Joint::ComponentAdded(typeId,component);
-  if(typeId == ZilchTypeId(JointLimit))
+  Joint::ComponentAdded(typeId, component);
+  if (typeId == ZilchTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -153,7 +149,8 @@ void WheelJoint2d::ComputeMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputeMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
+  ComputeMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
 }
 
 void WheelJoint2d::WarmStart(MoleculeWalker& molecules)
@@ -181,24 +178,26 @@ void WheelJoint2d::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData, FragmentPolicy());
 }
 
 void WheelJoint2d::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
   DrawAxisAtomFragment(mShockAxes, mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint WheelJoint2d::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint WheelJoint2d::GetAtomIndexFilter(uint atomIndex,
+                                      real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 2)
+  if (atomIndex < 2)
     return LinearAxis;
-  else if(atomIndex < 3)
+  else if (atomIndex < 3)
     return AngularAxis;
   return 0;
 }
@@ -236,7 +235,7 @@ void WheelJoint2d::SetShockAxis(Vec3Param axis)
 Vec3 WheelJoint2d::GetWorldShockAxis() const
 {
   Collider* collider = GetCollider(0);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return Vec3::cZero;
 
   return JointHelpers::BodyToWorldR(collider, mShockAxes.mBodyAxes[0]);
@@ -245,19 +244,19 @@ Vec3 WheelJoint2d::GetWorldShockAxis() const
 void WheelJoint2d::SetWorldShockAxis(Vec3Param axis)
 {
   // Register side-effect properties
-  if(OperationQueue::IsListeningForSideEffects())
+  if (OperationQueue::IsListeningForSideEffects())
     OperationQueue::RegisterSideEffect(this, "ShockAxis", GetShockAxis());
 
-  if(axis == Vec3::cZero)
+  if (axis == Vec3::cZero)
     return;
 
   Collider* collider = GetCollider(0);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return;
 
   mShockAxes.mBodyAxes[0] = JointHelpers::WorldToBodyR(collider, axis);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

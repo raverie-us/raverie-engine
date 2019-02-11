@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file WidgetTest.hpp
-/// WidgetTests
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -38,4 +30,4 @@ void StandardControlsLayoutTest(Composite* testWindow);
 void OpenSeperateWindow(OsWindow* mainWindow);
 void OpenTestWidgets(Composite* owner);
 
-}
+} // namespace Zero

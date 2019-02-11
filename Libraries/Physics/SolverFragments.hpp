@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,14 +6,14 @@ namespace Zero
 
 namespace Physics
 {
-  
-//Templated functions so that code can be generate for each type of joint.
+
+// Templated functions so that code can be generate for each type of joint.
 
 template <typename ListType>
 void ClearFragmentList(ListType& jointList)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -30,7 +25,7 @@ template <typename ListType>
 void UpdateDataFragmentList(ListType& jointList, MoleculeWalker& molecules)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -42,7 +37,7 @@ template <typename ListType>
 void WarmStartFragmentList(ListType& jointList, MoleculeWalker& molecules)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -51,10 +46,12 @@ void WarmStartFragmentList(ListType& jointList, MoleculeWalker& molecules)
 }
 
 template <typename ListType>
-void IterateVelocitiesFragmentList(ListType& jointList, MoleculeWalker& molecules, uint iteration)
+void IterateVelocitiesFragmentList(ListType& jointList,
+                                   MoleculeWalker& molecules,
+                                   uint iteration)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -65,14 +62,13 @@ void IterateVelocitiesFragmentList(ListType& jointList, MoleculeWalker& molecule
 template <typename ListType>
 void SolvePositionsFragmentList(ListType& jointList, MoleculeWalker& molecules)
 {
-
 }
 
 template <typename ListType>
 void CommitFragmentList(ListType& jointList, MoleculeWalker& molecules)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -84,7 +80,7 @@ template <typename ListType>
 void BatchEventsFragmentList(ListType& jointList)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -96,7 +92,7 @@ template <typename ListType>
 void DrawJointsFragmentList(ListType& jointList)
 {
   typename ListType::range jointRange = jointList.All();
-  while(!jointRange.Empty())
+  while (!jointRange.Empty())
   {
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
@@ -104,6 +100,6 @@ void DrawJointsFragmentList(ListType& jointList)
   }
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

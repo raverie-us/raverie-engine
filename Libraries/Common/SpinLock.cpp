@@ -1,22 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//******************************************************************************
 void SpinLock::Lock()
 {
-  while (!mLocked.CompareExchange(true, false));
+  while (!mLocked.CompareExchange(true, false))
+    ;
 }
 
-//******************************************************************************
 void SpinLock::Unlock()
 {
   mLocked = false;
 }
-}
+} // namespace Zero

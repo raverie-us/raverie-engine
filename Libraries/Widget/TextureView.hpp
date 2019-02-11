@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextureView.hpp
-/// Declaration of Texture View Composites.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -15,8 +7,7 @@ namespace Zero
 DeclareEnum2(Centering, UpperLeft, Middle);
 DeclareEnum2(TextureUvMode, Normal, RenderTarget);
 
-//----------------------------------------------------------------- Texture View
-///Display displays a texture with an effect.
+/// Display displays a texture with an effect.
 class TextureView : public Widget
 {
 public:
@@ -35,7 +26,11 @@ public:
 
   void SizeToContents() override;
 
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
   HandleOf<Texture> mTexture;
   Vec2 mUv0;
@@ -48,4 +43,4 @@ public:
   Vec4 mSkyboxInput;
 };
 
-}//namespace Zero
+} // namespace Zero

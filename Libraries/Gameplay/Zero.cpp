@@ -1,16 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------------- Zero Static
-//**************************************************************************************************
+//Zero Static
 ZilchDefineType(ZeroStatic, builder, type)
 {
   ZeroBindDocumented();
@@ -31,26 +25,29 @@ ZilchDefineType(ZeroStatic, builder, type)
   ZilchBindGetter(Audio);
 }
 
-//**************************************************************************************************
 void ErrorOnConnect(Function* func)
 {
-  DoNotifyException("Zilch Error", String::Format(
-    "Zero.Connect must take a delegate that has only one "
-    "parameter (a reference / class Event type). Function %s has the signature: %s",
-    func->Name.c_str(),
-    func->FunctionType->ToString().c_str()));
+  DoNotifyException(
+      "Zilch Error",
+      String::Format("Zero.Connect must take a delegate that has only one "
+                     "parameter (a reference / class Event type). Function %s "
+                     "has the signature: %s",
+                     func->Name.c_str(),
+                     func->FunctionType->ToString().c_str()));
 }
 
-//**************************************************************************************************
-void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam delegate)
+void ZeroStatic::Connect(Object* target,
+                         StringParam eventId,
+                         DelegateParam delegate)
 {
-  if(target == nullptr)
+  if (target == nullptr)
   {
-    DoNotifyException("The target object is null", "Cannot connect to a null object");
+    DoNotifyException("The target object is null",
+                      "Cannot connect to a null object");
     return;
   }
 
-  if(delegate.IsNull())
+  if (delegate.IsNull())
   {
     DoNotifyException("The delegate is null", "Cannot connect a null delegate");
     return;
@@ -58,9 +55,9 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
 
   Function* callbackFunction = delegate.BoundFunction;
   const ParameterArray& params = callbackFunction->FunctionType->Parameters;
-  
+
   // The function should only take an event
-  if(params.Size() != 1)
+  if (params.Size() != 1)
   {
     ErrorOnConnect(callbackFunction);
     return;
@@ -69,7 +66,7 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
   // Confirm that the parameter type is an event
   Type* type = params[0].ParameterType;
   BoundType* eventType = Type::DynamicCast<BoundType*>(type);
-  if(eventType == nullptr || !eventType->IsA(ZilchTypeId(Event)))
+  if (eventType == nullptr || !eventType->IsA(ZilchTypeId(Event)))
   {
     ErrorOnConnect(callbackFunction);
     return;
@@ -89,7 +86,8 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
 
   if (dispatcher == nullptr)
   {
-    DoNotifyException("The dispatcher is null", "Cannot connect a null dispatcher");
+    DoNotifyException("The dispatcher is null",
+                      "Cannot connect a null dispatcher");
     return;
   }
 
@@ -100,12 +98,15 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
   }
 
   // Create the connection
-  ZilchScriptConnection* connection = new ZilchScriptConnection(dispatcher, eventId, delegate);
+  ZilchScriptConnection* connection =
+      new ZilchScriptConnection(dispatcher, eventId, delegate);
   connection->EventType = eventType;
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
-    String error = String::Format("The event id '%s' already has a connection to this event handler", eventId.c_str());
+    String error = String::Format(
+        "The event id '%s' already has a connection to this event handler",
+        eventId.c_str());
     DoNotifyException("Duplicate Event Connection", error);
     connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
     delete connection;
@@ -116,16 +117,17 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
   connection->ConnectToReceiverAndDispatcher(eventId, receiver, dispatcher);
 }
 
-//**************************************************************************************************
-void ZeroStatic::Disconnect(Object* sender, StringParam eventId, Object* receiver)
+void ZeroStatic::Disconnect(Object* sender,
+                            StringParam eventId,
+                            Object* receiver)
 {
-  if(sender == nullptr)
+  if (sender == nullptr)
   {
     DoNotifyException("Cannot disconnect", "Sender object is null");
     return;
   }
 
-  if(receiver == nullptr)
+  if (receiver == nullptr)
   {
     DoNotifyException("Cannot disconnect", "Receiver object is null");
     return;
@@ -135,16 +137,15 @@ void ZeroStatic::Disconnect(Object* sender, StringParam eventId, Object* receive
   dispatcher->DisconnectEvent(eventId, receiver);
 }
 
-//**************************************************************************************************
 void ZeroStatic::DisconnectAllEvents(Object* sender, Object* receiver)
 {
-  if(sender == nullptr)
+  if (sender == nullptr)
   {
     DoNotifyException("Cannot disconnect", "Sender object is null");
     return;
   }
 
-  if(receiver == nullptr)
+  if (receiver == nullptr)
   {
     DoNotifyException("Cannot disconnect", "Receiver object is null");
     return;
@@ -154,78 +155,67 @@ void ZeroStatic::DisconnectAllEvents(Object* sender, Object* receiver)
   dispatcher->Disconnect(receiver);
 }
 
-//**************************************************************************************************
 
-//**************************************************************************************************
 Keyboard* ZeroStatic::GetKeyboard()
 {
   return Keyboard::Instance;
 }
 
-//**************************************************************************************************
 Mouse* ZeroStatic::GetMouse()
 {
   return Z::gMouse;
 }
 
-//**************************************************************************************************
 Editor* ZeroStatic::GetEditor()
 {
   return Z::gEditor;
 }
 
-//**************************************************************************************************
 Engine* ZeroStatic::GetEngine()
 {
   return Z::gEngine;
 }
 
-//**************************************************************************************************
 Environment* ZeroStatic::GetEnvironment()
 {
   return Environment::GetInstance();
 }
 
-//**************************************************************************************************
 Gamepads* ZeroStatic::GetGamepads()
 {
   return Z::gGamepads;
 }
 
-//**************************************************************************************************
 Zero::Joysticks* ZeroStatic::GetJoysticks()
 {
   return Z::gJoysticks;
 }
 
-//**************************************************************************************************
 ObjectStore* ZeroStatic::GetObjectStore()
 {
   return ObjectStore::GetInstance();
 }
 
-//**************************************************************************************************
 ResourceSystem* ZeroStatic::GetResourceSystem()
 {
   return Z::gResources;
 }
 
-//**************************************************************************************************
 OsShell* ZeroStatic::GetOsShell()
 {
   return GetEngine()->has(OsShell);
 }
 
-//**************************************************************************************************
 SoundSystem* ZeroStatic::GetAudio()
 {
   return Z::gSound;
 }
 
-//---------------------------------------------------------------------------- ZilchScriptConnection
-//**************************************************************************************************
-ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate)
-  : EventConnection(dispatcher, eventId)
+//ZilchScriptConnection
+ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher,
+                                             StringParam eventId,
+                                             DelegateParam delagate) :
+    EventConnection(dispatcher, eventId)
 {
   Flags.SetFlag(ConnectionFlags::Script);
   mDelegate = delagate;
@@ -233,52 +223,57 @@ ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher, String
   ThisObject = mDelegate.ThisHandle.Dereference();
 }
 
-//**************************************************************************************************
 ZilchScriptConnection::~ZilchScriptConnection()
 {
-  // Since ZilchScriptConnections contain a handle in the delegate, it is possible for the event
-  // connection to be the only thing keeping an object alive. Cannot destruct the object during the
-  // event connection destruction because it will also invoke destruction of the event connection
-  // being destructed right now.
+  // Since ZilchScriptConnections contain a handle in the delegate, it is
+  // possible for the event connection to be the only thing keeping an object
+  // alive. Cannot destruct the object during the event connection destruction
+  // because it will also invoke destruction of the event connection being
+  // destructed right now.
   sDelayDestructDelegates.PushBack(mDelegate);
 }
 
-//**************************************************************************************************
 void ZilchScriptConnection::RaiseError(StringParam message)
 {
   Function* function = mDelegate.BoundFunction;
-  if(function == nullptr)
+  if (function == nullptr)
   {
     DoNotifyException("Null Event Connection", message);
     return;
   }
 
   // Get the location of the first opcode
-  const CodeLocation* location = function->OpcodeLocationToCodeLocation.FindPointer(0);
-  if(location)
+  const CodeLocation* location =
+      function->OpcodeLocationToCodeLocation.FindPointer(0);
+  if (location)
   {
     String namedMessage = BuildString(function->Name, ": ", message);
-    String fullMessage = location->GetFormattedStringWithMessage(MessageFormat::Python, namedMessage);
-    ZilchScriptManager::GetInstance()->DispatchScriptError(Events::UnhandledException, namedMessage, fullMessage, *location);
+    String fullMessage = location->GetFormattedStringWithMessage(
+        MessageFormat::Python, namedMessage);
+    ZilchScriptManager::GetInstance()->DispatchScriptError(
+        Events::UnhandledException, namedMessage, fullMessage, *location);
     return;
   }
 
-  DoNotifyException("Event Connection", String::Format("%s\nFunction: ", function->ToString().c_str()));
+  DoNotifyException(
+      "Event Connection",
+      String::Format("%s\nFunction: ", function->ToString().c_str()));
 }
 
-//**************************************************************************************************
 void ZilchScriptConnection::Invoke(Event* e)
 {
-  // If the patch id matches the one on the state, then it means we disabled this event handler
-  // Once the state gets patched, the event handler will auto resume (it may throw again, and that will re-disable it)
-  if(mStatePatchId == ExecutableState::CallingState->PatchId)
+  // If the patch id matches the one on the state, then it means we disabled
+  // this event handler Once the state gets patched, the event handler will auto
+  // resume (it may throw again, and that will re-disable it)
+  if (mStatePatchId == ExecutableState::CallingState->PatchId)
     return;
 
   ExceptionReport report;
   Call call(mDelegate);
 
-  // We have to disable debug checks because technically we are doing something unsafe here
-  // The Zilch binding will yell at us for trying to pass in an 'Event' where it takes a more derived type
+  // We have to disable debug checks because technically we are doing something
+  // unsafe here The Zilch binding will yell at us for trying to pass in an
+  // 'Event' where it takes a more derived type
   call.DisableParameterChecks();
 
   call.SetHandle(0, e);
@@ -286,14 +281,13 @@ void ZilchScriptConnection::Invoke(Event* e)
 
   // If an exception has occurred kill this connection
   // to prevent callbacks like 'KeyDown' from constantly throwing exceptions
-  if(report.HasThrownExceptions())
+  if (report.HasThrownExceptions())
     mStatePatchId = ExecutableState::CallingState->PatchId;
 }
 
-//**************************************************************************************************
 DataBlock ZilchScriptConnection::GetFunctionPointer()
 {
   return DataBlock((byte*)&mDelegate.BoundFunction, sizeof(Function*));
 }
 
-}//namespace Zero
+} // namespace Zero

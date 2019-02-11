@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,7 +9,6 @@ namespace Z
 ThreadDispatch* gDispatch = nullptr;
 }
 
-//-------------------------------------------------------------------ThreadDispatch
 ThreadDispatch::ThreadDispatch()
 {
   Z::gDispatch = this;
@@ -25,13 +19,16 @@ ThreadDispatch::~ThreadDispatch()
   ClearEvents();
 }
 
-void ThreadDispatch::DispatchOn(HandleParam object, EventDispatcher* eventDispatcher, StringParam eventId, Event* event)
+void ThreadDispatch::DispatchOn(HandleParam object,
+                                EventDispatcher* eventDispatcher,
+                                StringParam eventId,
+                                Event* event)
 {
   QueuedEvent queuedEvent;
   queuedEvent.Object = object;
   queuedEvent.EventToSend = event;
   queuedEvent.EventDispatcherOn = eventDispatcher;
-  queuedEvent.EventId  = eventId;
+  queuedEvent.EventId = eventId;
 
   mLock.Lock();
   mEvents.PushBack(queuedEvent);
@@ -42,19 +39,20 @@ void ThreadDispatch::DispatchEvents()
 {
   Array<QueuedEvent> eventsToDispatch;
 
-  //To avoid dead lock pull out all message before dispatching
+  // To avoid dead lock pull out all message before dispatching
   //(dispatching may add more events)
   mLock.Lock();
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(QueuedEvent& queuedEvent, eventsToDispatch.All())
+  forRange(QueuedEvent & queuedEvent, eventsToDispatch.All())
   {
-    //Check to see if the object is still alive
-    if(queuedEvent.Object.IsNull() == false)
-      queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId, queuedEvent.EventToSend);
+    // Check to see if the object is still alive
+    if (queuedEvent.Object.IsNull() == false)
+      queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId,
+                                              queuedEvent.EventToSend);
 
-    //delete the event
+    // delete the event
     delete queuedEvent.EventToSend;
   }
   eventsToDispatch.Clear();
@@ -68,14 +66,13 @@ void ThreadDispatch::ClearEvents()
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(QueuedEvent& queuedEvent, eventsToDispatch.All())
+  forRange(QueuedEvent & queuedEvent, eventsToDispatch.All())
   {
     delete queuedEvent.EventToSend;
   }
   eventsToDispatch.Clear();
 }
 
-//-------------------------------------------------------------------ObjectThreadDispatch
 ObjectThreadDispatch::ObjectThreadDispatch()
 {
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
@@ -86,7 +83,9 @@ ObjectThreadDispatch::~ObjectThreadDispatch()
   ClearEvents();
 }
 
-void ObjectThreadDispatch::Dispatch(Object* object, StringParam eventId, Event* event)
+void ObjectThreadDispatch::Dispatch(Object* object,
+                                    StringParam eventId,
+                                    Event* event)
 {
   ObjectQueuedEvent queuedEvent;
   queuedEvent.EventToSend = event;
@@ -102,14 +101,16 @@ void ObjectThreadDispatch::DispatchEvents()
 {
   Array<ObjectQueuedEvent> eventsToDispatch;
 
-  // To avoid dead lock pull out all message before dispatching (dispatching may add more events)
+  // To avoid dead lock pull out all message before dispatching (dispatching may
+  // add more events)
   mLock.Lock();
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(ObjectQueuedEvent& queuedEvent, eventsToDispatch.All())
+  forRange(ObjectQueuedEvent & queuedEvent, eventsToDispatch.All())
   {
-    queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId, queuedEvent.EventToSend);
+    queuedEvent.EventDispatcherOn->Dispatch(queuedEvent.EventId,
+                                            queuedEvent.EventToSend);
 
     // Delete the event
     delete queuedEvent.EventToSend;
@@ -125,7 +126,7 @@ void ObjectThreadDispatch::ClearEvents()
   eventsToDispatch.Swap(mEvents);
   mLock.Unlock();
 
-  forRange(ObjectQueuedEvent& queuedEvent, eventsToDispatch.All())
+  forRange(ObjectQueuedEvent & queuedEvent, eventsToDispatch.All())
   {
     delete queuedEvent.EventToSend;
   }
@@ -137,7 +138,6 @@ void ObjectThreadDispatch::OnEngineUpdate(Event* e)
   DispatchEvents();
 }
 
-
 void StartThreadSystem()
 {
   Z::gDispatch = new ThreadDispatch();
@@ -146,9 +146,10 @@ void StartThreadSystem()
 
 void ShutdownThreadSystem()
 {
-  // This is important that the jobs are deleted first, because the job threads could be using the gDispatch
+  // This is important that the jobs are deleted first, because the job threads
+  // could be using the gDispatch
   SafeDelete(Z::gJobs);
   SafeDelete(Z::gDispatch);
 }
 
-}
+} // namespace Zero

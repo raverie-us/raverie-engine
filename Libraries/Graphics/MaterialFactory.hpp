@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -9,17 +8,28 @@ namespace Zero
 class MaterialFactory : public SimpleResourceFactory<Material, MaterialBlock>
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(MaterialFactory, MetaComposition, TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(MaterialFactory,
+                                  MetaComposition,
+                                  TypeCopyMode::ReferenceType);
   static MaterialFactory* sInstance;
-  static MaterialFactory* GetInstance() {return sInstance;}
+  static MaterialFactory* GetInstance()
+  {
+    return sInstance;
+  }
   MaterialFactory();
 
-  void MoveComponent(HandleParam owner, HandleParam componentToMove, uint destination) override;
+  void MoveComponent(HandleParam owner,
+                     HandleParam componentToMove,
+                     uint destination) override;
   uint GetComponentIndex(HandleParam owner, BoundType* componentType) override;
 
-  bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
+  bool CanAddComponent(HandleParam owner,
+                       BoundType* typeToAdd,
+                       AddInfo* info = nullptr) override;
 
-  void UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries, ZilchFragmentTypeMap& fragmentTypes);
+  void UpdateRestrictedComponents(
+      HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
+      ZilchFragmentTypeMap& fragmentTypes);
 
   ShaderInputType::Enum GetShaderInputType(Type* type);
   typedef HashMap<Type*, ShaderInputType::Enum> ShaderInputTypeMap;
@@ -29,7 +39,8 @@ public:
   // because they are used automatically in shader permutation generation
   HashSet<BoundType*> mRestrictedComponents;
 
-  // Keeping track of geometry fragments so that using multiple can be disallowed
+  // Keeping track of geometry fragments so that using multiple can be
+  // disallowed
   HashSet<BoundType*> mGeometryComponents;
 };
 

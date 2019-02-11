@@ -1,19 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Image.hpp
-/// Image class.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-
-//------------------------------------------------------------ Image
 
 Image::Image()
 {
@@ -30,7 +20,7 @@ Image::~Image()
 
 void Image::Deallocate()
 {
-  if(Data)
+  if (Data)
   {
     zDeallocate(Data);
     Data = nullptr;
@@ -76,24 +66,23 @@ void Image::Resize(int width, int height, uint color)
   newBuffer.ClearColorTo(color);
 
   uint copyWidth = Math::Min(width, this->Width);
-  uint copyHeight= Math::Min(height, this->Height);
+  uint copyHeight = Math::Min(height, this->Height);
 
-  CopyImage(&newBuffer, this, 0, 0, 0, 0, copyWidth, copyHeight );
+  CopyImage(&newBuffer, this, 0, 0, 0, 0, copyWidth, copyHeight);
 
   this->Swap(&newBuffer);
 }
 
 void Image::ClearColorTo(uint color)
 {
- PixelRange range(this);
- for(;!range.Empty();range.PopFront())
- {
-   range.Front() = color;
- }
+  PixelRange range(this);
+  for (; !range.Empty(); range.PopFront())
+  {
+    range.Front() = color;
+  }
 }
 
-
-#define SetPixelIB(x, y, value) *( (destData) + (x) + (y) * destWidth) = value
+#define SetPixelIB(x, y, value) *((destData) + (x) + (y)*destWidth) = value
 
 void CopyImageExpand(Image* dest, Image* source)
 {
@@ -113,7 +102,14 @@ void CopyImage(Image* dest, Image* source, int destX, int destY)
   CopyImage(dest, source, destX, destY, 0, 0, sourceWidth, sourceHeight);
 }
 
-void CopyImage(Image* dest, Image* source, int startDestX, int startDestY, int sourceX, int sourceY, int sizeX, int sizeY)
+void CopyImage(Image* dest,
+               Image* source,
+               int startDestX,
+               int startDestY,
+               int sourceX,
+               int sourceY,
+               int sizeX,
+               int sizeY)
 {
   ImagePixel* destData = dest->Data;
   ImagePixel* sourceData = source->Data;
@@ -123,19 +119,19 @@ void CopyImage(Image* dest, Image* source, int startDestX, int startDestY, int s
   int sourceStride = source->Width;
 
   // Clip width
-  int copyWidth = Math::Min(startDestX+sizeX, destWidth);
+  int copyWidth = Math::Min(startDestX + sizeX, destWidth);
   // Clip height
-  int copyHeight = Math::Min(startDestY+sizeY, destHeight);
+  int copyHeight = Math::Min(startDestY + sizeY, destHeight);
 
   startDestX = Math::Max(startDestX, 0);
   startDestY = Math::Max(startDestY, 0);
 
   int sx = sourceX;
   int sy = sourceY;
-  for(int y = startDestY; y < copyHeight; ++y)
+  for (int y = startDestY; y < copyHeight; ++y)
   {
     sx = sourceX;
-    for(int x = startDestX; x < copyWidth; ++x)
+    for (int x = startDestX; x < copyWidth; ++x)
     {
       ImagePixel pixel = *(sourceData + sx + sy * sourceStride);
       SetPixelIB(x, y, pixel);
@@ -149,8 +145,12 @@ const int alphaTol = 2;
 
 struct FillRange
 {
-  FillRange() {}
-  FillRange(int s, int e, int w, int h) : start(s), end(e), wRef(w), hRef(h) {}
+  FillRange()
+  {
+  }
+  FillRange(int s, int e, int w, int h) : start(s), end(e), wRef(w), hRef(h)
+  {
+  }
   int start, end, wRef, hRef;
 };
 
@@ -227,29 +227,33 @@ void FixAlphaHalo(Image* image)
   {
     FillRange& range = wFill[i];
     for (int w = range.start; w < range.end; ++w)
-      image->SetPixel(w, range.hRef, 0x00FFFFFF & image->GetPixel(range.wRef, range.hRef));
+      image->SetPixel(
+          w, range.hRef, 0x00FFFFFF & image->GetPixel(range.wRef, range.hRef));
   }
 
   for (unsigned i = 0; i < hFill.Size(); ++i)
   {
     FillRange& range = hFill[i];
     for (int w = 0; w < width; ++w)
-      image->SetPixel(w, range.start, 0x00FFFFFF & image->GetPixel(w, range.hRef));
+      image->SetPixel(
+          w, range.start, 0x00FFFFFF & image->GetPixel(w, range.hRef));
 
     range.hRef = range.start++;
     for (int h = range.start; h < range.end; ++h)
-      memcpy(&image->GetPixel(0, h), &image->GetPixel(0, range.hRef), width * sizeof(ImagePixel));
+      memcpy(&image->GetPixel(0, h),
+             &image->GetPixel(0, range.hRef),
+             width * sizeof(ImagePixel));
   }
 }
 
 void SetColorToAlpha(Image* buffer, ByteColor color)
 {
-  uint transparent = ByteColorRGBA(0,0,0,0);
+  uint transparent = ByteColorRGBA(0, 0, 0, 0);
   PixelRange pixelRange(buffer);
-  for(;!pixelRange.Empty();pixelRange.PopFront())
+  for (; !pixelRange.Empty(); pixelRange.PopFront())
   {
     ByteColor& pixel = pixelRange.Front();
-    if( pixel == color )
+    if (pixel == color)
       pixel = transparent;
   }
 }
@@ -261,13 +265,18 @@ IntVec2 IntVec2Clamp(IntVec2 value, IntVec2 min, IntVec2 max)
   return value;
 }
 
-void FillPixelBorders(Image* image, IntVec2 topLeft, IntVec2 bottomRight, int borderWidth)
+void FillPixelBorders(Image* image,
+                      IntVec2 topLeft,
+                      IntVec2 bottomRight,
+                      int borderWidth)
 {
   IntVec2 borderTL = topLeft - IntVec2(borderWidth, borderWidth);
   IntVec2 borderBR = bottomRight + IntVec2(borderWidth, borderWidth);
 
-  borderTL = IntVec2Clamp(borderTL, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
-  borderBR = IntVec2Clamp(borderBR, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
+  borderTL = IntVec2Clamp(
+      borderTL, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
+  borderBR = IntVec2Clamp(
+      borderBR, IntVec2(0, 0), IntVec2(image->Width - 1, image->Height - 1));
 
   for (int y = borderTL.y; y <= borderBR.y; ++y)
   {
@@ -279,7 +288,10 @@ void FillPixelBorders(Image* image, IntVec2 topLeft, IntVec2 bottomRight, int bo
   }
 }
 
-void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWidth)
+void AddPixelBorders(Image* image,
+                     int frameWidth,
+                     int frameHeight,
+                     int borderWidth)
 {
   int width = image->Width;
   int height = image->Height;
@@ -302,13 +314,23 @@ void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWi
       int sourceX = x * frameWidth;
       int destX = x * (frameWidth + borderWidth * 2) + borderWidth;
 
-      CopyImage(&output, image, destX, destY, sourceX, sourceY, frameWidth, frameHeight);
+      CopyImage(&output,
+                image,
+                destX,
+                destY,
+                sourceX,
+                sourceY,
+                frameWidth,
+                frameHeight);
 
-      FillPixelBorders(&output, IntVec2(destX, destY), IntVec2(destX + frameWidth - 1, destY + frameHeight - 1), borderWidth);
+      FillPixelBorders(&output,
+                       IntVec2(destX, destY),
+                       IntVec2(destX + frameWidth - 1, destY + frameHeight - 1),
+                       borderWidth);
     }
   }
 
   image->Swap(&output);
 }
 
-}
+} // namespace Zero

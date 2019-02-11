@@ -1,18 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ShapesHelpers.hpp
-/// Contains conversion functions to and from shapes.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------- Conversion Functions
 Ray ToRay(const Segment& segment);
 Segment ToSegment(const Ray& ray, real t = real(1.0));
 
@@ -37,4 +28,4 @@ Obb ToObb(const Capsule& capsule);
 Cylinder ToCylinder(const Capsule& capsule);
 Capsule ToCapsule(const Cylinder& cylinder);
 
-}//namespace Zero
+} // namespace Zero

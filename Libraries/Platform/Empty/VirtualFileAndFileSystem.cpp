@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-//---------------------------------------------------------------- File System
-const Rune  cDirectorySeparatorRune = Rune('/');
+const Rune cDirectorySeparatorRune = Rune('/');
 const char cDirectorySeparatorCstr[] = "/";
 bool cFileSystemCaseSensitive = false;
 
@@ -54,9 +48,9 @@ public:
 };
 
 SystemEntry::SystemEntry() :
-  mParent(nullptr),
-  mType(EntryType::Directory),
-  mModifiedTime(Time::GetTime())
+    mParent(nullptr),
+    mType(EntryType::Directory),
+    mModifiedTime(Time::GetTime())
 {
 }
 
@@ -71,12 +65,12 @@ SystemEntry::~SystemEntry()
 
 SystemEntry* SystemEntry::FindChild(StringParam name)
 {
-  // If we have double slashes with nothing in between, or the starting root / then
-  // there will be an empty entry before it (just return itself always).
+  // If we have double slashes with nothing in between, or the starting root /
+  // then there will be an empty entry before it (just return itself always).
   if (name.Empty())
     return this;
 
-  forRange(SystemEntry& child, mChildren)
+  forRange(SystemEntry & child, mChildren)
   {
     if (child.mName == name)
       return &child;
@@ -87,12 +81,12 @@ SystemEntry* SystemEntry::FindChild(StringParam name)
 
 SystemEntry* SystemEntry::FindOrAddChild(StringParam name, EntryType::Enum type)
 {
-  // If we have double slashes with nothing in between, or the starting root / then
-  // there will be an empty entry before it (just return itself always).
+  // If we have double slashes with nothing in between, or the starting root /
+  // then there will be an empty entry before it (just return itself always).
   if (name.Empty())
     return this;
 
-  forRange(SystemEntry& child, mChildren)
+  forRange(SystemEntry & child, mChildren)
   {
     if (child.mName == name)
       return &child;
@@ -113,7 +107,7 @@ bool SystemEntry::DeleteChild(StringParam name)
   if (name.Empty())
     return Delete();
 
-  forRange(SystemEntry& child, mChildren)
+  forRange(SystemEntry & child, mChildren)
   {
     if (child.mName == name)
       return child.Delete();
@@ -131,7 +125,7 @@ void SystemEntry::CopyTo(SystemEntry* copyTo)
   while (!copyTo->mChildren.Empty())
     copyTo->mChildren.Front().Delete();
 
-  forRange(SystemEntry& child, mChildren)
+  forRange(SystemEntry & child, mChildren)
   {
     SystemEntry* clonedChild = child.CloneUnattached();
     clonedChild->mParent = copyTo;
@@ -146,7 +140,7 @@ SystemEntry* SystemEntry::CloneUnattached()
   clone->mType = mType;
   clone->mFileData = mFileData;
 
-  forRange(SystemEntry& child, mChildren)
+  forRange(SystemEntry & child, mChildren)
   {
     SystemEntry* clonedChild = child.CloneUnattached();
     clonedChild->mParent = clone;
@@ -157,9 +151,9 @@ SystemEntry* SystemEntry::CloneUnattached()
 
 void SystemEntry::AttachTo(SystemEntry* parent)
 {
-  ReturnIf(mParent == nullptr,, "Cannot move the root directory");
+  ReturnIf(mParent == nullptr, , "Cannot move the root directory");
   ReturnIf(mLocked, , "Cannot move a locked file/directory");
-  
+
   EntryList::Unlink(this);
 
   mParent = parent;
@@ -168,8 +162,10 @@ void SystemEntry::AttachTo(SystemEntry* parent)
 
 bool SystemEntry::Delete()
 {
-  ReturnIf(mParent == nullptr, false, "Attempting to delete the root directory");
-  ReturnIf(mLocked, false, "The file/directory is locked and cannot be deleted");
+  ReturnIf(
+      mParent == nullptr, false, "Attempting to delete the root directory");
+  ReturnIf(
+      mLocked, false, "The file/directory is locked and cannot be deleted");
   delete this;
   return true;
 }
@@ -201,8 +197,8 @@ SystemEntry* FileSystem::CreateEntry(StringParam path, EntryType::Enum type)
 
   SystemEntry* entry = &mRoot;
 
-  forRange(String part, fullPath.Split(cDirectorySeparatorCstr))
-    entry = entry->FindOrAddChild(part, EntryType::Directory);
+  forRange(String part, fullPath.Split(cDirectorySeparatorCstr)) entry =
+      entry->FindOrAddChild(part, EntryType::Directory);
 
   entry->mType = type;
   return entry;
@@ -235,7 +231,8 @@ String FileSystem::GetFullPath(StringParam path)
   return FilePath::Combine(mWorkingDirectory, normalizedPath);
 }
 
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
+                                             void* userData)
 {
   FileSystem::Initialize();
 
@@ -250,21 +247,27 @@ FileSystemInitializer::~FileSystemInitializer()
   FileSystem::Destroy();
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath,
+                               DataBlock* stealData,
+                               TimeType modifiedTime)
 {
-  ErrorIf(!PathIsRooted(absolutePath), "The given path should have been an absolute/rooted path");
+  ErrorIf(!PathIsRooted(absolutePath),
+          "The given path should have been an absolute/rooted path");
 
   SystemEntry* entry = nullptr;
 
   // Create our entries for our files based on name, data, and modified time
   // If the size is 0, then it's a directory
-  if (stealData == nullptr || stealData->Data == nullptr || stealData->Size == 0 )
+  if (stealData == nullptr || stealData->Data == nullptr ||
+      stealData->Size == 0)
   {
-    entry = FileSystem::GetInstance()->CreateEntry(absolutePath, EntryType::Directory);
+    entry = FileSystem::GetInstance()->CreateEntry(absolutePath,
+                                                   EntryType::Directory);
   }
   else
   {
-    entry = FileSystem::GetInstance()->CreateEntry(absolutePath, EntryType::File);
+    entry =
+        FileSystem::GetInstance()->CreateEntry(absolutePath, EntryType::File);
 
     // Steal the data from the whoever passed it in
     entry->mFileData.SetData(stealData->Data, stealData->Size);
@@ -277,8 +280,9 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 
 bool PersistFiles()
 {
-  // The VFS has no way of perminantly persisting files, as they actual file system itself may be non-existant.
-  // In the future for platforms we could create a zip here and save it back out (or call a callback).
+  // The VFS has no way of perminantly persisting files, as they actual file
+  // system itself may be non-existant. In the future for platforms we could
+  // create a zip here and save it back out (or call a callback).
   return false;
 }
 
@@ -288,7 +292,8 @@ bool CopyFileInternal(StringParam dest, StringParam source)
   if (!sourceEntry || sourceEntry->mType != EntryType::File)
     return false;
 
-  SystemEntry* destEntry = FileSystem::GetInstance()->CreateEntry(dest, sourceEntry->mType);
+  SystemEntry* destEntry =
+      FileSystem::GetInstance()->CreateEntry(dest, sourceEntry->mType);
   sourceEntry->CopyTo(destEntry);
   return true;
 }
@@ -300,8 +305,9 @@ bool MoveFileInternal(StringParam dest, StringParam source)
     return false;
 
   String dirDest = FilePath::GetDirectoryPath(dest);
-  SystemEntry* dirEntry = FileSystem::GetInstance()->CreateEntry(dirDest, EntryType::Directory);
-  
+  SystemEntry* dirEntry =
+      FileSystem::GetInstance()->CreateEntry(dirDest, EntryType::Directory);
+
   sourceEntry->AttachTo(dirEntry);
   return true;
 }
@@ -313,7 +319,8 @@ bool DeleteFileInternal(StringParam file)
 
 bool DeleteDirectory(StringParam directory)
 {
-  return FileSystem::GetInstance()->DeleteEntry(directory, EntryType::Directory);
+  return FileSystem::GetInstance()->DeleteEntry(directory,
+                                                EntryType::Directory);
 }
 
 bool PathIsRooted(StringParam directoryPath)
@@ -372,7 +379,8 @@ bool FileExists(StringParam filePath)
 bool FileWritable(StringParam filePath)
 {
   SystemEntry* entry = FileSystem::GetInstance()->FindEntry(filePath);
-  return entry == nullptr || (entry->mType == EntryType::File && !entry->mLocked);
+  return entry == nullptr ||
+         (entry->mType == EntryType::File && !entry->mLocked);
 }
 
 bool DirectoryExists(StringParam directoryPath)
@@ -426,14 +434,12 @@ String UniqueFileId(StringParam fullpath)
   return FilePath::Normalize(fullpath);
 }
 
-//----------------------------------------------------------- File Range
 struct FileRangePrivateData
 {
   SystemEntry::EntryList::range mRange;
 };
 
-FileRange::FileRange(StringParam path) :
-  mPath(path)
+FileRange::FileRange(StringParam path) : mPath(path)
 {
   ZeroConstructPrivateData(FileRangePrivateData);
   SystemEntry* entry = FileSystem::GetInstance()->FindEntry(path);
@@ -476,7 +482,6 @@ void FileRange::PopFront()
   self->mRange.PopFront();
 }
 
-//----------------------------------------------------------------------- File
 
 const int File::PlatformMaxPath = 4096;
 
@@ -512,7 +517,11 @@ long long File::CurrentFileSize()
   return Size();
 }
 
-bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
+bool File::Open(StringParam filePath,
+                FileMode::Enum mode,
+                FileAccessPattern::Enum accessPattern,
+                FileShare::Enum share,
+                Status* status)
 {
   ZeroGetPrivateData(FilePrivateData);
 
@@ -570,7 +579,8 @@ void File::Open(OsHandle handle, FileMode::Enum mode)
 void File::Open(Status& status, FILE* file, FileMode::Enum mode)
 {
   ZeroGetPrivateData(FilePrivateData);
-  // We could support this by offering a dual interface where we also store a FILE*
+  // We could support this by offering a dual interface where we also store a
+  // FILE*
   Error("Memory File does not support opening files via FILE");
 }
 
@@ -608,11 +618,14 @@ bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 
   switch (rel)
   {
-  case SeekOrigin::Begin: self->mPosition = (size_t)pos;
+  case SeekOrigin::Begin:
+    self->mPosition = (size_t)pos;
     break;
-  case SeekOrigin::Current: self->mPosition += (size_t)pos;
+  case SeekOrigin::Current:
+    self->mPosition += (size_t)pos;
     break;
-  case SeekOrigin::End: self->mPosition = self->mEntry->mFileData.Size() + (size_t)pos;
+  case SeekOrigin::End:
+    self->mPosition = self->mEntry->mFileData.Size() + (size_t)pos;
     break;
   default:
     return false;
@@ -628,7 +641,8 @@ size_t File::Write(byte* data, size_t sizeInBytes)
   if (!entry)
     return 0;
 
-  size_t newSize = Math::Max(self->mPosition + sizeInBytes, entry->mFileData.Size());
+  size_t newSize =
+      Math::Max(self->mPosition + sizeInBytes, entry->mFileData.Size());
   entry->mFileData.Resize(newSize);
 
   memcpy(entry->mFileData.Data() + self->mPosition, data, sizeInBytes);
@@ -650,7 +664,7 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 
   size_t dataLeft = self->mEntry->mFileData.Size() - self->mPosition;
   sizeInBytes = Math::Min(sizeInBytes, dataLeft);
-  
+
   memcpy(data, self->mEntry->mFileData.Data() + self->mPosition, sizeInBytes);
   self->mPosition += sizeInBytes;
   return sizeInBytes;
@@ -680,12 +694,12 @@ void File::Duplicate(Status& status, File& destinationFile)
 
   if (!self->mEntry || !other->mEntry)
   {
-    status.SetFailed("File is not valid. Open a valid file before attempting file operations.");
+    status.SetFailed("File is not valid. Open a valid file before attempting "
+                     "file operations.");
     return;
   }
 
   self->mEntry->CopyTo(other->mEntry);
 }
 
-
-}//namespace Zero
+} // namespace Zero

@@ -1,34 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ProxyCast.hpp
-/// Declaration of classes for Ray Casting.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
 DeclareBitField8(BaseCastFilterFlags,
-  IgnoreStatic,
-  IgnoreDynamic,
-  IgnoreKinematic,
-  IgnoreGhost,
-  IgnoreChildren,
-  /// Determines whether or not to refine the cast. If this is false,
-  /// it will use an approximation (using AABB's or bounding spheres).
-  /// If it is true, it will check the actual geometry of the object.
-  /// This is initially set.
-  Refine,
-  /// Fills out the contact normal in the cast result if set.
-  GetContactNormal,
-  /// Ignores a cast if it starts inside of the object
-  IgnoreInternalCasts);
+                 IgnoreStatic,
+                 IgnoreDynamic,
+                 IgnoreKinematic,
+                 IgnoreGhost,
+                 IgnoreChildren,
+                 /// Determines whether or not to refine the cast. If this is
+                 /// false, it will use an approximation (using AABB's or
+                 /// bounding spheres). If it is true, it will check the actual
+                 /// geometry of the object. This is initially set.
+                 Refine,
+                 /// Fills out the contact normal in the cast result if set.
+                 GetContactNormal,
+                 /// Ignores a cast if it starts inside of the object
+                 IgnoreInternalCasts);
 
-//------------------------------------------------------------------ Cast Filter
 /// Used to filter objects during cast operations.
 struct BaseCastFilter
 {
@@ -36,7 +27,9 @@ struct BaseCastFilter
 
   BaseCastFilter();
   BaseCastFilter(const BaseCastFilter& rhs);
-  virtual ~BaseCastFilter(){}
+  virtual ~BaseCastFilter()
+  {
+  }
 
   /// Should Colliders with RigidBodies marked Static be ignored during casts?
   /// Note: Collider's with no RigidBody are treated as static.
@@ -45,14 +38,16 @@ struct BaseCastFilter
   /// Should Colliders with RigidBodies marked Dynamic be ignored during casts?
   bool GetIgnoreDynamic();
   void SetIgnoreDynamic(bool state);
-  /// Should Colliders with RigidBodies marked Kinematic be ignored during casts?
+  /// Should Colliders with RigidBodies marked Kinematic be ignored during
+  /// casts?
   bool GetIgnoreKinematic();
   void SetIgnoreKinematic(bool state);
   /// Should Colliders marked Ghost be ignored during casts?
   bool GetIgnoreGhost();
   void SetIgnoreGhost(bool state);
   /// This flag is currently only used for SweepCollider tests on PhysicsSpace.
-  /// This is used to ignore all objects that are a child of the Collider that is being swept.
+  /// This is used to ignore all objects that are a child of the Collider that
+  /// is being swept.
   bool GetIgnoreChildren();
   void SetIgnoreChildren(bool state);
 
@@ -84,15 +79,14 @@ struct Max
   static const size_t Result = (size1 > size2) ? size1 : size2;
 };
 
-//-------------------------------------------------------------------- Cast Data
-/// This is used to avoid code duplication for different casts into 
+/// This is used to avoid code duplication for different casts into
 /// a broad phase.  Used to store data for Ray, Segment, Aabb, and Sphere casts.
 /// NOTE: This structure is getting a little big due to the frustum.
 /// Right now, it only exists once per cast and is passed around by
 /// reference (never copied).
 struct CastData
 {
-  /// NOTE: 'vec' can be either a direction or an end point.  It will be treated 
+  /// NOTE: 'vec' can be either a direction or an end point.  It will be treated
   /// differently depending on what is called (Ray or Segment cast).
   CastData(Vec3Param start, Vec3Param vec);
   CastData(const Ray& ray);
@@ -116,33 +110,38 @@ struct CastData
   Frustum& GetFrustum();
   const Frustum& GetFrustum() const;
 
-  char bytes[Max<Max<Max<Max<sizeof(Ray), sizeof(Segment)>::Result, sizeof(Aabb)>::Result, sizeof(Sphere)>::Result, sizeof(Frustum)>::Result];
+  char bytes[Max<
+      Max<Max<Max<sizeof(Ray), sizeof(Segment)>::Result, sizeof(Aabb)>::Result,
+          sizeof(Sphere)>::Result,
+      sizeof(Frustum)>::Result];
 };
 
 typedef const CastData& CastDataParam;
 
-//----------------------------------------------------------------- ProxyResult
 /// Stores a single result from a broadphase query.
 struct ProxyResult
 {
-  ProxyResult() {}
-  ProxyResult(void* proxy, Vec3Param p1, Vec3Param p2,
-              Vec3Param contactNormal, real time);
+  ProxyResult()
+  {
+  }
+  ProxyResult(void* proxy,
+              Vec3Param p1,
+              Vec3Param p2,
+              Vec3Param contactNormal,
+              real time);
 
   void operator=(const ProxyResult& rhs);
   bool operator==(const ProxyResult& rhs);
   bool operator!=(const ProxyResult& rhs);
 
-  void Set(void* proxy, Vec3 points[2], 
-           Vec3Param contactNormal, real time);
+  void Set(void* proxy, Vec3 points[2], Vec3Param contactNormal, real time);
 
   void* mObjectHit;
 
   Vec3 mPoints[2];
   Vec3 mContactNormal;
 
-  union
-  {
+  union {
     /// Time of collision for a ray cast.
     real mTime;
 
@@ -159,7 +158,6 @@ struct ProxyResult
 
 typedef Array<ProxyResult> ProxyCastResultArray;
 
-//------------------------------------------------------- ProxyCastResults
 /// Internal wrapper around an array of cast results.
 /// Manages adding cast results to the array and keeping them in order
 /// (as well as maintaining the correct size).
@@ -168,22 +166,31 @@ struct ProxyCastResults
   ProxyCastResults(ProxyCastResultArray& array, BaseCastFilter& filter);
 
   /// Attempts to Insert a proxy.  It is inserted in order by shortest time.
-  /// If the array is already filled, it will either replace one already or reject the insertion.
+  /// If the array is already filled, it will either replace one already or
+  /// reject the insertion.
   bool Insert(ProxyResult& proxyResult);
-  /// Note: time is either time or distance. 
-  bool Insert(void* mObjectHit, Vec3 points[2], 
-              Vec3Param normal, real time);
+  /// Note: time is either time or distance.
+  bool Insert(void* mObjectHit, Vec3 points[2], Vec3Param normal, real time);
   /// For volume casting (points are defaulted to Vec3(0,0,0)).
   bool Insert(void* mObjectHit, real distance);
 
   /// Returns the total amount of proxies to be returned for the ray cast.
-  uint GetProxyCount() {return Results.Size();}
+  uint GetProxyCount()
+  {
+    return Results.Size();
+  }
   /// Returns the current amount of proxies that the cast has collided with.
-  uint GetCurrentSize() const {return CurrSize;}
+  uint GetCurrentSize() const
+  {
+    return CurrSize;
+  }
   /// Returns the remaining amount of new proxies to be accepted.
-  /// You can still Insert when this returns 0, but it will either deny 
+  /// You can still Insert when this returns 0, but it will either deny
   /// it (if it's time is too long), or replace one with it.
-  uint GetRemainingSize() {return Results.Size() - CurrSize;}
+  uint GetRemainingSize()
+  {
+    return Results.Size() - CurrSize;
+  }
 
   /// Merges two sets of results.  Used for combining separate casts into
   /// Dynamic and Static broad phases for optimizations.
@@ -210,4 +217,4 @@ private:
   bool IsValid(void* mObjectHit);
 };
 
-}//namespace Zero
+} // namespace Zero

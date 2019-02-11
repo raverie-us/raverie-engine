@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -113,17 +108,19 @@ void PositionJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void PositionJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
 }
 
-uint PositionJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint PositionJoint::GetAtomIndexFilter(uint atomIndex,
+                                       real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;
@@ -149,6 +146,6 @@ uint PositionJoint::GetDefaultSpringIds() const
   return AllAxes;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -17,25 +12,23 @@ namespace Events
 {
 DeclareEvent(SplineModified);
 DeclareEvent(QuerySpline);
-}//namespace Events
+} // namespace Events
 
-//-------------------------------------------------------------------SplineEvent
 /// Event sent out for notifications about a spline
 class SplineEvent : public Event
 {
 public:
   ZilchDeclareType(SplineEvent, TypeCopyMode::ReferenceType);
-  
+
   SplineEvent();
   SplineEvent(Spline* spline);
-  
+
   Spline* GetSpline() const;
   void SetSpline(Spline* spline);
-  
+
   HandleOf<Spline> mSpline;
 };
 
-//-------------------------------------------------------------------SplineControlPoint
 /// Data for a spline's control point
 class SplineControlPoint
 {
@@ -49,7 +42,6 @@ public:
   Vec3 mPosition;
 };
 
-//-------------------------------------------------------------------SplineControlPoints
 /// Control points for the Spline class. Modifying this will cause the spline to
 /// be marked as modified to rebuild the baked curve when needed.
 class SplineControlPoints : public SafeId32Object
@@ -79,7 +71,6 @@ public:
   Spline* mOwner;
 };
 
-//-------------------------------------------------------------------SplineBakedPoint
 /// Data for a spline's baked point
 class SplineBakedPoint
 {
@@ -93,8 +84,8 @@ public:
   Vec3 mPosition;
 };
 
-//-------------------------------------------------------------------SplineBakedPoints
-/// Read-only baked points for the Spline class. Will auto-recompute if the control points have changed.
+/// Read-only baked points for the Spline class. Will auto-recompute if the
+/// control points have changed.
 class SplineBakedPoints : SafeId32Object
 {
 public:
@@ -109,7 +100,6 @@ public:
   Spline* mOwner;
 };
 
-//-------------------------------------------------------------------SplineSampleData
 /// Returned data from sampling a spline at a given arc-length distance.
 class SplineSampleData
 {
@@ -124,10 +114,10 @@ public:
   Vec3 mTangent;
 };
 
-//-------------------------------------------------------------------Spline
 /// A spline built from control points. Bakes out the curve using an error
-/// term (distance from actual spline). Provides an interface to sample the curve
-/// at a given arc-length distance in order to provide constant speed interpolation.
+/// term (distance from actual spline). Provides an interface to sample the
+/// curve at a given arc-length distance in order to provide constant speed
+/// interpolation.
 class Spline : public ReferenceCountedEventObject
 {
 public:
@@ -159,8 +149,9 @@ public:
   /// Samples the curve with a time in the range of [0, 1].
   SplineSampleData SampleNormalized(float time);
 
-  /// Rebuild the baked points from the control points if they have changed. Should not need to be manually
-  /// called unless the user wants to control the timing when the points are baked.
+  /// Rebuild the baked points from the control points if they have changed.
+  /// Should not need to be manually called unless the user wants to control the
+  /// timing when the points are baked.
   void RebuildIfModified();
   /// Forcibly rebuild the baked points from the control points.
   void ForceRebuild();
@@ -169,7 +160,8 @@ public:
 
   /// The control points used to bake out the curve.
   SplineControlPoints* GetControlPoints();
-  /// The read-only curve points baked out to line segments using the provided error.
+  /// The read-only curve points baked out to line segments using the provided
+  /// error.
   SplineBakedPoints* GetBakedPoints();
 
 private:
@@ -184,4 +176,4 @@ private:
   Math::BakedCurve mBakedCurve;
 };
 
-}//namespace Zero
+} // namespace Zero

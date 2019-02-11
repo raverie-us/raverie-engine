@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -49,8 +44,8 @@ ZilchDefineType(WeldJoint, builder, type)
 WeldJoint::WeldJoint()
 {
   mConstraintFilter = sInfo.mOnAtomMask << DefaultOffset;
-  mAnchors.mBodyR[0] = Vec3(0,1,0);
-  mAnchors.mBodyR[1] = Vec3(0,-1,0);
+  mAnchors.mBodyR[0] = Vec3(0, 1, 0);
+  mAnchors.mBodyR[1] = Vec3(0, -1, 0);
 }
 
 void WeldJoint::Serialize(Serializer& stream)
@@ -129,23 +124,25 @@ void WeldJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void WeldJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
   DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
   DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
 }
 
-uint WeldJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint WeldJoint::GetAtomIndexFilter(uint atomIndex,
+                                   real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
-  if(atomIndex < 3)
+  if (atomIndex < 3)
     return LinearAxis;
-  else if(atomIndex < 6)
+  else if (atomIndex < 6)
     return AngularAxis;
   return 0;
 }
@@ -170,6 +167,6 @@ uint WeldJoint::GetDefaultSpringIds() const
   return AllLinearAxes;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

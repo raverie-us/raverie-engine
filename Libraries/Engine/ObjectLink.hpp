@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,15 +6,14 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(ObjectLinkChanged);
-  DeclareEvent(ObjectLinkPointChanged);
-}//namespace Events
+DeclareEvent(ObjectLinkChanged);
+DeclareEvent(ObjectLinkPointChanged);
+} // namespace Events
 
 class ObjectLink;
 class ObjectLinkAnchor;
 class ObjectLinkRange;
 
-//-------------------------------------------------------------------ObjectLinkEdge
 /// A directed edge between a cog and an object link.
 class ObjectLinkEdge
 {
@@ -34,10 +28,11 @@ public:
 
   /// The cog that this edge on the object link is connected to.
   Cog* GetSelfCog();
-  /// The other cog that the object link is connected to (the one not part of this edge).
+  /// The other cog that the object link is connected to (the one not part of
+  /// this edge).
   Cog* GetOtherCog();
   /// The object link that this edge is connected to.
-  ObjectLink* GetObjectLink();  
+  ObjectLink* GetObjectLink();
 
 private:
   friend class ObjectLinkAnchor;
@@ -48,12 +43,11 @@ private:
 
   void Set(ObjectLink* link, Cog* cog);
   void Clear();
-  
+
   HandleOf<ObjectLink> mObjectLinkHandle;
   HandleOf<ObjectLinkAnchor> mSelfAnchorHandle;
 };
 
-//-------------------------------------------------------------------ObjectLinkRange
 /// A range to iterate over all ObjectLinkEdges on a cog.
 /// An edge allows you to go between on object link and both cogs in the link.
 class ObjectLinkRange
@@ -78,7 +72,6 @@ private:
   EdgeList::range mRange;
 };
 
-//-------------------------------------------------------------------ObjectLinkAnchor
 /// Component used to keep track of what ObjectLinks a cog has. This component
 /// is added dynamically whenever a ObjectLink is added to a cog that did not
 /// contain an ObjectLink before. This can be used to traverse across linked
@@ -90,7 +83,10 @@ public:
 
   // Component Interface
   void OnDestroy(uint flags) override;
-  bool ShouldSerialize() override { return false; }
+  bool ShouldSerialize() override
+  {
+    return false;
+  }
 
   /// The range of object link edges connected to this anchor.
   ObjectLinkRange GetObjectLinks();
@@ -102,10 +98,9 @@ public:
   EdgeList mEdges;
 };
 
-//-------------------------------------------------------------------ObjectLink
-/// Forms a link between two positions on two objects. ObjectLinks are used primarily by physics
-/// to represent joints, but can also be used by graphics, gameplay, etc...
-/// to represent some connection between two objects.
+/// Forms a link between two positions on two objects. ObjectLinks are used
+/// primarily by physics to represent joints, but can also be used by graphics,
+/// gameplay, etc... to represent some connection between two objects.
 class ObjectLink : public Component
 {
 public:
@@ -129,10 +124,12 @@ public:
   CogPath GetObjectBPath();
   void SetObjectBPath(CogPath& path);
 
-  /// The first object that is being connected to. Set this to null to clear the link.
+  /// The first object that is being connected to. Set this to null to clear the
+  /// link.
   Cog* GetObjectA();
   void SetObjectA(Cog* cog);
-  /// The second object that is being connected to. Set this to null to clear the link.
+  /// The second object that is being connected to. Set this to null to clear
+  /// the link.
   Cog* GetObjectB();
   void SetObjectB(Cog* cog);
 
@@ -148,17 +145,22 @@ public:
   void SetWorldPointA(Vec3Param worldPoint);
   /// The point on object B in world space.
   Vec3 GetWorldPointB();
-  void SetWorldPointB(Vec3Param worldPoint);  
+  void SetWorldPointB(Vec3Param worldPoint);
 
-  // Returns a position used to represent the link. If both objects have at transform
-  // this will be the center of the two points in world space. If only one object has a
-  // transform then this will be the world point on that object. Otherwise this will just
-  // be the center of the local points relative to the origin.
+  // Returns a position used to represent the link. If both objects have at
+  // transform this will be the center of the two points in world space. If only
+  // one object has a transform then this will be the world point on that
+  // object. Otherwise this will just be the center of the local points relative
+  // to the origin.
   Vec3 GetWorldPosition();
 
   // Internals
 
-  enum ObjectIndex { IndexA = 0, IndexB = 1 };
+  enum ObjectIndex
+  {
+    IndexA = 0,
+    IndexB = 1
+  };
 
   void OnObjectAChanged(Event* e);
   void OnObjectBChanged(Event* e);
@@ -187,7 +189,6 @@ public:
   bool mValid;
 };
 
-//-------------------------------------------------------------------ObjectLinkEvent
 /// An event sent when an object link changes one of its link edges.
 class ObjectLinkEvent : public Event
 {
@@ -206,7 +207,6 @@ public:
   uint EdgeId;
 };
 
-//-------------------------------------------------------------------ObjectLinkPointChangedEvent
 class ObjectLinkPointChangedEvent : public Event
 {
 public:
@@ -222,4 +222,4 @@ public:
   uint mEdgeId;
 };
 
-}//namespace Zero
+} // namespace Zero

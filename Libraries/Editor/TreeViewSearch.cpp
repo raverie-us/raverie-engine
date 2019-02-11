@@ -1,16 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-TreeViewSearch::TreeViewSearch(Composite* parent, TreeView* treeView, DataSourceFilter* filter)
-  :Composite(parent)
+TreeViewSearch::TreeViewSearch(Composite* parent,
+                               TreeView* treeView,
+                               DataSourceFilter* filter) :
+    Composite(parent)
 {
   mTreeView = treeView;
   mFiltered = filter;
@@ -35,7 +32,7 @@ TreeViewSearch::TreeViewSearch(Composite* parent, TreeView* treeView, DataSource
 
   ConnectThisTo(mSearchField, Events::TextChanged, OnTextEntered);
   ConnectThisTo(mSearchField, Events::KeyDown, OnKeyDown);
-  ConnectThisTo(mSearchField, Events::KeyRepeated, OnKeyDown);  
+  ConnectThisTo(mSearchField, Events::KeyRepeated, OnKeyDown);
 }
 
 TreeViewSearch::~TreeViewSearch()
@@ -45,7 +42,7 @@ TreeViewSearch::~TreeViewSearch()
 
 void TreeViewSearch::OnKeyDown(KeyboardEvent* event)
 {
-  if(event->Key == Keys::Enter)
+  if (event->Key == Keys::Enter)
   {
     // When enter is press cancel the search
     // and select the item
@@ -55,42 +52,38 @@ void TreeViewSearch::OnKeyDown(KeyboardEvent* event)
     // normally there will be only one row
     Array<DataIndex> selectedIndices;
     mTreeView->GetSelection()->GetSelected(selectedIndices);
-    forRange(DataIndex index, selectedIndices.All())
-      mTreeView->ShowRow(index);
+    forRange(DataIndex index, selectedIndices.All()) mTreeView->ShowRow(index);
 
     // Move focus to the tree view
     mTreeView->TryTakeFocus();
   }
 
-  if(event->Key == Keys::Down || 
-     event->Key == Keys::Up)
+  if (event->Key == Keys::Down || event->Key == Keys::Up)
   {
     // Just forward the key logic
     // to move which item selected
     mTreeView->HandleKeyLogic(event);
   }
 
-
-  if(event->Key == Keys::Escape)
+  if (event->Key == Keys::Escape)
     CancelFilter();
 }
 
-
 void TreeViewSearch::OnTextEntered(Event* event)
 {
-  if(!mSearchField->HasFocus())
+  if (!mSearchField->HasFocus())
     return;
 
   // If the text has been cleared cancel the filter
   String currentText = mSearchField->GetText();
-  if(currentText.Empty())
+  if (currentText.Empty())
   {
     CancelFilter();
     return;
   }
 
   // Change to filtered list if not already active
-  if(mUnFiltered == nullptr)
+  if (mUnFiltered == nullptr)
   {
     mUnFiltered = mTreeView->mDataSource;
     ConnectThisTo(mUnFiltered, Events::DataDestroyed, OnSourceDestroy);
@@ -106,7 +99,7 @@ void TreeViewSearch::OnTextEntered(Event* event)
 
 void TreeViewSearch::OnSourceDestroy(Event* event)
 {
-  // Data source that is being filtered has been destroyed 
+  // Data source that is being filtered has been destroyed
   // Cancel the filter
   mUnFiltered = nullptr;
   CancelFilter();
@@ -114,11 +107,11 @@ void TreeViewSearch::OnSourceDestroy(Event* event)
 
 void TreeViewSearch::OnDataModified(Event* event)
 {
-  // The data source that is being filtered has 
+  // The data source that is being filtered has
   // been modified
 
   // Refilter the list with new objects
-  if(mFiltered)
+  if (mFiltered)
   {
     mFiltered->Filter(mSearchField->GetText());
     mTreeView->Refresh();
@@ -128,7 +121,7 @@ void TreeViewSearch::OnDataModified(Event* event)
 void TreeViewSearch::CancelFilter()
 {
   mSearchField->SetText(String());
-  if(mUnFiltered)
+  if (mUnFiltered)
   {
     mUnFiltered->GetDispatcher()->Disconnect(this);
     mTreeView->SetDataSource(mUnFiltered);
@@ -140,4 +133,4 @@ void TreeViewSearch::CancelFilter()
   mTreeView->ShowSelected();
 }
 
-}
+} // namespace Zero

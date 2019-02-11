@@ -1,20 +1,35 @@
-// Authors: Nathan Carlson
-// Copyright 2015, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-void ResizeImage(TextureFormat::Enum format, const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstImage, uint dstWidth, uint dstHeight);
+void ResizeImage(TextureFormat::Enum format,
+                 const byte* srcImage,
+                 uint srcWidth,
+                 uint srcHeight,
+                 byte* dstImage,
+                 uint dstWidth,
+                 uint dstHeight);
 
-void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureFormat::Enum format, const byte* image);
-void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, TextureFormat::Enum format, byte*& image);
+void ToNvttSurface(nvtt::Surface& surface,
+                   uint width,
+                   uint height,
+                   TextureFormat::Enum format,
+                   const byte* image);
+void FromNvttSurface(const nvtt::Surface& surface,
+                     uint& width,
+                     uint& height,
+                     TextureFormat::Enum format,
+                     byte*& image);
 
 class TextureImporter
 {
 public:
-  TextureImporter(StringParam inputFile, StringParam outputFile, StringParam metaFile);
+  TextureImporter(StringParam inputFile,
+                  StringParam outputFile,
+                  StringParam metaFile);
   ~TextureImporter();
 
   ImageProcessorCodes::Enum ProcessTexture(Status& status);

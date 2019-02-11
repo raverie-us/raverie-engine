@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SelectionHistory.hpp
-/// 
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2010-2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -28,11 +20,11 @@ SelectionHistory::~SelectionHistory()
 bool IsEqual(MetaSelection* selection, HandleParam object)
 {
   // If the given object is a selection, compare the contents of the selections
-  if(MetaSelection* objectSelection = object.Get<MetaSelection*>())
+  if (MetaSelection* objectSelection = object.Get<MetaSelection*>())
     return selection->IsEqual(objectSelection);
 
   // If there's only one object in the selection, compare it with the given obj
-  if(selection->Count() == 1)
+  if (selection->Count() == 1)
     return selection->GetPrimary() == object;
 
   return false;
@@ -40,17 +32,17 @@ bool IsEqual(MetaSelection* selection, HandleParam object)
 
 MetaSelection* SelectionHistory::Advance(HandleParam object)
 {
-  if(mLocked)
+  if (mLocked)
     return nullptr;
 
-  if(mCurrent)
+  if (mCurrent)
   {
     // If the objects are the same, we don't want to do anything
-    if(IsEqual(mCurrent, object))
+    if (IsEqual(mCurrent, object))
       return nullptr;
 
     // If the current selection is empty, don't add it to the history
-    if(mCurrent->Empty())
+    if (mCurrent->Empty())
       delete mCurrent;
     else
       mPrevious.PushBack(mCurrent);
@@ -61,7 +53,7 @@ MetaSelection* SelectionHistory::Advance(HandleParam object)
 
   // If it's already a selection, just copy it over. Otherwise, create
   // a selection for the new object
-  if(MetaSelection* selection = object.Get<MetaSelection*>())
+  if (MetaSelection* selection = object.Get<MetaSelection*>())
     localSelection->Copy(*selection, SendsEvents::False);
   else
     localSelection->SelectOnly(object);
@@ -72,11 +64,11 @@ MetaSelection* SelectionHistory::Advance(HandleParam object)
 
 void SelectionHistory::ShowObject()
 {
-  if(!mCurrent)
+  if (!mCurrent)
     return;
 
   Handle primary = mCurrent->GetPrimary();
-  if(Cog* cog = primary.Get<Cog*>())
+  if (Cog* cog = primary.Get<Cog*>())
   {
     Space* space = cog->GetSpace();
     Z::gEditor->mManager->ShowWidgetWith(space);
@@ -110,9 +102,9 @@ void SelectionHistory::MovedToObject(MetaSelection* selection)
 
 void SelectionHistory::Next()
 {
-  if(!mNext.Empty())
+  if (!mNext.Empty())
   {
-    if(mCurrent)
+    if (mCurrent)
       mPrevious.PushBack(mCurrent);
 
     MetaSelection* selection = mNext.Back();
@@ -125,9 +117,9 @@ void SelectionHistory::Next()
 
 void SelectionHistory::Previous()
 {
-  if(!mPrevious.Empty())
+  if (!mPrevious.Empty())
   {
-    if(mCurrent)
+    if (mCurrent)
       mNext.PushBack(mCurrent);
 
     MetaSelection* selection = mPrevious.Back();
@@ -138,4 +130,4 @@ void SelectionHistory::Previous()
   }
 }
 
-}//namespace Zero
+} // namespace Zero

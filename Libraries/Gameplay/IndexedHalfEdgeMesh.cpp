@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///  
-///  Authors: Joshua Davis
-///  Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "IndexedHalfEdgeMesh.hpp"
@@ -11,14 +6,14 @@
 namespace Zero
 {
 
-#define DefineHalfEdgeArrayType(arrayType)  \
-  ZilchDefineType(arrayType, builder, type) \
-  {                                         \
-    ZeroBindDocumented();                   \
-                                            \
-    ZilchBindMethod(Get);                   \
-    ZilchBindGetter(All);                   \
-    ZilchBindGetterProperty(Count);         \
+#define DefineHalfEdgeArrayType(arrayType)                                     \
+  ZilchDefineType(arrayType, builder, type)                                    \
+  {                                                                            \
+    ZeroBindDocumented();                                                      \
+                                                                               \
+    ZilchBindMethod(Get);                                                      \
+    ZilchBindGetter(All);                                                      \
+    ZilchBindGetterProperty(Count);                                            \
   }
 
 DefineHalfEdgeArrayType(IndexedHalfEdgeMeshVertexArray);
@@ -26,7 +21,6 @@ DefineHalfEdgeArrayType(IndexedHalfEdgeMeshEdgeArray);
 DefineHalfEdgeArrayType(IndexedHalfEdgeFaceEdgeIndexArray);
 DefineHalfEdgeArrayType(IndexedHalfEdgeMeshFaceArray);
 
-//-------------------------------------------------------------------IndexedHalfEdge
 ZilchDefineType(IndexedHalfEdge, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -36,7 +30,6 @@ ZilchDefineType(IndexedHalfEdge, builder, type)
   ZilchBindFieldGetter(mFaceIndex);
 }
 
-//-------------------------------------------------------------------IndexedHalfEdgeFace
 ZilchDefineType(IndexedHalfEdgeFace, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -54,7 +47,6 @@ IndexedHalfEdgeFace::BoundEdgeArray* IndexedHalfEdgeFace::GetEdges()
   return &mBoundEdges;
 }
 
-//-------------------------------------------------------------------IndexedHalfEdgeMesh
 ZilchDefineType(IndexedHalfEdgeMesh, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -77,9 +69,9 @@ void IndexedHalfEdgeMesh::Create(int vertexCount, int edgeCount, int faceCount)
   mVertices.Resize(vertexCount);
   mEdges.Resize(edgeCount);
   mFaces.Resize(faceCount);
-  for(int i = 0; i < edgeCount; ++i)
+  for (int i = 0; i < edgeCount; ++i)
     mEdges[i] = new IndexedHalfEdge();
-  for(int i = 0; i < faceCount; ++i)
+  for (int i = 0; i < faceCount; ++i)
     mFaces[i] = new IndexedHalfEdgeFace();
 }
 
@@ -107,4 +99,4 @@ IndexedHalfEdgeMesh::BoundFaceArray* IndexedHalfEdgeMesh::GetFaces()
   return &mBoundFaces;
 }
 
-}// namespace Zero
+} // namespace Zero

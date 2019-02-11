@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file EditorHotspots.hpp
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -13,7 +6,7 @@ namespace Zero
 class MouseEvent;
 class TextEditor;
 
-// Simple Hyper links 
+// Simple Hyper links
 // Opens link on click
 // Matches: http://zero.digipen.edu/
 class HyperLinkHotspot : public TextEditorHotspot
@@ -35,7 +28,7 @@ public:
 
 // Resource Hotspot
 // Edits resource on click
-// Matches: 5423f6b5995af33f:ResourceName 
+// Matches: 5423f6b5995af33f:ResourceName
 class ResourceHotspot : public TextEditorHotspot
 {
 public:
@@ -63,4 +56,4 @@ public:
   void OnClick(Matches& matches) override;
 };
 
-}
+} // namespace Zero

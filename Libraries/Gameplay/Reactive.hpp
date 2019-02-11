@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Reactive.hpp
-/// Declaration of the Reactive component class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,7 +8,6 @@ class MouseEvent;
 
 DeclareBitField3(MouseCaptureButtons, Left, Right, Middle);
 
-//--------------------------------------------------------------------- Reactive
 /// Reactive component allows the object to react to mouse events.
 /// Uses the collision volume of the collider on this composition for picking.
 class Reactive : public Component
@@ -28,12 +19,12 @@ public:
   Reactive();
   ~Reactive();
 
-  //Component Interface
+  // Component Interface
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
   void SetDefaults() override;
 
-  //Events
+  // Events
   void OnLeftMouseDown(MouseEvent* event);
   void OnLeftMouseUp(MouseEvent* event);
   void OnMiddleMouseDown(MouseEvent* event);
@@ -45,14 +36,13 @@ public:
   bool mActive;
 };
 
-//--------------------------------------------------------------- Reactive Space
 class ReactiveSpace : public Component
 {
 public:
   // Meta Initialization
   ZilchDeclareType(ReactiveSpace, TypeCopyMode::ReferenceType);
 
-  //Component Interface
+  // Component Interface
   void Serialize(Serializer& stream) override;
 
   Cog* GetOver();

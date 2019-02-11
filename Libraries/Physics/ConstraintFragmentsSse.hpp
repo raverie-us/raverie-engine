@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ConstraintFragmentsSse.hpp
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "SimMath.hpp"
@@ -18,15 +11,14 @@ namespace Zero
 namespace Physics
 {
 
-using Math::Simd::SimVec;
-using Math::Simd::SimVecRef;
-using Math::Simd::SimVecParam;
 using Math::Simd::SimMat3;
 using Math::Simd::SimMat3Param;
+using Math::Simd::SimVec;
+using Math::Simd::SimVecParam;
+using Math::Simd::SimVecRef;
 using namespace Math;
 
-ZeroPreAlign16
-struct Vec3_16 : public Vec3
+ZeroPreAlign16 struct Vec3_16 : public Vec3
 {
   Vec3_16& operator=(Vec3Param data)
   {
@@ -35,8 +27,7 @@ struct Vec3_16 : public Vec3
   }
 } ZeroPostAlign16;
 
-ZeroPreAlign16
-struct Vec4_16 : public Vec4
+ZeroPreAlign16 struct Vec4_16 : public Vec4
 {
   Vec4_16& operator=(Vec4Param data)
   {
@@ -52,8 +43,14 @@ SimInline real SimVecToReal(SimVecParam v)
   return vals[0];
 }
 
-SimInline SimVec ComputeLambdaSse(SimVecParam v0, SimVecParam w0, SimVecParam v1, SimVecParam w1, 
-                                  SimVecParam L0, SimVecParam A0, SimVecParam L1, SimVecParam A1, 
+SimInline SimVec ComputeLambdaSse(SimVecParam v0,
+                                  SimVecParam w0,
+                                  SimVecParam v1,
+                                  SimVecParam w1,
+                                  SimVecParam L0,
+                                  SimVecParam A0,
+                                  SimVecParam L1,
+                                  SimVecParam A1,
                                   ConstraintMolecule& mol)
 {
   SimVec cDot = Simd::Multiply(v0, L0);
@@ -78,14 +75,20 @@ SimInline SimVec ComputeLambdaSse(SimVecParam v0, SimVecParam w0, SimVecParam v1
   impulse = Simd::Clamp(Simd::Add(oldImpulse, lambda), minImpulse, maxImpulse);
   lambda = Simd::Subtract(impulse, oldImpulse);
 
-  //save the accumulated impulse
+  // save the accumulated impulse
   mol.mImpulse = SimVecToReal(impulse);
-  //return the lambda to apply
+  // return the lambda to apply
   return lambda;
 }
 
-SimInline void SolveConstraintSse(SimVecRef v0, SimVecRef w0, SimVecRef v1, SimVecRef w1, 
-                                  SimVecParam m0, SimMat3Param i0, SimVecParam m1, SimMat3Param i1,
+SimInline void SolveConstraintSse(SimVecRef v0,
+                                  SimVecRef w0,
+                                  SimVecRef v1,
+                                  SimVecRef w1,
+                                  SimVecParam m0,
+                                  SimMat3Param i0,
+                                  SimVecParam m1,
+                                  SimMat3Param i1,
                                   ConstraintMolecule& mol)
 {
   SimVec L0 = Simd::UnAlignedLoad(mol.mJacobian.Linear[0].array);
@@ -101,6 +104,6 @@ SimInline void SolveConstraintSse(SimVecRef v0, SimVecRef w0, SimVecRef v1, SimV
   w1 = Simd::MultiplyAdd(Simd::Transform(i1, A1), lambda, w1);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

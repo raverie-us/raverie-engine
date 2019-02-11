@@ -1,21 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------------------------- Attenuation Per Listener
+//Attenuation Per Listener
 
 class AttenuationPerListener
 {
 public:
-  AttenuationPerListener() : PreviousVolume(0) {}
+  AttenuationPerListener() : PreviousVolume(0)
+  {
+  }
 
   // Volume used last mix for this listener
   float PreviousVolume;
@@ -23,15 +20,21 @@ public:
   LowPassFilter LowPass;
 };
 
-//---------------------------------------------------------------------------------- Attenuator Node
+//Attenuator Node
 
 class AttenuatorNode : public SimpleCollapseNode
 {
 public:
   ZilchDeclareType(AttenuatorNode, TypeCopyMode::ReferenceType);
 
-  AttenuatorNode(StringParam name, const unsigned ID, Math::Vec3Param position, float startDistance,
-    float endDistance, float minVolume, const FalloffCurveType::Enum curveType, Array<Math::Vec3> *customCurveData);
+  AttenuatorNode(StringParam name,
+                 const unsigned ID,
+                 Math::Vec3Param position,
+                 float startDistance,
+                 float endDistance,
+                 float minVolume,
+                 const FalloffCurveType::Enum curveType,
+                 Array<Math::Vec3>* customCurveData);
   ~AttenuatorNode();
 
   // Sets the current position of the attenuator
@@ -43,7 +46,8 @@ public:
   // Sets the minimum volume reached at the furthest distance
   void SetMinimumVolume(float volume);
   // Sets the curve type used by the attenuator
-  void SetCurveType(const FalloffCurveType::Enum type, Array<Math::Vec3> *customCurveData);
+  void SetCurveType(const FalloffCurveType::Enum type,
+                    Array<Math::Vec3>* customCurveData);
   // Sets whether the attenuator should apply a low pass filter
   void SetUsingLowPass(bool useLowPass);
   // Sets the distance to start applying the low pass filter
@@ -52,14 +56,17 @@ public:
   void SetLowPassCutoffFreq(float frequency);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels,
-    ListenerNode* listener, const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer,
+                        const unsigned numberOfChannels,
+                        ListenerNode* listener,
+                        const bool firstRequest) override;
   float GetVolumeChangeFromOutputsThreaded() override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void UpdateDistanceInterpolator();
   void UpdateLowPassInterpolator();
 
-  typedef Zero::HashMap<ListenerNode*, AttenuationPerListener*> DataPerListenerMapType;
+  typedef Zero::HashMap<ListenerNode*, AttenuationPerListener*>
+      DataPerListenerMapType;
 
   // Previous volume and low pass for each listener
   DataPerListenerMapType DataPerListener;

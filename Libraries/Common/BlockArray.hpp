@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BlockArray.hpp
-/// Declaration of the BlockArray container.
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "ContainerCommon.hpp"
@@ -16,10 +8,12 @@
 namespace Zero
 {
 
-///Generic front deque array class. Store objects in buckets of a 1 << shiftSize.
-///Fast when the total number of objects being inserted is not known.
-///Currently hardcoded as only storing pod types.
-template<typename type, uint shiftSize = 6, typename Allocator = DefaultAllocator>
+/// Generic front deque array class. Store objects in buckets of a 1 <<
+/// shiftSize. Fast when the total number of objects being inserted is not known.
+/// Currently hardcoded as only storing pod types.
+template <typename type,
+          uint shiftSize = 6,
+          typename Allocator = DefaultAllocator>
 class PodBlockArray : public AllocationContainer<Allocator>
 {
 public:
@@ -39,8 +33,8 @@ public:
     /*used to determine the size of a bucket as well as to mask off
     the lower bits and determine the number of buckets*/
     ShiftSize = shiftSize,
-    BucketSize = 1 << ShiftSize,//the size of a bucket (how many objects)
-    BucketMask = BucketSize - 1,//mask to determine the index within a bucket
+    BucketSize = 1 << ShiftSize, // the size of a bucket (how many objects)
+    BucketMask = BucketSize - 1, // mask to determine the index within a bucket
   };
 
   struct iterator
@@ -84,8 +78,8 @@ public:
 
     bool operator==(const iterator& other)
     {
-      if(mBlockArray == other.mBlockArray && 
-         mCurrentIndex == other.mCurrentIndex)
+      if (mBlockArray == other.mBlockArray &&
+          mCurrentIndex == other.mCurrentIndex)
         return true;
       return false;
     }
@@ -106,8 +100,8 @@ public:
 
   struct range
   {
-    typedef typename this_type::value_type      value_type;
-    typedef value_type                          contiguousRangeType;
+    typedef typename this_type::value_type value_type;
+    typedef value_type contiguousRangeType;
 
     range()
     {
@@ -147,16 +141,22 @@ public:
 
     iterator Begin()
     {
-      return iterator(mBlockArray,mCurrentIndex);
+      return iterator(mBlockArray, mCurrentIndex);
     }
 
     iterator End()
     {
-      return iterator(mBlockArray,mEndIndex);
+      return iterator(mBlockArray, mEndIndex);
     }
 
-    range& All() { return *this; }
-    const range& All() const { return *this; }
+    range& All()
+    {
+      return *this;
+    }
+    const range& All() const
+    {
+      return *this;
+    }
 
     this_type* mBlockArray;
     size_type mCurrentIndex;
@@ -228,7 +228,7 @@ public:
 
   iterator Begin()
   {
-    return iterator(this,0);
+    return iterator(this, 0);
   }
 
   iterator End()
@@ -262,52 +262,52 @@ public:
 
   void PushBack(const_reference item)
   {
-    //if adding one object causes us to go over our capacity,
-    //then increase our capacity by one bucket
-    if(mSize >= mCapacity)
+    // if adding one object causes us to go over our capacity,
+    // then increase our capacity by one bucket
+    if (mSize >= mCapacity)
       ChangeCapacity(mCapacity + 1);
 
-    //Insert the new item at the last index
+    // Insert the new item at the last index
     (*this)[mSize] = item;
     ++mSize;
   }
-  
+
   reference PushBack()
   {
-    //see the above PushBack
-    if(mSize >= mCapacity)
+    // see the above PushBack
+    if (mSize >= mCapacity)
       ChangeCapacity(mCapacity + 1);
 
-    //we aren't filling in the last item, just giving
-    //back a reference for the user to fill out
+    // we aren't filling in the last item, just giving
+    // back a reference for the user to fill out
     ++mSize;
     return (*this)[mSize - 1];
   }
 
   void PopBack()
   {
-    ErrorIf(mSize == 0,"Empty block array, can not pop back element.");
-    //don't change capacity at all, just decrement our size
+    ErrorIf(mSize == 0, "Empty block array, can not pop back element.");
+    // don't change capacity at all, just decrement our size
     //(since we are pod we don't have to call a destructor on the last item)
     --mSize;
   }
 
   void Clear()
   {
-    //pod assumption, don't call destructors on the objects
+    // pod assumption, don't call destructors on the objects
     mSize = 0;
   }
 
   void Deallocate()
   {
     size_type bucketCount = BucketCountFromSize(mCapacity);
-    //deallocate all of our buckets
-    for(uint i = 0; i < bucketCount; ++i)
+    // deallocate all of our buckets
+    for (uint i = 0; i < bucketCount; ++i)
       mAllocator.Deallocate(mData[i], sizeof(value_type) * BucketSize);
-    //now deallocate the array of our buckets
+    // now deallocate the array of our buckets
     mAllocator.Deallocate(mData, sizeof(pointer) * bucketCount);
 
-    //reset members so array can still be used
+    // reset members so array can still be used
     mSize = 0;
     mCapacity = 0;
     mData = nullptr;
@@ -315,32 +315,35 @@ public:
 
   void ChangeCapacity(size_type newCapacity)
   {
-    //we never shrink at the moment, so if the capacity is the same or less do nothing
-    if(newCapacity <= mCapacity)
+    // we never shrink at the moment, so if the capacity is the same or less do
+    // nothing
+    if (newCapacity <= mCapacity)
       return;
 
-    //round capacity up to the next bucket size
-    if(newCapacity & BucketMask)
+    // round capacity up to the next bucket size
+    if (newCapacity & BucketMask)
       newCapacity = (newCapacity & ~BucketMask) + (1 << ShiftSize);
 
     size_type newBucketSize = BucketCountFromSize(newCapacity);
     size_type oldBucketSize = BucketCountFromSize(mCapacity);
-    //allocate our new array of buckets
-    pointer* newData = (pointer*)mAllocator.Allocate(newBucketSize * sizeof(pointer));
-    
-    //if we had any buckets previously, copy over our pointers to them
-    //then deallocate the old array of buckets
-    if(mCapacity != 0)
+    // allocate our new array of buckets
+    pointer* newData =
+        (pointer*)mAllocator.Allocate(newBucketSize * sizeof(pointer));
+
+    // if we had any buckets previously, copy over our pointers to them
+    // then deallocate the old array of buckets
+    if (mCapacity != 0)
     {
-      UninitializedMove(newData,mData,oldBucketSize,true_type());
+      UninitializedMove(newData, mData, oldBucketSize, true_type());
       mAllocator.Deallocate(mData, sizeof(pointer) * oldBucketSize);
     }
 
-    //now allocate any new buckets we need
-    for(size_t i = oldBucketSize; i < newBucketSize; ++i)
-      newData[i] = (pointer)mAllocator.Allocate(sizeof(value_type) * BucketSize);
+    // now allocate any new buckets we need
+    for (size_t i = oldBucketSize; i < newBucketSize; ++i)
+      newData[i] =
+          (pointer)mAllocator.Allocate(sizeof(value_type) * BucketSize);
 
-    //finally set our new state
+    // finally set our new state
     mData = newData;
     mCapacity = newCapacity;
   }
@@ -350,7 +353,7 @@ public:
     return range(this);
   }
 
-  //Returns and range for all the elements in the container.
+  // Returns and range for all the elements in the container.
   range All() const
   {
     return const_cast<PodBlockArray*>(this)->All();
@@ -370,16 +373,16 @@ public:
 
   void Resize(size_t newSize)
   {
-    //resizing to the same size, do nothing
-    if(mSize == newSize)
+    // resizing to the same size, do nothing
+    if (mSize == newSize)
       return;
 
-    //we only need to handle getting bigger, because getting smaller is
-    //just overriding our size variable (pod assumption)
+    // we only need to handle getting bigger, because getting smaller is
+    // just overriding our size variable (pod assumption)
 
-    //if our new size causes us to go beyond our capacity,
-    //compute and change the capacity
-    if(newSize > mCapacity)
+    // if our new size causes us to go beyond our capacity,
+    // compute and change the capacity
+    if (newSize > mCapacity)
       ChangeCapacity(newSize);
 
     mSize = newSize;
@@ -387,50 +390,57 @@ public:
 
   void Resize(size_t newSize, const_reference defaultvalue)
   {
-    //resizing to the same size, do nothing
-    if(mSize == newSize)
+    // resizing to the same size, do nothing
+    if (mSize == newSize)
       return;
 
-    //compute our old/new capacity and the index inside of those buckets
+    // compute our old/new capacity and the index inside of those buckets
     size_type oldBucketCount = BucketCountFromSize(mSize);
     size_type newBucketCount = BucketCountFromSize(newSize);
-    
-    //update the capacity
+
+    // update the capacity
     ChangeCapacity(newSize);
-      
-    //now we have to set the default value in all of the new buckets (only if we grew)
-    if(newSize > mSize)
+
+    // now we have to set the default value in all of the new buckets (only if
+    // we grew)
+    if (newSize > mSize)
     {
-      // The sizes within each bucket. Note that size with a block size of 64, size 64 needs
-      // to stay 64 and not turn into 0. This is done with the extra +-1 terms. This will cause a
-      // size of 0 to get incorrect values, but we should only ever have a size 0 here when going
-      // from 0 to something which is handled as a special case.
+      // The sizes within each bucket. Note that size with a block size of 64,
+      // size 64 needs to stay 64 and not turn into 0. This is done with the
+      // extra +-1 terms. This will cause a size of 0 to get incorrect values,
+      // but we should only ever have a size 0 here when going from 0 to
+      // something which is handled as a special case.
       size_type sizeInOldBucket = ((mSize - 1) & BucketMask) + 1;
       size_type sizeInNewBucket = ((newSize - 1) & BucketMask) + 1;
       // The index of each bucket
       size_type oldBucketIndex = oldBucketCount - 1;
       size_type newBucketIndex = newBucketCount - 1;
-      
+
       // Deal with having come from no buckets (size of 0)
-      if(oldBucketCount == 0)
+      if (oldBucketCount == 0)
       {
         // Completely fill any buckets we've skipped
-        for(size_type i = 0; i < newBucketIndex; ++i)
+        for (size_type i = 0; i < newBucketIndex; ++i)
           UninitializedFill(mData[i], BucketSize, defaultvalue);
         // Fill the remaining portion of the last bucket
         UninitializedFill(mData[newBucketIndex], sizeInNewBucket, defaultvalue);
       }
       // The bucket sizes are the same, so we just grew within the bucket.
-      else if(oldBucketCount == newBucketCount)
+      else if (oldBucketCount == newBucketCount)
       {
-        UninitializedFill(mData[newBucketIndex] + sizeInOldBucket, sizeInNewBucket - sizeInOldBucket, defaultvalue);
+        UninitializedFill(mData[newBucketIndex] + sizeInOldBucket,
+                          sizeInNewBucket - sizeInOldBucket,
+                          defaultvalue);
       }
       else
       {
-        // First, set the default value in any remaining portion of the old bucket
-        UninitializedFill(mData[oldBucketIndex] + sizeInOldBucket, BucketSize - sizeInOldBucket, defaultvalue);
+        // First, set the default value in any remaining portion of the old
+        // bucket
+        UninitializedFill(mData[oldBucketIndex] + sizeInOldBucket,
+                          BucketSize - sizeInOldBucket,
+                          defaultvalue);
         // Now fill any complete buckets up
-        for(uint i = oldBucketIndex + 1; i < newBucketIndex; ++i)
+        for (uint i = oldBucketIndex + 1; i < newBucketIndex; ++i)
           UninitializedFill(mData[i], BucketSize, defaultvalue);
         // Finally, fill out the used portion of the last bucket
         UninitializedFill(mData[newBucketIndex], sizeInNewBucket, defaultvalue);
@@ -442,39 +452,42 @@ public:
 
   void Copy(const this_type& other)
   {
-    //fix our size to be the same as the other object
+    // fix our size to be the same as the other object
     Resize(other.mSize);
 
-    //if we have no size, don't do anything
-    if(other.mSize == 0)
+    // if we have no size, don't do anything
+    if (other.mSize == 0)
       return;
 
     size_type bucketSize = BucketCountFromSize(mSize);
     size_type lastBucket = bucketSize - 1;
     size_type lastBucketFillCount = mSize & BucketMask;
 
-    //fill out all complete buckets
-    for(size_type i = 0; i < lastBucket; ++i)
-      UninitializedCopy(mData[i],other.mData[i],BucketSize,true_type());
-    //fill out the remaining portion of the last bucket
-    UninitializedCopy(mData[lastBucket],other.mData[lastBucket],lastBucketFillCount,true_type());
+    // fill out all complete buckets
+    for (size_type i = 0; i < lastBucket; ++i)
+      UninitializedCopy(mData[i], other.mData[i], BucketSize, true_type());
+    // fill out the remaining portion of the last bucket
+    UninitializedCopy(mData[lastBucket],
+                      other.mData[lastBucket],
+                      lastBucketFillCount,
+                      true_type());
   }
 
   size_type BucketCountFromSize(size_type size)
   {
     size_type buckets = size >> ShiftSize;
-    if(size & BucketMask)
+    if (size & BucketMask)
       ++buckets;
     return buckets;
   }
 
-  ///The current number of items we have
+  /// The current number of items we have
   size_type mSize;
-  ///The max number of items we can store before we
-  ///need to allocate more (bucketSize * numOfBuckets)
+  /// The max number of items we can store before we
+  /// need to allocate more (bucketSize * numOfBuckets)
   size_type mCapacity;
-  ///The start of our 2d array
+  /// The start of our 2d array
   pointer* mData;
 };
 
-}//namespace Zero
+} // namespace Zero

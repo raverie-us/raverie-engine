@@ -1,20 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                               ReplicatorLink                                    //
-//---------------------------------------------------------------------------------//
+//                               ReplicatorLink //
 
-ReplicatorLink::ReplicatorLink(Replicator* replicator)
-  : LinkPlugin(ReplicatorMessageType::Size),
+ReplicatorLink::ReplicatorLink(Replicator* replicator) :
+    LinkPlugin(ReplicatorMessageType::Size),
     mReplicator(replicator),
     mReplicatorId(0),
     mReplicaSet(),
@@ -43,9 +36,8 @@ Replicator* ReplicatorLink::GetReplicator() const
 
 Role::Enum ReplicatorLink::GetTheirRole() const
 {
-  return (GetReplicator()->GetRole() == Role::Client)
-       ? Role::Server
-       : Role::Client;
+  return (GetReplicator()->GetRole() == Role::Client) ? Role::Server
+                                                      : Role::Client;
 }
 
 ReplicatorId ReplicatorLink::GetReplicatorId() const
@@ -73,11 +65,12 @@ bool ReplicatorLink::HasReplica(Replica* replica) const
   // Has replica in set?
   return mReplicaSet.Contains(replica);
 }
-bool ReplicatorLink::HasReplicasByCreateContext(const CreateContext& createContext) const
+bool ReplicatorLink::HasReplicasByCreateContext(
+    const CreateContext& createContext) const
 {
   // Has replicas in create context set?
   CreateMap::const_iterator iter = mCreateMap.FindIterator(createContext);
-  if(iter != mCreateMap.End()) // Found?
+  if (iter != mCreateMap.End()) // Found?
   {
     Assert(!iter->second.Empty());
     return true;
@@ -85,11 +78,12 @@ bool ReplicatorLink::HasReplicasByCreateContext(const CreateContext& createConte
 
   return false;
 }
-bool ReplicatorLink::HasReplicasByReplicaType(const ReplicaType& replicaType) const
+bool ReplicatorLink::HasReplicasByReplicaType(
+    const ReplicaType& replicaType) const
 {
   // Has replicas in replica type set?
   ReplicaMap::const_iterator iter = mReplicaMap.FindIterator(replicaType);
-  if(iter != mReplicaMap.End()) // Found?
+  if (iter != mReplicaMap.End()) // Found?
   {
     Assert(!iter->second.Empty());
     return true;
@@ -107,7 +101,7 @@ Replica* ReplicatorLink::GetReplica(ReplicaId replicaId) const
 {
   // Find replica in set
   ReplicaSet::const_iterator iter = mReplicaSet.FindIterator(replicaId);
-  if(iter != mReplicaSet.End()) // Found?
+  if (iter != mReplicaSet.End()) // Found?
     return *iter;
 
   return nullptr;
@@ -116,25 +110,27 @@ Replica* ReplicatorLink::GetReplica(Replica* replica) const
 {
   // Find replica in set
   ReplicaSet::const_iterator iter = mReplicaSet.FindIterator(replica);
-  if(iter != mReplicaSet.End()) // Found?
+  if (iter != mReplicaSet.End()) // Found?
     return *iter;
 
   return nullptr;
 }
-ReplicaSet ReplicatorLink::GetReplicasByCreateContext(const CreateContext& createContext) const
+ReplicaSet ReplicatorLink::GetReplicasByCreateContext(
+    const CreateContext& createContext) const
 {
   // Find replicas in create context set
   CreateMap::const_iterator iter = mCreateMap.FindIterator(createContext);
-  if(iter != mCreateMap.End()) // Found?
+  if (iter != mCreateMap.End()) // Found?
     return iter->second;
 
   return ReplicaSet();
 }
-ReplicaSet ReplicatorLink::GetReplicasByReplicaType(const ReplicaType& replicaType) const
+ReplicaSet
+ReplicatorLink::GetReplicasByReplicaType(const ReplicaType& replicaType) const
 {
   // Find replicas in replica type set
   ReplicaMap::const_iterator iter = mReplicaMap.FindIterator(replicaType);
-  if(iter != mReplicaMap.End()) // Found?
+  if (iter != mReplicaMap.End()) // Found?
     return iter->second;
 
   return ReplicaSet();
@@ -144,20 +140,22 @@ const ReplicaSet& ReplicatorLink::GetReplicas() const
   return mReplicaSet;
 }
 
-size_t ReplicatorLink::GetReplicaCountByCreateContext(const CreateContext& createContext) const
+size_t ReplicatorLink::GetReplicaCountByCreateContext(
+    const CreateContext& createContext) const
 {
   // Count replicas in create context set
   CreateMap::const_iterator iter = mCreateMap.FindIterator(createContext);
-  if(iter != mCreateMap.End()) // Found?
+  if (iter != mCreateMap.End()) // Found?
     return iter->second.Size();
 
   return 0;
 }
-size_t ReplicatorLink::GetReplicaCountByReplicaType(const ReplicaType& replicaType) const
+size_t ReplicatorLink::GetReplicaCountByReplicaType(
+    const ReplicaType& replicaType) const
 {
   // Count replicas in replica type set
   ReplicaMap::const_iterator iter = mReplicaMap.FindIterator(replicaType);
-  if(iter != mReplicaMap.End()) // Found?
+  if (iter != mReplicaMap.End()) // Found?
     return iter->second.Size();
 
   return 0;
@@ -197,31 +195,37 @@ void ReplicatorLink::UpdateStart(TimeMs now)
   {
     // Get frame fill info
     float frameFillSkip = GetReplicator()->GetFrameFillSkip();
-    float frameFill     = GetLink()->GetOutgoingFrameFill();
+    float frameFill = GetLink()->GetOutgoingFrameFill();
 
-    // Should skip change replication if our current frame fill ratio exceeds our configured skip threshold
+    // Should skip change replication if our current frame fill ratio exceeds
+    // our configured skip threshold
     mShouldSkipChangeReplication = (frameFill >= frameFillSkip);
 
     // // Should skip change replication?
     // if(mShouldSkipChangeReplication)
     // {
     //   // Last notified more than a second ago?
-    //   if(GetDuration(mLastFrameFillSkipNotificationTime, now) > cOneSecondTimeMs)
+    //   if(GetDuration(mLastFrameFillSkipNotificationTime, now) >
+    //   cOneSecondTimeMs)
     //   {
     //     // Get outgoing bandwidth info
-    //     String replicatorName     = GetReplicatorDisplayName(GetReplicator());
-    //     String replicatorLinkName = GetReplicatorDisplayName(this);
-    //     Kbps   outgoingBandwidth  = GetLink()->GetOutgoingBandwidth();
-    // 
+    //     String replicatorName     =
+    //     GetReplicatorDisplayName(GetReplicator()); String replicatorLinkName
+    //     = GetReplicatorDisplayName(this); Kbps   outgoingBandwidth  =
+    //     GetLink()->GetOutgoingBandwidth();
+    //
     //     // Warn the user about the replication frame skip
     //     DoNotifyWarning("Network Frame Fill Skipping",
-    //                     String::Format("%s Skipping change replication this frame to %s - Exceeded the outgoing bandwidth (%.2fkbps) utilization skip threshold (%.2f) in a previous frame, with a current frame fill ratio of %.2f",
-    //                     replicatorName.c_str(),
+    //                     String::Format("%s Skipping change replication this
+    //                     frame to %s - Exceeded the outgoing bandwidth
+    //                     (%.2fkbps) utilization skip threshold (%.2f) in a
+    //                     previous frame, with a current frame fill ratio of
+    //                     %.2f", replicatorName.c_str(),
     //                     replicatorLinkName.c_str(),
     //                     outgoingBandwidth,
     //                     frameFillSkip,
     //                     frameFill));
-    // 
+    //
     //     // Set last notification time
     //     mLastFrameFillSkipNotificationTime = now;
     //   }
@@ -230,31 +234,37 @@ void ReplicatorLink::UpdateStart(TimeMs now)
 }
 void ReplicatorLink::UpdateEnd(TimeMs now)
 {
-  // See if we should warn the user about their outgoing bandwidth utilization this frame
+  // See if we should warn the user about their outgoing bandwidth utilization
+  // this frame
   {
     // Get frame fill info
     float frameFillWarning = GetReplicator()->GetFrameFillWarning();
-    float frameFill        = GetLink()->GetOutgoingFrameFill();
+    float frameFill = GetLink()->GetOutgoingFrameFill();
 
     // Current frame's fill ratio exceeds our configured warning threshold?
-    if(frameFill >= frameFillWarning)
+    if (frameFill >= frameFillWarning)
     {
       // Last notified more than a second ago?
-      if(GetDuration(mLastFrameFillWarningNotificationTime, now) > cOneSecondTimeMs)
+      if (GetDuration(mLastFrameFillWarningNotificationTime, now) >
+          cOneSecondTimeMs)
       {
         // Get outgoing bandwidth info
-        String replicatorName     = GetReplicatorDisplayName(GetReplicator());
+        String replicatorName = GetReplicatorDisplayName(GetReplicator());
         String replicatorLinkName = GetReplicatorDisplayName(this);
-        Kbps   outgoingBandwidth  = GetLink()->GetOutgoingBandwidth();
+        Kbps outgoingBandwidth = GetLink()->GetOutgoingBandwidth();
 
         // Warn the user about their outgoing bandwidth utilization
-        DoNotifyWarning("Network Frame Fill Warning",
-                        String::Format("%s Exceeded the outgoing bandwidth (%.2fkbps) utilization warning threshold (%.2f) this frame, with a current frame fill ratio of %.2f, when replicating to %s",
-                        replicatorName.c_str(),
-                        outgoingBandwidth,
-                        frameFillWarning,
-                        frameFill,
-                        replicatorLinkName.c_str()));
+        DoNotifyWarning(
+            "Network Frame Fill Warning",
+            String::Format(
+                "%s Exceeded the outgoing bandwidth (%.2fkbps) utilization "
+                "warning threshold (%.2f) this frame, with a current frame "
+                "fill ratio of %.2f, when replicating to %s",
+                replicatorName.c_str(),
+                outgoingBandwidth,
+                frameFillWarning,
+                frameFill,
+                replicatorLinkName.c_str()));
 
         // Set last notification time
         mLastFrameFillWarningNotificationTime = now;
@@ -271,7 +281,7 @@ bool ReplicatorLink::AddReplicaToLiveSet(Replica* replica)
 {
   // Add replica to live set
   ReplicaSet::pointer_bool_pair result = mReplicaSet.Insert(replica);
-  if(!result.second) // Unable?
+  if (!result.second) // Unable?
   {
     // Return failure (No clean up necessary)
     return false;
@@ -292,8 +302,9 @@ bool ReplicatorLink::RemoveReplicaFromLiveSet(Replica* replica)
 bool ReplicatorLink::AddReplicaToCreateContextSet(Replica* replica)
 {
   // Add replica to create context set
-  ReplicaSet::pointer_bool_pair result = mCreateMap.FindOrInsert(replica->GetCreateContext()).Insert(replica);
-  if(!result.second) // Unable?
+  ReplicaSet::pointer_bool_pair result =
+      mCreateMap.FindOrInsert(replica->GetCreateContext()).Insert(replica);
+  if (!result.second) // Unable?
   {
     // Clean up and return failure
     RemoveReplicaFromCreateContextSet(replica);
@@ -306,14 +317,15 @@ bool ReplicatorLink::AddReplicaToCreateContextSet(Replica* replica)
 bool ReplicatorLink::RemoveReplicaFromCreateContextSet(Replica* replica)
 {
   // Get create context set
-  CreateMap::iterator iter = mCreateMap.FindIterator(replica->GetCreateContext());
-  if(iter != mCreateMap.End()) // Found?
+  CreateMap::iterator iter =
+      mCreateMap.FindIterator(replica->GetCreateContext());
+  if (iter != mCreateMap.End()) // Found?
   {
     // Remove replica from create context set
     ReplicaSet::pointer_bool_pair result = iter->second.EraseValue(replica);
 
     // Replica type set is empty?
-    if(iter->second.Empty())
+    if (iter->second.Empty())
       mCreateMap.Erase(iter); // Erase create context set
 
     // Result
@@ -327,8 +339,9 @@ bool ReplicatorLink::RemoveReplicaFromCreateContextSet(Replica* replica)
 bool ReplicatorLink::AddReplicaToReplicaTypeSet(Replica* replica)
 {
   // Add replica to replica type set
-  ReplicaSet::pointer_bool_pair result = mReplicaMap.FindOrInsert(replica->GetReplicaType()).Insert(replica);
-  if(!result.second) // Unable?
+  ReplicaSet::pointer_bool_pair result =
+      mReplicaMap.FindOrInsert(replica->GetReplicaType()).Insert(replica);
+  if (!result.second) // Unable?
   {
     // Clean up and return failure
     RemoveReplicaFromReplicaTypeSet(replica);
@@ -341,14 +354,15 @@ bool ReplicatorLink::AddReplicaToReplicaTypeSet(Replica* replica)
 bool ReplicatorLink::RemoveReplicaFromReplicaTypeSet(Replica* replica)
 {
   // Get replica type set
-  ReplicaMap::iterator iter = mReplicaMap.FindIterator(replica->GetReplicaType());
-  if(iter != mReplicaMap.End()) // Found?
+  ReplicaMap::iterator iter =
+      mReplicaMap.FindIterator(replica->GetReplicaType());
+  if (iter != mReplicaMap.End()) // Found?
   {
     // Remove replica from replica type set
     ReplicaSet::pointer_bool_pair result = iter->second.EraseValue(replica);
 
     // Replica type set is empty?
-    if(iter->second.Empty())
+    if (iter->second.Empty())
       mReplicaMap.Erase(iter); // Erase replica type set
 
     // Result
@@ -368,7 +382,7 @@ bool ReplicatorLink::AddLiveReplica(Replica* replica)
   // Add replica to live set
   {
     bool result = AddReplicaToLiveSet(replica);
-    if(!result) // Unable?
+    if (!result) // Unable?
     {
       // Return failure (No clean up necessary)
       Assert(false);
@@ -379,7 +393,7 @@ bool ReplicatorLink::AddLiveReplica(Replica* replica)
   // Add replica to create context set
   {
     bool result = AddReplicaToCreateContextSet(replica);
-    if(!result) // Unable?
+    if (!result) // Unable?
     {
       // Clean up and return failure
       Assert(false);
@@ -391,7 +405,7 @@ bool ReplicatorLink::AddLiveReplica(Replica* replica)
   // Add replica to replica type set
   {
     bool result = AddReplicaToReplicaTypeSet(replica);
-    if(!result) // Unable?
+    if (!result) // Unable?
     {
       // Clean up and return failure
       Assert(false);
@@ -443,13 +457,19 @@ void ReplicatorLink::SetReplicatorId(ReplicatorId replicatorId)
 // Replication Helpers
 //
 
-bool ReplicatorLink::SerializeSpawn(const ReplicaArray& replicas, Message& message, TimeMs timestamp)
+bool ReplicatorLink::SerializeSpawn(const ReplicaArray& replicas,
+                                    Message& message,
+                                    TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // Serialize spawn command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Spawn, timestamp);
-  if(!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Spawn,
+                              timestamp);
+  if (!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
   {
     Assert(false);
     return false;
@@ -458,13 +478,19 @@ bool ReplicatorLink::SerializeSpawn(const ReplicaArray& replicas, Message& messa
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeSpawn(const Message& message, ReplicaArray& replicas, TimeMs timestamp)
+bool ReplicatorLink::DeserializeSpawn(const Message& message,
+                                      ReplicaArray& replicas,
+                                      TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // Deserialize spawn command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Spawn, timestamp);
-  if(!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Spawn,
+                              timestamp);
+  if (!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
   {
     // Assert(false);
     return false;
@@ -479,7 +505,9 @@ bool ReplicatorLink::DeserializeSpawn(const Message& message, ReplicaArray& repl
   // Success
   return true;
 }
-bool ReplicatorLink::HandleSpawn(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
+bool ReplicatorLink::HandleSpawn(const ReplicaArray& replicas,
+                                 TransmissionDirection::Enum direction,
+                                 TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
   AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
@@ -488,7 +516,7 @@ bool ReplicatorLink::HandleSpawn(const ReplicaArray& replicas, TransmissionDirec
   AssertReplicas(replicas, !replica->IsCloned(), "");
 
   // Outgoing spawn command?
-  if(direction == TransmissionDirection::Outgoing)
+  if (direction == TransmissionDirection::Outgoing)
   {
     Assert(GetReplicator()->GetRole() == Role::Server);
 
@@ -500,7 +528,8 @@ bool ReplicatorLink::HandleSpawn(const ReplicaArray& replicas, TransmissionDirec
     Assert(GetReplicator()->GetRole() == Role::Client);
 
     // Handle spawn locally
-    if(!GetReplicator()->HandleSpawn(replicas, direction, timestamp)) // Unable?
+    if (!GetReplicator()->HandleSpawn(
+            replicas, direction, timestamp)) // Unable?
     {
       Assert(false);
       return false;
@@ -508,14 +537,14 @@ bool ReplicatorLink::HandleSpawn(const ReplicaArray& replicas, TransmissionDirec
   }
 
   // For all replicas
-  forRange(Replica* replica, replicas.All())
+  forRange(Replica * replica, replicas.All())
   {
     // Absent replica?
-    if(!replica)
+    if (!replica)
       continue; // Skip
 
     // Add live replica
-    if(!AddLiveReplica(replica)) // Unable?
+    if (!AddLiveReplica(replica)) // Unable?
     {
       Assert(false);
       return false;
@@ -534,11 +563,11 @@ bool ReplicatorLink::SendSpawn(const ReplicaArray& replicas, TimeMs timestamp)
 
   // Serialize spawn command
   Message message(ReplicatorMessageType::Spawn);
-  if(!SerializeSpawn(replicas, message, timestamp)) // Unable?
+  if (!SerializeSpawn(replicas, message, timestamp)) // Unable?
     return false;
 
   // Should include an accurate timestamp with this message?
-  if(Replicator::ShouldIncludeAccurateTimestampOnInitialization(replicas))
+  if (Replicator::ShouldIncludeAccurateTimestampOnInitialization(replicas))
   {
     // Set accurate timestamp
     message.SetTimestamp(timestamp);
@@ -548,11 +577,12 @@ bool ReplicatorLink::SendSpawn(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetCommandChannelId());
   Status status;
   LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
     return false;
 
   // Handle outgoing spawn command
-  bool result = HandleSpawn(replicas, TransmissionDirection::Outgoing, timestamp);
+  bool result =
+      HandleSpawn(replicas, TransmissionDirection::Outgoing, timestamp);
   Assert(result);
 
   // Success
@@ -569,7 +599,7 @@ bool ReplicatorLink::ReceiveSpawn(const Message& message)
 
   // Deserialize spawn command
   ReplicaArray replicas;
-  if(!DeserializeSpawn(message, replicas, timestamp)) // Unable?
+  if (!DeserializeSpawn(message, replicas, timestamp)) // Unable?
     return false;
 
   // (We should not already have any of these replicas)
@@ -577,7 +607,8 @@ bool ReplicatorLink::ReceiveSpawn(const Message& message)
   AssertReplicas(replicas, !HasReplica(replica), "");
 
   // Handle incoming spawn command
-  if(!HandleSpawn(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
+  if (!HandleSpawn(
+          replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
   {
     Assert(false);
     GetReplicator()->ReleaseReplicas(replicas);
@@ -585,7 +616,7 @@ bool ReplicatorLink::ReceiveSpawn(const Message& message)
   }
 
   // Send reverse replica channels as applicable
-  if(!SendReverseReplicaChannels(replicas, timestamp)) // Unable?
+  if (!SendReverseReplicaChannels(replicas, timestamp)) // Unable?
   {
     Assert(false);
     GetReplicator()->ReleaseReplicas(replicas);
@@ -596,13 +627,19 @@ bool ReplicatorLink::ReceiveSpawn(const Message& message)
   return true;
 }
 
-bool ReplicatorLink::SerializeClone(const ReplicaArray& replicas, Message& message, TimeMs timestamp)
+bool ReplicatorLink::SerializeClone(const ReplicaArray& replicas,
+                                    Message& message,
+                                    TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // Serialize clone command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Clone, timestamp);
-  if(!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Clone,
+                              timestamp);
+  if (!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
   {
     Assert(false);
     return false;
@@ -611,19 +648,26 @@ bool ReplicatorLink::SerializeClone(const ReplicaArray& replicas, Message& messa
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeClone(const Message& message, ReplicaArray& replicas, TimeMs timestamp)
+bool ReplicatorLink::DeserializeClone(const Message& message,
+                                      ReplicaArray& replicas,
+                                      TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // Deserialize clone command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Clone, timestamp);
-  if(!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Clone,
+                              timestamp);
+  if (!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
   {
     // Assert(false);
     return false;
   }
 
-  // (All replicas should be either invalid (clone-from-spawn) or emplaced (clone-from-emplace))
+  // (All replicas should be either invalid (clone-from-spawn) or emplaced
+  // (clone-from-emplace))
   AssertReplicas(replicas, replica->IsInvalid() || replica->IsEmplaced(), "");
 
   // (All replicas should have a replica ID)
@@ -632,17 +676,20 @@ bool ReplicatorLink::DeserializeClone(const Message& message, ReplicaArray& repl
   // Success
   return true;
 }
-bool ReplicatorLink::HandleClone(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
+bool ReplicatorLink::HandleClone(const ReplicaArray& replicas,
+                                 TransmissionDirection::Enum direction,
+                                 TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
   AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // Outgoing clone command?
-  if(direction == TransmissionDirection::Outgoing)
+  if (direction == TransmissionDirection::Outgoing)
   {
     Assert(GetReplicator()->GetRole() == Role::Server);
 
-    // (All replicas should not be clones - these are the originals on the server!)
+    // (All replicas should not be clones - these are the originals on the
+    // server!)
     AssertReplicas(replicas, !replica->IsCloned(), "");
 
     // *** Clone already handled locally ***
@@ -656,7 +703,8 @@ bool ReplicatorLink::HandleClone(const ReplicaArray& replicas, TransmissionDirec
     AssertReplicas(replicas, replica->IsCloned(), "");
 
     // Handle clone locally
-    if(!GetReplicator()->HandleClone(replicas, direction, timestamp)) // Unable?
+    if (!GetReplicator()->HandleClone(
+            replicas, direction, timestamp)) // Unable?
     {
       Assert(false);
       return false;
@@ -664,14 +712,14 @@ bool ReplicatorLink::HandleClone(const ReplicaArray& replicas, TransmissionDirec
   }
 
   // For all replicas
-  forRange(Replica* replica, replicas.All())
+  forRange(Replica * replica, replicas.All())
   {
     // Absent replica?
-    if(!replica)
+    if (!replica)
       continue; // Skip
 
     // Add live replica
-    if(!AddLiveReplica(replica)) // Unable?
+    if (!AddLiveReplica(replica)) // Unable?
     {
       Assert(false);
       return false;
@@ -690,11 +738,11 @@ bool ReplicatorLink::SendClone(const ReplicaArray& replicas, TimeMs timestamp)
 
   // Serialize clone command
   Message message(ReplicatorMessageType::Clone);
-  if(!SerializeClone(replicas, message, timestamp)) // Unable?
+  if (!SerializeClone(replicas, message, timestamp)) // Unable?
     return false;
 
   // Should include an accurate timestamp with this message?
-  if(Replicator::ShouldIncludeAccurateTimestampOnInitialization(replicas))
+  if (Replicator::ShouldIncludeAccurateTimestampOnInitialization(replicas))
   {
     // Set accurate timestamp
     message.SetTimestamp(timestamp);
@@ -704,11 +752,12 @@ bool ReplicatorLink::SendClone(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetCommandChannelId());
   Status status;
   LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
     return false;
 
   // Handle outgoing clone command
-  bool result = HandleClone(replicas, TransmissionDirection::Outgoing, timestamp);
+  bool result =
+      HandleClone(replicas, TransmissionDirection::Outgoing, timestamp);
   Assert(result);
 
   // Success
@@ -725,7 +774,7 @@ bool ReplicatorLink::ReceiveClone(const Message& message)
 
   // Deserialize clone command
   ReplicaArray replicas;
-  if(!DeserializeClone(message, replicas, timestamp)) // Unable?
+  if (!DeserializeClone(message, replicas, timestamp)) // Unable?
     return false;
 
   // (We should not already have any of these replicas)
@@ -733,7 +782,8 @@ bool ReplicatorLink::ReceiveClone(const Message& message)
   AssertReplicas(replicas, !HasReplica(replica), "");
 
   // Handle incoming clone command
-  if(!HandleClone(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
+  if (!HandleClone(
+          replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
   {
     Assert(false);
     GetReplicator()->ReleaseReplicas(replicas);
@@ -741,7 +791,7 @@ bool ReplicatorLink::ReceiveClone(const Message& message)
   }
 
   // Send reverse replica channels as applicable
-  if(!SendReverseReplicaChannels(replicas, timestamp)) // Unable?
+  if (!SendReverseReplicaChannels(replicas, timestamp)) // Unable?
   {
     Assert(false);
     GetReplicator()->ReleaseReplicas(replicas);
@@ -752,13 +802,19 @@ bool ReplicatorLink::ReceiveClone(const Message& message)
   return true;
 }
 
-bool ReplicatorLink::SerializeForget(const ReplicaArray& replicas, Message& message, TimeMs timestamp)
+bool ReplicatorLink::SerializeForget(const ReplicaArray& replicas,
+                                     Message& message,
+                                     TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // Serialize forget command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Forget, timestamp);
-  if(!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Forget,
+                              timestamp);
+  if (!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
   {
     Assert(false);
     return false;
@@ -767,13 +823,19 @@ bool ReplicatorLink::SerializeForget(const ReplicaArray& replicas, Message& mess
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeForget(const Message& message, ReplicaArray& replicas, TimeMs timestamp)
+bool ReplicatorLink::DeserializeForget(const Message& message,
+                                       ReplicaArray& replicas,
+                                       TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // Deserialize forget command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Forget, timestamp);
-  if(!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Forget,
+                              timestamp);
+  if (!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
   {
     // Assert(false);
     return false;
@@ -785,13 +847,15 @@ bool ReplicatorLink::DeserializeForget(const Message& message, ReplicaArray& rep
   // Success
   return true;
 }
-bool ReplicatorLink::HandleForget(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
+bool ReplicatorLink::HandleForget(const ReplicaArray& replicas,
+                                  TransmissionDirection::Enum direction,
+                                  TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
   AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // For all replicas
-  forRange(Replica* replica, replicas.All())
+  forRange(Replica * replica, replicas.All())
   {
     // Remove live replica
     RemoveLiveReplica(replica);
@@ -801,7 +865,7 @@ bool ReplicatorLink::HandleForget(const ReplicaArray& replicas, TransmissionDire
   }
 
   // Outgoing forget command?
-  if(direction == TransmissionDirection::Outgoing)
+  if (direction == TransmissionDirection::Outgoing)
   {
     Assert(GetReplicator()->GetRole() == Role::Server);
 
@@ -835,11 +899,11 @@ bool ReplicatorLink::SendForget(const ReplicaArray& replicas, TimeMs timestamp)
 
   // Serialize forget command
   Message message(ReplicatorMessageType::Forget);
-  if(!SerializeForget(replicas, message, timestamp)) // Unable?
+  if (!SerializeForget(replicas, message, timestamp)) // Unable?
     return false;
 
   // Should include an accurate timestamp with this message?
-  if(Replicator::ShouldIncludeAccurateTimestampOnUninitialization(replicas))
+  if (Replicator::ShouldIncludeAccurateTimestampOnUninitialization(replicas))
   {
     // Set accurate timestamp
     message.SetTimestamp(timestamp);
@@ -849,11 +913,12 @@ bool ReplicatorLink::SendForget(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetCommandChannelId());
   Status status;
   LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
     return false;
 
   // Handle outgoing forget command
-  bool result = HandleForget(replicas, TransmissionDirection::Outgoing, timestamp);
+  bool result =
+      HandleForget(replicas, TransmissionDirection::Outgoing, timestamp);
   Assert(result);
 
   // Success
@@ -870,7 +935,7 @@ bool ReplicatorLink::ReceiveForget(const Message& message)
 
   // Deserialize forget command
   ReplicaArray replicas;
-  if(!DeserializeForget(message, replicas, timestamp)) // Unable?
+  if (!DeserializeForget(message, replicas, timestamp)) // Unable?
     return false;
 
   // (We should already have all of these replicas)
@@ -878,7 +943,8 @@ bool ReplicatorLink::ReceiveForget(const Message& message)
   AssertReplicas(replicas, HasReplica(replica), "");
 
   // Handle incoming forget command
-  if(!HandleForget(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
+  if (!HandleForget(
+          replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
   {
     Assert(false);
     return false;
@@ -888,13 +954,19 @@ bool ReplicatorLink::ReceiveForget(const Message& message)
   return true;
 }
 
-bool ReplicatorLink::SerializeDestroy(const ReplicaArray& replicas, Message& message, TimeMs timestamp)
+bool ReplicatorLink::SerializeDestroy(const ReplicaArray& replicas,
+                                      Message& message,
+                                      TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // Serialize destroy command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Destroy, timestamp);
-  if(!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Destroy,
+                              timestamp);
+  if (!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
   {
     Assert(false);
     return false;
@@ -903,13 +975,19 @@ bool ReplicatorLink::SerializeDestroy(const ReplicaArray& replicas, Message& mes
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeDestroy(const Message& message, ReplicaArray& replicas, TimeMs timestamp)
+bool ReplicatorLink::DeserializeDestroy(const Message& message,
+                                        ReplicaArray& replicas,
+                                        TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // Deserialize destroy command
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::Destroy, timestamp);
-  if(!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::Destroy,
+                              timestamp);
+  if (!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
   {
     // Assert(false);
     return false;
@@ -921,13 +999,15 @@ bool ReplicatorLink::DeserializeDestroy(const Message& message, ReplicaArray& re
   // Success
   return true;
 }
-bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
+bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas,
+                                   TransmissionDirection::Enum direction,
+                                   TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
   AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
 
   // For all replicas
-  forRange(Replica* replica, replicas.All())
+  forRange(Replica * replica, replicas.All())
   {
     // Remove live replica
     RemoveLiveReplica(replica);
@@ -937,7 +1017,7 @@ bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDir
   }
 
   // Outgoing destroy command?
-  if(direction == TransmissionDirection::Outgoing)
+  if (direction == TransmissionDirection::Outgoing)
   {
     Assert(GetReplicator()->GetRole() == Role::Server);
 
@@ -952,7 +1032,8 @@ bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDir
     Assert(GetReplicator()->GetRole() == Role::Client);
 
     // Handle destroy locally
-    bool result = GetReplicator()->HandleDestroy(replicas, direction, timestamp);
+    bool result =
+        GetReplicator()->HandleDestroy(replicas, direction, timestamp);
     Assert(result);
 
     // (All replicas should be invalid)
@@ -974,11 +1055,11 @@ bool ReplicatorLink::SendDestroy(const ReplicaArray& replicas, TimeMs timestamp)
 
   // Serialize destroy command
   Message message(ReplicatorMessageType::Destroy);
-  if(!SerializeDestroy(replicas, message, timestamp)) // Unable?
+  if (!SerializeDestroy(replicas, message, timestamp)) // Unable?
     return false;
 
   // Should include an accurate timestamp with this message?
-  if(Replicator::ShouldIncludeAccurateTimestampOnUninitialization(replicas))
+  if (Replicator::ShouldIncludeAccurateTimestampOnUninitialization(replicas))
   {
     // Set accurate timestamp
     message.SetTimestamp(timestamp);
@@ -988,11 +1069,12 @@ bool ReplicatorLink::SendDestroy(const ReplicaArray& replicas, TimeMs timestamp)
   Assert(GetCommandChannelId());
   Status status;
   LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
     return false;
 
   // Handle outgoing destroy command
-  bool result = HandleDestroy(replicas, TransmissionDirection::Outgoing, timestamp);
+  bool result =
+      HandleDestroy(replicas, TransmissionDirection::Outgoing, timestamp);
   Assert(result);
 
   // Success
@@ -1009,7 +1091,7 @@ bool ReplicatorLink::ReceiveDestroy(const Message& message)
 
   // Deserialize destroy command
   ReplicaArray replicas;
-  if(!DeserializeDestroy(message, replicas, timestamp)) // Unable?
+  if (!DeserializeDestroy(message, replicas, timestamp)) // Unable?
     return false;
 
   // (We should already have all of these replicas)
@@ -1017,7 +1099,8 @@ bool ReplicatorLink::ReceiveDestroy(const Message& message)
   AssertReplicas(replicas, HasReplica(replica), "");
 
   // Handle incoming destroy command
-  if(!HandleDestroy(replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
+  if (!HandleDestroy(
+          replicas, TransmissionDirection::Incoming, timestamp)) // Unable?
   {
     Assert(false);
     return false;
@@ -1027,7 +1110,11 @@ bool ReplicatorLink::ReceiveDestroy(const Message& message)
   return true;
 }
 
-bool ReplicatorLink::SerializeReverseReplicaChannels(const ReplicaArray& replicas, Message& message, bool& containsChannels, TimeMs timestamp)
+bool ReplicatorLink::SerializeReverseReplicaChannels(
+    const ReplicaArray& replicas,
+    Message& message,
+    bool& containsChannels,
+    TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
@@ -1038,8 +1125,12 @@ bool ReplicatorLink::SerializeReverseReplicaChannels(const ReplicaArray& replica
   Bits bitsWrittenStart = message.GetData().GetBitsWritten();
 
   // Serialize reverse replica channel mappings
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::ReverseReplicaChannels, timestamp);
-  if(!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::ReverseReplicaChannels,
+                              timestamp);
+  if (!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
   {
     Assert(false);
     return false;
@@ -1054,13 +1145,19 @@ bool ReplicatorLink::SerializeReverseReplicaChannels(const ReplicaArray& replica
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeReverseReplicaChannels(const Message& message, ReplicaArray& replicas, TimeMs timestamp)
+bool ReplicatorLink::DeserializeReverseReplicaChannels(const Message& message,
+                                                       ReplicaArray& replicas,
+                                                       TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // Deserialize reverse replica channel mappings
-  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::ReverseReplicaChannels, timestamp);
-  if(!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
+  ReplicaStream replicaStream(GetReplicator(),
+                              this,
+                              message.GetData(),
+                              ReplicaStreamMode::ReverseReplicaChannels,
+                              timestamp);
+  if (!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
   {
     // Assert(false);
     return false;
@@ -1069,7 +1166,8 @@ bool ReplicatorLink::DeserializeReverseReplicaChannels(const Message& message, R
   // Success
   return true;
 }
-bool ReplicatorLink::SendReverseReplicaChannels(const ReplicaArray& replicas, TimeMs timestamp)
+bool ReplicatorLink::SendReverseReplicaChannels(const ReplicaArray& replicas,
+                                                TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
@@ -1079,11 +1177,12 @@ bool ReplicatorLink::SendReverseReplicaChannels(const ReplicaArray& replicas, Ti
   // Serialize reverse replica channel mappings
   bool containsChannels = false;
   Message message(ReplicatorMessageType::ReverseReplicaChannels);
-  if(!SerializeReverseReplicaChannels(replicas, message, containsChannels, timestamp)) // Unable?
+  if (!SerializeReverseReplicaChannels(
+          replicas, message, containsChannels, timestamp)) // Unable?
     return false;
 
   // No replica channels were serialized?
-  if(!containsChannels)
+  if (!containsChannels)
   {
     // Don't bother sending, there's nothing useful in this message
     return true;
@@ -1093,7 +1192,7 @@ bool ReplicatorLink::SendReverseReplicaChannels(const ReplicaArray& replicas, Ti
   Assert(GetCommandChannelId());
   Status status;
   LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
     return false;
 
   // Success
@@ -1109,7 +1208,8 @@ bool ReplicatorLink::ReceiveReverseReplicaChannels(const Message& message)
 
   // Deserialize reverse replica channel mappings
   ReplicaArray replicas;
-  if(!DeserializeReverseReplicaChannels(message, replicas, timestamp)) // Unable?
+  if (!DeserializeReverseReplicaChannels(
+          message, replicas, timestamp)) // Unable?
     return false;
 
   // // (We should already have all of these replicas)
@@ -1144,36 +1244,39 @@ bool ReplicatorLink::DeserializeChange(const Message& message, TimeMs timestamp)
   const BitStream& bitStream = message.GetData();
 
   // Get replica channel
-  ReplicaChannel* replicaChannel = GetIncomingReplicaChannel(message.GetChannelId());
-  if(!replicaChannel) // Unable?
+  ReplicaChannel* replicaChannel =
+      GetIncomingReplicaChannel(message.GetChannelId());
+  if (!replicaChannel) // Unable?
   {
-    //Assert(false);
+    // Assert(false);
     return false;
   }
 
   // Get replica channel type
-  ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+  ReplicaChannelType* replicaChannelType =
+      replicaChannel->GetReplicaChannelType();
   ReturnIf(!replicaChannelType, false, "ReplicaChannelType was null");
 
   // Get replica
-  Replica*              replica = replicaChannel->GetReplica();
+  Replica* replica = replicaChannel->GetReplica();
   ReturnIf(!replica, false, "Replica was null");
   ReplicaId::value_type replicaId = replica->GetReplicaId().value();
   ReturnIf(!replicaId, false, "The ReplicaId was not valid");
 
   // Don't accept incoming changes for this replica or replica channel type?
-  if(!replica->GetAcceptIncomingChanges()
-  || !replicaChannelType->GetAcceptIncomingChanges())
+  if (!replica->GetAcceptIncomingChanges() ||
+      !replicaChannelType->GetAcceptIncomingChanges())
   {
     // Ignore
     return true;
   }
 
   // Is server?
-  if(GetReplicator()->GetRole() == Role::Server)
+  if (GetReplicator()->GetRole() == Role::Server)
   {
-    // They are not the change authority client for the replica whose channel they're trying to change?
-    if(GetReplicatorId() != replica->GetAuthorityClientReplicatorId())
+    // They are not the change authority client for the replica whose channel
+    // they're trying to change?
+    if (GetReplicatorId() != replica->GetAuthorityClientReplicatorId())
     {
       // Ignore
       return true;
@@ -1181,15 +1284,16 @@ bool ReplicatorLink::DeserializeChange(const Message& message, TimeMs timestamp)
   }
 
   // Read replica channel
-  bool result = replicaChannel->Deserialize(bitStream, ReplicationPhase::Change, timestamp);
-  if(!result) // Unable?
+  bool result = replicaChannel->Deserialize(
+      bitStream, ReplicationPhase::Change, timestamp);
+  if (!result) // Unable?
   {
-    //Assert(false);
+    // Assert(false);
     return false;
   }
 
   // Replica channel has not actually changed at all?
-  if(!replicaChannel->HasChangedAtAll())
+  if (!replicaChannel->HasChangedAtAll())
   {
     // Ignore
     return true;
@@ -1199,12 +1303,17 @@ bool ReplicatorLink::DeserializeChange(const Message& message, TimeMs timestamp)
   bool shouldRelay = replicaChannel->ShouldRelay();
 
   // Handle changed replica channel property values
-  // (Don't set properties last values to their current values when reacting to property changes if changes need to be relayed)
-  // (The last values will be set when relaying outgoing property changes after this call)
-  replicaChannel->ReactToPropertyChanges(timestamp, ReplicationPhase::Change, TransmissionDirection::Incoming, true, !shouldRelay);
+  // (Don't set properties last values to their current values when reacting to
+  // property changes if changes need to be relayed) (The last values will be
+  // set when relaying outgoing property changes after this call)
+  replicaChannel->ReactToPropertyChanges(timestamp,
+                                         ReplicationPhase::Change,
+                                         TransmissionDirection::Incoming,
+                                         true,
+                                         !shouldRelay);
 
   // Changes need to be relayed?
-  if(shouldRelay)
+  if (shouldRelay)
   {
     // Get peer
     Peer* peer = GetReplicator()->GetPeer();
@@ -1213,19 +1322,22 @@ bool ReplicatorLink::DeserializeChange(const Message& message, TimeMs timestamp)
     uint64 frameId = peer->GetLocalFrameId();
 
     // Observe and replicate changes now
-    bool result = replicaChannel->ObserveAndReplicateChanges(timestamp, frameId, false, false, true);
+    bool result = replicaChannel->ObserveAndReplicateChanges(
+        timestamp, frameId, false, false, true);
     Assert(result);
   }
 
   // Success
   return true;
 }
-bool ReplicatorLink::SendChange(ReplicaChannel* replicaChannel, Message& message)
+bool ReplicatorLink::SendChange(ReplicaChannel* replicaChannel,
+                                Message& message)
 {
   Assert(message.GetType() == ReplicatorMessageType::Change);
 
   // Get replica channel type
-  ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+  ReplicaChannelType* replicaChannelType =
+      replicaChannel->GetReplicaChannelType();
 
   // Get replica
   Replica* replica = replicaChannel->GetReplica();
@@ -1234,7 +1346,7 @@ bool ReplicatorLink::SendChange(ReplicaChannel* replicaChannel, Message& message
 
   // Get message channel
   MessageChannelId channelId = GetOutgoingReplicaChannel(replicaChannel);
-  if(channelId == 0) // Unable?
+  if (channelId == 0) // Unable?
   {
     Assert(false);
     return false;
@@ -1242,8 +1354,13 @@ bool ReplicatorLink::SendChange(ReplicaChannel* replicaChannel, Message& message
 
   // Send change message
   Status status;
-  LinkPlugin::Send(status, message, (replicaChannelType->GetReliabilityMode() == ReliabilityMode::Reliable), channelId, false);
-  if(status.Failed()) // Unable?
+  LinkPlugin::Send(
+      status,
+      message,
+      (replicaChannelType->GetReliabilityMode() == ReliabilityMode::Reliable),
+      channelId,
+      false);
+  if (status.Failed()) // Unable?
     return false;
 
   // Success
@@ -1269,7 +1386,7 @@ bool ReplicatorLink::SendInterrupt(Message& message)
   Assert(GetCommandChannelId());
   Status status;
   LinkPlugin::Send(status, message, true, GetCommandChannelId());
-  if(status.Failed()) // Unable?
+  if (status.Failed()) // Unable?
     return false;
 
   // Success
@@ -1280,16 +1397,17 @@ bool ReplicatorLink::SendInterrupt(Message& message)
 // Channel Helpers
 //
 
-bool ReplicatorLink::OpenAndSerializeForwardReplicaChannels(const Replica* replica, BitStream& bitStream)
+bool ReplicatorLink::OpenAndSerializeForwardReplicaChannels(
+    const Replica* replica, BitStream& bitStream)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, replica->GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, replica->GetReplicaChannels().All())
   {
     // Open outgoing message channel
     MessageChannelId channelId = OpenOutgoingReplicaChannel(replicaChannel);
-    if(channelId == 0) // Unable?
+    if (channelId == 0) // Unable?
     {
       Assert(false);
       return false;
@@ -1302,16 +1420,17 @@ bool ReplicatorLink::OpenAndSerializeForwardReplicaChannels(const Replica* repli
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeAndSetForwardReplicaChannels(Replica* replica, const BitStream& bitStream)
+bool ReplicatorLink::DeserializeAndSetForwardReplicaChannels(
+    Replica* replica, const BitStream& bitStream)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, replica->GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, replica->GetReplicaChannels().All())
   {
     // Read incoming message channel ID
     MessageChannelId channelId;
-    if(!bitStream.Read(channelId)) // Unable?
+    if (!bitStream.Read(channelId)) // Unable?
     {
       Assert(false);
       return false;
@@ -1319,7 +1438,7 @@ bool ReplicatorLink::DeserializeAndSetForwardReplicaChannels(Replica* replica, c
     Assert(channelId != 0);
 
     // Set incoming message channel
-    if(!SetIncomingReplicaChannel(channelId, replicaChannel)) // Unable?
+    if (!SetIncomingReplicaChannel(channelId, replicaChannel)) // Unable?
     {
       Assert(false);
       return false;
@@ -1330,24 +1449,26 @@ bool ReplicatorLink::DeserializeAndSetForwardReplicaChannels(Replica* replica, c
   return true;
 }
 
-bool ReplicatorLink::OpenAndSerializeReverseReplicaChannels(const Replica* replica, BitStream& bitStream)
+bool ReplicatorLink::OpenAndSerializeReverseReplicaChannels(
+    const Replica* replica, BitStream& bitStream)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, replica->GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, replica->GetReplicaChannels().All())
   {
     // Get replica channel type
-    ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+    ReplicaChannelType* replicaChannelType =
+        replicaChannel->GetReplicaChannelType();
 
     //    Replica channel has client change authority?
     // OR Replica channel type has dynamic change authority mode?
-    if(replicaChannel->GetAuthority() == Authority::Client
-    || replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannel->GetAuthority() == Authority::Client ||
+        replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
     {
       // Open outgoing message channel
       MessageChannelId channelId = OpenOutgoingReplicaChannel(replicaChannel);
-      if(channelId == 0) // Unable?
+      if (channelId == 0) // Unable?
       {
         Assert(false);
         return false;
@@ -1361,24 +1482,26 @@ bool ReplicatorLink::OpenAndSerializeReverseReplicaChannels(const Replica* repli
   // Success
   return true;
 }
-bool ReplicatorLink::DeserializeAndSetReverseReplicaChannels(Replica* replica, const BitStream& bitStream)
+bool ReplicatorLink::DeserializeAndSetReverseReplicaChannels(
+    Replica* replica, const BitStream& bitStream)
 {
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, replica->GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, replica->GetReplicaChannels().All())
   {
     // Get replica channel type
-    ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+    ReplicaChannelType* replicaChannelType =
+        replicaChannel->GetReplicaChannelType();
 
     //    Replica channel has client change authority?
     // OR Replica channel has dynamic change authority mode?
-    if(replicaChannel->GetAuthority() == Authority::Client
-    || replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannel->GetAuthority() == Authority::Client ||
+        replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
     {
       // Read incoming message channel ID
       MessageChannelId channelId;
-      if(!bitStream.Read(channelId)) // Unable?
+      if (!bitStream.Read(channelId)) // Unable?
       {
         Assert(false);
         return false;
@@ -1386,7 +1509,7 @@ bool ReplicatorLink::DeserializeAndSetReverseReplicaChannels(Replica* replica, c
       Assert(channelId != 0);
 
       // Set incoming message channel
-      if(!SetIncomingReplicaChannel(channelId, replicaChannel)) // Unable?
+      if (!SetIncomingReplicaChannel(channelId, replicaChannel)) // Unable?
       {
         Assert(false);
         return false;
@@ -1406,7 +1529,7 @@ MessageChannelId ReplicatorLink::GetCommandChannelId() const
 void ReplicatorLink::CloseAllReplicaChannels(Replica* replica)
 {
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, replica->GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, replica->GetReplicaChannels().All())
   {
     // Close outgoing message channel (if any)
     CloseOutgoingReplicaChannel(replicaChannel);
@@ -1416,17 +1539,21 @@ void ReplicatorLink::CloseAllReplicaChannels(Replica* replica)
   }
 }
 
-MessageChannelId ReplicatorLink::OpenOutgoingReplicaChannel(ReplicaChannel* replicaChannel)
+MessageChannelId
+ReplicatorLink::OpenOutgoingReplicaChannel(ReplicaChannel* replicaChannel)
 {
-  // (An outgoing message channel should not already be open for this replica channel)
+  // (An outgoing message channel should not already be open for this replica
+  // channel)
   Assert(!GetOutgoingReplicaChannel(replicaChannel));
 
   // Get replica channel type
-  ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+  ReplicaChannelType* replicaChannelType =
+      replicaChannel->GetReplicaChannelType();
 
   // Open outgoing message channel
-  OutMessageChannel* channel = LinkPlugin::GetLink()->OpenOutgoingChannel(replicaChannelType->GetTransferMode());
-  if(!channel) // Unable?
+  OutMessageChannel* channel = LinkPlugin::GetLink()->OpenOutgoingChannel(
+      replicaChannelType->GetTransferMode());
+  if (!channel) // Unable?
   {
     Assert(false);
     return 0;
@@ -1435,8 +1562,9 @@ MessageChannelId ReplicatorLink::OpenOutgoingReplicaChannel(ReplicaChannel* repl
   Assert(channelId != 0);
 
   // Add outgoing message channel
-  OutReplicaChannels::pointer_bool_pair result = mOutReplicaChannels.Insert(replicaChannel, channelId);
-  if(!result.second) // Unable?
+  OutReplicaChannels::pointer_bool_pair result =
+      mOutReplicaChannels.Insert(replicaChannel, channelId);
+  if (!result.second) // Unable?
   {
     // Close outgoing message channel
     LinkPlugin::GetLink()->CloseOutgoingChannel(channelId);
@@ -1451,8 +1579,9 @@ MessageChannelId ReplicatorLink::OpenOutgoingReplicaChannel(ReplicaChannel* repl
 void ReplicatorLink::CloseOutgoingReplicaChannel(ReplicaChannel* replicaChannel)
 {
   // Find outgoing message channel
-  OutReplicaChannels::iterator iter = mOutReplicaChannels.FindIterator(replicaChannel);
-  if(iter == mOutReplicaChannels.End()) // Unable?
+  OutReplicaChannels::iterator iter =
+      mOutReplicaChannels.FindIterator(replicaChannel);
+  if (iter == mOutReplicaChannels.End()) // Unable?
     return;
 
   // Close outgoing message channel
@@ -1461,28 +1590,33 @@ void ReplicatorLink::CloseOutgoingReplicaChannel(ReplicaChannel* replicaChannel)
   // Remove outgoing message channel
   mOutReplicaChannels.Erase(iter);
 }
-MessageChannelId ReplicatorLink::GetOutgoingReplicaChannel(ReplicaChannel* replicaChannel) const
+MessageChannelId
+ReplicatorLink::GetOutgoingReplicaChannel(ReplicaChannel* replicaChannel) const
 {
   // Get outgoing message channel
   return mOutReplicaChannels.FindValue(replicaChannel, MessageChannelId(0));
 }
 
-bool ReplicatorLink::SetIncomingReplicaChannel(MessageChannelId channelId, ReplicaChannel* replicaChannel)
+bool ReplicatorLink::SetIncomingReplicaChannel(MessageChannelId channelId,
+                                               ReplicaChannel* replicaChannel)
 {
-  // (An incoming message channel should not already be set for this replica channel)
+  // (An incoming message channel should not already be set for this replica
+  // channel)
   Assert(!GetIncomingReplicaChannel(channelId));
 
   // Add incoming message channel (in regular map)
-  InReplicaChannels::pointer_bool_pair result1 = mInReplicaChannels.Insert(channelId, replicaChannel);
-  if(!result1.second) // Unable?
+  InReplicaChannels::pointer_bool_pair result1 =
+      mInReplicaChannels.Insert(channelId, replicaChannel);
+  if (!result1.second) // Unable?
   {
     Assert(false);
     return false;
   }
 
   // Add incoming message channel (in flipped map)
-  InReplicaChannelsFlipped::pointer_bool_pair result2 = mInReplicaChannelsFlipped.Insert(replicaChannel, channelId);
-  if(!result2.second) // Unable?
+  InReplicaChannelsFlipped::pointer_bool_pair result2 =
+      mInReplicaChannelsFlipped.Insert(replicaChannel, channelId);
+  if (!result2.second) // Unable?
   {
     // Remove incoming message channel (in regular map)
     mInReplicaChannels.Erase(result1.first);
@@ -1497,8 +1631,9 @@ bool ReplicatorLink::SetIncomingReplicaChannel(MessageChannelId channelId, Repli
 void ReplicatorLink::ClearIncomingReplicaChannel(ReplicaChannel* replicaChannel)
 {
   // Find incoming message channel (in flipped map)
-  InReplicaChannelsFlipped::iterator iter = mInReplicaChannelsFlipped.FindIterator(replicaChannel);
-  if(iter == mInReplicaChannelsFlipped.End()) // Unable?
+  InReplicaChannelsFlipped::iterator iter =
+      mInReplicaChannelsFlipped.FindIterator(replicaChannel);
+  if (iter == mInReplicaChannelsFlipped.End()) // Unable?
     return;
 
   // Get incoming message channel ID
@@ -1510,7 +1645,8 @@ void ReplicatorLink::ClearIncomingReplicaChannel(ReplicaChannel* replicaChannel)
   // Remove incoming message channel (in regular map)
   mInReplicaChannels.EraseValue(channelId);
 }
-ReplicaChannel* ReplicatorLink::GetIncomingReplicaChannel(MessageChannelId channelId) const
+ReplicaChannel*
+ReplicatorLink::GetIncomingReplicaChannel(MessageChannelId channelId) const
 {
   // Get incoming message channel (in regular map)
   return mInReplicaChannels.FindValue(channelId, nullptr);
@@ -1523,7 +1659,7 @@ ReplicaChannel* ReplicatorLink::GetIncomingReplicaChannel(MessageChannelId chann
 void ReplicatorLink::OnConnectRequestSend(Message& message)
 {
   // Not client?
-  if(GetReplicator()->GetRole() != Role::Client)
+  if (GetReplicator()->GetRole() != Role::Client)
   {
     Assert(false);
     return;
@@ -1538,7 +1674,7 @@ void ReplicatorLink::OnConnectRequestSend(Message& message)
 
   // Read connect request message
   ConnectRequestData connectRequestData;
-  if(message.GetData().Read(connectRequestData)) // Successful?
+  if (message.GetData().Read(connectRequestData)) // Successful?
   {
     // Store connect request data for users who need it later
     mLastConnectRequestData = connectRequestData;
@@ -1550,7 +1686,7 @@ void ReplicatorLink::OnConnectRequestSend(Message& message)
 void ReplicatorLink::OnConnectRequestReceive(Message& message)
 {
   // Not server?
-  if(GetReplicator()->GetRole() != Role::Server)
+  if (GetReplicator()->GetRole() != Role::Server)
   {
     Assert(false);
     return;
@@ -1565,19 +1701,20 @@ void ReplicatorLink::OnConnectRequestReceive(Message& message)
 
   // Read connect request message
   ConnectRequestData connectRequestData;
-  if(message.GetData().Read(connectRequestData)) // Successful?
+  if (message.GetData().Read(connectRequestData)) // Successful?
   {
     // Store connect request data for users who need it later
     mLastConnectRequestData = connectRequestData;
 
     //[Server Callback]
     BitStream extraData;
-    Pair<bool, BitStream> result = GetReplicator()->ServerOnConnectRequest(this, connectRequestData);
-    if(result.first) // Accepted?
+    Pair<bool, BitStream> result =
+        GetReplicator()->ServerOnConnectRequest(this, connectRequestData);
+    if (result.first) // Accepted?
     {
       // Assign replicator ID
       result.first = GetReplicator()->AssignReplicatorId(this);
-      if(result.first) // Successful?
+      if (result.first) // Successful?
       {
         // Write replicator ID
         extraData.Write(GetReplicatorId());
@@ -1595,7 +1732,7 @@ void ReplicatorLink::OnConnectRequestReceive(Message& message)
 void ReplicatorLink::OnConnectResponseSend(Message& message)
 {
   // Not server?
-  if(GetReplicator()->GetRole() != Role::Server)
+  if (GetReplicator()->GetRole() != Role::Server)
   {
     Assert(false);
     return;
@@ -1610,13 +1747,13 @@ void ReplicatorLink::OnConnectResponseSend(Message& message)
 
   // Read connect response message
   ConnectResponseData connectResponseData;
-  if(message.GetData().Read(connectResponseData)) // Successful?
+  if (message.GetData().Read(connectResponseData)) // Successful?
   {
     // Store connect response data for users who need it later
     mLastConnectResponseData = connectResponseData;
 
     // Accepted?
-    if(connectResponseData.mConnectResponse == ConnectResponse::Accept)
+    if (connectResponseData.mConnectResponse == ConnectResponse::Accept)
     {
       // Send all create context items
       GetReplicator()->mCreateContextCacher.RouteAllItems(Route(this));
@@ -1632,7 +1769,7 @@ void ReplicatorLink::OnConnectResponseSend(Message& message)
     GetReplicator()->ServerOnConnectResponse(this, connectResponseData);
 
     // Denied?
-    if(connectResponseData.mConnectResponse != ConnectResponse::Accept)
+    if (connectResponseData.mConnectResponse != ConnectResponse::Accept)
     {
       // Release replicator ID
       GetReplicator()->ReleaseReplicatorId(this);
@@ -1645,7 +1782,7 @@ void ReplicatorLink::OnConnectResponseSend(Message& message)
 void ReplicatorLink::OnConnectResponseReceive(Message& message)
 {
   // Not client?
-  if(GetReplicator()->GetRole() != Role::Client)
+  if (GetReplicator()->GetRole() != Role::Client)
   {
     Assert(false);
     return;
@@ -1660,15 +1797,15 @@ void ReplicatorLink::OnConnectResponseReceive(Message& message)
 
   // Read connect response message
   ConnectResponseData connectResponseData;
-  if(message.GetData().Read(connectResponseData)) // Successful?
+  if (message.GetData().Read(connectResponseData)) // Successful?
   {
     // Accepted?
-    if(connectResponseData.mConnectResponse == ConnectResponse::Accept)
+    if (connectResponseData.mConnectResponse == ConnectResponse::Accept)
     {
       // Read replicator ID
       ReplicatorId replicatorId;
       BitStream extraData = connectResponseData.mExtraData;
-      if(extraData.Read(replicatorId))
+      if (extraData.Read(replicatorId))
       {
         // Set replicator ID
         Assert(replicatorId);
@@ -1682,22 +1819,25 @@ void ReplicatorLink::OnConnectResponseReceive(Message& message)
 
       // Create updated connect response data
       ConnectResponseData userConnectResponseData;
-      userConnectResponseData.mIpAddress       = connectResponseData.mIpAddress;
-      userConnectResponseData.mConnectResponse = connectResponseData.mConnectResponse;
-      userConnectResponseData.mExtraData       = extraData;
+      userConnectResponseData.mIpAddress = connectResponseData.mIpAddress;
+      userConnectResponseData.mConnectResponse =
+          connectResponseData.mConnectResponse;
+      userConnectResponseData.mExtraData = extraData;
 
       // Store connect response data for users who need it later
       mLastConnectResponseData = userConnectResponseData;
 
       //[Client Callback]
-      BitStream confirmExtraData = GetReplicator()->ClientOnConnectResponse(this, userConnectResponseData);
+      BitStream confirmExtraData = GetReplicator()->ClientOnConnectResponse(
+          this, userConnectResponseData);
 
       // Send connect confirmation message
       Assert(GetCommandChannelId());
       Status status;
-      Message message(ReplicatorMessageType::ConnectConfirmation, ZeroMove(confirmExtraData));
+      Message message(ReplicatorMessageType::ConnectConfirmation,
+                      ZeroMove(confirmExtraData));
       LinkPlugin::Send(status, message, true, GetCommandChannelId());
-      if(status.Succeeded()) // Successful?
+      if (status.Succeeded()) // Successful?
       {
         //[Client Callback]
         GetReplicator()->ClientOnConnectConfirmation(this, message.GetData());
@@ -1731,7 +1871,8 @@ void ReplicatorLink::OnDisconnectNoticeReceive(Message& message)
   // Handle the disconnect notice receive
   HandleDisconnectNotice(message, TransmissionDirection::Incoming);
 }
-void ReplicatorLink::HandleDisconnectNotice(Message& message, TransmissionDirection::Enum direction)
+void ReplicatorLink::HandleDisconnectNotice(
+    Message& message, TransmissionDirection::Enum direction)
 {
   // Clear bits read (just in case it was modified)
   message.GetData().ClearBitsRead();
@@ -1742,13 +1883,14 @@ void ReplicatorLink::HandleDisconnectNotice(Message& message, TransmissionDirect
 
   // Read disconnect notice message
   DisconnectNoticeData disconnectNoticeData;
-  if(message.GetData().Read(disconnectNoticeData)) // Successful?
+  if (message.GetData().Read(disconnectNoticeData)) // Successful?
   {
     // Is server?
-    if(GetReplicator()->GetRole() == Role::Server)
+    if (GetReplicator()->GetRole() == Role::Server)
     {
       //[Server Callback]
-      GetReplicator()->ServerOnDisconnectNotice(this, disconnectNoticeData, direction);
+      GetReplicator()->ServerOnDisconnectNotice(
+          this, disconnectNoticeData, direction);
 
       // Release replicator ID
       GetReplicator()->ReleaseReplicatorId(this);
@@ -1757,10 +1899,11 @@ void ReplicatorLink::HandleDisconnectNotice(Message& message, TransmissionDirect
       GetLink()->GetPeer()->DestroyLink(GetLink()->GetTheirIpAddress());
     }
     // Is client?
-    else if(GetReplicator()->GetRole() == Role::Client)
+    else if (GetReplicator()->GetRole() == Role::Client)
     {
       //[Client Callback]
-      GetReplicator()->ClientOnDisconnectNotice(this, disconnectNoticeData, direction);
+      GetReplicator()->ClientOnDisconnectNotice(
+          this, disconnectNoticeData, direction);
 
       // Clear replicator ID
       GetReplicator()->SetReplicatorId(0);
@@ -1775,13 +1918,14 @@ void ReplicatorLink::HandleDisconnectNotice(Message& message, TransmissionDirect
 void ReplicatorLink::OnStateChange(LinkState::Enum prevState)
 {
   // Now connected?
-  if(LinkPlugin::GetLink()->GetState() == LinkState::Connected)
+  if (LinkPlugin::GetLink()->GetState() == LinkState::Connected)
   {
     Assert(mCommandChannelId == 0);
 
     // Open command channel
-    OutMessageChannel* commandChannel = LinkPlugin::GetLink()->OpenOutgoingChannel(TransferMode::Ordered);
-    if(!commandChannel) // Unable?
+    OutMessageChannel* commandChannel =
+        LinkPlugin::GetLink()->OpenOutgoingChannel(TransferMode::Ordered);
+    if (!commandChannel) // Unable?
     {
       Assert(false);
       return;
@@ -1790,10 +1934,10 @@ void ReplicatorLink::OnStateChange(LinkState::Enum prevState)
     // Set command channel ID
     mCommandChannelId = commandChannel->GetChannelId();
   }
-  else if(LinkPlugin::GetLink()->GetState() == LinkState::Disconnected)
+  else if (LinkPlugin::GetLink()->GetState() == LinkState::Disconnected)
   {
     // Command channel is open?
-    if(mCommandChannelId != 0)
+    if (mCommandChannelId != 0)
     {
       // Close command channel
       LinkPlugin::GetLink()->CloseOutgoingChannel(mCommandChannelId);
@@ -1801,10 +1945,11 @@ void ReplicatorLink::OnStateChange(LinkState::Enum prevState)
   }
 }
 
-void ReplicatorLink::OnPluginMessageReceive(MoveReference<Message> message, bool& continueProcessingCustomMessages)
+void ReplicatorLink::OnPluginMessageReceive(
+    MoveReference<Message> message, bool& continueProcessingCustomMessages)
 {
   // Is link in any disconnected state?
-  if(LinkPlugin::GetLink()->GetStatus() == LinkStatus::Disconnected)
+  if (LinkPlugin::GetLink()->GetStatus() == LinkStatus::Disconnected)
   {
     // Ignore message
     return;
@@ -1818,13 +1963,13 @@ void ReplicatorLink::OnPluginMessageReceive(MoveReference<Message> message, bool
   message->GetData().ClearBitsRead();
 
   // Is server?
-  if(GetReplicator()->GetRole() == Role::Server)
+  if (GetReplicator()->GetRole() == Role::Server)
   {
     // Process message
-    switch(message->GetType())
+    switch (message->GetType())
     {
     case ReplicatorMessageType::ConnectConfirmation:
-      if(GetLink()->GetStatus() == LinkStatus::Connected)
+      if (GetLink()->GetStatus() == LinkStatus::Connected)
       {
         //[Server Callback]
         GetReplicator()->ServerOnConnectConfirmation(this, message->GetData());
@@ -1845,10 +1990,10 @@ void ReplicatorLink::OnPluginMessageReceive(MoveReference<Message> message, bool
     }
   }
   // Is client?
-  else if(GetReplicator()->GetRole() == Role::Client)
+  else if (GetReplicator()->GetRole() == Role::Client)
   {
     // Process message
-    switch(message->GetType())
+    switch (message->GetType())
     {
     case ReplicatorMessageType::CreateContextItems:
       ReceiveCreateContextItems(message);
@@ -1878,9 +2023,9 @@ void ReplicatorLink::OnPluginMessageReceive(MoveReference<Message> message, bool
       ReceiveDestroy(message);
       break;
 
-    // case ReplicatorMessageType::Reset:
-    //   ReceiveReset(message);
-    //   break;
+      // case ReplicatorMessageType::Reset:
+      //   ReceiveReset(message);
+      //   break;
 
     case ReplicatorMessageType::Change:
       ReceiveChange(message);

@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -17,7 +14,8 @@ Resolution GetDesktopResolution()
     return Resolution(cMinimumMonitorSize.x, cMinimumMonitorSize.y);
   }
 
-  return Resolution(displayInfo.w, displayInfo.h);;
+  return Resolution(displayInfo.w, displayInfo.h);
+  ;
 }
 
 void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
@@ -28,12 +26,13 @@ void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
   // Returns the window currently with input focus
   SDL_Window* activeWindow = SDL_GetGrabbedWindow();
   // Returns the display device index for the window provided
-  int displayIndex =  SDL_GetWindowDisplayIndex(activeWindow);
+  int displayIndex = SDL_GetWindowDisplayIndex(activeWindow);
   // Display index is negative on error
   if (displayIndex < 0)
   {
     String errorString = SDL_GetError();
-    Warn("Failed to get display index for the active window: %s", errorString.c_str());
+    Warn("Failed to get display index for the active window: %s",
+         errorString.c_str());
     return;
   }
 
@@ -42,12 +41,13 @@ void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
   if (totalDisplayModes < 1)
   {
     String errorString = SDL_GetError();
-    Warn("Failed to get total display modes for the active display device: %s", errorString.c_str());
+    Warn("Failed to get total display modes for the active display device: %s",
+         errorString.c_str());
     return;
   }
 
   // Get all supported display modes for the active display device
-  SDL_DisplayMode displayInfo = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
+  SDL_DisplayMode displayInfo = {SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0};
   for (int i = 0; i < totalDisplayModes; ++i)
   {
     if (SDL_GetDisplayMode(displayIndex, i, &displayInfo) != 0)
@@ -74,4 +74,4 @@ void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
   Sort(resolutions.All());
 }
 
-}// namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -73,4 +68,4 @@ String GetCallStack(StringParam extraSymbolPath, OsHandle exceptionContext)
   return stack;
 }
 
-}//namespace Zero
+} // namespace Zero

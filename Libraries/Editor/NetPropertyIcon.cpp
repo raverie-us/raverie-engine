@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Andrew Colean
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,19 +6,17 @@ namespace Zero
 
 namespace NetPropertyUi
 {
-  const cstr cLocation = "EditorUi/Net";
-  Tweakable(Vec4, DisabledNetPropertyIcon, Vec4(1, 1, 1, 1), cLocation);
-  Tweakable(Vec4, EnabledNetPropertyIcon,  Vec4(1, 1, 1, 1), cLocation);
-}
+const cstr cLocation = "EditorUi/Net";
+Tweakable(Vec4, DisabledNetPropertyIcon, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, EnabledNetPropertyIcon, Vec4(1, 1, 1, 1), cLocation);
+} // namespace NetPropertyUi
 
-//---------------------------------------------------------------------------------//
-//                               NetPropertyIcon                                   //
-//---------------------------------------------------------------------------------//
+//                               NetPropertyIcon //
 
-//******************************************************************************
-NetPropertyIcon::NetPropertyIcon(Composite* parent, HandleParam object,
-                                 Property* metaProperty)
-  : Composite(parent),
+NetPropertyIcon::NetPropertyIcon(Composite* parent,
+                                 HandleParam object,
+                                 Property* metaProperty) :
+    Composite(parent),
     mMouseOver(false),
     mIcon(nullptr),
     mComponentHandle(object),
@@ -36,7 +29,7 @@ NetPropertyIcon::NetPropertyIcon(Composite* parent, HandleParam object,
   Assert(mIcon);
 
   // Unsupported net property?
-  if(!IsValidNetProperty(metaProperty))
+  if (!IsValidNetProperty(metaProperty))
     mIcon->SetActive(false); // Hide net property icon
 
   // Size our widget to the icon's size
@@ -53,12 +46,11 @@ NetPropertyIcon::NetPropertyIcon(Composite* parent, HandleParam object,
 // Composite Interface
 //
 
-//******************************************************************************
 void NetPropertyIcon::UpdateTransform()
 {
   // Get component
   Component* component = mComponentHandle.Get<Component*>();
-  if(component == nullptr)
+  if (component == nullptr)
   {
     // Update icon transform
     Composite::UpdateTransform();
@@ -69,10 +61,9 @@ void NetPropertyIcon::UpdateTransform()
   float highlight = mMouseOver ? 1.2f : 0.9f;
   Vec4 color;
 
-
   // Get net object
   NetObject* netObject = component->GetOwner()->has(NetObject);
-  if(netObject == nullptr) // Unable?
+  if (netObject == nullptr) // Unable?
   {
     // Hide net property icon
     mIcon->SetActive(false);
@@ -85,7 +76,7 @@ void NetPropertyIcon::UpdateTransform()
   BoundType* componentType = ZilchVirtualTypeId(component);
 
   // Is the net object component?
-  if(componentType->IsA(ZilchTypeId(NetObject)))
+  if (componentType->IsA(ZilchTypeId(NetObject)))
   {
     // Hide net property icon
     mIcon->SetActive(false);
@@ -98,9 +89,10 @@ void NetPropertyIcon::UpdateTransform()
   String propertyName = mProperty->Name;
 
   //    Has net property attribute?
-  // OR Net object has this net property info added? (Property is enabled for network replication?)
-  if(mProperty->HasAttribute(PropertyAttributes::cNetProperty)
-  || netObject->HasNetPropertyInfo(componentType, propertyName))
+  // OR Net object has this net property info added? (Property is enabled for
+  // network replication?)
+  if (mProperty->HasAttribute(PropertyAttributes::cNetProperty) ||
+      netObject->HasNetPropertyInfo(componentType, propertyName))
     color = NetPropertyUi::EnabledNetPropertyIcon; // Use enabled color
   else
     color = NetPropertyUi::DisabledNetPropertyIcon; // Use disabled color
@@ -118,7 +110,6 @@ void NetPropertyIcon::UpdateTransform()
 // Event Handlers
 //
 
-//******************************************************************************
 void NetPropertyIcon::OnMouseEnter(Event* event)
 {
   // Create description tooltip
@@ -129,16 +120,20 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
   // DebugPrint("NetPropertyIcon: [%f, %f]\n", mTranslation.x, mTranslation.y);
 
   // Has net property attribute?
-  if(mProperty->HasAttribute(PropertyAttributes::cNetProperty))
-    toolTip->SetText("This property will always be replicated over the network. Specified in script via the [NetProperty] attribute.");
+  if (mProperty->HasAttribute(PropertyAttributes::cNetProperty))
+    toolTip->SetText(
+        "This property will always be replicated over the network. Specified "
+        "in script via the [NetProperty] attribute.");
   else
   {
     // Property is enabled for network replication?
-    if(IsEnabled())
-      toolTip->SetText("This property will be replicated over the network. Right click to choose a channel.");
+    if (IsEnabled())
+      toolTip->SetText("This property will be replicated over the network. "
+                       "Right click to choose a channel.");
     // Property is not enabled for network replication?
     else
-      toolTip->SetText("Left click to replicate this property over the network.");
+      toolTip->SetText(
+          "Left click to replicate this property over the network.");
 
     // Is mousing over
     mMouseOver = true;
@@ -149,8 +144,10 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
   ToolTipPlacement placement;
   placement.SetScreenRect(GetParent()->GetParent()->GetScreenRect());
   placement.mHotSpot = mIcon->GetScreenRect().Center();
-  placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right,
-                        IndicatorSide::Bottom, IndicatorSide::Top);
+  placement.SetPriority(IndicatorSide::Left,
+                        IndicatorSide::Right,
+                        IndicatorSide::Bottom,
+                        IndicatorSide::Top);
   toolTip->SetArrowTipTranslation(placement);
   mTooltip = toolTip;
 
@@ -158,7 +155,6 @@ void NetPropertyIcon::OnMouseEnter(Event* event)
   MarkAsNeedsUpdate();
 }
 
-//****************************************************************************
 void NetPropertyIcon::OnMouseExit(Event* event)
 {
   // Destroy tooltip
@@ -172,18 +168,17 @@ void NetPropertyIcon::OnMouseExit(Event* event)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void NetPropertyIcon::OnLeftClick(Event* event)
 {
   // Get component
   Component* component = mComponentHandle.Get<Component*>();
 
-  if(component == nullptr)
+  if (component == nullptr)
     return;
 
   // Get net object
   NetObject* netObject = component->GetOwner()->has(NetObject);
-  if(netObject == nullptr) // Unable?
+  if (netObject == nullptr) // Unable?
   {
     Error("NetPropertyIcon was visible on a Cog without a NetObject component");
 
@@ -196,7 +191,7 @@ void NetPropertyIcon::OnLeftClick(Event* event)
   BoundType* componentType = ZilchVirtualTypeId(component);
 
   // Is the net object component?
-  if(componentType->IsA(ZilchTypeId(NetObject)))
+  if (componentType->IsA(ZilchTypeId(NetObject)))
   {
     // Hide net property icon
     mIcon->SetActive(false);
@@ -210,10 +205,11 @@ void NetPropertyIcon::OnLeftClick(Event* event)
   OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
   // Does not have net property attribute?
-  if(!mProperty->HasAttribute(PropertyAttributes::cNetProperty))
+  if (!mProperty->HasAttribute(PropertyAttributes::cNetProperty))
   {
-    // Net object has this net property info added? (Property is enabled for network replication?)
-    if(netObject->HasNetPropertyInfo(componentType, propertyName))
+    // Net object has this net property info added? (Property is enabled for
+    // network replication?)
+    if (netObject->HasNetPropertyInfo(componentType, propertyName))
     {
       // (Operation) Remove net property info
       RemoveNetPropertyInfo(opQueue, netObject, componentType, propertyName);
@@ -235,16 +231,15 @@ void NetPropertyIcon::OnLeftClick(Event* event)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void NetPropertyIcon::OnRightClick(MouseEvent* event)
 {
   // Property is not enabled for network replication?
-  if(!IsEnabled())
+  if (!IsEnabled())
     return;
 
   // No active search view?
   FloatingSearchView* searchView = mActiveSearch;
-  if(searchView == NULL)
+  if (searchView == NULL)
   {
     // Display NetChannelConfig resource list
     FloatingSearchView* viewPopUp = new FloatingSearchView(this);
@@ -272,7 +267,6 @@ void NetPropertyIcon::OnRightClick(MouseEvent* event)
   }
 }
 
-//****************************************************************************
 void NetPropertyIcon::OnSearchCompleted(SearchViewEvent* event)
 {
   // Get net channel configuration resource from search result
@@ -283,12 +277,12 @@ void NetPropertyIcon::OnSearchCompleted(SearchViewEvent* event)
 
   // Get component
   Component* component = mComponentHandle.Get<Component*>();
-  if(component == nullptr)
+  if (component == nullptr)
     return;
 
   // Get net object
   NetObject* netObject = component->GetOwner()->has(NetObject);
-  if(netObject == nullptr) // Unable?
+  if (netObject == nullptr) // Unable?
     return;
 
   // Get component meta type
@@ -301,30 +295,29 @@ void NetPropertyIcon::OnSearchCompleted(SearchViewEvent* event)
   OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
 
   // (Operation) Remove net property info
-  SetNetPropertyInfoChannel(opQueue, netObject, componentType, propertyName, netChannelConfig);
+  SetNetPropertyInfoChannel(
+      opQueue, netObject, componentType, propertyName, netChannelConfig);
 }
 
 //
 // Icon Interface
 //
 
-//****************************************************************************
 bool NetPropertyIcon::IsEnabled()
 {
   return GetNetPropertyInfo() != nullptr;
 }
 
-//****************************************************************************
 NetPropertyInfo* NetPropertyIcon::GetNetPropertyInfo()
 {
   // Get component
   Component* component = mComponentHandle.Get<Component*>();
-  if(component == nullptr)
+  if (component == nullptr)
     return nullptr;
 
   // Get net object
   NetObject* netObject = component->GetOwner()->has(NetObject);
-  if(netObject == nullptr) // Unable?
+  if (netObject == nullptr) // Unable?
     return nullptr;
 
   // Get component meta type
@@ -337,14 +330,13 @@ NetPropertyInfo* NetPropertyIcon::GetNetPropertyInfo()
   return netObject->GetNetPropertyInfo(componentType, propertyName);
 }
 
-//******************************************************************************
 bool ShouldDisplayNetPropertyIcon(HandleParam selectedObject)
 {
   // Is a single Cog selection?
-  if(Cog* cog = selectedObject.Get<Cog*>())
+  if (Cog* cog = selectedObject.Get<Cog*>())
   {
     // Has NetObject component?
-    if(cog->has(NetObject))
+    if (cog->has(NetObject))
     {
       // Should display net property icons
       return true;
@@ -353,7 +345,8 @@ bool ShouldDisplayNetPropertyIcon(HandleParam selectedObject)
 
   // Disabled until we have the new property interface changes
 
-  //else if(MetaSelection* selection = selectedObject.As<MetaSelection>(nullptr))
+  // else if(MetaSelection* selection =
+  // selectedObject.As<MetaSelection>(nullptr))
   //{
   //  // To display the icon for multi-select, all objects in the selection
   //  // must be Cogs with the NetObject Component
@@ -371,17 +364,18 @@ bool ShouldDisplayNetPropertyIcon(HandleParam selectedObject)
   return false;
 }
 
-//******************************************************************************
-Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object,
-                              Property* metaProperty, void* clientData)
+Widget* CreateNetPropertyIcon(Composite* parent,
+                              HandleParam object,
+                              Property* metaProperty,
+                              void* clientData)
 {
   // Is a component property?
-  if(metaProperty && object.Get<Component*>())
+  if (metaProperty && object.Get<Component*>())
   {
     // To Do:
     // We need to determine if we're representing a single object or multiple.
-    // We can do this by searching up the object tree that was used to create the 
-    // property grid.
+    // We can do this by searching up the object tree that was used to create
+    // the property grid.
 
     // Create net property icon
     return new NetPropertyIcon(parent, object, metaProperty);
@@ -391,4 +385,4 @@ Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object,
   return nullptr;
 }
 
-}//namespace Zero
+} // namespace Zero

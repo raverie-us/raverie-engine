@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Nathan Carlson
-/// Copyright 2015-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,13 +6,17 @@ namespace Zero
 
 struct TimeOfImpactData
 {
-  TimeOfImpactData(Collider* colliderA, Collider* colliderB, real dt, Vec3 velocity = Vec3::cZero, bool linearSweep = false)
-    : ColliderA(colliderA)
-    , ColliderB(colliderB)
-    , Dt(dt)
-    , Velocity(velocity)
-    , LinearSweep(linearSweep)
-    , Steps(0)
+  TimeOfImpactData(Collider* colliderA,
+                   Collider* colliderB,
+                   real dt,
+                   Vec3 velocity = Vec3::cZero,
+                   bool linearSweep = false) :
+      ColliderA(colliderA),
+      ColliderB(colliderB),
+      Dt(dt),
+      Velocity(velocity),
+      LinearSweep(linearSweep),
+      Steps(0)
   {
   }
 

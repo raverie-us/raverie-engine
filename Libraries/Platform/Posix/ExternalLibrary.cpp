@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ExternalLibrary.cpp
-/// Implementation of the ExternalLibrary class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Common/ExternalLibrary.hpp"
 
@@ -21,7 +13,7 @@ ExternalLibrary::ExternalLibrary()
 
 ExternalLibrary::~ExternalLibrary()
 {
-  if(mUnloadOnDestruction)
+  if (mUnloadOnDestruction)
     Unload();
 }
 
@@ -37,7 +29,7 @@ void ExternalLibrary::Load(cstr filePath)
 
 void ExternalLibrary::Unload()
 {
-  if(mHandle == nullptr)
+  if (mHandle == nullptr)
     return;
   dlclose(mHandle);
   mHandle = nullptr;
@@ -45,8 +37,10 @@ void ExternalLibrary::Unload()
 
 void* ExternalLibrary::GetFunctionByName(cstr name)
 {
-  ReturnIf(mHandle == nullptr, nullptr, "Attempting to get a function from an invalid library");
+  ReturnIf(mHandle == nullptr,
+           nullptr,
+           "Attempting to get a function from an invalid library");
   return dlsym(mHandle, name);
 }
 
-}//namespace Zero
+} // namespace Zero

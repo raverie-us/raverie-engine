@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2018, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,59 +9,50 @@ namespace Events
 DefineEvent(PathFinderMeshFinished);
 }
 
-//------------------------------------------------------------------------------------ Nav Mesh Edge
-//**************************************************************************************************
-NavMeshEdge::NavMeshEdge(NavMeshPolygon* owner)
-  : mCost(0.0f)
-  , mTailVertex(u32(-1))
-  , mPolygon(owner)
-  , mNextConnected(this)
-  , mPreviousConnected(this)
+//Nav Mesh Edge
+NavMeshEdge::NavMeshEdge(NavMeshPolygon* owner) :
+    mCost(0.0f),
+    mTailVertex(u32(-1)),
+    mPolygon(owner),
+    mNextConnected(this),
+    mPreviousConnected(this)
 {
   owner->mEdges.PushBack(this);
 }
 
-//------------------------------------------------------------------------------ Edge Triangle Range
-//**************************************************************************************************
-NavMeshEdge::PolygonRange::PolygonRange()
-  : mIgnore(nullptr)
+//Edge Triangle Range
+NavMeshEdge::PolygonRange::PolygonRange() : mIgnore(nullptr)
 {
-  
 }
 
-//**************************************************************************************************
 NavMeshEdge::PolygonRange::PolygonRange(NavMeshEdge* edge,
-                                        NavMeshPolygon* ignore)
-  : mBegin(edge->mNextConnected)
-  , mEnd(edge)
-  , mIgnore(ignore)
+                                        NavMeshPolygon* ignore) :
+    mBegin(edge->mNextConnected),
+    mEnd(edge),
+    mIgnore(ignore)
 {
   FindNextValid();
 }
 
-//**************************************************************************************************
 bool NavMeshEdge::PolygonRange::Empty() const
 {
   return mBegin == mEnd;
 }
 
-//**************************************************************************************************
 void NavMeshEdge::PolygonRange::PopFront()
 {
   mBegin = mBegin->mNextConnected;
   FindNextValid();
 }
 
-//**************************************************************************************************
 NavMeshPolygon* NavMeshEdge::PolygonRange::Front()
 {
   return mBegin->mPolygon;
 }
 
-//**************************************************************************************************
 void NavMeshEdge::PolygonRange::FindNextValid()
 {
-  while(!Empty())
+  while (!Empty())
   {
     if (Front() != mIgnore)
       break;
@@ -75,27 +61,25 @@ void NavMeshEdge::PolygonRange::FindNextValid()
   }
 }
 
-//**************************************************************************************************
 NavMeshEdge::PolygonRange& NavMeshEdge::PolygonRange::All()
 {
   return *this;
 }
 
-//**************************************************************************************************
-NavMeshEdge::PolygonRange NavMeshEdge::AllConnectedTriangles(NavMeshPolygon* ignore)
+NavMeshEdge::PolygonRange
+NavMeshEdge::AllConnectedTriangles(NavMeshPolygon* ignore)
 {
   return PolygonRange(this, ignore);
 }
 
-//-------------------------------------------------------------------------------- Nav Mesh Triangle
-//**************************************************************************************************
+//Nav Mesh Triangle
 Vec3 NavMeshPolygon::GetCenter(PathFinderAlgorithmMesh* mesh)
 {
   Array<Vec3>& vertices = mesh->mVertices;
 
   Vec3 center = Vec3::cZero;
   u32 count = 0;
-  forRange(NavMeshEdge& edge, AllEdges())
+  forRange(NavMeshEdge & edge, AllEdges())
   {
     center += vertices[edge.mTailVertex];
     ++count;
@@ -106,59 +90,50 @@ Vec3 NavMeshPolygon::GetCenter(PathFinderAlgorithmMesh* mesh)
   return center;
 }
 
-//**************************************************************************************************
 NavMeshPolygon::EdgeRange NavMeshPolygon::AllEdges()
 {
   return mEdges.All();
 }
 
-//**************************************************************************************************
 NavMeshPolygon::PolygonRange NavMeshPolygon::AllNeighboringPolygons()
 {
   return PolygonRange(this);
 }
 
-//-------------------------------------------------------------------------- Triangle Triangle Range
-//**************************************************************************************************
-NavMeshPolygon::PolygonRange::PolygonRange(NavMeshPolygon* polygon)
-  : mCurrentEdge(polygon->AllEdges())
+//Triangle Triangle Range
+NavMeshPolygon::PolygonRange::PolygonRange(NavMeshPolygon* polygon) :
+    mCurrentEdge(polygon->AllEdges())
 {
   mCurrentEdgesPolygons = CurrentEdge()->AllConnectedTriangles(mPolygon);
   FindNextValid();
 }
 
-//**************************************************************************************************
 bool NavMeshPolygon::PolygonRange::Empty()
 {
   return mCurrentEdge.Empty();
 }
 
-//**************************************************************************************************
 void NavMeshPolygon::PolygonRange::PopFront()
 {
   mCurrentEdgesPolygons.PopFront();
   FindNextValid();
 }
 
-//**************************************************************************************************
 NavMeshEdge* NavMeshPolygon::PolygonRange::CurrentEdge()
 {
   return &mCurrentEdge.Front();
 }
 
-//**************************************************************************************************
 NavMeshPolygon* NavMeshPolygon::PolygonRange::Front()
 {
   return mCurrentEdgesPolygons.Front();
 }
 
-//**************************************************************************************************
 NavMeshPolygon::PolygonRange& NavMeshPolygon::PolygonRange::All()
 {
   return *this;
 }
 
-//**************************************************************************************************
 void NavMeshPolygon::PolygonRange::FindNextValid()
 {
   while (!mCurrentEdge.Empty() && mCurrentEdgesPolygons.Empty())
@@ -169,49 +144,42 @@ void NavMeshPolygon::PolygonRange::FindNextValid()
   }
 }
 
-//**************************************************************************************************
 float NavMeshPolygon::PolygonRange::GetFrontCost()
 {
   return CurrentEdge()->mCost + Front()->mCost;
 }
 
-//---------------------------------------------------------------------- Path Finder Mesh Node Range
-//**************************************************************************************************
-PathFinderMeshNodeRange::PathFinderMeshNodeRange(NavMeshPolygon* polygon)
-  : mRange(polygon->AllNeighboringPolygons())
+//Finder Mesh Node Range
+PathFinderMeshNodeRange::PathFinderMeshNodeRange(NavMeshPolygon* polygon) :
+    mRange(polygon->AllNeighboringPolygons())
 {
   PopUntilValid();
 }
 
-//**************************************************************************************************
 bool PathFinderMeshNodeRange::Empty()
 {
   return mRange.Empty();
 }
 
-//**************************************************************************************************
 void PathFinderMeshNodeRange::PopFront()
 {
   mRange.PopFront();
   PopUntilValid();
 }
 
-//**************************************************************************************************
 PathFinderMeshNodeRange::FrontResult PathFinderMeshNodeRange::Front()
 {
   return FrontResult(mRange.Front()->mId, mRange.GetFrontCost());
 }
 
-//**************************************************************************************************
 PathFinderMeshNodeRange& PathFinderMeshNodeRange::All()
 {
   return *this;
 }
 
-//**************************************************************************************************
 void PathFinderMeshNodeRange::PopUntilValid()
 {
-  while(!mRange.Empty())
+  while (!mRange.Empty())
   {
     NavMeshPolygon* triangle = mRange.Front();
 
@@ -222,29 +190,26 @@ void PathFinderMeshNodeRange::PopUntilValid()
   }
 }
 
-//----------------------------------------------------------------------- Path Finder Algorithm Mesh
-//**************************************************************************************************
-PathFinderAlgorithmMesh::PathFinderAlgorithmMesh()
-  : mCurrentPolygonId(0)
-  , mCurrentEdgeId(0)
+//Finder Algorithm Mesh
+PathFinderAlgorithmMesh::PathFinderAlgorithmMesh() :
+    mCurrentPolygonId(0),
+    mCurrentEdgeId(0)
 {
-
 }
 
-//**************************************************************************************************
-PathFinderMeshNodeRange PathFinderAlgorithmMesh::QueryNeighbors(NavMeshPolygonId polygonId)
+PathFinderMeshNodeRange
+PathFinderAlgorithmMesh::QueryNeighbors(NavMeshPolygonId polygonId)
 {
   return PathFinderMeshNodeRange(GetPolygon(polygonId));
 }
 
-//**************************************************************************************************
 bool PathFinderAlgorithmMesh::QueryIsValid(NavMeshPolygonId polygonId)
 {
   return (polygonId != u32(-1));
 }
 
-//**************************************************************************************************
-float PathFinderAlgorithmMesh::QueryHeuristic(NavMeshPolygonId start, NavMeshPolygonId goal)
+float PathFinderAlgorithmMesh::QueryHeuristic(NavMeshPolygonId start,
+                                              NavMeshPolygonId goal)
 {
   Vec3 startPos = GetPolygon(start)->GetCenter(this);
   Vec3 goalPos = GetPolygon(goal)->GetCenter(this);
@@ -252,14 +217,12 @@ float PathFinderAlgorithmMesh::QueryHeuristic(NavMeshPolygonId start, NavMeshPol
   return Math::DistanceSq(startPos, goalPos);
 }
 
-//**************************************************************************************************
 u32 PathFinderAlgorithmMesh::AddVertex(Vec3Param pos)
 {
   mVertices.PushBack(pos);
   return mVertices.Size() - 1;
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon()
 {
   NavMeshPolygonId id = GetNextPolygonId();
@@ -269,13 +232,13 @@ NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon()
   return id;
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(Array<u32>& vertices)
 {
   // We must be at least a triangle
   if (vertices.Size() <= 2)
   {
-    DoNotifyException("Cannot create polygon", "Polygons must have at least 3 vertices");
+    DoNotifyException("Cannot create polygon",
+                      "Polygons must have at least 3 vertices");
     return u32(-1);
   }
 
@@ -284,7 +247,7 @@ NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(Array<u32>& vertices)
 
   // Add all the given edges
   u32 previous = vertices.Front();
-  for(uint i = 1; i < vertices.Size(); ++i)
+  for (uint i = 1; i < vertices.Size(); ++i)
   {
     u32 current = vertices[i];
     AddEdgeToPolygon(id, previous, current);
@@ -294,14 +257,14 @@ NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(Array<u32>& vertices)
   return id;
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(ArrayClass<u32>& vertices)
 {
   return AddPolygon(vertices.NativeArray);
 }
 
-//**************************************************************************************************
-NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2)
+NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(u32 vertex0,
+                                                     u32 vertex1,
+                                                     u32 vertex2)
 {
   // Create the new polygon
   NavMeshPolygonId id = AddPolygon();
@@ -313,8 +276,10 @@ NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(u32 vertex0, u32 vertex1, u
   return id;
 }
 
-//**************************************************************************************************
-NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3)
+NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(u32 vertex0,
+                                                     u32 vertex1,
+                                                     u32 vertex2,
+                                                     u32 vertex3)
 {
   // Create the new polygon
   NavMeshPolygonId id = AddPolygon();
@@ -327,15 +292,15 @@ NavMeshPolygonId PathFinderAlgorithmMesh::AddPolygon(u32 vertex0, u32 vertex1, u
   return id;
 }
 
-//**************************************************************************************************
-NavMeshEdgeId PathFinderAlgorithmMesh::AddEdgeToPolygon(NavMeshPolygonId polygonId,
-                                                        u32 vertex0, u32 vertex1)
+NavMeshEdgeId PathFinderAlgorithmMesh::AddEdgeToPolygon(
+    NavMeshPolygonId polygonId, u32 vertex0, u32 vertex1)
 {
   NavMeshPolygon* polygon = GetPolygon(polygonId);
 
-  if(polygon == nullptr)
+  if (polygon == nullptr)
   {
-    DoNotifyException("Cannot add edge to polygon", "Given polygon id is invalid");
+    DoNotifyException("Cannot add edge to polygon",
+                      "Given polygon id is invalid");
     return u32(-1);
   }
 
@@ -347,7 +312,7 @@ NavMeshEdgeId PathFinderAlgorithmMesh::AddEdgeToPolygon(NavMeshPolygonId polygon
 
   // We need to search for other polygons connected to these two vertices
   u64 edgeIndex = GetLexicographicId(vertex0, vertex1);
-  if(NavMeshEdge* connected = mEdgeConnections.FindValue(edgeIndex, nullptr))
+  if (NavMeshEdge* connected = mEdgeConnections.FindValue(edgeIndex, nullptr))
   {
     // Insert the new edge into the linked list
     NavMeshEdge* previous = connected;
@@ -368,8 +333,8 @@ NavMeshEdgeId PathFinderAlgorithmMesh::AddEdgeToPolygon(NavMeshPolygonId polygon
   return edgeId;
 }
 
-//**************************************************************************************************
-void PathFinderAlgorithmMesh::SetPolygonCost(NavMeshPolygonId polygonId, float cost)
+void PathFinderAlgorithmMesh::SetPolygonCost(NavMeshPolygonId polygonId,
+                                             float cost)
 {
   if (NavMeshPolygon* polygon = GetPolygon(polygonId))
     polygon->mCost = cost;
@@ -377,16 +342,16 @@ void PathFinderAlgorithmMesh::SetPolygonCost(NavMeshPolygonId polygonId, float c
     DoNotifyException("Cannot set polygon cost", "Given polygon id is invalid");
 }
 
-//**************************************************************************************************
-void PathFinderAlgorithmMesh::SetPolygonClientData(NavMeshPolygonId polygonId, Cog* clientData)
+void PathFinderAlgorithmMesh::SetPolygonClientData(NavMeshPolygonId polygonId,
+                                                   Cog* clientData)
 {
   if (NavMeshPolygon* polygon = GetPolygon(polygonId))
     mPolygonClientData.Insert(polygon, clientData->GetId());
   else
-    DoNotifyException("Cannot set polygon client data", "Given polygon id is invalid");
+    DoNotifyException("Cannot set polygon client data",
+                      "Given polygon id is invalid");
 }
 
-//**************************************************************************************************
 void PathFinderAlgorithmMesh::SetEdgeCost(NavMeshEdgeId edgeId, float cost)
 {
   if (NavMeshEdge* edge = GetEdge(edgeId))
@@ -395,8 +360,8 @@ void PathFinderAlgorithmMesh::SetEdgeCost(NavMeshEdgeId edgeId, float cost)
     DoNotifyException("Cannot set edge cost", "Given edge id is invalid");
 }
 
-//**************************************************************************************************
-void PathFinderAlgorithmMesh::SetEdgeClientData(NavMeshEdgeId edgeId, Cog* clientData)
+void PathFinderAlgorithmMesh::SetEdgeClientData(NavMeshEdgeId edgeId,
+                                                Cog* clientData)
 {
   if (NavMeshEdge* edge = GetEdge(edgeId))
     mEdgeClientData.Insert(edge, clientData->GetId());
@@ -404,13 +369,10 @@ void PathFinderAlgorithmMesh::SetEdgeClientData(NavMeshEdgeId edgeId, Cog* clien
     DoNotifyException("Cannot set edge cost", "Given edge id is invalid");
 }
 
-//**************************************************************************************************
 void PathFinderAlgorithmMesh::Clear()
 {
-  forRange(NavMeshEdge* edge, mEdges.Values())
-    delete edge;
-  forRange(NavMeshPolygon* triangle, mPolygons.Values())
-    delete triangle;
+  forRange(NavMeshEdge * edge, mEdges.Values()) delete edge;
+  forRange(NavMeshPolygon * triangle, mPolygons.Values()) delete triangle;
 
   mEdgeConnections.Clear();
   mVertices.Clear();
@@ -420,32 +382,27 @@ void PathFinderAlgorithmMesh::Clear()
   mEdgeClientData.Clear();
 }
 
-//**************************************************************************************************
 NavMeshPolygon* PathFinderAlgorithmMesh::GetPolygon(NavMeshPolygonId id)
 {
   return mPolygons.FindValue(id, nullptr);
 }
 
-//**************************************************************************************************
 NavMeshEdge* PathFinderAlgorithmMesh::GetEdge(NavMeshEdgeId id)
 {
   return mEdges.FindValue(id, nullptr);
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderAlgorithmMesh::GetNextPolygonId()
 {
   return mCurrentPolygonId++;
 }
 
-//**************************************************************************************************
 NavMeshEdgeId PathFinderAlgorithmMesh::GetNextEdgeId()
 {
   return mCurrentEdgeId++;
 }
 
-//--------------------------------------------------------------------------------- Path Finder Mesh
-//**************************************************************************************************
+//Path Finder Mesh
 ZilchDefineType(PathFinderMesh, builder, type)
 {
   ZeroBindDocumented();
@@ -460,9 +417,12 @@ ZilchDefineType(PathFinderMesh, builder, type)
 
   ZilchBindMethod(AddVertex);
 
-  //ZilchBindOverloadedMethod(AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, ArrayClass<u32>&));
-  ZilchBindOverloadedMethod(AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, u32, u32, u32));
-  ZilchBindOverloadedMethod(AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, u32, u32, u32, u32));
+  // ZilchBindOverloadedMethod(AddPolygon,
+  // ZilchInstanceOverload(NavMeshPolygonId, ArrayClass<u32>&));
+  ZilchBindOverloadedMethod(
+      AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, u32, u32, u32));
+  ZilchBindOverloadedMethod(
+      AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, u32, u32, u32, u32));
 
   ZilchBindMethod(SetPolygonCost);
   ZilchBindMethod(SetPolygonClientData);
@@ -470,42 +430,42 @@ ZilchDefineType(PathFinderMesh, builder, type)
   ZilchBindMethod(SetEdgeClientData);
   ZilchBindMethod(Clear);
 
-  //ZilchBindOverloadedMethod(FindPath, ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param, IntVec3Param));
-  //ZilchBindOverloadedMethod(FindPath, ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
-  //ZilchBindOverloadedMethod(FindPathThreaded, ZilchInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param, IntVec3Param));
-  //ZilchBindOverloadedMethod(FindPathThreaded, ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
+  // ZilchBindOverloadedMethod(FindPath,
+  // ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param,
+  // IntVec3Param)); ZilchBindOverloadedMethod(FindPath,
+  // ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
+  // ZilchBindOverloadedMethod(FindPathThreaded,
+  // ZilchInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param,
+  // IntVec3Param)); ZilchBindOverloadedMethod(FindPathThreaded,
+  // ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
 
   ZilchBindMethod(WorldPositionToPolygon);
   ZilchBindMethod(LocalPositionToPolygon);
 }
 
-//**************************************************************************************************
-PathFinderMesh::PathFinderMesh()
-  : mTransform(nullptr)
-  , mMesh(new CopyOnWriteData<PathFinderAlgorithmMesh>())
+PathFinderMesh::PathFinderMesh() :
+    mTransform(nullptr),
+    mMesh(new CopyOnWriteData<PathFinderAlgorithmMesh>())
 {
 }
 
-//**************************************************************************************************
 void PathFinderMesh::Serialize(Serializer& stream)
 {
   PathFinder::Serialize(stream);
 }
 
-//**************************************************************************************************
 void PathFinderMesh::Initialize(CogInitializer& initializer)
 {
   ZilchBase::Initialize(initializer);
   mTransform = GetOwner()->has(Transform);
 }
 
-//**************************************************************************************************
 void PathFinderMesh::DebugDraw()
 {
   PathFinderAlgorithmMesh* mesh = mMesh;
   Array<Vec3>& vertices = mesh->mVertices;
 
-  forRange(NavMeshPolygon* polygon, mesh->mPolygons.Values())
+  forRange(NavMeshPolygon * polygon, mesh->mPolygons.Values())
   {
     NavMeshPolygon::EdgeRange r = polygon->AllEdges();
     u32 i0 = r.Front().mTailVertex;
@@ -522,7 +482,7 @@ void PathFinderMesh::DebugDraw()
     debugLine.mColor = ToFloatColor(Color::Purple);
     gDebugDraw->Add(debugLine);
 
-    forRange(NavMeshEdge& edge, r)
+    forRange(NavMeshEdge & edge, r)
     {
       u32 i2 = edge.mTailVertex;
 
@@ -549,44 +509,43 @@ void PathFinderMesh::DebugDraw()
   }
 }
 
-//**************************************************************************************************
 Variant PathFinderMesh::WorldPositionToNodeKey(Vec3Param worldPosition)
 {
   return Variant(WorldPositionToPolygon(worldPosition));
 }
 
-//**************************************************************************************************
 Vec3 PathFinderMesh::NodeKeyToWorldPosition(VariantParam nodeKey)
 {
   NavMeshPolygon* triangle = (NavMeshPolygon*)nodeKey;
   return triangle->GetCenter(mMesh);
 }
 
-//**************************************************************************************************
-void PathFinderMesh::FindPathGeneric(VariantParam start, VariantParam goal, Array<Variant>& pathOut)
+void PathFinderMesh::FindPathGeneric(VariantParam start,
+                                     VariantParam goal,
+                                     Array<Variant>& pathOut)
 {
-  GenericFindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, pathOut, mMaxIterations);
+  GenericFindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(
+      mMesh, start, goal, pathOut, mMaxIterations);
 }
 
-//**************************************************************************************************
-HandleOf<PathFinderRequest> PathFinderMesh::FindPathGenericThreaded(VariantParam start, VariantParam goal)
+HandleOf<PathFinderRequest>
+PathFinderMesh::FindPathGenericThreaded(VariantParam start, VariantParam goal)
 {
-  return GenericFindPathThreadedHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, mMaxIterations);
+  return GenericFindPathThreadedHelper<NavMeshPolygonId,
+                                       PathFinderAlgorithmMesh>(
+      mMesh, start, goal, mMaxIterations);
 }
 
-//**************************************************************************************************
 StringParam PathFinderMesh::GetCustomEventName()
 {
   return Events::PathFinderMeshFinished;
 }
 
-//**************************************************************************************************
 void PathFinderMesh::SetMesh(Mesh* graphicsMesh)
 {
   SetMesh(graphicsMesh, Math::DegToRad(90.0f));
 }
 
-//**************************************************************************************************
 void PathFinderMesh::SetMesh(Mesh* graphicsMesh, float maxSlope)
 {
   mMesh.CopyIfNeeded();
@@ -611,85 +570,80 @@ void PathFinderMesh::SetMesh(Mesh* graphicsMesh, float maxSlope)
   }
 }
 
-//**************************************************************************************************
 uint PathFinderMesh::AddVertex(Vec3Param pos)
 {
   mMesh.CopyIfNeeded();
   return mMesh->AddVertex(pos);
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderMesh::AddPolygon(Array<u32>& vertices)
 {
   mMesh.CopyIfNeeded();
   return mMesh->AddPolygon(vertices);
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderMesh::AddPolygon(ArrayClass<u32>& vertices)
 {
   mMesh.CopyIfNeeded();
   return mMesh->AddPolygon(vertices);
 }
 
-//**************************************************************************************************
-NavMeshPolygonId PathFinderMesh::AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2)
+NavMeshPolygonId PathFinderMesh::AddPolygon(u32 vertex0,
+                                            u32 vertex1,
+                                            u32 vertex2)
 {
   mMesh.CopyIfNeeded();
   return mMesh->AddPolygon(vertex0, vertex1, vertex2);
 }
 
-//**************************************************************************************************
-NavMeshPolygonId PathFinderMesh::AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3)
+NavMeshPolygonId
+PathFinderMesh::AddPolygon(u32 vertex0, u32 vertex1, u32 vertex2, u32 vertex3)
 {
   mMesh.CopyIfNeeded();
   return mMesh->AddPolygon(vertex0, vertex1, vertex2, vertex3);
 }
 
-//**************************************************************************************************
 void PathFinderMesh::SetPolygonCost(NavMeshPolygonId polygonId, float cost)
 {
   mMesh.CopyIfNeeded();
   mMesh->SetPolygonCost(polygonId, cost);
 }
 
-//**************************************************************************************************
-void PathFinderMesh::SetPolygonClientData(NavMeshPolygonId polygonId, Cog* clientData)
+void PathFinderMesh::SetPolygonClientData(NavMeshPolygonId polygonId,
+                                          Cog* clientData)
 {
   mMesh.CopyIfNeeded();
   mMesh->SetPolygonClientData(polygonId, clientData);
 }
 
-//**************************************************************************************************
 void PathFinderMesh::SetEdgeCost(NavMeshEdgeId edgeId, float cost)
 {
   mMesh.CopyIfNeeded();
   mMesh->SetEdgeCost(edgeId, cost);
 }
 
-//**************************************************************************************************
 void PathFinderMesh::SetEdgeClientData(NavMeshEdgeId edgeId, Cog* clientData)
 {
   mMesh.CopyIfNeeded();
   mMesh->SetEdgeClientData(edgeId, clientData);
 }
 
-//**************************************************************************************************
 void PathFinderMesh::Clear()
 {
   mMesh.CopyIfNeeded();
   mMesh->Clear();
 }
 
-//**************************************************************************************************
-HandleOf<ArrayClass<Vec3>> PathFinderMesh::FindPath(NavMeshPolygonId start, NavMeshPolygonId goal)
+HandleOf<ArrayClass<Vec3>> PathFinderMesh::FindPath(NavMeshPolygonId start,
+                                                    NavMeshPolygonId goal)
 {
   PathFinderAlgorithmMesh* mesh = mMesh;
-  //NavMeshPolygon* startPoly = mesh->GetPolygon(start);
-  //NavMeshPolygon* goalPoly = mesh->GetPolygon(goal);
+  // NavMeshPolygon* startPoly = mesh->GetPolygon(start);
+  // NavMeshPolygon* goalPoly = mesh->GetPolygon(goal);
 
-  HandleOf<ArrayClass<NavMeshPolygonId>> polygons = 
-   FindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, mMaxIterations);
+  HandleOf<ArrayClass<NavMeshPolygonId>> polygons =
+      FindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(
+          mMesh, start, goal, mMaxIterations);
 
   HandleOf<ArrayClass<Vec3>> output = ZilchAllocate(ArrayClass<Vec3>);
   forRange(NavMeshPolygonId polygonId, polygons->NativeArray.All())
@@ -700,17 +654,17 @@ HandleOf<ArrayClass<Vec3>> PathFinderMesh::FindPath(NavMeshPolygonId start, NavM
   return output;
 }
 
-//**************************************************************************************************
-HandleOf<PathFinderRequest> PathFinderMesh::FindPathThreaded(NavMeshPolygonId start, NavMeshPolygonId goal)
+HandleOf<PathFinderRequest>
+PathFinderMesh::FindPathThreaded(NavMeshPolygonId start, NavMeshPolygonId goal)
 {
   PathFinderAlgorithmMesh* mesh = mMesh;
-  //NavMeshPolygon* startPoly = mesh->GetPolygon(start);
-  //NavMeshPolygon* goalPoly = mesh->GetPolygon(goal);
+  // NavMeshPolygon* startPoly = mesh->GetPolygon(start);
+  // NavMeshPolygon* goalPoly = mesh->GetPolygon(goal);
 
-  return FindPathThreadedHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, mMaxIterations);
+  return FindPathThreadedHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(
+      mMesh, start, goal, mMaxIterations);
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderMesh::WorldPositionToPolygon(Vec3Param worldPosition)
 {
   PathFinderAlgorithmMesh* mesh = mMesh;
@@ -718,13 +672,13 @@ NavMeshPolygonId PathFinderMesh::WorldPositionToPolygon(Vec3Param worldPosition)
   float closestDistance = Math::PositiveMax();
 
   typedef Pair<NavMeshPolygonId, NavMeshPolygon*> PairEntry;
-  forRange(PairEntry& entry, mesh->mPolygons.All())
+  forRange(PairEntry & entry, mesh->mPolygons.All())
   {
     NavMeshPolygon* polygon = entry.second;
     Vec3 center = polygon->GetCenter(mesh);
     float currDistance = Math::DistanceSq(worldPosition, center);
 
-    if(currDistance < closestDistance)
+    if (currDistance < closestDistance)
     {
       closest = entry.first;
       closestDistance = currDistance;
@@ -734,13 +688,11 @@ NavMeshPolygonId PathFinderMesh::WorldPositionToPolygon(Vec3Param worldPosition)
   return closest;
 }
 
-//**************************************************************************************************
 NavMeshPolygonId PathFinderMesh::LocalPositionToPolygon(Vec3Param localPosition)
 {
   return 0;
 }
 
-//**************************************************************************************************
 Vec3 PathFinderMesh::PolygonToWorldPosition(NavMeshPolygonId polygonId)
 {
   PathFinderAlgorithmMesh* mesh = mMesh;
@@ -749,4 +701,4 @@ Vec3 PathFinderMesh::PolygonToWorldPosition(NavMeshPolygonId polygonId)
   return Vec3::cZero;
 }
 
-}// namespace Zero
+} // namespace Zero

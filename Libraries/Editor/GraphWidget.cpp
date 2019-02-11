@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file GraphWidget.cpp
-/// Implementation of the GraphWidget.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,26 +7,32 @@ namespace Zero
 namespace GraphWidgetUi
 {
 const cstr cLocation = "EditorUi/ResourceEditors/SampleCurve";
-Tweakable(Vec4,  PrimaryLineColor,   Vec4(1,1,1,1), cLocation);
-Tweakable(float, PrimaryLineWidth,   1.0f,          cLocation);
-Tweakable(Vec4,  SecondaryLineColor, Vec4(1,1,1,1), cLocation);
-Tweakable(float, SecondaryLineWidth, 1.0f,          cLocation);
-}
+Tweakable(Vec4, PrimaryLineColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(float, PrimaryLineWidth, 1.0f, cLocation);
+Tweakable(Vec4, SecondaryLineColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(float, SecondaryLineWidth, 1.0f, cLocation);
+} // namespace GraphWidgetUi
 
-GraphWidget::GraphWidget(Composite* parent)
-  : Widget(parent)
+GraphWidget::GraphWidget(Composite* parent) : Widget(parent)
 {
   mWidthRange[MIN] = 0.0f;
   mWidthRange[MAX] = 1.0f;
   mHeightRange[MIN] = 0.0f;
   mHeightRange[MAX] = 1.0f;
-  
+
   mDrawLabels = true;
   mHideLastLabel = false;
   mFlags.SetAll();
 }
 
-void AddHashLines(Array<Vec3>& lines, Vec3 pos, float size, Vec3 dir, Vec3 hashDir, uint count, uint offset, float spacing)
+void AddHashLines(Array<Vec3>& lines,
+                  Vec3 pos,
+                  float size,
+                  Vec3 dir,
+                  Vec3 hashDir,
+                  uint count,
+                  uint offset,
+                  float spacing)
 {
   for (uint i = offset; i < count + 1; ++i)
   {
@@ -45,11 +43,16 @@ void AddHashLines(Array<Vec3>& lines, Vec3 pos, float size, Vec3 dir, Vec3 hashD
   }
 }
 
-void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void GraphWidget::RenderUpdate(ViewBlock& viewBlock,
+                               FrameBlock& frameBlock,
+                               Mat4Param parentTx,
+                               ColorTransform colorTx,
+                               WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
-  StreamedVertexArray& streamedVertices = frameBlock.mRenderQueues->mStreamedVertices;
+  StreamedVertexArray& streamedVertices =
+      frameBlock.mRenderQueues->mStreamedVertices;
 
   // Get the spacing for each
   float widthRange = GetWidthRange();
@@ -63,16 +66,16 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
   Vec3 lowerLeft = upperLeft + Vec3(0, mSize.y, 0);
   Vec3 lowerRight = lowerLeft + Vec3(mSize.x, 0, 0);
 
-  // Offsets to deal with rendering issues? Would investigate further, but old UI should be
-  // removed somewhat soon
+  // Offsets to deal with rendering issues? Would investigate further, but old
+  // UI should be removed somewhat soon
   upperLeft += Vec3(0.5f, 0, 0);
   lowerLeft += Vec3(0.5f, -0.5f, 0);
   lowerRight += Vec3(0, -0.5f, 0);
 
   Vec4 primaryColor = GraphWidgetUi::PrimaryLineColor;
   Vec4 secondaryColor = GraphWidgetUi::SecondaryLineColor;
-  //float primaryWidth = GraphWidgetUi::PrimaryLineWidth;
-  //float secondaryWidth = GraphWidgetUi::SecondaryLineWidth;
+  // float primaryWidth = GraphWidgetUi::PrimaryLineWidth;
+  // float secondaryWidth = GraphWidgetUi::SecondaryLineWidth;
 
   Array<Vec3> primaryLines;
   Array<Vec3> secondaryLines;
@@ -94,10 +97,24 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
     uint hashCount = (uint)hashCountf;
     float spacing = mSize.y / hashCountf;
 
-    AddHashLines(primaryLines, lowerLeft, mSize.x, -Vec3::cYAxis, Vec3::cXAxis, hashCount, 1, spacing);
-    AddHashLines(secondaryLines, lowerLeft + Vec3(0, -spacing * 0.5f, 0), mSize.x, -Vec3::cYAxis, Vec3::cXAxis, hashCount - 1, 0, spacing);
+    AddHashLines(primaryLines,
+                 lowerLeft,
+                 mSize.x,
+                 -Vec3::cYAxis,
+                 Vec3::cXAxis,
+                 hashCount,
+                 1,
+                 spacing);
+    AddHashLines(secondaryLines,
+                 lowerLeft + Vec3(0, -spacing * 0.5f, 0),
+                 mSize.x,
+                 -Vec3::cYAxis,
+                 Vec3::cXAxis,
+                 hashCount - 1,
+                 0,
+                 spacing);
   }
-  
+
   // Vertical lines
   if (mFlags.IsSet(GraphAxes::AxisY))
   {
@@ -105,33 +122,58 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
     uint hashCount = (uint)hashCountf;
     float spacing = mSize.x / hashCountf;
 
-    AddHashLines(primaryLines, lowerLeft, mSize.y, Vec3::cXAxis, -Vec3::cYAxis, hashCount, 1, spacing);
-    AddHashLines(secondaryLines, lowerLeft + Vec3(spacing * 0.5f, 0, 0), mSize.y, Vec3::cXAxis, -Vec3::cYAxis, hashCount - 1, 0, spacing);
+    AddHashLines(primaryLines,
+                 lowerLeft,
+                 mSize.y,
+                 Vec3::cXAxis,
+                 -Vec3::cYAxis,
+                 hashCount,
+                 1,
+                 spacing);
+    AddHashLines(secondaryLines,
+                 lowerLeft + Vec3(spacing * 0.5f, 0, 0),
+                 mSize.y,
+                 Vec3::cXAxis,
+                 -Vec3::cYAxis,
+                 hashCount - 1,
+                 0,
+                 spacing);
   }
 
   // Render data for lines
-  ViewNode& lineNode = AddRenderNodes(viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
+  ViewNode& lineNode = AddRenderNodes(
+      viewBlock, frameBlock, clipRect, TextureManager::Find("White"));
   lineNode.mStreamedVertexType = PrimitiveType::Lines;
 
   for (uint i = 0; i < secondaryLines.Size(); ++i)
   {
-    StreamedVertex vertex(Math::TransformPoint(lineNode.mLocalToView, secondaryLines[i]), Vec2::cZero, secondaryColor);
+    StreamedVertex vertex(
+        Math::TransformPoint(lineNode.mLocalToView, secondaryLines[i]),
+        Vec2::cZero,
+        secondaryColor);
     streamedVertices.PushBack(vertex);
   }
 
   for (uint i = 0; i < primaryLines.Size(); ++i)
   {
-    StreamedVertex vertex(Math::TransformPoint(lineNode.mLocalToView, primaryLines[i]), Vec2::cZero, primaryColor);
+    StreamedVertex vertex(
+        Math::TransformPoint(lineNode.mLocalToView, primaryLines[i]),
+        Vec2::cZero,
+        primaryColor);
     streamedVertices.PushBack(vertex);
   }
 
-  lineNode.mStreamedVertexCount = streamedVertices.Size() - lineNode.mStreamedVertexStart;
+  lineNode.mStreamedVertexCount =
+      streamedVertices.Size() - lineNode.mStreamedVertexStart;
 
   if (mDrawLabels)
   {
-    RenderFont* font = FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
-    ViewNode& textNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
-    FontProcessor fontProcessor(frameBlock.mRenderQueues, &textNode, primaryColor);
+    RenderFont* font =
+        FontManager::GetInstance()->GetRenderFont("NotoSans-Regular", 11, 0);
+    ViewNode& textNode =
+        AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
+    FontProcessor fontProcessor(
+        frameBlock.mRenderQueues, &textNode, primaryColor);
 
     if (mFlags.IsSet(GraphAxes::AxisX))
     {
@@ -150,7 +192,14 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x + Pixels(2);
         pos.y -= textSize.y * 0.5f;
-        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
+        AddTextRange(fontProcessor,
+                     font,
+                     text,
+                     Math::ToVector2(SnapToPixels(pos)),
+                     TextAlign::Left,
+                     Vec2(1, 1),
+                     mSize,
+                     false);
       }
     }
 
@@ -171,7 +220,14 @@ void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x * 0.5f;
         pos.y += textSize.y * 0.5f;
-        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
+        AddTextRange(fontProcessor,
+                     font,
+                     text,
+                     Math::ToVector2(SnapToPixels(pos)),
+                     TextAlign::Left,
+                     Vec2(1, 1),
+                     mSize,
+                     false);
       }
     }
   }
@@ -217,8 +273,8 @@ bool GraphWidget::WorldPointInGraph(Vec2Param worldPos)
 
   Vec2 extents = local / range;
 
-  return !(extents.x < 0.0f || extents.x > 1.0f ||
-           extents.y < 0.0f || extents.y > 1.0f);
+  return !(extents.x < 0.0f || extents.x > 1.0f || extents.y < 0.0f ||
+           extents.y > 1.0f);
 }
 
 Vec2 GraphWidget::ClampPos(Vec2Param worldPos)
@@ -270,7 +326,7 @@ bool GraphWidget::GetDrawAxisX()
 
 void GraphWidget::SetDrawAxisX(bool state)
 {
-  return mFlags.SetState(GraphAxes::AxisX,state);
+  return mFlags.SetState(GraphAxes::AxisX, state);
 }
 
 bool GraphWidget::GetDrawAxisY()
@@ -280,7 +336,7 @@ bool GraphWidget::GetDrawAxisY()
 
 void GraphWidget::SetDrawAxisY(bool state)
 {
-  return mFlags.SetState(GraphAxes::AxisY,state);
+  return mFlags.SetState(GraphAxes::AxisY, state);
 }
 
 Vec2 GraphWidget::GetGridOrigin()
@@ -311,13 +367,13 @@ float GraphWidget::GetHeightSpacing()
 String GraphWidget::GetLabelFormat(float spacing)
 {
   uint decimals;
-  if(spacing > 0.9f)
+  if (spacing > 0.9f)
     decimals = 0;
-  else if(spacing > 0.09f)
+  else if (spacing > 0.09f)
     decimals = 1;
-  else if(spacing > 0.009)
+  else if (spacing > 0.009)
     decimals = 2;
-  else if(spacing > 0.0009)
+  else if (spacing > 0.0009)
     decimals = 3;
   else
     decimals = 4;
@@ -351,29 +407,30 @@ float GraphWidget::GetIntervalSize(float range, float space)
   uint hashCount;
   float dist;
 
-  // This is a temporary fix, because the below function can infinite loop in certain cases
+  // This is a temporary fix, because the below function can infinite loop in
+  // certain cases
   int count = 0;
   const int cMaxCount = 100;
 
-  // At index = -2, the step is 0.1 (which by default we want to 
+  // At index = -2, the step is 0.1 (which by default we want to
   // start searching from)
   int index = -2;
   float step = GetNextStep(index);
-  while(true)
+  while (true)
   {
     // Get the amount of hash marks that will fit
     hashCount = (uint)(range / step);
 
-    if(hashCount == 0)
+    if (hashCount == 0)
       return range;
 
     // Get the distance between each hash
     dist = space / hashCount;
 
-    if(dist > cMinDistance)
+    if (dist > cMinDistance)
     {
       // If we're both over the min and under the max, we found our step
-      if(dist < cMaxDistance)
+      if (dist < cMaxDistance)
         break;
       else
         step = GetNextStep(--index);
@@ -389,7 +446,7 @@ float GraphWidget::GetIntervalSize(float range, float space)
       break;
   }
 
-   return step;
+  return step;
 }
 
-}// namespace Zero
+} // namespace Zero

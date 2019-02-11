@@ -1,20 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//---------------------------------------------------------------------------------//
-//                                  Replica                                        //
-//---------------------------------------------------------------------------------//
+//                                  Replica //
 
-Replica::Replica()
-  : mCreateContext(),
+Replica::Replica() :
+    mCreateContext(),
     mReplicaType(),
     mReplicator(nullptr),
     mReplicaId(0),
@@ -36,8 +29,9 @@ Replica::Replica()
 {
   ResetConfig();
 }
-Replica::Replica(const CreateContext& createContext, const ReplicaType& replicaType)
-  : mCreateContext(),
+Replica::Replica(const CreateContext& createContext,
+                 const ReplicaType& replicaType) :
+    mCreateContext(),
     mReplicaType(),
     mReplicator(nullptr),
     mReplicaId(0),
@@ -66,33 +60,35 @@ Replica::Replica(const CreateContext& createContext, const ReplicaType& replicaT
 
 Replica::~Replica()
 {
-  // Deleting a valid replica is an error which will leave the replicator with a dangling replica pointer
-  // It is imperative that you first inform the replicator with commands like ForgetReplica() and DestroyReplica()
-  // This will unregister the replica from the replicator, at which time it will be safe to delete the now invalid replica
+  // Deleting a valid replica is an error which will leave the replicator with a
+  // dangling replica pointer It is imperative that you first inform the
+  // replicator with commands like ForgetReplica() and DestroyReplica() This
+  // will unregister the replica from the replicator, at which time it will be
+  // safe to delete the now invalid replica
   ErrorIf(IsValid());
 }
 
-bool Replica::operator ==(const Replica& rhs) const
+bool Replica::operator==(const Replica& rhs) const
 {
   return GetReplicaId() == rhs.GetReplicaId();
 }
-bool Replica::operator !=(const Replica& rhs) const
+bool Replica::operator!=(const Replica& rhs) const
 {
   return GetReplicaId() != rhs.GetReplicaId();
 }
-bool Replica::operator  <(const Replica& rhs) const
+bool Replica::operator<(const Replica& rhs) const
 {
   return GetReplicaId() < rhs.GetReplicaId();
 }
-bool Replica::operator ==(const ReplicaId& rhs) const
+bool Replica::operator==(const ReplicaId& rhs) const
 {
   return GetReplicaId() == rhs;
 }
-bool Replica::operator !=(const ReplicaId& rhs) const
+bool Replica::operator!=(const ReplicaId& rhs) const
 {
   return GetReplicaId() != rhs;
 }
-bool Replica::operator  <(const ReplicaId& rhs) const
+bool Replica::operator<(const ReplicaId& rhs) const
 {
   return GetReplicaId() < rhs;
 }
@@ -134,7 +130,7 @@ Replicator* Replica::GetReplicator() const
 bool Replica::SetCreateContext(const CreateContext& createContext)
 {
   // Not invalid?
-  if(!IsInvalid())
+  if (!IsInvalid())
   {
     Error("Unable to set CreateContext - Replica must be invalid");
     return false;
@@ -154,7 +150,7 @@ const CreateContext& Replica::GetCreateContext() const
 bool Replica::SetReplicaType(const ReplicaType& replicaType)
 {
   // Not invalid?
-  if(!IsInvalid())
+  if (!IsInvalid())
   {
     Error("Unable to set ReplicaType - Replica must be invalid");
     return false;
@@ -228,22 +224,22 @@ TimeMs Replica::GetUninitializationTimestamp() const
 void Replica::WakeUp()
 {
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, GetReplicaChannels().All())
-    replicaChannel->WakeUp();
+  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
+      replicaChannel->WakeUp();
 }
 void Replica::TakeNap()
 {
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, GetReplicaChannels().All())
-    replicaChannel->TakeNap();
+  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
+      replicaChannel->TakeNap();
 }
 
 bool Replica::IsAwake() const
 {
   // For all replica channels
-  forRange(const ReplicaChannel* replicaChannel, GetReplicaChannels().All())
-    if(replicaChannel->IsAwake())
-      return true;
+  forRange(
+      const ReplicaChannel* replicaChannel,
+      GetReplicaChannels().All()) if (replicaChannel->IsAwake()) return true;
 
   return false;
 }
@@ -290,7 +286,8 @@ bool Replica::GetAllowNapping() const
   return mAllowNapping;
 }
 
-void Replica::SetAuthorityClientReplicatorId(ReplicatorId authorityClientReplicatorId)
+void Replica::SetAuthorityClientReplicatorId(
+    ReplicatorId authorityClientReplicatorId)
 {
   mAuthorityClientReplicatorId = authorityClientReplicatorId;
 }
@@ -299,7 +296,8 @@ ReplicatorId Replica::GetAuthorityClientReplicatorId() const
   return mAuthorityClientReplicatorId;
 }
 
-void Replica::SetAccurateTimestampOnInitialization(bool accurateTimestampOnInitialization)
+void Replica::SetAccurateTimestampOnInitialization(
+    bool accurateTimestampOnInitialization)
 {
   mAccurateTimestampOnInitialization = accurateTimestampOnInitialization;
 }
@@ -317,7 +315,8 @@ bool Replica::GetAccurateTimestampOnChange() const
   return mAccurateTimestampOnChange;
 }
 
-void Replica::SetAccurateTimestampOnUninitialization(bool accurateTimestampOnUninitialization)
+void Replica::SetAccurateTimestampOnUninitialization(
+    bool accurateTimestampOnUninitialization)
 {
   mAccurateTimestampOnUninitialization = accurateTimestampOnUninitialization;
 }
@@ -334,14 +333,17 @@ bool Replica::HasReplicaChannel(const String& replicaChannelName) const
 {
   return mReplicaChannels.Contains(replicaChannelName);
 }
-const ReplicaChannel* Replica::GetReplicaChannel(const String& replicaChannelName) const
+const ReplicaChannel*
+Replica::GetReplicaChannel(const String& replicaChannelName) const
 {
-  const ReplicaChannel* result = mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
+  const ReplicaChannel* result =
+      mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
   return result;
 }
 ReplicaChannel* Replica::GetReplicaChannel(const String& replicaChannelName)
 {
-  const ReplicaChannel* result = mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
+  const ReplicaChannel* result =
+      mReplicaChannels.FindValue(replicaChannelName, ReplicaChannelPtr());
   return const_cast<ReplicaChannel*>(result);
 }
 const ReplicaChannelSet& Replica::GetReplicaChannels() const
@@ -356,18 +358,21 @@ ReplicaChannelSet& Replica::GetReplicaChannels()
 ReplicaChannel* Replica::AddReplicaChannel(ReplicaChannelPtr replicaChannel)
 {
   // Already valid?
-  if(IsValid())
+  if (IsValid())
   {
     // Unable to modify replica channel configuration
-    Error("Replica is already valid, unable to modify replica channel configuration");
+    Error("Replica is already valid, unable to modify replica channel "
+          "configuration");
     return nullptr;
   }
 
   // Add replica channel
-  ReplicaChannelSet::pointer_bool_pair result = mReplicaChannels.Insert(replicaChannel);
-  if(!result.second) // Unable?
+  ReplicaChannelSet::pointer_bool_pair result =
+      mReplicaChannels.Insert(replicaChannel);
+  if (!result.second) // Unable?
   {
-    Error("Replica already has a replica channel with that name, unable to add replica channel");
+    Error("Replica already has a replica channel with that name, unable to add "
+          "replica channel");
     return nullptr;
   }
 
@@ -380,25 +385,28 @@ ReplicaChannel* Replica::AddReplicaChannel(ReplicaChannelPtr replicaChannel)
 bool Replica::RemoveReplicaChannel(const String& replicaChannelName)
 {
   // Already valid?
-  if(IsValid())
+  if (IsValid())
   {
     // Unable to modify replica channel configuration
-    Error("Replica is already valid, unable to modify replica channel configuration");
+    Error("Replica is already valid, unable to modify replica channel "
+          "configuration");
     return false;
   }
 
   // Remove replica channel
-  ReplicaChannelSet::pointer_bool_pair result = mReplicaChannels.EraseValue(replicaChannelName);
+  ReplicaChannelSet::pointer_bool_pair result =
+      mReplicaChannels.EraseValue(replicaChannelName);
   return result.second;
 }
 
 void Replica::ClearReplicaChannels()
 {
   // Already valid?
-  if(IsValid())
+  if (IsValid())
   {
     // Unable to modify replica channel configuration
-    Error("Replica is already valid, unable to modify replica channel configuration");
+    Error("Replica is already valid, unable to modify replica channel "
+          "configuration");
     return;
   }
 
@@ -413,15 +421,16 @@ void Replica::ClearReplicaChannels()
 bool Replica::UsesReverseReplicaChannels() const
 {
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
   {
     // Get replica channel type
-    ReplicaChannelType* replicaChannelType = replicaChannel->GetReplicaChannelType();
+    ReplicaChannelType* replicaChannelType =
+        replicaChannel->GetReplicaChannelType();
 
     //    Replica channel has client change authority?
     // OR Replica channel type has dynamic change authority mode?
-    if(replicaChannel->GetAuthority() == Authority::Client
-    || replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannel->GetAuthority() == Authority::Client ||
+        replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
       return true; // Uses reverse replica channels
   }
 
@@ -449,13 +458,22 @@ void Replica::SetEmplaceId(EmplaceId emplaceId)
   mEmplaceId = emplaceId;
 }
 
-void Replica::ReactToChannelPropertyChanges(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, TransmissionDirection::Enum direction, bool generateNotifications, bool setLastValues)
+void Replica::ReactToChannelPropertyChanges(
+    TimeMs timestamp,
+    ReplicationPhase::Enum replicationPhase,
+    TransmissionDirection::Enum direction,
+    bool generateNotifications,
+    bool setLastValues)
 {
   // For all replica channels
-  forRange(ReplicaChannel* replicaChannel, GetReplicaChannels().All())
+  forRange(ReplicaChannel * replicaChannel, GetReplicaChannels().All())
   {
     // React to property changes
-    replicaChannel->ReactToPropertyChanges(timestamp, replicationPhase, direction, generateNotifications, setLastValues);
+    replicaChannel->ReactToPropertyChanges(timestamp,
+                                           replicationPhase,
+                                           direction,
+                                           generateNotifications,
+                                           setLastValues);
   }
 }
 

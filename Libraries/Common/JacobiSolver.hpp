@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file JacobiSolver.hpp
-/// Declaration of the JacobiSolver class.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "IndexPolicies.hpp"
@@ -15,7 +7,7 @@
 namespace Math
 {
 
-///Lcp solver using Jacobi iteration.
+/// Lcp solver using Jacobi iteration.
 struct JacobiSolver
 {
   JacobiSolver()
@@ -24,27 +16,34 @@ struct JacobiSolver
     mErrorTolerance = real(.001f);
   }
 
-  template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
-  void Solve(MatrixType& A, VectorType& b, VectorType& x0, PolicyType& policy, ErrorCallbackType& errCallback)
+  template <typename MatrixType,
+            typename VectorType,
+            typename PolicyType,
+            typename ErrorCallbackType>
+  void Solve(MatrixType& A,
+             VectorType& b,
+             VectorType& x0,
+             PolicyType& policy,
+             ErrorCallbackType& errCallback)
   {
     uint dimension = policy.GetDimension(b);
     uint iteration;
     real convergence = real(0.0);
 
     VectorType oldX;
-    for(iteration = 0; iteration < mMaxIterations; ++iteration)
+    for (iteration = 0; iteration < mMaxIterations; ++iteration)
     {
       oldX = x0;
       convergence = real(0.0);
 
-      for(uint i = 0; i < dimension; ++i)
+      for (uint i = 0; i < dimension; ++i)
       {
         real delta = real(0.0);
 
-        for(uint j = 0; j < i; ++j)
+        for (uint j = 0; j < i; ++j)
           delta += policy(A, i, j) * policy(oldX, j);
 
-        for(uint j = i + 1; j < dimension; ++j)
+        for (uint j = i + 1; j < dimension; ++j)
           delta += policy(A, i, j) * policy(oldX, j);
 
         policy(x0, i) = (policy(b, i) - delta) / policy(A, i, i);
@@ -53,11 +52,11 @@ struct JacobiSolver
         convergence += difference * difference;
       }
 
-      if(convergence < mErrorTolerance * mErrorTolerance)
+      if (convergence < mErrorTolerance * mErrorTolerance)
         break;
-    }    
+    }
 
-    if(iteration == mMaxIterations)
+    if (iteration == mMaxIterations)
     {
       errCallback(A, b, x0, convergence);
     }
@@ -74,4 +73,4 @@ struct JacobiSolver
   real mErrorTolerance;
 };
 
-}//namespace Math
+} // namespace Math

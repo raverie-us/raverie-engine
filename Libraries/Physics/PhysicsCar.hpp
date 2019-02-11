@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,10 +11,10 @@ class RigidBody;
 
 DeclareBitField3(CarFlags, DebugDraw, InEditor, OnAllObjectsCreatedCalled);
 
-/// A controller for a high speed physics based car. The car is controlled with a steer,
-/// gas, and brake scalar. The car will raycast wheel positions
-/// to try to keep the wheels on the ground and then apply friction and normal
-/// forces to propel the car.
+/// A controller for a high speed physics based car. The car is controlled with
+/// a steer, gas, and brake scalar. The car will raycast wheel positions to try
+/// to keep the wheels on the ground and then apply friction and normal forces
+/// to propel the car.
 struct PhysicsCar : public Component
 {
   ZilchDeclareType(PhysicsCar, TypeCopyMode::ReferenceType);
@@ -34,7 +29,7 @@ struct PhysicsCar : public Component
   /// Debug draws all of the wheels associated with this car.
   void DebugDraw() override;
   void TransformUpdate(TransformUpdateInfo& info) override;
-  
+
   /// Add the PhysicsCarWheel to be controlled by this car.
   void AddWheelCog(Cog* wheelCog);
   /// Remove the PhysicsCarWheel from being controlled by this car.
@@ -74,8 +69,9 @@ struct PhysicsCar : public Component
   /// The number of wheels currently in contact with an object.
   uint NumberOfWheelsInContact();
 
-  /// Helper class for referencing a PhysicsCarWheel. Contains a few helper functions
-  /// and helps with binding to the property grid (currently disabled).
+  /// Helper class for referencing a PhysicsCarWheel. Contains a few helper
+  /// functions and helps with binding to the property grid (currently
+  /// disabled).
   struct CarWheelRef : public Object
   {
     ZilchDeclareType(CarWheelRef, TypeCopyMode::ReferenceType);
@@ -86,7 +82,8 @@ struct PhysicsCar : public Component
     CogId mWheelId;
   };
 
-  /// An array interface to the cog paths of wheels that this car uses. This array is read-only.
+  /// An array interface to the cog paths of wheels that this car uses. This
+  /// array is read-only.
   struct CarWheelArray : public SafeId32Object
   {
     ZilchDeclareType(CarWheelArray, TypeCopyMode::ReferenceType);
@@ -106,14 +103,14 @@ struct PhysicsCar : public Component
   CarWheelArray mWheelCogs;
 
   Link<PhysicsCar> SpaceLink;
-  
-  /// Coefficient used to apply the side friction force closer to the car's center
-  /// of mass. 1 applies the force at the wheel position, 0 applies the force at the
-  /// point along the contact normal closest to the center of mass.
+
+  /// Coefficient used to apply the side friction force closer to the car's
+  /// center of mass. 1 applies the force at the wheel position, 0 applies the
+  /// force at the point along the contact normal closest to the center of mass.
   real mWheelFrictionSideRollCoef;
-  /// Coefficient used to apply the forward friction force closer to the car's center
-  /// of mass. 1 applies the force at the wheel position, 0 applies the force at the
-  /// point along the contact normal closest to the center of mass.
+  /// Coefficient used to apply the forward friction force closer to the car's
+  /// center of mass. 1 applies the force at the wheel position, 0 applies the
+  /// force at the point along the contact normal closest to the center of mass.
   real mWheelFrictionFrontRollCoef;
 
   real mSteerInput;
@@ -133,20 +130,21 @@ struct PhysicsCar : public Component
   real mMaxTorque;
   /// Artificially increases the grip of the car (where 2 is twice the grip).
   /// The total grip scalar is computed as CarGripScalar * WheelGripScalar
-  /// so the total car can be easily tweaked while allowing individual wheel tweaks.
+  /// so the total car can be easily tweaked while allowing individual wheel
+  /// tweaks.
   real mGripScalar;
   /// Prevents the car from entering dynamic friction when applying brakes.
   /// If the brake would start to skid, the brake force is clamped to the
   /// max amount that will not slip.
   bool mAntiLockBrakes;
   /// Governs the max torque that the engine can apply. This is used to keep
-  /// the wheels from spinning out (slipping) when too high of a torque is applied.
-  /// If the tires would slip, the engine will apply the maximum
-  /// torque for the tires to not slip.
+  /// the wheels from spinning out (slipping) when too high of a torque is
+  /// applied. If the tires would slip, the engine will apply the maximum torque
+  /// for the tires to not slip.
   bool mTorqueGovernor;
   /// Whether or not the car will run any logic at all. If this is false wheels
   /// will not work, they will not behave as springs, drive, or anything else.
   bool mActive;
 };
 
-}//namespace Zero
+} // namespace Zero

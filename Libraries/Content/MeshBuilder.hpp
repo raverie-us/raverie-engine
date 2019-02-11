@@ -1,7 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -10,7 +7,7 @@ namespace Zero
 class FixedVertexDescription
 {
 public:
-  FixedVertexDescription() {};
+  FixedVertexDescription(){};
 
   uint mVertexSize;
   static const size_t sMaxElements = 16;
@@ -56,11 +53,11 @@ public:
 
   Array<GeometryResourceEntry> Meshes;
 
-  //BuilderComponent Interface
+  // BuilderComponent Interface
   bool NeedsBuilding(BuildOptions& options) override;
   void Generate(ContentInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
   void BuildListing(ResourceListing& listing) override;
 };
 
-}// namespace Zero
+} // namespace Zero

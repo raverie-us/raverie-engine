@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -43,14 +38,14 @@ void IgnoreSpaceEffects::Serialize(Serializer& stream)
 void IgnoreSpaceEffects::Initialize(CogInitializer& initializer)
 {
   RigidBody* body = GetOwner()->has(RigidBody);
-  if(body != nullptr)
+  if (body != nullptr)
     body->mSpaceEffectsToIgnore = this;
 }
 
 void IgnoreSpaceEffects::OnDestroy(uint flags)
 {
   RigidBody* body = GetOwner()->has(RigidBody);
-  if(body != nullptr)
+  if (body != nullptr)
     body->mSpaceEffectsToIgnore = nullptr;
 }
 
@@ -184,9 +179,10 @@ bool IgnoreSpaceEffects::GetIgnoreState(PhysicsEffectType::Enum effectType)
   return mFlags.IsSet(effectType);
 }
 
-void IgnoreSpaceEffects::SetIgnoreState(PhysicsEffectType::Enum effectType, bool ignore)
+void IgnoreSpaceEffects::SetIgnoreState(PhysicsEffectType::Enum effectType,
+                                        bool ignore)
 {
   mFlags.SetState(effectType, ignore);
 }
 
-}//namespace Zero
+} // namespace Zero

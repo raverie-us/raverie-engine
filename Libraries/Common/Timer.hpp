@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Timer.hpp
-/// Declaration of the Os High precision Timer class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -18,10 +10,11 @@ typedef s64 TimeMs;
 
 /// Constants
 static const TimeMs cOneSecondTimeMs = TimeMs(1000);
-static const TimeMs cInfiniteTimeMs  = std::numeric_limits<TimeMs>::max();
+static const TimeMs cInfiniteTimeMs = std::numeric_limits<TimeMs>::max();
 
 /// Converts a rate (hertz) to an interval (milliseconds)
-#define RATE_TO_INTERVAL(Rate) TimeMs((double(1) / double(Rate)) * cOneSecondTimeMs)
+#define RATE_TO_INTERVAL(Rate)                                                 \
+  TimeMs((double(1) / double(Rate)) * cOneSecondTimeMs)
 
 /// Returns the duration between start and end
 ZeroShared inline TimeMs GetDuration(TimeMs start, TimeMs end)
@@ -55,7 +48,7 @@ public:
   ~Timer();
 
   Timer(const Timer& rhs);
-  Timer& operator= (const Timer& rhs);
+  Timer& operator=(const Timer& rhs);
 
   /// Resets the time to zero
   void Reset();
@@ -70,7 +63,8 @@ public:
 
   /// Gets the time in milliseconds since the last reset
   TimeMs TimeMilliseconds() const;
-  /// Gets the time in milliseconds between the last update and the update before it
+  /// Gets the time in milliseconds between the last update and the update
+  /// before it
   TimeMs TimeDeltaMilliseconds() const;
   /// Updates the clock and gets the time in milliseconds since the last reset
   TimeMs UpdateAndGetTimeMilliseconds();

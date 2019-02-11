@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceSystem.cpp
-/// Implementation of the Resource Manager.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,18 +6,17 @@ namespace Zero
 
 namespace Z
 {
-  ResourceSystem* gResources = nullptr;
+ResourceSystem* gResources = nullptr;
 }
 
 namespace Events
 {
-  DefineEvent(ResourcesLoaded);
-  DefineEvent(ResourcesUnloaded);
-  DefineEvent(PackagedStarted);
-  DefineEvent(PackagedFinished);
-}
+DefineEvent(ResourcesLoaded);
+DefineEvent(ResourcesUnloaded);
+DefineEvent(PackagedStarted);
+DefineEvent(PackagedFinished);
+} // namespace Events
 
-//-------------------------------------------------------------- Resource System
 ZilchDefineType(ResourceSystem, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -56,19 +47,20 @@ void ResourceSystem::OnResourcesLoaded(ResourceEvent* event)
   }
 }
 
-ResourceLibrary* ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* currentType)
+ResourceLibrary*
+ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* currentType)
 {
-  forRange(ResourceLibrary* library, LoadedResourceLibraries.Values( ))
+  forRange(ResourceLibrary * library, LoadedResourceLibraries.Values())
   {
-    if(currentType->SourceLibrary == library->mSwapScript.mCurrentLibrary)
+    if (currentType->SourceLibrary == library->mSwapScript.mCurrentLibrary)
       return library;
 
-    if(currentType->SourceLibrary == library->mSwapFragment.mCurrentLibrary)
+    if (currentType->SourceLibrary == library->mSwapFragment.mCurrentLibrary)
       return library;
 
-    forRange(SwapLibrary& swapPlugin, library->mSwapPlugins.Values( ))
+    forRange(SwapLibrary & swapPlugin, library->mSwapPlugins.Values())
     {
-      if(currentType->SourceLibrary == swapPlugin.mCurrentLibrary)
+      if (currentType->SourceLibrary == swapPlugin.mCurrentLibrary)
         return library;
     }
   }
@@ -78,7 +70,9 @@ ResourceLibrary* ResourceSystem::GetResourceLibraryFromCurrentType(BoundType* cu
 
 void ResourceSystem::RegisterManager(ResourceManager* manager)
 {
-  Managers.InsertOrError(manager->mResourceType->Name, manager, "Only one resource manager for each type");
+  Managers.InsertOrError(manager->mResourceType->Name,
+                         manager,
+                         "Only one resource manager for each type");
   mResourceManagers.PushBack(manager);
 }
 
@@ -87,7 +81,8 @@ ResourceManager* ResourceSystem::GetResourceManager(BoundType* resourceType)
   return GetResourceManager(resourceType->Name);
 }
 
-ResourceManager* ResourceSystem::GetResourceManager(StringParam resourceTypeName)
+ResourceManager*
+ResourceSystem::GetResourceManager(StringParam resourceTypeName)
 {
   return Managers.FindValue(resourceTypeName, nullptr);
 }
@@ -105,27 +100,31 @@ ResourceLibrary* ResourceSystem::LoadPackageFile(StringParam fileName)
   package->Location = FilePath::GetFileName(fileName);
 
   Status status;
-  ResourceLibrary* library = LoadPackage(status,package);
-  if(!status)
-    DoNotifyError("Failed to load resource package.",status.Message);
+  ResourceLibrary* library = LoadPackage(status, package);
+  if (!status)
+    DoNotifyError("Failed to load resource package.", status.Message);
   return library;
 }
 
-ResourceLibrary* ResourceSystem::LoadPackage(Status& status, ResourcePackage* package)
+ResourceLibrary* ResourceSystem::LoadPackage(Status& status,
+                                             ResourcePackage* package)
 {
   PushErrorContextObject("Loading", package);
 
-  ResourceLibrary* currentSet = LoadedResourceLibraries.FindValue(package->Name, nullptr);
+  ResourceLibrary* currentSet =
+      LoadedResourceLibraries.FindValue(package->Name, nullptr);
 
-  if(currentSet)
+  if (currentSet)
   {
-    ZPrintFilter(Filter::DefaultFilter, 
-      "Resource Package Already Loaded '%s'...\n", package->Name.c_str());
+    ZPrintFilter(Filter::DefaultFilter,
+                 "Resource Package Already Loaded '%s'...\n",
+                 package->Name.c_str());
     return currentSet;
   }
 
-  ZPrintFilter(Filter::DefaultFilter, 
-    "Loading Resource Package '%s'...\n", package->Name.c_str());
+  ZPrintFilter(Filter::DefaultFilter,
+               "Loading Resource Package '%s'...\n",
+               package->Name.c_str());
 
   Timer timer;
   timer.Update();
@@ -134,12 +133,13 @@ ResourceLibrary* ResourceSystem::LoadPackage(Status& status, ResourcePackage* pa
   event.Name = package->Name;
   event.Path = package->Location;
   DispatchEvent(Events::PackagedStarted, &event);
-  
-  // METAREFACTOR this is the worst way to handle this, but it works until we get true dependencies.
-  // Find the last resource library (assuming we load Core first, then others)
-  // and pretend we're always dependent upon the previous resource library
+
+  // METAREFACTOR this is the worst way to handle this, but it works until we
+  // get true dependencies. Find the last resource library (assuming we load
+  // Core first, then others) and pretend we're always dependent upon the
+  // previous resource library
   ResourceLibrary* lastResourceLibrary = nullptr;
-  forRange(ResourceLibrary* library, LoadedResourceLibraries.Values())
+  forRange(ResourceLibrary * library, LoadedResourceLibraries.Values())
   {
     lastResourceLibrary = library;
   }
@@ -149,7 +149,7 @@ ResourceLibrary* ResourceSystem::LoadPackage(Status& status, ResourcePackage* pa
   resourceLibrary->Location = package->Location;
   resourceLibrary->Name = package->Name;
   LoadedResourceLibraries.InsertOrError(package->Name, resourceLibrary);
-  
+
   if (lastResourceLibrary != nullptr)
     resourceLibrary->AddDependency(lastResourceLibrary);
 
@@ -159,8 +159,10 @@ ResourceLibrary* ResourceSystem::LoadPackage(Status& status, ResourcePackage* pa
   DispatchEvent(Events::PackagedFinished, &event);
 
   float time = (float)timer.UpdateAndGetTime();
-  ZPrintFilter(Filter::DefaultFilter, "Loaded Resource Package '%s' in %.2fs\n", 
-    package->Name.c_str(), time);
+  ZPrintFilter(Filter::DefaultFilter,
+               "Loaded Resource Package '%s' in %.2fs\n",
+               package->Name.c_str(),
+               time);
 
   return resourceLibrary;
 }
@@ -170,41 +172,44 @@ ResourceLibrary* ResourceSystem::GetResourceLibrary(StringParam name)
   return LoadedResourceLibraries.FindValue(name, nullptr);
 }
 
-void ResourceSystem::ReloadPackage(ResourceLibrary* resourceLibrary, ResourcePackage* package)
+void ResourceSystem::ReloadPackage(ResourceLibrary* resourceLibrary,
+                                   ResourcePackage* package)
 {
   // Load all resources
-  for(uint i = 0; i < package->Resources.Size(); ++i)
+  for (uint i = 0; i < package->Resources.Size(); ++i)
   {
     ResourceEntry& entry = package->Resources[i];
     entry.FullPath = FilePath::Combine(package->Location, entry.Location);
 
-    HandleOf<Resource> subResource = ResourceIdMap.FindValue(entry.mResourceId, nullptr);
-    if(subResource)
+    HandleOf<Resource> subResource =
+        ResourceIdMap.FindValue(entry.mResourceId, nullptr);
+    if (subResource)
       ReloadEntry(subResource, entry);
     else
     {
-      //New Add to the resource library
+      // New Add to the resource library
       Status status;
       subResource = LoadEntry(status, entry);
-      if(subResource)
+      if (subResource)
         resourceLibrary->Add(subResource, false);
     }
   }
 
-  //Signal that resources are loaded
+  // Signal that resources are loaded
   ResourceEvent event;
   Z::gResources->DispatchEvent(Events::ResourcesLoaded, &event);
 }
 
 void ResourceSystem::UnloadAll()
 {
-  // Unload all libraries. We want to unload libraries that no one depends on first
-  while(!LoadedResourceLibraries.Empty())
+  // Unload all libraries. We want to unload libraries that no one depends on
+  // first
+  while (!LoadedResourceLibraries.Empty())
   {
     // Find the next leaf library (doesn't have any dependents)
-    forRange(ResourceLibrary* library, LoadedResourceLibraries.Values())
+    forRange(ResourceLibrary * library, LoadedResourceLibraries.Values())
     {
-      if(library->Dependents.Empty())
+      if (library->Dependents.Empty())
       {
         LoadedResourceLibraries.Erase(library->Name);
         library->Unload();
@@ -215,7 +220,7 @@ void ResourceSystem::UnloadAll()
 
   // Delete Managers in the reverse order due to dependencies
   int size = (int)mResourceManagers.Size();
-  for(int i = size - 1; i >= 0; --i)
+  for (int i = size - 1; i >= 0; --i)
     SafeDelete(mResourceManagers[i]);
 
   mResourceManagers.Clear();
@@ -224,17 +229,18 @@ void ResourceSystem::UnloadAll()
   MetaDatabase::GetInstance()->ClearRemovedLibraries();
 }
 
-Resource* ResourceSystem::GetResourceByTypeAndName(StringParam resourceType, 
-                                      StringParam resourceName)
+Resource* ResourceSystem::GetResourceByTypeAndName(StringParam resourceType,
+                                                   StringParam resourceName)
 {
-  //Find resource manager for given type
+  // Find resource manager for given type
   ManagerMapType::range r = Managers.Find(resourceType);
-  if(r.Empty())
+  if (r.Empty())
     return nullptr;
 
   ResourceManager* manager = r.Front().second;
-  ///Get the resource from that manager
-  Resource* resource = manager->GetResource(resourceName, ResourceNotFound::ReturnNull);
+  /// Get the resource from that manager
+  Resource* resource =
+      manager->GetResource(resourceName, ResourceNotFound::ReturnNull);
   return resource;
 }
 
@@ -242,7 +248,8 @@ Resource* ResourceSystem::GetResourceByName(StringParam resourceIdAndName)
 {
   // We need to account for a possible "0x" at the start of the resource id
   uint offset = StringStartsWith0x(resourceIdAndName.All()) ? 2 : 0;
-  StringRange resId = resourceIdAndName.SubStringFromByteIndices(offset, cHex64Size + offset);
+  StringRange resId =
+      resourceIdAndName.SubStringFromByteIndices(offset, cHex64Size + offset);
   ResourceId resourceId = ReadHexString(resId);
   return GetResource(resourceId);
 }
@@ -252,29 +259,37 @@ Resource* ResourceSystem::GetResource(ResourceId resourceId)
   return ResourceIdMap.FindValue(resourceId, nullptr);
 }
 
-void ResourceSystem::LoadIntoLibrary(Status& status, ResourceLibrary* resourceLibrary,
-                                 ResourcePackage* resourcePackage, bool isNew)
+void ResourceSystem::LoadIntoLibrary(Status& status,
+                                     ResourceLibrary* resourceLibrary,
+                                     ResourcePackage* resourcePackage,
+                                     bool isNew)
 {
   Z::gEngine->LoadingStart();
 
   StringBuilder errorString;
   uint count = resourcePackage->Resources.Size();
 
-  ProgressType::Enum progressType = count > 1 ? ProgressType::Normal : ProgressType::None;
+  ProgressType::Enum progressType =
+      count > 1 ? ProgressType::Normal : ProgressType::None;
 
-  for(uint i = 0; i < count; ++i)
+  for (uint i = 0; i < count; ++i)
   {
     ResourceEntry& entry = resourcePackage->Resources[i];
     entry.mLibrary = resourceLibrary;
 
     // Blocking update of progress
-    Z::gEngine->LoadingUpdate("Loading", resourcePackage->Name, entry.Name, progressType, (float)(i + 1) / count);
+    Z::gEngine->LoadingUpdate("Loading",
+                              resourcePackage->Name,
+                              entry.Name,
+                              progressType,
+                              (float)(i + 1) / count);
 
-    entry.FullPath = FilePath::Combine(resourcePackage->Location, entry.Location);
+    entry.FullPath =
+        FilePath::Combine(resourcePackage->Location, entry.Location);
 
     Status entryStatus;
     HandleOf<Resource> resource = LoadEntry(entryStatus, entry);
-    if(!entryStatus)
+    if (!entryStatus)
     {
       continue;
       // Collect all error messages
@@ -283,15 +298,16 @@ void ResourceSystem::LoadIntoLibrary(Status& status, ResourceLibrary* resourceLi
       errorString << " \n";
     }
 
-    if(resource)
+    if (resource)
       resourceLibrary->Add(resource, isNew);
 
     YieldToOs();
   }
 
-  if(!status)
+  if (!status)
   {
-    status.Message = BuildString("Resource package failed to load. \n", errorString.ToString());
+    status.Message = BuildString("Resource package failed to load. \n",
+                                 errorString.ToString());
   }
 
   Z::gEngine->LoadingFinish();
@@ -301,15 +317,13 @@ void ResourceSystem::LoadIntoLibrary(Status& status, ResourceLibrary* resourceLi
   Z::gResources->DispatchEvent(Events::ResourcesLoaded, &event);
 }
 
-
 // ErrorContext for loading resources
 class ErrorContextResourceEntry : public ErrorContext
 {
 public:
   ResourceEntry* mEntry;
 
-  ErrorContextResourceEntry(ResourceEntry* entry)
-    :mEntry(entry)
+  ErrorContextResourceEntry(ResourceEntry* entry) : mEntry(entry)
   {
   }
 
@@ -319,19 +333,22 @@ public:
   }
 };
 
-
-HandleOf<Resource> ResourceSystem::LoadEntry(Status& status, ResourceEntry& element)
+HandleOf<Resource> ResourceSystem::LoadEntry(Status& status,
+                                             ResourceEntry& element)
 {
-  //TimerBlock block(element.Name);
+  // TimerBlock block(element.Name);
 
   ErrorContextResourceEntry loadingResourceContext(&element);
 
-  if(mDetailedResources)
-    ZPrintFilter(Filter::ResourceFilter, "Loading Resource '%s'\n", element.Name.c_str());
+  if (mDetailedResources)
+    ZPrintFilter(Filter::ResourceFilter,
+                 "Loading Resource '%s'\n",
+                 element.Name.c_str());
 
-  if(!FileExists(element.FullPath))
+  if (!FileExists(element.FullPath))
   {
-    String errMsg = String::Format("Resource file '%s' does not exist.", element.FullPath.c_str());
+    String errMsg = String::Format("Resource file '%s' does not exist.",
+                                   element.FullPath.c_str());
     status.SetFailed(errMsg);
     ZPrint("%s\n", errMsg.c_str());
     return nullptr;
@@ -342,16 +359,21 @@ HandleOf<Resource> ResourceSystem::LoadEntry(Status& status, ResourceEntry& elem
     element.Type = "Cog";
 
   LoaderRange range = mLoaderMap.Find(element.Type);
-  if(!range.Empty())
+  if (!range.Empty())
   {
-    HandleOf<Resource> newResource =  range.Front().second->LoadFromFile(element);
-    //ideally we'd do a check here, but some resources don't load anything (fragments)
+    HandleOf<Resource> newResource =
+        range.Front().second->LoadFromFile(element);
+    // ideally we'd do a check here, but some resources don't load anything
+    // (fragments)
     return newResource;
   }
   else
   {
-    String errMsg = String::Format("Failed to load file. Could not find loader for type"
-                                   "'%s' for file '%s'.", element.Type.c_str(), element.Location.c_str());
+    String errMsg =
+        String::Format("Failed to load file. Could not find loader for type"
+                       "'%s' for file '%s'.",
+                       element.Type.c_str(),
+                       element.Location.c_str());
     ZPrint("%s\n", errMsg.c_str());
     status.SetFailed(errMsg);
   }
@@ -361,16 +383,16 @@ HandleOf<Resource> ResourceSystem::LoadEntry(Status& status, ResourceEntry& elem
 void ResourceSystem::ReloadEntry(Resource* resource, ResourceEntry& entry)
 {
   ResourceManager* manager = resource->GetManager();
-  if(manager->mCanReload)
+  if (manager->mCanReload)
   {
     LoaderRange range = mLoaderMap.Find(entry.Type);
-    if(!range.Empty())
+    if (!range.Empty())
     {
       range.Front().second->ReloadFromFile(resource, entry);
 
       resource->UpdateContentItem(entry.mLibrarySource);
 
-      if(entry.mLibrarySource->EditMode == ContentEditMode::ResourceObject)
+      if (entry.mLibrarySource->EditMode == ContentEditMode::ResourceObject)
         entry.mLibrarySource->mRuntimeResource = resource->mResourceId;
     }
   }
@@ -378,11 +400,13 @@ void ResourceSystem::ReloadEntry(Resource* resource, ResourceEntry& entry)
   {
     resource->UpdateContentItem(entry.mLibrarySource);
 
-    String message = String::Format("Can not reload resource type %s named %s." 
-      "Restart engine for changes to have an effect.",
-      manager->mResourceTypeName.c_str(), resource->Name.c_str());
-    //DoNotifyError("Can not reload", message);
+    String message =
+        String::Format("Can not reload resource type %s named %s."
+                       "Restart engine for changes to have an effect.",
+                       manager->mResourceTypeName.c_str(),
+                       resource->Name.c_str());
+    // DoNotifyError("Can not reload", message);
   }
 }
 
-}//namespace Zero
+} // namespace Zero

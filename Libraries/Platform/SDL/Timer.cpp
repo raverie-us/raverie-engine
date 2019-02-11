@@ -1,9 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,9 +6,9 @@ namespace Zero
 
 struct TimerPrivateData
 {
-  u64    mStartCount;
-  u64    mCurrentTickCount;
-  u64    mCurrentTickDelta;
+  u64 mStartCount;
+  u64 mCurrentTickCount;
+  u64 mCurrentTickDelta;
   double mFrequency;
   double mCurTimeDelta;
   double mCurTime;
@@ -37,7 +32,7 @@ Timer::Timer(const Timer& rhs)
   memcpy(this, &rhs, sizeof(*this));
 }
 
-Timer& Timer::operator= (const Timer& rhs)
+Timer& Timer::operator=(const Timer& rhs)
 {
   if (this == &rhs)
     return *this;
@@ -67,7 +62,7 @@ void Timer::Update()
   self->mCurrentTickCount = currentCount - self->mStartCount;
   self->mCurrentTickDelta = self->mCurrentTickCount - lastTickCount;
 
-  self->mCurTime =  self->mCurrentTickCount / self->mFrequency;
+  self->mCurTime = self->mCurrentTickCount / self->mFrequency;
   self->mCurTimeDelta = self->mCurrentTickDelta / self->mFrequency;
 }
 
@@ -108,7 +103,7 @@ double Timer::TimeNoUpdate() const
 {
   ZeroGetPrivateData(TimerPrivateData);
   u64 currentCount = SDL_GetPerformanceCounter();
-  u64 TempTicks  = currentCount - self->mStartCount;
+  u64 TempTicks = currentCount - self->mStartCount;
   return TempTicks / self->mFrequency;
 }
 

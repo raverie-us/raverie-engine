@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//***************************************************************************
 String EscapeString(StringRange input)
 {
   StringBuilder builder;
@@ -70,7 +64,6 @@ String EscapeString(StringRange input)
   return builder.ToString();
 }
 
-//***************************************************************************
 String EscapeCharacter(int unicodeCharacter)
 {
   // Based on the escaped character type...
@@ -107,113 +100,95 @@ String EscapeCharacter(int unicodeCharacter)
   }
 }
 
-//***************************************************************************
-Character::Character() :
-  mCharacter(0)
+Character::Character() : mCharacter(0)
 {
 }
 
-//***************************************************************************
 Character::Character(int character)
 {
   this->mCharacter = character;
 }
 
-//***************************************************************************
 bool Character::IsEnd() const
 {
   return this->mCharacter == 0;
 }
 
-//***************************************************************************
 bool Character::IsValid() const
 {
   return this->mCharacter != 0;
 }
 
-//***************************************************************************
 String Character::ToEscapedString() const
 {
   return EscapeCharacter(this->mCharacter);
 }
 
-//***************************************************************************
 bool Character::operator==(const Character& rhs) const
 {
   return this->mCharacter == rhs.mCharacter;
 }
 
-//***************************************************************************
 bool Character::operator!=(const Character& rhs) const
 {
   return this->mCharacter != rhs.mCharacter;
 }
 
-//***************************************************************************
-bool Character::operator< (const Character& rhs) const
+bool Character::operator<(const Character& rhs) const
 {
   return this->mCharacter < rhs.mCharacter;
 }
 
-//***************************************************************************
 bool Character::operator<=(const Character& rhs) const
 {
   return this->mCharacter <= rhs.mCharacter;
 }
 
-//***************************************************************************
-bool Character::operator> (const Character& rhs) const
+bool Character::operator>(const Character& rhs) const
 {
   return this->mCharacter > rhs.mCharacter;
 }
 
-//***************************************************************************
 bool Character::operator>=(const Character& rhs) const
 {
   return this->mCharacter >= rhs.mCharacter;
 }
 
-//***************************************************************************
 Token::Token() :
-  mEnd(true),
-  mError(false),
-  mRule(nullptr),
-  mStartInclusive(0),
-  mEndExclusive(0),
-  mStream(nullptr)
+    mEnd(true),
+    mError(false),
+    mRule(nullptr),
+    mStartInclusive(0),
+    mEndExclusive(0),
+    mStream(nullptr)
 {
 }
 
-//***************************************************************************
 Token::Token(GrammarRule<Character>* rule) :
-  mEnd(false),
-  mError(false),
-  mRule(rule),
-  mStartInclusive(0),
-  mEndExclusive(0),
-  mStream(nullptr)
+    mEnd(false),
+    mError(false),
+    mRule(rule),
+    mStartInclusive(0),
+    mEndExclusive(0),
+    mStream(nullptr)
 {
 }
 
-//***************************************************************************
 Token::operator String()
 {
   return this->mString;
 }
 
-//***************************************************************************
 bool Token::IsEnd() const
 {
   return this->mEnd;
 }
 
-//***************************************************************************
 bool Token::IsValid() const
 {
   return (mRule != nullptr);
 }
 
-//***************************************************************************
 String Token::ToEscapedString() const
 {
   if (this->mEnd)
@@ -221,7 +196,6 @@ String Token::ToEscapedString() const
     static String Eof("EndOfFile");
     return Eof;
   }
-
 
   if (this->mString.Empty())
   {
@@ -232,52 +206,44 @@ String Token::ToEscapedString() const
   return EscapeString(this->mString);
 }
 
-//***************************************************************************
 bool Token::operator==(const Token& rhs) const
 {
   return this->mRule == rhs.mRule;
 }
 
-//***************************************************************************
 bool Token::operator!=(const Token& rhs) const
 {
   return this->mRule != rhs.mRule;
 }
 
-//***************************************************************************
-bool Token::operator< (const Token& rhs) const
+bool Token::operator<(const Token& rhs) const
 {
   return this->mRule->mOrderId < rhs.mRule->mOrderId;
 }
 
-//***************************************************************************
 bool Token::operator<=(const Token& rhs) const
 {
   return this->mRule->mOrderId <= rhs.mRule->mOrderId;
 }
 
-//***************************************************************************
-bool Token::operator> (const Token& rhs) const
+bool Token::operator>(const Token& rhs) const
 {
   return this->mRule->mOrderId > rhs.mRule->mOrderId;
 }
 
-//***************************************************************************
 bool Token::operator>=(const Token& rhs) const
 {
   return this->mRule->mOrderId >= rhs.mRule->mOrderId;
 }
 
-//***************************************************************************
 ReplacementNode::ReplacementNode() :
-  mType(ReplacementNodeType::Text),
-  mCaptureReference(nullptr),
-  mLhs(nullptr),
-  mRhs(nullptr)
+    mType(ReplacementNodeType::Text),
+    mCaptureReference(nullptr),
+    mLhs(nullptr),
+    mRhs(nullptr)
 {
 }
 
-//***************************************************************************
 ReplacementNode::~ReplacementNode()
 {
   delete this->mLhs;
@@ -285,7 +251,6 @@ ReplacementNode::~ReplacementNode()
   delete this->mCaptureReference;
 }
 
-//***************************************************************************
 ReplacementNode& ReplacementNode::operator<<(ReplacementNode& rhs)
 {
   ReplacementNode& node = *new ReplacementNode();
@@ -295,7 +260,6 @@ ReplacementNode& ReplacementNode::operator<<(ReplacementNode& rhs)
   return node;
 }
 
-//***************************************************************************
 ReplacementNode& R(StringParam text)
 {
   ReplacementNode& node = *new ReplacementNode();
@@ -304,7 +268,6 @@ ReplacementNode& R(StringParam text)
   return node;
 }
 
-//***************************************************************************
 ReplacementNode& R(CaptureExpressionNode& capture)
 {
   ReplacementNode& node = *new ReplacementNode();
@@ -313,7 +276,6 @@ ReplacementNode& R(CaptureExpressionNode& capture)
   return node;
 }
 
-//***************************************************************************
 ReplacementNode& R(CaptureExpressionNode& capture, ReplacementNode& replaceEach)
 {
   ReplacementNode& node = *new ReplacementNode();
@@ -323,8 +285,9 @@ ReplacementNode& R(CaptureExpressionNode& capture, ReplacementNode& replaceEach)
   return node;
 }
 
-//***************************************************************************
-ReplacementNode& R(CaptureExpressionNode& capture, StringParam name, ReplacementNode& replaceEach)
+ReplacementNode& R(CaptureExpressionNode& capture,
+                   StringParam name,
+                   ReplacementNode& replaceEach)
 {
   ReplacementNode& node = *new ReplacementNode();
   node.mType = ReplacementNodeType::ForeachCapture;
@@ -334,7 +297,6 @@ ReplacementNode& R(CaptureExpressionNode& capture, StringParam name, Replacement
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Character>& T()
 {
   GrammarNode<Character>& node = *new GrammarNode<Character>();
@@ -342,7 +304,6 @@ GrammarNode<Character>& T()
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Character>& T(int character)
 {
   GrammarNode<Character>& node = *new GrammarNode<Character>();
@@ -351,7 +312,6 @@ GrammarNode<Character>& T(int character)
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Character>& T(StringRange rangeSet)
 {
   GrammarNode<Character>& node = *new GrammarNode<Character>();
@@ -385,7 +345,8 @@ GrammarNode<Character>& T(StringRange rangeSet)
       newRange.mStartInclusive = rangeStart;
       newRange.mEndInclusive = rune.value;
 
-      // If the user did a-z-A we would actually include the second - as a character
+      // If the user did a-z-A we would actually include the second - as a
+      // character
       rangeStart = '\0';
       range = false;
     }
@@ -406,8 +367,9 @@ GrammarNode<Character>& T(StringRange rangeSet)
     }
   }
 
-  // If we started a range, but it had no end, then the - character is included as a character
-  // Note that this WILL NOT be hit when it is a single dash for the entire string
+  // If we started a range, but it had no end, then the - character is included
+  // as a character Note that this WILL NOT be hit when it is a single dash for
+  // the entire string
   if (range)
   {
     node.mSingleTokens.PushBack(rangeStart);
@@ -416,7 +378,6 @@ GrammarNode<Character>& T(StringRange rangeSet)
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Character>& T(int startInclusive, int endInclusive)
 {
   GrammarNode<Character>& node = *new GrammarNode<Character>();
@@ -427,8 +388,8 @@ GrammarNode<Character>& T(int startInclusive, int endInclusive)
   return node;
 }
 
-//***************************************************************************
-GrammarNode<Character>& T(StringParam captureName, GrammarNode<Character>& capture)
+GrammarNode<Character>& T(StringParam captureName,
+                          GrammarNode<Character>& capture)
 {
   GrammarNode<Character>& node = *new GrammarNode<Character>();
   node.mType = GrammarNodeType::Capture;
@@ -437,7 +398,6 @@ GrammarNode<Character>& T(StringParam captureName, GrammarNode<Character>& captu
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Token>& P()
 {
   GrammarNode<Token>& node = *new GrammarNode<Token>();
@@ -445,7 +405,6 @@ GrammarNode<Token>& P()
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Token>& P(GrammarRule<Character>& tokenRule)
 {
   GrammarNode<Token>& node = *new GrammarNode<Token>();
@@ -454,7 +413,6 @@ GrammarNode<Token>& P(GrammarRule<Character>& tokenRule)
   return node;
 }
 
-//***************************************************************************
 GrammarNode<Token>& P(StringParam captureName, GrammarNode<Token>& capture)
 {
   GrammarNode<Token>& node = *new GrammarNode<Token>();
@@ -464,14 +422,12 @@ GrammarNode<Token>& P(StringParam captureName, GrammarNode<Token>& capture)
   return node;
 }
 
-//***************************************************************************
 Character CharacterStream::GetToken(size_t index)
 {
   char character = this->mText.Data()[index];
   return character;
 }
 
-//***************************************************************************
 StringRange CharacterStream::GetText(size_t startInclusive, size_t endExclusive)
 {
   StringIterator start = this->mText.Begin() + startInclusive;
@@ -480,44 +436,41 @@ StringRange CharacterStream::GetText(size_t startInclusive, size_t endExclusive)
   return subString;
 }
 
-//***************************************************************************
-void CharacterStream::Replace(StringParam text, size_t startInclusive, size_t endExclusive)
+void CharacterStream::Replace(StringParam text,
+                              size_t startInclusive,
+                              size_t endExclusive)
 {
-  this->mText = String::ReplaceSub(this->mText, text, startInclusive, endExclusive);
+  this->mText =
+      String::ReplaceSub(this->mText, text, startInclusive, endExclusive);
 }
 
-//***************************************************************************
-AutoIncrement::AutoIncrement(size_t* increment) :
-  mIncrement(increment)
+AutoIncrement::AutoIncrement(size_t* increment) : mIncrement(increment)
 {
   ++*this->mIncrement;
 }
 
-//***************************************************************************
 AutoIncrement::~AutoIncrement()
 {
   --*this->mIncrement;
 }
 
-//***************************************************************************
 CaptureExpressionNode::CaptureExpressionNode() :
-  mType(CaptureExpressionNodeType::NamedCapture),
-  mLhs(nullptr),
-  mRhs(nullptr),
-  mStartIndexInclusive(0),
-  mEndIndexInclusive(0)
+    mType(CaptureExpressionNodeType::NamedCapture),
+    mLhs(nullptr),
+    mRhs(nullptr),
+    mStartIndexInclusive(0),
+    mEndIndexInclusive(0)
 {
 }
 
-//***************************************************************************
 CaptureExpressionNode::~CaptureExpressionNode()
 {
   delete this->mLhs;
   delete this->mRhs;
 }
 
-//***************************************************************************
-CaptureExpressionNode& CaptureExpressionNode::operator+(CaptureExpressionNode& rhs)
+CaptureExpressionNode& CaptureExpressionNode::
+operator+(CaptureExpressionNode& rhs)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
   node.mType = CaptureExpressionNodeType::Union;
@@ -526,7 +479,6 @@ CaptureExpressionNode& CaptureExpressionNode::operator+(CaptureExpressionNode& r
   return node;
 }
 
-//***************************************************************************
 CaptureExpressionNode& CaptureExpressionNode::operator[](int index)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
@@ -537,8 +489,8 @@ CaptureExpressionNode& CaptureExpressionNode::operator[](int index)
   return node;
 }
 
-//***************************************************************************
-CaptureExpressionNode& CaptureExpressionNode::operator[](StringParam nestedCaptureName)
+CaptureExpressionNode& CaptureExpressionNode::
+operator[](StringParam nestedCaptureName)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
   node.mType = CaptureExpressionNodeType::NestedCapture;
@@ -547,7 +499,6 @@ CaptureExpressionNode& CaptureExpressionNode::operator[](StringParam nestedCaptu
   return node;
 }
 
-//***************************************************************************
 CaptureExpressionNode& CaptureExpressionNode::operator!()
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
@@ -556,7 +507,6 @@ CaptureExpressionNode& CaptureExpressionNode::operator!()
   return node;
 }
 
-//***************************************************************************
 CaptureExpressionNode& CaptureExpressionNode::operator~()
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
@@ -565,7 +515,6 @@ CaptureExpressionNode& CaptureExpressionNode::operator~()
   return node;
 }
 
-//***************************************************************************
 CaptureExpressionNode& C(StringParam captureName)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
@@ -574,8 +523,9 @@ CaptureExpressionNode& C(StringParam captureName)
   return node;
 }
 
-//***************************************************************************
-CaptureExpressionNode& C(CaptureExpressionNode& parent, int startIndexInclusive, int endIndexInclusive)
+CaptureExpressionNode& C(CaptureExpressionNode& parent,
+                         int startIndexInclusive,
+                         int endIndexInclusive)
 {
   CaptureExpressionNode& node = *new CaptureExpressionNode();
   node.mType = CaptureExpressionNodeType::IndexRange;
@@ -585,21 +535,16 @@ CaptureExpressionNode& C(CaptureExpressionNode& parent, int startIndexInclusive,
   return node;
 }
 
-//***************************************************************************
-CharacterLocation::CharacterLocation() :
-  mLine(0),
-  mCharacter(0)
+CharacterLocation::CharacterLocation() : mLine(0), mCharacter(0)
 {
 }
 
-//***************************************************************************
 CharacterLocation::CharacterLocation(size_t line, size_t character) :
-  mLine(line),
-  mCharacter(character)
+    mLine(line),
+    mCharacter(character)
 {
 }
 
-//***************************************************************************
 CharacterLocation CharacterLocation::FromIndex(StringRange input, size_t index)
 {
   CharacterLocation location;
@@ -607,7 +552,6 @@ CharacterLocation CharacterLocation::FromIndex(StringRange input, size_t index)
   return location;
 }
 
-//***************************************************************************
 size_t CharacterLocation::ToIndex(StringRange input, CharacterLocation location)
 {
   size_t index = 0;
@@ -615,8 +559,10 @@ size_t CharacterLocation::ToIndex(StringRange input, CharacterLocation location)
   return index;
 }
 
-//***************************************************************************
-void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocation, size_t* outIndex, bool computeIndex)
+void CharacterLocation::Compute(StringRange input,
+                                CharacterLocation* outLocation,
+                                size_t* outIndex,
+                                bool computeIndex)
 {
   CharacterLocation location;
   size_t currentIndex = 0;
@@ -624,7 +570,7 @@ void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocatio
 
   for (; !input.Empty(); input.PopFront())
   {
-    // If we're computing locations from an index, and the current index 
+    // If we're computing locations from an index, and the current index
     if (computeIndex == false && currentIndex >= *outIndex)
       break;
 
@@ -637,8 +583,9 @@ void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocatio
     // Check if the character matches that of the newline or carriage return
     if (rune == '\n' || rune == '\r')
     {
-      // As long as the last character wasn't a carriage return and this character isn't a newline (CRLF)...
-      // Note: If this was a full CRLF, we already incremented the line on the first CR, no need to do it again!
+      // As long as the last character wasn't a carriage return and this
+      // character isn't a newline (CRLF)... Note: If this was a full CRLF, we
+      // already incremented the line on the first CR, no need to do it again!
       if ((wasCariageReturn && rune == '\n') == false)
       {
         // Increment the line count since we hit a line
@@ -652,8 +599,10 @@ void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocatio
       location.mCharacter = 1;
     }
 
-    // If we're computing the index from the location, then check if the line and character matches
-    if (computeIndex && location.mLine == outLocation->mLine && location.mCharacter == outLocation->mCharacter)
+    // If we're computing the index from the location, then check if the line
+    // and character matches
+    if (computeIndex && location.mLine == outLocation->mLine &&
+        location.mCharacter == outLocation->mCharacter)
       break;
 
     ++currentIndex;
@@ -665,4 +614,4 @@ void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocatio
   else
     *outLocation = location;
 }
-}
+} // namespace Zero

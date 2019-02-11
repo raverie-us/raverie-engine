@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 #include "Reals.hpp"
@@ -19,11 +14,10 @@ typedef const Vector3& Vec3Param;
 typedef Vector3& Vec3Ref;
 typedef Vector3* Vec3Ptr;
 
-//--------------------------------------------------------------------- Vector 3
 /// Three dimensional vector.
 struct ZeroShared Vector3
 {
-  Vector3() {};
+  Vector3(){};
   explicit Vector3(real x, real y, real z);
   // Splat all elements
   explicit Vector3(real xyz);
@@ -55,9 +49,9 @@ struct ZeroShared Vector3
   // Comparison operators
   bool operator==(Vec3Param rhs) const;
   bool operator!=(Vec3Param rhs) const;
-  BoolVec3 operator< (Vec3Param rhs) const;
+  BoolVec3 operator<(Vec3Param rhs) const;
   BoolVec3 operator<=(Vec3Param rhs) const;
-  BoolVec3 operator> (Vec3Param rhs) const;
+  BoolVec3 operator>(Vec3Param rhs) const;
   BoolVec3 operator>=(Vec3Param rhs) const;
 
   /// Set all of elements to 0.
@@ -66,7 +60,6 @@ struct ZeroShared Vector3
   void Set(real x, real y, real z);
   /// Set all elements to the same value.
   void Splat(real xyz);
-
 
   /// Compute the dot product of two vectors.
   static real Dot(Vec3Param lhs, Vec3Param rhs);
@@ -84,9 +77,11 @@ struct ZeroShared Vector3
   static real Normalize(Vec3Ref value);
   /// Calculate and return a unit-length copy of the given vector.
   static Vector3 Normalized(Vec3Param value);
-  /// Try to normalize the given vector if possible. Safeguards against zero divisions.
+  /// Try to normalize the given vector if possible. Safeguards against zero
+  /// divisions.
   static real AttemptNormalize(Vec3Ref value);
-  /// Attempts to return a normalized given vector. Safeguards against zero divisions.
+  /// Attempts to return a normalized given vector. Safeguards against zero
+  /// divisions.
   static Vector3 AttemptNormalized(Vec3Param value);
 
   /// Fused multiply add:  v0 + v1 * scalar
@@ -104,7 +99,10 @@ struct ZeroShared Vector3
   static Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue);
   /// Same as clamp, however it fills out whether or not anything was clamped.
   /// Useful when an assert message should be shown if anything was clamped.
-  static Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped);
+  static Vector3 DebugClamp(Vec3Param value,
+                            Vec3Param minValue,
+                            Vec3Param maxValue,
+                            bool& wasClamped);
 
   /// Return a copy of this vector with each element has been floored.
   static Vector3 Floor(Vec3Param value);
@@ -115,31 +113,39 @@ struct ZeroShared Vector3
   /// Return a copy of this vector with each element has been rounded.
   static Vector3 Round(Vec3Param value);
 
-  /// Linearly interpolate between the two vectors, the t-value is restricted to [0, 1].
+  /// Linearly interpolate between the two vectors, the t-value is restricted to
+  /// [0, 1].
   static Vector3 Lerp(Vec3Param start, Vec3Param end, real tValue);
-  /// Spherical linear interpolation. Interpolates along the surface of the unit sphere.
-  /// Normalizes input, checks for degenerate/ambiguous cases.
+  /// Spherical linear interpolation. Interpolates along the surface of the unit
+  /// sphere. Normalizes input, checks for degenerate/ambiguous cases.
   static Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue);
-  /// Same as Slerp except this function assumes the user has deal with degenerate/ambiguous cases.
-  /// Used when multiple calls are made to Slerp and the user wants to fix degeneracies once ahead of time.
+  /// Same as Slerp except this function assumes the user has deal with
+  /// degenerate/ambiguous cases. Used when multiple calls are made to Slerp and
+  /// the user wants to fix degeneracies once ahead of time.
   static Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
-  /// Same as Slerp except this function does not normalize the input vectors. This is the 'pure' mathematical
-  /// Slerp function. This effectively traces along an ellipse defined by the two input vectors.
+  /// Same as Slerp except this function does not normalize the input vectors.
+  /// This is the 'pure' mathematical Slerp function. This effectively traces
+  /// along an ellipse defined by the two input vectors.
   static Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
   /// Projects the input vector onto the given vector (must be normalized)
   static Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);
   /// Projects the input vector onto a plane (the normal must be normalized)
   static Vector3 ProjectOnPlane(Vec3Param input, Vec3Param planeNormal);
   /// Calculates the reflection vector across a given vector.
-  static Vector3 ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector);
+  static Vector3 ReflectAcrossVector(Vec3Param input,
+                                     Vec3Param normalizedVector);
   /// Calculates the reflection vector across a given plane.
   static Vector3 ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal);
-  /// Calculates the refraction vector through a plane given a certain index of refraction.
-  static Vector3 Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex);
+  /// Calculates the refraction vector through a plane given a certain index of
+  /// refraction.
+  static Vector3 Refract(Vec3Param input,
+                         Vec3Param planeNormal,
+                         real refractionIndex);
   /// Get the angle between the two vectors in radians.
   static real AngleBetween(Vec3Param a, Vec3Param b);
 
-  /// Returns if all elements of the two vectors are within epsilon of each other
+  /// Returns if all elements of the two vectors are within epsilon of each
+  /// other
   static bool ApproximatelyEqual(Vec3Param lhs, Vec3Param rhs, real epsilon);
   /// Checks to see if the values of this vector's elements are usable.
   bool Valid() const;
@@ -157,7 +163,7 @@ struct ZeroShared Vector3
   /// Calculate and return a unit-length copy of this vector.
   Vector3 Normalized() const;
   /// Attempt to give this vector a length of 1, but checks if it's possible.
-  /// Instead of crashing, will return 0 if the vector was not able to be 
+  /// Instead of crashing, will return 0 if the vector was not able to be
   /// normalized.
   real AttemptNormalize();
   Vector3 AttemptNormalized() const;
@@ -178,14 +184,14 @@ struct ZeroShared Vector3
   Vector3 ReflectAcrossVector(Vec3Param normalizedVector) const;
   /// Calculates the reflection vector across a given plane.
   Vector3 ReflectAcrossPlane(Vec3Param planeNormal) const;
-  /// Calculates the refraction vector through a plane given a certain index of refraction.
+  /// Calculates the refraction vector through a plane given a certain index of
+  /// refraction.
   Vector3 Refract(Vec3Param planeNormal, real refractionIndex) const;
   /// Flip this vector so it's pointing in the opposite direction.
   Vec3Ref Negate();
 
-  union
-  {
-    struct  
+  union {
+    struct
     {
       real x, y, z;
     };
@@ -216,9 +222,11 @@ ZeroShared real DistanceSq(Vec3Param lhs, Vec3Param rhs);
 ZeroShared real Normalize(Vec3Ref value);
 /// Calculate and return a unit-length copy of the given vector.
 ZeroShared Vector3 Normalized(Vec3Param value);
-/// Try to normalize the given vector if possible. Safeguards against zero divisions.
+/// Try to normalize the given vector if possible. Safeguards against zero
+/// divisions.
 ZeroShared real AttemptNormalize(Vec3Ref value);
-/// Attempts to return a normalized given vector. Safeguards against zero divisions.
+/// Attempts to return a normalized given vector. Safeguards against zero
+/// divisions.
 ZeroShared Vector3 AttemptNormalized(Vec3Param value);
 
 /// Fused multiply add:  v0 + v1 * scalar
@@ -233,10 +241,15 @@ ZeroShared Vector3 Min(Vec3Param lhs, Vec3Param rhs);
 /// Returns a vector with the component-wise max between two vectors.
 ZeroShared Vector3 Max(Vec3Param lhs, Vec3Param rhs);
 /// Returns a vector where each component is clamped between min and max.
-ZeroShared Vector3 Clamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue);
+ZeroShared Vector3 Clamp(Vec3Param value,
+                         Vec3Param minValue,
+                         Vec3Param maxValue);
 /// Same as clamp, however it fills out whether or not anything was clamped.
 /// Useful when an assert message should be shown if anything was clamped.
-ZeroShared Vector3 DebugClamp(Vec3Param value, Vec3Param minValue, Vec3Param maxValue, bool& wasClamped);
+ZeroShared Vector3 DebugClamp(Vec3Param value,
+                              Vec3Param minValue,
+                              Vec3Param maxValue,
+                              bool& wasClamped);
 
 /// Return a copy of this vector with each element has been floored.
 ZeroShared Vector3 Floor(Vec3Param value);
@@ -247,32 +260,40 @@ ZeroShared Vector3 Truncate(Vec3Param value);
 /// Return a copy of this vector with each element has been rounded.
 ZeroShared Vector3 Round(Vec3Param value);
 
-/// Linearly interpolate between the two vectors, the t-value is restricted to [0, 1].
+/// Linearly interpolate between the two vectors, the t-value is restricted to
+/// [0, 1].
 ZeroShared Vector3 Lerp(Vec3Param start, Vec3Param end, real tValue);
-/// Spherical linear interpolation. Interpolates along the surface of the unit sphere.
-/// Normalizes input, checks for degenerate/ambiguous cases.
+/// Spherical linear interpolation. Interpolates along the surface of the unit
+/// sphere. Normalizes input, checks for degenerate/ambiguous cases.
 ZeroShared Vector3 Slerp(Vec3Param start, Vec3Param end, real tValue);
-/// Same as Slerp except this function assumes the user has deal with degenerate/ambiguous cases.
-/// Used when multiple calls are made to Slerp and the user wants to fix degeneracies once ahead of time.
+/// Same as Slerp except this function assumes the user has deal with
+/// degenerate/ambiguous cases. Used when multiple calls are made to Slerp and
+/// the user wants to fix degeneracies once ahead of time.
 ZeroShared Vector3 SlerpFast(Vec3Param start, Vec3Param end, real tValue);
-/// Same as Slerp except this function does not normalize the input vectors. This is the 'pure' mathematical
-/// Slerp function. This effectively traces along an ellipse defined by the two input vectors.
-ZeroShared Vector3 SlerpUnnormalized(Vec3Param start, Vec3Param end, real tValue);
+/// Same as Slerp except this function does not normalize the input vectors.
+/// This is the 'pure' mathematical Slerp function. This effectively traces
+/// along an ellipse defined by the two input vectors.
+ZeroShared Vector3 SlerpUnnormalized(Vec3Param start,
+                                     Vec3Param end,
+                                     real tValue);
 
 /// Projects the input vector onto the given vector (must be normalized)
 ZeroShared Vector3 ProjectOnVector(Vec3Param input, Vec3Param normalizedVector);
 /// Projects the input vector onto a plane (the normal must be normalized)
 ZeroShared Vector3 ProjectOnPlane(Vec3Param input, Vec3Param planeNormal);
 /// Calculates the reflection vector across a given vector.
-ZeroShared Vector3 ReflectAcrossVector(Vec3Param input, Vec3Param normalizedVector);
+ZeroShared Vector3 ReflectAcrossVector(Vec3Param input,
+                                       Vec3Param normalizedVector);
 /// Calculates the reflection vector across a given plane.
 ZeroShared Vector3 ReflectAcrossPlane(Vec3Param input, Vec3Param planeNormal);
-/// Calculates the refraction vector through a plane given a certain index of refraction.
-ZeroShared Vector3 Refract(Vec3Param input, Vec3Param planeNormal, real refractionIndex);
+/// Calculates the refraction vector through a plane given a certain index of
+/// refraction.
+ZeroShared Vector3 Refract(Vec3Param input,
+                           Vec3Param planeNormal,
+                           real refractionIndex);
 /// Get the angle between the two vectors in radians.
 ZeroShared real AngleBetween(Vec3Param a, Vec3Param b);
 
-//-------------------------------------------------------------------Legacy
 ZeroShared bool Equal(Vec3Param lhs, Vec3Param rhs, real epsilon);
 
 /// Compute the cross product of the two given vectors for 2d.
@@ -292,7 +313,7 @@ ZeroShared Vector3 Clamped(Vec3Param vec, real min, real max);
 /// Returns if all values in lhs are less than all values in rhs
 ZeroShared bool AllLess(Vec3Param lhs, Vec3Param rhs);
 
-///Returns if any value in lhs is less than any value in rhs
+/// Returns if any value in lhs is less than any value in rhs
 ZeroShared bool AnyLess(Vec3Param lhs, Vec3Param rhs);
 
 /// Returns if all values in lhs are greater than all values in rhs
@@ -301,8 +322,10 @@ ZeroShared bool AllGreater(Vec3Param lhs, Vec3Param rhs);
 /// Returns if any value in lhs is greater than any value in rhs
 ZeroShared bool AnyGreater(Vec3Param lhs, Vec3Param rhs);
 
-ZeroShared real DistanceToLineSq(Vec3Param start, Vec3Param end, Vec3Param point);
+ZeroShared real DistanceToLineSq(Vec3Param start,
+                                 Vec3Param end,
+                                 Vec3Param point);
 
-}// namespace Math
+} // namespace Math
 
 #include "Vector3.inl"

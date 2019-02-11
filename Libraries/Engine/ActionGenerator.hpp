@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ActionGenerator.hpp
-/// Declaration of the Action Builder.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,30 +6,46 @@ namespace Zero
 
 #define EaseFunc float (*EaseType)(float)
 
-//Property
-template<typename objectType, typename elementType, 
-  elementType objectType::* PtrToMember >
+// Property
+template <typename objectType,
+          typename elementType,
+          elementType objectType::*PtrToMember>
 struct PropertyAccessorMem
 {
-  static inline elementType Get(objectType* mObject){return mObject->*PtrToMember;}
-  static inline void Set(objectType* mObject,const elementType& value){mObject->*PtrToMember = value;}
+  static inline elementType Get(objectType* mObject)
+  {
+    return mObject->*PtrToMember;
+  }
+  static inline void Set(objectType* mObject, const elementType& value)
+  {
+    mObject->*PtrToMember = value;
+  }
 };
 
-template<typename objectType, typename elementType, typename elementTypeSet,
-  elementType (objectType::*MemGetter)() ,
-  void (objectType::*MemSetter)(elementTypeSet)>
+template <typename objectType,
+          typename elementType,
+          typename elementTypeSet,
+          elementType (objectType::*MemGetter)(),
+          void (objectType::*MemSetter)(elementTypeSet)>
 struct PropertyAccessorMemFunc
 {
-  static inline elementType Get(objectType* mObject){return (mObject->*MemGetter)();}
-  static inline void Set(objectType* mObject,const elementType& newValue){(mObject->*MemSetter)(newValue);}
+  static inline elementType Get(objectType* mObject)
+  {
+    return (mObject->*MemGetter)();
+  }
+  static inline void Set(objectType* mObject, const elementType& newValue)
+  {
+    (mObject->*MemSetter)(newValue);
+  }
 };
 
-
-template<typename type, typename objectType, EaseFunc, typename PropertyAccessor>
+template <typename type,
+          typename objectType,
+          EaseFunc,
+          typename PropertyAccessor>
 class ActionGenerator : public Action
 {
 public:
-
   ActionGenerator(objectType* instance, float duration, type destination)
   {
     Duration = duration;
@@ -52,18 +60,19 @@ public:
   float Time;
   objectType* Instance;
 
-  ActionState::Enum  Update(float dt) override
+  ActionState::Enum Update(float dt) override
   {
-    if(mFlags.IsSet(ActionFlag::Started))
+    if (mFlags.IsSet(ActionFlag::Started))
     {
       Time += dt;
       float t = Time / Duration;
-      if(t>1.0f) t = 1.0f;
+      if (t > 1.0f)
+        t = 1.0f;
       float eased = (*EaseType)(t);
       type newValue = Interpolation::Lerp<type>::Interpolate(t0, t1, eased);
       PropertyAccessor::Set(Instance, newValue);
 
-      if(t<1.0f)
+      if (t < 1.0f)
         return ActionState::Running;
       else
         return ActionState::Completed;
@@ -77,35 +86,66 @@ public:
   }
 };
 
-
-//Bind normal getter and setters member functions.
-template<typename GetterType, typename SetterType, GetterType MemGetter, SetterType MemSetter, 
-         EaseFunc, typename objectType, typename elementType, typename elementSetType>
-inline Action* GenerateAction(elementType (objectType::*getDummy)() , void (objectType::*setDummy)(elementSetType),
-                                    objectType* instance, float duration, const elementType& destination)
+// Bind normal getter and setters member functions.
+template <typename GetterType,
+          typename SetterType,
+          GetterType MemGetter,
+          SetterType MemSetter,
+          EaseFunc,
+          typename objectType,
+          typename elementType,
+          typename elementSetType>
+inline Action* GenerateAction(elementType (objectType::*getDummy)(),
+                              void (objectType::*setDummy)(elementSetType),
+                              objectType* instance,
+                              float duration,
+                              const elementType& destination)
 {
-  return new ActionGenerator<elementType, objectType, EaseType, 
-    PropertyAccessorMemFunc<objectType, elementType, elementSetType, MemGetter, MemSetter> >(instance, duration, destination);
+  return new ActionGenerator<elementType,
+                             objectType,
+                             EaseType,
+                             PropertyAccessorMemFunc<objectType,
+                                                     elementType,
+                                                     elementSetType,
+                                                     MemGetter,
+                                                     MemSetter>>(
+      instance, duration, destination);
 }
 
-template<typename MemberType, MemberType Member, EaseFunc, typename objectType, typename elementType>
-inline Action* GenerateAction(objectType* instance, float duration, const elementType& destination)
+template <typename MemberType,
+          MemberType Member,
+          EaseFunc,
+          typename objectType,
+          typename elementType>
+inline Action* GenerateAction(objectType* instance,
+                              float duration,
+                              const elementType& destination)
 {
-  return new ActionGenerator<elementType, objectType, EaseType, 
-    PropertyAccessorMem<objectType, elementType, 
-    Member > >(instance, duration, destination);
+  return new ActionGenerator<
+      elementType,
+      objectType,
+      EaseType,
+      PropertyAccessorMem<objectType, elementType, Member>>(
+      instance, duration, destination);
 }
 
-#define AnimateMember(memberPointer, easeType, instance, duration, dest)  \
-  GenerateAction< decltype(memberPointer), memberPointer, easeType> \
-  (instance, duration, dest)
+#define AnimateMember(memberPointer, easeType, instance, duration, dest)       \
+  GenerateAction<decltype(memberPointer), memberPointer, easeType>(            \
+      instance, duration, dest)
 
-#define AnimatePropertyGetSet(objectType, propName, easeType, instance, duration, dest)  \
-  GenerateAction< decltype(&objectType::Get##propName), decltype(&objectType::Set##propName),  \
-     &objectType::Get##propName,  &objectType::Set##propName, easeType>(                \
-    &objectType::Get##propName, &objectType::Set##propName, static_cast<objectType*>(instance), duration, dest)
+#define AnimatePropertyGetSet(                                                 \
+    objectType, propName, easeType, instance, duration, dest)                  \
+  GenerateAction<decltype(&objectType::Get##propName),                         \
+                 decltype(&objectType::Set##propName),                         \
+                 &objectType::Get##propName,                                   \
+                 &objectType::Set##propName,                                   \
+                 easeType>(&objectType::Get##propName,                         \
+                           &objectType::Set##propName,                         \
+                           static_cast<objectType*>(instance),                 \
+                           duration,                                           \
+                           dest)
 
-template<typename objectType, void (objectType::*FunctionToCall)()>
+template <typename objectType, void (objectType::*FunctionToCall)()>
 class CallAction : public Action
 {
 public:
@@ -121,14 +161,17 @@ public:
   }
 };
 
-template<typename objectType, typename ParamType, void (objectType::*FunctionToCall)(ParamType)>
+template <typename objectType,
+          typename ParamType,
+          void (objectType::*FunctionToCall)(ParamType)>
 class CallParamAction : public Action
 {
 public:
   objectType* Instance;
   ParamType Value;
-  CallParamAction(objectType* instance, ParamType param)
-    :Instance(instance), Value(param)
+  CallParamAction(objectType* instance, ParamType param) :
+      Instance(instance),
+      Value(param)
   {
     Instance = instance;
   }
@@ -140,15 +183,13 @@ public:
   }
 };
 
-template<typename ParamType, void (*FunctionToCall)(ParamType)>
+template <typename ParamType, void (*FunctionToCall)(ParamType)>
 class GlobalCallParamAction : public Action
 {
 public:
   ParamType Value;
-  GlobalCallParamAction(ParamType param)
-    :Value(param)
+  GlobalCallParamAction(ParamType param) : Value(param)
   {
-    
   }
 
   ActionState::Enum Update(float dt) override
@@ -158,13 +199,12 @@ public:
   }
 };
 
-template<typename objectType, void (objectType::*FunctionToCall)(float)>
+template <typename objectType, void (objectType::*FunctionToCall)(float)>
 class UpdateAction : public Action
 {
 public:
   objectType* mInstance;
-  UpdateAction(objectType* instance)
-    :mInstance(instance)
+  UpdateAction(objectType* instance) : mInstance(instance)
   {
   }
   ActionState::Enum Update(float dt) override
@@ -174,4 +214,4 @@ public:
   }
 };
 
-}
+} // namespace Zero

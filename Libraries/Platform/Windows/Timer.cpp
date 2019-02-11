@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Timer.cpp
-/// Implementation of the Os Timer class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -26,9 +18,9 @@ Timer::Timer()
 {
   ZeroConstructPrivateData(TimerPrivateData);
 
-  LARGE_INTEGER  Frequency;
+  LARGE_INTEGER Frequency;
   QueryPerformanceFrequency(&Frequency);
-  //mInvFrequency = 1.0 / (double)Frequency.QuadPart;
+  // mInvFrequency = 1.0 / (double)Frequency.QuadPart;
   self->mFrequency = (double)Frequency.QuadPart;
   Reset();
 }
@@ -44,7 +36,7 @@ Timer::Timer(const Timer& rhs)
   memcpy(this, &rhs, sizeof(*this));
 }
 
-Timer& Timer::operator= (const Timer& rhs)
+Timer& Timer::operator=(const Timer& rhs)
 {
   if (this == &rhs)
     return *this;
@@ -75,9 +67,9 @@ void Timer::Update()
   self->mCurrentTickCount = (CurrCount.QuadPart - self->mStartCount);
   self->mCurrentTickDelta = self->mCurrentTickCount - lastTickCount;
 
-  //mCurTime =  mCurrentTickCount * mInvFrequency;
-  self->mCurTime =  self->mCurrentTickCount / self->mFrequency;
-  //mCurTimeDelta = mCurrentTickDelta * mInvFrequency;
+  // mCurTime =  mCurrentTickCount * mInvFrequency;
+  self->mCurTime = self->mCurrentTickCount / self->mFrequency;
+  // mCurTimeDelta = mCurrentTickDelta * mInvFrequency;
   self->mCurTimeDelta = self->mCurrentTickDelta / self->mFrequency;
 }
 
@@ -119,8 +111,8 @@ double Timer::TimeNoUpdate() const
   ZeroGetPrivateData(TimerPrivateData);
   LARGE_INTEGER CurrCount;
   QueryPerformanceCounter(&CurrCount);
-  TickType TempTicks  = (CurrCount.QuadPart - self->mStartCount);
-  //return (double)(TempTicks * mInvFrequency);
+  TickType TempTicks = (CurrCount.QuadPart - self->mStartCount);
+  // return (double)(TempTicks * mInvFrequency);
   return (double)(TempTicks / self->mFrequency);
 }
 
@@ -135,7 +127,7 @@ Timer::TickType Timer::GetTickTime() const
 double Timer::TicksToSeconds(TickType ticks) const
 {
   ZeroGetPrivateData(TimerPrivateData);
-  //return (double)(ticks* mInvFrequency);
+  // return (double)(ticks* mInvFrequency);
   return (double)(ticks / self->mFrequency);
 }
 

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 /*
@@ -17,11 +12,11 @@
 
 namespace Zero
 {
-  
+
 namespace Physics
 {
 
-JointInfo ManipulatorJoint::sInfo = JointInfo(3,0);
+JointInfo ManipulatorJoint::sInfo = JointInfo(3, 0);
 
 ImplementJointType(ManipulatorJoint);
 
@@ -53,11 +48,11 @@ void ManipulatorJoint::OnAllObjectsCreated(CogInitializer& initializer)
   Joint::OnAllObjectsCreated(initializer);
 
   Collider* obj = GetCollider(0);
-  if(obj == nullptr)
+  if (obj == nullptr)
     return;
 
   RigidBody* body = obj->GetActiveBody();
-  if(body)
+  if (body)
     mMaxImpulse *= body->GetMass();
 }
 
@@ -115,12 +110,13 @@ void ManipulatorJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData);
+  ComputePositionMoleculesFragment(
+      this, molecules, sInfo.mAtomCount, moleculeData);
 }
 
 void ManipulatorJoint::DebugDraw()
 {
-  if(!GetValid())
+  if (!GetValid())
     return;
 
   // Get the world anchor values
@@ -131,12 +127,15 @@ void ManipulatorJoint::DebugDraw()
   Vec3 obj0Pos = obj0->GetWorldTranslation();
 
   // Draw lines from each object's center to its respective anchor
-  gDebugDraw->Add(Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
+  gDebugDraw->Add(
+      Debug::Line(obj0Pos, anchors.mWorldPoints[0]).Color(Color::White));
   // Draw a line between the anchors
-  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1]).Color(Color::Gray));
+  gDebugDraw->Add(Debug::Line(anchors.mWorldPoints[0], anchors.mWorldPoints[1])
+                      .Color(Color::Gray));
 }
 
-uint ManipulatorJoint::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
+uint ManipulatorJoint::GetAtomIndexFilter(uint atomIndex,
+                                          real& desiredConstraintValue) const
 {
   desiredConstraintValue = 0;
   return LinearAxis;
@@ -165,7 +164,7 @@ void ManipulatorJoint::SetLocalPoint(Vec3Param bodyPoint)
 Vec3 ManipulatorJoint::GetWorldPoint()
 {
   Collider* collider = GetCollider(0);
-  if(collider == nullptr)
+  if (collider == nullptr)
     return mAnchors.mBodyR[0];
   return JointHelpers::BodyRToWorldPoint(GetCollider(0), mAnchors.mBodyR[0]);
 }
@@ -173,10 +172,11 @@ Vec3 ManipulatorJoint::GetWorldPoint()
 void ManipulatorJoint::SetWorldPoint(Vec3Param worldPoint)
 {
   Collider* collider = GetCollider(0);
-  if(collider != nullptr)
-    mAnchors.mBodyR[0] = JointHelpers::WorldPointToBodyR(GetCollider(0), worldPoint);
+  if (collider != nullptr)
+    mAnchors.mBodyR[0] =
+        JointHelpers::WorldPointToBodyR(GetCollider(0), worldPoint);
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

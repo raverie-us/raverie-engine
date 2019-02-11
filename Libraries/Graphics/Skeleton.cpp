@@ -1,5 +1,4 @@
-// Authors: Nathan Carlson
-// Copyright 2016, DigiPen Institute of Technology
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
@@ -8,11 +7,10 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(SkeletonModified);
-  DefineEvent(SkeletonDestroyed);
-}
+DefineEvent(SkeletonModified);
+DefineEvent(SkeletonDestroyed);
+} // namespace Events
 
-//**************************************************************************************************
 ParentSkeletonRange::ParentSkeletonRange(Cog* bone)
 {
   mSkeleton = nullptr;
@@ -21,13 +19,11 @@ ParentSkeletonRange::ParentSkeletonRange(Cog* bone)
     PopFront();
 }
 
-//**************************************************************************************************
 Skeleton* ParentSkeletonRange::Front()
 {
   return mSkeleton;
 }
 
-//**************************************************************************************************
 void ParentSkeletonRange::PopFront()
 {
   mSkeleton = nullptr;
@@ -41,13 +37,11 @@ void ParentSkeletonRange::PopFront()
   }
 }
 
-//**************************************************************************************************
 bool ParentSkeletonRange::Empty()
 {
   return mSkeleton == nullptr;
 }
 
-//**************************************************************************************************
 ZilchDefineType(Bone, builder, type)
 {
   ZeroBindComponent();
@@ -57,12 +51,10 @@ ZilchDefineType(Bone, builder, type)
   ZeroBindDependency(Transform);
 }
 
-//**************************************************************************************************
 void Bone::Serialize(Serializer& stream)
 {
 }
 
-//**************************************************************************************************
 void Bone::Initialize(CogInitializer& initializer)
 {
   mTransform = GetOwner()->has(Transform);
@@ -70,47 +62,39 @@ void Bone::Initialize(CogInitializer& initializer)
   NotifySkeletonModified();
 }
 
-//**************************************************************************************************
 void Bone::OnDestroy(uint flags)
 {
   NotifySkeletonModified();
 }
 
-//**************************************************************************************************
 void Bone::AttachTo(AttachmentInfo& info)
 {
   NotifySkeletonModified();
 }
 
-//**************************************************************************************************
 void Bone::Detached(AttachmentInfo& info)
 {
   NotifySkeletonModified();
 }
 
-//**************************************************************************************************
 void Bone::DebugDraw()
 {
   ParentSkeletonRange range(GetOwner());
-  forRange (Skeleton* skeleton, range)
-    skeleton->DebugDrawSkeleton(GetOwner()->mName);
+  forRange(Skeleton * skeleton, range)
+      skeleton->DebugDrawSkeleton(GetOwner()->mName);
 }
 
-//**************************************************************************************************
 void Bone::OnCogNameChanged(Event* event)
 {
   NotifySkeletonModified();
 }
 
-//**************************************************************************************************
 void Bone::NotifySkeletonModified()
 {
   ParentSkeletonRange range(GetOwner());
-  forRange (Skeleton* skeleton, range)
-    skeleton->MarkModified();
+  forRange(Skeleton * skeleton, range) skeleton->MarkModified();
 }
 
-//**************************************************************************************************
 Mat4 Bone::GetLocalTransform()
 {
   Mat4 localMatrix = mTransform->GetParentRelativeMatrix();
@@ -130,7 +114,6 @@ Mat4 Bone::GetLocalTransform()
   return localMatrix;
 }
 
-//**************************************************************************************************
 ZilchDefineType(Skeleton, builder, type)
 {
   ZeroBindComponent();
@@ -140,52 +123,44 @@ ZilchDefineType(Skeleton, builder, type)
   ZeroBindDependency(Transform);
 }
 
-//**************************************************************************************************
 void Skeleton::Serialize(Serializer& stream)
 {
 }
 
-//**************************************************************************************************
 void Skeleton::Initialize(CogInitializer& initializer)
 {
   mTransform = GetOwner()->has(Transform);
   MarkModified();
 }
 
-//**************************************************************************************************
 void Skeleton::OnAllObjectsCreated(CogInitializer& initializer)
 {
   BuildSkeleton();
 }
 
-//**************************************************************************************************
 void Skeleton::OnDestroy(uint flags)
 {
   Event event;
   DispatchEvent(Events::SkeletonDestroyed, &event);
 }
 
-//**************************************************************************************************
 void Skeleton::DebugDraw()
 {
   DebugDrawSkeleton(GetOwner()->mName);
 }
 
-//**************************************************************************************************
 void Skeleton::DebugDrawSkeleton(StringParam boneName)
 {
-  forRange (BoneInfo& boneInfo, mBones.All())
-    DebugDrawBone(boneInfo, boneName == boneInfo.mCog->mName);
+  forRange(BoneInfo & boneInfo, mBones.All())
+      DebugDrawBone(boneInfo, boneName == boneInfo.mCog->mName);
 }
 
-//**************************************************************************************************
 void Skeleton::DebugDrawSkeleton(Array<String>& boneNames)
 {
-  forRange (BoneInfo& boneInfo, mBones.All())
-    DebugDrawBone(boneInfo, boneNames.Contains(boneInfo.mCog->mName));
+  forRange(BoneInfo & boneInfo, mBones.All())
+      DebugDrawBone(boneInfo, boneNames.Contains(boneInfo.mCog->mName));
 }
 
-//**************************************************************************************************
 void Skeleton::DebugDrawBone(BoneInfo& boneInfo, bool highlight)
 {
   ByteColor color = highlight ? Color::DodgerBlue : Color::White;
@@ -195,27 +170,27 @@ void Skeleton::DebugDrawBone(BoneInfo& boneInfo, bool highlight)
 
   gDebugDraw->Add(Debug::Sphere(pos, rad).Color(color).OnTop(true));
 
-  forRange (Cog* child, boneInfo.mChildren.All())
+  forRange(Cog * child, boneInfo.mChildren.All())
   {
     Vec3 childPos = child->has(Transform)->GetWorldTranslation();
     Vec3 dir = pos - childPos;
     float len = dir.AttemptNormalize();
-    gDebugDraw->Add(Debug::Cone(childPos, dir, len, rad).Color(color).OnTop(true));
+    gDebugDraw->Add(
+        Debug::Cone(childPos, dir, len, rad).Color(color).OnTop(true));
   }
 }
 
-//**************************************************************************************************
 bool Skeleton::TestRay(GraphicsRayCast& raycast)
 {
   bool hitBone = false;
   raycast.mT = Math::PositiveMax();
 
-  forRange (BoneInfo& boneInfo, mBones.All())
+  forRange(BoneInfo & boneInfo, mBones.All())
   {
     Vec3 pos = boneInfo.mCog->has(Transform)->GetWorldTranslation();
     float rad = GetBoneRadius(boneInfo);
-        
-    forRange (Cog* child, boneInfo.mChildren.All())
+
+    forRange(Cog * child, boneInfo.mChildren.All())
     {
       Vec3 childPos = child->has(Transform)->GetWorldTranslation();
       Vec3 dir = pos - childPos;
@@ -226,9 +201,15 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
       Intersection::IntersectionPoint point;
       Intersection::Type result;
       if (len > Math::Epsilon())
-        result = Intersection::RayCapsule(raycast.mRay.Start, raycast.mRay.Direction, pos, childPos, rad, &point);
+        result = Intersection::RayCapsule(raycast.mRay.Start,
+                                          raycast.mRay.Direction,
+                                          pos,
+                                          childPos,
+                                          rad,
+                                          &point);
       else
-        result = Intersection::RaySphere(raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
+        result = Intersection::RaySphere(
+            raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
 
       if (result == Intersection::None)
         continue;
@@ -244,7 +225,8 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
     if (boneInfo.mChildren.Empty())
     {
       Intersection::IntersectionPoint point;
-      Intersection::Type result = Intersection::RaySphere(raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
+      Intersection::Type result = Intersection::RaySphere(
+          raycast.mRay.Start, raycast.mRay.Direction, pos, rad, &point);
 
       if (result == Intersection::None)
         continue;
@@ -261,7 +243,6 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
   return hitBone;
 }
 
-//**************************************************************************************************
 void Skeleton::MarkModified()
 {
   mNeedsRebuild = true;
@@ -269,8 +250,8 @@ void Skeleton::MarkModified()
   ConnectThisTo(GetSpace(), Events::UpdateSkeletons, OnUpdateSkeletons);
 }
 
-//**************************************************************************************************
-IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer, uint version)
+IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer,
+                                       uint version)
 {
   if (mNeedsRebuild)
     BuildSkeleton();
@@ -284,7 +265,8 @@ IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer, uint version
   // mBones[0] is this object and bone pointer may be null
   boneTransforms[0] = mBones[0].mCog->has(Transform)->GetParentRelativeMatrix();
   for (uint i = 1; i < mBones.Size(); ++i)
-    boneTransforms[i] = boneTransforms[mBones[i].mParentIndex] * mBones[i].mCog->has(Bone)->GetLocalTransform();
+    boneTransforms[i] = boneTransforms[mBones[i].mParentIndex] *
+                        mBones[i].mCog->has(Bone)->GetLocalTransform();
 
   mCachedTransformRange.start = skinningBuffer.Size();
   skinningBuffer.Append(boneTransforms.All());
@@ -294,7 +276,6 @@ IndexRange Skeleton::GetBoneTransforms(Array<Mat4>& skinningBuffer, uint version
   return mCachedTransformRange;
 }
 
-//**************************************************************************************************
 void Skeleton::OnUpdateSkeletons(Event* event)
 {
   if (mNeedsRebuild)
@@ -303,7 +284,6 @@ void Skeleton::OnUpdateSkeletons(Event* event)
   DisconnectAll(GetSpace(), this);
 }
 
-//**************************************************************************************************
 void Skeleton::BuildSkeleton()
 {
   mBones.Clear();
@@ -316,7 +296,6 @@ void Skeleton::BuildSkeleton()
   DispatchEvent(Events::SkeletonModified, &event);
 }
 
-//**************************************************************************************************
 void Skeleton::BuildSkeletonRecursive(Cog& cog, int parentIndex)
 {
   uint index = parentIndex;
@@ -334,11 +313,10 @@ void Skeleton::BuildSkeletonRecursive(Cog& cog, int parentIndex)
       mBones[parentIndex].mChildren.PushBack(&cog);
   }
 
-  forRange (Cog& child, cog.GetChildren())
-    BuildSkeletonRecursive(child, (int)index);
+  forRange(Cog & child, cog.GetChildren())
+      BuildSkeletonRecursive(child, (int)index);
 }
 
-//**************************************************************************************************
 float Skeleton::GetBoneRadius(BoneInfo& boneInfo)
 {
   if (boneInfo.mChildren.Empty() && boneInfo.mParentIndex != -1)
@@ -347,12 +325,12 @@ float Skeleton::GetBoneRadius(BoneInfo& boneInfo)
   Vec3 pos = boneInfo.mCog->has(Transform)->GetWorldTranslation();
 
   float radius = 0.005f;
-  forRange (Cog* child, boneInfo.mChildren.All())
+  forRange(Cog * child, boneInfo.mChildren.All())
   {
     Vec3 childPos = child->has(Transform)->GetWorldTranslation();
     radius = Math::Max(radius, Math::Length(childPos - pos) * 0.05f);
   }
-        
+
   return radius;
 }
 

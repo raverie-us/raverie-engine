@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Ryan Edgemon
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -18,18 +13,16 @@ class ViewportMouseEvent;
 class GizmoUpdateEvent;
 class UpdateEvent;
 
-//----------------------------------------------------------------------- Events
 namespace Events
 {
-  DeclareEvent(GizmoObjectsDuplicated);
-  DeclareEvent(ObjectTransformGizmoStart);
-  DeclareEvent(ObjectTranslateGizmoModified);
-  DeclareEvent(ObjectScaleGizmoModified);
-  DeclareEvent(ObjectRotateGizmoModified);
-  DeclareEvent(ObjectTransformGizmoEnd);
-}
+DeclareEvent(GizmoObjectsDuplicated);
+DeclareEvent(ObjectTransformGizmoStart);
+DeclareEvent(ObjectTranslateGizmoModified);
+DeclareEvent(ObjectScaleGizmoModified);
+DeclareEvent(ObjectRotateGizmoModified);
+DeclareEvent(ObjectTransformGizmoEnd);
+} // namespace Events
 
-//------------------------------------------------- Object Transform Gizmo Event
 class ObjectTransformGizmoEvent : public GizmoEvent
 {
 public:
@@ -37,7 +30,9 @@ public:
   ZilchDeclareType(ObjectTransformGizmoEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base);
+  ObjectTransformGizmoEvent(Component* sourceGizmo,
+                            Cog* owner,
+                            ViewportMouseEvent* base);
 
   Vec3 GetFinalLocalTranslation();
   Vec3 GetFinalLocalScale();
@@ -67,7 +62,6 @@ public:
   bool mCanAlterRotation;
 };
 
-//------------------------------------------------------- Object Transform State
 class ObjectTransformState : public SafeId32EventObject
 {
 public:
@@ -89,26 +83,26 @@ public:
   Aabb WorldAabb;
 };
 
-//------------------------------------------------------- Object Transform Gizmo
 /// Set the pivot point when a gizmo affects translation during manipulation.
 /// <param name="Primary">
-///   Set the pivot point as the position of the primary object in the selection.
+///   Set the pivot point as the position of the primary object in the
+///   selection.
 /// </param>
 /// <param name="Center">
 ///   Set the pivot point to be at the spacial center of the selection.
 /// </param>
 /// <param name="Average">
-///   Set the pivot point to be at the average position of all objects in the selection.
+///   Set the pivot point to be at the average position of all objects in the
+///   selection.
 /// </param>
 DeclareEnum3(GizmoPivot, Primary, Center, Average);
-
 
 class ObjectTransformGizmo : public Component
 {
 public:
   /// Meta Initialization.
   ZilchDeclareType(ObjectTransformGizmo, TypeCopyMode::ReferenceType);
-  
+
   /// Component Interface.
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -128,7 +122,7 @@ public:
 
   /// Toggle between local / world.
   void ToggleCoordinateMode();
-  
+
   /// Store the state of every object.
   virtual void OnMouseDragStart(ViewportMouseEvent* event);
 
@@ -175,7 +169,6 @@ public:
   Array<ObjectTransformState> mObjectStates;
 };
 
-//---------------------------------------------------------- Cog Translate Gizmo
 class ObjectTranslateGizmo : public ObjectTransformGizmo
 {
 public:
@@ -200,7 +193,6 @@ public:
   bool mDuplicateOnCtrlDrag;
 };
 
-//-------------------------------------------------------------- Cog Scale Gizmo
 class ObjectScaleGizmo : public ObjectTransformGizmo
 {
 public:
@@ -218,17 +210,18 @@ public:
   void OnGizmoModified(ScaleGizmoUpdateEvent* event);
 
   /// With multiple objects selected, allow their spacial-offest to be affected
-  /// about the chosen pivot point, while being locally scaled with 'mAffectScale'.
+  /// about the chosen pivot point, while being locally scaled with
+  /// 'mAffectScale'.
   bool mAffectTranslation;
   /// With multiple objects selected, allow their local scale to be affected
-  /// while being spacially-offset (with 'AffectTranslation') about the chosen pivot point.
+  /// while being spacially-offset (with 'AffectTranslation') about the chosen
+  /// pivot point.
   bool mAffectScale;
 
-  /// Used when dragging on the view axis to determine which direction 
+  /// Used when dragging on the view axis to determine which direction
   Vec3 mEyeDirection;
 };
 
-//------------------------------------------------------------- Cog Rotate Gizmo
 class ObjectRotateGizmo : public ObjectTransformGizmo
 {
 public:
@@ -245,12 +238,13 @@ public:
   void OnGizmoModified(RotateGizmoUpdateEvent* event);
 
   /// With multiple objects selected, allow their spacial-offest to be rotated
-  /// about the chosen pivot point, while being locally rotated with 'mAffectRotation'.
+  /// about the chosen pivot point, while being locally rotated with
+  /// 'mAffectRotation'.
   bool mAffectTranslation;
   /// With multiple objects selected, allow their local rotation to be affected
-  /// while being spacially-rotated (with 'AffectTranslation') about the chosen pivot point.
+  /// while being spacially-rotated (with 'AffectTranslation') about the chosen
+  /// pivot point.
   bool mAffectRotation;
 };
 
-
-}//namespace Zero
+} // namespace Zero

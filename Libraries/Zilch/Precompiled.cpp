@@ -1,31 +1,26 @@
-/**************************************************************\
-* Author: Trevor Sundberg
-* Copyright 2016, DigiPen Institute of Technology
-\**************************************************************/
+// MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
 
 namespace Zilch
 {
-  //***************************************************************************
-  String GetDocumentationStringOrEmpty(StringParam string)
-  {
-    ZilchErrorIfNotStarted(Documentation);
+String GetDocumentationStringOrEmpty(StringParam string)
+{
+  ZilchErrorIfNotStarted(Documentation);
 
-    if (ZilchSetup::Instance->Flags & SetupFlags::NoDocumentationStrings)
-      return String();
+  if (ZilchSetup::Instance->Flags & SetupFlags::NoDocumentationStrings)
+    return String();
 
-    return string;
-  }
-  
-  //***************************************************************************
-  String GetDocumentationCStringOrEmpty(cstr string)
-  {
-    ZilchErrorIfNotStarted(Documentation);
-
-    if (ZilchSetup::Instance->Flags & SetupFlags::NoDocumentationStrings)
-      return String();
-
-    return string;
-  }
+  return string;
 }
+
+String GetDocumentationCStringOrEmpty(cstr string)
+{
+  ZilchErrorIfNotStarted(Documentation);
+
+  if (ZilchSetup::Instance->Flags & SetupFlags::NoDocumentationStrings)
+    return String();
+
+  return string;
+}
+} // namespace Zilch

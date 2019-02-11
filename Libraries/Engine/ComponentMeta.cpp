@@ -1,21 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------------ Component Meta Data Inheritance
-//**************************************************************************************************
+//Meta Data Inheritance
 ZilchDefineType(ComponentMetaDataInheritance, builder, type)
 {
 }
 
-//**************************************************************************************************
 void ComponentMetaDataInheritance::Revert(HandleParam object)
 {
   Component* component = object.Get<Component*>();
@@ -26,17 +19,18 @@ void ComponentMetaDataInheritance::Revert(HandleParam object)
   if (owner == owner->FindRootArchetype())
     retainOverrideProperties = true;
 
-  LocalModifications::GetInstance()->ClearModifications(object, true, retainOverrideProperties);
+  LocalModifications::GetInstance()->ClearModifications(
+      object, true, retainOverrideProperties);
 }
 
-//**************************************************************************************************
-bool ComponentMetaDataInheritance::CanPropertyBeReverted(HandleParam object, PropertyPathParam propertyPath)
+bool ComponentMetaDataInheritance::CanPropertyBeReverted(
+    HandleParam object, PropertyPathParam propertyPath)
 {
   return true;
 }
 
-//**************************************************************************************************
-void ComponentMetaDataInheritance::RevertProperty(HandleParam object, PropertyPathParam propertyPath)
+void ComponentMetaDataInheritance::RevertProperty(
+    HandleParam object, PropertyPathParam propertyPath)
 {
   MetaDataInheritance::RevertProperty(object, propertyPath);
 
@@ -44,7 +38,7 @@ void ComponentMetaDataInheritance::RevertProperty(HandleParam object, PropertyPa
   Cog* owner = component->GetOwner();
   if (Cog* root = owner->FindRootArchetype())
   {
-    if(root->InArchetypeDefinitionMode())
+    if (root->InArchetypeDefinitionMode())
     {
       root->UploadToArchetype();
       ArchetypeRebuilder::RebuildArchetypes(root->GetArchetype());
@@ -58,8 +52,8 @@ void ComponentMetaDataInheritance::RevertProperty(HandleParam object, PropertyPa
   }
 }
 
-//**************************************************************************************************
-void ComponentMetaDataInheritance::SetPropertyModified(HandleParam object, PropertyPathParam propertyPath, bool state)
+void ComponentMetaDataInheritance::SetPropertyModified(
+    HandleParam object, PropertyPathParam propertyPath, bool state)
 {
   MetaDataInheritance::SetPropertyModified(object, propertyPath, state);
 
@@ -69,7 +63,6 @@ void ComponentMetaDataInheritance::SetPropertyModified(HandleParam object, Prope
   space->ChangedObjects();
 }
 
-//**************************************************************************************************
 void ComponentMetaDataInheritance::RebuildObject(HandleParam object)
 {
   Component* component = object.Get<Component*>();
@@ -77,13 +70,11 @@ void ComponentMetaDataInheritance::RebuildObject(HandleParam object)
   ZilchTypeId(Cog)->HasInherited<MetaDataInheritance>()->RebuildObject(cog);
 }
 
-//------------------------------------------------------------------------ Component Meta Operations
-//**************************************************************************************************
+//Component Meta Operations
 ZilchDefineType(ComponentMetaOperations, builder, type)
 {
 }
 
-//**************************************************************************************************
 u64 ComponentMetaOperations::GetUndoHandleId(HandleParam object)
 {
   Component* component = object.Get<Component*>();
@@ -92,18 +83,18 @@ u64 ComponentMetaOperations::GetUndoHandleId(HandleParam object)
   return (cogId << 32) | componentHash;
 }
 
-//**************************************************************************************************
 Any ComponentMetaOperations::GetUndoData(HandleParam object)
 {
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, Any(), "Invalid Component given.");
 
-  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  MetaOperations* cogOperations =
+      ZilchTypeId(Cog)->HasInherited<MetaOperations>();
   return cogOperations->GetUndoData(component->GetOwner());
 }
 
-//**************************************************************************************************
-void ComponentMetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
+void ComponentMetaOperations::ObjectModified(HandleParam object,
+                                             bool intermediateChange)
 {
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, , "Invalid Component given");
@@ -118,7 +109,7 @@ void ComponentMetaOperations::ObjectModified(HandleParam object, bool intermedia
   if (!intermediateChange)
   {
     Cog* root = component->GetOwner()->FindRootArchetype();
-    if (root&& root->InArchetypeDefinitionMode())
+    if (root && root->InArchetypeDefinitionMode())
     {
       if (!Archetype::sRebuilding)
       {
@@ -131,24 +122,25 @@ void ComponentMetaOperations::ObjectModified(HandleParam object, bool intermedia
   MetaOperations::ObjectModified(object, intermediateChange);
 }
 
-//**************************************************************************************************
-void ComponentMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoData)
+void ComponentMetaOperations::RestoreUndoData(HandleParam object,
+                                              AnyParam undoData)
 {
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, , "Invalid Component given.");
 
-  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  MetaOperations* cogOperations =
+      ZilchTypeId(Cog)->HasInherited<MetaOperations>();
   cogOperations->RestoreUndoData(component->GetOwner(), undoData);
 }
 
-//**************************************************************************************************
 ObjectRestoreState* ComponentMetaOperations::GetRestoreState(HandleParam object)
 {
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, nullptr, "Invalid Component given.");
 
-  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  MetaOperations* cogOperations =
+      ZilchTypeId(Cog)->HasInherited<MetaOperations>();
   return cogOperations->GetRestoreState(component->GetOwner());
 }
 
-}//namespace Zero
+} // namespace Zero

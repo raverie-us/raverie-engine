@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file FpControl.hpp
-/// Implementation of the ScpeFpuExceptions, ScoplessFpuExceptions and
-/// FpuControlSystem classes.
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "Common/FpControl.hpp"
 
@@ -32,4 +23,4 @@ ScopeFpuExceptionsDisabler::~ScopeFpuExceptionsDisabler()
 {
 }
 
-}//namespace Zero
+} // namespace Zero

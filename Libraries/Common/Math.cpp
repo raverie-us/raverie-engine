@@ -1,36 +1,28 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Math.cpp
-/// Central location for all the math used by the Zero engine.
-/// 
-/// Authors: Benjamin Strukus
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Math
 {
-typedef Vector2    Vec2;
-typedef Vector3    Vec3;
-typedef Vector4    Vec4;
-typedef Matrix3    Mat3;
-typedef Matrix4    Mat4;
+typedef Vector2 Vec2;
+typedef Vector3 Vec3;
+typedef Vector4 Vec4;
+typedef Matrix3 Mat3;
+typedef Matrix4 Mat4;
 typedef Quaternion Quat;
 
 namespace
 {
-const uint I = 0; 
-const uint J = 1; 
+const uint I = 0;
+const uint J = 1;
 const uint H = 2;
 
 void ClampAngle(real* angle)
 {
-  while(*angle < -Math::cPi)
+  while (*angle < -Math::cPi)
   {
     *angle += Math::cTwoPi;
   }
-  while(*angle > Math::cPi)
+  while (*angle > Math::cPi)
   {
     *angle -= Math::cTwoPi;
   }
@@ -38,24 +30,24 @@ void ClampAngle(real* angle)
 
 } // namespace
 
-///Creates a skew symmetric matrix from the given 3D vector. Multiplying a 
-///vector by this matrix is equivalent to the cross product using the input 
-///vector.
+/// Creates a skew symmetric matrix from the given 3D vector. Multiplying a
+/// vector by this matrix is equivalent to the cross product using the input
+/// vector.
 Matrix3 SkewSymmetric(Vec3Param vec3)
 {
   Matrix3 mtx;
   mtx.m22 = mtx.m11 = mtx.m00 = real(0.0);
   mtx.m01 = -vec3[2];
-  mtx.m02 =  vec3[1];
-  mtx.m10 =  vec3[2];
+  mtx.m02 = vec3[1];
+  mtx.m10 = vec3[2];
   mtx.m12 = -vec3[0];
   mtx.m20 = -vec3[1];
-  mtx.m21 =  vec3[0];
+  mtx.m21 = vec3[0];
   return mtx;
 }
 
-///Converts a quaternion to an axis-angle pair (in radians). Axis is stored in 
-///the Vector4's xyz and the angle is stored in the w.
+/// Converts a quaternion to an axis-angle pair (in radians). Axis is stored in
+/// the Vector4's xyz and the angle is stored in the w.
 Vector4 ToAxisAngle(QuatParam quaternion)
 {
   Vector4 axisAngle;
@@ -65,13 +57,14 @@ Vector4 ToAxisAngle(QuatParam quaternion)
 
 void ToAxisAngle(QuatParam quaternion, Vec4Ptr axisAngle)
 {
-  ErrorIf(axisAngle == nullptr, "Math - Null pointer passed for axis-angle pair.");
+  ErrorIf(axisAngle == nullptr,
+          "Math - Null pointer passed for axis-angle pair.");
   Quat tempQuat(Normalized(quaternion));
 
   axisAngle->w = real(2.0) * Math::ArcCos(tempQuat.w);
   real invSinAngle = Math::Sqrt(real(1.0) - tempQuat.w * tempQuat.w);
 
-  if(Math::Abs(invSinAngle) < real(0.0005))
+  if (Math::Abs(invSinAngle) < real(0.0005))
   {
     invSinAngle = real(1.0);
   }
@@ -84,7 +77,7 @@ void ToAxisAngle(QuatParam quaternion, Vec4Ptr axisAngle)
   axisAngle->z = tempQuat.z * invSinAngle;
 }
 
-///Converts a quaternion to an axis-angle pair (in radians).
+/// Converts a quaternion to an axis-angle pair (in radians).
 void ToAxisAngle(QuatParam quaternion, Vec3Ptr axis, real* radians)
 {
   ErrorIf(axis == nullptr, "Math - Null pointer passed for axis.");
@@ -94,7 +87,7 @@ void ToAxisAngle(QuatParam quaternion, Vec3Ptr axis, real* radians)
   *radians = real(2.0) * Math::ArcCos(tempQuat.w);
   real invSinAngle = Math::Sqrt(real(1.0) - tempQuat.w * tempQuat.w);
 
-  if(Math::Abs(invSinAngle) < real(0.0005))
+  if (Math::Abs(invSinAngle) < real(0.0005))
   {
     invSinAngle = real(1.0);
   }
@@ -107,8 +100,8 @@ void ToAxisAngle(QuatParam quaternion, Vec3Ptr axis, real* radians)
   axis->z = tempQuat.z * invSinAngle;
 }
 
-///Convert a 3x3 matrix to a set of Euler angles (in radians). The desired order
-///of the rotations is expected to be in the given Euler angle structure.
+/// Convert a 3x3 matrix to a set of Euler angles (in radians). The desired
+/// order of the rotations is expected to be in the given Euler angle structure.
 EulerAngles ToEulerAngles(Mat3Param matrix, EulerOrders::Enum order)
 {
   EulerAngles eulerAngles(order);
@@ -118,14 +111,15 @@ EulerAngles ToEulerAngles(Mat3Param matrix, EulerOrders::Enum order)
 
 void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles)
 {
-  ErrorIf(eulerAngles == nullptr, "Math - Null pointer passed for Euler angles.");
+  ErrorIf(eulerAngles == nullptr,
+          "Math - Null pointer passed for Euler angles.");
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles->Order, i, j, k, h, parity, repeated, frame);
-  if(EulerOrders::Yes == repeated)
+  if (EulerOrders::Yes == repeated)
   {
-    real sy = Math::Sqrt(matrix(i, j) * matrix(i, j) + 
-                         matrix(i, k) * matrix(i, k));
-    if(sy > real(16.0) * real(FLT_EPSILON))
+    real sy =
+        Math::Sqrt(matrix(i, j) * matrix(i, j) + matrix(i, k) * matrix(i, k));
+    if (sy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(i, j), matrix(i, k));
       (*eulerAngles)[cY] = Math::ArcTan2(sy, matrix(i, i));
@@ -140,9 +134,9 @@ void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles)
   }
   else
   {
-    real cy = Math::Sqrt(matrix(i, i) * matrix(i, i) + 
-                         matrix(j, i) * matrix(j, i));
-    if(cy > real(16.0) * real(FLT_EPSILON))
+    real cy =
+        Math::Sqrt(matrix(i, i) * matrix(i, i) + matrix(j, i) * matrix(j, i));
+    if (cy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(k, j), matrix(k, k));
       (*eulerAngles)[cY] = Math::ArcTan2(-matrix(k, i), cy);
@@ -155,7 +149,7 @@ void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles)
       (*eulerAngles)[cZ] = real(0.0);
     }
   }
-  if(EulerOrders::Odd == parity)
+  if (EulerOrders::Odd == parity)
   {
     (*eulerAngles)[cX] *= real(-1.0);
     (*eulerAngles)[cY] *= real(-1.0);
@@ -166,14 +160,14 @@ void ToEulerAngles(Mat3Param matrix, EulerAnglesPtr eulerAngles)
   ClampAngle(&((*eulerAngles)[cY]));
   ClampAngle(&((*eulerAngles)[cZ]));
 
-  if(EulerOrders::Rotated == frame)
+  if (EulerOrders::Rotated == frame)
   {
     Math::Swap((*eulerAngles)[cX], (*eulerAngles)[cZ]);
   }
 }
 
-///Convert a 4x4 matrix to a set of Euler angles in radians. The desired order
-///of the rotations is expected to be in the given Euler angle structure.
+/// Convert a 4x4 matrix to a set of Euler angles in radians. The desired order
+/// of the rotations is expected to be in the given Euler angle structure.
 EulerAngles ToEulerAngles(Mat4Param matrix, EulerOrders::Enum order)
 {
   EulerAngles eulerAngles(order);
@@ -183,15 +177,16 @@ EulerAngles ToEulerAngles(Mat4Param matrix, EulerOrders::Enum order)
 
 void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles)
 {
-  ErrorIf(eulerAngles == nullptr, "Math - Null pointer passed for Euler angles.");
+  ErrorIf(eulerAngles == nullptr,
+          "Math - Null pointer passed for Euler angles.");
 
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles->Order, i, j, k, h, parity, repeated, frame);
-  if(EulerOrders::Yes == repeated)
+  if (EulerOrders::Yes == repeated)
   {
-    real sy = Math::Sqrt(matrix(i, j) * matrix(i, j) + 
-                         matrix(i, k) * matrix(i, k));
-    if(sy > real(16.0) * real(FLT_EPSILON))
+    real sy =
+        Math::Sqrt(matrix(i, j) * matrix(i, j) + matrix(i, k) * matrix(i, k));
+    if (sy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(i, j), matrix(i, k));
       (*eulerAngles)[cY] = Math::ArcTan2(sy, matrix(i, i));
@@ -206,9 +201,9 @@ void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles)
   }
   else
   {
-    real cy = Math::Sqrt(matrix(i, i) * matrix(i, i) + 
-                         matrix(j, i) * matrix(j, i));
-    if(cy > real(16.0) * real(FLT_EPSILON))
+    real cy =
+        Math::Sqrt(matrix(i, i) * matrix(i, i) + matrix(j, i) * matrix(j, i));
+    if (cy > real(16.0) * real(FLT_EPSILON))
     {
       (*eulerAngles)[cX] = Math::ArcTan2(matrix(k, j), matrix(k, k));
       (*eulerAngles)[cY] = Math::ArcTan2(-matrix(k, i), cy);
@@ -221,7 +216,7 @@ void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles)
       (*eulerAngles)[cZ] = real(0.0);
     }
   }
-  if(EulerOrders::Odd == parity)
+  if (EulerOrders::Odd == parity)
   {
     (*eulerAngles)[cX] *= real(-1.0);
     (*eulerAngles)[cY] *= real(-1.0);
@@ -232,14 +227,14 @@ void ToEulerAngles(Mat4Param matrix, EulerAnglesPtr eulerAngles)
   ClampAngle(&((*eulerAngles)[cY]));
   ClampAngle(&((*eulerAngles)[cZ]));
 
-  if(EulerOrders::Rotated == frame)
+  if (EulerOrders::Rotated == frame)
   {
     Math::Swap((*eulerAngles)[cX], (*eulerAngles)[cZ]);
   }
 }
 
-///Convert a quaternion to a set of Euler angles (in radians). The desired order
-///of the rotations is expected to be in the given Euler angle structure.
+/// Convert a quaternion to a set of Euler angles (in radians). The desired
+/// order of the rotations is expected to be in the given Euler angle structure.
 EulerAngles ToEulerAngles(QuatParam quaternion, EulerOrders::Enum order)
 {
   EulerAngles eulerAngles(order);
@@ -249,7 +244,8 @@ EulerAngles ToEulerAngles(QuatParam quaternion, EulerOrders::Enum order)
 
 void ToEulerAngles(QuatParam quaternion, EulerAnglesPtr eulerAngles)
 {
-  ErrorIf(eulerAngles == nullptr, "Math - Null pointer passed for Euler angles.");
+  ErrorIf(eulerAngles == nullptr,
+          "Math - Null pointer passed for Euler angles.");
 
   Matrix3 matrix;
   ToMatrix3(quaternion, &matrix);
@@ -278,9 +274,9 @@ Vector3 ToVector3(IntVec3Param v)
   return Vector3((real)v.x, (real)v.y, (real)v.z);
 }
 
-///Converts an axis-angle pair to a 3x3 (in radians). Axis is stored in the
-///Vector4's xyz and the angle is stored in the w. Axis is assumed to be 
-///normalized.
+/// Converts an axis-angle pair to a 3x3 (in radians). Axis is stored in the
+/// Vector4's xyz and the angle is stored in the w. Axis is assumed to be
+/// normalized.
 Matrix3 ToMatrix3(Vec4Param axisAngle)
 {
   Matrix3 matrix;
@@ -312,8 +308,8 @@ void ToMatrix3(Vec4Param axisAngle, Mat3Ptr matrix)
   matrix->m22 = axisAngle.z * axisAngle.z * n1C0 + c0;
 }
 
-///Converts an axis-angle pair to a 3x3 matrix (in radians). Axis is assumed to
-///be normalized.
+/// Converts an axis-angle pair to a 3x3 matrix (in radians). Axis is assumed to
+/// be normalized.
 Matrix3 ToMatrix3(Vec3Param axis, real radians)
 {
   Matrix3 matrix;
@@ -345,7 +341,7 @@ void ToMatrix3(Vec3Param axis, real radians, Mat3Ptr matrix)
   matrix->m22 = axis.z * axis.z * n1C0 + c0;
 }
 
-///Convert a set of Euler angles to a 3x3 matrix (in radians).
+/// Convert a set of Euler angles to a 3x3 matrix (in radians).
 Matrix3 ToMatrix3(EulerAnglesParam eulerAngles)
 {
   Matrix3 matrix;
@@ -357,56 +353,62 @@ void ToMatrix3(EulerAnglesParam eulerAngles, Mat3Ptr matrix)
 {
   ErrorIf(matrix == nullptr, "Math - Null pointer passed for matrix.");
 
-  real angles[3] = { eulerAngles[0], eulerAngles[1], eulerAngles[2] };
+  real angles[3] = {eulerAngles[0], eulerAngles[1], eulerAngles[2]};
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles.Order, i, j, k, h, parity, repeated, frame);
-  if(EulerOrders::Rotated == frame)
+  if (EulerOrders::Rotated == frame)
   {
     Math::Swap(angles[cX], angles[cZ]);
   }
-  if(EulerOrders::Odd == parity)
+  if (EulerOrders::Odd == parity)
   {
     angles[cX] *= real(-1.0);
     angles[cY] *= real(-1.0);
     angles[cZ] *= real(-1.0);
   }
-  
+
   real t[3], c[3], s[3];
-  t[I] = angles[cX];      t[J] = angles[cY];      t[H] = angles[cZ];
-  c[I] = Math::Cos(t[I]); c[J] = Math::Cos(t[J]); c[H] = Math::Cos(t[H]);
-  s[I] = Math::Sin(t[I]); s[J] = Math::Sin(t[J]); s[H] = Math::Sin(t[H]);
+  t[I] = angles[cX];
+  t[J] = angles[cY];
+  t[H] = angles[cZ];
+  c[I] = Math::Cos(t[I]);
+  c[J] = Math::Cos(t[J]);
+  c[H] = Math::Cos(t[H]);
+  s[I] = Math::Sin(t[I]);
+  s[J] = Math::Sin(t[J]);
+  s[H] = Math::Sin(t[H]);
 
-  const real cc = c[I] * c[H]; 
-  const real cs = c[I] * s[H]; 
-  const real sc = s[I] * c[H]; 
+  const real cc = c[I] * c[H];
+  const real cs = c[I] * s[H];
+  const real sc = s[I] * c[H];
   const real ss = s[I] * s[H];
-  if(EulerOrders::Yes == repeated)
+  if (EulerOrders::Yes == repeated)
   {
-    (*matrix)(i, i) =  c[J];        
-    (*matrix)(i, j) =  c[J] * s[I];
-    (*matrix)(i, k) =  c[J] * c[I];
+    (*matrix)(i, i) = c[J];
+    (*matrix)(i, j) = c[J] * s[I];
+    (*matrix)(i, k) = c[J] * c[I];
 
-    (*matrix)(j, i) =  c[J] * s[H];
+    (*matrix)(j, i) = c[J] * s[H];
     (*matrix)(j, j) = -c[J] * ss + cc;
     (*matrix)(j, k) = -c[J] * cs - sc;
 
     (*matrix)(k, i) = -c[J] * c[H];
-    (*matrix)(k, j) =  c[J] * sc + cs;
-    (*matrix)(k, k) =  c[J] * cc - ss;
-  } 
-  else 
+    (*matrix)(k, j) = c[J] * sc + cs;
+    (*matrix)(k, k) = c[J] * cc - ss;
+  }
+  else
   {
-    (*matrix)(i, i) =  c[J] * c[H];
-    (*matrix)(j, i) =  c[J] * s[H];
+    (*matrix)(i, i) = c[J] * c[H];
+    (*matrix)(j, i) = c[J] * s[H];
     (*matrix)(k, i) = -s[J];
 
-    (*matrix)(i, j) =  s[J] * sc - cs;
-    (*matrix)(j, j) =  s[J] * ss + cc;
-    (*matrix)(k, j) =  c[J] * s[I];
+    (*matrix)(i, j) = s[J] * sc - cs;
+    (*matrix)(j, j) = s[J] * ss + cc;
+    (*matrix)(k, j) = c[J] * s[I];
 
-    (*matrix)(i, k) =  s[J] * cc + ss;
-    (*matrix)(j, k) =  s[J] * cs - sc;
-    (*matrix)(k, k) =  c[J] * c[I];
+    (*matrix)(i, k) = s[J] * cc + ss;
+    (*matrix)(j, k) = s[J] * cs - sc;
+    (*matrix)(k, k) = c[J] * c[I];
   }
 }
 
@@ -427,17 +429,17 @@ void ToMatrix2(Mat3Param mat3, Mat2Ptr mat2)
 {
   ErrorIf(mat2 == nullptr, "Math - Null pointer passed for matrix.");
 
-  //First "cross" components
+  // First "cross" components
   mat2->m00 = mat3.m00;
   mat2->m01 = mat3.m01;
 
-  //Second "cross" components
+  // Second "cross" components
   mat2->m10 = mat3.m10;
   mat2->m11 = mat3.m11;
 }
 
-///Convert a 4x4 matrix to a 3x3 matrix. Simply copies the 4x4 matrix's upper 
-///3x3 matrix (rotation & scale) to the 3x3 matrix.
+/// Convert a 4x4 matrix to a 3x3 matrix. Simply copies the 4x4 matrix's upper
+/// 3x3 matrix (rotation & scale) to the 3x3 matrix.
 Matrix3 ToMatrix3(Mat4Param matrix)
 {
   Matrix3 mat3;
@@ -449,23 +451,23 @@ void ToMatrix3(Mat4Param mat4, Mat3Ptr mat3)
 {
   ErrorIf(mat3 == nullptr, "Math - Null pointer passed for matrix.");
 
-  //First "cross" components
-  mat3->m00 = mat4.m00; 
+  // First "cross" components
+  mat3->m00 = mat4.m00;
   mat3->m01 = mat4.m01;
   mat3->m02 = mat4.m02;
 
-  //Second "cross" components
+  // Second "cross" components
   mat3->m10 = mat4.m10;
-  mat3->m11 = mat4.m11; 
+  mat3->m11 = mat4.m11;
   mat3->m12 = mat4.m12;
 
-  //Third "cross" components
+  // Third "cross" components
   mat3->m20 = mat4.m20;
   mat3->m21 = mat4.m21;
   mat3->m22 = mat4.m22;
 }
 
-///Converts a quaternion to a 3x3 rotation matrix (in radians).
+/// Converts a quaternion to a 3x3 rotation matrix (in radians).
 Matrix3 ToMatrix3(QuatParam quaternion)
 {
   Matrix3 matrix;
@@ -519,7 +521,7 @@ Matrix3 ToMatrix3(Vec3Param facing)
 
 Matrix3 ToMatrix3(Vec3Param facing, Vec3Param up)
 {
-  //Get the right vector
+  // Get the right vector
   Vec3 right = Math::Cross(facing, up);
   return ToMatrix3(facing, up, right);
 }
@@ -533,7 +535,7 @@ Matrix3 ToMatrix3(Vec3Param facing, Vec3Param up, Vec3Param right)
   return mat;
 }
 
-///Convert a set of Euler angles to a 4x4 matrix (in radians).
+/// Convert a set of Euler angles to a 4x4 matrix (in radians).
 Matrix4 ToMatrix4(EulerAnglesParam eulerAngles)
 {
   Matrix4 matrix;
@@ -545,62 +547,72 @@ void ToMatrix4(EulerAnglesParam eulerAngles, Mat4Ptr matrix)
 {
   ErrorIf(matrix == nullptr, "Math - Null pointer passed for matrix.");
 
-  real angles[3] = { eulerAngles[0], eulerAngles[1], eulerAngles[2] };
+  real angles[3] = {eulerAngles[0], eulerAngles[1], eulerAngles[2]};
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles.Order, i, j, k, h, parity, repeated, frame);
-  if(EulerOrders::Rotated == frame)
+  if (EulerOrders::Rotated == frame)
   {
     Math::Swap(angles[cX], angles[cZ]);
   }
-  if(EulerOrders::Odd == parity)
+  if (EulerOrders::Odd == parity)
   {
     angles[cX] *= real(-1.0);
     angles[cY] *= real(-1.0);
     angles[cZ] *= real(-1.0);
   }
   real t[3], c[3], s[3];
-  t[I] = angles[cX];       t[J] = angles[cY];       t[H] = angles[cZ];
-  c[I] = Math::Cos(t[I]); c[J] = Math::Cos(t[J]); c[H] = Math::Cos(t[H]);
-  s[I] = Math::Sin(t[I]); s[J] = Math::Sin(t[J]); s[H] = Math::Sin(t[H]);
-  real cc = c[I] * c[H]; 
-  real cs = c[I] * s[H]; 
-  real sc = s[I] * c[H]; 
+  t[I] = angles[cX];
+  t[J] = angles[cY];
+  t[H] = angles[cZ];
+  c[I] = Math::Cos(t[I]);
+  c[J] = Math::Cos(t[J]);
+  c[H] = Math::Cos(t[H]);
+  s[I] = Math::Sin(t[I]);
+  s[J] = Math::Sin(t[J]);
+  s[H] = Math::Sin(t[H]);
+  real cc = c[I] * c[H];
+  real cs = c[I] * s[H];
+  real sc = s[I] * c[H];
   real ss = s[I] * s[H];
-  if(EulerOrders::Yes == repeated)
+  if (EulerOrders::Yes == repeated)
   {
-    (*matrix)(i, i) =  c[J];        
-    (*matrix)(i, j) =  c[J] * s[I];
-    (*matrix)(i, k) =  c[J] * c[I];
+    (*matrix)(i, i) = c[J];
+    (*matrix)(i, j) = c[J] * s[I];
+    (*matrix)(i, k) = c[J] * c[I];
 
-    (*matrix)(j, i) =  c[J] * s[H];
+    (*matrix)(j, i) = c[J] * s[H];
     (*matrix)(j, j) = -c[J] * ss + cc;
     (*matrix)(j, k) = -c[J] * cs - sc;
 
     (*matrix)(k, i) = -c[J] * c[H];
-    (*matrix)(k, j) =  c[J] * sc + cs;
-    (*matrix)(k, k) =  c[J] * cc - ss;
-  } 
-  else 
+    (*matrix)(k, j) = c[J] * sc + cs;
+    (*matrix)(k, k) = c[J] * cc - ss;
+  }
+  else
   {
-    (*matrix)(i, i) =  c[J] * c[H];
-    (*matrix)(j, i) =  c[J] * s[H];
+    (*matrix)(i, i) = c[J] * c[H];
+    (*matrix)(j, i) = c[J] * s[H];
     (*matrix)(k, i) = -s[J];
 
-    (*matrix)(i, j) =  s[J] * sc - cs;
-    (*matrix)(j, j) =  s[J] * ss + cc;
-    (*matrix)(k, j) =  c[J] * s[I];
+    (*matrix)(i, j) = s[J] * sc - cs;
+    (*matrix)(j, j) = s[J] * ss + cc;
+    (*matrix)(k, j) = c[J] * s[I];
 
-    (*matrix)(i, k) =  s[J] * cc + ss;
-    (*matrix)(j, k) =  s[J] * cs - sc;
-    (*matrix)(k, k) =  c[J] * c[I];
+    (*matrix)(i, k) = s[J] * cc + ss;
+    (*matrix)(j, k) = s[J] * cs - sc;
+    (*matrix)(k, k) = c[J] * c[I];
   }
-  matrix->m03 = real(0.0);  matrix->m13 = real(0.0);  matrix->m23 = real(0.0);
-  matrix->m30 = real(0.0);  matrix->m31 = real(0.0);  matrix->m32 = real(0.0);
+  matrix->m03 = real(0.0);
+  matrix->m13 = real(0.0);
+  matrix->m23 = real(0.0);
+  matrix->m30 = real(0.0);
+  matrix->m31 = real(0.0);
+  matrix->m32 = real(0.0);
   matrix->m33 = real(1.0);
 }
 
-///Convert a 3x3 matrix to a 4x4 matrix. Simply copies the 3x3 matrix's values
-///into the rotational part of the 4x4 matrix.
+/// Convert a 3x3 matrix to a 4x4 matrix. Simply copies the 3x3 matrix's values
+/// into the rotational part of the 4x4 matrix.
 Matrix4 ToMatrix4(Mat3Param matrix)
 {
   Matrix4 matrix4;
@@ -612,32 +624,32 @@ void ToMatrix4(Mat3Param mat3, Mat4Ptr mat4)
 {
   ErrorIf(mat4 == nullptr, "Math - Null pointer passed for matrix.");
 
-  //First "cross" components
+  // First "cross" components
   mat4->m00 = mat3.m00;
-  mat4->m01 = mat3.m01;   
+  mat4->m01 = mat3.m01;
   mat4->m02 = mat3.m02;
   mat4->m03 = real(0.0);
-  
-  //Second "cross" components
+
+  // Second "cross" components
   mat4->m10 = mat3.m10;
-  mat4->m11 = mat3.m11;   
+  mat4->m11 = mat3.m11;
   mat4->m12 = mat3.m12;
   mat4->m13 = real(0.0);
-  
-  //Third "cross" components
+
+  // Third "cross" components
   mat4->m20 = mat3.m20;
-  mat4->m21 = mat3.m21;   
+  mat4->m21 = mat3.m21;
   mat4->m22 = mat3.m22;
   mat4->m23 = real(0.0);
-  
-  //Fourth "cross" components
+
+  // Fourth "cross" components
   mat4->m30 = real(0.0);
-  mat4->m31 = real(0.0);  
+  mat4->m31 = real(0.0);
   mat4->m32 = real(0.0);
   mat4->m33 = real(1.0);
 }
 
-///Converts a quaternion to a 4x4 rotation matrix (in radians).
+/// Converts a quaternion to a 4x4 rotation matrix (in radians).
 Matrix4 ToMatrix4(QuatParam quaternion)
 {
   Matrix4 matrix;
@@ -690,9 +702,9 @@ void ToMatrix4(QuatParam quaternion, Mat4Ptr matrix)
   matrix->m33 = real(1.0);
 }
 
-///Converts an axis-angle pair to a quaternion (in radians). Axis is stored in
-///the Vector4's xyz and the angle is stored in the w. Axis is assumed to be 
-///normalized.
+/// Converts an axis-angle pair to a quaternion (in radians). Axis is stored in
+/// the Vector4's xyz and the angle is stored in the w. Axis is assumed to be
+/// normalized.
 Quat ToQuaternion(Vec4Param axisAngle)
 {
   Quat quaternion;
@@ -713,8 +725,8 @@ void ToQuaternion(Vec4Param axisAngle, QuatPtr quaternion)
   quaternion->w = Math::Cos(alpha);
 }
 
-///Converts an axis-angle pair to a quaternion (in radians). Axis is assumed to
-///be normalized.
+/// Converts an axis-angle pair to a quaternion (in radians). Axis is assumed to
+/// be normalized.
 Quaternion ToQuaternion(Vec3Param axis, real radians)
 {
   Quat quaternion;
@@ -735,7 +747,7 @@ void ToQuaternion(Vec3Param axis, real radians, QuatPtr quaternion)
   quaternion->w = Math::Cos(alpha);
 }
 
-///Convert a set of Euler angles to a quaternion (in radians).
+/// Convert a set of Euler angles to a quaternion (in radians).
 Quat ToQuaternion(EulerAnglesParam eulerAngles)
 {
   Quat quaternion;
@@ -747,29 +759,35 @@ void ToQuaternion(EulerAnglesParam eulerAngles, QuatPtr quaternion)
 {
   ErrorIf(quaternion == nullptr, "Math - Null pointer passed for quaternion.");
 
-  real angles[3] = { eulerAngles[cX], eulerAngles[cY], eulerAngles[cZ] };
+  real angles[3] = {eulerAngles[cX], eulerAngles[cY], eulerAngles[cZ]};
   uint i, j, k, h, parity, repeated, frame;
   EulerOrder::GetOrder(eulerAngles.Order, i, j, k, h, parity, repeated, frame);
-  if(EulerOrders::Rotated == frame)
+  if (EulerOrders::Rotated == frame)
   {
     Math::Swap(angles[cX], angles[cZ]);
   }
 
-  if(EulerOrders::Odd == parity)
+  if (EulerOrders::Odd == parity)
   {
     angles[cY] *= real(-1.0);
   }
 
   real t[3], c[3], s[3];
-  t[I] = angles[cX] * real(0.5); c[I] = Math::Cos(t[I]); s[I] = Math::Sin(t[I]);
-  t[J] = angles[cY] * real(0.5); c[J] = Math::Cos(t[J]); s[J] = Math::Sin(t[J]);
-  t[H] = angles[cZ] * real(0.5); c[H] = Math::Cos(t[H]); s[H] = Math::Sin(t[H]);
-  
+  t[I] = angles[cX] * real(0.5);
+  c[I] = Math::Cos(t[I]);
+  s[I] = Math::Sin(t[I]);
+  t[J] = angles[cY] * real(0.5);
+  c[J] = Math::Cos(t[J]);
+  s[J] = Math::Sin(t[J]);
+  t[H] = angles[cZ] * real(0.5);
+  c[H] = Math::Cos(t[H]);
+  s[H] = Math::Sin(t[H]);
+
   const real cc = c[I] * c[H];
   const real cs = c[I] * s[H];
   const real sc = s[I] * c[H];
   const real ss = s[I] * s[H];
-  if(EulerOrders::Yes == repeated)
+  if (EulerOrders::Yes == repeated)
   {
     angles[i] = c[J] * (cs + sc);
     angles[j] = s[J] * (cc + ss);
@@ -783,7 +801,7 @@ void ToQuaternion(EulerAnglesParam eulerAngles, QuatPtr quaternion)
     angles[k] = c[J] * cs - s[J] * sc;
     quaternion->w = c[J] * cc + s[J] * ss;
   }
-  if(EulerOrders::Odd == parity)
+  if (EulerOrders::Odd == parity)
   {
     angles[j] *= real(-1.0);
   }
@@ -792,7 +810,7 @@ void ToQuaternion(EulerAnglesParam eulerAngles, QuatPtr quaternion)
   quaternion->z = angles[cZ];
 }
 
-///Converts a 3x3 matrix to a quaternion (in radians).
+/// Converts a 3x3 matrix to a quaternion (in radians).
 Quat ToQuaternion(Mat3Param matrix)
 {
   Quat quaternion;
@@ -804,7 +822,7 @@ void ToQuaternion(Mat3Param matrix, QuatPtr quaternion)
 {
   ErrorIf(quaternion == nullptr, "Math - Null pointer passed for quaternion.");
 
-  if(matrix.m00 + matrix.m11 + matrix.m22 > real(0.0))
+  if (matrix.m00 + matrix.m11 + matrix.m22 > real(0.0))
   {
     real t = matrix.m00 + matrix.m11 + matrix.m22 + real(1.0);
     real s = Math::Rsqrt(t) * real(0.5);
@@ -814,7 +832,7 @@ void ToQuaternion(Mat3Param matrix, QuatPtr quaternion)
     (*quaternion)[1] = (matrix.m02 - matrix.m20) * s;
     (*quaternion)[0] = (matrix.m21 - matrix.m12) * s;
   }
-  else if(matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
+  else if (matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
   {
     real t = matrix.m00 - matrix.m11 - matrix.m22 + real(1.0);
     real s = Math::Rsqrt(t) * real(0.5);
@@ -824,11 +842,11 @@ void ToQuaternion(Mat3Param matrix, QuatPtr quaternion)
     (*quaternion)[2] = (matrix.m02 + matrix.m20) * s;
     (*quaternion)[3] = (matrix.m21 - matrix.m12) * s;
   }
-  else if(matrix.m11 > matrix.m22)
+  else if (matrix.m11 > matrix.m22)
   {
     real t = -matrix.m00 + matrix.m11 - matrix.m22 + real(1.0);
     real s = Math::Rsqrt(t) * real(0.5);
-    
+
     (*quaternion)[1] = s * t;
     (*quaternion)[0] = (matrix.m10 + matrix.m01) * s;
     (*quaternion)[3] = (matrix.m02 - matrix.m20) * s;
@@ -846,7 +864,7 @@ void ToQuaternion(Mat3Param matrix, QuatPtr quaternion)
   }
 }
 
-///Converts a 4x4 matrix to a quaternion (in radians).
+/// Converts a 4x4 matrix to a quaternion (in radians).
 Quat ToQuaternion(Mat4Param matrix)
 {
   Quat quaternion;
@@ -858,7 +876,7 @@ void ToQuaternion(Mat4Param matrix, QuatPtr quaternion)
 {
   ErrorIf(quaternion == nullptr, "Math - Null pointer passed for quaternion.");
 
-  if(matrix.m00 + matrix.m11 + matrix.m22 > real(0.0))
+  if (matrix.m00 + matrix.m11 + matrix.m22 > real(0.0))
   {
     real t = matrix.m00 + matrix.m11 + matrix.m22 + real(1.0);
     real s = Math::Rsqrt(t) * real(0.5);
@@ -868,7 +886,7 @@ void ToQuaternion(Mat4Param matrix, QuatPtr quaternion)
     (*quaternion)[1] = (matrix.m02 - matrix.m20) * s;
     (*quaternion)[0] = (matrix.m21 - matrix.m12) * s;
   }
-  else if(matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
+  else if (matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
   {
     real t = matrix.m00 - matrix.m11 - matrix.m22 + real(1.0);
     real s = Math::Rsqrt(t) * real(0.5);
@@ -878,11 +896,11 @@ void ToQuaternion(Mat4Param matrix, QuatPtr quaternion)
     (*quaternion)[2] = (matrix.m02 + matrix.m20) * s;
     (*quaternion)[3] = (matrix.m21 - matrix.m12) * s;
   }
-  else if(matrix.m11 > matrix.m22)
+  else if (matrix.m11 > matrix.m22)
   {
     real t = -matrix.m00 + matrix.m11 - matrix.m22 + real(1.0);
     real s = Math::Rsqrt(t) * real(0.5);
-    
+
     (*quaternion)[1] = s * t;
     (*quaternion)[0] = (matrix.m10 + matrix.m01) * s;
     (*quaternion)[3] = (matrix.m02 - matrix.m20) * s;
@@ -912,7 +930,8 @@ Quaternion ToQuaternion(Vec3Param facing, Vec3Param up, Vec3Param right)
 
 Quaternion ToQuaternion(Vec3Param eulerVector)
 {
-  return ToQuaternion(EulerAngles(eulerVector.x, eulerVector.y, eulerVector.z, Math::EulerOrders::XYZs));
+  return ToQuaternion(EulerAngles(
+      eulerVector.x, eulerVector.y, eulerVector.z, Math::EulerOrders::XYZs));
 }
 
 Quaternion ToQuaternion(real x, real y, real z)
@@ -960,7 +979,8 @@ Vec2 GeneratePerpendicularVector(Vec2Param input)
 Vec3 GeneratePerpendicularVector(Vec3Param input)
 {
   Vec3 result;
-  if((Math::Abs(input.x) >= Math::Abs(input.y)) && (Math::Abs(input.x) >= Math::Abs(input.z)))
+  if ((Math::Abs(input.x) >= Math::Abs(input.y)) &&
+      (Math::Abs(input.x) >= Math::Abs(input.z)))
   {
     result.x = -input.y;
     result.y = input.x;
@@ -975,8 +995,8 @@ Vec3 GeneratePerpendicularVector(Vec3Param input)
   return result;
 }
 
-///Generates a set of orthonormal vectors from the given vectors, modifying u 
-///and v.
+/// Generates a set of orthonormal vectors from the given vectors, modifying u
+/// and v.
 void GenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
 {
   ErrorIf(u == nullptr, "Math - Null pointer passed for vector U.");
@@ -989,8 +1009,8 @@ void GenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
   Normalize(*v);
 }
 
-///Generates a set of orthonormal vectors from the given vectors while using 
-///debug checks, modifies u and v
+/// Generates a set of orthonormal vectors from the given vectors while using
+/// debug checks, modifies u and v
 void DebugGenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
 {
   ErrorIf(u == nullptr, "Math - Null pointer passed for vector U.");
@@ -1003,105 +1023,105 @@ void DebugGenerateOrthonormalBasis(Vec3Param w, Vec3Ptr u, Vec3Ptr v)
   AttemptNormalize(*v);
 }
 
-///Converts a 32-bit float into a compressed 16-bit floating point value;
-///referenced from Insomniac Games math library.
+/// Converts a 32-bit float into a compressed 16-bit floating point value;
+/// referenced from Insomniac Games math library.
 half ToHalf(float value)
 {
   //------------------------------------------------------------------ Constants
-  //Base value for the exponent part of the 32-bit floating point number
+  // Base value for the exponent part of the 32-bit floating point number
   const s32 cFloatExponentBase = 127;
 
-  //Base value for the exponent part of the 16-bit floating point number
+  // Base value for the exponent part of the 16-bit floating point number
   const s32 cHalfExponentBase = 15;
 
-  //Number of bits needed to move the float's sign to the half's sign spot
+  // Number of bits needed to move the float's sign to the half's sign spot
   const s32 cSignShift = 16;
 
-  //Mask to only have the shifted sign portion of the float
+  // Mask to only have the shifted sign portion of the float
   const s32 cShiftedSignMask = 0x00008000;
 
-  //Number of bits needed to move the float's exponent bits such that they 
-  //occupy
+  // Number of bits needed to move the float's exponent bits such that they
+  // occupy
   const s32 cExponentShift = 23;
 
-  //Mask to only have the shifted exponent portion of the float
+  // Mask to only have the shifted exponent portion of the float
   const s32 cShiftedExponentMask = 0x000000FF;
 
-  //The value to subtract from the exponent portion to map it to the 4-bit 
-  //format
+  // The value to subtract from the exponent portion to map it to the 4-bit
+  // format
   const s32 cExponentBaseChange = cFloatExponentBase - cHalfExponentBase;
 
-  //Mask to only have the mantissa portion of the float
+  // Mask to only have the mantissa portion of the float
   const s32 cMantissaMask = 0x007FFFFF;
 
-  //Bit that would be set if the mantissa overflowed into the exponent portion
+  // Bit that would be set if the mantissa overflowed into the exponent portion
   const s32 cMantissaOverflowBit = 0x00800000;
 
-  //Bit used to check if the mantissa needs to be rounded up or not, checks the
-  //least significant bit of the final shifted mantissa
+  // Bit used to check if the mantissa needs to be rounded up or not, checks the
+  // least significant bit of the final shifted mantissa
   const s32 cMantissaRoundingBit = 0x00001000;
 
-  //Value used when rounding floating point values up
+  // Value used when rounding floating point values up
   const s32 cMantissaRoundingValue = 0x00002000;
 
-  //Number of bits needed to move the mantissa bits in order for them to fit in
-  //the half-float format
+  // Number of bits needed to move the mantissa bits in order for them to fit in
+  // the half-float format
   const s32 cMantissaShift = 13;
 
-  //Value of the fully shifted exponent bit-combination (all bits are set)
+  // Value of the fully shifted exponent bit-combination (all bits are set)
   const s32 cFullShiftedExponent = 0x0000008F;
 
-  //Used to check if a float is set to infinity
+  // Used to check if a float is set to infinity
   const s32 cInfinityCheck = 0x0000000;
 
-  //Value, for half-floats, of all the exponent bits set
+  // Value, for half-floats, of all the exponent bits set
   const s32 cFullExponent = 0x00007C00;
 
-  //Redundant value used for clarification
+  // Redundant value used for clarification
   const s32 cZeroMantissa = 0x00000000;
   //----------------------------------------------------------------------------
 
-  //Bit interpretation of the floating point value
+  // Bit interpretation of the floating point value
   s32 v = *reinterpret_cast<s32*>(&value);
-  
-  //Sign
+
+  // Sign
   s32 s = (v >> cSignShift) & cShiftedSignMask;
 
-  //Exponent
+  // Exponent
   s32 e = ((v >> cExponentShift) & cShiftedExponentMask) - cExponentBaseChange;
 
-  //Mantissa
+  // Mantissa
   s32 m = v & cMantissaMask;
 
-  //Handle values in the range [0,1] (negative exponent)
-  if(e <= 0)
+  // Handle values in the range [0,1] (negative exponent)
+  if (e <= 0)
   {
-    //If the exponent part is too small then treat value as 0
-    if(e < -10)
+    // If the exponent part is too small then treat value as 0
+    if (e < -10)
     {
       return 0;
     }
 
-    //Since the number is so small, attempt to round it
+    // Since the number is so small, attempt to round it
     m = (m | cMantissaOverflowBit) >> (1 - e);
 
-    //Check to see if rounding is needed
-    if(m & cMantissaRoundingBit)
+    // Check to see if rounding is needed
+    if (m & cMantissaRoundingBit)
     {
       m += cMantissaRoundingValue;
     }
 
     return static_cast<half>(s | (m >> cMantissaShift));
   }
-  //Handle infinity and NaN
-  else if(e == cFullShiftedExponent)
+  // Handle infinity and NaN
+  else if (e == cFullShiftedExponent)
   {
-    //Result is either positive or negative infinity
-    if(m == cInfinityCheck)
+    // Result is either positive or negative infinity
+    if (m == cInfinityCheck)
     {
       return static_cast<half>(s | cFullExponent | cZeroMantissa);
     }
-    //Result is NaN
+    // Result is NaN
     else
     {
       return static_cast<half>(s | cFullExponent | (m >> cMantissaShift));
@@ -1109,124 +1129,123 @@ half ToHalf(float value)
   }
   else
   {
-    //Check if rounding is needed
-    if(m & cMantissaRoundingBit)
+    // Check if rounding is needed
+    if (m & cMantissaRoundingBit)
     {
       m += cMantissaRoundingValue;
 
-      //Check if the rounding has overflowed into the exponent part
-      if(m & cMantissaOverflowBit)
+      // Check if the rounding has overflowed into the exponent part
+      if (m & cMantissaOverflowBit)
       {
         m = 0;
         e += 1;
       }
     }
 
-    //Check to see if all of the exponent bits are set
-    if(e > 30)
+    // Check to see if all of the exponent bits are set
+    if (e > 30)
     {
-      //Returns a signed infinity
+      // Returns a signed infinity
       return static_cast<half>(s | (e << 10) | (m >> cMantissaShift));
     }
 
-    //Normal half
+    // Normal half
     return static_cast<half>(s | (e << 10) | (m >> cMantissaShift));
   }
 }
 
-///Converts a 16-bit compressed floating point value back into a 32-bit float;
-///referenced from Insomniac Games math library.
+/// Converts a 16-bit compressed floating point value back into a 32-bit float;
+/// referenced from Insomniac Games math library.
 float ToFloat(half value)
 {
   //------------------------------------------------------------------ Constants
-  //Base value for the exponent part of the 32-bit floating point number
+  // Base value for the exponent part of the 32-bit floating point number
   const s32 cFloatExponentBase = 127;
 
-  //Base value for the exponent part of the 16-bit floating point number
+  // Base value for the exponent part of the 16-bit floating point number
   const s32 cHalfExponentBase = 15;
 
-  //The value to subtract from the exponent portion to map it to the 4-bit 
-  //format
+  // The value to subtract from the exponent portion to map it to the 4-bit
+  // format
   const s32 cExponentBaseChange = cFloatExponentBase - cHalfExponentBase;
 
-  //Bit mask to ensure that the shifted sign is the only value in the bit field
+  // Bit mask to ensure that the shifted sign is the only value in the bit field
   s32 cShiftedSignMask = 0x00000001;
 
-  //Bit mask to ensure that the shifted exponent is the only value in the bit
-  //field
+  // Bit mask to ensure that the shifted exponent is the only value in the bit
+  // field
   s32 cShiftedExponentMask = 0x0000001F;
 
-  //Bit mask to ensure that the mantissa is the only value in the bit field
+  // Bit mask to ensure that the mantissa is the only value in the bit field
   s32 cMantissaMask = 0x000003FF;
 
-  //Bit mask to check against the most significant bit in the mantissa
+  // Bit mask to check against the most significant bit in the mantissa
   s32 cMantissaMsbMask = 0x00000400;
 
-  //Bit mask to ensure all the exponent bits are set
+  // Bit mask to ensure all the exponent bits are set
   s32 cFullExponent = 0x7F800000;
   //----------------------------------------------------------------------------
-  
-  //Sign
+
+  // Sign
   s32 s = (value >> 15) & cShiftedSignMask;
 
-  //Exponent
+  // Exponent
   s32 e = (value >> 10) & cShiftedExponentMask;
 
-  //Mantissa
+  // Mantissa
   s32 m = value & cMantissaMask;
 
-  //No exponent, denormalized OR zero
-  if(e == 0)
+  // No exponent, denormalized OR zero
+  if (e == 0)
   {
-    //Positive or negative zero
-    if(m == 0)
+    // Positive or negative zero
+    if (m == 0)
     {
       uint result = s << 31;
       return *reinterpret_cast<float*>(&result);
     }
-    //Denormalized number
+    // Denormalized number
     else
     {
-      //Continuously move the mantissa until the most significant bit of the
-      //mantissa has been set
-      while(!(m & cMantissaMsbMask))
+      // Continuously move the mantissa until the most significant bit of the
+      // mantissa has been set
+      while (!(m & cMantissaMsbMask))
       {
         m <<= 1;
         e -= 1;
       }
       e += 1;
 
-      //Make sure the most significant bit of the mantissa is cleared
+      // Make sure the most significant bit of the mantissa is cleared
       m &= ~cMantissaMsbMask;
     }
   }
-  //Full exponent
-  else if(e == 31)
+  // Full exponent
+  else if (e == 31)
   {
-    //Positive or negative infinity
-    if(m == 0)
+    // Positive or negative infinity
+    if (m == 0)
     {
       uint result = (s << 31) | cFullExponent;
       return *reinterpret_cast<float*>(&result);
     }
-    //NaN
+    // NaN
     else
     {
       uint result = (s << 31) | cFullExponent | (m << 13);
       return *reinterpret_cast<float*>(&result);
     }
   }
-  
-  //Normalized number
+
+  // Normalized number
   e += cExponentBaseChange;
   m <<= 13;
 
-  //Create the float
+  // Create the float
   uint result = (s << 31) | (e << 23) | m;
   return *reinterpret_cast<float*>(&result);
 }
 
-//----------------------------------------------------------- Rotation Functions
 real Angle2D(Vec3Param a)
 {
   return ArcTan2(a.y, a.x);
@@ -1284,9 +1303,10 @@ real SignedAngle(Vec3Param a, Vec3Param b, Vec3Param up)
   real finalAngle = Math::ArcCos(forwardDot);
 
   // If we're actually on the left side...
-  if(rightDot > real(0.0))
+  if (rightDot > real(0.0))
   {
-    // Compute the real final angle given the quadrant it's in (kinda like atan2)
+    // Compute the real final angle given the quadrant it's in (kinda like
+    // atan2)
     finalAngle = -finalAngle;
   }
 
@@ -1302,9 +1322,9 @@ Vector3 RotateVector(Vec3Param a, Vec3Param axis, real radians)
 
 Quat EulerDegreesToQuat(Vec3Param eulerDegrees)
 {
-  Math::EulerAngles angle(Math::DegToRad(eulerDegrees[0]), 
-                          Math::DegToRad(eulerDegrees[1]), 
-                          Math::DegToRad(eulerDegrees[2]), 
+  Math::EulerAngles angle(Math::DegToRad(eulerDegrees[0]),
+                          Math::DegToRad(eulerDegrees[1]),
+                          Math::DegToRad(eulerDegrees[2]),
                           Math::EulerOrders::XYZs);
 
   return Math::ToQuaternion(angle);
@@ -1320,10 +1340,9 @@ Vector3 QuatToEulerDegrees(QuatParam rotation)
   return newData;
 }
 
-//----------------------------------------------------------- Misc Functions
 float Luminance(Vector3 linearColor)
 {
   return Math::Dot(linearColor, Vec3(0.2126f, 0.7152f, 0.0722f));
 }
 
-}// namespace Math
+} // namespace Math

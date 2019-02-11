@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2013-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------CollisionFilterBlock
 
 ZilchDefineType(CollisionFilterBlock, builder, type)
 {
@@ -29,7 +23,8 @@ CollisionFilterBlock::CollisionFilterBlock()
 
 void CollisionFilterBlock::Serialize(Serializer& stream)
 {
-  uint defaultFlags = CollisionBlockStates::SendEventsToA | CollisionBlockStates::SendEventsToB;
+  uint defaultFlags =
+      CollisionBlockStates::SendEventsToA | CollisionBlockStates::SendEventsToB;
   SerializeBits(stream, mStates, CollisionBlockStates::Names, 0, defaultFlags);
   SerializeNameDefault(mEventOverride, String());
 }
@@ -66,18 +61,17 @@ void CollisionFilterBlock::SetSendEventsToSpace(bool state)
 
 CollisionFilterBlockType::Enum CollisionFilterBlock::GetBlockType() const
 {
-  if(mBlockType & FilterFlags::StartEvent)
+  if (mBlockType & FilterFlags::StartEvent)
     return CollisionFilterBlockType::CollisionStartedBlock;
-  if(mBlockType & FilterFlags::PersistedEvent)
+  if (mBlockType & FilterFlags::PersistedEvent)
     return CollisionFilterBlockType::CollisionPersistedBlock;
-  if(mBlockType & FilterFlags::EndEvent)
+  if (mBlockType & FilterFlags::EndEvent)
     return CollisionFilterBlockType::CollisionEndedBlock;
-  if(mBlockType & FilterFlags::PreSolveEvent)
+  if (mBlockType & FilterFlags::PreSolveEvent)
     return CollisionFilterBlockType::PreSolveBlock;
   return CollisionFilterBlockType::CollisionStartedBlock;
 }
 
-//-------------------------------------------------------------------CollisionStartBlock
 ZilchDefineType(CollisionStartBlock, builder, type)
 {
   ZeroBindComponent();
@@ -92,7 +86,6 @@ CollisionStartBlock::CollisionStartBlock()
   mBlockType = FilterFlags::StartEvent;
 }
 
-//-------------------------------------------------------------------CollisionPersistedBlock
 ZilchDefineType(CollisionPersistedBlock, builder, type)
 {
   ZeroBindComponent();
@@ -107,7 +100,6 @@ CollisionPersistedBlock::CollisionPersistedBlock()
   mBlockType = FilterFlags::PersistedEvent;
 }
 
-//-------------------------------------------------------------------CollisionEndBlock
 ZilchDefineType(CollisionEndBlock, builder, type)
 {
   ZeroBindComponent();
@@ -122,7 +114,6 @@ CollisionEndBlock::CollisionEndBlock()
   mBlockType = FilterFlags::EndEvent;
 }
 
-//-------------------------------------------------------------------PreSolveBlock
 ZilchDefineType(PreSolveBlock, builder, type)
 {
   ZeroBindComponent();
@@ -137,9 +128,8 @@ PreSolveBlock::PreSolveBlock()
   mBlockType = FilterFlags::PreSolveEvent;
 }
 
-//-------------------------------------------------------------------CollisionFilterFactory
 ZilchDefineTemplateType(CollisionFilterMetaComposition, builder, type)
 {
 }
 
-}//namespace Zero
+} // namespace Zero

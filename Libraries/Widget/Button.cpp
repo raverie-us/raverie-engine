@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Button.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,49 +6,47 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(ButtonPressed);
+DefineEvent(ButtonPressed);
 }
 
 namespace ButtonUi
 {
-  const cstr cLocation = "EditorUi/Controls/Button";
-  Tweakable(Vec4, DefaultColor,      Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, HoverColor,        Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ClickedColor,      Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor,       Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, FocusBorderColor,  Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReadOnlyColor,     Vec4(1, 1, 1, 1), cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/Button";
+Tweakable(Vec4, DefaultColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, HoverColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ClickedColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, FocusBorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReadOnlyColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace ButtonUi
 
 namespace TextBUttonUi
 {
-  const cstr cLocation = "EditorUi/Controls/ModernTextButton";
-  Tweakable(Vec4, TextColor,         Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, TextHoverColor,    Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, TextClickedColor,  Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReadOnlyTextColor, Vec4(1, 1, 1, 1), cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/ModernTextButton";
+Tweakable(Vec4, TextColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TextHoverColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, TextClickedColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReadOnlyTextColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace TextBUttonUi
 
 namespace IconButtonUi
 {
-  const cstr cLocation = "EditorUi/Controls/IconButton";
-  Tweakable(Vec4, DefaultColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, HoverColor,   Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ClickedColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec2, Padding,      Vec2(2,2), cLocation);
-  Tweakable(Vec4, ActiveColor,  Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ActiveHoverColor, Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/IconButton";
+Tweakable(Vec4, DefaultColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, HoverColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ClickedColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec2, Padding, Vec2(2, 2), cLocation);
+Tweakable(Vec4, ActiveColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ActiveHoverColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace IconButtonUi
 
-//------------------------------------------------------------------ Button Base
 ZilchDefineType(ButtonBase, builder, type)
 {
-
 }
 
-ButtonBase::ButtonBase(Composite* parent, StringParam styleClass)
-  : Composite(parent)
-  , mToolTipColor(ToolTipColorScheme::Default)
+ButtonBase::ButtonBase(Composite* parent, StringParam styleClass) :
+    Composite(parent),
+    mToolTipColor(ToolTipColorScheme::Default)
 {
   mDefSet = mDefSet->GetDefinitionSet(styleClass);
 
@@ -114,9 +104,9 @@ void ButtonBase::UpdateTransform()
   mFocusBorder->SetVisible(HasFocus());
   mBorder->SetColor(ToFloatColor(mBorderColor));
 
-  if(mMouseDown)
+  if (mMouseDown)
     mBackground->SetColor(ToFloatColor(mBackgroundClickedColor));
-  else if(mMouseOver)
+  else if (mMouseOver)
     mBackground->SetColor(ToFloatColor(mBackgroundHoverColor));
   else
     mBackground->SetColor(ToFloatColor(mBackgroundColor));
@@ -126,7 +116,7 @@ void ButtonBase::UpdateTransform()
 
 void ButtonBase::OnMouseEnter(MouseEvent* event)
 {
-  if(mIgnoreInput)
+  if (mIgnoreInput)
     return;
   mMouseOver = true;
   MarkAsNeedsUpdate();
@@ -135,7 +125,7 @@ void ButtonBase::OnMouseEnter(MouseEvent* event)
 void ButtonBase::OnMouseExit(MouseEvent* event)
 {
   mShowToolTip = true;
-  if(mIgnoreInput)
+  if (mIgnoreInput)
     return;
   mMouseOver = false;
   mMouseDown = false;
@@ -145,7 +135,7 @@ void ButtonBase::OnMouseExit(MouseEvent* event)
 void ButtonBase::OnMouseDown(MouseEvent* event)
 {
   event->Handled = true;
-  if(mIgnoreInput)
+  if (mIgnoreInput)
     return;
   mMouseDown = true;
   MarkAsNeedsUpdate();
@@ -154,7 +144,7 @@ void ButtonBase::OnMouseDown(MouseEvent* event)
 void ButtonBase::OnMouseUp(MouseEvent* event)
 {
   event->Handled = true;
-  if(mIgnoreInput)
+  if (mIgnoreInput)
     return;
   mMouseDown = false;
   MarkAsNeedsUpdate();
@@ -162,26 +152,26 @@ void ButtonBase::OnMouseUp(MouseEvent* event)
 
 void ButtonBase::OnHover(MouseEvent* event)
 {
-  if(mShowToolTip)
+  if (mShowToolTip)
   {
     ToolTip* toolTip = new ToolTip(this);
 
     bool hasText = false;
-    forRange(Command* command, mCommands.All())
+    forRange(Command * command, mCommands.All())
     {
       hasText |= (!command->ToolTip.Empty());
-      if(hasText)
+      if (hasText)
         toolTip->AddText(command->ToolTip, Vec4(1));
     }
 
     // Check if there's tooltip text not associated with commands.
-    if(!hasText && !mToolTipText.Empty())
+    if (!hasText && !mToolTipText.Empty())
     {
       hasText = true;
       toolTip->AddText(mToolTipText, Vec4(1));
     }
 
-    if(!hasText)
+    if (!hasText)
     {
       toolTip->Destroy();
     }
@@ -191,8 +181,10 @@ void ButtonBase::OnHover(MouseEvent* event)
 
       ToolTipPlacement placement;
       placement.SetScreenRect(GetScreenRect());
-      placement.SetPriority(IndicatorSide::Bottom, IndicatorSide::Right,
-                            IndicatorSide::Left, IndicatorSide::Top);
+      placement.SetPriority(IndicatorSide::Bottom,
+                            IndicatorSide::Right,
+                            IndicatorSide::Left,
+                            IndicatorSide::Top);
       toolTip->SetArrowTipTranslation(placement);
       // Temporary to fix jitter when the tool pops up
       toolTip->UpdateTransform();
@@ -208,7 +200,7 @@ void ButtonBase::OnCommandStateChange(ObjectEvent* event)
 
 void ButtonBase::OnMouseClick(MouseEvent* event)
 {
-  if(mIgnoreInput)
+  if (mIgnoreInput)
     return;
 
   event->Handled = true;
@@ -217,7 +209,7 @@ void ButtonBase::OnMouseClick(MouseEvent* event)
 
 bool ButtonBase::TakeFocusOverride()
 {
-  if(!mTabFocusStop)
+  if (!mTabFocusStop)
     return false;
 
   this->HardTakeFocus();
@@ -226,7 +218,7 @@ bool ButtonBase::TakeFocusOverride()
 
 void ButtonBase::SetIgnoreInput(bool state)
 {
-  if(mIgnoreInput == state)
+  if (mIgnoreInput == state)
     return;
 
   mIgnoreInput = state;
@@ -237,7 +229,7 @@ void ButtonBase::SetIgnoreInput(bool state)
 
 void ButtonBase::OnKeyDown(KeyboardEvent* event)
 {
-  if(!mIgnoreInput && (event->Key == Keys::Space || event->Key == Keys::Enter))
+  if (!mIgnoreInput && (event->Key == Keys::Space || event->Key == Keys::Enter))
     Activate();
 
   TabJump(this, event);
@@ -256,7 +248,7 @@ void ButtonBase::Activate()
   ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ButtonPressed, &e);
 
-  if(!mCommands.Empty())
+  if (!mCommands.Empty())
   {
     CommandCaptureContextEvent commandCaptureEvent;
     commandCaptureEvent.ActiveSet = CommandManager::GetInstance();
@@ -267,18 +259,15 @@ void ButtonBase::Activate()
   }
 }
 
-//------------------------------------------------------------------ Text Button
 ZilchDefineType(TextButton, builder, type)
 {
-
 }
 
-//******************************************************************************
-TextButton::TextButton(Composite* parent, StringParam textStyle)
-  : ButtonBase(parent, "TextButton")
+TextButton::TextButton(Composite* parent, StringParam textStyle) :
+    ButtonBase(parent, "TextButton")
 {
   mButtonText = new Text(this, textStyle);
-  
+
   mStyle = TextButtonStyle::Classic;
 
   mTextColor = TextBUttonUi::TextColor;
@@ -286,8 +275,8 @@ TextButton::TextButton(Composite* parent, StringParam textStyle)
   mTextClickedColor = TextBUttonUi::TextClickedColor;
 }
 
-TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize)
-  : ButtonBase(parent, "TextButton")
+TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize) :
+    ButtonBase(parent, "TextButton")
 {
   mButtonText = new Text(this, fontName, fontSize);
 
@@ -298,7 +287,6 @@ TextButton::TextButton(Composite* parent, StringParam fontName, uint fontSize)
   mTextClickedColor = TextBUttonUi::TextClickedColor;
 }
 
-//******************************************************************************
 void TextButton::SetStyle(TextButtonStyle::Type style)
 {
   mStyle = style;
@@ -311,29 +299,28 @@ void TextButton::SetStyle(TextButtonStyle::Type style)
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void TextButton::SetText(StringParam newValue)
 {
   mButtonText->SetText(newValue);
   mButtonText->SizeToContents();
 }
 
-//******************************************************************************
 void TextButton::UpdateTransform()
 {
   /// Only update the text color in the modern style
-  if(mStyle == TextButtonStyle::Modern)
+  if (mStyle == TextButtonStyle::Modern)
   {
-    if(mMouseDown)
+    if (mMouseDown)
       mButtonText->SetColor(mTextClickedColor);
-    else if(mMouseOver)
+    else if (mMouseOver)
       mButtonText->SetColor(mTextHoverColor);
     else
       mButtonText->SetColor(mTextColor);
   }
-  
-  // If out text button is set to non-interactive grey out the displayed button and text
-  if(!mInteractive)
+
+  // If out text button is set to non-interactive grey out the displayed button
+  // and text
+  if (!mInteractive)
   {
     mButtonText->SetColor(TextBUttonUi::ReadOnlyTextColor);
     mBackground->SetColor(ButtonUi::ReadOnlyColor);
@@ -354,7 +341,6 @@ void TextButton::UpdateTransform()
   ButtonBase::UpdateTransform();
 }
 
-//******************************************************************************
 Vec2 TextButton::GetMinSize()
 {
   Vec2 size = mButtonText->GetMinSize();
@@ -362,15 +348,14 @@ Vec2 TextButton::GetMinSize()
   return Math::Max(mMinSize, ExpandSizeByThickness(padding, size));
 }
 
-//******************************************************************************
 Thickness TextButton::GetPadding()
 {
-  const Thickness cButtonPadding(4,4,4,4);
+  const Thickness cButtonPadding(4, 4, 4, 4);
 
   Thickness padding = Thickness::cZero;
 
   // Add extra padding for the classic style
-  if(mStyle == TextButtonStyle::Classic)
+  if (mStyle == TextButtonStyle::Classic)
   {
     padding = mBackground->GetBorderThickness();
     padding = padding + cButtonPadding;
@@ -379,14 +364,11 @@ Thickness TextButton::GetPadding()
   return padding;
 }
 
-//------------------------------------------------------------------ Icon Button
 ZilchDefineType(IconButton, builder, type)
 {
-
 }
 
-IconButton::IconButton(Composite* parent)
-  : ButtonBase(parent, "TextButton")
+IconButton::IconButton(Composite* parent) : ButtonBase(parent, "TextButton")
 {
   mIcon = NULL;
   mPadding = Thickness(IconButtonUi::Padding);
@@ -403,15 +385,15 @@ void IconButton::AddCommand(Command* command)
   ButtonBase::AddCommand(command);
 
   // Use the icon of the primary command.
-  if(mCommands.Size() == 1)
+  if (mCommands.Size() == 1)
     SetIcon(command->IconName);
 }
 
 void IconButton::UpdateIconColor()
 {
-  if(mMouseDown)
+  if (mMouseDown)
     mIcon->SetColor(ToFloatColor(mIconClickedColor));
-  else if(mMouseOver)
+  else if (mMouseOver)
     mIcon->SetColor(ToFloatColor(mIconHoverColor));
   else
     mIcon->SetColor(ToFloatColor(mIconColor));
@@ -427,7 +409,7 @@ void IconButton::SetIcon(StringParam newValue)
 
 void IconButton::SetIconColor(Vec4Param color)
 {
-  if(mIcon)
+  if (mIcon)
     mIcon->SetColor(color);
 }
 
@@ -441,7 +423,7 @@ void IconButton::UpdateTransform()
   mBackground->SetSize(mSize);
   WidgetRect rect = RemoveThicknessRect(mPadding, mSize);
 
-  if(mIcon)
+  if (mIcon)
     PlaceCenterToRect(rect, mIcon);
 
   // Call this before setting colors as we're going to overwrite the colors
@@ -449,22 +431,23 @@ void IconButton::UpdateTransform()
 
   // Command can show themselves as active
   Command* primary = nullptr;
-  bool commandActive = !mCommands.Empty() && (primary = mCommands[0]) && primary->IsActive();
+  bool commandActive =
+      !mCommands.Empty() && (primary = mCommands[0]) && primary->IsActive();
 
-  if(mMouseDown)
+  if (mMouseDown)
   {
     mBackground->SetColor(ToFloatColor(mBackgroundClickedColor));
   }
-  else if(mMouseOver)
+  else if (mMouseOver)
   {
-    if(commandActive)
+    if (commandActive)
       mBackground->SetColor(IconButtonUi::ActiveHoverColor);
     else
       mBackground->SetColor(ToFloatColor(mBackgroundHoverColor));
   }
   else
   {
-    if(commandActive)
+    if (commandActive)
       mBackground->SetColor(IconButtonUi::ActiveColor);
     else
       mBackground->SetColor(ToFloatColor(mBackgroundColor));
@@ -487,14 +470,11 @@ void IconButton::OnMouseExit(MouseEvent* e)
   UpdateIconColor();
 }
 
-//----------------------------------------------------------- Toggle Icon Button
 ZilchDefineType(ToggleIconButton, builder, type)
 {
-
 }
 
-ToggleIconButton::ToggleIconButton(Composite* parent)
- : IconButton(parent)
+ToggleIconButton::ToggleIconButton(Composite* parent) : IconButton(parent)
 {
   ConnectThisTo(this, Events::ButtonPressed, OnButtonPressed);
 
@@ -506,14 +486,14 @@ ToggleIconButton::ToggleIconButton(Composite* parent)
 void ToggleIconButton::SetEnabledIcon(StringParam newValue)
 {
   mEnabledIcon = newValue;
-  if(mIcon == NULL && mEnabled)
+  if (mIcon == NULL && mEnabled)
     SetIcon(mEnabledIcon);
 }
 
 void ToggleIconButton::SetDisabledIcon(StringParam newValue)
 {
   mDisabledIcon = newValue;
-  if(mIcon == NULL && !mEnabled)
+  if (mIcon == NULL && !mEnabled)
     SetIcon(mEnabledIcon);
 }
 
@@ -530,16 +510,16 @@ bool ToggleIconButton::GetEnabled()
 
 void ToggleIconButton::UpdateIconColor()
 {
-  if(mMouseOver)
+  if (mMouseOver)
   {
-    if(mEnabled)
+    if (mEnabled)
       mIcon->SetColor(ToFloatColor(mIconHoverColor));
     else
       mIcon->SetColor(ToFloatColor(mIconDisabledHoverColor));
   }
   else
   {
-    if(mEnabled)
+    if (mEnabled)
       mIcon->SetColor(ToFloatColor(mIconColor));
     else
       mIcon->SetColor(ToFloatColor(mIconDisabledColor));
@@ -548,7 +528,7 @@ void ToggleIconButton::UpdateIconColor()
 
 void ToggleIconButton::UpdateIcon()
 {
-  if(mEnabled)
+  if (mEnabled)
     SetIcon(mEnabledIcon);
   else
     SetIcon(mDisabledIcon);
@@ -558,11 +538,11 @@ void ToggleIconButton::UpdateIcon()
 
 void ToggleIconButton::OnButtonPressed(Event* e)
 {
-  if(mIgnoreClicks)
+  if (mIgnoreClicks)
     return;
 
   mEnabled = !mEnabled;
   UpdateIcon();
 }
 
-}//namespace Zero
+} // namespace Zero

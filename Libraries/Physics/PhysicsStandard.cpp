@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -45,18 +40,21 @@ ZilchDefineEnum(SpringDebugDrawMode);
 ZilchDefineEnum(SpringDebugDrawType);
 ZilchDefineEnum(SpringSortOrder);
 
-// Bind the joint types special because they're generated using the #define #include trick
-ZilchDefineExternalBaseType(JointTypes::Enum, TypeCopyMode::ValueType, builder, type)
+// Bind the joint types special because they're generated using the #define
+// #include trick
+ZilchDefineExternalBaseType(JointTypes::Enum,
+                            TypeCopyMode::ValueType,
+                            builder,
+                            type)
 {
-  ZilchFullBindEnum(builder, type, SpecialType::Enumeration); 
+  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
   // Add all of the joint types
-  for(size_t i = 0; i < JointTypes::Size; ++i)
+  for (size_t i = 0; i < JointTypes::Size; ++i)
   {
     ZilchFullBindEnumValue(builder, type, i, JointTypes::Names[i]);
   }
 }
 
-//**************************************************************************************************
 ZilchDefineStaticLibrary(PhysicsLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -68,8 +66,10 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   ZilchInitializeRange(CastResultsRange);
   ZilchInitializeRangeAs(CastResults::range, "CastResultsArrayRange");
   ZilchInitializeRange(SweepResultRange);
-  ZilchInitializeRangeAs(PhysicsMeshVertexData::RangeType, "PhysicsMeshVertexRange");
-  ZilchInitializeRangeAs(PhysicsMeshIndexData::RangeType, "PhysicsMeshIndexRange");
+  ZilchInitializeRangeAs(PhysicsMeshVertexData::RangeType,
+                         "PhysicsMeshVertexRange");
+  ZilchInitializeRangeAs(PhysicsMeshIndexData::RangeType,
+                         "PhysicsMeshIndexRange");
 
   // Enums
   ZilchInitializeEnum(RigidBodyDynamicState);
@@ -107,7 +107,6 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   ZilchInitializeType(CustomPhysicsEffectEvent);
   ZilchInitializeType(CastFilterEvent);
   ZilchInitializeType(PreSolveEvent);
-
 
   ZilchInitializeType(PhysicsEngine);
   ZilchInitializeType(PhysicsSpace);
@@ -156,8 +155,8 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   ZilchInitializeType(CustomJoint);
   ZilchInitializeType(ConstraintConfigBlock);
   // Joints and JointBlocks
-#define JointType(jointType)              \
-  ZilchInitializeType(jointType);         \
+#define JointType(jointType)                                                   \
+  ZilchInitializeType(jointType);                                              \
   ZilchInitializeType(jointType##Block);
 #include "JointList.hpp"
 #undef JointType
@@ -187,10 +186,13 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   ZilchInitializeType(MultiConvexMeshIndexData);
   ZilchInitializeType(SubConvexMesh);
   ZilchInitializeType(MultiConvexMeshSubMeshData);
-  ZilchInitializeRangeAs(MultiConvexMeshVertexData::RangeType, "MultiConvexMeshVertexRange");
-  ZilchInitializeRangeAs(MultiConvexMeshIndexData::RangeType, "MultiConvexMeshIndexRange");
-  ZilchInitializeRangeAs(MultiConvexMeshSubMeshData::RangeType, "MultiConvexMeshSubMeshRange");
-  
+  ZilchInitializeRangeAs(MultiConvexMeshVertexData::RangeType,
+                         "MultiConvexMeshVertexRange");
+  ZilchInitializeRangeAs(MultiConvexMeshIndexData::RangeType,
+                         "MultiConvexMeshIndexRange");
+  ZilchInitializeRangeAs(MultiConvexMeshSubMeshData::RangeType,
+                         "MultiConvexMeshSubMeshRange");
+
   // Casting
   ZilchInitializeType(BaseCastFilter);
   ZilchInitializeType(CastFilter);
@@ -213,8 +215,9 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   ZilchInitializeType(JointGraphEdge);
 
   // Not ready for consumption yet, but I want to test it with dev config
-  // METAREFACTOR they should always be initialized, but hidden with an attribute
-  if(Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  // METAREFACTOR they should always be initialized, but hidden with an
+  // attribute
+  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
   {
     ZilchInitializeType(SpringSystem);
     ZilchInitializeType(DecorativeCloth);
@@ -228,13 +231,12 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-//**************************************************************************************************
 void PhysicsLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
-  //Create the material manager.
+  // Create the material manager.
   InitializeResourceManager(PhysicsMaterialManager);
   InitializeResourceManager(PhysicsSolverConfigManager);
   InitializeResourceManager(PhysicsMeshManager);
@@ -244,10 +246,9 @@ void PhysicsLibrary::Initialize()
   InitializeResourceManager(MultiConvexMeshManager);
 }
 
-//**************************************************************************************************
 void PhysicsLibrary::Shutdown()
 {
   GetLibrary()->ClearComponents();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,9 +6,9 @@ namespace Zero
 
 String ToString(const Ray& value, bool shortFormat = false);
 String ToString(const Segment& value, bool shortFormat = false);
-String ToString(const Aabb& value,   bool shortFormat = false);
+String ToString(const Aabb& value, bool shortFormat = false);
 String ToString(const Sphere& value, bool shortFormat = false);
 String ToString(const Plane& value, bool shortFormat = false);
 String ToString(const Frustum& value, bool shortFormat = false);
 
-}//namespace Zero
+} // namespace Zero

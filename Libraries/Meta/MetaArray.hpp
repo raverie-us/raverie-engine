@@ -1,16 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//--------------------------------------------------------------------------------------- Meta Array
-///Meta Interface for dynamic containment of objects / components.
+//Meta Array
+/// Meta Interface for dynamic containment of objects / components.
 class MetaArray : public ReferenceCountedEventObject
 {
 public:
@@ -44,7 +39,10 @@ public:
     bool Empty();
     Any Front();
     void PopFront();
-    Range& All() { return *this; }
+    Range& All()
+    {
+      return *this;
+    }
 
     Handle mContainer;
     MetaArray* mMetaArray;
@@ -57,15 +55,14 @@ public:
   BoundType* mContainedType;
 };
 
-//------------------------------------------------------------------------------- Meta Array Wrapper
-///Meta Interface for dynamic containment of objects / components.
+//Meta Array Wrapper
+/// Meta Interface for dynamic containment of objects / components.
 class MetaArrayWrapper : public MetaArray
 {
 public:
   ZilchDeclareType(MetaArrayWrapper, TypeCopyMode::ReferenceType);
 
-  MetaArrayWrapper(BoundType* typeToWrap) : 
-    MetaArray(nullptr)
+  MetaArrayWrapper(BoundType* typeToWrap) : MetaArray(nullptr)
   {
     mContainedMetaArray = typeToWrap->HasInherited<MetaArray>();
     mContainedType = mContainedMetaArray->mContainedType;
@@ -110,4 +107,4 @@ public:
   MetaArray* mContainedMetaArray;
 };
 
-}//namespace Zero
+} // namespace Zero

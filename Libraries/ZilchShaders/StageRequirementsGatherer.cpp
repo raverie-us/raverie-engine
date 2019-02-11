@@ -1,44 +1,46 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------StageRequirementsGatherer
-StageRequirementsGatherer::StageRequirementsGatherer(ZilchShaderSpirVSettings* settings)
+StageRequirementsGatherer::StageRequirementsGatherer(
+    ZilchShaderSpirVSettings* settings)
 {
   mErrors = nullptr;
   mSettings = settings;
 }
 
-bool StageRequirementsGatherer::Run(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRLibrary* library, ShaderCompilationErrors* errors)
+bool StageRequirementsGatherer::Run(Zilch::SyntaxTree& syntaxTree,
+                                    ZilchShaderIRLibrary* library,
+                                    ShaderCompilationErrors* errors)
 {
   mErrors = errors;
   StageRequirementsGathererContext context;
   context.mErrors = mErrors;
   context.mCurrentLibrary = library;
 
-  // Walk all dependency libraries to build a mapping of zilch libraries to shader libraries.
-  // This could potentially be done faster but this will never be a bottleneck.
+  // Walk all dependency libraries to build a mapping of zilch libraries to
+  // shader libraries. This could potentially be done faster but this will never
+  // be a bottleneck.
   BuildLibraryMap(library, &context);
 
-  // Do a pre-walk in order to build a map of nodes to zilch objects. This is needed during
-  // that actual pass as we'll have to recurse from a function call node into a function and 
-  // all of its statements. Only a function node has the actual function statements though
-  // so we have to build a map here.
-  Zilch::BranchWalker<StageRequirementsGatherer, StageRequirementsGathererContext> preWalker;
+  // Do a pre-walk in order to build a map of nodes to zilch objects. This is
+  // needed during that actual pass as we'll have to recurse from a function
+  // call node into a function and all of its statements. Only a function node
+  // has the actual function statements though so we have to build a map here.
+  Zilch::BranchWalker<StageRequirementsGatherer,
+                      StageRequirementsGathererContext>
+      preWalker;
   preWalker.Register(&StageRequirementsGatherer::PreWalkClassNode);
   preWalker.Register(&StageRequirementsGatherer::PreWalkConstructor);
   preWalker.Register(&StageRequirementsGatherer::PreWalkClassFunction);
   preWalker.Register(&StageRequirementsGatherer::PreWalkClassMemberVariable);
   preWalker.Walk(this, syntaxTree.Root, &context);
 
-  Zilch::BranchWalker<StageRequirementsGatherer, StageRequirementsGathererContext> walker;
+  Zilch::BranchWalker<StageRequirementsGatherer,
+                      StageRequirementsGathererContext>
+      walker;
   walker.Register(&StageRequirementsGatherer::WalkClassNode);
   walker.Register(&StageRequirementsGatherer::WalkClassConstructor);
   walker.Register(&StageRequirementsGatherer::WalkClassFunction);
@@ -50,7 +52,8 @@ bool StageRequirementsGatherer::Run(Zilch::SyntaxTree& syntaxTree, ZilchShaderIR
   return mErrors->mErrorTriggered;
 }
 
-void StageRequirementsGatherer::PreWalkClassNode(Zilch::ClassNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkClassNode(
+    Zilch::ClassNode*& node, StageRequirementsGathererContext* context)
 {
   // Map the type to its node
   context->mTypeMap[node->Type] = node;
@@ -60,27 +63,31 @@ void StageRequirementsGatherer::PreWalkClassNode(Zilch::ClassNode*& node, StageR
   context->Walker->Walk(this, node->Variables, context);
 }
 
-void StageRequirementsGatherer::PreWalkConstructor(Zilch::ConstructorNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkConstructor(
+    Zilch::ConstructorNode*& node, StageRequirementsGathererContext* context)
 {
   context->mConstructorMap[node->DefinedFunction] = node;
 }
 
-void StageRequirementsGatherer::PreWalkClassFunction(Zilch::FunctionNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkClassFunction(
+    Zilch::FunctionNode*& node, StageRequirementsGathererContext* context)
 {
   context->mFunctionMap[node->DefinedFunction] = node;
 }
 
-void StageRequirementsGatherer::PreWalkClassMemberVariable(Zilch::MemberVariableNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkClassMemberVariable(
+    Zilch::MemberVariableNode*& node, StageRequirementsGathererContext* context)
 {
   context->mVariableMap[node->CreatedProperty] = node;
   // Additionally handle get/set functions.
-  if(node->Get != nullptr)
+  if (node->Get != nullptr)
     context->mFunctionMap[node->Get->DefinedFunction] = node->Get;
-  if(node->Set != nullptr)
+  if (node->Set != nullptr)
     context->mFunctionMap[node->Set->DefinedFunction] = node->Set;
 }
 
-void StageRequirementsGatherer::WalkClassNode(Zilch::ClassNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassNode(
+    Zilch::ClassNode*& node, StageRequirementsGathererContext* context)
 {
   // Recursively walk all functions
   WalkClassPreconstructor(node, context);
@@ -88,11 +95,14 @@ void StageRequirementsGatherer::WalkClassNode(Zilch::ClassNode*& node, StageRequ
   context->Walker->Walk(this, node->Functions, context);
 }
 
-void StageRequirementsGatherer::WalkClassPreconstructor(Zilch::ClassNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassPreconstructor(
+    Zilch::ClassNode*& node, StageRequirementsGathererContext* context)
 {
-  // Only walk the pre-constructor if it exists and we haven't already processed it
+  // Only walk the pre-constructor if it exists and we haven't already processed
+  // it
   Zilch::Function* preConstructor = node->PreConstructor;
-  if(preConstructor == nullptr || context->mProcessedObjects.Contains(preConstructor))
+  if (preConstructor == nullptr ||
+      context->mProcessedObjects.Contains(preConstructor))
     return;
   context->mProcessedObjects.Insert(preConstructor);
 
@@ -100,17 +110,19 @@ void StageRequirementsGatherer::WalkClassPreconstructor(Zilch::ClassNode*& node,
   StageRequirementsData prevRequirements = context->mCurrentRequirements;
   context->mCurrentRequirements = StageRequirementsData();
 
-  // Walk all member variables (which walks their initializers) to get their requirements
+  // Walk all member variables (which walks their initializers) to get their
+  // requirements
   context->Walker->Walk(this, node->Variables, context);
 
-  // Now we need to actually merge each instance member variable's requirements into
-  // the pre-constructor's requirements. Static member variable initializers are not
-  // invoked by our pre-constructor, only on reference to the static variable itself.
+  // Now we need to actually merge each instance member variable's requirements
+  // into the pre-constructor's requirements. Static member variable
+  // initializers are not invoked by our pre-constructor, only on reference to
+  // the static variable itself.
   ZilchShaderIRLibrary* shaderLibrary = context->mCurrentLibrary;
-  for(size_t i = 0; i < node->Variables.Size(); ++i)
+  for (size_t i = 0; i < node->Variables.Size(); ++i)
   {
     Zilch::MemberVariableNode* varNode = node->Variables[i];
-    if(varNode->CreatedProperty->HasAttribute(Zilch::StaticAttribute))
+    if (varNode->CreatedProperty->HasAttribute(Zilch::StaticAttribute))
       continue;
 
     // Merge the result from the member variable into our current context
@@ -118,8 +130,9 @@ void StageRequirementsGatherer::WalkClassPreconstructor(Zilch::ClassNode*& node,
   }
 
   // If we found any stage requirements then cache them on the library
-  if(context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
-    shaderLibrary->mStageRequirementsData[preConstructor] = context->mCurrentRequirements;
+  if (context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
+    shaderLibrary->mStageRequirementsData[preConstructor] =
+        context->mCurrentRequirements;
   // Now check if this symbol has any mis-matched requirements
   CheckAndDispatchErrors(preConstructor, preConstructor->Owner, context);
 
@@ -127,22 +140,24 @@ void StageRequirementsGatherer::WalkClassPreconstructor(Zilch::ClassNode*& node,
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkClassPreconstructor(Zilch::Function* preConstructor, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassPreconstructor(
+    Zilch::Function* preConstructor, StageRequirementsGathererContext* context)
 {
   // Pre-constructors require walking the class node.
-  Zilch::ClassNode* classNode = context->mTypeMap.FindValue(preConstructor->Owner, nullptr);
-  if(classNode != nullptr)
+  Zilch::ClassNode* classNode =
+      context->mTypeMap.FindValue(preConstructor->Owner, nullptr);
+  if (classNode != nullptr)
     WalkClassPreconstructor(classNode, context);
 }
 
-void StageRequirementsGatherer::WalkClassConstructor(Zilch::ConstructorNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassConstructor(
+    Zilch::ConstructorNode*& node, StageRequirementsGathererContext* context)
 {
   // Only walk a constructor once
   Zilch::Function* zilchFunction = node->DefinedFunction;
-  if(context->mProcessedObjects.Contains(zilchFunction))
+  if (context->mProcessedObjects.Contains(zilchFunction))
     return;
   context->mProcessedObjects.Insert(zilchFunction);
-
 
   ZilchShaderIRLibrary* shaderLibrary = context->mCurrentLibrary;
 
@@ -150,9 +165,10 @@ void StageRequirementsGatherer::WalkClassConstructor(Zilch::ConstructorNode*& no
   StageRequirementsData prevRequirements = context->mCurrentRequirements;
   context->mCurrentRequirements = StageRequirementsData();
 
-  // If there's a preconstructor then merge in its results (instance variable initializers)
+  // If there's a preconstructor then merge in its results (instance variable
+  // initializers)
   Zilch::Function* preConstructor = zilchFunction->Owner->PreConstructor;
-  if(preConstructor != nullptr)
+  if (preConstructor != nullptr)
   {
     WalkClassPreconstructor(preConstructor, context);
     MergeCurrent(shaderLibrary, preConstructor, node, context);
@@ -161,8 +177,9 @@ void StageRequirementsGatherer::WalkClassConstructor(Zilch::ConstructorNode*& no
   context->Walker->Walk(this, node->Statements, context);
 
   // If we found any stage requirements then cache them on the library
-  if(context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
-    shaderLibrary->mStageRequirementsData[zilchFunction] = context->mCurrentRequirements;
+  if (context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
+    shaderLibrary->mStageRequirementsData[zilchFunction] =
+        context->mCurrentRequirements;
   // Now check if this symbol has any mis-matched requirements
   CheckAndDispatchErrors(zilchFunction, zilchFunction->Owner, context);
 
@@ -170,11 +187,12 @@ void StageRequirementsGatherer::WalkClassConstructor(Zilch::ConstructorNode*& no
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkClassFunction(Zilch::FunctionNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassFunction(
+    Zilch::FunctionNode*& node, StageRequirementsGathererContext* context)
 {
   // Only walk a function once
   Zilch::Function* zilchFunction = node->DefinedFunction;
-  if(context->mProcessedObjects.Contains(zilchFunction))
+  if (context->mProcessedObjects.Contains(zilchFunction))
     return;
   context->mProcessedObjects.Insert(zilchFunction);
 
@@ -187,8 +205,9 @@ void StageRequirementsGatherer::WalkClassFunction(Zilch::FunctionNode*& node, St
   context->Walker->Walk(this, node->Statements, context);
 
   // If we found any stage requirements then cache them on the library
-  if(context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
-    shaderLibrary->mStageRequirementsData[zilchFunction] = context->mCurrentRequirements;
+  if (context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
+    shaderLibrary->mStageRequirementsData[zilchFunction] =
+        context->mCurrentRequirements;
   // Now check if this symbol has any mis-matched requirements
   CheckAndDispatchErrors(zilchFunction, zilchFunction->Owner, context);
 
@@ -196,11 +215,12 @@ void StageRequirementsGatherer::WalkClassFunction(Zilch::FunctionNode*& node, St
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkClassMemberVariable(Zilch::MemberVariableNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassMemberVariable(
+    Zilch::MemberVariableNode*& node, StageRequirementsGathererContext* context)
 {
   // Only walk members once
   Zilch::Property* zilchProperty = node->CreatedProperty;
-  if(context->mProcessedObjects.Contains(zilchProperty))
+  if (context->mProcessedObjects.Contains(zilchProperty))
     return;
   context->mProcessedObjects.Insert(zilchProperty);
 
@@ -210,14 +230,15 @@ void StageRequirementsGatherer::WalkClassMemberVariable(Zilch::MemberVariableNod
 
   ZilchShaderIRLibrary* shaderLibrary = context->mCurrentLibrary;
   // Walk the initializer for the variable if it exists
-  if(node->InitialValue != nullptr)
+  if (node->InitialValue != nullptr)
     context->Walker->Walk(this, node->InitialValue, context);
   // Merge the initializer results into the variable's results
   MergeCurrent(shaderLibrary, zilchProperty, node, context);
 
   // If we found any stage requirements then cache them on the library
-  if(context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
-    shaderLibrary->mStageRequirementsData[zilchProperty] = context->mCurrentRequirements;
+  if (context->mCurrentRequirements.mRequiredStages != ShaderStage::None)
+    shaderLibrary->mStageRequirementsData[zilchProperty] =
+        context->mCurrentRequirements;
   // Now check if this symbol has any mis-matched requirements
   CheckAndDispatchErrors(zilchProperty, zilchProperty->Owner, context);
 
@@ -225,129 +246,162 @@ void StageRequirementsGatherer::WalkClassMemberVariable(Zilch::MemberVariableNod
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkMemberAccessNode(
+    Zilch::MemberAccessNode*& node, StageRequirementsGathererContext* context)
 {
   // Find the actual accessed function/property
   Zilch::Function* zilchFunction = nullptr;
   Zilch::Property* zilchProperty = nullptr;
   // If this is actually a getter/setter, then find the called get/set function
-  if(node->AccessedGetterSetter != nullptr)
+  if (node->AccessedGetterSetter != nullptr)
   {
-    if(node->IoUsage & Zilch::IoMode::ReadRValue)
+    if (node->IoUsage & Zilch::IoMode::ReadRValue)
       zilchFunction = node->AccessedGetterSetter->Get;
-    else if(node->IoUsage & Zilch::IoMode::WriteLValue)
+    else if (node->IoUsage & Zilch::IoMode::WriteLValue)
       zilchFunction = node->AccessedGetterSetter->Set;
   }
-  else if(node->AccessedFunction != nullptr)
+  else if (node->AccessedFunction != nullptr)
     zilchFunction = node->AccessedFunction;
-  else  if(node->AccessedProperty != nullptr)
+  else if (node->AccessedProperty != nullptr)
     zilchProperty = node->AccessedProperty;
 
   // If we're calling a function (including getter/setters)
-  if(zilchFunction != nullptr)
+  if (zilchFunction != nullptr)
   {
-    // Deal with [Implements]. If an implements is registered we'll find a shader function with
-    // a different zilch function then the one we started with. This is the one that should
-    // actually be walked to find dependencies.
-    ZilchShaderIRFunction* shaderFunction = context->mCurrentLibrary->FindFunction(zilchFunction);
-    if(shaderFunction != nullptr)
+    // Deal with [Implements]. If an implements is registered we'll find a
+    // shader function with a different zilch function then the one we started
+    // with. This is the one that should actually be walked to find
+    // dependencies.
+    ZilchShaderIRFunction* shaderFunction =
+        context->mCurrentLibrary->FindFunction(zilchFunction);
+    if (shaderFunction != nullptr)
       zilchFunction = shaderFunction->mMeta->mZilchFunction;
 
-    // Recursively walk the function we're calling if it's in the current library (to build up it's requirements)
-    Zilch::FunctionNode* fnNode = context->mFunctionMap.FindValue(zilchFunction, nullptr);
-    if(fnNode != nullptr)
+    // Recursively walk the function we're calling if it's in the current
+    // library (to build up it's requirements)
+    Zilch::FunctionNode* fnNode =
+        context->mFunctionMap.FindValue(zilchFunction, nullptr);
+    if (fnNode != nullptr)
       context->Walker->Walk(this, fnNode, context);
 
-    // Merge the requirements from the constructor into the current object's requirements.
-    ZilchShaderIRLibrary* shaderLibrary = context->mZilchLibraryToShaderLibraryMap[zilchFunction->SourceLibrary];
+    // Merge the requirements from the constructor into the current object's
+    // requirements.
+    ZilchShaderIRLibrary* shaderLibrary =
+        context->mZilchLibraryToShaderLibraryMap[zilchFunction->SourceLibrary];
     MergeCurrent(shaderLibrary, zilchFunction, node, context);
   }
   // Otherwise, deal with member variables
-  else if(zilchProperty != nullptr)
+  else if (zilchProperty != nullptr)
   {
-    // Recursively walk the member we're referencing if it's in the current library (to build up it's requirements)
-    Zilch::MemberVariableNode* varNode = context->mVariableMap.FindValue(zilchProperty, nullptr);
-    if(varNode != nullptr)
+    // Recursively walk the member we're referencing if it's in the current
+    // library (to build up it's requirements)
+    Zilch::MemberVariableNode* varNode =
+        context->mVariableMap.FindValue(zilchProperty, nullptr);
+    if (varNode != nullptr)
       context->Walker->Walk(this, varNode, context);
 
-    // Merge the requirements from the constructor into the current object's requirements.
-    ZilchShaderIRLibrary* shaderLibrary = context->mZilchLibraryToShaderLibraryMap[zilchProperty->Owner->SourceLibrary];
+    // Merge the requirements from the constructor into the current object's
+    // requirements.
+    ZilchShaderIRLibrary* shaderLibrary =
+        context->mZilchLibraryToShaderLibraryMap[zilchProperty->Owner
+                                                     ->SourceLibrary];
     MergeCurrent(shaderLibrary, zilchProperty, node, context);
   }
 }
 
-void StageRequirementsGatherer::WalkStaticTypeNode(Zilch::StaticTypeNode*& node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkStaticTypeNode(
+    Zilch::StaticTypeNode*& node, StageRequirementsGathererContext* context)
 {
   // If there's a constructor function then walk its dependencies
   Zilch::Function* constructor = node->ConstructorFunction;
-  if(constructor != nullptr)
+  if (constructor != nullptr)
   {
     // Find the node for this constructor so we can walk the statements within.
-    // If this node is null then the constructor call is from a different library
-    Zilch::ConstructorNode* constructorNode = context->mConstructorMap.FindValue(constructor, nullptr);
-    if(constructorNode != nullptr)
+    // If this node is null then the constructor call is from a different
+    // library
+    Zilch::ConstructorNode* constructorNode =
+        context->mConstructorMap.FindValue(constructor, nullptr);
+    if (constructorNode != nullptr)
       context->Walker->Walk(this, constructorNode, context);
 
-    // Merge the requirements from the constructor into the current object's requirements.
-    ZilchShaderIRLibrary* shaderLibrary = context->mZilchLibraryToShaderLibraryMap[constructor->SourceLibrary];
+    // Merge the requirements from the constructor into the current object's
+    // requirements.
+    ZilchShaderIRLibrary* shaderLibrary =
+        context->mZilchLibraryToShaderLibraryMap[constructor->SourceLibrary];
     MergeCurrent(shaderLibrary, constructor, node, context);
   }
-  // Otherwise this is a constructor call to a class with an implicit constructor.
-  // In this case we have to traverse the pre-constructor.
+  // Otherwise this is a constructor call to a class with an implicit
+  // constructor. In this case we have to traverse the pre-constructor.
   else
   {
     Zilch::Function* preConstructor = node->ReferencedType->PreConstructor;
-    if(preConstructor != nullptr)
+    if (preConstructor != nullptr)
     {
       // Walk the pre-constructor to collect all its requirements
       WalkClassPreconstructor(preConstructor, context);
 
-      // Merge the requirements from the pre-constructor into the current object's requirements.
-      ZilchShaderIRLibrary* shaderLibrary = context->mZilchLibraryToShaderLibraryMap[preConstructor->SourceLibrary];
+      // Merge the requirements from the pre-constructor into the current
+      // object's requirements.
+      ZilchShaderIRLibrary* shaderLibrary =
+          context
+              ->mZilchLibraryToShaderLibraryMap[preConstructor->SourceLibrary];
       MergeCurrent(context->mCurrentLibrary, preConstructor, node, context);
     }
   }
 }
 
-void StageRequirementsGatherer::MergeCurrent(ZilchShaderIRLibrary* shaderLibrary, Zilch::Member* zilchMember, Zilch::SyntaxNode* node, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::MergeCurrent(
+    ZilchShaderIRLibrary* shaderLibrary,
+    Zilch::Member* zilchMember,
+    Zilch::SyntaxNode* node,
+    StageRequirementsGathererContext* context)
 {
-  // If the given member has any stage requirements then merge them into the context's requirements
-  StageRequirementsData* newState = shaderLibrary->mStageRequirementsData.FindPointer(zilchMember);
-  if(newState != nullptr)
-    context->mCurrentRequirements.Combine(zilchMember, node->Location, newState->mRequiredStages);
+  // If the given member has any stage requirements then merge them into the
+  // context's requirements
+  StageRequirementsData* newState =
+      shaderLibrary->mStageRequirementsData.FindPointer(zilchMember);
+  if (newState != nullptr)
+    context->mCurrentRequirements.Combine(
+        zilchMember, node->Location, newState->mRequiredStages);
 }
 
-void StageRequirementsGatherer::BuildLibraryMap(ZilchShaderIRLibrary* library, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::BuildLibraryMap(
+    ZilchShaderIRLibrary* library, StageRequirementsGathererContext* context)
 {
   // Map the zilch library to the shader library
   context->mZilchLibraryToShaderLibraryMap[library->mZilchLibrary] = library;
 
   // Walk all dependencies recursively
-  if(library->mDependencies == nullptr)
+  if (library->mDependencies == nullptr)
     return;
 
-  for(auto range = library->mDependencies->All(); !range.Empty(); range.PopFront())
+  for (auto range = library->mDependencies->All(); !range.Empty();
+       range.PopFront())
     BuildLibraryMap(range.Front(), context);
 }
 
-ShaderStage::Enum StageRequirementsGatherer::GetRequiredStages(Zilch::Member* zilchObject, Zilch::ReflectionObject* owner)
+ShaderStage::Enum StageRequirementsGatherer::GetRequiredStages(
+    Zilch::Member* zilchObject, Zilch::ReflectionObject* owner)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderStage::Enum stage = (ShaderStage::Enum)ShaderStage::None;
 
   // Check all shader stage types to see if this object or its owner contain
   // either a stage declaration or a stage requirement declaration.
-  for(size_t i = 0; i < FragmentType::Size; ++i)
+  for (size_t i = 0; i < FragmentType::Size; ++i)
   {
     String stageName = nameSettings.mFragmentTypeAttributes[i];
     String requiresName = nameSettings.mRequiresAttributes[i];
 
-    bool hasStageName = (zilchObject->HasAttribute(stageName) != nullptr) || owner->HasAttribute(stageName);
+    bool hasStageName = (zilchObject->HasAttribute(stageName) != nullptr) ||
+                        owner->HasAttribute(stageName);
     bool hasRequiresName = false;
-    // Currently, not all [Requires...] attributes exist. Only check non-empty strings
-    if(!requiresName.Empty())
-      hasRequiresName = (zilchObject->HasAttribute(requiresName) != nullptr) || owner->HasAttribute(requiresName);
-    if(hasStageName || hasRequiresName)
+    // Currently, not all [Requires...] attributes exist. Only check non-empty
+    // strings
+    if (!requiresName.Empty())
+      hasRequiresName = (zilchObject->HasAttribute(requiresName) != nullptr) ||
+                        owner->HasAttribute(requiresName);
+    if (hasStageName || hasRequiresName)
       stage = FragmentTypeToShaderStage((FragmentType::Enum)i);
   }
 
@@ -359,64 +413,80 @@ String StageRequirementsGatherer::GetStageName(ShaderStage::Enum stage)
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
   // Find the first non-zero shader stage set and return that as the name.
-  for(size_t i = 0; i < FragmentType::Size; ++i)
+  for (size_t i = 0; i < FragmentType::Size; ++i)
   {
-    ShaderStage::Enum testStage = FragmentTypeToShaderStage((FragmentType::Enum)i);
-    if(stage & testStage)
+    ShaderStage::Enum testStage =
+        FragmentTypeToShaderStage((FragmentType::Enum)i);
+    if (stage & testStage)
       return nameSettings.mFragmentTypeAttributes[i];
   }
   return String();
 }
 
-void StageRequirementsGatherer::CheckAndDispatchErrors(Zilch::Member* zilchObject, Zilch::ReflectionObject* owner, StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::CheckAndDispatchErrors(
+    Zilch::Member* zilchObject,
+    Zilch::ReflectionObject* owner,
+    StageRequirementsGathererContext* context)
 {
-  ShaderStage::Enum currentRequiredStages = context->mCurrentRequirements.mRequiredStages;
-  // If no shader stages are required for the current context then there's nothing to do.
-  if(currentRequiredStages == ShaderStage::None)
+  ShaderStage::Enum currentRequiredStages =
+      context->mCurrentRequirements.mRequiredStages;
+  // If no shader stages are required for the current context then there's
+  // nothing to do.
+  if (currentRequiredStages == ShaderStage::None)
     return;
 
-  // Otherwise the current context has some requirements. Find what stages are required
-  // on the current object (or its owner) to see if they're compatible. If the current object
-  // doesn't have any requirements then there's no possible errors so there's nothing more to check.
+  // Otherwise the current context has some requirements. Find what stages are
+  // required on the current object (or its owner) to see if they're compatible.
+  // If the current object doesn't have any requirements then there's no
+  // possible errors so there's nothing more to check.
   ShaderStage::Enum specifiedStages = GetRequiredStages(zilchObject, owner);
-  if(specifiedStages == ShaderStage::None)
+  if (specifiedStages == ShaderStage::None)
     return;
 
-  // Otherwise we might have an error. An error exists if there is a mismatch between 
-  // the current required and specified stages. We can test this by seeing if the
-  // bit pattern matches between the stage specifications.
+  // Otherwise we might have an error. An error exists if there is a mismatch
+  // between the current required and specified stages. We can test this by
+  // seeing if the bit pattern matches between the stage specifications.
   bool isValid = (currentRequiredStages ^ specifiedStages) == 0;
-  if(isValid)
+  if (isValid)
     return;
 
   Array<StageRequirementsData*> stack;
   Zilch::Member* currentObj = zilchObject;
   // Trace back the error locations until we find the source of the requirement
-  while(currentObj != nullptr)
+  while (currentObj != nullptr)
   {
-    // By default, assume the source library (where we trace cached dependencies)
-    // is the same as the owner of the object (e.g. the function's class' library).
-    Zilch::Library* zilchSourceLibrary = zilchSourceLibrary = currentObj->Owner->SourceLibrary;
+    // By default, assume the source library (where we trace cached
+    // dependencies) is the same as the owner of the object (e.g. the function's
+    // class' library).
+    Zilch::Library* zilchSourceLibrary = zilchSourceLibrary =
+        currentObj->Owner->SourceLibrary;
 
-    // This assumption isn't always correct though. In particular, on extension and
-    // implements the owning object can be in a different library from where the object
-    // is declared (e.g. an extension function on Math has the owner in the 'Core' library
-    // even though the cached information is in the user's library).
-    // If this is a function then grab the source library from the function itself.
-    Zilch::Function* fn = Zilch::Type::DynamicCast<Zilch::Function*>(currentObj);
-    if(fn != nullptr)
+    // This assumption isn't always correct though. In particular, on extension
+    // and implements the owning object can be in a different library from where
+    // the object is declared (e.g. an extension function on Math has the owner
+    // in the 'Core' library even though the cached information is in the user's
+    // library). If this is a function then grab the source library from the
+    // function itself.
+    Zilch::Function* fn =
+        Zilch::Type::DynamicCast<Zilch::Function*>(currentObj);
+    if (fn != nullptr)
       zilchSourceLibrary = fn->SourceLibrary;
 
     // Lookup the object's shader source library from the zilch library
-    ZilchShaderIRLibrary* objectLibrary = context->mZilchLibraryToShaderLibraryMap.FindValue(zilchSourceLibrary, nullptr);
+    ZilchShaderIRLibrary* objectLibrary =
+        context->mZilchLibraryToShaderLibraryMap.FindValue(zilchSourceLibrary,
+                                                           nullptr);
 
-    // Find the cached requirements data for this object. If it doesn't exist or this object has
-    // no dependencies then we've reached the end of the dependency chain.
-    StageRequirementsData* requirements = objectLibrary->mStageRequirementsData.FindPointer(currentObj);
-    if(requirements == nullptr || requirements->mDependency == nullptr)
+    // Find the cached requirements data for this object. If it doesn't exist or
+    // this object has no dependencies then we've reached the end of the
+    // dependency chain.
+    StageRequirementsData* requirements =
+        objectLibrary->mStageRequirementsData.FindPointer(currentObj);
+    if (requirements == nullptr || requirements->mDependency == nullptr)
       break;
 
-    // Otherwise, cache the requirements objects so we can build the full error message
+    // Otherwise, cache the requirements objects so we can build the full error
+    // message
     stack.PushBack(requirements);
     // And then continue the recursion
     currentObj = requirements->mDependency;
@@ -429,18 +499,24 @@ void StageRequirementsGatherer::CheckAndDispatchErrors(Zilch::Member* zilchObjec
   // Build up the full error message which says where the error originated
   // from and who called it as well as what the error was.
   Zilch::Member* errorSource = stack[stack.Size() - 1]->mDependency;
-  String currentObjName = BuildString(zilchObject->Owner->Name, ".", zilchObject->Name);
-  String errrorSourceName = BuildString(errorSource->Owner->Name, ".", errorSource->Name);
+  String currentObjName =
+      BuildString(zilchObject->Owner->Name, ".", zilchObject->Name);
+  String errrorSourceName =
+      BuildString(errorSource->Owner->Name, ".", errorSource->Name);
 
-  String fullMsg = String::Format("'%s' requires shader stage %s but references '%s' which requires stage %s\n",
-    currentObjName.c_str(), currentStage.c_str(), errrorSourceName.c_str(), requiredStageName.c_str());
-    
+  String fullMsg = String::Format("'%s' requires shader stage %s but "
+                                  "references '%s' which requires stage %s\n",
+                                  currentObjName.c_str(),
+                                  currentStage.c_str(),
+                                  errrorSourceName.c_str(),
+                                  requiredStageName.c_str());
+
   ValidationErrorEvent toSend;
   toSend.mShortMessage = "Invalid shader stage combination";
   toSend.mFullMessage = fullMsg;
   toSend.mLocation = zilchObject->Location;
   // Copy over the call location stack trace
-  for(size_t i = 0; i < stack.Size(); ++i)
+  for (size_t i = 0; i < stack.Size(); ++i)
     toSend.mCallStack.PushBack(stack[i]->mCallLocation);
 
   EventSend(context->mErrors, Events::ValidationError, &toSend);
@@ -448,4 +524,4 @@ void StageRequirementsGatherer::CheckAndDispatchErrors(Zilch::Member* zilchObjec
   context->mErrors->mErrorTriggered = true;
 }
 
-}//namespace Zero
+} // namespace Zero

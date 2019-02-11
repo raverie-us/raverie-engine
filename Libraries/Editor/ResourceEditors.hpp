@@ -1,18 +1,10 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ResourceEditors.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 namespace Zero
 {
 class Editor;
 
-typedef void (*EditResourceFunction)(Editor*,Resource*);
+typedef void (*EditResourceFunction)(Editor*, Resource*);
 
 /// Store resource editors
 class ResourceEditors : public ExplicitSingleton<ResourceEditors, Object>
@@ -27,4 +19,4 @@ public:
   void FindResourceEditor(Resource* resource);
 };
 
-}
+} // namespace Zero

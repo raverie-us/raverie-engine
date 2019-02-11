@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -13,7 +8,6 @@ namespace Events
 DefineEvent(OsShellUpdate);
 }
 
-//-------------------------------------------------------------------OsShell
 ZilchDefineType(OsShell, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -33,9 +27,7 @@ OsShell* CreateOsShellSystem()
   return new OsShell();
 }
 
-OsShell::OsShell() :
-  mOsShellHook(nullptr),
-  mIsUpdating(false)
+OsShell::OsShell() : mOsShellHook(nullptr), mIsUpdating(false)
 {
   mShell.mUserData = this;
 }
@@ -44,7 +36,6 @@ cstr OsShell::GetName()
 {
   return "OsShell";
 }
-
 
 void OsShell::Update(bool debugger)
 {
@@ -58,7 +49,8 @@ void OsShell::Update(bool debugger)
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->Update();
 
-  // Zero the cursor movement before the windows message pump to clear last frames movement
+  // Zero the cursor movement before the windows message pump to clear last
+  // frames movement
   Z::gMouse->mCursorMovement = Vec2::cZero;
   Z::gMouse->mRawMovement = Vec2(0, 0);
 
@@ -74,7 +66,7 @@ void OsShell::Update(bool debugger)
   Event toSend;
   DispatchEvent(Events::OsShellUpdate, &toSend);
   Z::gEngine->DispatchEvent(Events::OsShellUpdate, &toSend);
-  
+
   mIsUpdating = false;
 }
 
@@ -98,14 +90,14 @@ IntVec2 OsShell::GetPrimaryMonitorSize()
   return mShell.GetPrimaryMonitorSize();
 }
 
-OsWindow* OsShell::CreateOsWindow(
-  StringParam windowName,
-  IntVec2Param clientSize,
-  IntVec2Param monitorClientPos,
-  OsWindow* parentWindow,
-  WindowStyleFlags::Enum flags)
+OsWindow* OsShell::CreateOsWindow(StringParam windowName,
+                                  IntVec2Param clientSize,
+                                  IntVec2Param monitorClientPos,
+                                  OsWindow* parentWindow,
+                                  WindowStyleFlags::Enum flags)
 {
-  return new OsWindow(this, windowName, clientSize, monitorClientPos, parentWindow, flags);
+  return new OsWindow(
+      this, windowName, clientSize, monitorClientPos, parentWindow, flags);
 }
 
 ByteColor OsShell::GetColorAtMouse()
@@ -169,7 +161,7 @@ void OsShell::ScanInputDevices()
   Z::gJoysticks->DeactivateAll();
 
   const Array<PlatformInputDevice>& devices = mShell.ScanInputDevices();
-  forRange(PlatformInputDevice& device, devices)
+  forRange(PlatformInputDevice & device, devices)
   {
     // Tell the Joysticks system that a Joystick is present
     Z::gJoysticks->AddJoystickDevice(device);
@@ -198,12 +190,10 @@ void OsShell::DumpMemoryDebuggerStats()
   Memory::DumpMemoryDebuggerStats("MyProject");
 }
 
-//-------------------------------------------------------------------OsFileSelection
 ZilchDefineType(OsFileSelection, builder, type)
 {
 }
 
-//-------------------------------------------------------------------FileDialogConfig
 FileDialogConfig* FileDialogConfig::Create()
 {
   return new FileDialogConfig();
@@ -219,7 +209,7 @@ FileDialogConfig::FileDialogConfig()
 void FileDialogConfig::Callback(Array<String>& files, void* userData)
 {
   FileDialogConfig* self = (FileDialogConfig*)userData;
-  
+
   if (Object* callbackObject = self->CallbackObject)
   {
     EventDispatcher* dispatcher = callbackObject->GetDispatcherObject();
@@ -236,4 +226,4 @@ void FileDialogConfig::Callback(Array<String>& files, void* userData)
   delete self;
 }
 
-}//namespace Zero
+} // namespace Zero

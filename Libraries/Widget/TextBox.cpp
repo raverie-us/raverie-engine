@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextBox.cpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,51 +6,49 @@ namespace Zero
 
 namespace TextBoxUi
 {
-  const cstr cLocation = "EditorUi/Controls/TextBox";
-  Tweakable(Vec4, BackgroundColor,         Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor,             Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, FocusBorderColor,        Vec4(1,1,1,1), cLocation);
-  // The color of the background element when the text box is read only
-  Tweakable(Vec4, ReadOnlyBackgroundColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReadOnlyTextColor,       Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, HintColor,               Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/TextBox";
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, FocusBorderColor, Vec4(1, 1, 1, 1), cLocation);
+// The color of the background element when the text box is read only
+Tweakable(Vec4, ReadOnlyBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReadOnlyTextColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, HintColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace TextBoxUi
 
 namespace ModernTextBoxUi
 {
-  const cstr cLocation = "EditorUi/Controls/TextBox/Modern";
-  Tweakable(Vec4, BackgroundColor,         Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BorderColor,             Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, FocusBorderColor,        Vec4(1,1,1,1), cLocation);
-  // The color of the background element when the text box is read only
-  Tweakable(Vec4, ReadOnlyBackgroundColor, Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, ReadOnlyTextColor,       Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, HintColor,               Vec4(1,1,1,1), cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/TextBox/Modern";
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, FocusBorderColor, Vec4(1, 1, 1, 1), cLocation);
+// The color of the background element when the text box is read only
+Tweakable(Vec4, ReadOnlyBackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, ReadOnlyTextColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, HintColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace ModernTextBoxUi
 
 namespace TextBoxButtonUi
 {
-  const cstr cLocation = "EditorUi/Controls/TextBox/TextBoxButton";
-  Tweakable(Vec4, BackgroundColor,   Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BackgroundHover,   Vec4(1,1,1,1), cLocation);
-  Tweakable(Vec4, BackgroundClicked, Vec4(1,1,1,1), cLocation);
-  Tweakable(float, ButtonWidth,      34.0f,         cLocation);
-}
+const cstr cLocation = "EditorUi/Controls/TextBox/TextBoxButton";
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BackgroundHover, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, BackgroundClicked, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(float, ButtonWidth, 34.0f, cLocation);
+} // namespace TextBoxButtonUi
 
-//------------------------------------------------------------- Text Box Control
 ZilchDefineType(TextBox, builder, type)
 {
 }
 
 static const String TextBoxClass = "TextBox";
 
-const Thickness TextBoxPadding = Thickness(2,2,2,2);
+const Thickness TextBoxPadding = Thickness(2, 2, 2, 2);
 
-TextBox::TextBox(Composite* parent, StringParam styleName)
-  : Composite(parent)
+TextBox::TextBox(Composite* parent, StringParam styleName) : Composite(parent)
 {
   String style = styleName;
-  if(style.Empty())
+  if (style.Empty())
     style = TextBoxClass;
 
   mDefSet = mDefSet->GetDefinitionSet(style);
@@ -107,7 +97,7 @@ TextBox::~TextBox()
 void TextBox::SetReadOnly(bool state)
 {
   SetEditable(!state);
-  if(state)
+  if (state)
   {
     mBackground->SetColor(TextBoxUi::ReadOnlyBackgroundColor);
     mEditTextField->SetColor(TextBoxUi::ReadOnlyTextColor);
@@ -115,7 +105,7 @@ void TextBox::SetReadOnly(bool state)
   else
   {
     mBackground->SetColor(TextBoxUi::BackgroundColor);
-    mEditTextField->SetColor(Vec4(1,1,1,1));
+    mEditTextField->SetColor(Vec4(1, 1, 1, 1));
   }
 
   mBorder->SetVisible(!state);
@@ -136,14 +126,13 @@ void TextBox::SetEditable(bool editable)
 {
   mAllowEdit = editable;
   mEditTextField->SetEditable(editable);
-  if(editable == false)
+  if (editable == false)
     LoseFocus();
 }
 
-
 bool TextBox::TakeFocusOverride()
 {
-  if(!mAllowEdit)
+  if (!mAllowEdit)
     return false;
 
   mEditTextField->HardTakeFocus();
@@ -153,7 +142,7 @@ bool TextBox::TakeFocusOverride()
 
 Vec2 TextBox::GetMinSize()
 {
-  if(mMeasureForMinSize)
+  if (mMeasureForMinSize)
   {
     Vec2 textSize = mEditTextField->GetMinSize();
     Thickness thickness = TextBoxPadding;
@@ -198,7 +187,7 @@ String TextBox::GetText()
 
 void TextBox::SetStyle(TextBoxStyle::Type style)
 {
-  if(style == TextBoxStyle::Classic)
+  if (style == TextBoxStyle::Classic)
   {
     mBackgroundColor = ToByteColor(TextBoxUi::BackgroundColor);
     mBorderColor = ToByteColor(TextBoxUi::BorderColor);
@@ -221,7 +210,7 @@ void TextBox::SetHintText(StringParam text)
 
 void TextBox::MouseEnter(MouseEvent* event)
 {
-  if(mAllowEdit)
+  if (mAllowEdit)
     event->GetMouse()->SetCursor(Cursor::TextBeam);
 }
 
@@ -237,18 +226,19 @@ void TextBox::UpdateTransform()
   mBackground->SetColor(ToFloatColor(mBackgroundColor));
 
   mBorder->SetSize(mSize);
-  if(HasFocus())
+  if (HasFocus())
     mBorder->SetColor(ToFloatColor(mFocusBorderColor));
   else
     mBorder->SetColor(ToFloatColor(mBorderColor));
 
-  LayoutResult lr = RemoveThickness(borderThickness, mSize - Vec2(mTextOffset, 0), Vec3(mTextOffset,0,0));
+  LayoutResult lr = RemoveThickness(
+      borderThickness, mSize - Vec2(mTextOffset, 0), Vec3(mTextOffset, 0, 0));
   lr.Translation.y = SnapToPixels(lr.Translation.y);
   mEditTextField->SetTranslation(lr.Translation);
   mEditTextField->SetSize(lr.Size);
 
   mHint->SetColor(TextBoxUi::HintColor);
-  if(!HasFocus() && GetText().Empty())
+  if (!HasFocus() && GetText().Empty())
   {
     mHint->SetTranslation(lr.Translation);
     mHint->SetSize(lr.Size);
@@ -303,20 +293,19 @@ void TextBox::SetPassword(bool passwordMode)
   mEditTextField->mPassword = passwordMode;
 }
 
-//---------------------------------------------------------------- TextBoxButton
-//******************************************************************************
 TextBoxButton::TextBoxButton(Composite* parent, StringParam iconName) :
-  TextBox(parent)
+    TextBox(parent)
 {
   mButton = new IconButton(this);
   mButton->SetIcon(iconName);
   mButton->mBackgroundColor = ToByteColor(TextBoxButtonUi::BackgroundColor);
-  mButton->mBackgroundHoverColor = ToByteColor(TextBoxButtonUi::BackgroundHover);
-  mButton->mBackgroundClickedColor = ToByteColor(TextBoxButtonUi::BackgroundClicked);
+  mButton->mBackgroundHoverColor =
+      ToByteColor(TextBoxButtonUi::BackgroundHover);
+  mButton->mBackgroundClickedColor =
+      ToByteColor(TextBoxButtonUi::BackgroundClicked);
   mButton->mBorder->SetVisible(false);
 }
 
-//******************************************************************************
 void TextBoxButton::UpdateTransform()
 {
   Vec3 pos = Vec3::cZero;
@@ -329,7 +318,6 @@ void TextBoxButton::UpdateTransform()
   TextBox::UpdateTransform();
 }
 
-//---------------------------------------------------------------- MultiLineText
 const float MultiLineText::cDefaultLineWidth = 300.0f;
 const Thickness MultiLineText::cDefaultPadding = Thickness(2, 2, 2, 2);
 
@@ -337,19 +325,21 @@ ZilchDefineType(MultiLineText, builder, type)
 {
 }
 
-MultiLineText::MultiLineText(Composite* parent, StringParam textStyle)
-  :Composite(parent)
+MultiLineText::MultiLineText(Composite* parent, StringParam textStyle) :
+    Composite(parent)
 {
   String style = textStyle;
-  if(style.Empty())
+  if (style.Empty())
     style = cText;
 
   Text* text = new Text(this, style);
   Initialize(text);
 }
 
-MultiLineText::MultiLineText(Composite* parent, StringParam font, uint fontSize) :
-  Composite(parent)
+MultiLineText::MultiLineText(Composite* parent,
+                             StringParam font,
+                             uint fontSize) :
+    Composite(parent)
 {
   Text* text = new Text(this, font, fontSize);
   Initialize(text);
@@ -360,12 +350,12 @@ Vec2 MultiLineText::GetMinSize()
   float width = mMaxLineWidth;
   Vec2 minSize = mTextField->GetBoundedSize(width, 10000);
 
-  if(mBestFitText)
+  if (mBestFitText)
   {
     width = mMaxBestFitTextWidth;
 
     // Remeasure if MaxLineWidth wasn't a fit for the max fit width.
-    if(minSize.x > width)
+    if (minSize.x > width)
       minSize = mTextField->GetBoundedSize(width, 10000);
 
     // Must cap based on max fit width.
@@ -424,4 +414,4 @@ void MultiLineText::Initialize(Text* textObject)
   mMaxLineWidth = cDefaultLineWidth;
 }
 
-}
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Ryan Edgemon
-/// Copyright 2010-2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -21,9 +16,8 @@ namespace Events
 DeclareEvent(ManipulatorToolStart);
 DeclareEvent(ManipulatorToolModified);
 DeclareEvent(ManipulatorToolEnd);
-}
+} // namespace Events
 
-//----------------------------------------------------- ManipulatorToolEvent ---
 class ManipulatorToolEvent : public ViewportMouseEvent
 {
 public:
@@ -41,13 +35,13 @@ public:
 
   Rectangle mStartWorldRectangle;
   /// If marking the event as HandledEventScript == false, then modifications
-  /// to 'EndWorldRectangle' (in script) will be applied internally by the ManipulatorTool.
+  /// to 'EndWorldRectangle' (in script) will be applied internally by the
+  /// ManipulatorTool.
   Rectangle mEndWorldRectangle;
 };
 
-//------------------------------------------------------------------------------
 
-//Store data about each object being transformed
+// Store data about each object being transformed
 struct TransformingObject
 {
   Handle MetaObject;
@@ -67,7 +61,6 @@ struct TransformingObject
   Vec2 EndSize;
 };
 
-//------------------------------------------------------------- Manipulator Tool
 /// <Commands>
 ///   <command name = "Maintain Aspect Ratio">
 ///     <shortcut> Ctrl + A + Drag (Corners) </shortcut>
@@ -79,7 +72,7 @@ struct TransformingObject
 ///   <command name = "CopySelection">
 ///     <shortcut> Ctrl + Drag (Center) </shortcut>
 ///     <description>
-///       Duplicate all objects in the current selection.  Then, set the 
+///       Duplicate all objects in the current selection.  Then, set the
 ///       duplicates to be the current selection and target of the
 ///       ManipulatorTool.  Note: Only activates on the center grab node of the
 ///       ManipulatorTool.
@@ -121,9 +114,16 @@ public:
 
   bool PrioritizeUiWidget(Array<Handle>::range& range);
   bool CheckAlignment(Array<Handle>::range& range, Vec3Param toolNormal);
-  void ComputeWorldToolRect(Array<Handle>::range& range, Vec3Param toolPosition, bool includeChildren, bool childPass = false);
-  void ComputeLocalToolRect(Array<Handle>::range& range, Vec3Param toolNormal, Vec3Param pointOnToolPlane,
-                            Aabb* aabbOut, bool includeChildren, bool childPass = false);
+  void ComputeWorldToolRect(Array<Handle>::range& range,
+                            Vec3Param toolPosition,
+                            bool includeChildren,
+                            bool childPass = false);
+  void ComputeLocalToolRect(Array<Handle>::range& range,
+                            Vec3Param toolNormal,
+                            Vec3Param pointOnToolPlane,
+                            Aabb* aabbOut,
+                            bool includeChildren,
+                            bool childPass = false);
 
   void ExtractPrimary(Array<Handle>::range& range, Handle& primaryOut);
   void CompileChildObjects(Cog* parent, Array<Handle>& children);
@@ -182,7 +182,7 @@ public:
 
   Vec2 mMouseDragStart;
   Vec3 mWorldGrabPoint;
-  
+
   int mSelectedPoint;
 
   bool mValidLocation;
@@ -203,4 +203,4 @@ public:
   Array<TransformingObject> mTransformingObjects;
 };
 
-}//namespace Zero
+} // namespace Zero

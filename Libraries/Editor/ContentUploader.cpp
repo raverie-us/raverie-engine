@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentUploader.cpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,10 +7,9 @@ namespace Zero
 namespace UploaderUi
 {
 const cstr cLocation = "EditorUi/ContentStore/Uploader";
-Tweakable(Vec4, MissingColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, MissingColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace UploaderUi
 
-//---------------------------------------------------- Content Store Data Source
 class ContentUploadSource : public DataSource
 {
 public:
@@ -26,8 +17,7 @@ public:
   Array<ContentItem*>& mEntries;
 
   //****************************************************************************
-  ContentUploadSource(Array<ContentItem*>& resources)
-    : mEntries(resources)
+  ContentUploadSource(Array<ContentItem*>& resources) : mEntries(resources)
   {
     mRoot = (ContentItem*)0x123456;
   }
@@ -41,7 +31,7 @@ public:
   //****************************************************************************
   DataEntry* ToEntry(DataIndex index) override
   {
-    if(index == cRootIndex || (uint)index.Id >= mEntries.Size())
+    if (index == cRootIndex || (uint)index.Id >= mEntries.Size())
       return mRoot;
     return mEntries[(uint)index.Id];
   }
@@ -49,7 +39,7 @@ public:
   //****************************************************************************
   DataIndex ToIndex(DataEntry* dataEntry) override
   {
-    if(dataEntry == mRoot)
+    if (dataEntry == mRoot)
       return cRootIndex;
     ContentItem* entry = (ContentItem*)dataEntry;
     uint index = mEntries.FindIndex(entry);
@@ -61,11 +51,11 @@ public:
   {
     return (ContentItem*)dataEntry;
   }
-  
+
   //****************************************************************************
   DataEntry* Parent(DataEntry* dataEntry) override
   {
-    if(dataEntry == mRoot)
+    if (dataEntry == mRoot)
       return nullptr;
     return &mRoot;
   }
@@ -73,19 +63,21 @@ public:
   //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
-    if(dataEntry == mRoot)
+    if (dataEntry == mRoot)
       return mEntries.Size();
     return 0;
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev) override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
-    if(dataEntry == mRoot)
+    if (dataEntry == mRoot)
       return mEntries[index];
     return nullptr;
   }
-    
+
   //****************************************************************************
   bool IsExpandable(DataEntry* dataEntry) override
   {
@@ -96,32 +88,36 @@ public:
   void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     ContentItem* contentItem = (ContentItem*)dataEntry;
-    if(column == CommonColumns::Name)
+    if (column == CommonColumns::Name)
     {
-      String name = FilePath::GetFileNameWithoutExtension(contentItem->Filename);
+      String name =
+          FilePath::GetFileNameWithoutExtension(contentItem->Filename);
       variant = name;
     }
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     return false;
   }
 };
 
-//--------------------------------------------------------- Content Package Tile
-//******************************************************************************
-ContentExportTile::ContentExportTile(Composite* parent, TileView* tileView,
-                        PreviewWidget* tileWidget, DataIndex dataIndex,
-                        ContentPackageExporter* uploadView, ContentItem* contentItem)
- : TileViewWidget(parent, tileView, tileWidget, dataIndex)
+ContentExportTile::ContentExportTile(Composite* parent,
+                                     TileView* tileView,
+                                     PreviewWidget* tileWidget,
+                                     DataIndex dataIndex,
+                                     ContentPackageExporter* uploadView,
+                                     ContentItem* contentItem) :
+    TileViewWidget(parent, tileView, tileWidget, dataIndex)
 {
   mExporter = uploadView;
   mContentItem = contentItem;
   CheckForDependencies();
-  
-  if(mMissingDependencies)
+
+  if (mMissingDependencies)
   {
     mMissingTextBackground = CreateAttached<Element>(cWhiteSquare);
     mMissingTextBackground->SetColor(UploaderUi::MissingColor);
@@ -132,10 +128,10 @@ ContentExportTile::ContentExportTile(Composite* parent, TileView* tileView,
   ConnectThisTo(this, Events::RightClick, OnRightClick);
 }
 
-//******************************************************************************
 void ContentExportTile::UpdateTransform()
 {
-  // If there are missing dependencies place the text for it below the tiles title bar
+  // If there are missing dependencies place the text for it below the tiles
+  // title bar
   if (mMissingDependencies)
   {
     Vec2 backgroundSize = Vec2(mSize.x, cTileViewNameOffset);
@@ -144,12 +140,14 @@ void ContentExportTile::UpdateTransform()
     mMissingText->SizeToContents();
     // Y offset by the titlebar's height to place below it
     Vec2 textbarOffset = Vec2(0, cTileViewNameOffset);
-    WidgetRect textRect = WidgetRect::PointAndSize(textbarOffset, backgroundSize);
+    WidgetRect textRect =
+        WidgetRect::PointAndSize(textbarOffset, backgroundSize);
     // Place both the text and its background below the titlebar
     PlaceCenterToRect(textRect, mMissingTextBackground);
     PlaceCenterToRect(textRect, mMissingText);
 
-    mMissingText->mTranslation.x = Math::Max(mMissingText->mTranslation.x, 0.0f);
+    mMissingText->mTranslation.x =
+        Math::Max(mMissingText->mTranslation.x, 0.0f);
     mMissingText->mSize.x = Math::Min(mMissingText->mSize.x, mSize.x);
   }
 
@@ -162,7 +160,6 @@ void ContentExportTile::OnMouseHover(MouseEvent* event)
   // when attempting to remove an item or add a dependency
 }
 
-//******************************************************************************
 void ContentExportTile::CheckForDependencies()
 {
   // Store the old state so we don't have an unneeded update transform
@@ -173,12 +170,12 @@ void ContentExportTile::CheckForDependencies()
 
   mMissingDependencies = !missingDependencies.Empty();
 
-  if(mMissingDependencies != oldState)
+  if (mMissingDependencies != oldState)
     MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
-void ContentExportTile::GetMissingDependencies(HashSet<ContentItem*>& missingDependencies)
+void ContentExportTile::GetMissingDependencies(
+    HashSet<ContentItem*>& missingDependencies)
 {
   // Build the listing of all resources made by this content item
   ResourceListing listing;
@@ -188,61 +185,59 @@ void ContentExportTile::GetMissingDependencies(HashSet<ContentItem*>& missingDep
   Handle instance = GetEditObject();
 
   // Get the dependencies from each resource
-  forRange(ResourceEntry& entry, listing.All())
+  forRange(ResourceEntry & entry, listing.All())
   {
     Resource* resource = Z::gResources->GetResource(entry.mResourceId);
-      resource->GetDependencies(missingDependencies, instance);
+    resource->GetDependencies(missingDependencies, instance);
   }
-    
+
   // Check for core resources in our dependencies list
   HashSet<ContentItem*> toRemove;
-  forRange(ContentItem* item, missingDependencies)
+  forRange(ContentItem * item, missingDependencies)
   {
-    if(item->mLibrary->GetReadOnly())
+    if (item->mLibrary->GetReadOnly())
       toRemove.Insert(item);
   }
 
-  // Remove core resources from the dependencies list as they don't need to be exported
-  forRange(ContentItem* item, toRemove)
+  // Remove core resources from the dependencies list as they don't need to be
+  // exported
+  forRange(ContentItem * item, toRemove)
   {
     missingDependencies.Erase(item);
   }
 
-  forRange(ContentItem* dependency, missingDependencies.All())
+  forRange(ContentItem * dependency, missingDependencies.All())
   {
     // If it already contains the content item, we can remove it from the list
-    if(mExporter->mContentItems.Contains(dependency))
+    if (mExporter->mContentItems.Contains(dependency))
       toRemove.Insert(dependency);
   }
 
   // Remove the dependencies already listed in the content items
-  forRange(ContentItem* item, toRemove)
+  forRange(ContentItem * item, toRemove)
   {
     missingDependencies.Erase(item);
   }
-
 }
 
-//******************************************************************************
 void ContentExportTile::OnRightClick(MouseEvent* e)
 {
   ContextMenu* menu = new ContextMenu(this);
   Mouse* mouse = Z::gMouse;
-  menu->SetBelowMouse(mouse, Pixels(0,0) );
+  menu->SetBelowMouse(mouse, Pixels(0, 0));
 
-  if(mMissingDependencies)
+  if (mMissingDependencies)
     ConnectMenu(menu, "Add Dependencies", OnAddDependencies, false);
 
   ConnectMenu(menu, "Remove", OnRemove, false);
 }
 
-//******************************************************************************
 void ContentExportTile::OnAddDependencies(Event* e)
 {
   HashSet<ContentItem*> missingDependencies;
   GetMissingDependencies(missingDependencies);
 
-  forRange(ContentItem* dependency, missingDependencies.All())
+  forRange(ContentItem * dependency, missingDependencies.All())
   {
     mExporter->mContentItems.PushBack(dependency);
   }
@@ -253,16 +248,14 @@ void ContentExportTile::OnAddDependencies(Event* e)
   mExporter->RefreshTileView();
 }
 
-//******************************************************************************
 void ContentExportTile::OnRemove(Event* e)
 {
   mParent->DispatchBubble("RemoveSelectedItems", e);
 }
 
-//---------------------------------------------------- Content Package Tile View
-//******************************************************************************
-ContentExporterTileView::ContentExporterTileView(ContentPackageExporter* parent)
-  : TileView(parent)
+ContentExporterTileView::ContentExporterTileView(
+    ContentPackageExporter* parent) :
+    TileView(parent)
 {
   ConnectThisTo(this, Events::MetaDrop, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropTest, OnMetaDrop);
@@ -275,40 +268,40 @@ Resource* GetFirstResource(ContentItem* contentItem)
   ResourceListing listing;
   contentItem->BuildListing(listing);
 
-  if(listing.Empty())
+  if (listing.Empty())
     return nullptr;
 
   ResourceEntry& entry = listing.Front();
   return Z::gResources->GetResource(entry.mResourceId);
 }
 
-//******************************************************************************
-TileViewWidget* ContentExporterTileView::CreateTileViewWidget(Composite* parent,
-                StringParam name, HandleParam instance, DataIndex index,
-                PreviewImportance::Enum minImportance)
+TileViewWidget* ContentExporterTileView::CreateTileViewWidget(
+    Composite* parent,
+    StringParam name,
+    HandleParam instance,
+    DataIndex index,
+    PreviewImportance::Enum minImportance)
 {
   // We need to pull out a resource from the content item to display a preview
   ContentItem* contentItem = instance.Get<ContentItem*>();
   Resource* firstResource = GetFirstResource(contentItem);
 
-
-  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(parent, name,
-                                                  firstResource, minImportance);
-  if(tileWidget == nullptr)
+  PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(
+      parent, name, firstResource, minImportance);
+  if (tileWidget == nullptr)
     return nullptr;
 
-  return new ContentExportTile(parent, this, tileWidget, index,
-                               mExporter, contentItem);
+  return new ContentExportTile(
+      parent, this, tileWidget, index, mExporter, contentItem);
 }
 
-//******************************************************************************
 void ContentExporterTileView::OnMetaDrop(MetaDropEvent* e)
 {
-  if(e->Testing)
+  if (e->Testing)
   {
-    if(Resource* resource = e->Instance.Get<Resource*>())
+    if (Resource* resource = e->Instance.Get<Resource*>())
     {
-      if(mExporter->mContentItems.Contains(resource->mContentItem))
+      if (mExporter->mContentItems.Contains(resource->mContentItem))
         e->Result = "Content item already added to package";
       else
         e->Result = "Add to content package";
@@ -316,9 +309,9 @@ void ContentExporterTileView::OnMetaDrop(MetaDropEvent* e)
   }
   else
   {
-    if(Resource* resource = e->Instance.Get<Resource*>())
+    if (Resource* resource = e->Instance.Get<Resource*>())
     {
-      if(mExporter->mContentItems.Contains(resource->mContentItem))
+      if (mExporter->mContentItems.Contains(resource->mContentItem))
         return;
 
       mExporter->mContentItems.PushBack(resource->mContentItem);
@@ -330,26 +323,27 @@ void ContentExporterTileView::OnMetaDrop(MetaDropEvent* e)
   }
 }
 
-//---------------------------------------------------------- Content Upload View
-//******************************************************************************
-ContentPackageExporter::ContentPackageExporter(Composite* parent)
-  : Composite(parent)
+ContentPackageExporter::ContentPackageExporter(Composite* parent) :
+    Composite(parent)
 {
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness(4,0,4,0)));
-  this->SetMinSize(Pixels(800,600));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness(4, 0, 4, 0)));
+  this->SetMinSize(Pixels(800, 600));
 
   mTileView = new ContentExporterTileView(this);
   mTileView->SetSizing(SizeAxis::X, SizePolicy::Flex, 1);
   mSource = new ContentUploadSource(mContentItems);
   mTileView->SetDataSource(mSource);
-  // This is the smallest size that makes the entire missing dependency text visible
+  // This is the smallest size that makes the entire missing dependency text
+  // visible
   mTileView->SetItemSize(118.f);
 
   Splitter* splitter = new Splitter(this);
   splitter->SetInteractive(false);
 
   Composite* right = new Composite(this);
-  right->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(4,0,4,0)));
+  right->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Vec2::cZero, Thickness(4, 0, 4, 0)));
 
   mPropertyView = new PropertyView(right);
   mPropertyView->SetObject(&mTempPackage);
@@ -373,13 +367,11 @@ ContentPackageExporter::ContentPackageExporter(Composite* parent)
   ConnectThisTo(this, "RemoveSelectedItems", RemoveSelectedItems);
 }
 
-//******************************************************************************
 ContentPackageExporter::~ContentPackageExporter()
 {
   SafeDelete(mSource);
 }
 
-//******************************************************************************
 void ContentPackageExporter::UpdateTransform()
 {
   // Center the hint text to the tile view
@@ -389,23 +381,22 @@ void ContentPackageExporter::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//******************************************************************************
 void ContentPackageExporter::RefreshTileView()
 {
   mTileView->SetDataSource(mSource);
   MarkAsNeedsUpdate();
 }
 
-//******************************************************************************
 void ContentPackageExporter::OnExportPressed(Event* e)
 {
   // Ignore the event if we're not active
-  if(!GetActive())
+  if (!GetActive())
     return;
 
-  if(mContentItems.Empty())
+  if (mContentItems.Empty())
   {
-    DoNotifyWarning("Cannot export content package", "No content items selected.");
+    DoNotifyWarning("Cannot export content package",
+                    "No content items selected.");
     return;
   }
 
@@ -425,10 +416,9 @@ void ContentPackageExporter::OnExportPressed(Event* e)
   CloseTabContaining(this);
 }
 
-//******************************************************************************
 void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
 {
-  if(!e->Success)
+  if (!e->Success)
     return;
 
   String packageFile = e->Files[0];
@@ -436,7 +426,7 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
   ContentPackageListing listing;
 
   // Add all the content items to the listing
-  forRange(ContentItem* item, mContentItems.All())
+  forRange(ContentItem * item, mContentItems.All())
   {
     listing.Location = item->mLibrary->SourcePath;
     String filename = item->GetFullPath();
@@ -453,7 +443,7 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
   ExportContentPackageListing(listing, packageFile);
 
   // If info provided write that out
-  if(!mTempPackage.mName.Empty())
+  if (!mTempPackage.mName.Empty())
   {
     mTempPackage.mDate = GetDate();
     mTempPackage.mSize = GetFileSize(packageFile);
@@ -464,7 +454,7 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
     TextSaver saver;
     Status status;
     saver.Open(status, metaFile.c_str());
-    if(!status.Failed())
+    if (!status.Failed())
     {
       saver.StartPolymorphic("ContentPackage");
       mTempPackage.Serialize(saver);
@@ -474,14 +464,12 @@ void ContentPackageExporter::OnExportFileSelected(OsFileSelection* e)
   }
 }
 
-//******************************************************************************
 void ContentPackageExporter::OnKeyDown(KeyboardEvent* event)
 {
   if (event->Key == Keys::Delete)
     RemoveSelectedItems(nullptr);
 }
 
-//******************************************************************************
 void ContentPackageExporter::RemoveSelectedItems(Event*)
 {
   // Remove all currently selected content items in the tile view
@@ -490,20 +478,20 @@ void ContentPackageExporter::RemoveSelectedItems(Event*)
   selection->GetSelected(selected);
 
   Array<ContentItem*> toRemove;
-  forRange(DataIndex& index, selected)
+  forRange(DataIndex & index, selected)
   {
     ContentItem* item = (ContentItem*)mSource->ToEntry(index);
     toRemove.PushBack(item);
   }
 
-  forRange(ContentItem* content, toRemove.All())
+  forRange(ContentItem * content, toRemove.All())
   {
     mContentItems.EraseValue(content);
   }
-  
+
   // Clear our selection and update the tile view
   selection->SelectNone();
   RefreshTileView();
 }
 
-}//namespace Zero
+} // namespace Zero

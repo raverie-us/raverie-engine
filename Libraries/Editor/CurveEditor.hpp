@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file CurveEditor.hpp
-/// Declaration of the CurveEditor Widget and CurveEditor Composite.
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2012-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -29,33 +21,32 @@ class ButtonBase;
 /// Events
 namespace Events
 {
-  /// Debug samples should be pushed when this is sent on the Curve editor
-  DeclareEvent(PushDebugSamples);
-  /// Sent whenever anything on the curve has been modified
-  DeclareEvent(CurveModified);
-  DeclareEvent(ControlPointAdded);
-  DeclareEvent(ControlPointModified);
-  /// Sent when a given control point is deleted.
-  DeclareEvent(ControlPointDeleted);
-  /// Sent when the mouse enters the curve
-  DeclareEvent(MouseEnterCurve);
-  /// Sent when the mouse leaves the curve
-  DeclareEvent(MouseExitCurve);
-  /// Sent when the curve is double clicked
-  DeclareEvent(CurveDoubleClicked);
-}
+/// Debug samples should be pushed when this is sent on the Curve editor
+DeclareEvent(PushDebugSamples);
+/// Sent whenever anything on the curve has been modified
+DeclareEvent(CurveModified);
+DeclareEvent(ControlPointAdded);
+DeclareEvent(ControlPointModified);
+/// Sent when a given control point is deleted.
+DeclareEvent(ControlPointDeleted);
+/// Sent when the mouse enters the curve
+DeclareEvent(MouseEnterCurve);
+/// Sent when the mouse leaves the curve
+DeclareEvent(MouseExitCurve);
+/// Sent when the curve is double clicked
+DeclareEvent(CurveDoubleClicked);
+} // namespace Events
 
 namespace CurveEditing
 {
-DeclareBitField4(CurveEditorFlags, TangentsSplit, LinearIn, LinearOut,
-                                   NonWeighted);
+DeclareBitField4(
+    CurveEditorFlags, TangentsSplit, LinearIn, LinearOut, NonWeighted);
 class CurveEditorToolbar;
 class Draggable;
 class ControlPoint;
 class Tangent;
-}//namespace CurveEditing
+} // namespace CurveEditing
 
-//------------------------------------------------------------------ Curve Event
 class CurveEvent : public Event
 {
 public:
@@ -69,7 +60,6 @@ public:
   CurveEditing::ControlPoint* mControlPoint;
 };
 
-//----------------------------------------------------------------- Curve Object
 /// Represents a single curve edited by the curve editor.
 class CurveObject : public EventObject
 {
@@ -92,14 +82,15 @@ public:
   virtual void GetCurve(Vec3Array& curve);
 
   /// Creates a control point and adds it to the curve.
-  ControlPoint* CreateControlPoint(Vec2Param pos, Vec2Param tanIn,
-                                   Vec2Param tanOut, 
+  ControlPoint* CreateControlPoint(Vec2Param pos,
+                                   Vec2Param tanIn,
+                                   Vec2Param tanOut,
                                    CurveEditing::CurveEditorFlags::Type flags);
 
   /// Returns whether or not the mouse is over the curve.
   bool IsMouseOver(Vec2Param pixelPos);
 
-  /// Adds a control point to the current curve.  Returns the index of 
+  /// Adds a control point to the current curve.  Returns the index of
   /// its position.
   uint AddControlPoint(ControlPoint* controlPoint);
 
@@ -123,7 +114,10 @@ public:
   void Modified(ControlPoint* controlPoint);
 
   /// Returns all the control points.
-  ControlPointArray::range GetControlPoints(){return mControlPoints.All();}
+  ControlPointArray::range GetControlPoints()
+  {
+    return mControlPoints.All();
+  }
 
   /// Used to sort the control points by the x-position.
   struct SortByX
@@ -147,7 +141,6 @@ public:
   CurveEditor* mEditor;
 };
 
-//----------------------------------------------------------------- Curve Editor
 class CurveEditor : public Composite
 {
 public:
@@ -182,17 +175,20 @@ public:
   virtual float DisplayTextToGraphY(StringParam displayText);
 
   /// Called when the mouse is close to the edges while dragging.
-  virtual void MouseDragUpdate(MouseEvent* e){}
+  virtual void MouseDragUpdate(MouseEvent* e)
+  {
+  }
 
   /// Returns the first curve that the mouse is over.
   CurveObject* GetMouseOverCurve();
 
-  /// Adds the given draggable to the selection. Clears the selection if specified
+  /// Adds the given draggable to the selection. Clears the selection if
+  /// specified
   void SelectDraggable(Draggable* draggable, bool singleSelect = true);
   bool IsSelected(Draggable* draggable);
   void DeSelect(Draggable* draggable);
   SelectionRange GetSelection();
-  
+
   /// Clears all selections.
   void ClearSelection();
 
@@ -247,8 +243,8 @@ public:
   CurveDrawer* mCurveDrawer;
 
   /// The line thickness of the curve.
-  float mDefaultLineThickness; 
-  
+  float mDefaultLineThickness;
+
   /// The line thickness of the curve when the mouse is over it.
   float mHighlightThickness;
 
@@ -279,7 +275,6 @@ namespace CurveEditing
 
 class Draggable;
 
-//--------------------------------------------------------- Curve Editor Toolbar
 class CurveEditorToolbar : public Composite
 {
 public:
@@ -309,7 +304,10 @@ private:
     Draggable* Front();
     bool Empty();
     void PopFront();
-    range& All() { return *this; }
+    range& All()
+    {
+      return *this;
+    }
     void FindNextControlPoint();
 
     CurveEditor::SelectionRange mRange;
@@ -325,10 +323,9 @@ private:
   void OnSelectionChanged(Event* e);
 
   CurveEditor* mEditor;
-  TextBox* mPositionX, *mPositionY;
+  TextBox *mPositionX, *mPositionY;
 };
 
-//-------------------------------------------------------------------- Draggable
 class Draggable : public Widget
 {
 public:
@@ -349,21 +346,27 @@ public:
 
   void StartDrag(Mouse* mouse);
 
-  virtual void MoveTo(Vec2Param pixelPos, bool clampToScreen = true){}
-  virtual void FinishedDrag(){}
-  virtual Vec2 GetDisplayPosition(){return Vec2::cZero;}
+  virtual void MoveTo(Vec2Param pixelPos, bool clampToScreen = true)
+  {
+  }
+  virtual void FinishedDrag()
+  {
+  }
+  virtual Vec2 GetDisplayPosition()
+  {
+    return Vec2::cZero;
+  }
 
   virtual void Select();
   virtual void DeSelect();
 
   bool mMouseOver;
 
-//protected:
+  // protected:
   CurveObject* mCurve;
   CurveEditor* mEditor;
 };
 
-//---------------------------------------------------------------- Control Point
 class Tangent;
 
 class ControlPoint : public Draggable
@@ -373,8 +376,11 @@ public:
   ZilchDeclareType(ControlPoint, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor.
-  ControlPoint(CurveObject* parent, Vec2Param pos, 
-               Vec2Param tanIn, Vec2Param tanOut, uint editorFlags = 0);
+  ControlPoint(CurveObject* parent,
+               Vec2Param pos,
+               Vec2Param tanIn,
+               Vec2Param tanOut,
+               uint editorFlags = 0);
   ~ControlPoint();
 
   /// Widget Interface.
@@ -388,11 +394,14 @@ public:
   Vec2 GetGraphPosition();
   void SetPixelPosition(Vec2Param pixelPosition, bool clampToScreen);
   Vec2 GetPixelPosition();
-  
+
   /// Draggable Interface.
   void MoveTo(Vec2Param pixelPos, bool clampToScreen) override;
   void FinishedDrag() override;
-  Vec2 GetDisplayPosition() override {return mGraphPosition;}
+  Vec2 GetDisplayPosition() override
+  {
+    return mGraphPosition;
+  }
 
   void UpdateNeighborLinearTangents();
   void UpdateLinearTangents();
@@ -421,7 +430,7 @@ public:
   bool InIsLinear();
   bool OutIsLinear();
   bool IsWeighted();
-  
+
   ControlPoint* GetNeighborControlPoint(int direction);
 
   Vec2 mGraphPosition;
@@ -434,7 +443,6 @@ public:
 
 DeclareEnum2(TangentSide, In, Out);
 
-//---------------------------------------------------------------------- Tangent
 class Tangent : public Draggable
 {
 public:
@@ -442,7 +450,9 @@ public:
   ZilchDeclareType(Tangent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction,
+  Tangent(CurveObject* curve,
+          ControlPoint* controlPoint,
+          Vec2Param direction,
           TangentSide::Type side);
 
   /// Position setting. Setting either pixel or graph position will properly
@@ -458,7 +468,10 @@ public:
   /// Draggable Interface.
   void MoveTo(Vec2Param pixelPos, bool clampToScreen) override;
   void FinishedDrag() override;
-  Vec2 GetDisplayPosition() override {return mGraphDirection;}
+  Vec2 GetDisplayPosition() override
+  {
+    return mGraphDirection;
+  }
 
   /// Event response
   void OnRightMouseUp(MouseEvent* e);
@@ -470,7 +483,7 @@ public:
   bool IsLinear();
   bool IsWeighted();
 
-  /// Which side the 
+  /// Which side the
   TangentSide::Type mSide;
   ControlPoint* mControlPoint;
 
@@ -478,22 +491,36 @@ public:
   Vec2 mGraphDirection;
 };
 
-}//namespace CurveEditing
+} // namespace CurveEditing
 
-//----------------------------------------------------------------- Curve Drawer
 class CurveDrawer : public Widget
 {
 public:
   CurveDrawer(CurveEditor* curveEditor);
 
   /// Draw the widget.
-  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock,
+                    FrameBlock& frameBlock,
+                    Mat4Param parentTx,
+                    ColorTransform colorTx,
+                    WidgetRect clipRect) override;
 
-  void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
-  void AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
-  void AddPoint(Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, Vec3Param pos, float size, Vec4 color, bool empty = false);
+  void AddCurve(ViewBlock& viewBlock,
+                FrameBlock& frameBlock,
+                WidgetRect clipRect,
+                CurveObject* curveObject);
+  void AddControlPoints(ViewBlock& viewBlock,
+                        FrameBlock& frameBlock,
+                        WidgetRect clipRect,
+                        CurveObject* curveObject);
+  void AddPoint(Array<StreamedVertex>& lines,
+                Array<StreamedVertex>& triangles,
+                Vec3Param pos,
+                float size,
+                Vec4 color,
+                bool empty = false);
 
   CurveEditor* mCurveEditor;
 };
 
-}//namespace Zero
+} // namespace Zero

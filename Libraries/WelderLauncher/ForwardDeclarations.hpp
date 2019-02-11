@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -36,4 +31,4 @@ class ZeroBuildContent;
 class ZeroBuildDeprecated;
 class ZeroTemplate;
 
-}//namespace Zero
+} // namespace Zero

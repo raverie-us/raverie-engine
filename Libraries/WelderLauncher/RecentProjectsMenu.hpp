@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//------------------------------------------------------ No Screenshot Available
 class NoScreenshotAvailable : public Composite
 {
 public:
@@ -23,7 +17,6 @@ public:
   Text* mText;
 };
 
-//--------------------------------------------------------------- Recent Project
 class RecentProjectItem : public Composite
 {
 public:
@@ -31,9 +24,10 @@ public:
   typedef RecentProjectItem ZilchSelf;
 
   /// Constructor.
-  RecentProjectItem(Composite* parent, RecentProjectsMenu* projectsMenu,
+  RecentProjectItem(Composite* parent,
+                    RecentProjectsMenu* projectsMenu,
                     CachedProject* cachedProject);
-  
+
   /// Composite Interface.
   void UpdateTransform() override;
 
@@ -42,7 +36,7 @@ public:
   /// listening to being installed / uninstalled.
   void UpdateConnections();
   void UpdateScreenshot();
-  
+
   /// Event Response.
   void OnScreenshotUpdated(Event* e);
   void OnMouseEnter(MouseEvent* e);
@@ -70,7 +64,6 @@ public:
   ZeroBuild* mCurrentVersion;
 };
 
-//--------------------------------------------------------- Recent Projects Menu
 class RecentProjectsMenu : public Composite
 {
 public:
@@ -113,4 +106,4 @@ public:
   HashMap<String, CachedProject*> mLoadedProjects;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MetaDrop.hpp
-/// 
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,14 +6,13 @@ namespace Zero
 
 namespace Events
 {
-  DeclareEvent(MetaDrop);
-  DeclareEvent(MetaDropTest);
-  DeclareEvent(MetaDropUpdate);
-}
+DeclareEvent(MetaDrop);
+DeclareEvent(MetaDropTest);
+DeclareEvent(MetaDropUpdate);
+} // namespace Events
 
 class ViewportMouseEvent;
 
-//-------------------------------------------------------------- Meta Drop Event
 /// MetaDropEvent for dropping MetaObjects
 class MetaDropEvent : public Event
 {
@@ -60,7 +51,6 @@ public:
   ToolTipPlacement mToolTipPlacement;
 };
 
-//------------------------------------------------------------Meta Drag
 class ToolTip;
 
 /// MetaDrag for implementing MetaDrops. Will dispatch MetaDropEvent when
@@ -71,21 +61,22 @@ public:
   typedef MetaDrag ZilchSelf;
   MetaDrag(Mouse* mouse, Composite* owner, HandleParam object);
   ~MetaDrag();
-  
+
   // Add an object to the drop. Each object will be dropped individually.
   void AddObject(HandleParam instance);
 
-  //MouseManipulation Interface
+  // MouseManipulation Interface
   void OnMouseMove(MouseEvent* event) override;
   void OnMouseUp(MouseEvent* event) override;
   void OnMouseUpdate(MouseEvent* event) override;
 
-  //Events
+  // Events
   void OnKeyDown(KeyboardEvent* event);
+
 private:
   Array<Handle> mObjects;
   ToolTip* mToolTip;
   Vec4 mBorderColor;
 };
 
-}//namespace Zero
+} // namespace Zero

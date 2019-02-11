@@ -1,20 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file NSquared.hpp
-/// Declaration of the BaseNSquared, NSquaredRange
-/// and NSquaredPairRange classes.
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-///A range for iterating through the cast results of the NSquared BroadPhase.
-///This range becomes invalidated when the BroadPhase is changed.
+/// A range for iterating through the cast results of the NSquared BroadPhase.
+/// This range becomes invalidated when the BroadPhase is changed.
 template <typename ClientDataType>
 struct NSquaredRange : public BroadPhaseArrayRange<ClientDataType>
 {
@@ -25,8 +16,8 @@ struct NSquaredRange : public BroadPhaseArrayRange<ClientDataType>
   }
 };
 
-///A range for iterating through the self pairs of the NSquared BroadPhase.
-///This range becomes invalidated when the BroadPhase is changed.
+/// A range for iterating through the self pairs of the NSquared BroadPhase.
+/// This range becomes invalidated when the BroadPhase is changed.
 template <typename ClientDataType>
 struct NSquaredPairRange : public BroadPhaseArrayPairRange<ClientDataType>
 {
@@ -37,34 +28,37 @@ struct NSquaredPairRange : public BroadPhaseArrayPairRange<ClientDataType>
   }
 };
 
-///The most basic BroadPhase that could ever be implemented. Serves no real
-///purpose other than stubbing and very basic time comparisons.
+/// The most basic BroadPhase that could ever be implemented. Serves no real
+/// purpose other than stubbing and very basic time comparisons.
 template <typename ClientDataType>
 class NSquared : public BaseNSquared<ClientDataType>
 {
 public:
-
   typedef BaseNSquared<ClientDataType> BaseType;
 
   typedef NSquaredPairRange<ClientDataType> PairRange;
 
   using BaseType::mData;
 
-  NSquared() {}
-  ~NSquared() {}
+  NSquared()
+  {
+  }
+  ~NSquared()
+  {
+  }
 
-  ///Returns a range to iterate through any cast on this BroadPhase. No
-  ///cast parameters are specified since this is the NSquared BroadPhase.
+  /// Returns a range to iterate through any cast on this BroadPhase. No
+  /// cast parameters are specified since this is the NSquared BroadPhase.
   NSquaredRange<ClientDataType> Query()
   {
     return NSquaredRange<ClientDataType>(&mData);
   }
 
-  ///Returns a range to self pair intersections.
+  /// Returns a range to self pair intersections.
   PairRange QueryPairRange()
   {
-     return PairRange(&mData);
+    return PairRange(&mData);
   }
 };
 
-}//namespace Zero
+} // namespace Zero

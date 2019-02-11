@@ -1,13 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Trevor Sundberg
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-// When running the browser you have to return control to the browser before it will
-// update the render to the canvas (so special progress/loading screens will not work).
+// When running the browser you have to return control to the browser before it
+// will update the render to the canvas (so special progress/loading screens
+// will not work).
 bool SupportsRenderingOutsideMainLoop = false;
 
 ZeroThreadLocal bool gIsMainLoopSet = false;
@@ -18,7 +16,7 @@ void YieldToOs()
   // entire call-stack (with mangled names) up to every call to YieldToOs.
   // Moreover, with SDL + EMTERPRETIFY it seems there are unresolvable
   // exceptions that get thrown, particularly an abort(-12).
-  //emscripten_sleep(0);
+  // emscripten_sleep(0);
 }
 
 void EmptyMainLoopFunction(void* userData)
@@ -38,7 +36,8 @@ void RunMainLoop(MainLoopFn callback, void* userData)
 {
   StopMainLoop();
 
-  ErrorIf(gIsMainLoopSet, "We should not have a main loop set since we called 'StopMainLoop'");
+  ErrorIf(gIsMainLoopSet,
+          "We should not have a main loop set since we called 'StopMainLoop'");
 
   // This *MUST* come before because we are haulting execution here.
   gIsMainLoopSet = true;
@@ -54,4 +53,4 @@ void StopMainLoop()
   gIsMainLoopSet = false;
 }
 
-}// namespace Zero
+} // namespace Zero

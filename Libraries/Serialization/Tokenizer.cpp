@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tokenizer.cpp
-/// Implementation of the Text Tokenizer.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -19,7 +11,8 @@ bool IsWord(Rune r)
 
 bool IsWordLegacy(Rune r)
 {
-  return IsAlpha(r) || IsDigit(r) || r.value == '_' || r.value == '.' || r.value == '[' || r.value == ']';
+  return IsAlpha(r) || IsDigit(r) || r.value == '_' || r.value == '.' ||
+         r.value == '[' || r.value == ']';
 }
 
 bool IsNumeric(Rune r)
@@ -29,7 +22,9 @@ bool IsNumeric(Rune r)
 
 bool IsNumericHex(Rune r)
 {
-  return IsDigit(r) || r.value == '.' || r.value == '-' || r.value == '+' || (r.value >= 'a' && r.value <= 'f') || (r.value >= 'A' && r.value <= 'F');
+  return IsDigit(r) || r.value == '.' || r.value == '-' || r.value == '+' ||
+         (r.value >= 'a' && r.value <= 'f') ||
+         (r.value >= 'A' && r.value <= 'F');
 }
 
 bool IsNumericStart(Rune r)
@@ -57,21 +52,21 @@ bool NotWhitespace(Rune r)
   return !IsSpace(r);
 }
 
-template<typename rangeType, typename Pred> 
+template <typename rangeType, typename Pred>
 rangeType while_is(rangeType range, Pred pred)
 {
-  while(!range.Empty() && pred(range.Front()))
+  while (!range.Empty() && pred(range.Front()))
     range.PopFront();
   return range;
 }
 
-template<typename rangeType, typename Pred> 
+template <typename rangeType, typename Pred>
 size_t Count(rangeType range, Pred pred)
 {
   size_t n = 0;
-  while(!range.Empty())
+  while (!range.Empty())
   {
-    if(pred(range.Front()))
+    if (pred(range.Front()))
       ++n;
     range.PopFront();
   }
@@ -83,7 +78,9 @@ StringRange MergeFront(StringRangeParam a, StringRangeParam b)
   return StringRange(a.Begin(), b.Begin());
 }
 
-void ExtractToken(TempToken& token, TempToken::TokenType type, StringRange& range)
+void ExtractToken(TempToken& token,
+                  TempToken::TokenType type,
+                  StringRange& range)
 {
   token.Text = range;
   token.Type = type;
@@ -113,28 +110,28 @@ bool Tokenizer::ReadToken(TempToken& token)
 {
   Validate();
 
-  //skip any leading whitespace
+  // skip any leading whitespace
   SkipWhiteSpace();
 
-  if(mPosition.Empty())
+  if (mPosition.Empty())
     return EndToken(mPosition, token);
 
   Rune curRune = mPosition.Front();
 
-  //Need to loop because there might be multiple single line comments
-  while(curRune == '/')
+  // Need to loop because there might be multiple single line comments
+  while (curRune == '/')
   {
     StringRange& next = mPosition;
-    if(!next.Empty())
+    if (!next.Empty())
     {
-      //make sure that this is a double slash comment
+      // make sure that this is a double slash comment
       next.PopFront();
-      if(next.Front() == '/')
+      if (next.Front() == '/')
       {
-        //eat the entire comment (newlines are considered whitespace)
+        // eat the entire comment (newlines are considered whitespace)
         mPosition = while_is(mPosition, NotNewLine);
         SkipWhiteSpace();
-        if(mPosition.Empty())
+        if (mPosition.Empty())
           return EndToken(mPosition, token);
         curRune = mPosition.Front();
       }
@@ -142,26 +139,26 @@ bool Tokenizer::ReadToken(TempToken& token)
       {
         return ReadSymbol(token);
       }
-    }  
+    }
   }
 
-  //determine what kind of token we are at
-  if(IsAlpha(curRune))
+  // determine what kind of token we are at
+  if (IsAlpha(curRune))
     return ReadWord(token);
 
-  if(IsNumericStart(curRune))
+  if (IsNumericStart(curRune))
     return ReadNumber(token);
 
   if (curRune == '"')
     return ReadStringConstant(token);
 
-  //if nothing above, just default to a symbol
+  // if nothing above, just default to a symbol
   return ReadSymbol(token);
 }
 
 bool Tokenizer::PutBack(TempToken& token)
 {
-  //WARNING THIS MAY BE BROKEN NOW DO TO CHANGES TO STRING RANGE - Dane
+  // WARNING THIS MAY BE BROKEN NOW DO TO CHANGES TO STRING RANGE - Dane
   mPosition.mBegin = token.Text.Data();
   return true;
 }
@@ -169,7 +166,7 @@ bool Tokenizer::PutBack(TempToken& token)
 Rune Tokenizer::NextCharacter()
 {
   StringRange text = while_is(mPosition, IsSpace);
-  if(!text.Empty())
+  if (!text.Empty())
     return text.Front();
   else
     return StringRange::InvalidRune;
@@ -187,7 +184,7 @@ void Tokenizer::SkipWhiteSpace()
 
 void Tokenizer::SkipUntilOfEndWord()
 {
-  if(LegacyWordParse)
+  if (LegacyWordParse)
     mPosition = while_is(mPosition, IsWordLegacy);
   else
     mPosition = while_is(mPosition, IsWord);
@@ -195,10 +192,10 @@ void Tokenizer::SkipUntilOfEndWord()
 
 bool Tokenizer::SkipPastString(StringRangeParam str)
 {
-  //if the string exists, skip past it
-  if(SkipUntilString(str))
+  // if the string exists, skip past it
+  if (SkipUntilString(str))
   {
-    //could be dangerous, no checks done here
+    // could be dangerous, no checks done here
     mPosition.mBegin += str.SizeInBytes();
     return true;
   }
@@ -217,10 +214,11 @@ bool Tokenizer::SkipUntilString(StringRangeParam str)
 
 bool Tokenizer::ReadWord(TempToken& token)
 {
-  //read until the end of the word
+  // read until the end of the word
   StringRange& text = mPosition;
-  StringRange endOfWord = LegacyWordParse ? while_is(text, IsWordLegacy) : while_is(text, IsWord);
-  //make the substring of the word and set it in the token
+  StringRange endOfWord =
+      LegacyWordParse ? while_is(text, IsWordLegacy) : while_is(text, IsWord);
+  // make the substring of the word and set it in the token
   token.Assign(TempToken::Word, MergeFront(text, endOfWord));
   mPosition = endOfWord;
   return true;
@@ -229,14 +227,15 @@ bool Tokenizer::ReadWord(TempToken& token)
 bool Tokenizer::ReadNumber(TempToken& token)
 {
   StringRange& text = mPosition;
-  //the first element of a number is always valid, but in the middle of a
-  //number it might not be valid, so skip the first character to deal with
-  //invalid middle characters (such as - or + when not in hex mode) 
+  // the first element of a number is always valid, but in the middle of a
+  // number it might not be valid, so skip the first character to deal with
+  // invalid middle characters (such as - or + when not in hex mode)
   StringRange m = text;
   m.PopFront();
 
-  //read the entire number, if hex is allowed then allow hex characters
-  StringRange endOfWord = AllowHex ? while_is(m, IsNumericHex) : while_is(m, IsNumeric);
+  // read the entire number, if hex is allowed then allow hex characters
+  StringRange endOfWord =
+      AllowHex ? while_is(m, IsNumericHex) : while_is(m, IsNumeric);
 
   token.Assign(TempToken::Number, MergeFront(text, endOfWord));
   mPosition = endOfWord;
@@ -249,19 +248,21 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
 
   StringRange& text = mPosition;
   StringBuilder builder;
-  if(text == '"')
+  if (text == '"')
   {
-    //remove the quote
+    // remove the quote
     text.PopFront();
 
-    // Create a temporary iterator starting at the beginning of the leftover text
+    // Create a temporary iterator starting at the beginning of the leftover
+    // text
     StringIterator it = text.Begin();
 
     // Loop until we hit the end of the text or until we reach an ending quote
     StringIterator textEnd = text.End();
     while (it != textEnd)
     {
-      // If the current character is a quote (note: we should be after the first quote by now, so this would either be the end or an escape sequence)
+      // If the current character is a quote (note: we should be after the first
+      // quote by now, so this would either be the end or an escape sequence)
       if (*it == '"')
       {
         StringIterator next = it + 1;
@@ -273,7 +274,8 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
         }
         else
         {
-          // Otherwise, it's not a double quote (escape sequence) so it must be the end
+          // Otherwise, it's not a double quote (escape sequence) so it must be
+          // the end
           break;
         }
       }
@@ -293,7 +295,7 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
   }
   else
   {
-    //not a quoted string, read until a whitespace
+    // not a quoted string, read until a whitespace
     StringRange endOfWord = while_is(text, NotWhitespace);
     token.Assign(TempToken::String, MergeFront(text, endOfWord));
     mPosition = endOfWord;
@@ -304,8 +306,8 @@ bool Tokenizer::ReadStringConstant(TempToken& token)
 bool Tokenizer::ReadSymbol(TempToken& token)
 {
   StringRange text = mPosition;
-  //Eat the symbol
-  //right now only support mono symbols
+  // Eat the symbol
+  // right now only support mono symbols
   text.PopFront();
   token.Assign(TempToken::Symbol, MergeFront(mPosition, text));
   mPosition = text;
@@ -345,9 +347,9 @@ StringRange Tokenizer::ReadUntil(char value)
   StringRange text = mPosition;
   StringRange range = mPosition;
 
-  while(!range.Empty())
+  while (!range.Empty())
   {
-    if(range.Front() == value)
+    if (range.Front() == value)
       break;
     range.PopFront();
   }
@@ -355,4 +357,4 @@ StringRange Tokenizer::ReadUntil(char value)
   return MergeFront(text, range);
 }
 
-}//namespace Zero
+} // namespace Zero

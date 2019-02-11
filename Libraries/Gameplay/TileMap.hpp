@@ -1,11 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-///
-/// \file TileMap.hpp
-///
-/// Authors: Nathan Carlson
-/// Copyright 2013, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -16,27 +9,39 @@ class PhysicsMesh;
 class Archetype;
 class TileMapSource;
 
-DeclareEnum8(TileStatus, Valid, MissingArchetype, MissingPhysicsMesh, MissingSpriteSource, ConflictMeshCollider, ConflictMultiSprite, ConflictColliderGraphical, InvalidMerge);
+DeclareEnum8(TileStatus,
+             Valid,
+             MissingArchetype,
+             MissingPhysicsMesh,
+             MissingSpriteSource,
+             ConflictMeshCollider,
+             ConflictMultiSprite,
+             ConflictColliderGraphical,
+             InvalidMerge);
 
-template<>
+template <>
 struct HashPolicy<Vec2>
 {
   inline size_t operator()(Vec2Param value) const
   {
-    return HashUint(*(uint*)&value.x) +
-           HashUint(*(uint*)&value.y);
+    return HashUint(*(uint*)&value.x) + HashUint(*(uint*)&value.y);
   }
   inline bool Equal(Vec2Param left, Vec2Param right) const
   {
-    return left.x == right.x &&
-           left.y == right.y;
+    return left.x == right.x && left.y == right.y;
   }
 };
 
 struct SpriteOffset
 {
-  SpriteOffset() {}
-  SpriteOffset(HandleOf<SpriteSource> source, IntVec2 spriteOffset) : sprite(source), offset(spriteOffset) {}
+  SpriteOffset()
+  {
+  }
+  SpriteOffset(HandleOf<SpriteSource> source, IntVec2 spriteOffset) :
+      sprite(source),
+      offset(spriteOffset)
+  {
+  }
 
   HandleOf<SpriteSource> sprite;
   IntVec2 offset;
@@ -44,7 +49,9 @@ struct SpriteOffset
 
 struct EndPoints
 {
-  EndPoints() : size(0) {}
+  EndPoints() : size(0)
+  {
+  }
 
   void AddPoint(Vec2Param point)
   {
@@ -83,15 +90,18 @@ public:
     bool Merge;
 
     Tile();
-    Tile(ResourceId archetype, ResourceId sprite, ResourceId collision, bool mergable);
+    Tile(ResourceId archetype,
+         ResourceId sprite,
+         ResourceId collision,
+         bool mergable);
 
     bool operator==(const Tile& tile) const;
 
     size_t Hash() const;
 
-    Archetype* GetArchetypeResource( ) const;
-    SpriteSource* GetSpriteResource( ) const;
-    PhysicsMesh* GetCollisionResource( ) const;
+    Archetype* GetArchetypeResource() const;
+    SpriteSource* GetSpriteResource() const;
+    PhysicsMesh* GetCollisionResource() const;
   };
 
   HashMap<Tile, TileStatus::Enum> mValidTileTests;
@@ -100,7 +110,7 @@ public:
 
   typedef HashMap<IntVec2, Tile> TileHashMap;
   typedef TileHashMap::range TileRange;
-  typedef HashMap<IntVec2, HandleOf<SpriteSource> > SpriteHashMap;
+  typedef HashMap<IntVec2, HandleOf<SpriteSource>> SpriteHashMap;
 
   TileMap();
   ~TileMap();
@@ -130,8 +140,12 @@ public:
   void DrawContours(ByteColor color);
 
   TileStatus::Enum ValidTile(Tile tile);
-  TileStatus::Enum ValidArchetype(Archetype* archetype, bool tilemapCollision, bool tilemapSprites);
-  TileStatus::Enum ValidConfiguration(Cog* cog, bool tilemapCollision, bool tilemapSprites);
+  TileStatus::Enum ValidArchetype(Archetype* archetype,
+                                  bool tilemapCollision,
+                                  bool tilemapSprites);
+  TileStatus::Enum ValidConfiguration(Cog* cog,
+                                      bool tilemapCollision,
+                                      bool tilemapSprites);
 
 private:
   void Modified();

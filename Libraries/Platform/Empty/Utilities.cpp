@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2018, DigiPen Institute of Technology
-////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -55,19 +52,32 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   return false;
 }
 
-void WebRequest(Status& status, StringParam url, const Array<WebPostData>& postData, const Array<String>& additionalRequestHeaders,
-                  WebRequestHeadersFn onHeadersReceived, WebRequestDataFn onDataReceived, void* userData)
+void WebRequest(Status& status,
+                StringParam url,
+                const Array<WebPostData>& postData,
+                const Array<String>& additionalRequestHeaders,
+                WebRequestHeadersFn onHeadersReceived,
+                WebRequestDataFn onDataReceived,
+                void* userData)
 {
   status.SetFailed("WebRequest not implemented");
 }
 
-bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenFile(Status& status,
+                    cstr file,
+                    uint verb,
+                    cstr parameters,
+                    cstr workingDirectory)
 {
   status.SetFailed("SystemOpenFile not implemented");
   return false;
 }
 
-bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
+bool SystemOpenNetworkFile(Status& status,
+                           cstr file,
+                           uint verb,
+                           cstr parameters,
+                           cstr workingDirectory)
 {
   status.SetFailed("SystemOpenNetworkFile not implemented");
   return false;
@@ -87,7 +97,7 @@ String GetVersionString()
   return String();
 }
 
-}
+} // namespace Os
 
 u64 GenerateUniqueId64()
 {
@@ -95,4 +105,4 @@ u64 GenerateUniqueId64()
   return ++counter;
 }
 
-}//namespace Zero
+} // namespace Zero

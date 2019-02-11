@@ -1,32 +1,35 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-DeclareBitField5(JointCreatorFlags, UseCenter, OverrideLength, AutoSnaps, AttachToCommonParent, AttachToWorld);
+DeclareBitField5(JointCreatorFlags,
+                 UseCenter,
+                 OverrideLength,
+                 AutoSnaps,
+                 AttachToCommonParent,
+                 AttachToWorld);
 
-/// A helper class to create joints of various configurations. Each joint is configured from
-/// two points. Any other specific joint properties are calculated from these two points.
+/// A helper class to create joints of various configurations. Each joint is
+/// configured from two points. Any other specific joint properties are
+/// calculated from these two points.
 struct JointCreator
 {
   ZilchDeclareType(JointCreator, TypeCopyMode::ReferenceType);
 
   struct ConnectionInfo
   {
-    ConnectionInfo(){}
+    ConnectionInfo()
+    {
+    }
     ConnectionInfo(Cog* obj0, Cog* obj1, bool worldConnect);
 
     void SetLocalPoints(Vec3Param localPoint0, Vec3Param localPoint1);
     void SetWorldPoint(Vec3Param worldPoint);
     void SetWorldPoints(Vec3Param worldPoint0, Vec3Param worldPoint1);
 
-    Cog* a,* b;
+    Cog *a, *b;
     Vec3 mBodyRs[2];
     Vec3 mWorldPoints[2];
     Mat4 mTransforms[2];
@@ -40,21 +43,43 @@ struct JointCreator
   Cog* Create(Cog* objectA, Cog* objectB, StringParam jointName);
   /// Create a joint (by component name) attached to the two given cogs.
   /// Both world points on the joint are set to the same world point value.
-  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param bothWorldPoints);
+  Cog* CreateWorldPoints(Cog* objectA,
+                         Cog* objectB,
+                         StringParam jointName,
+                         Vec3Param bothWorldPoints);
   /// Create a joint (by component name) attached to the two given cogs.
-  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param worldPointA, Vec3Param worldPointB);
+  Cog* CreateWorldPoints(Cog* objectA,
+                         Cog* objectB,
+                         StringParam jointName,
+                         Vec3Param worldPointA,
+                         Vec3Param worldPointB);
   /// Create a joint (by component name) attached to the two given cogs.
-  Cog* CreateLocalPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB);
+  Cog* CreateLocalPoints(Cog* objectA,
+                         Cog* objectB,
+                         StringParam jointName,
+                         Vec3Param localPointA,
+                         Vec3Param localPointB);
 
   /// Create a joint (by archetype) attached to the two given cogs.
   Cog* Create(Cog* objectA, Cog* objectB, Archetype* jointArchetype);
   /// Create a joint (by archetype) attached to the two given cogs.
   /// Both world points on the joint are set to the same world point value.
-  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param bothWorldPoints);
+  Cog* CreateWorldPoints(Cog* objectA,
+                         Cog* objectB,
+                         Archetype* jointArchetype,
+                         Vec3Param bothWorldPoints);
   /// Create a joint (by archetype) attached to the two given cogs.
-  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB);
+  Cog* CreateWorldPoints(Cog* objectA,
+                         Cog* objectB,
+                         Archetype* jointArchetype,
+                         Vec3Param worldPointA,
+                         Vec3Param worldPointB);
   /// Create a joint (by archetype) attached to the two given cogs.
-  Cog* CreateLocalPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB);
+  Cog* CreateLocalPoints(Cog* objectA,
+                         Cog* objectB,
+                         Archetype* jointArchetype,
+                         Vec3Param localPointA,
+                         Vec3Param localPointB);
 
   /// Add a JointLimit to the given joint cog.
   JointLimit* AddJointLimit(Cog* joint);
@@ -73,24 +98,29 @@ struct JointCreator
   /// Should the joint auto-snap when the force limit is reached?
   bool GetAutoSnaps() const;
   void SetAutoSnaps(bool autoSnaps);
-  /// Used to create a connection to a dummy object. Instead of connecting to object B,
-  /// the connection will be between object A and "the world".
+  /// Used to create a connection to a dummy object. Instead of connecting to
+  /// object B, the connection will be between object A and "the world".
   bool GetAttachToWorld() const;
   void SetAttachToWorld(bool attachToWorld);
-  /// Should the cog of the joint be added as a child of the common parent of the two given cogs?
-  /// Useful for putting the joint in the same hierarchy so that archetypes can be created.
+  /// Should the cog of the joint be added as a child of the common parent of
+  /// the two given cogs? Useful for putting the joint in the same hierarchy so
+  /// that archetypes can be created.
   bool GetAttachToCommonParent() const;
   void SetAttachToCommonParent(bool attachToCommonParent);
 
 private:
-  Cog* AttachInternal(ConnectionInfo& info, StringParam jointName, Archetype* archetype = nullptr);
+  Cog* AttachInternal(ConnectionInfo& info,
+                      StringParam jointName,
+                      Archetype* archetype = nullptr);
   Cog* FindCommonParent(Cog* cogA, Cog* cogB);
-  
+
   bool ObjectsValid(Cog* a, Cog* b, StringParam jointName);
   bool ObjectValid(Cog* cog, StringParam jointName);
 
   void ConfigureInfo(ConnectionInfo& info);
-  Cog* CreateJoint(StringParam fileName, ConnectionInfo& info, Archetype* archetype);
+  Cog* CreateJoint(StringParam fileName,
+                   ConnectionInfo& info,
+                   Archetype* archetype);
   void SetBasicProperties(Joint* joint);
   template <typename JointType>
   void CallJointFunctions(Joint* joint, ConnectionInfo& info);
@@ -98,7 +128,7 @@ private:
 
   void SetPointsAtLength(ConnectionInfo& info);
   void FixPoints(Joint* joint, ConnectionInfo& info);
-  void SpecificSetup(Joint* joint, ConnectionInfo& info) {};
+  void SpecificSetup(Joint* joint, ConnectionInfo& info){};
 
   void FixPoints(StickJoint* joint, ConnectionInfo& info);
 
@@ -115,7 +145,6 @@ private:
   void SpecificSetup(WeldJoint* joint, ConnectionInfo& info);
 
 public:
-
   BitField<JointCreatorFlags::Enum> mFlags;
   float mMaxImpulse;
   float mLength;
@@ -130,4 +159,4 @@ void JointCreator::CallJointFunctions(Joint* joint, ConnectionInfo& info)
   SpecificSetup(typedJoint, info);
 }
 
-}//namespace Zero
+} // namespace Zero

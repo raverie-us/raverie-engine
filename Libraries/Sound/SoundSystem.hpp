@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Andrea Ellinger
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
@@ -29,7 +24,7 @@ DeclareEvent(MicrophoneCompressedByteData);
 
 } // namespace Events
 
-//-------------------------------------------------------------------------------------- Sound Event
+//Sound Event
 
 /// Sent for various audio-related events
 class SoundEvent : public Event
@@ -37,40 +32,43 @@ class SoundEvent : public Event
 public:
   ZilchDeclareType(SoundEvent, TypeCopyMode::ReferenceType);
 
-  SoundEvent() : mPointer(nullptr) {}
-  SoundEvent(void* pointer) : mPointer(pointer) {}
+  SoundEvent() : mPointer(nullptr)
+  {
+  }
+  SoundEvent(void* pointer) : mPointer(pointer)
+  {
+  }
 
   void* mPointer;
 };
 
-//--------------------------------------------------------------------------------------- MIDI Event
+//MIDI Event
 
 /// Sent when a MIDI message is received from a connected device.
-class MidiEvent : public Event 
+class MidiEvent : public Event
 {
 public:
   ZilchDeclareType(MidiEvent, TypeCopyMode::ReferenceType);
 
-  MidiEvent() : 
-    Channel(0),
-    MIDINumber(0), 
-    Value(0) 
-  {}
-  MidiEvent(float channel, float number, float value) : 
-    Channel(channel), 
-    MIDINumber(number), 
-    Value(value) 
-  {}
+  MidiEvent() : Channel(0), MIDINumber(0), Value(0)
+  {
+  }
+  MidiEvent(float channel, float number, float value) :
+      Channel(channel),
+      MIDINumber(number),
+      Value(value)
+  {
+  }
 
   /// The MIDI channel received from the device.
   float Channel;
-  /// The MIDI note number associated with the message. 
+  /// The MIDI note number associated with the message.
   float MIDINumber;
   /// A value associated with the message. Will be in the range 0 - 127.
   float Value;
 };
 
-//--------------------------------------------------------------------------- Audio Float Data Event
+//Audio Float Data Event
 
 class AudioFloatDataEvent : public Event
 {
@@ -81,7 +79,7 @@ public:
   unsigned Channels;
 };
 
-//---------------------------------------------------------------------------- Audio Byte Data Event
+//Audio Byte Data Event
 
 class AudioByteDataEvent : public Event
 {
@@ -91,20 +89,23 @@ public:
   HandleOf<ArrayClass<byte>> AudioData;
 };
 
-//-------------------------------------------------------------------------------------------- Enums
+//Enums
 
-/// The possible settings for the number of channels used by the audio system when creating audio.
-/// <param name="AutoDetect">The audio system will match its channels to the default output device.</param>
-/// <param name="Mono">Audio will be produced using only a single channel.</param>
-/// <param name="Stereo">Audio will be produced using two channels, one for the left speaker and one for the right.</param>
-/// <param name="Quad">Audio will be produced using two left channels and two right channels.</param>
-/// <param name="FiveOne">Audio will be produced using a typical 5.1 speaker configuration.</param>
-/// <param name="SevenOne">Audio will be produced using a typical 7.1 speaker configuration.</param>
+/// The possible settings for the number of channels used by the audio system
+/// when creating audio. <param name="AutoDetect">The audio system will match
+/// its channels to the default output device.</param> <param name="Mono">Audio
+/// will be produced using only a single channel.</param> <param
+/// name="Stereo">Audio will be produced using two channels, one for the left
+/// speaker and one for the right.</param> <param name="Quad">Audio will be
+/// produced using two left channels and two right channels.</param> <param
+/// name="FiveOne">Audio will be produced using a typical 5.1 speaker
+/// configuration.</param> <param name="SevenOne">Audio will be produced using a
+/// typical 7.1 speaker configuration.</param>
 DeclareEnum6(AudioMixTypes, AutoDetect, Mono, Stereo, Quad, FiveOne, SevenOne);
 
-//------------------------------------------------------------------------------------- Sound System
+//Sound System
 
-///SoundSystem manages audio for the engine.
+/// SoundSystem manages audio for the engine.
 class SoundSystem : public System
 {
 public:
@@ -113,11 +114,15 @@ public:
   SoundSystem();
   ~SoundSystem();
 
-  //System Interface
-  virtual cstr GetName()override{return "Sound";}
+  // System Interface
+  virtual cstr GetName() override
+  {
+    return "Sound";
+  }
   void Initialize(SystemInitializer& initializer) override;
 
-  /// Used by the SoundNode Graph window to display the current state of connected SoundNodes.
+  /// Used by the SoundNode Graph window to display the current state of
+  /// connected SoundNodes.
   NodeInfoListType::range GetNodeGraphInfo();
   /// The volume modifier applied to all audio generated by Zero.
   float GetSystemVolume();
@@ -129,22 +134,26 @@ public:
   float GetPeakOutputLevel();
   /// The current RMS volume level of all audio output
   float GetRMSOutputLevel();
-  /// If currently dispatching either uncompressed or compressed audio input data, this value
-  /// will be the highest peak volume in the last batch of input.
+  /// If currently dispatching either uncompressed or compressed audio input
+  /// data, this value will be the highest peak volume in the last batch of
+  /// input.
   float GetPeakInputLevel();
-  /// Using the high latency setting can fix some audio problems (such as clicks and static) 
-  /// but can lead to a slight delay in the audio
+  /// Using the high latency setting can fix some audio problems (such as clicks
+  /// and static) but can lead to a slight delay in the audio
   AudioLatency::Enum GetLatencySetting();
   void SetLatencySetting(AudioLatency::Enum latency);
-  /// If true, MicrophoneUncompressedFloatData events will be sent every update with the buffer of
-  /// audio data received from the default audio input device.
+  /// If true, MicrophoneUncompressedFloatData events will be sent every update
+  /// with the buffer of audio data received from the default audio input
+  /// device.
   bool GetDispatchMicrophoneUncompressedFloatData();
   void SetDispatchMicrophoneUncompressedFloatData(bool dispatchData);
-  /// If true, MicrophoneCompressedByteData events will be sent every update with the buffer of
-  /// compressed audio data received from the default audio input device.
+  /// If true, MicrophoneCompressedByteData events will be sent every update
+  /// with the buffer of compressed audio data received from the default audio
+  /// input device.
   bool GetDispatchMicrophoneCompressedByteData();
   void SetDispatchMicrophoneCompressedByteData(bool dispatchData);
-  /// Returns the number of audio channels currently used by the audio engine for audio output.
+  /// Returns the number of audio channels currently used by the audio engine
+  /// for audio output.
   int GetOutputChannels();
 
   /// Creates a new VolumeNode object
@@ -194,12 +203,13 @@ public:
   /// Creates a new GranularSynthNode object
   static GranularSynthNode* GranularSynthNode();
 
-  /// If true, the random number generator used by audio objects in this SoundSpace will be seeded randomly.
+  /// If true, the random number generator used by audio objects in this
+  /// SoundSpace will be seeded randomly.
   bool mUseRandomSeed;
   /// Value to seed the random number generator with.
   uint mSeed;
 
-//Internals
+  // Internals
   void Update(bool debugger) override;
   void StopPreview();
   void AddSoundSpace(SoundSpace* space, bool isEditor);
@@ -231,10 +241,10 @@ System* CreateSoundSystem();
 // Global Access
 namespace Z
 {
-  extern SoundSystem* gSound;
+extern SoundSystem* gSound;
 } // namespace Z
 
-//----------------------------------------------------------------------------------- Sound Settings
+//Sound Settings
 
 class AudioSettings : public Component
 {
@@ -252,21 +262,23 @@ public:
   /// When true, audio will be processed normally but will be silent.
   bool GetMuteAllAudio();
   void SetMuteAllAudio(bool muteAudio);
-  /// Sets the number of channels the audio system uses when creating audio. See the enum descriptions.
-  /// If your selection is different from the output device, it will be automatically translated 
-  /// to match the number of channels needed for output.
+  /// Sets the number of channels the audio system uses when creating audio. See
+  /// the enum descriptions. If your selection is different from the output
+  /// device, it will be automatically translated to match the number of
+  /// channels needed for output.
   AudioMixTypes::Enum GetMixType();
   void SetMixType(AudioMixTypes::Enum mixType);
-  /// Sets the volume threshold at which sounds will be virtualized (they will continue
-  /// tracking their position and all data but will not process audio). 
+  /// Sets the volume threshold at which sounds will be virtualized (they will
+  /// continue tracking their position and all data but will not process audio).
   /// This is a floating point volume number, not decibels.
   float GetMinVolumeThreshold();
   void SetMinVolumeThreshold(float volume);
-  /// Using the high latency setting can fix some audio problems (such as clicks and static) 
-  /// but can lead to a slight delay in the audio
+  /// Using the high latency setting can fix some audio problems (such as clicks
+  /// and static) but can lead to a slight delay in the audio
   AudioLatency::Enum GetLatencySetting();
   void SetLatencySetting(AudioLatency::Enum latency);
-  /// If true, the random number generator used by audio objects in this SoundSpace will be seeded randomly.
+  /// If true, the random number generator used by audio objects in this
+  /// SoundSpace will be seeded randomly.
   bool GetUseRandomSeed();
   void SetUseRandomSeed(bool useRandom);
   /// Value to seed the random number generator with.
@@ -282,4 +294,4 @@ private:
   uint mSeed;
 };
 
-}//namespace Zero
+} // namespace Zero

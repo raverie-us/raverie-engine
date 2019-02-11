@@ -1,19 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Trevor Sundberg
-/// Copyright 2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
-//--------------------------------------------------------------------------------------- Empty Base
+//Empty Base
 class EmptyBase
 {
 };
 
-//----------------------------------------------------------------------------------- Lazy Singleton
+//Lazy Singleton
 template <typename T, typename Base = EmptyBase>
 class LazySingleton : public Base
 {
@@ -25,37 +20,41 @@ public:
   }
 
 protected:
-  LazySingleton(){}
+  LazySingleton()
+  {
+  }
 };
 
-#define ZeroDeclareExplicitSingletonContents(T) \
-public:                                         \
-  static T* GetInstance()                       \
-  {                                             \
-    return mInstance;                           \
-  }                                             \
-                                                \
-  static void Initialize()                      \
-  {                                             \
-    ReturnIf(mInstance != nullptr,,             \
-      "The singleton is being "                 \
-      "initialized more than once");            \
-    mInstance = new T();                        \
-  }                                             \
-                                                \
-  static void Destroy()                         \
-  {                                             \
-    delete mInstance;                           \
-    mInstance = nullptr;                        \
-  }                                             \
-private:                                        \
-  static T* mInstance;                          \
+#define ZeroDeclareExplicitSingletonContents(T)                                \
+public:                                                                        \
+  static T* GetInstance()                                                      \
+  {                                                                            \
+    return mInstance;                                                          \
+  }                                                                            \
+                                                                               \
+  static void Initialize()                                                     \
+  {                                                                            \
+    ReturnIf(mInstance != nullptr,                                             \
+             ,                                                                 \
+             "The singleton is being "                                         \
+             "initialized more than once");                                    \
+    mInstance = new T();                                                       \
+  }                                                                            \
+                                                                               \
+  static void Destroy()                                                        \
+  {                                                                            \
+    delete mInstance;                                                          \
+    mInstance = nullptr;                                                       \
+  }                                                                            \
+                                                                               \
+private:                                                                       \
+  static T* mInstance;                                                         \
+                                                                               \
 public:
 
-#define ZeroDefineExplicitSingletonContents(T)  \
-  T* T::mInstance = nullptr;
+#define ZeroDefineExplicitSingletonContents(T) T* T::mInstance = nullptr;
 
-//------------------------------------------------------------------------------- Explicit Singleton
+//Explicit Singleton
 template <typename T, typename Base = EmptyBase>
 class ExplicitSingleton : public Base
 {
@@ -63,10 +62,12 @@ public:
   ZeroDeclareExplicitSingletonContents(T);
 
 protected:
-  ExplicitSingleton(){}
+  ExplicitSingleton()
+  {
+  }
 };
 
 template <typename T, typename Base>
 T* ExplicitSingleton<T, Base>::mInstance = nullptr;
 
-}//namespace Zero
+} // namespace Zero

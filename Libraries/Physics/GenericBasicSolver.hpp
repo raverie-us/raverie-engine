@@ -1,9 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-/////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -12,10 +7,11 @@ namespace Zero
 namespace Physics
 {
 
-///A solver that copies data into an array for quick solving. This does not allow
-///joints to change during each iteration. Since it is a basic solver, there
-///are virtual function calls during the set up phase, but during actual solving
-///there are none. Also copies RigidBody data to a small array to help cache.
+/// A solver that copies data into an array for quick solving. This does not
+/// allow joints to change during each iteration. Since it is a basic solver,
+/// there are virtual function calls during the set up phase, but during actual
+/// solving there are none. Also copies RigidBody data to a small array to help
+/// cache.
 class GenericBasicSolver : public IConstraintSolver
 {
 public:
@@ -41,19 +37,18 @@ public:
   void BatchEvents() override;
 
 private:
-
-  ///An entry for a constraint. Contains the fragment and the
-  ///id of each object in the object data array.
+  /// An entry for a constraint. Contains the fragment and the
+  /// id of each object in the object data array.
   struct ConstraintEntry
   {
     ConstraintEntry();
 
     ConstraintMolecule Fragment;
-    uint Obj1Index,Obj2Index;
+    uint Obj1Index, Obj2Index;
   };
   typedef Array<ConstraintEntry> EntryArray;
 
-  ///The basics of a RigidBody needed to solve a constraint.
+  /// The basics of a RigidBody needed to solve a constraint.
   struct ConstraintObjectData
   {
     ConstraintObjectData();
@@ -71,24 +66,24 @@ private:
   };
   typedef Array<ConstraintObjectData> ObjectArray;
 
-  template <typename JointType> void CreateEntry(JointType& joint, MoleculeWalker& fragments);
+  template <typename JointType>
+  void CreateEntry(JointType& joint, MoleculeWalker& fragments);
   void CreateEntriesandObjects();
   uint FindRigidBodyIndex(Collider* collider);
 
-
-  typedef InList<Joint,&Joint::SolverLink> JointList;
-  typedef InList<Contact,&Contact::SolverLink> ContactList;
+  typedef InList<Joint, &Joint::SolverLink> JointList;
+  typedef InList<Contact, &Contact::SolverLink> ContactList;
   typedef Array<ConstraintMolecule> MoleculeList;
   JointList mJoints;
   ContactList mContacts;
 
   EntryArray mEntries;
   ObjectArray mObjects;
-  HashMap<RigidBody*,uint> mLookupMap;
+  HashMap<RigidBody*, uint> mLookupMap;
 
   uint mEntryCount;
 };
-  
-}//namespace Physics
 
-}//namespace Zero
+} // namespace Physics
+
+} // namespace Zero

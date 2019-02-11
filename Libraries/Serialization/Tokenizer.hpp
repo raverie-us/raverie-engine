@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Tokenizer.hpp
-/// Declaration of the Text tokenizer.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -33,11 +25,17 @@ struct TempToken
     Text = range;
   }
 
-  bool operator==(cstr test) {return Text == test;}
-  bool operator==(char test) {return Text == test;}
+  bool operator==(cstr test)
+  {
+    return Text == test;
+  }
+  bool operator==(char test)
+  {
+    return Text == test;
+  }
 };
 
-//A text parser that tokenizes a string buffer.
+// A text parser that tokenizes a string buffer.
 class Tokenizer
 {
 public:
@@ -45,14 +43,14 @@ public:
 
   void Load(StringRangeParam text);
 
-  //Tokens
+  // Tokens
   bool ReadToken(TempToken& token);
   /// Move the parser's position back to the token start.
   bool PutBack(TempToken& token);
   Rune NextCharacter();
-  //Processing
+  // Processing
 
-  //Skipping
+  // Skipping
   bool AtEnd();
   void SkipWhiteSpace();
   void SkipUntilOfEndWord();
@@ -71,7 +69,10 @@ public:
   size_t CurrentLine();
 
   void Validate();
-  StringRange GetText() {return mPosition;}
+  StringRange GetText()
+  {
+    return mPosition;
+  }
   StringRange ReadUntil(char value);
 
   // Allow hex reading
@@ -84,4 +85,4 @@ private:
   StringRange mAll;
 };
 
-}//namespace Zero
+} // namespace Zero

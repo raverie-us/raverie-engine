@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "StringBuilder.hpp"
 
@@ -14,7 +9,7 @@ namespace Zero
 class TextStream
 {
 public:
-  virtual void Write(cstr text)=0;
+  virtual void Write(cstr text) = 0;
   virtual ~TextStream(){};
 };
 
@@ -30,14 +25,19 @@ class TextStreamBuffer : public TextStream
 {
 public:
   StringBuilder buffer;
-  String ToString(){return buffer.ToString();}
-  void Write(cstr text) override { buffer.Append(text);}
+  String ToString()
+  {
+    return buffer.ToString();
+  }
+  void Write(cstr text) override
+  {
+    buffer.Append(text);
+  }
 };
 
 class TextStreamNull : public TextStream
 {
-  void Write(cstr text) override {};
+  void Write(cstr text) override{};
 };
 
-
-}
+} // namespace Zero

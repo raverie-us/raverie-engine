@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Aabb.cpp
-/// Implementation of the Aabb class.
-/// 
-/// Authors: Joshua Davis
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,7 +16,6 @@ Aabb::Aabb(Vec3Param center, Vec3Param halfExtents)
 
 Aabb::~Aabb()
 {
-
 }
 
 void Aabb::SetInvalid()
@@ -38,27 +29,28 @@ bool Aabb::Valid() const
   return !((mMin.x > mMax.x) || (mMin.y > mMax.y) || (mMin.z > mMax.z));
 }
 
-
 void Aabb::AttemptToCorrectInvalid()
 {
-  // Average all the extents of the aabb to try and make a reasonable center, then use that (a zero sized aabb)
+  // Average all the extents of the aabb to try and make a reasonable center,
+  // then use that (a zero sized aabb)
   SetCenterAndHalfExtents(GetCenter(), Vec3::cZero);
 
-  // If the object is still not valid (could be nans, infs, etc) then just zero it out
-  if(!Valid())
+  // If the object is still not valid (could be nans, infs, etc) then just zero
+  // it out
+  if (!Valid())
     Zero();
 }
 
 bool Aabb::Overlap(const Aabb& rhs) const
 {
-  Intersection::IntersectionType type = Intersection::AabbAabb(mMin, mMax, rhs.mMin, 
-                                                   rhs.mMax);
+  Intersection::IntersectionType type =
+      Intersection::AabbAabb(mMin, mMax, rhs.mMin, rhs.mMax);
   return type == Intersection::Point;
 }
 
 bool Aabb::OverlapAxis(const Aabb& rhs, uint axis)
 {
-  if(mMax[axis] < rhs.mMin[axis] || mMin[axis] > rhs.mMax[axis])
+  if (mMax[axis] < rhs.mMin[axis] || mMin[axis] > rhs.mMax[axis])
     return false;
   return true;
 }
@@ -70,15 +62,15 @@ bool Aabb::ContainsPoint(Vec3Param point)
 
 void Aabb::Combine(const Aabb& aabb)
 {
-  //get the min on each axis of this aabb and the one passed in
-  mMin[0] = Math::Min(mMin[0],aabb.mMin[0]);
-  mMin[1] = Math::Min(mMin[1],aabb.mMin[1]);
-  mMin[2] = Math::Min(mMin[2],aabb.mMin[2]);
+  // get the min on each axis of this aabb and the one passed in
+  mMin[0] = Math::Min(mMin[0], aabb.mMin[0]);
+  mMin[1] = Math::Min(mMin[1], aabb.mMin[1]);
+  mMin[2] = Math::Min(mMin[2], aabb.mMin[2]);
 
-  //get the max on each axis of this aabb and the one passed in
-  mMax[0] = Math::Max(mMax[0],aabb.mMax[0]);
-  mMax[1] = Math::Max(mMax[1],aabb.mMax[1]);
-  mMax[2] = Math::Max(mMax[2],aabb.mMax[2]);
+  // get the max on each axis of this aabb and the one passed in
+  mMax[0] = Math::Max(mMax[0], aabb.mMax[0]);
+  mMax[1] = Math::Max(mMax[1], aabb.mMax[1]);
+  mMax[2] = Math::Max(mMax[2], aabb.mMax[2]);
 }
 
 Aabb Aabb::Combined(const Aabb& aabb) const
@@ -102,16 +94,16 @@ void Aabb::Compute(Vec3Param pt)
 
 void Aabb::Compute(const Vec3Array& pts)
 {
-  //should assert here that pts is not empty
+  // should assert here that pts is not empty
 
   Vec3Array::const_iterator cIt = pts.Begin();
 
-  //set the initial aabb dimensions
+  // set the initial aabb dimensions
   Compute(*cIt);
   ++cIt;
 
-  //expand the aabb for the remaining points
-  while(cIt != pts.End())
+  // expand the aabb for the remaining points
+  while (cIt != pts.End())
   {
     Expand(*cIt);
     ++cIt;
@@ -127,31 +119,31 @@ void Aabb::Compute(const Vec3* pts, uint count)
 {
   Compute(pts[0]);
 
-  for(uint i = 1; i < count; ++i)
+  for (uint i = 1; i < count; ++i)
     Expand(pts[i]);
 }
 
 void Aabb::Expand(Vec3Param pt)
 {
-  //get the min on each axis of what
-  //we already had and the point passed in
-  mMin[0] = Math::Min(mMin[0],pt[0]);
-  mMin[1] = Math::Min(mMin[1],pt[1]);
-  mMin[2] = Math::Min(mMin[2],pt[2]);
+  // get the min on each axis of what
+  // we already had and the point passed in
+  mMin[0] = Math::Min(mMin[0], pt[0]);
+  mMin[1] = Math::Min(mMin[1], pt[1]);
+  mMin[2] = Math::Min(mMin[2], pt[2]);
 
-  //get the max on each axis of what
-  //we already had and the point passed in
-  mMax[0] = Math::Max(mMax[0],pt[0]);
-  mMax[1] = Math::Max(mMax[1],pt[1]);
-  mMax[2] = Math::Max(mMax[2],pt[2]);
+  // get the max on each axis of what
+  // we already had and the point passed in
+  mMax[0] = Math::Max(mMax[0], pt[0]);
+  mMax[1] = Math::Max(mMax[1], pt[1]);
+  mMax[2] = Math::Max(mMax[2], pt[2]);
 }
 
 void Aabb::Expand(const Vec3Array& pts)
 {
   Vec3Array::const_iterator cIt = pts.Begin();
 
-  //expand the aabb by all of the points
-  while(cIt != pts.End())
+  // expand the aabb by all of the points
+  while (cIt != pts.End())
   {
     Expand(*cIt);
     ++cIt;
@@ -173,18 +165,20 @@ Aabb Aabb::Expand(const Aabb& aabb, Vec3Param pt)
 void Aabb::Transform(Mat3Param rot)
 {
   Vec3 halfExtents = GetHalfExtents();
-  
+
   Mat3 absRot;
   absRot.SetBasis(0, Math::Abs(rot.BasisX()));
   absRot.SetBasis(1, Math::Abs(rot.BasisY()));
   absRot.SetBasis(2, Math::Abs(rot.BasisZ()));
-  
+
   halfExtents = Math::Multiply(absRot, halfExtents);
-  
+
   SetHalfExtents(halfExtents);
 }
 
-Aabb Aabb::TransformAabbInternal(Vec3Param worldScale, Mat3Param worldRotation, Vec3Param worldTranslation) const
+Aabb Aabb::TransformAabbInternal(Vec3Param worldScale,
+                                 Mat3Param worldRotation,
+                                 Vec3Param worldTranslation) const
 {
   Aabb result = *this;
 
@@ -198,16 +192,19 @@ Aabb Aabb::TransformAabbInternal(Vec3Param worldScale, Mat3Param worldRotation, 
   return result;
 }
 
-Aabb Aabb::TransformAabb(Vec3Param worldScale, Mat3Param worldRotation, Vec3Param worldTranslation) const
+Aabb Aabb::TransformAabb(Vec3Param worldScale,
+                         Mat3Param worldRotation,
+                         Vec3Param worldTranslation) const
 {
   Aabb result = *this;
-  //compute the offset of the aabb from origin in local space
+  // compute the offset of the aabb from origin in local space
   Vec3 center = result.GetCenter();
-  //put the aabb at the origin so we can scale and rotate it
+  // put the aabb at the origin so we can scale and rotate it
   result.Translate(-center);
-  //scale, rotate and world translate it
-  result = result.TransformAabbInternal(worldScale, worldRotation, worldTranslation);
-  //now rotate and scale that local offset to get the final world translation
+  // scale, rotate and world translate it
+  result =
+      result.TransformAabbInternal(worldScale, worldRotation, worldTranslation);
+  // now rotate and scale that local offset to get the final world translation
   result.Translate(Math::Transform(worldRotation, worldScale * center));
   return result;
 }
@@ -223,7 +220,7 @@ Aabb Aabb::TransformAabb(Mat4Param transformation) const
   absMat.SetBasis(0, Math::Abs(absMat.BasisX()));
   absMat.SetBasis(1, Math::Abs(absMat.BasisY()));
   absMat.SetBasis(2, Math::Abs(absMat.BasisZ()));
-  
+
   halfExtents = Math::Multiply(absMat, halfExtents);
 
   // Transform the point as normal
@@ -260,17 +257,16 @@ void Aabb::Translate(Vec3Param translation)
 
 Aabb Aabb::InverseTransform(const Aabb& rhs, Mat4Param worldTransform)
 {
-  //Pull out the translation
+  // Pull out the translation
   Vec3 translation = worldTransform.GetBasis3(3);
 
-  //Pull out the inverted rotation and scale into a matrix3
+  // Pull out the inverted rotation and scale into a matrix3
   Mat3 scaleRot = Math::ToMatrix3(worldTransform.Inverted());
-  
 
-  //Calculate the center of the new Aabb
+  // Calculate the center of the new Aabb
   Vec3 center = Math::Transform(scaleRot, rhs.GetCenter() - translation);
 
-  //Create the new Aabb
+  // Create the new Aabb
   Aabb newAabb;
   newAabb.SetCenterAndHalfExtents(center, rhs.GetHalfExtents());
   newAabb.Transform(scaleRot);
@@ -342,13 +338,13 @@ real Aabb::GetSurfaceArea() const
   real surfaceArea = 0;
   Vec3 extents = mMax - mMin;
 
-  //Top / Bottom
+  // Top / Bottom
   surfaceArea += real(2.0) * (extents.x * extents.z);
 
-  //Front / Back
+  // Front / Back
   surfaceArea += real(2.0) * (extents.x * extents.y);
 
-  //Left / Right
+  // Left / Right
   surfaceArea += real(2.0) * (extents.z * extents.y);
 
   return surfaceArea;
@@ -361,7 +357,7 @@ void Aabb::GetCenter(Vec3Ref center) const
 
 void Aabb::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportAabb(direction,mMin,mMax,support);
+  Geometry::SupportAabb(direction, mMin, mMax, support);
 }
 
 void Aabb::DebugDraw() const
@@ -375,4 +371,4 @@ void Aabb::Zero(void)
   mMax.ZeroOut();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,13 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Event.hpp
-/// Object Event / Messaging System used by engine for cross game object and
-/// system communication.
-///
-/// Authors: Chris Peters.
-/// Copyright 2010-2012, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -30,8 +21,9 @@ public:
   /// Serialization of the event.
   virtual void Serialize(Serializer& stream);
 
-  /// Because the event could be implemented in scripting, it needs to know how to destroy itself.
-  /// The standard method is to call delete on its own this pointer.
+  /// Because the event could be implemented in scripting, it needs to know how
+  /// to destroy itself. The standard method is to call delete on its own this
+  /// pointer.
   virtual void Delete();
 
   /// Write an event to a stream.

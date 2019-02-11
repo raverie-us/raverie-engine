@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///  
-///  Authors: Joshua Davis
-///  Copyright 2014-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 // Standard includes
@@ -18,19 +13,19 @@ namespace Geometry
 using namespace Math;
 using Zero::Array;
 
-}//namespace Geometry
+} // namespace Geometry
 
 namespace Zero
 {
 #include "MathImports.hpp"
 using Geometry::Vec3Array;
 
-typedef Array<Array<Vec2> > ContourArray;
+typedef Array<Array<Vec2>> ContourArray;
 
 namespace Csg
 {
 using Zero::ContourArray;
-}//namespace Csg
+} // namespace Csg
 
 // Geometry library
 class ZeroNoImportExport GeometryLibrary : public Zilch::StaticLibrary
@@ -42,20 +37,19 @@ public:
   static void Shutdown();
 };
 
-
-}//namespace Zero
+} // namespace Zero
 
 namespace Intersection
 {
 using namespace Geometry;
 using namespace Math;
-}//namespace Intersection
+} // namespace Intersection
 
 namespace Csg
 {
 using namespace Geometry;
 using namespace Math;
-}//namespace Intersection
+} // namespace Csg
 
 // Project includes
 #include "Solids.hpp"

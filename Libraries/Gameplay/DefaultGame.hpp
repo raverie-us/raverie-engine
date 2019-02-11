@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -30,7 +25,8 @@ public:
 
   void OnSetup(GameEvent* event);
 
-  // If set to true StartingLevel will be overridden by the currently edited level
+  // If set to true StartingLevel will be overridden by the currently edited
+  // level
   bool mLoadEditingLevel;
 };
 

@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MultiManager.hpp
-///
-/// Authors: Chris Peters
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,10 +7,9 @@ namespace Zero
 class LayoutInfo
 {
 public:
-
   LayoutInfo()
   {
-    Size = Vec2(0,0);
+    Size = Vec2(0, 0);
     Area = DockArea::Center;
     Visible = true;
   }
@@ -55,7 +47,9 @@ public:
   HashMap<String, LayoutInfo> Info;
 
   // Add a widget to be managed for tracking and searching
-  Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool isVisible);
+  Window* AddManagedWidget(Widget* widget,
+                           DockArea::Enum dockArea,
+                           bool isVisible);
   Window* AddManagedWidget(Widget* widget, LayoutInfo& info);
 
   // Show a widget forcing it to the front
@@ -72,11 +66,11 @@ public:
   // For moving windows between OS windows
   void Transfer(TabWidget* tabWidget, Widget* widget);
 
-//Internals
+  // Internals
   void ManageWidget(Widget* widget);
   Widget* InternalActivateWidget(Widget* widget);
 
   void OnWindowKeyDown(KeyboardEvent* event);
 };
 
-}
+} // namespace Zero

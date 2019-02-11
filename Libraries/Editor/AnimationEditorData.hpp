@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file AnimationEditorData.cpp
-/// Declaration of AnimationEditorData.
-///
-/// Authors: Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,7 @@ namespace Zero
 
 namespace AnimationConstants
 {
-  const ByteColor cHashColor = Color::Black;
+const ByteColor cHashColor = Color::Black;
 }
 
 /// Forward declarations.
@@ -29,24 +21,21 @@ class TrackEvent;
 // Events
 namespace Events
 {
-  // Sent when the selected tracks are modified
-  DeclareEvent(TrackSelectionModified);
-}
+// Sent when the selected tracks are modified
+DeclareEvent(TrackSelectionModified);
+} // namespace Events
 
-//---------------------------------------------------------- Key Frame Selection
 struct KeyFrameSelection
 {
   Array<uint> Keys;
 };
 
-//-------------------------------------------------------------- Track Selection
 struct TrackSelection
 {
   /// Contains only property tracks
   Array<TrackNode*> Tracks;
 };
 
-//-------------------------------------------------------- Animation Editor Data
 class AnimationEditorData : public EventObject
 {
 public:
@@ -54,8 +43,10 @@ public:
   ZilchDeclareType(AnimationEditorData, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  AnimationEditorData(AnimationEditor* editor, Cog* animGraphObject,
-                      Animation* animation, ScrollingGraph* graphData);
+  AnimationEditorData(AnimationEditor* editor,
+                      Cog* animGraphObject,
+                      Animation* animation,
+                      ScrollingGraph* graphData);
 
   /// When the rich animation is modified, we want to bake it out to
   /// the animation resource.
@@ -97,4 +88,4 @@ public:
 /// Coverts the given animation into a new rich animation.
 RichAnimation* ConvertToRichAnimation(Animation* animation);
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -40,7 +35,7 @@ JointSpring::JointSpring()
 
 JointSpring::~JointSpring()
 {
-  if(mNode == nullptr)
+  if (mNode == nullptr)
     return;
 
   mNode->mSpring = nullptr;
@@ -56,7 +51,7 @@ void JointSpring::Serialize(Serializer& stream)
 void JointSpring::Initialize(CogInitializer& initializer)
 {
   Joint* joint = GetOwner()->has(Joint);
-  if(joint)
+  if (joint)
   {
     mNode = joint->mNode;
     mNode->mSpring = this;
@@ -81,7 +76,7 @@ bool JointSpring::GetActive() const
 void JointSpring::SetActive(bool active)
 {
   mActive = active;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -95,7 +90,7 @@ uint JointSpring::GetAtomIds() const
 void JointSpring::SetAtomIds(uint atomIds)
 {
   mAtomIds = atomIds;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -109,7 +104,7 @@ real JointSpring::GetFrequencyHz() const
 void JointSpring::SetFrequencyHz(real frequency)
 {
   mSpringAtom.mFrequencyHz = frequency;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
@@ -123,10 +118,10 @@ real JointSpring::GetDampingRatio() const
 void JointSpring::SetDampingRatio(real dampRatio)
 {
   mSpringAtom.mDampingRatio = dampRatio;
-  if(!IsValid())
+  if (!IsValid())
     return;
 
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
 }
 
-}//namespace Zero
+} // namespace Zero

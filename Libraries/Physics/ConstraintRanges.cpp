@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------ContactGraphEdge
 ZilchDefineType(ContactGraphEdge, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -22,7 +16,7 @@ ZilchDefineType(ContactGraphEdge, builder, type)
   ZilchBindGetterProperty(ContactPointCount);
   ZilchBindGetterProperty(ContactPoints);
 
-  //ZilchBindGetterProperty(IsNew);
+  // ZilchBindGetterProperty(IsNew);
   ZilchBindGetterProperty(FirstPoint);
 }
 
@@ -44,7 +38,7 @@ ContactPointRange ContactGraphEdge::GetContactPoints()
 {
   // Find out if we're object 0 or object 1 in the manifold
   uint objectIndex = 0;
-  if(mConstraint->mManifold->Objects[0] != GetCollider())
+  if (mConstraint->mManifold->Objects[0] != GetCollider())
     objectIndex = 1;
 
   ContactPointRange range;
@@ -56,11 +50,13 @@ ContactPoint ContactGraphEdge::GetFirstPoint()
 {
   // Find out if we're object 0 or object 1 in the manifold
   uint objectIndex = 0;
-  if(mConstraint->mManifold->Objects[0] != GetCollider())
+  if (mConstraint->mManifold->Objects[0] != GetCollider())
     objectIndex = 1;
 
   ContactPoint proxyPoint;
-  proxyPoint.Set(mConstraint->mManifold, &mConstraint->mManifold->Contacts[0], objectIndex);
+  proxyPoint.Set(mConstraint->mManifold,
+                 &mConstraint->mManifold->Contacts[0],
+                 objectIndex);
   return proxyPoint;
 }
 
@@ -79,7 +75,6 @@ Physics::Contact& ContactGraphEdge::GetContact()
   return GetConstraint();
 }
 
-//-------------------------------------------------------------------JointGraphEdge
 ZilchDefineType(JointGraphEdge, builder, type)
 {
   ZilchBindDefaultCopyDestructor();
@@ -93,7 +88,6 @@ ZilchDefineType(JointGraphEdge, builder, type)
   ZilchBindGetterProperty(Owner);
 }
 
-//-------------------------------------------------------------------JointBodyFilter
 typedef BodyFilterPolicy<Joint> JointBodyFilter;
 
 JointBodyFilter::GraphEdgeType JointBodyFilter::CreateGraphEdge(EdgeType* edge)
@@ -103,10 +97,10 @@ JointBodyFilter::GraphEdgeType JointBodyFilter::CreateGraphEdge(EdgeType* edge)
 
 void JointBodyFilter::SkipDead(RangeType& range)
 {
-  while(!range.Empty())
+  while (!range.Empty())
   {
     RigidBody* body = range.Front().mOther->GetActiveBody();
-    if(body && mBodies.Find(body).Empty())
+    if (body && mBodies.Find(body).Empty())
     {
       mBodies.Insert(body);
       break;
@@ -115,20 +109,20 @@ void JointBodyFilter::SkipDead(RangeType& range)
   }
 }
 
-//-------------------------------------------------------------------ContactBodyFilter
 typedef BodyFilterPolicy<Physics::Contact> ContactBodyFilter;
 
-ContactBodyFilter::GraphEdgeType ContactBodyFilter::CreateGraphEdge(EdgeType* edge)
+ContactBodyFilter::GraphEdgeType
+ContactBodyFilter::CreateGraphEdge(EdgeType* edge)
 {
   return GraphEdgeType(edge);
 }
 
 void ContactBodyFilter::SkipDead(RangeType& range)
 {
-  while(!range.Empty())
+  while (!range.Empty())
   {
     RigidBody* body = range.Front().mOther->GetActiveBody();
-    if(body && mBodies.Find(body).Empty())
+    if (body && mBodies.Find(body).Empty())
     {
       mBodies.Insert(body);
       break;
@@ -137,8 +131,9 @@ void ContactBodyFilter::SkipDead(RangeType& range)
   }
 }
 
-//-------------------------------------------------------------------Helper functions
-InList<JointEdge, &JointEdge::ColliderLink>::range GetJointEdges(Collider* collider)
+//functions
+InList<JointEdge, &JointEdge::ColliderLink>::range
+GetJointEdges(Collider* collider)
 {
   return collider->mJointEdges.All();
 }
@@ -148,4 +143,4 @@ ContactRange FilterContactRange(Collider* collider)
   return ContactRange(collider->mContactEdges.All());
 }
 
-}//namespace Zero
+} // namespace Zero

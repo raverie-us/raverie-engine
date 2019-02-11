@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ObjectView.hpp
-/// 
-/// 
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -31,7 +23,7 @@ public:
   ObjectView(Composite* parent);
   ~ObjectView();
 
-  //Widget Interface
+  // Widget Interface
   void UpdateTransform() override;
   void SetSpace(Space* space);
 
@@ -65,7 +57,7 @@ private:
   Element* mDimSearch;
 };
 
-//------------------------------------------------------------------------------------ Removed Entry
+//Removed Entry
 class RemovedEntry : public Object
 {
 public:
@@ -76,7 +68,9 @@ public:
   u64 ToId();
   static u64 ToId(Cog* parent, Guid childId);
   String GetRemovedChildName();
-  DataNode* FindRemovedCogNode(DataNode* dataTree, Cog* currParent, Guid childGuid,
+  DataNode* FindRemovedCogNode(DataNode* dataTree,
+                               Cog* currParent,
+                               Guid childGuid,
                                Cog* archetypeRoot);
   String GetNameFromCogNode(DataNode* cogNode);
 
@@ -84,4 +78,4 @@ public:
   Guid mChildId;
 };
 
-}// Namespace Zero
+} // Namespace Zero

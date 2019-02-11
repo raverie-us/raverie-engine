@@ -1,30 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Console.cpp
-/// Implementation of the Console
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------------------ConsoleListener
 ConsoleListener::~ConsoleListener()
 {
   Console::Remove(this);
 };
 
-//-------------------------------------------------------------------DebuggerListener
 void DebuggerListener::Print(FilterType filterType, cstr message)
 {
   Os::DebuggerOutput(message);
 }
 
-//-------------------------------------------------------------------StdOutListener
 void StdOutListener::Print(FilterType filterType, cstr message)
 {
   // As this is used for logging primarily on the build machine make
@@ -45,11 +34,11 @@ Array<ConsoleListener*> ConsoleListeners;
 
 void Console::PrintVa(Filter::Enum filter, cstr format, va_list args)
 {
-  //Get the number of characters needed
+  // Get the number of characters needed
   int bufferSize;
   ZeroVSPrintfCount(format, args, 1, bufferSize);
 
-  if(bufferSize > 0)
+  if (bufferSize > 0)
   {
     char* messageBuffer = (char*)alloca((bufferSize + 1) * sizeof(char));
     ZeroVSPrintf(messageBuffer, bufferSize, format, args);
@@ -68,14 +57,14 @@ void Console::Print(Filter::Enum filter, cstr format, ...)
 
 void Console::PrintRaw(Filter::Enum filter, cstr messageBuffer)
 {
-  forRange(ConsoleListener* listener, ConsoleListeners.All())
-    listener->Print(filter, messageBuffer);
+  forRange(ConsoleListener * listener, ConsoleListeners.All())
+      listener->Print(filter, messageBuffer);
 }
 
 void Console::FlushAll()
 {
-  forRange(ConsoleListener* listener, ConsoleListeners.All())
-    listener->Flush();
+  forRange(ConsoleListener * listener, ConsoleListeners.All())
+      listener->Flush();
 }
 
 void Console::Add(ConsoleListener* listener)
@@ -86,8 +75,8 @@ void Console::Add(ConsoleListener* listener)
 void Console::Remove(ConsoleListener* listener)
 {
   size_t index = ConsoleListeners.FindIndex(listener);
-  if(index < ConsoleListeners.Size())
+  if (index < ConsoleListeners.Size())
     ConsoleListeners.EraseAt(index);
 }
 
-}//namespace Zero
+} // namespace Zero

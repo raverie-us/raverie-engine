@@ -1,15 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------- Meta Net Property
+//Meta Net Property
 class MetaNetProperty : public MetaAttribute
 {
 public:
@@ -17,9 +12,9 @@ public:
 
   /// The net property type name.
   String mNetPropertyConfig;
-  
+
   /// Desired net channel name.
   String mNetChannelConfig;
 };
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Particle.hpp
-/// Declaration of the Particle classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -14,7 +6,7 @@ namespace Zero
 
 namespace Tags
 {
-  DeclareTag(Particle);
+DeclareTag(Particle);
 }
 
 /// The particle Contains the position, size, color,
@@ -54,17 +46,31 @@ public:
     typedef Particle* value_type;
     typedef Particle*& FrontResult;
 
-    range() : mCurrentParticle(nullptr), mEndParticle(nullptr) {}
+    range() : mCurrentParticle(nullptr), mEndParticle(nullptr)
+    {
+    }
     range(Particle* curr, Particle* endParticle = nullptr)
     {
       mCurrentParticle = curr;
       mEndParticle = endParticle;
     }
 
-    void PopFront(){mCurrentParticle = mCurrentParticle->Next;}
-    FrontResult Front(){return mCurrentParticle;}
-    bool Empty(){return mCurrentParticle == mEndParticle;}
-    range& All() { return *this; }
+    void PopFront()
+    {
+      mCurrentParticle = mCurrentParticle->Next;
+    }
+    FrontResult Front()
+    {
+      return mCurrentParticle;
+    }
+    bool Empty()
+    {
+      return mCurrentParticle == mEndParticle;
+    }
+    range& All()
+    {
+      return *this;
+    }
     Particle* mCurrentParticle;
     Particle* mEndParticle;
   };

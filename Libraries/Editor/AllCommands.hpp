@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 namespace Zero
 {
@@ -20,4 +15,4 @@ void BindPhysicsTestCommands(Cog* configCog, CommandManager* commands);
 void BindDocumentationCommands(Cog* config, CommandManager* commands);
 void BindContentCommands(Cog* configCog, CommandManager* commands);
 
-}
+} // namespace Zero

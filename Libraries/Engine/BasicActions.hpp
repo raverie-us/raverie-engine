@@ -1,27 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ActionBasic.hpp
-/// Declaration of the basic actions.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+// MIT Licensed (see LICENSE.md).
+#pragma once
 
 namespace Zero
 {
 
 ////Basic Actions////////
 
-///Delay action. Delays by time in seconds.
+/// Delay action. Delays by time in seconds.
 class ActionDelay : public Action
 {
 public:
   ZilchDeclareType(ActionDelay, TypeCopyMode::ReferenceType);
 
-  ActionDelay(float duration)
-    : mTimeLeft(duration)
+  ActionDelay(float duration) : mTimeLeft(duration)
   {
     mFlags.SetFlag(ActionFlag::Schedulable);
   }
@@ -29,16 +20,16 @@ public:
   ActionState::Enum Update(float dt) override
   {
     mFlags.SetFlag(ActionFlag::Started);
-    mTimeLeft-=dt;
-    if(mTimeLeft > 0.0f)
+    mTimeLeft -= dt;
+    if (mTimeLeft > 0.0f)
       return ActionState::Running;
     else
       return ActionState::Completed;
   }
+
 private:
   float mTimeLeft;
 };
-
 
 class ActionDelayOnce : public Action
 {
@@ -49,7 +40,7 @@ public:
 
   ActionState::Enum Update(float dt) override
   {
-    if(!mFlags.IsSet(ActionFlag::Started))
+    if (!mFlags.IsSet(ActionFlag::Started))
     {
       mFlags.SetFlag(ActionFlag::Started);
       return ActionState::Running;
@@ -59,6 +50,7 @@ public:
       return ActionState::Completed;
     }
   }
+
 private:
 };
 
@@ -71,7 +63,9 @@ public:
   HandleOf<Event> mEvent;
   HandleOf<Object> mTargetObject;
 
-  ActionEvent(Object* targetObject, StringParam eventNameToSend, Event* eventToSend)
+  ActionEvent(Object* targetObject,
+              StringParam eventNameToSend,
+              Event* eventToSend)
   {
     mTargetObject = targetObject;
     mEventName = eventNameToSend;
@@ -80,20 +74,22 @@ public:
 
   ActionState::Enum Update(float dt) override
   {
-    if(mTargetObject.IsNull())
+    if (mTargetObject.IsNull())
       return ActionState::Completed;
 
-    if(Object* eventObject = mTargetObject)
+    if (Object* eventObject = mTargetObject)
     {
       Event* event = mEvent;
       if (event == nullptr)
       {
         // Should this be an error?
-        DoNotifyError("ActionEvent Failed", "The event inside the action was destructed. Did you "
-          "send a C++ event? C++ events are destructed and generally cannot be saved for later.");
+        DoNotifyError("ActionEvent Failed",
+                      "The event inside the action was destructed. Did you "
+                      "send a C++ event? C++ events are destructed and "
+                      "generally cannot be saved for later.");
         return ActionState::Completed;
       }
-      
+
       eventObject->GetDispatcher()->Dispatch(mEventName, event);
       mEvent.Delete();
     }
@@ -102,4 +98,4 @@ public:
   }
 };
 
-}
+} // namespace Zero

@@ -1,27 +1,19 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContainerCommon.cpp
-/// Container Support.
-///
-/// Authors: Chris Peters, Andrew Colean, Dane Curbow
-/// Copyright 2010-2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-DataBlock::DataBlock()
-  : Data(nullptr), Size(0)
-{}
+DataBlock::DataBlock() : Data(nullptr), Size(0)
+{
+}
 
-DataBlock::DataBlock(byte* data, size_t size) 
-  : Data(data), Size(size) 
-{}
+DataBlock::DataBlock(byte* data, size_t size) : Data(data), Size(size)
+{
+}
 
 DataBlock::operator bool()
-{ 
-  return Data != nullptr; 
+{
+  return Data != nullptr;
 }
 
 bool DataBlock::operator==(DataBlock& lhs)
@@ -42,4 +34,4 @@ size_t DataBlock::Hash()
   return HashString((char*)Data, Size);
 }
 
-}// namespace Zero
+} // namespace Zero

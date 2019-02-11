@@ -1,15 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2017, DigiPen Institute of Technology
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//--------------------------------------------------------------------------------------- Meta Array
+//Meta Array
 ZilchDefineType(MetaArray, builder, type)
 {
 }
@@ -18,51 +13,42 @@ ZilchDefineType(MetaArrayWrapper, builder, type)
 {
 }
 
-//**************************************************************************************************
-MetaArray::MetaArray(BoundType* containedType) : 
-  mContainedType(containedType)
+MetaArray::MetaArray(BoundType* containedType) : mContainedType(containedType)
 {
-
 }
 
-//**************************************************************************************************
 uint MetaArray::FindIndex(HandleParam container, AnyParam value)
 {
   uint size = Size(container);
-  for(uint i = 0; i < size; ++i)
+  for (uint i = 0; i < size; ++i)
   {
-    if(GetValue(container, i) == value)
+    if (GetValue(container, i) == value)
       return i;
   }
   return uint(-1);
 }
 
-//**************************************************************************************************
 Any MetaArray::GetValueWithUniqueId(HandleParam instance, u64 uniqueId)
 {
   Error("Not implemented");
   return Any();
 }
 
-//**************************************************************************************************
 bool MetaArray::Range::Empty()
 {
   return (mIndex >= mMetaArray->Size(mContainer));
 }
 
-//**************************************************************************************************
 Any MetaArray::Range::Front()
 {
   return mMetaArray->GetValue(mContainer, mIndex);
 }
 
-//**************************************************************************************************
 void MetaArray::Range::PopFront()
 {
   ++mIndex;
 }
 
-//**************************************************************************************************
 MetaArray::Range MetaArray::All(HandleParam container)
 {
   Range r;
@@ -72,4 +58,4 @@ MetaArray::Range MetaArray::All(HandleParam container)
   return r;
 }
 
-}//namespace Zero
+} // namespace Zero

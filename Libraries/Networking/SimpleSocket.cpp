@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file SimpleSocket.cpp
-/// Implementation of the SimpleSocket class.
-///
-/// Authors: Joshua Claeys.
-/// Copyright 2012, DigiPen Institute of Technology.
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -20,8 +12,8 @@ ZilchDefineType(SimpleSocket, builder, type)
   ZilchBindGetterProperty(Socket);
 }
 
-SimpleSocket::SimpleSocket() 
-  : mSocket(Protocol::Chunks | Protocol::Events, "SimpleSocket")
+SimpleSocket::SimpleSocket() :
+    mSocket(Protocol::Chunks | Protocol::Events, "SimpleSocket")
 {
 }
 

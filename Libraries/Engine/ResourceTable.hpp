@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2013-2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -11,10 +6,10 @@ namespace Zero
 
 class RandomContext;
 
-//-------------------------------------------------------------------ResourceTableEntry
-/// An entry from a resource table. The resource type of this entry must match the
-/// resource type of the table to add/set. If the value is set via string then the type
-/// will be implicitly set to string, otherwise the type must be set via the Resource property.
+/// An entry from a resource table. The resource type of this entry must match
+/// the resource type of the table to add/set. If the value is set via string
+/// then the type will be implicitly set to string, otherwise the type must be
+/// set via the Resource property.
 class ResourceTableEntry
 {
 public:
@@ -24,11 +19,13 @@ public:
 
   void Serialize(Serializer& stream);
 
-  /// The string value of this entry. Changes this entry's type to String on Set.
+  /// The string value of this entry. Changes this entry's type to String on
+  /// Set.
   String GetValue();
   void SetValue(StringParam value);
-  /// The resource value of this entry. Returns null if the underlying type is not a resource.
-  /// Changes this entry's type to the given resource's type on Set.
+  /// The resource value of this entry. Returns null if the underlying type is
+  /// not a resource. Changes this entry's type to the given resource's type on
+  /// Set.
   Resource* GetResource();
   void SetResource(Resource* resource);
   /// The weight value used to determine how likely this item is to be sampled.
@@ -36,7 +33,8 @@ public:
   float GetWeight();
   void SetWeight(float weight);
 
-  /// Returns the resource id if this is a resource, otherwise the internal value.
+  /// Returns the resource id if this is a resource, otherwise the internal
+  /// value.
   String GetValueOrResourceIdName();
 
   /// Creates a new entry with the same values.
@@ -50,9 +48,9 @@ public:
 
 typedef Array<ResourceTableEntry*> ResourceTableEntryList;
 
-//-------------------------------------------------------------------ResourceTable
 /// A table of resources (or strings) that can be indexed, searched by name, or
-/// sampled randomly. The table can be randomly sampled to return an entry into the table.
+/// sampled randomly. The table can be randomly sampled to return an entry into
+/// the table.
 class ResourceTable : public DataResource
 {
 public:
@@ -77,20 +75,27 @@ public:
   HandleOf<ResourceTable> RuntimeClone();
   void CopyTo(ResourceTable* destination);
 
-  /// Add the given entry. If another entry with the same name exists then an error is thrown.
+  /// Add the given entry. If another entry with the same name exists then an
+  /// error is thrown.
   void AddOrError(ResourceTableEntry* entry);
-  /// Add the given entry. If another entry with the same name exists then no operation is performed.
+  /// Add the given entry. If another entry with the same name exists then no
+  /// operation is performed.
   bool AddOrIgnore(ResourceTableEntry* entry);
-  /// Add the given entry. If another entry with the same name exists then it is overwritten.
+  /// Add the given entry. If another entry with the same name exists then it is
+  /// overwritten.
   bool AddOrOverwrite(ResourceTableEntry* entry);
 
-  /// Returns the entry associated with the given key. If no entry matches the key then the provided default is returned.
-  ResourceTableEntry* GetOrDefault(StringParam key, ResourceTableEntry* defaultValue);
-  /// Returns the entry associated with the given key. If no entry matches the key then an exception is thrown.
+  /// Returns the entry associated with the given key. If no entry matches the
+  /// key then the provided default is returned.
+  ResourceTableEntry* GetOrDefault(StringParam key,
+                                   ResourceTableEntry* defaultValue);
+  /// Returns the entry associated with the given key. If no entry matches the
+  /// key then an exception is thrown.
   ResourceTableEntry* GetOrError(StringParam key);
-  /// Returns the entry associated with the given key. If no entry matches then null is returned.
+  /// Returns the entry associated with the given key. If no entry matches then
+  /// null is returned.
   ResourceTableEntry* GetOrNull(StringParam key);
-  
+
   ResourceTableEntry* operator[](int index);
   /// Access an item at the given index
   ResourceTableEntry* Get(int index);
@@ -104,12 +109,14 @@ public:
   ResourceTableEntry* Get(StringParam key);
   /// Hash-Map interface. Sets via the provided key.
   void Set(StringParam key, ResourceTableEntry* entry);
-  
+
   /// Removes the item at the given index.
   void RemoveAt(int index);
-  /// Removes the entry associated with the given key. If no entry matches an exception is thrown.
+  /// Removes the entry associated with the given key. If no entry matches an
+  /// exception is thrown.
   void RemoveOrError(StringParam key);
-  /// Removes the entry associated with the given key. If no entry matches then no operation is performed.
+  /// Removes the entry associated with the given key. If no entry matches then
+  /// no operation is performed.
   bool RemoveOrIgnore(StringParam key);
 
   /// Returns if the given key is contained.
@@ -125,34 +132,42 @@ public:
   /// Clear all items in the table
   void Clear();
 
-  /// The kind of resource contained in this table. This is either a resource type or "String".
+  /// The kind of resource contained in this table. This is either a resource
+  /// type or "String".
   String GetResourceType();
   void SetResourceType(StringParam resourceType);
-  /// The maximum probability weight value that can be stored in the table. Setting this will clamp all weight values
+  /// The maximum probability weight value that can be stored in the table.
+  /// Setting this will clamp all weight values
   WeightType GetMaxWeight();
   void SetMaxWeight(WeightType maxWeight);
 
   /// Samples the table to return a random index into the table. Takes two
   /// (different) random floats from [0,1) in order to sample.
   uint SampleIndex(float random1, float random2);
-  /// Samples the table to return a random index into the table given a random context.
+  /// Samples the table to return a random index into the table given a random
+  /// context.
   uint SampleIndex(RandomContext* random);
 
-  /// Samples the table to return a random entry. Takes two (different) random floats
-  /// from [0,1) in order to sample. Returns an empty string if the table is empty.
+  /// Samples the table to return a random entry. Takes two (different) random
+  /// floats from [0,1) in order to sample. Returns an empty string if the table
+  /// is empty.
   ResourceTableEntry* Sample(float random1, float random2);
   /// Samples the table to return a random entry given a random context.
   ResourceTableEntry* Sample(RandomContext* random);
 
   /// Force rebuild the weighted probability table.
   void ForceRebuild();
-  
+
   //-------------------------------------------------------------------Internal
-  // Add a new entry solely based upon a value. This is almost entirely used by the ui when a new row is added.
+  // Add a new entry solely based upon a value. This is almost entirely used by
+  // the ui when a new row is added.
   void AddNewEntry(StringParam value = String());
-  bool AddNewEntry(const ValueType& name, const ValueType& value, const WeightType& prob);
-  
-  /// Mark the table as having changes that need to be processed on the next sample.
+  bool AddNewEntry(const ValueType& name,
+                   const ValueType& value,
+                   const WeightType& prob);
+
+  /// Mark the table as having changes that need to be processed on the next
+  /// sample.
   void SetOutOfDate();
   void BuildIfOutOfDate();
   void RebuildMap();
@@ -160,7 +175,9 @@ public:
   void ValidateEntries();
   bool ValidateEntry(ResourceTableEntry* entry);
   bool ValidateEntryType(ResourceTableEntry* entry, bool throwException);
-  Resource* GetResource(StringParam resourceIdName, ResourceNotFound::Enum notFoundMode = ResourceNotFound::ReturnDefault);
+  Resource* GetResource(
+      StringParam resourceIdName,
+      ResourceNotFound::Enum notFoundMode = ResourceNotFound::ReturnDefault);
 
   /// List used to lookup entries by index.
   EntryList mEntryList;
@@ -178,7 +195,6 @@ public:
   bool mIsOutOfDate;
 };
 
-//-------------------------------------------------------------------ResourceTableManager
 /// Simple manager for the ResourceTable. Just manages creating the resources.
 class ResourceTableManager : public ResourceManager
 {
@@ -189,4 +205,4 @@ public:
   void OnValidateTables(ResourceEvent* e);
 };
 
-}//namespace Zero
+} // namespace Zero

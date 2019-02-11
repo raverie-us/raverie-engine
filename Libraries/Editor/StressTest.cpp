@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file StressTest.cpp
-/// Implementation of the StressTest class.
-/// 
-/// Authors: Trevor Sundberg
-/// Copyright 2010-2012, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -24,7 +16,7 @@ String ToString(Cog* sourceCog)
   output.Append("Cog \"");
   output.Append(sourceCog->GetName());
   output.Append("\" [");
-  if(Archetype* archetype = sourceCog->GetArchetype())
+  if (Archetype* archetype = sourceCog->GetArchetype())
     output.Append(archetype->Name);
   output.Append("] <");
   output.Append(cogIdStr);
@@ -79,10 +71,9 @@ bool StressTestErrorHandler(ErrorSignaler::ErrorData& errorData)
 // Occurs when the engine updates
 void OnUpdate(ObjectEvent* event);
 
-//------------------------------------------------------------------------ StressRandom
+//StressRandom
 // Constructor
-StressRandom::StressRandom(int seed)
-  : mRandom(seed)
+StressRandom::StressRandom(int seed) : mRandom(seed)
 {
   //
 }
@@ -231,7 +222,7 @@ String StressRandom::RandomString()
   return builder.ToString();
 }
 
-//------------------------------------------------------------------------ StressTest
+//StressTest
 ZilchDefineType(StressTest, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -256,17 +247,17 @@ ZilchDefineType(StressTest, builder, type)
   ZilchBindFieldProperty(SwitchViewports);
   ZilchBindFieldProperty(Undo);
   ZilchBindFieldProperty(Redo);
-  //ZilchBindFieldProperty(CreateObjectLinks)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(ModifyArchetypes)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(CreateResources)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(LoadResources)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(ResourceProperties)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(ConfigProperties)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(ProjectProperties)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(RunCommands)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(ShapeCasts)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(CollisionPairs)->SetFlag(PropertyFlags::Serialized);
-  //ZilchBindFieldProperty(LightingModes)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(CreateObjectLinks)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(ModifyArchetypes)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(CreateResources)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(LoadResources)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(ResourceProperties)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(ConfigProperties)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(ProjectProperties)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(RunCommands)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(ShapeCasts)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(CollisionPairs)->SetFlag(PropertyFlags::Serialized);
+  // ZilchBindFieldProperty(LightingModes)->SetFlag(PropertyFlags::Serialized);
 }
 
 // Constructor
@@ -292,44 +283,45 @@ StressTest::StressTest()
   SwitchViewports = false;
   Undo = false;
   Redo = false;
-  //CreateObjectLinks         = false;
-  //ModifyArchetypes          = false;
-  //CreateResources           = false;
-  //LoadResources             = false;
-  //ResourceProperties        = false;
-  //ConfigProperties          = false;
-  //ProjectProperties         = false;
-  //RunCommands               = false;
-  //ShapeCasts                = false;
-  //CollisionPairs            = false;
-  //LightingModes            = false;
+  // CreateObjectLinks         = false;
+  // ModifyArchetypes          = false;
+  // CreateResources           = false;
+  // LoadResources             = false;
+  // ResourceProperties        = false;
+  // ConfigProperties          = false;
+  // ProjectProperties         = false;
+  // RunCommands               = false;
+  // ShapeCasts                = false;
+  // CollisionPairs            = false;
+  // LightingModes            = false;
 }
 
 void StressTest::Serialize(Serializer& stream)
 {
   MetaSerializeProperties(this, stream);
 
-  if(LogFile.Empty())
+  if (LogFile.Empty())
     LogFile = FilePath::Combine(GetUserDocumentsDirectory(), "Log.txt");
 }
 
-//------------------------------------------------------------------------ StressTestDialog
+//StressTestDialog
 ZilchDefineType(StressTestDialog, builder, type)
 {
 }
 
 // Constructor
-StressTestDialog::StressTestDialog(Composite* parent)
-  : Composite(parent)
-  , mTestIterationCount(0)
-  , mTestFrame(0)
-  , mRandom(0)
+StressTestDialog::StressTestDialog(Composite* parent) :
+    Composite(parent),
+    mTestIterationCount(0),
+    mTestFrame(0),
+    mRandom(0)
 {
   SetLayout(CreateStackLayout());
   SetMinSize(Vec2(300, 300));
 
-  mSettingsLocation = FilePath::Combine(GetUserDocumentsDirectory(), "StressTester.txt");
-  if(FileExists(mSettingsLocation))
+  mSettingsLocation =
+      FilePath::Combine(GetUserDocumentsDirectory(), "StressTester.txt");
+  if (FileExists(mSettingsLocation))
     LoadFromDataFile(mTestInfo, mSettingsLocation);
 
   // Start the test
@@ -345,10 +337,14 @@ StressTestDialog::StressTestDialog(Composite* parent)
 
   mStarted = false;
 
-  mExtensionFunctions[ZilchTypeId(Resource)] = &StressTestDialog::GetVariantForResourceExtension;
-  mExtensionFunctions[ZilchTypeId(Enum)] = &StressTestDialog::GetVariantForEnumExtension;
-  mExtensionFunctions[ZilchTypeId(EditorRange)] = &StressTestDialog::GetVariantForRangeExtension;
-  mExtensionFunctions[ZilchTypeId(EditorIndexedStringArray)] = &StressTestDialog::GetVariantForStringArray;
+  mExtensionFunctions[ZilchTypeId(Resource)] =
+      &StressTestDialog::GetVariantForResourceExtension;
+  mExtensionFunctions[ZilchTypeId(Enum)] =
+      &StressTestDialog::GetVariantForEnumExtension;
+  mExtensionFunctions[ZilchTypeId(EditorRange)] =
+      &StressTestDialog::GetVariantForRangeExtension;
+  mExtensionFunctions[ZilchTypeId(EditorIndexedStringArray)] =
+      &StressTestDialog::GetVariantForStringArray;
 
   mIgnoreObjects.PushBack(SpecialCogNames::WorldAnchor);
   mIgnoreObjects.PushBack("Renderer");
@@ -391,15 +387,16 @@ void StressTestDialog::OnStartTest(ObjectEvent* event)
     CopyFolderContents(dest, projectDirectory, &emptyFilter);
   }
 
-  String newProjLocation = FilePath::Combine(dest, BuildString(projName, ".zeroproj"));
+  String newProjLocation =
+      FilePath::Combine(dest, BuildString(projName, ".zeroproj"));
 
   Z::gEditor->mConfig->has(MainConfig)->mSave = false;
 
-  //OpenProjectFile(newProjLocation);
+  // OpenProjectFile(newProjLocation);
 
   SaveToDataFile(mTestInfo, mSettingsLocation);
 
-  //hide this window so we can't modify while running
+  // hide this window so we can't modify while running
   this->SetActive(false);
 
   mStarted = true;
@@ -410,11 +407,13 @@ void StressTestDialog::OnStartTest(ObjectEvent* event)
     mLogFile.Close();
   }
 
-  //HACK
+  // HACK
   gStressTestDialog = this;
   ErrorSignaler::SetErrorHandler(StressTestErrorHandler);
 
-  bool opened = mLogFile.Open(mTestInfo.LogFile.c_str(), FileMode::Write, FileAccessPattern::Sequential);
+  bool opened = mLogFile.Open(mTestInfo.LogFile.c_str(),
+                              FileMode::Write,
+                              FileAccessPattern::Sequential);
   ErrorIf(!opened, "Failed to open file for text output");
 
   Log("Seed: %d", mTestInfo.Seed);
@@ -444,7 +443,9 @@ void StressTestDialog::OnUpdate(UpdateEvent* event)
 void StressTestDialog::Log(cstr format, ...)
 {
   if (!mLogFile.IsOpen())
-    mLogFile.Open(mTestInfo.LogFile.c_str(), FileMode::Append, FileAccessPattern::Sequential);
+    mLogFile.Open(mTestInfo.LogFile.c_str(),
+                  FileMode::Append,
+                  FileAccessPattern::Sequential);
 
   if (mLogFile.IsOpen())
   {
@@ -461,14 +462,15 @@ void StressTestDialog::Log(cstr format, ...)
 }
 
 // Generate a random variant
-Any StressTestDialog::RandomVariantOfType(BoundType* boundType, Space* targetSpace)
+Any StressTestDialog::RandomVariantOfType(BoundType* boundType,
+                                          Space* targetSpace)
 {
   if (boundType == ZilchTypeId(String))
     return mRandom.RandomString();
   else if (boundType == ZilchTypeId(int))
     return mRandom.RandomInt();
   // uint has no type. Can't support for now
-  //else if(boundType == ZilchTypeId(uint))
+  // else if(boundType == ZilchTypeId(uint))
   //  return mRandom.RandomUint();
   else if (boundType == ZilchTypeId(bool))
     return mRandom.RandomBool();
@@ -507,7 +509,9 @@ void StressTestDialog::TestOnce()
   if (targetSpace == NULL)
     return;
 
-  Log("******************************************** Test(%d) on Frame(%d)", mTestIterationCount, mTestFrame);
+  Log("******************************************** Test(%d) on Frame(%d)",
+      mTestIterationCount,
+      mTestFrame);
   ++mTestIterationCount;
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
@@ -537,7 +541,7 @@ void StressTestDialog::TestOnce()
         ToString(scale).c_str(),
         name.c_str());
 
-    //TODO
+    // TODO
     // Go through random archetypes (not just cube)
     // Occasionally try to create bad ones
     Cog* object = targetSpace->CreateAt(archetype, position, rotation, scale);
@@ -579,7 +583,7 @@ void StressTestDialog::TestOnce()
       BoundType* boundType = ZilchVirtualTypeId(component);
 
       Property* property = GetRandomSetProperty(boundType);
-      if(property != nullptr)
+      if (property != nullptr)
       {
         Any oldVariant = property->GetValue(component);
 
@@ -590,30 +594,38 @@ void StressTestDialog::TestOnce()
 
           Any newVariant;
 
-          if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
-            function = mExtensionFunctions.FindValue(ZilchVirtualTypeId(extension), nullptr);
+          if (EditorPropertyExtension* extension =
+                  property->HasInherited<EditorPropertyExtension>())
+            function = mExtensionFunctions.FindValue(
+                ZilchVirtualTypeId(extension), nullptr);
 
           // Check if this is an enum
-          if(function == nullptr && property->PropertyType->IsA(ZilchTypeId(Enum)))
+          if (function == nullptr &&
+              property->PropertyType->IsA(ZilchTypeId(Enum)))
             function = &GetVariantForEnumExtension;
           // Check if this is a resource
-          if(function == nullptr && property->PropertyType->IsA(ZilchTypeId(Resource)))
+          if (function == nullptr &&
+              property->PropertyType->IsA(ZilchTypeId(Resource)))
             function = &GetVariantForResourceExtension;
 
-          if(function == nullptr)
+          if (function == nullptr)
           {
-            MetaPropertyEditor* propertyEditor = property->PropertyType->HasInherited<MetaPropertyEditor>();
+            MetaPropertyEditor* propertyEditor =
+                property->PropertyType->HasInherited<MetaPropertyEditor>();
             BoundType* propertyEditorType = ZilchVirtualTypeId(propertyEditor);
-            if(propertyEditorType)
-              function = mExtensionFunctions.FindValue(propertyEditorType, nullptr);
+            if (propertyEditorType)
+              function =
+                  mExtensionFunctions.FindValue(propertyEditorType, nullptr);
           }
 
           if (function != nullptr)
             newVariant = function(mRandom, property, component);
           else
-            newVariant = RandomVariantOfType(Type::GetBoundType(property->PropertyType), targetSpace);
+            newVariant = RandomVariantOfType(
+                Type::GetBoundType(property->PropertyType), targetSpace);
 
-          Log("Set Property '%s' on '%s' (old value %s, new value %s) on Cog %s",
+          Log("Set Property '%s' on '%s' (old value %s, new value %s) on Cog "
+              "%s",
               property->Name.c_str(),
               ZilchVirtualTypeId(component)->Name.c_str(),
               oldVariant.ToString().c_str(),
@@ -638,11 +650,13 @@ void StressTestDialog::TestOnce()
       auto composition = meta->HasInherited<MetaComposition>();
 
       Array<String> availableComponents;
-      composition->Enumerate(availableComponents, EnumerateAction::AllAddableToObject, object);
+      composition->Enumerate(
+          availableComponents, EnumerateAction::AllAddableToObject, object);
 
       if (!availableComponents.Empty())
       {
-        String component = availableComponents[mRandom.RandomIntMax(availableComponents.Size())];
+        String component = availableComponents[mRandom.RandomIntMax(
+            availableComponents.Size())];
 
         bool validComponent = true;
 
@@ -657,7 +671,9 @@ void StressTestDialog::TestOnce()
 
         if (validComponent)
         {
-          Log("Adding component %s on %s", component.c_str(), ToString(object).c_str());
+          Log("Adding component %s on %s",
+              component.c_str(),
+              ToString(object).c_str());
 
           QueueAddComponent(queue, object, component);
 
@@ -674,7 +690,9 @@ void StressTestDialog::TestOnce()
       auto componentMeta = ZilchVirtualTypeId(component);
       auto owner = component->GetOwner();
 
-      Log("Removing component %s from %s", componentMeta->Name.c_str(), ToString(owner).c_str());
+      Log("Removing component %s from %s",
+          componentMeta->Name.c_str(),
+          ToString(owner).c_str());
 
       auto meta = ZilchVirtualTypeId(owner);
 
@@ -727,14 +745,18 @@ void StressTestDialog::TestOnce()
       worldRay.Direction = mRandom.RandomDirection();
       physics->CastRay(worldRay, results);
 
-      Log("Casting ray from %s in direction %s", ToString(worldRay.Start).c_str(), ToString(worldRay.Direction).c_str());
+      Log("Casting ray from %s in direction %s",
+          ToString(worldRay.Start).c_str(),
+          ToString(worldRay.Direction).c_str());
 
       StringBuilder castStr;
 
       for (uint i = 0; i < results.Size(); ++i)
       {
         auto hit = results[i];
-        Log(" - Hit at %f, object %s", hit.GetDistance(), ToString(hit.GetObjectHit()).c_str());
+        Log(" - Hit at %f, object %s",
+            hit.GetDistance(),
+            ToString(hit.GetObjectHit()).c_str());
       }
     }
   }
@@ -747,7 +769,9 @@ void StressTestDialog::TestOnce()
 
     if (parent && child && !child->mFlags.IsSet(CogFlags::Protected))
     {
-      Log("Attaching %s to %s", ToString(child).c_str(), ToString(parent).c_str());
+      Log("Attaching %s to %s",
+          ToString(child).c_str(),
+          ToString(parent).c_str());
 
       bool relative = mRandom.RandomBool();
       AttachObject(queue, child, parent, relative);
@@ -766,7 +790,9 @@ void StressTestDialog::TestOnce()
     if (child)
     {
       if (child->mHierarchyParent)
-        Log("Detaching %s from parent %s", ToString(child).c_str(), ToString(child->mHierarchyParent).c_str());
+        Log("Detaching %s from parent %s",
+            ToString(child).c_str(),
+            ToString(child->mHierarchyParent).c_str());
       else
         Log("Detaching %s from parent", ToString(child).c_str());
 
@@ -782,7 +808,7 @@ void StressTestDialog::TestOnce()
 
   if (mTestInfo.MouseEvents)
   {
-    //Needs updating
+    // Needs updating
   }
 
   if (mTestInfo.KeyEvents)
@@ -812,7 +838,8 @@ void StressTestDialog::TestOnce()
 
   if (mTestInfo.ChangeTools)
   {
-    Z::gEditor->Tools->SelectToolIndex(mRandom.RandomIntMax(Z::gEditor->Tools->mTools.mToolArray.Size() + 5));
+    Z::gEditor->Tools->SelectToolIndex(
+        mRandom.RandomIntMax(Z::gEditor->Tools->mTools.mToolArray.Size() + 5));
   }
 
   if (mTestInfo.StartGameInstances)
@@ -840,14 +867,15 @@ void StressTestDialog::TestOnce()
     {
       Composite* c = Z::gEditor;
       auto children = c->GetChildren();
-      //grab all tab areas under the main window
+      // grab all tab areas under the main window
       Array<TabArea*> tabAreas;
       for (; !children.Empty(); children.PopFront())
       {
         Widget& child = children.Front();
-        //unfortunately the meta of the window is null now, I should fix this but
-        //I'm lazy and I'll just check for the name window right now...
-        if (ZilchVirtualTypeId(&child)->IsA(ZilchTypeId(Window)) || child.GetName() == "Window")
+        // unfortunately the meta of the window is null now, I should fix this
+        // but I'm lazy and I'll just check for the name window right now...
+        if (ZilchVirtualTypeId(&child)->IsA(ZilchTypeId(Window)) ||
+            child.GetName() == "Window")
         {
           Window* window = static_cast<Window*>(&child);
           tabAreas.PushBack(window->mTabArea);
@@ -864,7 +892,8 @@ void StressTestDialog::TestOnce()
 
         if (sourceTabArea->mTabs.Size() != 0)
         {
-          uint sourceTabIndex = mRandom.RandomIntMax(sourceTabArea->mTabs.Size());
+          uint sourceTabIndex =
+              mRandom.RandomIntMax(sourceTabArea->mTabs.Size());
 
           TabWidget* sourceTab = sourceTabArea->mTabs[sourceTabIndex];
           Vec2 pos = Math::ToVector2(sourceTab->mTitle->GetScreenPosition());
@@ -878,23 +907,25 @@ void StressTestDialog::TestOnce()
           //          event.Movement = Vec2::cZero;
           //          event.Position = pos;
           //         event.ScrollMovement = Vec2::cZero;
-          //          event.State[MouseButtons::Left] = true;//OsMouseButtonState::Pressed;
+          //          event.State[MouseButtons::Left] =
+          //          true;//OsMouseButtonState::Pressed;
 
-          //send a down event
+          // send a down event
           OsShell* shell = Z::gEngine->has(OsShell);
           shell->DispatchEvent(Events::OsMouseDown, &event);
 
-          //occasionally try to drag to another tab
+          // occasionally try to drag to another tab
           if (mRandom.Chance(0.3f) && destTabArea->mTabs.Size() != 0)
           {
             TabWidget* destTab = destTabArea->mTabs[0];
             Vec2 newPos;
 
-            //either drag to another tab
+            // either drag to another tab
             float chance = mRandom.RandomFloat();
             if (chance <= 0.6f)
-              newPos = Math::ToVector2(destTab->mTitle->GetScreenPosition()) + destTab->mTitle->GetSize() * 0.5f;
-            //or drag to one of the four edges of the window
+              newPos = Math::ToVector2(destTab->mTitle->GetScreenPosition()) +
+                       destTab->mTitle->GetSize() * 0.5f;
+            // or drag to one of the four edges of the window
             else
             {
               Vec2 size = c->GetSize();
@@ -908,20 +939,23 @@ void StressTestDialog::TestOnce()
                 newPos = Vec2(size.x, size.y / 2);
             }
 
-            //now send a move to the new spot
+            // now send a move to the new spot
             //            event.Movement = newPos - pos;
             //            event.Position = newPos;
-            //            event.State[MouseButtons::Left] = true;//OsMouseButtonState::Held;
+            //            event.State[MouseButtons::Left] =
+            //            true;//OsMouseButtonState::Held;
             //            shell->DispatchEvent(Events::OsMouseMove, &event);
-            //a move has to be sent twice (at least on the same frame) otherwise it
-            //doesn't work right now, I guess it's a bug in ui that needs to be fixed
+            // a move has to be sent twice (at least on the same frame)
+            // otherwise it doesn't work right now, I guess it's a bug in ui that
+            // needs to be fixed
             //            event.Movement = Vec2::cZero;
             //            shell->DispatchEvent(Events::OsMouseMove, &event);
           }
 
-          //now send the corresponding up wherever we left off at
+          // now send the corresponding up wherever we left off at
           //          event.Movement = Vec2::cZero;
-          //          event.State[MouseButtons::Left] = OsMouseButtonState::Released;
+          //          event.State[MouseButtons::Left] =
+          //          OsMouseButtonState::Released;
           shell->DispatchEvent(Events::OsMouseUp, &event);
         }
       }
@@ -963,7 +997,8 @@ Cog* StressTestDialog::GetRandomObject(Space* targetSpace)
 
     for (uint j = 0; j < mIgnoreObjects.Size(); ++j)
     {
-      if (cog->GetName() == mIgnoreObjects[j] || cog->mFlags.IsSet(CogFlags::ObjectViewHidden))
+      if (cog->GetName() == mIgnoreObjects[j] ||
+          cog->mFlags.IsSet(CogFlags::ObjectViewHidden))
       {
         return NULL;
       }
@@ -980,10 +1015,10 @@ Component* StressTestDialog::GetRandomComponent(Space* targetSpace)
 {
   Cog* object = nullptr;
   // Attempt a max number of times to get a valid object
-  for(size_t i = 0; i < 1000; ++i)
+  for (size_t i = 0; i < 1000; ++i)
   {
     object = GetRandomObject(targetSpace);
-    if(object != nullptr)
+    if (object != nullptr)
       break;
   }
 
@@ -993,7 +1028,8 @@ Component* StressTestDialog::GetRandomComponent(Space* targetSpace)
 
     if (components.Empty() == false)
     {
-      Component* component = components[mRandom.RandomIntMax(components.Size())];
+      Component* component =
+          components[mRandom.RandomIntMax(components.Size())];
 
       for (uint j = 0; j < mIgnoreComponents.Size(); ++j)
       {
@@ -1014,52 +1050,58 @@ Component* StressTestDialog::GetRandomComponent(Space* targetSpace)
 Property* StressTestDialog::GetRandomSetProperty(BoundType* boundType)
 {
   PropertyArray properties;
-  // In order to get base type properties in an array (so we can randomly access)
-  // we have to create a new array and copy all properties over.
+  // In order to get base type properties in an array (so we can randomly
+  // access) we have to create a new array and copy all properties over.
   auto range = boundType->GetProperties(Zilch::Members::All);
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     properties.PushBack(range.Front());
 
-  if(properties.Empty())
+  if (properties.Empty())
     return nullptr;
 
   // Find a non-readonly property (give up after so many attempts)
   Property* property = nullptr;
-  for(size_t i = 0; i < 1000; ++i)
+  for (size_t i = 0; i < 1000; ++i)
   {
     property = properties[mRandom.RandomIntMax(properties.Size())];
-    if(!property->IsReadOnly())
+    if (!property->IsReadOnly())
       break;
   }
   return property;
 }
 
-Any StressTestDialog::GetVariantForResourceExtension(StressRandom& random, Property* prop, Component* component)
+Any StressTestDialog::GetVariantForResourceExtension(StressRandom& random,
+                                                     Property* prop,
+                                                     Component* component)
 {
   // Get the resource manager for this editor resource type
   BoundType* resourceType = Type::GetBoundType(prop->PropertyType);
-  ResourceManager* manager = Z::gResources->Managers.FindValue(resourceType->Name, NULL);
+  ResourceManager* manager =
+      Z::gResources->Managers.FindValue(resourceType->Name, NULL);
   // Get all of the resources for this resource type
   Array<String> resources;
   manager->EnumerateResources(resources);
   // There is a 90% chance that we will pick a pre-existing resource,
   // otherwise generate a random name
   String resourceName = random.RandomString();
-  if(resources.Size() != 0)
+  if (resources.Size() != 0)
     resourceName = resources[random.RandomIntMax(resources.Size())];
-  
-  Resource* resource = manager->GetResource(resourceName, ResourceNotFound::ErrorFallback);
+
+  Resource* resource =
+      manager->GetResource(resourceName, ResourceNotFound::ErrorFallback);
   return resource;
 }
 
-Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random, Property* prop, Component* component)
+Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random,
+                                                 Property* prop,
+                                                 Component* component)
 {
   BoundType* propertyType = Type::GetBoundType(prop->PropertyType);
   Zilch::PropertyArray& properties = propertyType->AllProperties;
-  if(properties.Empty())
+  if (properties.Empty())
     return Any(0);
-  
-  if(random.Chance(0.9f))
+
+  if (random.Chance(0.9f))
   {
     uint index = random.RandomIntMax(properties.Size());
     return Any(properties[index]);
@@ -1068,7 +1110,9 @@ Any StressTestDialog::GetVariantForEnumExtension(StressRandom& random, Property*
   return Any(index);
 }
 
-Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random, Property* prop, Component* component)
+Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random,
+                                                  Property* prop,
+                                                  Component* component)
 {
   EditorRange* editorRange = prop->HasInherited<EditorRange>();
   BoundType* propertyType = Type::GetBoundType(prop->PropertyType);
@@ -1076,51 +1120,56 @@ Any StressTestDialog::GetVariantForRangeExtension(StressRandom& random, Property
   // We want to generate a value within a range, but we have to determine the
   // value type of the range, there is also a 90% chance we will pick a
   // value within the valid range, a 10% chance we will pick a random value
-  if(propertyType == ZilchTypeId(float))
+  if (propertyType == ZilchTypeId(float))
   {
     float value = 0;
-    if(random.Chance(0.9f))
+    if (random.Chance(0.9f))
       value = random.RandomFloat();
     else
-      value = random.RandomFloatRange(editorRange->Min,editorRange->Max);
+      value = random.RandomFloatRange(editorRange->Min, editorRange->Max);
     return Any(value);
   }
   // Uint has not type, can't support for now
-  //else if(propertyType == ZilchTypeId(uint))
+  // else if(propertyType == ZilchTypeId(uint))
   //{
   //  if(random.Chance(0.9f))
   //    return Variant((uint)random.RandomInt());
-  //  return Variant((uint)random.RandomIntRange((uint)editorRange->MinValue,(uint)editorRange->MaxValue));
+  //  return
+  //  Variant((uint)random.RandomIntRange((uint)editorRange->MinValue,(uint)editorRange->MaxValue));
   //}
-  else if(propertyType == ZilchTypeId(int))
+  else if (propertyType == ZilchTypeId(int))
   {
     int value = 0;
-    if(random.Chance(0.9f))
+    if (random.Chance(0.9f))
       value = random.RandomInt();
     else
-      value = random.RandomIntRange((int)editorRange->Min, (int)editorRange->Max);
+      value =
+          random.RandomIntRange((int)editorRange->Min, (int)editorRange->Max);
     return Any(value);
   }
   else
-    //there is a range type we don't handle
+    // there is a range type we don't handle
     Os::DebugBreak();
-    
+
   return Any(0);
 }
 
-Any StressTestDialog::GetVariantForStringArray(StressRandom& random, Property* prop, Component* component)
+Any StressTestDialog::GetVariantForStringArray(StressRandom& random,
+                                               Property* prop,
+                                               Component* component)
 {
-  EditorIndexedStringArray* editorStrArray = prop->HasInherited<EditorIndexedStringArray>();
-  
-  if(random.Chance(0.7f))
+  EditorIndexedStringArray* editorStrArray =
+      prop->HasInherited<EditorIndexedStringArray>();
+
+  if (random.Chance(0.7f))
   {
     Array<String> strs;
     editorStrArray->Enumerate(component, prop, strs);
-    if(strs.Size() != 0)
+    if (strs.Size() != 0)
       return Any(strs[random.RandomIntRange(0, strs.Size())]);
   }
-  
+
   return Any(random.RandomString());
 }
 
-}//namespace Zero
+} // namespace Zero

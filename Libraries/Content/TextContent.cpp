@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file TextContent.hpp
-/// Implementation of TextContent classes.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -20,27 +12,28 @@ TextContent::TextContent()
   EditMode = ContentEditMode::ResourceObject;
 }
 
-//------------------------------------------------------------ Factory
 
 ContentItem* MakeTextContent(ContentInitializer& initializer)
 {
   TextContent* content = new TextContent();
 
   content->Filename = initializer.Filename;
-  
+
   DirectBuilderComponent* builder = nullptr;
 
-  if(initializer.Extension == "txt")
+  if (initializer.Extension == "txt")
     builder = new TextBuilder();
 
-  TypeExtensionEntry* zilchTypeEntry = FileExtensionManager::GetZilchScriptTypeEntry();
-  if(zilchTypeEntry->IsValidExtensionNoDot(initializer.Extension))
+  TypeExtensionEntry* zilchTypeEntry =
+      FileExtensionManager::GetZilchScriptTypeEntry();
+  if (zilchTypeEntry->IsValidExtensionNoDot(initializer.Extension))
     builder = new ZilchScriptBuilder();
 
-  TypeExtensionEntry* fragmentTypeEntry = FileExtensionManager::GetZilchFragmentTypeEntry();
-  //at the moment the extension always comes through as
-  //lower case so add both cases to cover any future changes
-  if(fragmentTypeEntry->IsValidExtensionNoDot(initializer.Extension))
+  TypeExtensionEntry* fragmentTypeEntry =
+      FileExtensionManager::GetZilchFragmentTypeEntry();
+  // at the moment the extension always comes through as
+  // lower case so add both cases to cover any future changes
+  if (fragmentTypeEntry->IsValidExtensionNoDot(initializer.Extension))
     builder = new ZilchFragmentBuilder();
 
   builder->Generate(initializer);
@@ -50,7 +43,6 @@ ContentItem* MakeTextContent(ContentInitializer& initializer)
   return content;
 }
 
-//------------------------------------------------------------Builders
 ZilchDefineType(BaseTextBuilder, builder, type)
 {
   ZeroBindDependency(TextContent);
@@ -62,9 +54,15 @@ void BaseTextBuilder::Generate(ContentInitializer& initializer)
   mResourceId = GenerateUniqueId64();
 }
 
-ZilchDefineType(TextBuilder, builder, type) {}
-ZilchDefineType(ZilchScriptBuilder, builder, type) {}
-ZilchDefineType(ZilchFragmentBuilder, builder, type) {}
+ZilchDefineType(TextBuilder, builder, type)
+{
+}
+ZilchDefineType(ZilchScriptBuilder, builder, type)
+{
+}
+ZilchDefineType(ZilchFragmentBuilder, builder, type)
+{
+}
 
 void CreateScriptContent(ContentSystem* system)
 {
@@ -75,15 +73,16 @@ void CreateScriptContent(ContentSystem* system)
 
   ContentTypeEntry text(ZilchTypeId(TextContent), MakeTextContent);
   system->CreatorsByExtension["txt"] = text;
-  
 
-  TypeExtensionEntry* zilchExtensions = FileExtensionManager::GetInstance()->GetZilchScriptTypeEntry();
-  for(size_t i = 0; i < zilchExtensions->mExtensions.Size(); ++i)
+  TypeExtensionEntry* zilchExtensions =
+      FileExtensionManager::GetInstance()->GetZilchScriptTypeEntry();
+  for (size_t i = 0; i < zilchExtensions->mExtensions.Size(); ++i)
     system->CreatorsByExtension[zilchExtensions->mExtensions[i]] = text;
 
-  TypeExtensionEntry* fragmentExtensions = FileExtensionManager::GetInstance()->GetZilchFragmentTypeEntry();
-  for(size_t i = 0; i < fragmentExtensions->mExtensions.Size(); ++i)
+  TypeExtensionEntry* fragmentExtensions =
+      FileExtensionManager::GetInstance()->GetZilchFragmentTypeEntry();
+  for (size_t i = 0; i < fragmentExtensions->mExtensions.Size(); ++i)
     system->CreatorsByExtension[fragmentExtensions->mExtensions[i]] = text;
 }
 
-}
+} // namespace Zero

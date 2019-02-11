@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-/// 
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -56,8 +51,8 @@ void ConvexMeshCollider::DebugDraw()
 void ConvexMeshCollider::ComputeWorldAabbInternal()
 {
   // Compute a more tight-fitting aabb if the vertex count is low enough?
-  //static const uint vertexThreshold = 9999;
-  //if(mMesh->GetVertexCount() <= vertexThreshold)
+  // static const uint vertexThreshold = 9999;
+  // if(mMesh->GetVertexCount() <= vertexThreshold)
   {
     Vec3 supportPoints[6];
     Support(Vec3::cXAxis, &supportPoints[0]);
@@ -71,11 +66,11 @@ void ConvexMeshCollider::ComputeWorldAabbInternal()
   }
 
   // Proper aabb of transformed aabb code. Maybe use later?
-  //Vec3 scale = GetWorldScale();
-  //Mat3 rotation = GetWorldRotation();
-  //Vec3 translation = GetWorldTranslation();
-  //mAabb = mMesh->GetAabb();
-  //mAabb = mAabb.TransformAabb(scale, rotation, translation);
+  // Vec3 scale = GetWorldScale();
+  // Mat3 rotation = GetWorldRotation();
+  // Vec3 translation = GetWorldTranslation();
+  // mAabb = mMesh->GetAabb();
+  // mAabb = mAabb.TransformAabb(scale, rotation, translation);
 }
 
 real ConvexMeshCollider::ComputeWorldVolumeInternal()
@@ -84,10 +79,12 @@ real ConvexMeshCollider::ComputeWorldVolumeInternal()
   return mConvexMesh->ComputeScaledVolume(worldScale);
 }
 
-void ConvexMeshCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
+void ConvexMeshCollider::ComputeLocalInverseInertiaTensor(
+    real mass, Mat3Ref localInvInertia)
 {
   Vec3 worldScale = GetWorldScale();
-  localInvInertia = mConvexMesh->ComputeScaledInvInertiaTensor(worldScale, mass);
+  localInvInertia =
+      mConvexMesh->ComputeScaledInvInertiaTensor(worldScale, mass);
 }
 
 void ConvexMeshCollider::RebuildModifiedResources()
@@ -98,8 +95,8 @@ void ConvexMeshCollider::RebuildModifiedResources()
 
 Vec3 ConvexMeshCollider::GetColliderLocalCenterOfMass(void) const
 {
-  // We currently need true world-space as the caller of this will transform to world space.
-  // To do this we must return the local space center of mass.
+  // We currently need true world-space as the caller of this will transform to
+  // world space. To do this we must return the local space center of mass.
   // @JoshD: Refactor later to remove this?
   return mConvexMesh->mLocalCenterOfMass;
 }
@@ -107,7 +104,8 @@ Vec3 ConvexMeshCollider::GetColliderLocalCenterOfMass(void) const
 void ConvexMeshCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
   // Bring the support direction into local space (normalize for safety),
-  // call the local-space support function then transform the result back into world space
+  // call the local-space support function then transform the result back into
+  // world space
   Vec3 localSpaceDir = TransformSupportDirectionToLocal(direction);
   localSpaceDir.Normalize();
   mConvexMesh->Support(localSpaceDir, support);
@@ -127,16 +125,17 @@ ConvexMesh* ConvexMeshCollider::GetConvexMesh()
 
 void ConvexMeshCollider::SetConvexMesh(ConvexMesh* convexMesh)
 {
-  if(convexMesh == nullptr)
+  if (convexMesh == nullptr)
     return;
 
-  // Disconnect from events on the old mesh and connect on the new mesh (if they're different)
+  // Disconnect from events on the old mesh and connect on the new mesh (if
+  // they're different)
   ConvexMesh* oldMesh = mConvexMesh;
-  if(oldMesh != convexMesh)
+  if (oldMesh != convexMesh)
   {
-    if(oldMesh != nullptr)
+    if (oldMesh != nullptr)
       DisconnectAll(oldMesh, this);
-    if(convexMesh != nullptr)
+    if (convexMesh != nullptr)
       ConnectThisTo(convexMesh, Events::ResourceModified, OnMeshModified);
   }
 
@@ -149,11 +148,12 @@ void ConvexMeshCollider::OnMeshModified(Event* e)
   InternalSizeChanged();
 }
 
-ConvexMeshCollider::RangeType ConvexMeshCollider::GetOverlapRange(Aabb& localAabb)
+ConvexMeshCollider::RangeType
+ConvexMeshCollider::GetOverlapRange(Aabb& localAabb)
 {
   // Return a range containing the mesh info (vertices and indices)
   ConvexMesh* mesh = GetConvexMesh();
   return RangeType(&mesh->GetVertexArray(), &mesh->GetIndexArray(), localAabb);
 }
 
-}//namespace Zero
+} // namespace Zero

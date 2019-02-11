@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Font.cpp
-/// Implementation of the font resource class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 #include "ft2build.h"
@@ -20,16 +12,16 @@ bool AnyNewLine(Rune rune)
   return rune == '\n' || rune == '\r';
 }
 
-//character > 255 quick fix for UTF8 needs to be improved to be accurate
+// character > 255 quick fix for UTF8 needs to be improved to be accurate
 bool IsPrintable(Rune rune)
 {
-  return (rune >= 32 && rune < 127) || rune == 169 || rune == 149 || rune == 245 || rune > 255;
+  return (rune >= 32 && rune < 127) || rune == 169 || rune == 149 ||
+         rune == 245 || rune > 255;
 }
 
-//------------------------------------------------------------ Render Font 
 
-RenderFont::RenderFont(Font* fontObject, int fontHeight)
-  : mFont(fontObject),
+RenderFont::RenderFont(Font* fontObject, int fontHeight) :
+    mFont(fontObject),
     mFontHeight(fontHeight),
     mTextureSize(cDefaultFontTextureSize),
     mTexPosX(cFontSpacing),
@@ -37,15 +29,15 @@ RenderFont::RenderFont(Font* fontObject, int fontHeight)
     mMaxWidthInPixels(1),
     mMaxHeightInPixels(1)
 {
-
 }
 
 RenderFont::~RenderFont()
 {
-
 }
 
-Vec2 RenderFont::MeasureText(StringRange text, uint runesToCount, float unitsPerPixel)
+Vec2 RenderFont::MeasureText(StringRange text,
+                             uint runesToCount,
+                             float unitsPerPixel)
 {
   Vec2 size = Vec2(0.0f, mLineHeight * unitsPerPixel);
   uint count = Math::Min(runesToCount, (uint)text.ComputeRuneCount());
@@ -81,7 +73,10 @@ Vec2 RenderFont::MeasureText(StringRange text, float unitsPerPixel)
   return MeasureText(text, text.SizeInBytes(), unitsPerPixel);
 }
 
-uint RenderFont::GetPosition(StringRange text, float offset, float unitsPerPixel, TextRounding::Enum rounding)
+uint RenderFont::GetPosition(StringRange text,
+                             float offset,
+                             float unitsPerPixel,
+                             TextRounding::Enum rounding)
 {
   float width = 0.0f;
   float lastWidth = 0.0f;
@@ -92,11 +87,11 @@ uint RenderFont::GetPosition(StringRange text, float offset, float unitsPerPixel
   {
     Rune runeCode = textTemp.Front();
 
-    //check for line terminator 
+    // check for line terminator
     if (AnyNewLine(runeCode))
       return runePositionIndex;
 
-    //skip unprintable (is printable does not check for UTF8 ranges and codes)
+    // skip unprintable (is printable does not check for UTF8 ranges and codes)
     if (!IsPrintable(runeCode))
       continue;
 
@@ -110,10 +105,10 @@ uint RenderFont::GetPosition(StringRange text, float offset, float unitsPerPixel
       if (rounding == TextRounding::LastCharacter)
         return runePositionIndex;
 
-      //Round the character selection
-      //Is the position more than halfway through this character
+      // Round the character selection
+      // Is the position more than halfway through this character
       float overflow = offset - width;
-      if (overflow >  characterWidth * 0.5f)
+      if (overflow > characterWidth * 0.5f)
         return runePositionIndex + 1;
       else
         return runePositionIndex;
@@ -145,15 +140,15 @@ RenderRune& RenderFont::GetRenderRune(Rune rune)
     // this if a fail safe as this should never be the case
     if (renderRune == nullptr)
     {
-      DoNotifyWarning("Unsupported Rune", "New rune failed to render for the selected font");
+      DoNotifyWarning("Unsupported Rune",
+                      "New rune failed to render for the selected font");
       renderRune = mRunes.FindPointer('?');
     }
-    
+
     return *renderRune;
   }
 }
 
-//------------------------------------------------------------ Font Rendering 
 
 struct FontRenderOptions
 {
@@ -167,24 +162,26 @@ void RasterGlyph(Image* dest, FT_Bitmap* bitmap, int x, int y)
   int destX, destY, srcX, srcY;
   int destEndX = x + bitmap->width;
   int destEndY = y + bitmap->rows;
-  destEndX = Math::Min( destEndX, dest->Height );
-  destEndY = Math::Min( destEndY, dest->Width );
+  destEndX = Math::Min(destEndX, dest->Height);
+  destEndY = Math::Min(destEndY, dest->Width);
   for (destX = x, srcX = 0; destX < destEndX; destX++, srcX++)
   {
     for (destY = y, srcY = 0; destY < destEndY; destY++, srcY++)
     {
       ImagePixel& a = dest->GetPixel(destX, destY);
       ImagePixel color = bitmap->buffer[srcY * bitmap->width + srcX] << 24;
-      //mix with white
+      // mix with white
       color |= 0x00FFFFFF;
       a = color;
     }
   }
 }
 
-int FtToPixels(int a){return a >> 6;}
+int FtToPixels(int a)
+{
+  return a >> 6;
+}
 
-//------------------------------------------------------------ Font
 ZilchDefineType(Font, builder, type)
 {
   ZeroBindDocumented();
@@ -198,14 +195,14 @@ Font::~Font()
 {
   DeleteObjectsInContainer(mRendered);
 
-  if(FontBlock)
+  if (FontBlock)
     FreeBlock(FontBlock);
 }
 
 RenderFont* Font::GetRenderFont(uint size)
 {
   RenderFont* rfont = mRendered.FindValue(size, nullptr);
-  if(rfont)
+  if (rfont)
     return rfont;
   else
   {
@@ -215,8 +212,6 @@ RenderFont* Font::GetRenderFont(uint size)
   }
 }
 
-
-//------------------------------------------------------------ FontLoaderTtf
 class FontLoaderTtf : public ResourceLoader
 {
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry)
@@ -230,23 +225,21 @@ class FontLoaderTtf : public ResourceLoader
   HandleOf<Resource> LoadFromBlock(ResourceEntry& entry)
   {
     Font* newFont = new Font();
-    //Store in memory
+    // Store in memory
     CloneBlock(newFont->FontBlock, entry.Block);
     FontManager::GetInstance()->AddResource(entry, newFont);
     return newFont;
   }
 };
 
-
-//------------------------------------------------------------ Font Manager
 ImplementResourceManager(FontManager, Font);
 
 FontManager::~FontManager()
 {
 }
 
-FontManager::FontManager(BoundType* resourceType)
-  : ResourceManager(resourceType)
+FontManager::FontManager(BoundType* resourceType) :
+    ResourceManager(resourceType)
 {
   AddLoader("Font", new FontLoaderTtf());
   mCategory = "Graphics";
@@ -264,15 +257,13 @@ RenderFont* FontManager::GetRenderFont(StringParam face, uint size, uint flags)
   return font->GetRenderFont(size);
 }
 
-//------------------------------------------------------------ FontRasterizer
 struct FontRasterizerData
 {
   FT_Library Library;
   FT_Face FontFace;
 };
 
-FontRasterizer::FontRasterizer(Font* fontObject)
-  : mFontObject(fontObject)
+FontRasterizer::FontRasterizer(Font* fontObject) : mFontObject(fontObject)
 {
   mData = new FontRasterizerData();
   int errorCode = FT_Init_FreeType(&mData->Library);
@@ -281,7 +272,7 @@ FontRasterizer::FontRasterizer(Font* fontObject)
 
 FontRasterizer::~FontRasterizer()
 {
-  //clean up all used freetype resources
+  // clean up all used freetype resources
   FT_Done_Face(mData->FontFace);
   FT_Done_FreeType(mData->Library);
   SafeDelete(mData);
@@ -305,8 +296,10 @@ RenderFont* FontRasterizer::RasterNewFont(int fontHeight)
   else
   {
     // get all existing rune codes rasterized for this font so far
-    RenderFont* existingRenderFont = mFontObject->mRendered.All().Front().second;
-    HashMap<int, RenderRune>::keyrange runeCodeRange = existingRenderFont->mRunes.Keys();
+    RenderFont* existingRenderFont =
+        mFontObject->mRendered.All().Front().second;
+    HashMap<int, RenderRune>::keyrange runeCodeRange =
+        existingRenderFont->mRunes.Keys();
 
     while (!runeCodeRange.Empty())
     {
@@ -323,24 +316,27 @@ RenderFont* FontRasterizer::RasterNewFont(int fontHeight)
   return renderFont;
 }
 
-RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Array<int>& newRuneCodes)
+RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont,
+                                               Array<int>& newRuneCodes)
 {
   SetRenderFont(existingFont);
   LoadFontFace(existingFont->mFontHeight);
 
   CollectRenderGlyphInfo(newRuneCodes);
-  // We are checking whether or not we have to collect and re-rasterize the existing runes onto a new texture
+  // We are checking whether or not we have to collect and re-rasterize the
+  // existing runes onto a new texture
   bool isCurrentTexture = PrepareFontImage();
-  // subtex2d is broken in the old graphics engine, just always re-rasterize the whole font set
+  // subtex2d is broken in the old graphics engine, just always re-rasterize the
+  // whole font set
   if (isCurrentTexture == false)
   {
     // Since we are treating our render font as new, reset tracked values
     ResetRenderFont(mRenderFont->mFontHeight);
     CollectExisitingRuneCodes(newRuneCodes);
     CollectRenderGlyphInfo(newRuneCodes);
-    // After recollecting the existing runes we may need to increase the texture size again
-    // so re-run just in case, it deallocates/allocates again, investigate
-    // better solutions
+    // After recollecting the existing runes we may need to increase the texture
+    // size again so re-run just in case, it deallocates/allocates again,
+    // investigate better solutions
     PrepareFontImage();
   }
 
@@ -350,12 +346,13 @@ RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Array<i
 }
 
 // For ease of use when adding just one new rune code
-Zero::RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Rune newRuneCode)
+Zero::RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont,
+                                                     Rune newRuneCode)
 {
   Array<int> runeCodes;
   runeCodes.PushBack(newRuneCode.value);
   UpdateRasteredFont(existingFont, runeCodes);
-  
+
   return existingFont;
 }
 
@@ -375,24 +372,34 @@ void FontRasterizer::ResetRenderFont(int fontHeight)
 
 void FontRasterizer::LoadFontFace(int fontHeight)
 {
-  //Always face index zero for now.
+  // Always face index zero for now.
   uint faceIndex = 0;
 
-  //Load the font from the font file into memory
-  // We don't use the freetype file API because it doens't use our internal File wrapper and doesn't handle utf8.
-  // We CANNOT deallocate this file block here because freetype continues to reference it.
+  // Load the font from the font file into memory
+  // We don't use the freetype file API because it doens't use our internal File
+  // wrapper and doesn't handle utf8. We CANNOT deallocate this file block here
+  // because freetype continues to reference it.
   mFontSource = ReadFileIntoDataBlock(mFontObject->LoadPath.c_str());
   // Create the font face from the file data now stored in memory
-  int errorCode = FT_New_Memory_Face(mData->Library, mFontSource.Data, mFontSource.Size, faceIndex, &mData->FontFace);
+  int errorCode = FT_New_Memory_Face(mData->Library,
+                                     mFontSource.Data,
+                                     mFontSource.Size,
+                                     faceIndex,
+                                     &mData->FontFace);
 
-  ErrorIf(errorCode == FT_Err_Unknown_File_Format, nullptr, "File is not a valid font file.");
+  ErrorIf(errorCode == FT_Err_Unknown_File_Format,
+          nullptr,
+          "File is not a valid font file.");
   ErrorIf(errorCode != 0, nullptr, "Bad file or path.");
 
   errorCode = FT_Set_Pixel_Sizes(mData->FontFace, 0, fontHeight);
   ErrorIf(errorCode != 0, nullptr, "Pixel size failed for some reason.");
 
   FT_Select_Charmap(mData->FontFace, FT_ENCODING_UNICODE);
-  ErrorIf(errorCode != 0, nullptr, "Failed to set unicode charmap for %s.", mFontObject->LoadPath.c_str());
+  ErrorIf(errorCode != 0,
+          nullptr,
+          "Failed to set unicode charmap for %s.",
+          mFontObject->LoadPath.c_str());
 }
 
 void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
@@ -413,7 +420,8 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
       RenderGlyph curGlyph;
       curGlyph.RuneCode = rune.value;
 
-      FT_UInt glyphIndex = FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(rune));
+      FT_UInt glyphIndex =
+          FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(rune));
 
       if (glyphIndex == cMissingGlyphIndex)
       {
@@ -423,13 +431,14 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
 
       errorCode = FT_Load_Glyph(mData->FontFace, glyphIndex, FT_LOAD_DEFAULT);
 
-      if (errorCode) continue;
+      if (errorCode)
+        continue;
 
       FT_GlyphSlot glyphSlot = mData->FontFace->glyph;
       curGlyph.Width = FtToPixels(glyphSlot->metrics.width);
       curGlyph.Height = FtToPixels(glyphSlot->metrics.height);
 
-      //these will determine our fonts standard render box size
+      // these will determine our fonts standard render box size
       maxWidth = Math::Max(maxWidth, curGlyph.Width + cFontSpacing);
       maxHeight = Math::Max(maxHeight, curGlyph.Height + cFontSpacing);
 
@@ -446,9 +455,9 @@ void FontRasterizer::CollectRenderGlyphInfo(Array<int>& runeCodes)
 void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
 {
   int errorCode = 0;
- 
-  // we want to track the starting texPos(X,Y) for where to start rendering glyphs
-  // after we have placed them in our image font
+
+  // we want to track the starting texPos(X,Y) for where to start rendering
+  // glyphs after we have placed them in our image font
   uint texPosX = mRenderFont->mTexPosX;
   uint texPosY = mRenderFont->mTexPosY;
 
@@ -461,12 +470,12 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
   ComputeAndRasterizeGlyphs();
 
   HandleOf<Texture> texture;
-  // We have to special case if this is a new texture entirely, or if we are adding
-  // these glyphs to an existing texture
+  // We have to special case if this is a new texture entirely, or if we are
+  // adding these glyphs to an existing texture
   if (isOriginalTexture)
   {
     texture = mRenderFont->mTexture;
-    
+
     // We must render the new glyphs in rectangles so figure out how many
     // are left on the current line
     uint stripStartX = texPosX;
@@ -486,8 +495,8 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
         texPosY += slotHeight;
         texPosX = cFontSpacing;
         timeToRasterStrip = true;
-        // since we 'counted' one glyph past the end we need to move our count back one to get all the glyphs
-        // should their be more to render
+        // since we 'counted' one glyph past the end we need to move our count
+        // back one to get all the glyphs should their be more to render
         glyphsInStrip -= 1;
         i -= 1;
       }
@@ -497,11 +506,11 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
         texPosX += slotWidth * glyphsInStrip;
         timeToRasterStrip = true;
       }
-      
+
       if (timeToRasterStrip)
       {
-        // figure out the size of the sub image we will be copying and uploading to the
-        // existing rasterized font texture
+        // figure out the size of the sub image we will be copying and uploading
+        // to the existing rasterized font texture
         int stripWidth = slotWidth * glyphsInStrip;
         int stripHeight = slotHeight;
 
@@ -514,7 +523,8 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
         // copy the data into an image to upload to the existing texture
         for (int x = 0; x < stripWidth; ++x)
           for (int y = 0; y < stripHeight; ++y)
-            subImage.SetPixel(x, y, mFontImage.GetPixel(stripX + x, stripY + y));
+            subImage.SetPixel(
+                x, y, mFontImage.GetPixel(stripX + x, stripY + y));
 
         // upload to the texture
         texture->SubUpload(subImage, stripStartX, stripStartY);
@@ -526,19 +536,26 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
       }
     }
   }
-  // This is a new texture altogether so create a texture and load the image data into it
+  // This is a new texture altogether so create a texture and load the image
+  // data into it
   else
   {
     int textureSize = mRenderFont->mTextureSize;
     texture = Texture::CreateRuntime();
     texture->mFiltering = TextureFiltering::Bilinear;
-    texture->Upload(textureSize, textureSize, TextureFormat::RGBA8, (byte*)mFontImage.Data, mFontImage.SizeInBytes);
-    
+    texture->Upload(textureSize,
+                    textureSize,
+                    TextureFormat::RGBA8,
+                    (byte*)mFontImage.Data,
+                    mFontImage.SizeInBytes);
+
     // None of these steps should be repeated for new textures altogether
     // Load all the data into the Rendered Font
-    mRenderFont->mDescent = -(float)FtToPixels(mData->FontFace->size->metrics.descender);
+    mRenderFont->mDescent =
+        -(float)FtToPixels(mData->FontFace->size->metrics.descender);
     mRenderFont->mFontHeight = fontHeight;
-    mRenderFont->mLineHeight = (float)FtToPixels(mData->FontFace->size->metrics.height);
+    mRenderFont->mLineHeight =
+        (float)FtToPixels(mData->FontFace->size->metrics.height);
 
     // Clear all default characters
     mRenderFont->mRunes[cEmptyRuneIndex].Rect.BotRight = Vec2(1, 1);
@@ -551,10 +568,11 @@ void FontRasterizer::LoadGlyphsOntoTexture(bool isOriginalTexture)
     FT_UInt glyph_index = FT_Get_Char_Index(mData->FontFace, cEmptyRuneIndex);
     errorCode = FT_Load_Glyph(mData->FontFace, glyph_index, FT_LOAD_DEFAULT);
     FT_GlyphSlot glyphSlot = mData->FontFace->glyph;
-    mRenderFont->mRunes[cEmptyRuneIndex].Advance = (float)FtToPixels(glyphSlot->advance.x);
+    mRenderFont->mRunes[cEmptyRuneIndex].Advance =
+        (float)FtToPixels(glyphSlot->advance.x);
 
-    // If the hashmap resizes during an assignment the returned reference will be invalid so we need
-    // a copy here for assignment below.
+    // If the hashmap resizes during an assignment the returned reference will
+    // be invalid so we need a copy here for assignment below.
     RenderRune emptyRune = mRenderFont->mRunes[cEmptyRuneIndex];
     // Copy to other characters
     for (int i = 1; i <= cEmptyRuneIndex; ++i)
@@ -593,40 +611,45 @@ void FontRasterizer::ComputeAndRasterizeGlyphs()
 
   int errorCode = 0;
 
-  // even when adding new glyphs to an existing font texture this places them correctly
+  // even when adding new glyphs to an existing font texture this places them
+  // correctly
   for (uint n = 0; n < mGlyphInfo.Size(); n++)
   {
     RenderGlyph& curGlyph = mGlyphInfo[n];
 
     int pixelsLeft = mFontImage.Width - texPosX;
 
-    //Is there enough room on this line?
+    // Is there enough room on this line?
     if (slotWidth > pixelsLeft)
     {
-      //start a new line
+      // start a new line
       texPosY += slotHeight;
       texPosX = cFontSpacing;
     }
 
     // retrieve glyph index from character code
     FT_UInt glyph_index;
-    glyph_index = FT_Get_Char_Index(mData->FontFace, UTF8::Utf8ToUtf32(Rune(curGlyph.RuneCode)));
+    glyph_index = FT_Get_Char_Index(mData->FontFace,
+                                    UTF8::Utf8ToUtf32(Rune(curGlyph.RuneCode)));
 
     // load glyph image into the slot
     errorCode = FT_Load_Glyph(mData->FontFace, glyph_index, FT_LOAD_DEFAULT);
-    if (errorCode) continue;
+    if (errorCode)
+      continue;
 
     FT_GlyphSlot glyphSlot = mData->FontFace->glyph;
 
     // convert to an anti-aliased bitmap
     errorCode = FT_Render_Glyph(glyphSlot, FT_RENDER_MODE_NORMAL);
-    if (errorCode) continue; /* now, draw to our target surface */
+    if (errorCode)
+      continue; /* now, draw to our target surface */
 
     // Store data needed to draw text
     curGlyph.X = texPosX;
     curGlyph.Y = texPosY;
     curGlyph.DrawOffsetX = FtToPixels(glyphSlot->metrics.horiBearingX);
-    curGlyph.DrawOffsetY = FtToPixels(-glyphSlot->metrics.horiBearingY) + fontHeight;
+    curGlyph.DrawOffsetY =
+        FtToPixels(-glyphSlot->metrics.horiBearingY) + fontHeight;
     curGlyph.AdvanceX = FtToPixels(glyphSlot->advance.x);
 
     // Raster the glyph to the image
@@ -641,8 +664,9 @@ void FontRasterizer::ComputeGlyphTextureCoordinates()
 {
   const float texSize = (float)mRenderFont->mTextureSize;
 
-  // Compute texture coordinates, since we place the glyphs in the respective positions
-  // on the font image this step doesn't change between new fonts or adding to existing sets
+  // Compute texture coordinates, since we place the glyphs in the respective
+  // positions on the font image this step doesn't change between new fonts or
+  // adding to existing sets
   Array<RenderGlyph>::range r = mGlyphInfo.All();
   for (; !r.Empty(); r.PopFront())
   {
@@ -655,8 +679,10 @@ void FontRasterizer::ComputeGlyphTextureCoordinates()
     r->Offset = Vec2(float(curGlyph.DrawOffsetX), float(curGlyph.DrawOffsetY));
     r->Advance = float(curGlyph.AdvanceX);
 
-    r->Rect.TopLeft = Vec2(float(curGlyph.X) / texSize, float(curGlyph.Y) / texSize);
-    r->Rect.BotRight = Vec2(float(curGlyph.X + curGlyph.Width) / texSize, float(curGlyph.Y + curGlyph.Height) / texSize);
+    r->Rect.TopLeft =
+        Vec2(float(curGlyph.X) / texSize, float(curGlyph.Y) / texSize);
+    r->Rect.BotRight = Vec2(float(curGlyph.X + curGlyph.Width) / texSize,
+                            float(curGlyph.Y + curGlyph.Height) / texSize);
   }
 }
 
@@ -676,7 +702,8 @@ bool FontRasterizer::PrepareFontImage()
   int& textureSize = mRenderFont->mTextureSize;
   int prevTextureSize = textureSize;
 
-  // then we need to see if we have a texture space available for the number of glyphs
+  // then we need to see if we have a texture space available for the number of
+  // glyphs
   while (!RoomOnTextureForRunes(mRenderFont->mTexPosX, mRenderFont->mTexPosY))
   {
     // increase texture size, there is no space
@@ -685,22 +712,23 @@ bool FontRasterizer::PrepareFontImage()
   // now that we have a large enough texture create it
   mFontImage.Allocate(textureSize, textureSize);
   mFontImage.ClearColorTo(0x00FFFFFF);
-  
+
   return prevTextureSize == textureSize;
 }
 
 bool FontRasterizer::RoomOnTextureForRunes(int xPos, int yPos)
 {
-  //int for round down division, we can't rasterize 1/2 a rune
+  // int for round down division, we can't rasterize 1/2 a rune
   int totalColumns = mRenderFont->mTextureSize / mRenderFont->mMaxWidthInPixels;
   int totalRows = mRenderFont->mTextureSize / mRenderFont->mMaxHeightInPixels;
 
   int currentColumn = (xPos / mRenderFont->mMaxWidthInPixels) + 1;
   int currentRow = (yPos / mRenderFont->mMaxHeightInPixels) + 1;
 
-  uint runeSlotsLeft = (totalColumns * (totalRows - currentRow)) + (totalColumns - currentColumn);
+  uint runeSlotsLeft = (totalColumns * (totalRows - currentRow)) +
+                       (totalColumns - currentColumn);
 
   return runeSlotsLeft >= mGlyphInfo.Size();
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,19 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Joshua Davis
-/// Copyright 2010, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
-const Rune  cDirectorySeparatorRune = Rune('\\');
+const Rune cDirectorySeparatorRune = Rune('\\');
 const char cDirectorySeparatorCstr[] = "\\";
 bool cFileSystemCaseSensitive = false;
 
 // There is no initialization or virtual file system on this platform
-FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback,
+                                             void* userData)
 {
 }
 
@@ -21,7 +17,9 @@ FileSystemInitializer::~FileSystemInitializer()
 {
 }
 
-void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
+void AddVirtualFileSystemEntry(StringParam absolutePath,
+                               DataBlock* stealData,
+                               TimeType modifiedTime)
 {
 }
 
@@ -32,9 +30,9 @@ bool PersistFiles()
 
 String GetWorkingDirectory()
 {
-  char temp[MAX_PATH+1];
+  char temp[MAX_PATH + 1];
   _getcwd(temp, MAX_PATH);
-  ZeroStrCat(temp, MAX_PATH+1, cDirectorySeparatorCstr);
+  ZeroStrCat(temp, MAX_PATH + 1, cDirectorySeparatorCstr);
   return String(temp);
 }
 
@@ -45,45 +43,48 @@ void SetWorkingDirectory(StringParam path)
 
 String GetUserLocalDirectory()
 {
-  wchar_t temp[MAX_PATH+1];
-  // Consider making an option to set which path is returned for people who want to use networked drives with
-  // proper permissions setup such that they work, same for the GetUserDocumentsDirectory function
+  wchar_t temp[MAX_PATH + 1];
+  // Consider making an option to set which path is returned for people who want
+  // to use networked drives with proper permissions setup such that they work,
+  // same for the GetUserDocumentsDirectory function
 
   // SHGFP_TYPE_DEFAULT - Returns the default path for the requested folder
   // SHGFP_TYPE_CURRENT - Returns the redirect path for the requested folder
   SHGFP_TYPE pathType = SHGFP_TYPE_DEFAULT;
 
   // By calling get folder path with SHGFP_TYPE_DEFAULT it will return the path
-  // %USERPROFILE%\AppData\Local even if the user has redirected it to a network drive
-  // this avoids user permission errors caused by one drive or other networked drives
+  // %USERPROFILE%\AppData\Local even if the user has redirected it to a network
+  // drive this avoids user permission errors caused by one drive or other
+  // networked drives
   SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, pathType, temp);
   return Narrow(temp);
 }
 
 String GetUserDocumentsDirectory()
 {
-  wchar_t temp[MAX_PATH+1];
+  wchar_t temp[MAX_PATH + 1];
   // SHGFP_TYPE_DEFAULT - Returns the default path for the requested folder
   // SHGFP_TYPE_CURRENT - Returns the redirect path for the requested folder
   SHGFP_TYPE pathType = SHGFP_TYPE_DEFAULT;
 
   // By calling get folder path with SHGFP_TYPE_DEFAULT it will return the path
-  // %USERPROFILE%\Documents even if the user has redirected it to a network drive
-  // this avoids user permission errors caused by one drive or other networked drives
+  // %USERPROFILE%\Documents even if the user has redirected it to a network
+  // drive this avoids user permission errors caused by one drive or other
+  // networked drives
   SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, pathType, temp);
   return Narrow(temp);
 }
 
 String GetApplicationDirectory()
 {
-  wchar_t temp[MAX_PATH+1];
+  wchar_t temp[MAX_PATH + 1];
   GetModuleFileName(NULL, temp, MAX_PATH);
   String fileName = Narrow(temp);
 
-  ///FIX ME LATER!!!
-  //return Zero::FilePath::GetDirectoryPath(fileName);
+  /// FIX ME LATER!!!
+  // return Zero::FilePath::GetDirectoryPath(fileName);
   StringRange found = fileName.FindLastOf(cDirectorySeparatorRune);
-  if(found.Empty())
+  if (found.Empty())
     return StringRange();
 
   return fileName.SubString(fileName.Begin(), found.Begin());
@@ -91,7 +92,7 @@ String GetApplicationDirectory()
 
 String GetApplication()
 {
-  wchar_t temp[MAX_PATH+1];
+  wchar_t temp[MAX_PATH + 1];
   GetModuleFileName(NULL, temp, MAX_PATH);
   return Narrow(temp);
 }
@@ -106,13 +107,14 @@ String GetTemporaryDirectory()
 bool FileExists(StringParam filePath)
 {
   DWORD attributes = GetFileAttributes(Widen(filePath).c_str());
-  return (attributes!=INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
+  return (attributes != INVALID_FILE_ATTRIBUTES) &&
+         (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
 
 bool FileWritable(StringParam filePath)
 {
   DWORD attributes = GetFileAttributes(Widen(filePath).c_str());
-  if(attributes == INVALID_FILE_ATTRIBUTES)
+  if (attributes == INVALID_FILE_ATTRIBUTES)
     return false;
   else
     return !(attributes & FILE_ATTRIBUTE_READONLY);
@@ -143,10 +145,10 @@ bool PathIsRooted(StringParam directoryPath)
 void CreateDirectory(StringParam dest)
 {
   BOOL success = ::CreateDirectoryW(Widen(dest).c_str(), NULL);
-  if(!success)
+  if (!success)
   {
     DWORD lastErr = GetLastError();
-    if(lastErr != ERROR_ALREADY_EXISTS)
+    if (lastErr != ERROR_ALREADY_EXISTS)
       VerifyWin(success, "Failed to create the directory '%s'.", dest.c_str());
   }
 }
@@ -157,57 +159,61 @@ void CreateDirectoryAndParents(StringParam directory)
   ZeroStrCpy(directoryPath, MAX_PATH, directory.c_str());
   uint size = directory.SizeInBytes();
 
-  for(uint c = 0; c < size; ++c)
+  for (uint c = 0; c < size; ++c)
   {
-    //When there is a directory separator
-    if(directoryPath[c] == cDirectorySeparatorRune.value)
+    // When there is a directory separator
+    if (directoryPath[c] == cDirectorySeparatorRune.value)
     {
       if (c > 0 && directoryPath[c - 1] == ':')
         continue;
-      //Null terminate
+      // Null terminate
       directoryPath[c] = '\0';
-      //Create directory
+      // Create directory
       CreateDirectory(directoryPath);
-      //remove null terminator
+      // remove null terminator
       directoryPath[c] = cDirectorySeparatorRune.value;
     }
   }
 
-  //directories no longer have a trailing '/' so we have to
-  //explicitly create the final directory
+  // directories no longer have a trailing '/' so we have to
+  // explicitly create the final directory
   CreateDirectory(directory);
 }
 
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   BOOL success = ::CopyFileW(Widen(source).c_str(), Widen(dest).c_str(), FALSE);
-  VerifyWin(success, "Failed to copy file. %s to %s.", source.c_str(), dest.c_str());
-  return success!=0;
+  VerifyWin(
+      success, "Failed to copy file. %s to %s.", source.c_str(), dest.c_str());
+  return success != 0;
 }
 
 bool MoveFileInternal(StringParam dest, StringParam source)
 {
-  BOOL success = ::MoveFileEx(Widen(source).c_str(), Widen(dest).c_str(), MOVEFILE_REPLACE_EXISTING);
-  VerifyWin(success, "Failed to move file. %s to %s.", source.c_str(), dest.c_str());
-  return success!=0;
+  BOOL success = ::MoveFileEx(
+      Widen(source).c_str(), Widen(dest).c_str(), MOVEFILE_REPLACE_EXISTING);
+  VerifyWin(
+      success, "Failed to move file. %s to %s.", source.c_str(), dest.c_str());
+  return success != 0;
 }
 
 bool DeleteFileInternal(StringParam file)
 {
   BOOL success = ::DeleteFileW(Widen(file).c_str());
   VerifyWin(success, "Failed to delete file %s.", file.c_str());
-  return success!=0;
+  return success != 0;
 }
 
 bool DeleteDirectory(StringParam directory)
 {
-  if(!DirectoryExists(directory))
+  if (!DirectoryExists(directory))
     return false;
 
-  // RemoveDirectoryW requires the directory to be empty, so we must delete everything in it
+  // RemoveDirectoryW requires the directory to be empty, so we must delete
+  // everything in it
   DeleteDirectoryContents(directory);
 
-  //this is the only part that needs to be updated platform specific
+  // this is the only part that needs to be updated platform specific
   BOOL success = ::RemoveDirectoryW(Widen(directory).c_str());
   VerifyWin(success, "Failed to delete directory %s.", directory.c_str());
   return success != 0;
@@ -215,12 +221,12 @@ bool DeleteDirectory(StringParam directory)
 
 TimeType SystemTimeToTimeType(SYSTEMTIME& systemTime)
 {
-  //Build a TimeType using mktime and systemTime
+  // Build a TimeType using mktime and systemTime
   tm newTime;
   memset(&newTime, 0, sizeof(tm));
-  //tm_year is based at 1900
+  // tm_year is based at 1900
   newTime.tm_year = systemTime.wYear - 1900;
-  //tm_mday is zero based
+  // tm_mday is zero based
   newTime.tm_mon = systemTime.wMonth - 1;
   newTime.tm_mday = systemTime.wDay;
   newTime.tm_hour = systemTime.wHour;
@@ -232,7 +238,8 @@ TimeType SystemTimeToTimeType(SYSTEMTIME& systemTime)
 TimeType GetFileModifiedTime(StringParam filename)
 {
   WIN32_FILE_ATTRIBUTE_DATA fileInfo;
-  BOOL success = GetFileAttributesEx(Widen(filename).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
+  BOOL success = GetFileAttributesEx(
+      Widen(filename).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
   CheckWin(success, "Failed to get GetFileAttributesEx.");
 
   // Convert to system time so the time can be parsed
@@ -247,24 +254,27 @@ bool SetFileToCurrentTime(StringParam filename)
 {
   // Need a file handle to do file time operations
   StackHandle sourceFile;
-  sourceFile = CreateFile(Widen(filename).c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL,
-                           OPEN_EXISTING, 0, NULL);
+  sourceFile = CreateFile(Widen(filename).c_str(),
+                          GENERIC_WRITE,
+                          FILE_SHARE_READ,
+                          NULL,
+                          OPEN_EXISTING,
+                          0,
+                          NULL);
 
   FILETIME fileTime;
   SYSTEMTIME systemTime;
   BOOL result;
 
   // Gets the current system time
-  GetSystemTime(&systemTime); 
+  GetSystemTime(&systemTime);
   // Converts the current system time to file time format
   SystemTimeToFileTime(&systemTime, &fileTime);
 
-  // Sets last-write time of the file 
-  // to the converted current system time 
-  result = SetFileTime(sourceFile,
-    (LPFILETIME) NULL, 
-    (LPFILETIME) NULL, 
-    &fileTime);
+  // Sets last-write time of the file
+  // to the converted current system time
+  result =
+      SetFileTime(sourceFile, (LPFILETIME)NULL, (LPFILETIME)NULL, &fileTime);
 
   return result != 0;
 }
@@ -272,11 +282,13 @@ bool SetFileToCurrentTime(StringParam filename)
 u64 GetFileSize(StringParam fileName)
 {
   WIN32_FILE_ATTRIBUTE_DATA fileInfo;
-  BOOL success = GetFileAttributesEx(Widen(fileName).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
+  BOOL success = GetFileAttributesEx(
+      Widen(fileName).c_str(), GetFileExInfoStandard, (void*)&fileInfo);
   CheckWin(success, "Failed to get GetFileAttributesEx.");
-  if(!success)
+  if (!success)
     return 0;
-  return ((u64)fileInfo.nFileSizeHigh * ((u64)MAXDWORD + (u64)1)) + (u64)fileInfo.nFileSizeLow;
+  return ((u64)fileInfo.nFileSizeHigh * ((u64)MAXDWORD + (u64)1)) +
+         (u64)fileInfo.nFileSizeLow;
 }
 
 struct FileRangePrivateData
@@ -290,9 +302,10 @@ FileRange::FileRange(StringParam filePath)
 {
   ZeroConstructPrivateData(FileRangePrivateData);
   mPath = filePath;
-  if(mPath.Empty())
+  if (mPath.Empty())
   {
-    Error("Cannot create a file range from an empty directory/path string (working directory as empty string not supported)");
+    Error("Cannot create a file range from an empty directory/path string "
+          "(working directory as empty string not supported)");
     self->mHandle = NULL;
     return;
   }
@@ -303,7 +316,7 @@ FileRange::FileRange(StringParam filePath)
   wcsncpy_s(path, MAX_PATH, wpath.c_str(), wpath.Size());
 
   // Check for trailing slash and add if not there
-  if(path[wpath.Size()-1] != '\\')
+  if (path[wpath.Size() - 1] != '\\')
     ZeroStrCatW(path, MAX_PATH, L"\\");
 
   // Add the wildcard to get all files in directory
@@ -312,13 +325,13 @@ FileRange::FileRange(StringParam filePath)
   // Begin Windows file iteration
   self->mHandle = FindFirstFile(path, &self->mFindData);
 
-  if(self->mHandle == INVALID_HANDLE_VALUE)
+  if (self->mHandle == INVALID_HANDLE_VALUE)
   {
     self->mHandle = NULL;
   }
   else
   {
-    //Skip rid of "." and ".." directory results.
+    // Skip rid of "." and ".." directory results.
     if (wcscmp(self->mFindData.cFileName, L".") == 0)
       this->PopFront();
     if (self->mHandle && wcscmp(self->mFindData.cFileName, L"..") == 0)
@@ -330,7 +343,7 @@ FileRange::~FileRange()
 {
   ZeroGetPrivateData(FileRangePrivateData);
 
-  if(self->mHandle)
+  if (self->mHandle)
     FindClose(self->mHandle);
 
   ZeroDestructPrivateData(FileRangePrivateData);
@@ -339,7 +352,7 @@ FileRange::~FileRange()
 bool FileRange::Empty()
 {
   ZeroGetPrivateData(FileRangePrivateData);
-  return self->mHandle==NULL;
+  return self->mHandle == NULL;
 }
 
 String FileRange::Front()
@@ -368,7 +381,7 @@ void FileRange::PopFront()
   ZeroGetPrivateData(FileRangePrivateData);
   BOOL hasNext = FindNextFile(self->mHandle, &self->mFindData);
 
-  if(!hasNext)
+  if (!hasNext)
   {
     // No more files
     FindClose(self->mHandle);
@@ -381,20 +394,26 @@ String UniqueFileId(StringParam fullpath)
 #ifdef FILE_NAME_NORMALIZED
   StackHandle fileHandle;
 
-  fileHandle = CreateFile(Widen(fullpath).c_str(), GENERIC_READ, FILE_SHARE_READ, NULL,
-    OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+  fileHandle = CreateFile(Widen(fullpath).c_str(),
+                          GENERIC_READ,
+                          FILE_SHARE_READ,
+                          NULL,
+                          OPEN_EXISTING,
+                          FILE_FLAG_BACKUP_SEMANTICS,
+                          NULL);
 
-  if(fileHandle == INVALID_HANDLE_VALUE)
+  if (fileHandle == INVALID_HANDLE_VALUE)
   {
-    //no file just return path.
+    // no file just return path.
     fileHandle = cInvalidHandle;
     return fullpath;
   }
 
-  wchar_t fixedFullPath[MAX_PATH+1] = {0};
-  DWORD size = GetFinalPathNameByHandle(fileHandle, fixedFullPath, MAX_PATH, FILE_NAME_NORMALIZED);
+  wchar_t fixedFullPath[MAX_PATH + 1] = {0};
+  DWORD size = GetFinalPathNameByHandle(
+      fileHandle, fixedFullPath, MAX_PATH, FILE_NAME_NORMALIZED);
 
-  if(size == 0)
+  if (size == 0)
     return fullpath;
 
   return Narrow(fixedFullPath);
@@ -403,4 +422,4 @@ String UniqueFileId(StringParam fullpath)
 #endif
 }
 
-}//namespace Zero
+} // namespace Zero

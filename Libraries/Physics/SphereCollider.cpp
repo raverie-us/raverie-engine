@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys, Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -40,20 +35,24 @@ void SphereCollider::Serialize(Serializer& stream)
 void SphereCollider::DebugDraw()
 {
   Collider::DebugDraw();
-  gDebugDraw->Add(Debug::Sphere(GetWorldTranslation(), GetWorldRadius()).Color(Color::Plum).OnTop(true));
+  gDebugDraw->Add(Debug::Sphere(GetWorldTranslation(), GetWorldRadius())
+                      .Color(Color::Plum)
+                      .OnTop(true));
 }
 
 void SphereCollider::CacheWorldValues()
 {
   Vec3 worldScale = GetWorldScale();
-  real largestScale = Math::Max(Math::Max(worldScale[0], worldScale[1]), worldScale[2]);
+  real largestScale =
+      Math::Max(Math::Max(worldScale[0], worldScale[1]), worldScale[2]);
   mWorldRadius = mRadius * largestScale;
 }
 
 void SphereCollider::ComputeWorldAabbInternal()
 {
-  // We don't want the default world aabb logic. Since we're a sphere, the world-space
-  // aabb doesn't change, it's always the min aabb that encompasses our radius.
+  // We don't want the default world aabb logic. Since we're a sphere, the
+  // world-space aabb doesn't change, it's always the min aabb that encompasses
+  // our radius.
   real radius = GetWorldRadius();
   Vec3 worldCenter = GetWorldTranslation();
   mAabb.SetCenterAndHalfExtents(worldCenter, Vec3(radius));
@@ -72,7 +71,8 @@ real SphereCollider::ComputeWorldVolumeInternal()
   return real(4.0f / 3.0) * Math::cPi * radius * radius * radius;
 }
 
-void SphereCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localInvInertia)
+void SphereCollider::ComputeLocalInverseInertiaTensor(real mass,
+                                                      Mat3Ref localInvInertia)
 {
   real radius = GetWorldRadius();
   real diagonal = real(2.0f / 5.0f) * mass * radius * radius;
@@ -84,7 +84,8 @@ void SphereCollider::ComputeLocalInverseInertiaTensor(real mass, Mat3Ref localIn
 
 void SphereCollider::Support(Vec3Param direction, Vec3Ptr support) const
 {
-  Geometry::SupportSphere(direction, GetWorldTranslation(), GetWorldRadius(), support);
+  Geometry::SupportSphere(
+      direction, GetWorldTranslation(), GetWorldRadius(), support);
 }
 
 real SphereCollider::GetRadius() const
@@ -94,7 +95,7 @@ real SphereCollider::GetRadius() const
 
 void SphereCollider::SetRadius(real radius)
 {
-  mRadius = Math::Clamp(radius, mMinAllowedRadius, mMaxAllowedRadius); 
+  mRadius = Math::Clamp(radius, mMinAllowedRadius, mMaxAllowedRadius);
 
   // Since our internal size changed make sure to run all common update code
   InternalSizeChanged();
@@ -105,4 +106,4 @@ real SphereCollider::GetWorldRadius() const
   return mWorldRadius;
 }
 
-}//namespace Zero
+} // namespace Zero

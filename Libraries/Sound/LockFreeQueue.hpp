@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Author: Andrea Ellinger
-/// Copyright 2018, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------------------------------- Lock Free Queue
+//Lock Free Queue
 
 template <typename T>
 class LockFreeQueue
@@ -18,7 +13,9 @@ class LockFreeQueue
 private:
   struct Node
   {
-    Node(T value) : Value(value), Next(nullptr) {}
+    Node(T value) : Value(value), Next(nullptr)
+    {
+    }
 
     T Value;
     Node* Next;
@@ -26,7 +23,10 @@ private:
 
 public:
   // Create the dummy node
-  LockFreeQueue() { First = Last = new Node(T()); }
+  LockFreeQueue()
+  {
+    First = Last = new Node(T());
+  }
 
   ~LockFreeQueue()
   {
@@ -84,7 +84,7 @@ private:
   Node* Last;
 };
 
-//-------------------------------------------------------------------------- Multiple Writer Queue
+//Multiple Writer Queue
 
 template <typename T>
 class MultipleWriterQueue
@@ -92,7 +92,9 @@ class MultipleWriterQueue
 private:
   struct Node
   {
-    Node(T value) : Value(value), Next(nullptr) {}
+    Node(T value) : Value(value), Next(nullptr)
+    {
+    }
 
     T Value;
     Node* Next;
@@ -100,7 +102,10 @@ private:
 
 public:
   // Create the dummy node
-  MultipleWriterQueue() : WriteLock(0) { First = Last = new Node(T()); }
+  MultipleWriterQueue() : WriteLock(0)
+  {
+    First = Last = new Node(T());
+  }
 
   ~MultipleWriterQueue()
   {

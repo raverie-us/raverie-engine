@@ -1,13 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-/// Authors: Chris Peters, Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-//////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
- 
 ZilchDefineType(MeshBuilder, builder, type)
 {
   ZeroBindComponent();
@@ -22,8 +18,8 @@ ZilchDefineType(MeshBuilder, builder, type)
   ZilchBindFieldProperty(mFlipNormals);
 }
 
-MeshBuilder::MeshBuilder()
-  : mCombineMeshes(false),
+MeshBuilder::MeshBuilder() :
+    mCombineMeshes(false),
     mGenerateSmoothNormals(false),
     mSmoothingAngleDegreesThreshold(30.f),
     mGenerateTangentSpace(true),
@@ -31,7 +27,6 @@ MeshBuilder::MeshBuilder()
     mFlipWindingOrder(false),
     mFlipNormals(false)
 {
-
 }
 
 bool MeshBuilder::NeedsBuilding(BuildOptions& options)
@@ -47,12 +42,11 @@ bool MeshBuilder::NeedsBuilding(BuildOptions& options)
 
 void MeshBuilder::Generate(ContentInitializer& initializer)
 {
-
 }
 
 void MeshBuilder::Serialize(Serializer& stream)
 {
-  //SerializeNameDefault(mCombineMeshes, false);
+  // SerializeNameDefault(mCombineMeshes, false);
   SerializeNameDefault(mGenerateSmoothNormals, false);
   SerializeNameDefault(mSmoothingAngleDegreesThreshold, 30.f);
   SerializeNameDefault(mGenerateTangentSpace, true);
@@ -64,20 +58,23 @@ void MeshBuilder::Serialize(Serializer& stream)
 
 void MeshBuilder::BuildListing(ResourceListing& listing)
 {
-  forRange(GeometryResourceEntry& entry, Meshes.All())
+  forRange(GeometryResourceEntry & entry, Meshes.All())
   {
     String output = BuildString(entry.mName, ".mesh");
-    listing.PushBack(ResourceEntry(0, "Mesh", entry.mName, output, entry.mResourceId, this->mOwner, this));
+    listing.PushBack(ResourceEntry(
+        0, "Mesh", entry.mName, output, entry.mResourceId, this->mOwner, this));
   }
 }
 
-VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset)
-  : mSemantic(semantic),
+VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic,
+                                 VertexElementType::Enum type,
+                                 byte count,
+                                 byte offset) :
+    mSemantic(semantic),
     mType(type),
     mCount(count),
     mOffset(offset)
 {
-
 }
 
-}// namespace Zero
+} // namespace Zero

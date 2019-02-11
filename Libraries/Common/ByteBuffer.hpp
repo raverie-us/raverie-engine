@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ByteBuffer.hpp
-/// Definition of ByteBuffer.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 #include "Array.hpp"
 #include "String.hpp"
@@ -17,21 +9,21 @@ namespace Zero
 
 class ByteBufferBlock;
 
-///ByteBuffer used for efficient appending. Structured as an array of blocks.
+/// ByteBuffer used for efficient appending. Structured as an array of blocks.
 class ZeroShared ByteBuffer
 {
 public:
   typedef unsigned char byteType;
 
-  //Block of data in the ByteBuffer
+  // Block of data in the ByteBuffer
   struct Block
   {
     size_t Size;
     byteType* Data;
   };
 
-  //Block range is used to iterate
-  //through all blocks on the buffer.
+  // Block range is used to iterate
+  // through all blocks on the buffer.
   struct BlockRange
   {
     BlockRange(ByteBuffer* buffer);
@@ -39,8 +31,15 @@ public:
     const Block& Front();
     bool Empty();
     void PopFront();
-    BlockRange& All() { return *this; }
-    const BlockRange& All() const { return *this; }
+    BlockRange& All()
+    {
+      return *this;
+    }
+    const BlockRange& All() const
+    {
+      return *this;
+    }
+
   private:
     void LoadBlock();
     size_t mBlockSize;
@@ -50,51 +49,53 @@ public:
     Block mCurrent;
   };
 
-  ByteBuffer(size_t blockSize=512);
+  ByteBuffer(size_t blockSize = 512);
   ~ByteBuffer();
 
-  //Get current position of writing
+  // Get current position of writing
   size_t Tell();
 
-  //Write bytes to the buffer.
+  // Write bytes to the buffer.
   void Write(const byteType* data, size_t sizeInBytes);
 
-  //Add Data to end of buffer.
+  // Add Data to end of buffer.
   void Append(const byteType* data, size_t sizeInBytes);
 
-  //Backs up by a certain number of bytes
+  // Backs up by a certain number of bytes
   void Backup(size_t sizeInBytes);
 
   byte operator[](size_t index) const;
   byte& operator[](size_t index);
 
-  //Get size of buffer.
-  size_t GetSize() const {return mTotalSize;}
+  // Get size of buffer.
+  size_t GetSize() const
+  {
+    return mTotalSize;
+  }
 
-  //Get buffer as a string
+  // Get buffer as a string
   String ToString() const;
 
-  //Get buffer as a string with a custom size (substring of the buffer).
+  // Get buffer as a string with a custom size (substring of the buffer).
   String ToString(size_t subStringSizeBytes) const;
 
-  //Extract into a raw memory buffer
+  // Extract into a raw memory buffer
   void ExtractInto(byteType* buffer, size_t bufferSizeInBytes) const;
 
-  //Extract into a ByteBufferReader
+  // Extract into a ByteBufferReader
   void ExtractInto(ByteBufferBlock& buffer) const;
 
-  //Deallocate memory of blocks
+  // Deallocate memory of blocks
   void Deallocate();
 
-  //Get range of all blocks
+  // Get range of all blocks
   BlockRange Blocks();
 
 private:
-  ByteBuffer(const ByteBuffer&) {};
-  void operator=(const ByteBuffer&) {};
+  ByteBuffer(const ByteBuffer&){};
+  void operator=(const ByteBuffer&){};
 
 protected:
-
   Array<byteType*> mBlocks;
   size_t mBlockSize;
   size_t mTotalSize;
@@ -102,8 +103,8 @@ protected:
   byteType* mCurBlockBuffer;
 };
 
-///ByteBufferBlock is a simple wrapper around a single contiguous block of memory.
-///has same interface as a file.
+/// ByteBufferBlock is a simple wrapper around a single contiguous block of
+/// memory. has same interface as a file.
 class ByteBufferBlock
 {
 public:
@@ -114,44 +115,44 @@ public:
   ByteBufferBlock(MoveReference<ByteBufferBlock> rhs);
   ByteBufferBlock(const ByteBufferBlock& rhs);
 
-  //Create buffer with the given size
+  // Create buffer with the given size
   ByteBufferBlock(size_t size);
 
-  //Create a buffer from existing data. If data is owned
-  //buffer will deallocate data on destruction.
+  // Create a buffer from existing data. If data is owned
+  // buffer will deallocate data on destruction.
   ByteBufferBlock(byte* data, size_t size, bool owned);
 
-  //Set data to use for this byte buffer
+  // Set data to use for this byte buffer
   void SetData(byte* data, size_t size, bool owned);
 
-  //Set data block to use for this byte buffer
+  // Set data block to use for this byte buffer
   void SetBlock(DataBlock block);
 
-  //Read data from buffer.
+  // Read data from buffer.
   size_t Read(Status& status, byte* data, size_t sizeInBytes);
 
-  //Write data to the buffer
+  // Write data to the buffer
   size_t Write(byte* data, size_t sizeInBytes);
-  
-  //Write a single byte of data
+
+  // Write a single byte of data
   size_t Write(byte value);
 
-  //Seek to position
+  // Seek to position
   void Seek(int offset, uint origin);
 
-  //Pointer to current position in buffer.
+  // Pointer to current position in buffer.
   byte* GetCurrent();
 
-  //Size of a buffer.
+  // Size of a buffer.
   size_t Size();
 
-  //Return current position.
+  // Return current position.
   size_t Tell();
-  
-  //Get start of block
+
+  // Get start of block
   byte* GetBegin();
 
-  //Deallocate memory if owned.
+  // Deallocate memory if owned.
   void Deallocate();
 
 private:
@@ -162,13 +163,14 @@ private:
   friend class ByteBuffer;
 };
 
-template<>
+template <>
 struct ZeroShared MoveWithoutDestructionOperator<ByteBufferBlock>
 {
-  static inline void MoveWithoutDestruction(ByteBufferBlock* dest, ByteBufferBlock* source)
+  static inline void MoveWithoutDestruction(ByteBufferBlock* dest,
+                                            ByteBufferBlock* source)
   {
     memcpy(dest, source, sizeof(*dest));
   }
 };
 
-}
+} // namespace Zero

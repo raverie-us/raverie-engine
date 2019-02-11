@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ContentPackageWidget.cpp
-///
-/// Authors: Joshua Claeys, Chris Peters
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -14,15 +7,16 @@ namespace Zero
 namespace ContentImportUi
 {
 const cstr cLocation = "EditorUi/ContentImporter";
-Tweakable(Vec4, ToolTipBorderColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, ToolTipBorderColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace ContentImportUi
 
-//---------------------------------------------------- Content Entry Name Sorter
 template <typename Comparer>
 struct ContentEntryNameSorter
 {
   Comparer mComparer;
-  ContentEntryNameSorter(Comparer comparer) : mComparer(comparer) {}
+  ContentEntryNameSorter(Comparer comparer) : mComparer(comparer)
+  {
+  }
 
   bool operator()(ContentPackageEntry* left, ContentPackageEntry* right)
   {
@@ -32,12 +26,13 @@ struct ContentEntryNameSorter
   }
 };
 
-//----------------------------------------------- Content Entry Extension Sorter
 template <typename Comparer>
 struct ContentEntryExtensionSorter
 {
   Comparer mComparer;
-  ContentEntryExtensionSorter(Comparer comparer) : mComparer(comparer) {}
+  ContentEntryExtensionSorter(Comparer comparer) : mComparer(comparer)
+  {
+  }
 
   bool operator()(ContentPackageEntry* left, ContentPackageEntry* right)
   {
@@ -47,12 +42,13 @@ struct ContentEntryExtensionSorter
   }
 };
 
-//-------------------------------------------------- Content Entry Active Sorter
 template <typename Comparer>
 struct ContentEntryActiveSorter
 {
   Comparer mComparer;
-  ContentEntryActiveSorter(Comparer comparer) : mComparer(comparer) {}
+  ContentEntryActiveSorter(Comparer comparer) : mComparer(comparer)
+  {
+  }
 
   bool operator()(ContentPackageEntry* left, ContentPackageEntry* right)
   {
@@ -60,13 +56,14 @@ struct ContentEntryActiveSorter
   }
 };
 
-//------------------------------------------------------ Content Importer Source
 struct ContentImporterSource : public DataSource
 {
   ContentPackageListing* mListing;
 
   //****************************************************************************
-  ContentImporterSource(ContentPackageListing* listing) : mListing(listing) { }
+  ContentImporterSource(ContentPackageListing* listing) : mListing(listing)
+  {
+  }
 
   //****************************************************************************
   DataEntry* GetRoot() override
@@ -95,17 +92,19 @@ struct ContentImporterSource : public DataSource
   //****************************************************************************
   uint ChildCount(DataEntry* dataEntry) override
   {
-    if(dataEntry == mListing)
+    if (dataEntry == mListing)
       return mListing->Entries.Size();
     else
       return 0;
   }
 
   //****************************************************************************
-  DataEntry* GetChild(DataEntry* dataEntry, uint index, DataEntry* prev)override
+  DataEntry* GetChild(DataEntry* dataEntry,
+                      uint index,
+                      DataEntry* prev) override
   {
-     ContentPackageListing* listing = (ContentPackageListing*)dataEntry;
-     return (DataEntry*)listing->SortedEntries[index];
+    ContentPackageListing* listing = (ContentPackageListing*)dataEntry;
+    return (DataEntry*)listing->SortedEntries[index];
   }
 
   //****************************************************************************
@@ -115,31 +114,31 @@ struct ContentImporterSource : public DataSource
   }
 
   //****************************************************************************
-  void GetData(DataEntry* dataEntry, Any& variant, StringParam column)override
+  void GetData(DataEntry* dataEntry, Any& variant, StringParam column) override
   {
     // Ignore the root
-    if(dataEntry == mListing)
+    if (dataEntry == mListing)
       return;
 
     ContentPackageEntry* entry = (ContentPackageEntry*)dataEntry;
-    if(!column.Empty())
+    if (!column.Empty())
     {
-      if(column == CommonColumns::Name)
+      if (column == CommonColumns::Name)
       {
         variant = String(FilePath::GetFileNameWithoutExtension(entry->File));
       }
-      else if(column == CommonColumns::Icon)
+      else if (column == CommonColumns::Icon)
       {
-        if(entry->Conflicted)
+        if (entry->Conflicted)
           variant = String("WarningIcon");
         else
           variant = String("ResourceIcon");
       }
-      else if(column == "Type")
+      else if (column == "Type")
       {
         variant = String(FilePath::GetExtension(entry->File));
       }
-      else if(column == "Import")
+      else if (column == "Import")
       {
         variant = entry->Active;
       }
@@ -147,12 +146,14 @@ struct ContentImporterSource : public DataSource
   }
 
   //****************************************************************************
-  bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
+  bool SetData(DataEntry* dataEntry,
+               AnyParam variant,
+               StringParam column) override
   {
     ContentPackageEntry* entry = (ContentPackageEntry*)dataEntry;
-    if(!column.Empty())
+    if (!column.Empty())
     {
-      if(column == "Import")
+      if (column == "Import")
       {
         entry->Active = variant.Get<bool>();
         return true;
@@ -165,39 +166,42 @@ struct ContentImporterSource : public DataSource
   void Sort(DataEntry* dataEntry, StringParam column, bool flip) override
   {
     // Can only sort the root
-    if(dataEntry != NULL)
+    if (dataEntry != NULL)
       return;
 
-    #define GetSorter(type, comparer) type<comparer>(comparer())
+#define GetSorter(type, comparer) type<comparer>(comparer())
 
-    if(flip)
+    if (flip)
     {
-      if(column == CommonColumns::Name)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, greater<String>));
-      else if(column == CommonColumns::Type)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, greater<String>));
-      else if(column == "Import")
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, greater<bool>));
+      if (column == CommonColumns::Name)
+        Zero::Sort(mListing->SortedEntries.All(),
+                   GetSorter(ContentEntryNameSorter, greater<String>));
+      else if (column == CommonColumns::Type)
+        Zero::Sort(mListing->SortedEntries.All(),
+                   GetSorter(ContentEntryExtensionSorter, greater<String>));
+      else if (column == "Import")
+        Zero::Sort(mListing->SortedEntries.All(),
+                   GetSorter(ContentEntryActiveSorter, greater<bool>));
     }
     else
     {
-      if(column == CommonColumns::Name)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, less<String>));
-      else if(column == CommonColumns::Type)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, less<String>));
-      else if(column == "Import")
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, less<bool>));
+      if (column == CommonColumns::Name)
+        Zero::Sort(mListing->SortedEntries.All(),
+                   GetSorter(ContentEntryNameSorter, less<String>));
+      else if (column == CommonColumns::Type)
+        Zero::Sort(mListing->SortedEntries.All(),
+                   GetSorter(ContentEntryExtensionSorter, less<String>));
+      else if (column == "Import")
+        Zero::Sort(mListing->SortedEntries.All(),
+                   GetSorter(ContentEntryActiveSorter, less<bool>));
     }
   }
 };
 
-//------------------------------------------------------------- Content Importer
-//******************************************************************************
-ContentImporter::ContentImporter(Composite* parent)
-  :Composite(parent)
+ContentImporter::ContentImporter(Composite* parent) : Composite(parent)
 {
-  this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom,
-                                    Pixels(0, 2), Thickness::cZero));
+  this->SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
 
   mTreeView = new TreeView(this);
   mTreeView->SetMinSize(Pixels(200, 200));
@@ -216,8 +220,8 @@ ContentImporter::ContentImporter(Composite* parent)
   mTagEditor->GetTagChain()->mSorted = false;
 
   Composite* buttonRow = new Composite(this);
-  buttonRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight,
-                                         Vec2::cZero, Thickness::cZero));
+  buttonRow->SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero));
   {
     TextButton* importButton = new TextButton(buttonRow);
     importButton->SetText("Import");
@@ -236,40 +240,37 @@ ContentImporter::ContentImporter(Composite* parent)
   ConnectThisTo(this, "OnImportFileSelected", OnImportFileSelected);
 }
 
-//******************************************************************************
 void ContentImporter::OpenImportWindow(StringParam fileName)
 {
   Window* window = new Window(Z::gEditor);
   window->SetTitle("Import Content Package");
   ContentImporter* widget = new ContentImporter(window);
   window->SizeToContents();
-  window->SetSize(Pixels(340,490));
+  window->SetSize(Pixels(340, 490));
   CenterToWindow(Z::gEditor, window, false);
   widget->LoadListingFromFile(fileName);
   window->MoveToFront();
 }
 
-//******************************************************************************
 ContentImporter::~ContentImporter()
 {
   mToolTip.SafeDestroy();
   SafeDelete(mSource);
 }
 
-//******************************************************************************
 void ContentImporter::LoadListingFromFile(StringParam filename)
 {
   mFileName = filename;
   LoadContentPackageListing(mListing, filename);
-  #define GetSorter(type, comparer) type<comparer>(comparer())
-  Sort(mListing.SortedEntries.All(), GetSorter(ContentEntryActiveSorter, less<bool>));
+#define GetSorter(type, comparer) type<comparer>(comparer())
+  Sort(mListing.SortedEntries.All(),
+       GetSorter(ContentEntryActiveSorter, less<bool>));
   mTreeView->Refresh();
 
   String defaultTag = FilePath::GetFileNameWithoutExtension(filename);
   mTagEditor->GetTagChain()->AddTag(defaultTag, true);
 }
 
-//******************************************************************************
 void ContentImporter::SetTreeFormatting()
 {
   TreeFormatting formatting;
@@ -315,7 +316,6 @@ void ContentImporter::SetTreeFormatting()
   mTreeView->SetFormat(formatting);
 }
 
-//******************************************************************************
 void ContentImporter::OnImport(Event* event)
 {
   // Add the tags to the listing
@@ -328,22 +328,19 @@ void ContentImporter::OnImport(Event* event)
   CloseTabContaining(this);
 }
 
-//******************************************************************************
 void ContentImporter::OnCancel(Event* event)
 {
   CloseTabContaining(this);
 }
 
-//******************************************************************************
 void ContentImporter::OnImportFileSelected(OsFileSelection* event)
 {
-  if(event->Success)
+  if (event->Success)
     LoadListingFromFile(event->Files[0]);
   else
     CloseTabContaining(this);
 }
 
-//******************************************************************************
 void ContentImporter::OnMouseEnterTreeRow(TreeEvent* e)
 {
   mToolTip.SafeDestroy();
@@ -353,7 +350,7 @@ void ContentImporter::OnMouseEnterTreeRow(TreeEvent* e)
   ContentPackageEntry* entry = (ContentPackageEntry*)dataSource->ToEntry(index);
 
   // Create the tooltip if it's conflicted
-  if(entry->Conflicted)
+  if (entry->Conflicted)
   {
     ToolTip* toolTip = new ToolTip(e->Row);
     toolTip->SetText("Content already exists under this name. Importing this "
@@ -363,21 +360,21 @@ void ContentImporter::OnMouseEnterTreeRow(TreeEvent* e)
     // Position the tooltip
     ToolTipPlacement placement;
     placement.SetScreenRect(e->Row->GetScreenRect());
-    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
-                          IndicatorSide::Bottom, IndicatorSide::Top);
+    placement.SetPriority(IndicatorSide::Right,
+                          IndicatorSide::Left,
+                          IndicatorSide::Bottom,
+                          IndicatorSide::Top);
     toolTip->SetArrowTipTranslation(placement);
 
     mToolTip = toolTip;
   }
 }
 
-//******************************************************************************
 void ContentImporter::OnMouseExitTreeRow(TreeEvent* e)
 {
   mToolTip.SafeDestroy();
 }
 
-//******************************************************************************
 void ImportContentPackage()
 {
   Window* window = new Window(Z::gEditor);
@@ -386,7 +383,7 @@ void ImportContentPackage()
   window->SizeToContents();
   CenterToWindow(Z::gEditor, window, false);
 
-  //Open the open file dialog
+  // Open the open file dialog
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "OnImportFileSelected";
   config->CallbackObject = widget;
@@ -395,4 +392,4 @@ void ImportContentPackage()
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
-}//namespace Zero
+} // namespace Zero

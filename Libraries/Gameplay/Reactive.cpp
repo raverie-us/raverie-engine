@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Reactive.cpp
-/// Implementation of the Reactive component class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -30,7 +22,7 @@ ZilchDefineType(Reactive, builder, type)
 
   ZilchBindFieldProperty(mActive);
 
-ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
+  ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
 
   ZeroBindEvent(Events::MouseEnter, ViewportMouseEvent);
   ZeroBindEvent(Events::MouseEnterPreview, ViewportMouseEvent);
@@ -72,14 +64,11 @@ void Reactive::SetDefaults()
 
 Reactive::Reactive()
 {
-
 }
 
 Reactive::~Reactive()
 {
-
 }
-
 
 ZilchDefineType(ReactiveSpace, builder, type)
 {
@@ -95,8 +84,9 @@ ZilchDefineType(ReactiveSpace, builder, type)
 
 void ReactiveSpace::Serialize(Serializer& stream)
 {
-  bool success = Serialization::Policy<Raycaster>::Serialize(stream, "Raycaster", mRaycaster);
-  if(success == false)
+  bool success = Serialization::Policy<Raycaster>::Serialize(
+      stream, "Raycaster", mRaycaster);
+  if (success == false)
   {
     mRaycaster.AddProvider(new PhysicsRaycastProvider());
 

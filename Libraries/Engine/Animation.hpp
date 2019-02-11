@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file Animation.hpp
-/// Declaration of the Animation resource and support classes.
-///
-/// Authors: Chris Peters, Joshua Claeys
-/// Copyright 2011-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -39,22 +31,22 @@ public:
 struct PositionKey
 {
   float Keytime;
-  Vec3  Position;
+  Vec3 Position;
 };
 
 struct RotationKey
 {
   float Keytime;
-  Quat  Rotation;
+  Quat Rotation;
 };
 
 struct ScalingKey
 {
   float Keytime;
-  Vec3  Scale;
+  Vec3 Scale;
 };
 
-//A track for a object in the animation system.
+// A track for a object in the animation system.
 class ObjectTrack
 {
 public:
@@ -66,7 +58,9 @@ public:
 
   void Serialize(Serializer& stream);
 
-  void UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame);
+  void UpdateFrame(PlayData& playData,
+                   TrackParams& params,
+                   AnimationFrame& frame);
 
   /// Name will be "Transform.Translation" or "Light.Color"
   PropertyTrack* GetPropertyTrack(StringParam name);
@@ -83,7 +77,7 @@ public:
   void SetFullPath(StringParam path);
   StringParam GetFullPath() const;
 
-//private:
+  // private:
   uint mTrackCount;
   PropertyTrackList PropertyTracks;
 
@@ -112,21 +106,27 @@ public:
   /// Resource Interface.
   void Save(StringParam filename) override;
   void Serialize(Serializer& stream);
-  void Initialize(){}
+  void Initialize()
+  {
+  }
 
-  /// Duration of the animation in seconds 
-  float GetDuration(){return mDuration;}
+  /// Duration of the animation in seconds
+  float GetDuration()
+  {
+    return mDuration;
+  }
 
   ObjectTrackList ObjectTracks;
-  void UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame);
+  void UpdateFrame(PlayData& playData,
+                   TrackParams& params,
+                   AnimationFrame& frame);
   ObjectTrack* GetObjectTrack(StringParam fullPath);
   float mDuration;
   uint mNumberOfTracks;
-  //Clear for reload
+  // Clear for reload
   void Unload() override;
 };
 
-//------------------------------------------------------------ Animation Manager
 class AnimationManager : public ResourceManager
 {
 public:
@@ -135,4 +135,4 @@ public:
   AnimationManager(BoundType* resourceType);
 };
 
-}//namespace Zero
+} // namespace Zero

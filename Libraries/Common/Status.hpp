@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Chris Peters, Trevor Sundberg
-/// Copyright 2016, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 // #include "String.hpp"
 #include "EnumDeclaration.hpp"
@@ -19,23 +14,25 @@ class StatusContext
 public:
   static void ZilchDoNotBind();
 
-  typedef void(*StatusFn)(StringParam message, const T& context, void* userData);
+  typedef void (*StatusFn)(StringParam message,
+                           const T& context,
+                           void* userData);
 
   StatusContext() :
-    State(StatusState::Success),
-    Context(T()),
-    IgnoreMessage(false),
-    CallbackOnFailure(nullptr),
-    UserDataOnFailure(nullptr)
+      State(StatusState::Success),
+      Context(T()),
+      IgnoreMessage(false),
+      CallbackOnFailure(nullptr),
+      UserDataOnFailure(nullptr)
   {
   }
 
   StatusContext(StatusState::Enum state, StringParam message) :
-    State(state),
-    Message(message),
-    IgnoreMessage(false),
-    CallbackOnFailure(nullptr),
-    UserDataOnFailure(nullptr)
+      State(state),
+      Message(message),
+      IgnoreMessage(false),
+      CallbackOnFailure(nullptr),
+      UserDataOnFailure(nullptr)
   {
   }
 
@@ -108,7 +105,9 @@ public:
     return Succeeded();
   }
 
-  static void AssertCallback(StringParam message, const T& context, void* userData)
+  static void AssertCallback(StringParam message,
+                             const T& context,
+                             void* userData)
   {
     Error("%s", message.c_str());
   }
@@ -123,20 +122,24 @@ public:
   StatusState::Enum State;
   // A custom error message (generally only set when the State is Failure)
   String Message;
-  // Some functions want to return more detail on why they failed or information about the failure
-  // This is usually an enumeration, operating specific error code, etc
+  // Some functions want to return more detail on why they failed or information
+  // about the failure This is usually an enumeration, operating specific error
+  // code, etc
   T Context;
-  // As an optimization, we can suggest that we don't care about the message string
-  // This is only a suggestion and may not be used (but should be heeded in high performance areas)
+  // As an optimization, we can suggest that we don't care about the message
+  // string This is only a suggestion and may not be used (but should be heeded
+  // in high performance areas)
   bool IgnoreMessage;
   // A function pointer that is automatically invoked when the status fails
-  // This is useful for triggering asserts or global callbacks (must use SetFailed, AppendFailed, or PrependFailed)
+  // This is useful for triggering asserts or global callbacks (must use
+  // SetFailed, AppendFailed, or PrependFailed)
   StatusFn CallbackOnFailure;
   void* UserDataOnFailure;
 };
 
 typedef StatusContext<u32> Status;
 
-#define StatusReturnIfFailed(Status, ...) ReturnIf((Status).Failed(), __VA_ARGS__, "%s", (Status).Message.c_str())
+#define StatusReturnIfFailed(Status, ...)                                      \
+  ReturnIf((Status).Failed(), __VA_ARGS__, "%s", (Status).Message.c_str())
 
-}
+} // namespace Zero

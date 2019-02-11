@@ -1,17 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BaseBuilders.cpp
-/// 
-/// Authors: Chris Peters
-/// Copyright 2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//------------------------------------------------------------ Direct Builder
 
 void DirectBuilderComponent::Serialize(Serializer& stream)
 {
@@ -36,8 +28,8 @@ String DirectBuilderComponent::GetOutputFile()
   return BuildString(Name, Extension);
 }
 
-
-bool DirectBuilderComponent::NeedsBuildingTool(BuildOptions& options, StringParam tool)
+bool DirectBuilderComponent::NeedsBuildingTool(BuildOptions& options,
+                                               StringParam tool)
 {
   return CheckToolFile(options, GetOutputFile(), tool);
 }
@@ -45,7 +37,8 @@ bool DirectBuilderComponent::NeedsBuildingTool(BuildOptions& options, StringPara
 void DirectBuilderComponent::BuildListing(ResourceListing& listing)
 {
   String destFile = GetOutputFile();
-  listing.PushBack(ResourceEntry(Order, LoaderType, Name, destFile, mResourceId, this->mOwner, this));
+  listing.PushBack(ResourceEntry(
+      Order, LoaderType, Name, destFile, mResourceId, this->mOwner, this));
 }
 
 void DirectBuilderComponent::Generate(ContentInitializer& initializer)
@@ -56,34 +49,44 @@ void DirectBuilderComponent::Generate(ContentInitializer& initializer)
 
 void DirectBuilderComponent::BuildContent(BuildOptions& buildOptions)
 {
-  //Default behavior for direct builder is to just copy the content file.
+  // Default behavior for direct builder is to just copy the content file.
 
   String destFile = FilePath::Combine(buildOptions.OutputPath, GetOutputFile());
-  String sourceFile = FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
+  String sourceFile =
+      FilePath::Combine(buildOptions.SourcePath, mOwner->Filename);
 
   // Copy the file.
   bool success = CopyFile(destFile, sourceFile);
-  if(!success)
+  if (!success)
   {
-    // Try to create any missing parent directories of the destination path and try again
+    // Try to create any missing parent directories of the destination path and
+    // try again
     CreateDirectoryAndParents(FilePath::GetDirectoryPath(destFile));
     success = CopyFile(destFile, sourceFile);
   }
 
-  if(!success)
+  if (!success)
   {
     buildOptions.Failure = true;
-    buildOptions.Message = String::Format("Failed to copy file '%s' to '%s'", sourceFile.c_str(), destFile.c_str());
+    buildOptions.Message = String::Format("Failed to copy file '%s' to '%s'",
+                                          sourceFile.c_str(),
+                                          destFile.c_str());
 
     // Log what part of the source path was missing (if any)
     String sourceFileMissingDir = FindFirstMissingDirectory(sourceFile);
-    if(sourceFileMissingDir != sourceFile)
-      buildOptions.Message = String::Format("%s. The source path '%s' doesn't exist", buildOptions.Message.c_str(), sourceFileMissingDir.c_str());
+    if (sourceFileMissingDir != sourceFile)
+      buildOptions.Message =
+          String::Format("%s. The source path '%s' doesn't exist",
+                         buildOptions.Message.c_str(),
+                         sourceFileMissingDir.c_str());
 
     // Log what part of the destination path was missing (if any)
     String destFileMissingDir = FindFirstMissingDirectory(destFile);
-    if(destFileMissingDir != destFile)
-      buildOptions.Message = String::Format("%s. The destination path '%s' doesn't exist", buildOptions.Message.c_str(), destFileMissingDir.c_str());
+    if (destFileMissingDir != destFile)
+      buildOptions.Message =
+          String::Format("%s. The destination path '%s' doesn't exist",
+                         buildOptions.Message.c_str(),
+                         destFileMissingDir.c_str());
 
     return;
   }
@@ -92,4 +95,4 @@ void DirectBuilderComponent::BuildContent(BuildOptions& buildOptions)
   SetFileToCurrentTime(destFile);
 }
 
-}
+} // namespace Zero

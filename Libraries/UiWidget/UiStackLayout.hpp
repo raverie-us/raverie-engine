@@ -1,18 +1,12 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//----------------------------------------------------------------- Stack Layout
-// Direction of 
-DeclareEnum4(UiStackLayoutDirection, TopToBottom, BottomToTop,
-                                     LeftToRight, RightToLeft);
+// Direction of
+DeclareEnum4(
+    UiStackLayoutDirection, TopToBottom, BottomToTop, LeftToRight, RightToLeft);
 
 class UiStackLayout : public UiLayout
 {
@@ -28,7 +22,9 @@ public:
   Vec2 Measure(Rectangle& rect) override;
   void DoLayout(Rectangle& rect, UiTransformUpdateEvent* e) override;
 
-  float ComputeFlexRatio(float fixedSize, float totalFlex, float flexMinSize,
+  float ComputeFlexRatio(float fixedSize,
+                         float totalFlex,
+                         float flexMinSize,
                          float totalSize);
 
   /// The stack direction the child Widgets will be placed in.
@@ -38,10 +34,10 @@ public:
   /// The amount of space, in pixels, between each child Widget.
   Vec2 GetSpacing();
   void SetSpacing(Vec2Param spacing);
-  
+
 private:
   UiStackLayoutDirection::Enum mStackDirection;
   Vec2 mSpacing;
 };
 
-}//namespace Zero
+} // namespace Zero

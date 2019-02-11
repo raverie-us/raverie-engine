@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis, Joshua Claeys
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
 {
 
-//-------------------------------------------------------- Template Project Item
 class TemplateProjectItem : public Composite
 {
 public:
@@ -17,7 +11,8 @@ public:
   typedef TemplateProjectItem ZilchSelf;
 
   /// Constructor.
-  TemplateProjectItem(Composite* parent, NewProjectMenu* newProjectMenu,
+  TemplateProjectItem(Composite* parent,
+                      NewProjectMenu* newProjectMenu,
                       TemplateProject* project);
 
   /// Composite Interface.
@@ -39,7 +34,6 @@ public:
   bool mSelected;
 };
 
-//------------------------------------------------------------- New Project Menu
 class NewProjectMenu : public Composite
 {
 public:
@@ -74,9 +68,10 @@ public:
   void OnTemplateInstallFinished(BackgroundTaskEvent* e);
   void RunNewlyCreatedProject(CachedProject* project);
 
-  /// Open the windows folder dialog when the 
+  /// Open the windows folder dialog when the
   void OnSelectLocationPressed(Event* e);
-  /// Special case handling of the user trying to run the new project with the active debugger but none exists.
+  /// Special case handling of the user trying to run the new project with the
+  /// active debugger but none exists.
   void OnNewProjectDebuggerCommunicationFailed(LauncherCommunicationEvent* e);
   void OnLocationSelected(OsFileSelection* e);
 
@@ -96,4 +91,4 @@ public:
   HandleOf<TemplateProjectItem> mSelectedTemplate;
 };
 
-}//namespace Zero
+} // namespace Zero

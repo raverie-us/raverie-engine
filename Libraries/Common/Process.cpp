@@ -1,19 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Trevor Sundberg, Joshua T. Fisher, Chris Peters Joshua Davis
-/// Copyright 2015, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 ProcessStartInfo::ProcessStartInfo() :
-  mShowWindow(false),
-  mSearchPath(true),
-  mRedirectStandardOutput(false),
-  mRedirectStandardError(false),
-  mRedirectStandardInput(false)
+    mShowWindow(false),
+    mSearchPath(true),
+    mRedirectStandardOutput(false),
+    mRedirectStandardError(false),
+    mRedirectStandardInput(false)
 {
 }
 
@@ -36,7 +31,12 @@ ZeroShared ProcessInfo FindProcess(StringParam processName)
   return ProcessInfo();
 }
 
-void Process::Start(Status& status, StringRange commandLine, bool redirectOut, bool redirectError, bool redirectIn, bool showWindow)
+void Process::Start(Status& status,
+                    StringRange commandLine,
+                    bool redirectOut,
+                    bool redirectError,
+                    bool redirectIn,
+                    bool showWindow)
 {
   ProcessStartInfo info;
   info.mArguments = commandLine;
@@ -58,7 +58,10 @@ SimpleProcess::~SimpleProcess()
   }
 }
 
-void SimpleProcess::ExecProcess(StringParam debugName, StringParam commandLine, TextStream* stream, bool showWindow)
+void SimpleProcess::ExecProcess(StringParam debugName,
+                                StringParam commandLine,
+                                TextStream* stream,
+                                bool showWindow)
 {
   mCancel = false;
   mStream = stream;
@@ -88,14 +91,15 @@ OsInt SimpleProcess::ReadThreadEntryPoint(void* data)
     const size_t BufferSize = 4096;
 
     // We add 1 for an extra null terminator at the end
-    // (technically the null terminator could go anywhere since we place it at the end of the amount we read)
+    // (technically the null terminator could go anywhere since we place it at
+    // the end of the amount we read)
     byte buffer[BufferSize + 1];
 
     size_t amountRead = self->mStandardOut.Read(status, buffer, BufferSize);
 
     // Terminate this buffer and write it out
     buffer[amountRead] = '\0';
-    if(self->mStream != nullptr)
+    if (self->mStream != nullptr)
       self->mStream->Write((cstr)buffer);
 
     if (status.Failed())
@@ -119,4 +123,4 @@ void SimpleProcess::Cancel()
   mStandardOut.Close();
 }
 
-}//namespace Zero
+} // namespace Zero

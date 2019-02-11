@@ -1,41 +1,42 @@
-///////////////////////////////////////////////////////////////////////////////
-/// Authors: Dane Curbow
-/// Copyright 2016, DigiPen Institute of Technology
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
 {
 
-//----------------------------------------------------------------------- UTF8 Utilities
+//Utilities
 namespace UTF8
 {
 static const char cTotalBytesToReadUTF8[256] = {
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
-};
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
 
 // any character value above this value is in the UTF8 code point space
 const int cUnicodeRangeStart = 0xC0;
 
-// the offset values are bit shifted by 6 positions so the markers do no line up with the start of each byte
-static const int cOffsetsFromUTF8[5] = { 0x00000000,  // bytes read will (should) never be 0
-                                         0x00000000,  // 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
-                                         0x00003080,  // 0000 0000 | 0000 0000 | 0011 0000 | 1000 0000
-                                         0x000E2080,  // 0000 0000 | 0000 1110 | 0010 0000 | 1000 0000
-                                         0x03C82080 };// 0011 1100 | 0000 1000 | 0010 0000 | 1000 0000
+// the offset values are bit shifted by 6 positions so the markers do no line up
+// with the start of each byte
+static const int cOffsetsFromUTF8[5] = {
+    0x00000000,  // bytes read will (should) never be 0
+    0x00000000,  // 0000 0000 | 0000 0000 | 0000 0000 | 0000 0000
+    0x00003080,  // 0000 0000 | 0000 0000 | 0011 0000 | 1000 0000
+    0x000E2080,  // 0000 0000 | 0000 1110 | 0010 0000 | 1000 0000
+    0x03C82080}; // 0011 1100 | 0000 1000 | 0010 0000 | 1000 0000
 
-size_t UnpackUtf8RuneIntoBufferInternal(Rune uft8Rune, byte(&utf8Bytes)[4]);
+size_t UnpackUtf8RuneIntoBufferInternal(Rune uft8Rune, byte (&utf8Bytes)[4]);
 
 bool IsLower(Rune rune)
 {
-// temporary fix for windows lack of any real UTF8 support
+  // temporary fix for windows lack of any real UTF8 support
   if (rune.value > cUnicodeRangeStart)
     return false;
   return islower(rune.value);
@@ -43,7 +44,7 @@ bool IsLower(Rune rune)
 
 bool IsUpper(Rune rune)
 {
-// temporary fix for windows lack of any real UTF8 support
+  // temporary fix for windows lack of any real UTF8 support
   if (rune.value > cUnicodeRangeStart)
     return false;
   return isupper(rune.value);
@@ -51,8 +52,8 @@ bool IsUpper(Rune rune)
 
 bool IsWhiteSpace(Rune rune)
 {
-// temporary fix for windows lack of any real UTF8 support
-  if(rune.value > cUnicodeRangeStart)
+  // temporary fix for windows lack of any real UTF8 support
+  if (rune.value > cUnicodeRangeStart)
     return false;
   return isspace(rune.value);
 }
@@ -70,7 +71,7 @@ bool IsAlphaNumeric(Rune rune)
 bool IsPunctuation(Rune rune)
 {
   // temporary fix for windows lack of any real UTF8 support
-  if(rune.value > cUnicodeRangeStart)
+  if (rune.value > cUnicodeRangeStart)
     return false;
   return ispunct(rune.value);
 }
@@ -85,7 +86,7 @@ Rune ToUpper(Rune rune)
   return Rune(toupper(rune.value));
 }
 
-// Does not validate rune 
+// Does not validate rune
 uint Utf8ToUtf32(Rune utf8)
 {
   if (utf8.value < 128)
@@ -100,19 +101,27 @@ uint Utf8ToUtf32(Rune utf8)
 
   byte currentByteToRead = totalBytesToRead - 1;
   // this switch case falling through is intended behavior, it is simply an
-  // unwrapped while loop with the removed case of not bit shifting on the first byte
+  // unwrapped while loop with the removed case of not bit shifting on the first
+  // byte
   switch (currentByteToRead)
   {
-    case 3: utf32 += utf8Bytes[currentByteToRead--]; utf32 <<= 6;
-    case 2: utf32 += utf8Bytes[currentByteToRead--]; utf32 <<= 6;
-    case 1: utf32 += utf8Bytes[currentByteToRead--]; utf32 <<= 6;
-    case 0: utf32 += utf8Bytes[currentByteToRead];
+  case 3:
+    utf32 += utf8Bytes[currentByteToRead--];
+    utf32 <<= 6;
+  case 2:
+    utf32 += utf8Bytes[currentByteToRead--];
+    utf32 <<= 6;
+  case 1:
+    utf32 += utf8Bytes[currentByteToRead--];
+    utf32 <<= 6;
+  case 0:
+    utf32 += utf8Bytes[currentByteToRead];
   }
 
-  // subtract out the utf8 information byte values which are the lead bytes value and the following
-  // continuation byte markers
+  // subtract out the utf8 information byte values which are the lead bytes
+  // value and the following continuation byte markers
   utf32 -= cOffsetsFromUTF8[totalBytesToRead];
-  
+
   return utf32;
 }
 
@@ -123,15 +132,16 @@ size_t UnpackUtf8RuneIntoBufferInternal(Rune uft8Rune, byte (&utf8Bytes)[4])
 
   for (int i = 3; i >= 0; --i)
   {
-    // either we found the leading byte value or reached the end of the codepoint
+    // either we found the leading byte value or reached the end of the
+    // codepoint
     if (utf8Bytes[i] || i == 0)
-     return EncodedCodepointLength(utf8Bytes[i]);
+      return EncodedCodepointLength(utf8Bytes[i]);
   }
   // this should never be hit, but just in case
   return 0;
 }
 
-size_t UnpackUtf8RuneIntoBuffer(Rune uft8Rune, byte(&utf8Bytes)[4])
+size_t UnpackUtf8RuneIntoBuffer(Rune uft8Rune, byte (&utf8Bytes)[4])
 {
   memset(utf8Bytes, 0, sizeof(uint));
   byte bytes[4];
@@ -150,8 +160,9 @@ Rune ReadUtf8Rune(byte* firstByte)
   int currentByteToRead = 0;
   int rune = 0;
 
-  do {
-    // bit shift the character into the byte started furtherest left 
+  do
+  {
+    // bit shift the character into the byte started furtherest left
     // and counting down until the next byte starts
     rune = rune << 8;
     rune |= firstByte[currentByteToRead++];
@@ -160,12 +171,13 @@ Rune ReadUtf8Rune(byte* firstByte)
   return Rune(rune);
 }
 
-//Only pass in the first utf8 byte to get how long the encoded codepoint is in bytes
+// Only pass in the first utf8 byte to get how long the encoded codepoint is in
+// bytes
 size_t EncodedCodepointLength(byte utf8FirstByte)
 {
   return cTotalBytesToReadUTF8[utf8FirstByte];
 }
 
-}// namespace UTF8
+} // namespace UTF8
 
-}// namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2010-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -12,50 +7,48 @@ namespace Zero
 namespace Physics
 {
 
-  
 typedef Array<Collider*, HeapAllocator> ColliderStack;
-
 
 void AddTreeToStack(Collider* collider, ColliderStack& stack)
 {
-  //if any collider in a tree is marked as on an island,
-  //that means we've put the whole tree on the island
-  if(collider->mState.IsSet(ColliderFlags::OnIsland))
+  // if any collider in a tree is marked as on an island,
+  // that means we've put the whole tree on the island
+  if (collider->mState.IsSet(ColliderFlags::OnIsland))
     return;
 
   RigidBody* body = collider->GetActiveBody();
-  if(body == nullptr)
+  if (body == nullptr)
     return;
 
-  //loop up to find a dynamic parent body
-  while(!body->IsDynamic() && body->mParentBody)
+  // loop up to find a dynamic parent body
+  while (!body->IsDynamic() && body->mParentBody)
     body = body->mParentBody;
 
-  if(body == nullptr)
+  if (body == nullptr)
     return;
 
-  //now that we have the root body of the tree (dynamic root), we can
-  //loop through the tree and add all colliders to the stack
+  // now that we have the root body of the tree (dynamic root), we can
+  // loop through the tree and add all colliders to the stack
   Array<RigidBody*> bodyStack;
   bodyStack.PushBack(body);
 
-  while(!bodyStack.Empty())
+  while (!bodyStack.Empty())
   {
     RigidBody* currentBody = bodyStack.Back();
     bodyStack.PopBack();
 
-    //add all child bodies that aren't dynamic to the body stack
+    // add all child bodies that aren't dynamic to the body stack
     RigidBody::BodyRange bodies = currentBody->mChildBodies.All();
-    for(; !bodies.Empty(); bodies.PopFront())
+    for (; !bodies.Empty(); bodies.PopFront())
     {
       RigidBody* childBody = &bodies.Front();
-      if(!childBody->IsDynamic())
+      if (!childBody->IsDynamic())
         bodyStack.PushBack(childBody);
     }
 
-    //add all colliders of this body to the body stack
+    // add all colliders of this body to the body stack
     RigidBody::CompositeColliderRange colliders = currentBody->mColliders.All();
-    for(; !colliders.Empty(); colliders.PopFront())
+    for (; !colliders.Empty(); colliders.PopFront())
     {
       Collider* currentCollider = &colliders.Front();
       currentCollider->mState.SetFlag(ColliderFlags::OnIsland);
@@ -69,28 +62,31 @@ void DestroyJoint(Joint* joint)
 {
 }
 
-// Contacts should be destroyed when they are invalid (so that we get collision end)
+// Contacts should be destroyed when they are invalid (so that we get collision
+// end)
 void DestroyJoint(Contact* contact)
 {
   contact->Destroy();
 }
 
 template <typename EdgeListType>
-void AddCompositeEdges(EdgeListType& edgeList, Island* island, ColliderStack& stack)
+void AddCompositeEdges(EdgeListType& edgeList,
+                       Island* island,
+                       ColliderStack& stack)
 {
   typename EdgeListType::range edgeRange = edgeList.All();
 
-  while(!edgeRange.Empty())
+  while (!edgeRange.Empty())
   {
     typename EdgeListType::value_type& edge = edgeRange.Front();
     edgeRange.PopFront();
 
-    if(edge.mJoint->GetOnIsland())
+    if (edge.mJoint->GetOnIsland())
       continue;
 
-    // If the joint isn't valid for some reason (one of the colliders/cogs is null)
-    // then don't solve or traverse this edge
-    if(!edge.mJoint->GetValid())
+    // If the joint isn't valid for some reason (one of the colliders/cogs is
+    // null) then don't solve or traverse this edge
+    if (!edge.mJoint->GetValid())
     {
       DestroyJoint(edge.mJoint);
       continue;
@@ -99,12 +95,13 @@ void AddCompositeEdges(EdgeListType& edgeList, Island* island, ColliderStack& st
     island->Add(edge.mJoint);
     Collider* otherCollider = edge.mOther;
 
-    //don't add the other object if it already exists on this island
-    if(otherCollider->mState.IsSet(ColliderFlags::OnIsland))
+    // don't add the other object if it already exists on this island
+    if (otherCollider->mState.IsSet(ColliderFlags::OnIsland))
       continue;
 
-    //don't add static objects to the island since islands don't extend over static objects
-    if(otherCollider->GetActiveBody() != nullptr)
+    // don't add static objects to the island since islands don't extend over
+    // static objects
+    if (otherCollider->GetActiveBody() != nullptr)
     {
       AddTreeToStack(otherCollider, stack);
     }
@@ -113,14 +110,15 @@ void AddCompositeEdges(EdgeListType& edgeList, Island* island, ColliderStack& st
 
 void AddCompositeColliders(Collider* collider, ColliderStack& stack)
 {
-  //Push on other colliders in the composite object
+  // Push on other colliders in the composite object
   RigidBody* body = collider->GetActiveBody();
-  if(body == nullptr)
+  if (body == nullptr)
     return;
-  RigidBody::CompositeColliderList::range colliderRange = body->mColliders.All();
-  for(; !colliderRange.Empty(); colliderRange.PopFront())
+  RigidBody::CompositeColliderList::range colliderRange =
+      body->mColliders.All();
+  for (; !colliderRange.Empty(); colliderRange.PopFront())
   {
-    if(colliderRange.Front().mState.IsSet(ColliderFlags::OnIsland))
+    if (colliderRange.Front().mState.IsSet(ColliderFlags::OnIsland))
       continue;
 
     colliderRange.Front().mState.SetFlag(ColliderFlags::OnIsland);
@@ -128,25 +126,25 @@ void AddCompositeColliders(Collider* collider, ColliderStack& stack)
   }
 }
 
-///Extends islands across kinematic objects so that a kinematic object can be on an island.
-///Used when objects want to get everything in their island.
+/// Extends islands across kinematic objects so that a kinematic object can be
+/// on an island. Used when objects want to get everything in their island.
 struct KinematicTraversal
 {
   bool ValidCollider(Collider* collider)
   {
-    //if this one is already on an island, it has already been taken
-    //care of so ignore it.
-    if(collider->mState.IsSet(ColliderFlags::OnIsland) || collider->IsAsleep())
+    // if this one is already on an island, it has already been taken
+    // care of so ignore it.
+    if (collider->mState.IsSet(ColliderFlags::OnIsland) || collider->IsAsleep())
     {
-      //Objects have to be given an initialized flag so that they can get
-      //contacts added even though they are asleep. This is because if the
-      //contacts aren't added, then an island will never be formed, so objects
-      //will not wake up if something under them wakes up.
+      // Objects have to be given an initialized flag so that they can get
+      // contacts added even though they are asleep. This is because if the
+      // contacts aren't added, then an island will never be formed, so objects
+      // will not wake up if something under them wakes up.
       collider->mState.ClearFlag(ColliderFlags::Uninitialized);
       return false;
     }
 
-    if(collider->mContactEdges.Empty() && collider->mJointEdges.Empty())
+    if (collider->mContactEdges.Empty() && collider->mJointEdges.Empty())
       return false;
     return true;
   }
@@ -154,13 +152,13 @@ struct KinematicTraversal
   void TraverseEdges(Collider* collider, ColliderStack& stack, Island* island)
   {
     RigidBody* body = collider->GetActiveBody();
-    //Remove for now (clean-up later).
-    //If this is in here then objects will not properly be woken up (timer) later.
-    //if(body)
+    // Remove for now (clean-up later).
+    // If this is in here then objects will not properly be woken up (timer)
+    // later. if(body)
     //  body->mState.ClearFlag(RigidBodyStates::Asleep);
 
-    //don't extend the island over static or asleep objects
-    if(collider->IsStatic())
+    // don't extend the island over static or asleep objects
+    if (collider->IsStatic())
       return;
 
     AddCompositeEdges(collider->mJointEdges, island, stack);
@@ -174,12 +172,12 @@ struct CompositeTraversal
 {
   bool ValidCollider(Collider* collider)
   {
-    //if this one is already on an island, it has already been taken
-    //care of so ignore it.
-    if(collider->mState.IsSet(ColliderFlags::OnIsland) || collider->IsAsleep())
+    // if this one is already on an island, it has already been taken
+    // care of so ignore it.
+    if (collider->mState.IsSet(ColliderFlags::OnIsland) || collider->IsAsleep())
       return false;
 
-    if(collider->mContactEdges.Empty() && collider->mJointEdges.Empty())
+    if (collider->mContactEdges.Empty() && collider->mJointEdges.Empty())
       return true;
     return true;
   }
@@ -188,8 +186,9 @@ struct CompositeTraversal
   {
     collider->GetActiveBody()->mState.ClearFlag(RigidBodyStates::Asleep);
 
-    //don't extend the island over static or asleep objects
-    if(collider->GetActiveBody() == nullptr || !collider->GetActiveBody()->IsDynamic())
+    // don't extend the island over static or asleep objects
+    if (collider->GetActiveBody() == nullptr ||
+        !collider->GetActiveBody()->IsDynamic())
       return;
 
     AddCompositeEdges(collider->mJointEdges, island, stack);
@@ -212,10 +211,10 @@ struct BasicPreProcessing
 {
   void PreProcess(IslandManager::IslandList& islands, Island*& newIsland)
   {
-    if(!islands.Empty())
+    if (!islands.Empty())
     {
       Physics::Island* mergeIsland = &(islands.Back());
-      if(mergeIsland->ColliderCount + newIsland->ColliderCount < 20)
+      if (mergeIsland->ColliderCount + newIsland->ColliderCount < 20)
       {
         mergeIsland->MergeIsland(*newIsland);
         newIsland->Clear();
@@ -238,12 +237,12 @@ struct ConstraintCountPreProcessing
 {
   void PreProcess(IslandManager::IslandList& islands, Island*& newIsland)
   {
-    if(!islands.Empty())
+    if (!islands.Empty())
     {
       Physics::Island* mergeIsland = &(islands.Back());
       uint mergeCount = mergeIsland->ContactCount + mergeIsland->JointCount;
       uint newCount = newIsland->ContactCount + newIsland->JointCount;
-      if(mergeCount + newCount < 20)
+      if (mergeCount + newCount < 20)
       {
         mergeIsland->MergeIsland(*newIsland);
         newIsland->Clear();
@@ -288,13 +287,13 @@ void IslandManager::SetSolverConfig(PhysicsSolverConfig* config)
 {
   mPhysicsSolverConfig = config;
 
-  //make sure to set all of the solver's up with the new config
+  // make sure to set all of the solver's up with the new config
   //(especially since we don't store resource references to them)
-  if(mSharedSolver != nullptr)
+  if (mSharedSolver != nullptr)
     mSharedSolver->SetConfiguration(mPhysicsSolverConfig);
 
   IslandList::range range = mIslands.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     Island& island = range.Front();
     island.mSolver->SetConfiguration(mPhysicsSolverConfig);
@@ -305,30 +304,30 @@ void IslandManager::BuildIslands(ColliderList& colliders)
 {
   Clear();
 
-  if(mShareSolver)
+  if (mShareSolver)
     mSharedSolver = GetNewSolver();
 
-  if(mIslandingType == PhysicsIslandType::ForcedOne)
+  if (mIslandingType == PhysicsIslandType::ForcedOne)
     CreateSingleIsland(KinematicTraversal(), colliders);
-  else if(mIslandingType == PhysicsIslandType::Kinematics)
+  else if (mIslandingType == PhysicsIslandType::Kinematics)
     CreateCompactIslands(KinematicTraversal(), colliders);
-  else if(mIslandingType == PhysicsIslandType::Composites)
+  else if (mIslandingType == PhysicsIslandType::Composites)
     CreateCompactIslands(CompositeTraversal(), colliders);
   else
     ErrorIf(true, "Invalid islanding type specified.");
 
-  if(mPostProcess)
+  if (mPostProcess)
     PostProcessIslands();
 
   mIslandCount = 0;
   IslandList::range range = mIslands.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     ++mIslandCount;
 }
 
 void IslandManager::PostProcessIslands()
 {
-  if(mIslands.Empty())
+  if (mIslands.Empty())
     return;
 
   uint ColliderMergeThreshold = 20;
@@ -336,30 +335,31 @@ void IslandManager::PostProcessIslands()
   IslandList largeEnoughIslands;
   Island* mergeIsland = &(mIslands.Front());
   mIslands.Unlink(mergeIsland);
-  if(mergeIsland->ColliderCount >= ColliderMergeThreshold)
+  if (mergeIsland->ColliderCount >= ColliderMergeThreshold)
   {
     largeEnoughIslands.PushBack(mergeIsland);
     mergeIsland = nullptr;
   }
 
-  while(!mIslands.Empty())
+  while (!mIslands.Empty())
   {
     Island* island = &(mIslands.Front());
     mIslands.Unlink(island);
 
-    if(mergeIsland == nullptr)
+    if (mergeIsland == nullptr)
     {
       mergeIsland = island;
       continue;
     }
 
-    if(island->ColliderCount >= ColliderMergeThreshold)
+    if (island->ColliderCount >= ColliderMergeThreshold)
     {
       largeEnoughIslands.PushBack(island);
       continue;
     }
 
-    if(island->ColliderCount + mergeIsland->ColliderCount >= ColliderMergeThreshold)
+    if (island->ColliderCount + mergeIsland->ColliderCount >=
+        ColliderMergeThreshold)
     {
       largeEnoughIslands.PushBack(mergeIsland);
       mergeIsland = island;
@@ -370,46 +370,46 @@ void IslandManager::PostProcessIslands()
     delete island;
   }
 
-  if(mergeIsland)
+  if (mergeIsland)
     largeEnoughIslands.PushBack(mergeIsland);
   mIslands.Swap(largeEnoughIslands);
 }
 
 void IslandManager::Solve(real dt, bool allowSleeping, uint debugFlags)
 {
-  if(mShareSolver)
+  if (mShareSolver)
   {
     IslandList::range islandRange = mIslands.All();
-    for(; !islandRange.Empty(); islandRange.PopFront())
+    for (; !islandRange.Empty(); islandRange.PopFront())
       islandRange.Front().CommitConstraints();
 
     mSharedSolver->Solve(dt);
 
-    //solve all of the islands.
+    // solve all of the islands.
     islandRange = mIslands.All();
-    for(; !islandRange.Empty(); islandRange.PopFront())
+    for (; !islandRange.Empty(); islandRange.PopFront())
       islandRange.Front().UpdateSleep(dt, allowSleeping, debugFlags);
 
     return;
   }
 
-  //solve all of the islands.
+  // solve all of the islands.
   IslandList::range islandRange = mIslands.All();
-  for(; !islandRange.Empty(); islandRange.PopFront())
+  for (; !islandRange.Empty(); islandRange.PopFront())
     islandRange.Front().Solve(dt, allowSleeping, debugFlags);
 }
 
 void IslandManager::SolvePositions(real dt)
 {
   IslandList::range islandRange = mIslands.All();
-  for(; !islandRange.Empty(); islandRange.PopFront())
+  for (; !islandRange.Empty(); islandRange.PopFront())
     islandRange.Front().SolvePositions(dt);
 }
 
 void IslandManager::Draw(uint flags)
 {
   IslandList::range range = mIslands.All();
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
   {
     Island& island = range.Front();
     island.mSolver->DebugDraw(flags);
@@ -418,12 +418,13 @@ void IslandManager::Draw(uint flags)
 
 void IslandManager::RemoveCollider(Collider* collider)
 {
-  //have the collider unlink itself if it is on an island
-  if(collider->mState.IsSet(ColliderFlags::OnIsland))
+  // have the collider unlink itself if it is on an island
+  if (collider->mState.IsSet(ColliderFlags::OnIsland))
   {
-    //remove the constraints from the solver but don't unlink them from the colliders
-    //the colliders remove them in the destructor. Otherwise objects being moved by their
-    //transform being set will have their constraints undone
+    // remove the constraints from the solver but don't unlink them from the
+    // colliders the colliders remove them in the destructor. Otherwise objects
+    // being moved by their transform being set will have their constraints
+    // undone
     Physics::JointHelpers::UnlinkJointsFromSolver(collider);
     Physics::Island::Colliders::Unlink(collider);
     collider->mState.ClearFlag(ColliderFlags::OnIsland);
@@ -435,7 +436,7 @@ void IslandManager::Clear()
   mIslandCount = 0;
 
   DeleteObjectsIn<Island, &Island::ManagerLink>(mIslands);
-  if(mShareSolver && mSharedSolver != nullptr)
+  if (mShareSolver && mSharedSolver != nullptr)
   {
     mSharedSolver->Clear();
     delete mSharedSolver;
@@ -445,31 +446,34 @@ void IslandManager::Clear()
 Island* IslandManager::GetObjectsIsland(const Collider* collider)
 {
   IslandList::range islandRange = mIslands.All();
-  for(; !islandRange.Empty(); islandRange.PopFront())
+  for (; !islandRange.Empty(); islandRange.PopFront())
   {
     Island* island = &islandRange.Front();
-    if(island->ContainsCollider(collider))
+    if (island->ContainsCollider(collider))
       return island;
   }
 
   return nullptr;
 }
 
-template <typename Policy> 
+template <typename Policy>
 void IslandManager::CreateCompactIslands(Policy policy, ColliderList& colliders)
 {
-  if(mPreProcessingType == PhysicsIslandPreProcessingMode::None)
+  if (mPreProcessingType == PhysicsIslandPreProcessingMode::None)
     CreateCompactIslands(policy, NoPreProcessing(), colliders);
-  else if(mPreProcessingType == PhysicsIslandPreProcessingMode::ColliderCount)
+  else if (mPreProcessingType == PhysicsIslandPreProcessingMode::ColliderCount)
     CreateCompactIslands(policy, BasicPreProcessing(), colliders);
-  else if(mPreProcessingType == PhysicsIslandPreProcessingMode::ConstraintCount)
+  else if (mPreProcessingType ==
+           PhysicsIslandPreProcessingMode::ConstraintCount)
     CreateCompactIslands(policy, ConstraintCountPreProcessing(), colliders);
-  else 
-    ErrorIf(true,"Invalid Pre-Processing type specified.");
+  else
+    ErrorIf(true, "Invalid Pre-Processing type specified.");
 }
 
 template <typename Policy, typename PreProcessing>
-void IslandManager::CreateCompactIslands(Policy policy, PreProcessing prePolicy, ColliderList& colliders)
+void IslandManager::CreateCompactIslands(Policy policy,
+                                         PreProcessing prePolicy,
+                                         ColliderList& colliders)
 {
   ColliderStack stack;
   stack.SetAllocator(HeapAllocator(mSpace->mHeap));
@@ -477,22 +481,22 @@ void IslandManager::CreateCompactIslands(Policy policy, PreProcessing prePolicy,
   Physics::Island* island = nullptr;
 
   ColliderList::range colliderRange = colliders.All();
-  //loop over all of the colliders
-  for(; !colliderRange.Empty(); colliderRange.PopFront())
+  // loop over all of the colliders
+  for (; !colliderRange.Empty(); colliderRange.PopFront())
   {
     Collider& obj = colliderRange.Front();
-    if(!policy.ValidCollider(&obj))
+    if (!policy.ValidCollider(&obj))
       continue;
 
     AddTreeToStack(&obj, stack);
 
-    if(island == nullptr)
+    if (island == nullptr)
       island = CreateNewIsland();
     obj.mState.SetFlag(ColliderFlags::OnIsland);
 
-    //the stack represents the objects in this island that have
-    //yet to be visited, so we have to iterate until the stack is empty.
-    while(!stack.Empty())
+    // the stack represents the objects in this island that have
+    // yet to be visited, so we have to iterate until the stack is empty.
+    while (!stack.Empty())
     {
       Collider* collider = stack.Back();
       stack.PopBack();
@@ -504,7 +508,7 @@ void IslandManager::CreateCompactIslands(Policy policy, PreProcessing prePolicy,
     prePolicy.PreProcess(mIslands, island);
   }
 
-  if(island != nullptr)
+  if (island != nullptr)
     delete island;
 }
 
@@ -515,21 +519,20 @@ void IslandManager::CreateSingleIsland(Policy policy, ColliderList& colliders)
 
   ColliderStack stack;
   stack.SetAllocator(HeapAllocator(mSpace->mHeap));
-  
 
   ColliderList::range colliderRange = colliders.All();
-  //loop over all of the colliders
-  for(; !colliderRange.Empty(); colliderRange.PopFront())
+  // loop over all of the colliders
+  for (; !colliderRange.Empty(); colliderRange.PopFront())
   {
     Collider& obj = colliderRange.Front();
-    if(!policy.ValidCollider(&obj))
+    if (!policy.ValidCollider(&obj))
       continue;
 
     stack.PushBack(&obj);
     obj.mState.SetFlag(ColliderFlags::OnIsland);
 
-    //the stack is all of the connections that need to be spanned for an island
-    while(!stack.Empty())
+    // the stack is all of the connections that need to be spanned for an island
+    while (!stack.Empty())
     {
       Collider* collider = stack.Back();
       stack.PopBack();
@@ -545,18 +548,18 @@ void IslandManager::CreateSingleIsland(Policy policy, ColliderList& colliders)
 IConstraintSolver* IslandManager::GetNewSolver()
 {
   IConstraintSolver* solver = nullptr;
-  if(mPhysicsSolverConfig->mSolverType == PhysicsSolverType::Basic)
+  if (mPhysicsSolverConfig->mSolverType == PhysicsSolverType::Basic)
     solver = new BasicSolver();
-  else if(mPhysicsSolverConfig->mSolverType == PhysicsSolverType::GenericBasic)
+  else if (mPhysicsSolverConfig->mSolverType == PhysicsSolverType::GenericBasic)
     solver = new GenericBasicSolver();
-  else if(mPhysicsSolverConfig->mSolverType == PhysicsSolverType::Normal)
+  else if (mPhysicsSolverConfig->mSolverType == PhysicsSolverType::Normal)
     solver = new NormalSolver();
-  else if(mPhysicsSolverConfig->mSolverType == PhysicsSolverType::Threaded)
+  else if (mPhysicsSolverConfig->mSolverType == PhysicsSolverType::Threaded)
     solver = new ThreadedSolver();
   else
-    ErrorIf(true,"Invalid Solver type specified.");
+    ErrorIf(true, "Invalid Solver type specified.");
 
-  if(mPhysicsSolverConfig != nullptr)
+  if (mPhysicsSolverConfig != nullptr)
     solver->SetConfiguration(mPhysicsSolverConfig);
   solver->SetHeap(mSpace->mHeap);
 
@@ -567,7 +570,7 @@ Island* IslandManager::CreateNewIsland()
 {
   Island* island = new Island();
 
-  if(mShareSolver)
+  if (mShareSolver)
     island->SetSolver(mSharedSolver, false);
   else
     island->SetSolver(GetNewSolver(), true);
@@ -575,6 +578,6 @@ Island* IslandManager::CreateNewIsland()
   return island;
 }
 
-}//namespace Physics
+} // namespace Physics
 
-}//namespace Zero
+} // namespace Zero

@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Authors: Joshua Davis
-/// Copyright 2011-2017, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -11,12 +6,11 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(JointExceedImpulseLimit);
-  DefineEvent(JointLowerLimitReached);
-  DefineEvent(JointUpperLimitReached);
-}
+DefineEvent(JointExceedImpulseLimit);
+DefineEvent(JointLowerLimitReached);
+DefineEvent(JointUpperLimitReached);
+} // namespace Events
 
-//-------------------------------------------------------------------JointEvent
 ZilchDefineType(JointEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -55,4 +49,4 @@ Joint* JointEvent::GetJoint()
   return mJoint;
 }
 
-}//namespace Zero
+} // namespace Zero

@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file BackgroundTaskUi.hpp
-/// 
-///
-/// Authors: Joshua Claeys
-/// Copyright 2014, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #pragma once
 
 namespace Zero
@@ -19,13 +11,12 @@ class BackgroundTaskEvent;
 class BackgroundTaskWindow;
 class UpdateEvent;
 
-//------------------------------------------------------------- Downloads Button
 class BackgroundTaskButton : public IconButton
 {
 public:
   typedef BackgroundTaskButton ZilchSelf;
   BackgroundTaskButton(Composite* parent);
-  
+
   /// Widget Interface.
   void UpdateTransform() override;
 
@@ -38,7 +29,7 @@ private:
 
   /// Notify that a task has started.
   void OnTaskStarted(BackgroundTaskEvent* e);
-  
+
   /// Updates the progress bar on the bottom of the button.
   void OnTaskUpdated(BackgroundTaskEvent* e);
 
@@ -53,14 +44,13 @@ private:
 
   HandleOf<Composite> mTasksWindow;
 
-  /// Shows the average progress of all 
+  /// Shows the average progress of all
   ProgressBar* mAverageProgress;
 
   /// Are there currently any non-completed tasks?
   bool mActiveTasks;
 };
 
-//---------------------------------------------------------------- Download Item
 class BackgroundTaskItem : public Composite
 {
 public:
@@ -94,7 +84,6 @@ private:
   BackgroundTask* mTask;
 };
 
-//------------------------------------------------------------- Downloads Window
 class BackgroundTaskWindow : public PopUp
 {
 public:
@@ -111,4 +100,4 @@ private:
   Element* mBackground;
 };
 
-}//namespace Zero
+} // namespace Zero

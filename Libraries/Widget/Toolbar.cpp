@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file ToolBar.cpp
-/// Implementation of the Toolbar classes.
-///
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
 namespace Zero
@@ -15,13 +7,12 @@ namespace Zero
 namespace ToolbarUi
 {
 const cstr cLocation = "EditorUi/Controls/Toolbar";
-Tweakable(Vec4, BackgroundColor, Vec4(1,1,1,1), cLocation);
-Tweakable(Vec4, DividerColor, Vec4(1,1,1,1), cLocation);
-}
+Tweakable(Vec4, BackgroundColor, Vec4(1, 1, 1, 1), cLocation);
+Tweakable(Vec4, DividerColor, Vec4(1, 1, 1, 1), cLocation);
+} // namespace ToolbarUi
 
-//------------------------------------------------------------- Command Sub Item
-CommandSubItem::CommandSubItem(ToolBarGroupPopUp* parent, Command* command)
-  : Composite(parent)
+CommandSubItem::CommandSubItem(ToolBarGroupPopUp* parent, Command* command) :
+    Composite(parent)
 {
   mPopUp = parent;
   mCommand = command;
@@ -55,10 +46,11 @@ float CommandSubItem::MeasureWidth()
 
 void CommandSubItem::UpdateTransform()
 {
-  mIcon->SetTranslation(Vec3(cMargins, cMargins,0));
+  mIcon->SetTranslation(Vec3(cMargins, cMargins, 0));
   mIcon->SetSize(Pixels(28, 28));
 
-  Vec3 textTranslation(cMargins + mIcon->mSize.x + cSpacing, cMargins + Pixels(7), 0);
+  Vec3 textTranslation(
+      cMargins + mIcon->mSize.x + cSpacing, cMargins + Pixels(7), 0);
   mText->SetTranslation(textTranslation);
   mText->SetSize(mText->GetMinSize());
 
@@ -73,7 +65,7 @@ Vec2 CommandSubItem::GetMinSize()
 
 void CommandSubItem::OnMouseEnter(MouseEvent* e)
 {
-  mBackground->SetColor(ToFloatColor(ByteColorRGBA(94,94,94, 255)));
+  mBackground->SetColor(ToFloatColor(ByteColorRGBA(94, 94, 94, 255)));
 }
 
 void CommandSubItem::OnMouseExit(MouseEvent* e)
@@ -90,16 +82,16 @@ void CommandSubItem::OnLeftClick(MouseEvent* e)
   mPopUp->Destroy();
 }
 
-//--------------------------------------------------------- Tool Bar Group Popup
-ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group)
-  : PopUp(parent, PopUpCloseMode::MouseDistance)
+ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group) :
+    PopUp(parent, PopUpCloseMode::MouseDistance)
 {
   Array<Command*>& commands = group->mCommands;
   mCommandWidgets.Reserve(commands.Size());
-  SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(2,2), Thickness::All(1)));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::TopToBottom, Pixels(2, 2), Thickness::All(1)));
 
   float maxWidth = 0.0f;
-  for(uint i = 0; i < commands.Size(); ++i)
+  for (uint i = 0; i < commands.Size(); ++i)
   {
     CommandSubItem* item = new CommandSubItem(this, commands[i]);
 
@@ -110,7 +102,7 @@ ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group)
   }
 
   // Set the size of all of them to the max size
-  for(uint i = 0; i < mCommandWidgets.Size(); ++i)
+  for (uint i = 0; i < mCommandWidgets.Size(); ++i)
     mCommandWidgets[i]->SetSize(Vec2(maxWidth, Pixels(32)));
 
   SetClipping(true);
@@ -127,13 +119,12 @@ ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group)
   seq->Add(SizeWidgetAction(this, size, 0.1f));
 }
 
-//--------------------------------------------------------------- Tool Bar Group
-ToolBarGroup::ToolBarGroup(Composite* parent, StringParam name)
-  : Composite(parent)
+ToolBarGroup::ToolBarGroup(Composite* parent, StringParam name) :
+    Composite(parent)
 {
   mButton = new IconButton(this);
   mButton->SetIcon(name);
-  mButton->SetSize(Pixels(32,32));
+  mButton->SetSize(Pixels(32, 32));
 
   mExpandIcon = CreateAttached<Element>("ExpandIcon");
   mExpandIcon->SetInteractive(false);
@@ -159,7 +150,7 @@ void ToolBarGroup::AddCommand(Command* command)
 
 void ToolBarGroup::OnButtonPressed(Event* e)
 {
-  if(ToolBarGroupPopUp* oldPopup = mPopUp)
+  if (ToolBarGroupPopUp* oldPopup = mPopUp)
   {
     oldPopup->Destroy();
     return;
@@ -176,25 +167,25 @@ void ToolBarGroup::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
   MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, NULL);
-  ReturnIf(menuDef == NULL,, "Could not find menu definition '%s'", menuName.c_str());
+  ReturnIf(menuDef == NULL,
+           ,
+           "Could not find menu definition '%s'",
+           menuName.c_str());
 
   // Add all entries
-  forRange(String& name, menuDef->Entries.All())
+  forRange(String & name, menuDef->Entries.All())
   {
     Command* command = commandManager->GetCommand(name);
     ErrorIf(command == NULL, "Can not find command '%s'", name.c_str());
-    if(command) this->AddCommand(command);
+    if (command)
+      this->AddCommand(command);
   }
 }
 
-//---------------------------------------------------------------- Tool Bar Area
-//******************************************************************************
 ToolBarArea::ToolBarArea(Composite* parent) : Composite(parent)
 {
-
 }
 
-//******************************************************************************
 void ToolBarArea::UpdateTransform()
 {
   Thickness currentArea(0.0f, 0.0f, mSize.x, 0.0f);
@@ -202,24 +193,24 @@ void ToolBarArea::UpdateTransform()
   float sizeY = mSize.y - Pixels(2);
 
   Widget* center = NULL;
-  forRange(Widget& child, GetChildren())
+  forRange(Widget & child, GetChildren())
   {
     child.UpdateTransformExternal();
     Vec2 childSize = child.mSize;
 
     u32 dockMode = child.GetDockMode();
     u32 dockCenter = DockMode::DockLeft | DockMode::DockRight;
-    if(dockMode == dockCenter)
+    if (dockMode == dockCenter)
     {
       center = &child;
     }
-    else if(dockMode == DockMode::DockLeft)
+    else if (dockMode == DockMode::DockLeft)
     {
       child.SetTranslation(Vec3(currentArea.Left, 0, 0));
       child.SetSize(Vec2(childSize.x, sizeY));
       currentArea.Left += childSize.x;
     }
-    else if(dockMode == DockMode::DockRight)
+    else if (dockMode == DockMode::DockRight)
     {
       currentArea.Right -= childSize.x;
       child.SetTranslation(Vec3(currentArea.Right, 0, 0));
@@ -227,7 +218,7 @@ void ToolBarArea::UpdateTransform()
     }
   }
 
-  if(center)
+  if (center)
   {
     Vec2 centerSize = center->GetSize();
     Vec3 pos = ToVector3(((mSize * 0.5f) - (centerSize * 0.5f)));
@@ -239,7 +230,6 @@ void ToolBarArea::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//---------------------------------------------------------------- Tool Bar Drag
 class ToolBarDrag : public MouseManipulation
 {
 public:
@@ -247,8 +237,8 @@ public:
   ToolBar* mDraggin;
 
   //****************************************************************************
-  ToolBarDrag(Mouse* mouse, ToolBar* toBeDragged)
-    : MouseManipulation(mouse, toBeDragged->GetParent())
+  ToolBarDrag(Mouse* mouse, ToolBar* toBeDragged) :
+      MouseManipulation(mouse, toBeDragged->GetParent())
   {
     mStartTrans = toBeDragged->GetTranslation();
     mDraggin = toBeDragged;
@@ -257,19 +247,17 @@ public:
   //****************************************************************************
   void OnMouseMove(MouseEvent* event) override
   {
-    Vec3 newT = mStartTrans +  Vec3(event->Position - mMouseStartPosition);
+    Vec3 newT = mStartTrans + Vec3(event->Position - mMouseStartPosition);
     mDraggin->SetTranslation(newT);
   }
 };
 
-//--------------------------------------------------------------------- Tool Bar
-//******************************************************************************
-ToolBar::ToolBar(Composite* parent)
-  :Composite(parent)
+ToolBar::ToolBar(Composite* parent) : Composite(parent)
 {
   static const String className = "TextButton";
   mDefSet = mDefSet->GetDefinitionSet(className);
-  SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(0,0), Thickness::All(2)));
+  SetLayout(CreateStackLayout(
+      LayoutDirection::LeftToRight, Pixels(0, 0), Thickness::All(2)));
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetVisible(false);
@@ -279,7 +267,6 @@ ToolBar::ToolBar(Composite* parent)
   mToolBarMode = ToolBarMode::Dockable;
 }
 
-//******************************************************************************
 void ToolBar::DoLayout()
 {
   Thickness borderThickness = mBackground->GetBorderThickness();
@@ -293,58 +280,56 @@ void ToolBar::DoLayout()
   const float cLeftSize = Pixels(2);
   const float cDragSize = Pixels(0);
 
-  if(mToolBarMode == ToolBarMode::Dockable)
-    data.Offset = Vec3(cDragSize,cTopSize,0);
+  if (mToolBarMode == ToolBarMode::Dockable)
+    data.Offset = Vec3(cDragSize, cTopSize, 0);
   else
-    data.Offset = Vec3(borderThickness.Left, cTopSize,0);
-  
+    data.Offset = Vec3(borderThickness.Left, cTopSize, 0);
+
   Vec2 newSize = mLayout->DoLayout(this, data);
-  if(mSize.x < newSize.x)
+  if (mSize.x < newSize.x)
   {
     newSize.x += cLeftSize;
     mSize = newSize;
   }
 }
 
-//******************************************************************************
 void ToolBar::OnMouseDown(MouseEvent* event)
 {
-  if(GetDocker())
+  if (GetDocker())
     GetDocker()->StartManipulation(this, DockMode::DockNone);
   else
     new ToolBarDrag(event->GetMouse(), this);
 }
 
-//******************************************************************************
 ToolBar::~ToolBar()
 {
-
 }
 
-//******************************************************************************
 void ToolBar::AddCommand(Command* command, Command* secondaryCommand)
 {
-  if(command)
+  if (command)
   {
     IconButton* button = new IconButton(this);
     button->AddCommand(command);
     button->SetName(BuildString(command->Name, "Command"));
     button->SetSizing(SizeAxis::Y, SizePolicy::Fixed, mSize.y);
 
-    if(secondaryCommand)
+    if (secondaryCommand)
       button->AddCommand(secondaryCommand);
   }
 }
 
-//******************************************************************************
 void ToolBar::LoadMenu(StringParam menuName)
 {
   CommandManager* commandManager = CommandManager::GetInstance();
   MenuDefinition* menuDef = commandManager->mMenus.FindValue(menuName, NULL);
-  ReturnIf(menuDef == NULL,, "Could not find menu definition '%s'", menuName.c_str());
+  ReturnIf(menuDef == NULL,
+           ,
+           "Could not find menu definition '%s'",
+           menuName.c_str());
 
   // Add all entries
-  forRange(String& name, menuDef->Entries.All())
+  forRange(String & name, menuDef->Entries.All())
   {
     StringTokenRange tokens(name.All(), '#');
 
@@ -355,13 +340,14 @@ void ToolBar::LoadMenu(StringParam menuName)
 
     // Entry is a valid command
     Command* command = commandManager->GetCommand(main);
-    if(command)
+    if (command)
     {
       // If the command is dev only and they don't have dev config, skip it
-      if(command->DevOnly && !Z::gEngine->GetConfigCog()->has(DeveloperConfig))
+      if (command->DevOnly && !Z::gEngine->GetConfigCog()->has(DeveloperConfig))
         continue;
 
-      Command* other = (secondary.Empty()) ? nullptr : commandManager->GetCommand(secondary);
+      Command* other =
+          (secondary.Empty()) ? nullptr : commandManager->GetCommand(secondary);
 
       this->AddCommand(command, other);
       continue;
@@ -369,7 +355,7 @@ void ToolBar::LoadMenu(StringParam menuName)
 
     // Entry might also be a tool bar group that contains other commands
     MenuDefinition* menuDef = commandManager->mMenus.FindValue(main, NULL);
-    if(menuDef != NULL)
+    if (menuDef != NULL)
     {
       ToolBarGroup* toolBarGroup = this->AddGroup(menuDef->Icon);
       toolBarGroup->LoadMenu(main);
@@ -377,7 +363,7 @@ void ToolBar::LoadMenu(StringParam menuName)
     }
 
     // Is the entry a divider?
-    if(main == Divider)
+    if (main == Divider)
     {
       new ContextMenuDivider(this, ToolbarUi::DividerColor);
       continue;
@@ -388,20 +374,17 @@ void ToolBar::LoadMenu(StringParam menuName)
   }
 }
 
-//******************************************************************************
 ToolBarGroup* ToolBar::AddGroup(StringParam icon)
 {
   ToolBarGroup* button = new ToolBarGroup(this, icon);
   return button;
 }
 
-//******************************************************************************
 void ToolBar::SetIconSize(Vec2 size)
 {
   mIconSize = size;
 }
 
-//******************************************************************************
 void ToolBar::UpdateTransform()
 {
   mBackground->SetSize(mSize);
@@ -409,4 +392,4 @@ void ToolBar::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-}// namespace Zero
+} // namespace Zero

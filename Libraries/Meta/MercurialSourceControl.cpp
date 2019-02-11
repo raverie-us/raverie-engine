@@ -1,12 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// \file MercurialSourceControl.cpp
-///  Implementation of Mercurial Source Control
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2013, DigiPen Institute of Technology
-///
-///////////////////////////////////////////////////////////////////////////////
+// MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 #include "SourceControl.hpp"
 #include "Process.hpp"
@@ -19,13 +11,11 @@ namespace Zero
 class Mercurial : public SourceControl
 {
 public:
-
   void Add(Status& status, StringParam filePath) override
   {
     String filePathSafe = BuildString("\"", filePath, "\"");
     String commandLine = BuildString("hg add ", filePathSafe);
     RunSimpleCommandLine(status, commandLine);
-
   }
 
   void Remove(Status& status, StringParam filePath) override
@@ -37,7 +27,7 @@ public:
     SimpleProcess process;
     process.ExecProcess("Log", commandLine.c_str(), &buffer);
     int returnCode = process.WaitForClose();
-    if(returnCode!=0)
+    if (returnCode != 0)
     {
       // May have failed because file was only marked for add
       // so try and hg forget the file
@@ -47,7 +37,7 @@ public:
       SimpleProcess processForget;
       processForget.ExecProcess("Log", commandLineForget.c_str(), &buffer);
       int returnCodeForget = processForget.WaitForClose();
-      if(returnCodeForget !=0)
+      if (returnCodeForget != 0)
       {
         status.SetFailed(buffer.ToString());
       }
@@ -58,7 +48,9 @@ public:
     }
   }
 
-  void Rename(Status& status, StringParam sourcePath, StringParam destPath) override
+  void Rename(Status& status,
+              StringParam sourcePath,
+              StringParam destPath) override
   {
     // Build command line
     String source = BuildString("\"", sourcePath, "\"");
@@ -68,7 +60,9 @@ public:
     RunSimpleCommandLine(status, commandLine);
   }
 
-  void GetRevisions(Status& status, StringParam sourcePath, Array<Revision>& revisions) override
+  void GetRevisions(Status& status,
+                    StringParam sourcePath,
+                    Array<Revision>& revisions) override
   {
   }
 };
@@ -79,4 +73,4 @@ SourceControl* GetMercurial()
   return &mercurial;
 }
 
-}
+} // namespace Zero
