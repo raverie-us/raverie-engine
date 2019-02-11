@@ -554,7 +554,7 @@ function safeDeleteFile(filePath)
 
 function gatherSourceFiles()
 {
-  return glob.sync('**/*.@(c|cc|cxx|cpp|h|hxx|hpp)', {
+  return glob.sync('**/*.@(c|cc|cxx|cpp|h|hxx|hpp|inl)', {
     cwd: dirs.libraries
   });
 }
@@ -868,14 +868,14 @@ async function build()
   await runEslint();
   // TODO(Trevor.Sundberg): Run cmake_format.
   const sourceFiles = gatherSourceFiles();
-  await runClangTidy(sourceFiles);
+  //await runClangTidy(sourceFiles);
   await runClangFormat(sourceFiles);
   await runWelderFormat(sourceFiles);
   // TODO(Trevor.Sundberg): Run cppcheck.
   // TODO(Trevor.Sundberg): Run cpplint.
   //await runDoxygen();
   // TODO(Trevor.Sundberg): Run moxygen.
-  //await runCmakeLocal();
+  await runCmakeLocal();
   //const testExecutablePaths = [];
   //await runBuild(dirs.buildLocal, 'Release', testExecutablePaths);
   //await runTests(testExecutablePaths);

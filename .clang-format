@@ -1,14 +1,22 @@
 ﻿---
 BasedOnStyle: LLVM
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: 'false'
+AllowShortLoopsOnASingleLine: 'false'
 AlwaysBreakTemplateDeclarations: 'true'
-BinPackParameters: 'false'
 BinPackArguments: 'false'
+BinPackParameters: 'false'
 BreakBeforeBraces: Allman
-BreakConstructorInitializersBeforeComma: 'true'
-ExperimentalAutoDetectBinPacking: 'false'
-PenaltyReturnTypeOnItsOwnLine: '100'
-TabWidth: '2'
-ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 BreakConstructorInitializers: AfterColon
+BreakConstructorInitializersBeforeComma: 'true'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+DerivePointerAlignment: 'false'
+ExperimentalAutoDetectBinPacking: 'false'
+IncludeBlocks: Preserve
 IndentPPDirectives: AfterHash
+PenaltyReturnTypeOnItsOwnLine: '100'
+PointerAlignment: Left
+SortIncludes: 'false'
+TabWidth: '2'
+UseTab: Never
 ...
