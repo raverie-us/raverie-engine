@@ -1,0 +1,14 @@
+﻿---
+BasedOnStyle: LLVM
+AlwaysBreakTemplateDeclarations: 'true'
+BinPackParameters: 'false'
+BinPackArguments: 'false'
+BreakBeforeBraces: Allman
+BreakConstructorInitializersBeforeComma: 'true'
+ExperimentalAutoDetectBinPacking: 'false'
+PenaltyReturnTypeOnItsOwnLine: '100'
+TabWidth: '2'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+BreakConstructorInitializers: AfterColon
+IndentPPDirectives: AfterHash
+...

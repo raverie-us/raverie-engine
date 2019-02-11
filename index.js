@@ -630,18 +630,17 @@ async function runClangFormat(sourceFiles)
     const fileOptions =
     {
       encoding: 'utf8'
-    }
+    };
     const oldCode = fs.readFileSync(fullPath, fileOptions);
     const newCode = result.stdout;
-
-    if (oldCode !== newCode)
-    {
-      printError(`File '${fullPath}' was not formatted`);
-    }
 
     if (fixMode)
     {
       fs.writeFileSync(fullPath, newCode, fileOptions);
+    }
+    else if (oldCode !== newCode)
+    {
+      printError(`File '${fullPath}' was not clang-formatted`);
     }
   }
 }
@@ -656,17 +655,19 @@ async function runWelderFormat(sourceFiles)
     const fileOptions =
     {
       encoding: 'utf8'
-    }
+    };
     const oldCode = fs.readFileSync(fullPath, fileOptions);
 
     // Split our code into lines (detect Windows newline too so we can remove it).
     const lines = oldCode.split(/\r?\n/);
 
+    const commentRegex = /^[/*-=\\]+.*/;
+
     // Remove any comments from the first lines.
-    while (lines.length != 0)
+    while (lines.length !== 0)
     {
       const line = lines[0];
-      if (line.startsWith('//') || line.startsWith('/*'))
+      if (commentRegex.test(line))
       {
         lines.shift();
       }
@@ -676,20 +677,38 @@ async function runWelderFormat(sourceFiles)
       }
     }
 
+    // Remove any comments that are long bar comments.
+    // Technically this could remove the beginning of a multi-line comment, but our
+    // style says it's invalid to have one that has a ton of stars in it anyways.
+    const barCommentRegex = /^[/*-=\\]{40}.*/;
+
+    // These comments may have text after them, but we delete that too intentionally.
+    for (let i = 0; i < lines.length;)
+    {
+      const line = lines[i];
+      if (barCommentRegex.test(line))
+      {
+        lines.splice(i, 1);
+      }
+      else
+      {
+        ++i;
+      }
+    }
+
     // Add back in the standard file header (would have been removed above).
     lines.unshift('// MIT Licensed (see LICENSE.md).');
-    
+
     // Join all lines together with a standard UNIX newline.
     const newCode = lines.join('\n');
-
-    if (oldCode !== newCode)
-    {
-      printError(`File '${fullPath}' must have UNIX newlines and a proper header`);
-    }
 
     if (fixMode)
     {
       fs.writeFileSync(fullPath, newCode, fileOptions);
+    }
+    else if (oldCode !== newCode)
+    {
+      printError(`File '${fullPath}' must be welder-formatted`);
     }
   }
 }
@@ -710,24 +729,6 @@ async function runDoxygen()
     reject: false
   };
   await exec(paths.doxygen, [], doxygenOptions);
-}
-
-async function runCmakeDefault()
-{
-  console.log('Running Cmake Default');
-  if (!await verifyFileExists(paths.cmake))
-  {
-    return;
-  }
-
-  const cmakeOptions = {
-    cwd: dirs.buildDefault,
-    stdio: ['ignore', 'pipe', 'pipe'],
-    out: printLog,
-    err: printError,
-    reject: false
-  };
-  await exec(paths.cmake, [dirs.root], cmakeOptions);
 }
 
 async function runCmakeLocal()
@@ -804,16 +805,16 @@ async function runBuild(buildDir, config, testExecutablePaths)
 async function runTests(testExecutablePaths)
 {
   console.log('Running Tests');
-  //for (const testExecutablePath of testExecutablePaths)
-  //{
-  //  const options = {
-  //    cwd: path.dirname(testExecutablePath),
-  //    stdio: [input, output, 'pipe'],
-  //    err: printError,
-  //    reject: false
-  //  };
-  //  await exec(testExecutablePath, [], options);
-  //}
+  for (const testExecutablePath of testExecutablePaths)
+  {
+    const options = {
+      cwd: path.dirname(testExecutablePath),
+      stdio: ['pipe', 'pipe', 'pipe'],
+      err: printError,
+      reject: false
+    };
+    await exec(testExecutablePath, [], options);
+  }
 }
 
 async function createImage()
@@ -872,12 +873,12 @@ async function build()
   await runWelderFormat(sourceFiles);
   // TODO(Trevor.Sundberg): Run cppcheck.
   // TODO(Trevor.Sundberg): Run cpplint.
-  await runDoxygen();
+  //await runDoxygen();
   // TODO(Trevor.Sundberg): Run moxygen.
-  await runCmakeLocal();
-  const testExecutablePaths = [];
-  await runBuild(dirs.buildLocal, 'Release', testExecutablePaths);
-  await runTests(testExecutablePaths);
+  //await runCmakeLocal();
+  //const testExecutablePaths = [];
+  //await runBuild(dirs.buildLocal, 'Release', testExecutablePaths);
+  //await runTests(testExecutablePaths);
   console.log('Built');
 }
 
