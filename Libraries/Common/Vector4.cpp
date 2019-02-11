@@ -455,7 +455,7 @@ Vector4 Vector4::Refract(Vec4Param planeNormal, real refractionIndex) const
   return Vector4::Refract(*this, planeNormal, refractionIndex);
 }
 
-//functions
+// functions
 Vector4 operator*(real lhs, Vec4Param rhs)
 {
   return rhs * lhs;

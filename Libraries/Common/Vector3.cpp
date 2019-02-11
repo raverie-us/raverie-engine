@@ -406,7 +406,7 @@ Vec3Ref Vector3::Negate()
   return *this;
 }
 
-//Functions
+// Functions
 Vector3 operator*(real lhs, Vec3Param rhs)
 {
   return rhs * lhs;

@@ -9,7 +9,7 @@ DeclareEvent(PathFinderFinishedGeneric);
 DeclareEvent(PathFinderFinished);
 } // namespace Events
 
-//PathFinderAlgorithm
+// PathFinderAlgorithm
 // To derive from PathFinderAlgorithm you must provide the following interface:
 // Template Types:
 //   Derived   - Your derived PathFinder type such as PathFinderGridAlgorithm
@@ -129,7 +129,7 @@ public:
   }
 };
 
-//PathFinder
+// PathFinder
 class PathFinderRequest;
 class PathFinderBaseEvent;
 

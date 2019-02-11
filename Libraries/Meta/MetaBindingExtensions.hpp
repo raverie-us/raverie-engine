@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Object Attributes
+// Object Attributes
 namespace ObjectAttributes
 {
 
@@ -48,7 +48,7 @@ extern const String cTool;
 
 } // namespace ObjectAttributes
 
-//Property Attributes
+// Property Attributes
 namespace PropertyAttributes
 {
 
@@ -106,7 +106,7 @@ extern const String cOptional;
 
 } // namespace PropertyAttributes
 
-//Function Attributes
+// Function Attributes
 namespace FunctionAttributes
 {
 
@@ -122,7 +122,7 @@ extern const String cInvalidatesObject;
 
 } // namespace FunctionAttributes
 
-//Serialization Attributes
+// Serialization Attributes
 namespace SerializationAttributes
 {
 
@@ -169,7 +169,7 @@ void BindEventSent(LibraryBuilder& builder,
   BindEventSent(                                                               \
       builder, ZilchTypeId(SenderType), (EventName), ZilchTypeId(EventType))
 
-//Events
+// Events
 namespace Events
 {
 DeclareEvent(PropertyModified);
@@ -187,7 +187,7 @@ DeclareEvent(ObjectStructureModified);
 DeclareEvent(ObjectModified);
 } // namespace Events
 
-//Meta Operations
+// Meta Operations
 // If the object supports undo/redo, this component should be added
 class MetaOperations : public ReferenceCountedEventObject
 {
@@ -252,7 +252,7 @@ public:
   }
 };
 
-//Property Event
+// Property Event
 class PropertyEvent : public Event
 {
 public:
@@ -269,7 +269,7 @@ public:
   Any mNewValue;
 };
 
-//Type Event
+// Type Event
 class TypeEvent : public Event
 {
 public:
@@ -281,7 +281,7 @@ public:
   BoundType* mType;
 };
 
-//Meta Display
+// Meta Display
 class MetaDisplay : public ReferenceCountedEventObject
 {
 public:
@@ -291,7 +291,7 @@ public:
   virtual String GetDebugText(HandleParam object) = 0;
 };
 
-//Type Name Display
+// Type Name Display
 class TypeNameDisplay : public MetaDisplay
 {
 public:
@@ -301,7 +301,7 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
-//String Name Display
+// String Name Display
 class StringNameDisplay : public MetaDisplay
 {
 public:
@@ -314,7 +314,7 @@ public:
   String mString;
 };
 
-//Meta Transform Instance
+// Meta Transform Instance
 class MetaTransformInstance
 {
 public:
@@ -388,7 +388,7 @@ public:
 
 typedef MetaTransformInstance& MetaTransformParam;
 
-//Meta Transform
+// Meta Transform
 // Allows objects to have transform type properties without the limitation of
 // the object type being a Cog
 class MetaTransform : public ReferenceCountedEventObject
@@ -404,7 +404,7 @@ public:
 // An extension to the "has" macro
 #define hasAll(type) HasRange<type>()
 
-//Array Binding
+// Array Binding
 #define ZeroDefineArrayType(arrayType)                                         \
   ZilchDefineTemplateType(ZeroMetaArray<arrayType>, builder, type)             \
   {                                                                            \
@@ -421,7 +421,7 @@ public:
   ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);       \
   ZilchInitializeExternalTypeAs(arrayType, name);
 
-//Meta Attribute
+// Meta Attribute
 class MetaAttribute : public ReferenceCountedEventObject
 {
 public:

@@ -41,7 +41,7 @@ Serializer* GetDefaultStream();
 // Get what type is in the file
 String GetTypeInFile(StringParam fileName);
 
-//Load
+// Load
 
 // Save an object to a data file.
 template <typename type>
@@ -151,7 +151,7 @@ void SerializeDefaults(type* instance)
   instance->Serialize(*stream);
 }
 
-//Serialization
+// Serialization
 
 template <typename containerType>
 void SavePolymorphicSerialize(cstr Name,

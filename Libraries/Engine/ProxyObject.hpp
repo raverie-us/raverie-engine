@@ -8,7 +8,7 @@ namespace Zero
 // have to know about Serialization (for DataNode) to use it.
 class DataNode;
 
-//Proxy Component
+// Proxy Component
 template <typename ComponentType>
 class ProxyObject : public ComponentType
 {

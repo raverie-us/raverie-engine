@@ -1175,7 +1175,7 @@ void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
   // ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
   //
   //// Patch anything that was not reinitialized if the compilation was
-  ///successful
+  /// successful
   // if(e->mLibrary != nullptr)
   //  zilchManager->PatchLibraryIfNeeded(e->mLibrary);
 
@@ -1335,7 +1335,7 @@ void Editor::OnCaptureContext(CommandCaptureContextEvent* event)
   event->ActiveSet->GetContext()->Add(this);
 }
 
-//Functions
+// Functions
 
 // Game Commands
 

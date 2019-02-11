@@ -9,8 +9,8 @@ namespace Zero
 {
 
 /// Generic front deque array class. Store objects in buckets of a 1 <<
-/// shiftSize. Fast when the total number of objects being inserted is not known.
-/// Currently hardcoded as only storing pod types.
+/// shiftSize. Fast when the total number of objects being inserted is not
+/// known. Currently hardcoded as only storing pod types.
 template <typename type,
           uint shiftSize = 6,
           typename Allocator = DefaultAllocator>

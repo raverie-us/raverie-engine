@@ -28,7 +28,7 @@ DeclareEnum2(ZilchCompileStatus,
              Compiled  // All scripts compiled and project library is up to date
 );
 
-//Zilch Compiled Event
+// Zilch Compiled Event
 class ZilchCompiledEvent : public Event
 {
 public:
@@ -36,7 +36,7 @@ public:
   LibraryRef mLibrary;
 };
 
-//Compile Fragment Event
+// Compile Fragment Event
 class ZilchCompileFragmentEvent : public Event
 {
 public:
@@ -51,7 +51,7 @@ public:
   ResourceLibrary* mOwningLibrary;
 };
 
-//Resource Entry
+// Resource Entry
 /// ResourceEntry built by a builder stored in ResourcePackage.
 class ResourceEntry
 {
@@ -89,7 +89,7 @@ public:
 
 typedef Array<ResourceEntry> ResourceListing;
 
-//Resource Package
+// Resource Package
 /// A Resource package is collection of resources
 /// to be loaded. Built from a Content Library or
 /// dynamically.
@@ -137,7 +137,7 @@ public:
   ZilchCompileStatus::Enum mCompileStatus;
 };
 
-//Resource Library
+// Resource Library
 /// A Resource Library is a set of resources loaded from a
 /// resource package. Used to manage resource lifetimes.
 /// EventHandler is Zilch's EventObject and is needed for compilation events.

@@ -18,7 +18,6 @@ typedef IntVec2Param CellIndexParam;
 typedef IntVec2 AbsoluteIndex;
 typedef IntVec2Param AbsoluteIndexParam;
 
-
 namespace Events
 {
 DeclareEvent(HeightMapPatchAdded);
@@ -42,7 +41,7 @@ struct HeightMapEvent : public Event
   HeightMapSource* Source;
 };
 
-//HeightPatch
+// HeightPatch
 
 /// A large 2d block of height data
 struct HeightPatch
@@ -93,12 +92,10 @@ struct HeightPatch
   HeightValueType MaxHeight;
 };
 
-
 /// Type-defines
 typedef Pair<PatchIndex, HeightPatch*> PatchMapPair;
 typedef HashMap<PatchIndex, HeightPatch*> PatchMap;
 typedef HashMap<PatchIndex, HeightPatch> PatchMapCopy;
-
 
 struct HeightMapCell
 {
@@ -164,7 +161,6 @@ public:
   CellIndex mCellIndexMax;
   CellIndex mCellIndex;
 };
-
 
 /// A common class that represents height map data
 class HeightMap : public Component

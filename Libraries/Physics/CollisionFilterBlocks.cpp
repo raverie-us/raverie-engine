@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 ZilchDefineType(CollisionFilterBlock, builder, type)
 {
   ZeroBindDocumented();

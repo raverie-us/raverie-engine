@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Array
+// Meta Array
 /// Meta Interface for dynamic containment of objects / components.
 class MetaArray : public ReferenceCountedEventObject
 {
@@ -55,7 +55,7 @@ public:
   BoundType* mContainedType;
 };
 
-//Meta Array Wrapper
+// Meta Array Wrapper
 /// Meta Interface for dynamic containment of objects / components.
 class MetaArrayWrapper : public MetaArray
 {

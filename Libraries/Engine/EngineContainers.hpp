@@ -42,7 +42,7 @@ public:
   rangeType mRange;
 };
 
-//ArrayMultiMap
+// ArrayMultiMap
 template <typename KeyType, typename DataType>
 class ArrayMultiMap
 {

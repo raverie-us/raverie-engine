@@ -568,7 +568,7 @@ void TexturePreview::UpdateTransform()
   PreviewWidget::UpdateTransform();
 }
 
-//preview
+// preview
 FontPreview::FontPreview(PreviewWidgetInitializer& initializer) :
     SpacePreview(initializer, CoreArchetypes::SpriteText)
 {
@@ -738,7 +738,7 @@ void SampleCurveDrawer::RenderUpdate(ViewBlock& viewBlock,
   AddCurve(viewBlock, frameBlock, clipRect, sampleCurve);
 }
 
-//SampleCurvePreview
+// SampleCurvePreview
 SampleCurvePreview::SampleCurvePreview(PreviewWidgetInitializer& initializer) :
     PreviewWidget(initializer)
 {

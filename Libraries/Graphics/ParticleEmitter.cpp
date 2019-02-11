@@ -39,7 +39,7 @@ void ParticleEmitter::Initialize(CogInitializer& initializer)
   }
 }
 
-//Hide Base Filter
+// Hide Base Filter
 ZilchDefineType(HideBaseFilter, builder, type)
 {
 }
@@ -56,7 +56,7 @@ bool HideBaseFilter::Filter(Member* prop, HandleParam instance)
   return true;
 }
 
-//Emitter Common Data
+// Emitter Common Data
 const float ParticleEmitterShared::mMaxEmitRate = 50000.0f;
 
 ZilchDefineType(ParticleEmitterShared, builder, type)

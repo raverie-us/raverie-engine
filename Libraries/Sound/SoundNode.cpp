@@ -16,7 +16,7 @@ DefineEvent(SoundListenerRemoved);
 
 } // namespace Events
 
-//Sound Node
+// Sound Node
 
 ZilchDefineType(SoundNode, builder, type)
 {
@@ -603,7 +603,7 @@ void SoundNode::RemoveInputNodeThreaded(HandleOf<SoundNode> node)
   node->mOutputs[AudioThreads::MixThread].EraseValue(HandleOf<SoundNode>(this));
 }
 
-//Simple Collapse Node
+// Simple Collapse Node
 
 ZilchDefineType(SimpleCollapseNode, builder, Type)
 {
@@ -619,7 +619,7 @@ void SimpleCollapseNode::CollapseNode()
   RemoveAllOutputs();
 }
 
-//Output Node
+// Output Node
 
 ZilchDefineType(OutputNode, builder, Type)
 {
@@ -650,7 +650,7 @@ bool OutputNode::GetOutputSamples(BufferType* outputBuffer,
   return isThereOutput;
 }
 
-//Combine Node
+// Combine Node
 
 ZilchDefineType(CombineNode, builder, Type)
 {
@@ -677,7 +677,7 @@ bool CombineNode::GetOutputSamples(BufferType* outputBuffer,
   return isThereOutput;
 }
 
-//Combine And Pause Node
+// Combine And Pause Node
 
 ZilchDefineType(CombineAndPauseNode, builder, Type)
 {

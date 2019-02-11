@@ -57,7 +57,7 @@ private:
   Element* mDimSearch;
 };
 
-//Removed Entry
+// Removed Entry
 class RemovedEntry : public Object
 {
 public:

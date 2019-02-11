@@ -12,7 +12,7 @@ DefineEvent(ResourceTemplateSelected);
 DefineEvent(PostAddResource);
 } // namespace Events
 
-//Post Add Resource Event
+// Post Add Resource Event
 ZilchDefineType(PostAddResourceEvent, builder, type)
 {
 }
@@ -71,7 +71,7 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType,
   return addDialog;
 }
 
-//Add Resource Window
+// Add Resource Window
 ZilchDefineType(AddResourceWindow, builder, type)
 {
 }
@@ -245,7 +245,7 @@ void AddResourceWindow::OnResourceTemplateSelected(Event*)
   mResourceTemplateDisplay->ShowResourceTemplate(resourceTemplate);
 }
 
-//Resource Search Data Source
+// Resource Search Data Source
 struct ResourceManagerPolicy : public ObjectTree<String>
 {
   typedef String StoredType;
@@ -303,7 +303,7 @@ class ReourceManagersDataSource : public PolicyDataSource<ResourceManagerPolicy>
 {
 };
 
-//Resource Type Search
+// Resource Type Search
 ZilchDefineType(ResourceTypeSearch, builder, type)
 {
 }
@@ -492,7 +492,7 @@ void ResourceTypeSearch::OnResourceTypeSelected(Event*)
     SetSelectedResourceType(resourceType);
 }
 
-//Resource Template Search
+// Resource Template Search
 ZilchDefineType(ResourceTemplateSearch, builder, type)
 {
 }
@@ -713,7 +713,7 @@ void ResourceTemplateSearch::OnKeyDown(KeyboardEvent* e)
   }
 }
 
-//Resource Template Display
+// Resource Template Display
 ZilchDefineType(ResourceTemplateDisplay, builder, type)
 {
 }
@@ -1252,7 +1252,7 @@ void ResourceTemplateDisplay::OnTagsFocusLost(Event*)
     RemoveTagToolTip();
 }
 
-//Resource Template Display
+// Resource Template Display
 ZilchDefineType(ImportButton, builder, type)
 {
 }

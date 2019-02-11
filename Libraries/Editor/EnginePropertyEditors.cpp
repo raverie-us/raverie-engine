@@ -26,7 +26,7 @@ Tweakable(float, CogPathCogLabelMinWidth, 15.0f, cLocation);
 Tweakable(float, CogPathCogLabelSpace, 100.0f, cLocation);
 } // namespace ResourceEditorUi
 
-//Property
+// Property
 class PropertyArchetype : public DirectProperty
 {
 public:
@@ -1665,7 +1665,7 @@ public:
   }
 };
 
-//PropertyEditorResource
+// PropertyEditorResource
 const String NoResourceName = "None";
 
 class PropertyEditorResource : public DirectProperty

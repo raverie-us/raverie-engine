@@ -371,7 +371,7 @@ void PropertyInterface::SendComponentsModifiedOnGrid(HandleParam object)
   mPropertyGrid->GetDispatcher()->Dispatch(Events::ObjectModified, &e);
 }
 
-//Event Meta Composition
+// Event Meta Composition
 EventMetaComposition::EventMetaComposition(PropertyInterface* propertyInterface,
                                            BoundType* typeToWrap) :
     MetaCompositionWrapper(typeToWrap),
@@ -421,7 +421,7 @@ void EventMetaComposition::MoveComponent(HandleParam owner,
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);
 }
 
-//Event Meta Array
+// Event Meta Array
 EventMetaArray::EventMetaArray(BoundType* containedType,
                                PropertyInterface* propertyInterface) :
     MetaArrayWrapper(containedType),

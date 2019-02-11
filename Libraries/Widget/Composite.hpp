@@ -21,7 +21,6 @@ struct FilterLayoutChildren
   void SkipInvalid();
 };
 
-
 /// Composite is a widget that Contains children.
 /// Base class for all widgets that have children.
 class Composite : public Widget
@@ -100,7 +99,6 @@ private:
   static void InternalAttach(Composite* parent, Widget* child);
 };
 
-
 DeclareEnum3(UiTraversal, DirectDescendantsOnly, DepthFirst, BreadthFirst);
 
 // Find any child widget by class
@@ -109,7 +107,7 @@ Widget* FindWidgetByName(StringParam name,
                          size_t index,
                          Widget* parent);
 
-//Colored Composite
+// Colored Composite
 class ColoredComposite : public Composite
 {
 public:

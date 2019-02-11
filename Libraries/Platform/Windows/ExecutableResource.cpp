@@ -55,7 +55,6 @@ void ExecutableResourceUpdater::Update(const char* name,
       "UpdateResource should never fail unless a parameter was invalid/null");
 }
 
-
 #pragma pack(push, 2)
 
 // Icon Entry Structure in .ico file

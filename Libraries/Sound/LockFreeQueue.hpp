@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Lock Free Queue
+// Lock Free Queue
 
 template <typename T>
 class LockFreeQueue
@@ -84,7 +84,7 @@ private:
   Node* Last;
 };
 
-//Multiple Writer Queue
+// Multiple Writer Queue
 
 template <typename T>
 class MultipleWriterQueue

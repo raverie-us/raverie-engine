@@ -714,11 +714,12 @@ void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder,
 
     // Causes SpirV-Cross exceptions
     // AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450NMin, "NMin",
-    // TwoParameters(zilchType, zilchType), zilchType); AddGlslIntrinsic(builder,
-    // type, extLibrary, GLSLstd450NMax, "NMax", TwoParameters(zilchType,
-    // zilchType), zilchType); AddGlslIntrinsic(builder, type, extLibrary,
-    // GLSLstd450NClamp, "NClamp", ThreeParameters(zilchType, "value", zilchType,
-    // "minValue", zilchType, "maxValue"), zilchType);
+    // TwoParameters(zilchType, zilchType), zilchType);
+    // AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450NMax, "NMax",
+    // TwoParameters(zilchType, zilchType), zilchType);
+    // AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450NClamp, "NClamp",
+    // ThreeParameters(zilchType, "value", zilchType, "minValue", zilchType,
+    // "maxValue"), zilchType);
 
     // Requires pointer types
     // AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450Modf, "Modf",

@@ -8,7 +8,7 @@ static const String DefaultTileArchetype = "DefaultTile";
 static const String DefaultTileSpriteSource = "SquareBordered";
 static const String DefaultTilePhysicsMesh = "Box";
 
-//Sprite
+// Sprite
 ZilchDefineType(TilePaletteSprite, builder, type)
 {
 }
@@ -89,7 +89,7 @@ void TilePaletteSprite::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//Palette Operation
+// Palette Operation
 void TilePaletteOperation::Undo()
 {
   TilePaletteSource* palette = mTilePaletteSource;

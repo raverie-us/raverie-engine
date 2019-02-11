@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Editor Property Extension
+// Editor Property Extension
 // Property Extensions
 class EditorPropertyExtension : public MetaAttribute
 {
@@ -14,7 +14,7 @@ public:
   virtual ~EditorPropertyExtension(){};
 };
 
-//Indexed String Array
+// Indexed String Array
 typedef void (*GetStringsFunc)(HandleParam instance,
                                Property* property,
                                Array<String>& strings);
@@ -40,7 +40,7 @@ public:
   Array<String> mFixedValues;
 };
 
-//Editor Range
+// Editor Range
 class EditorRange : public EditorPropertyExtension
 {
 public:
@@ -56,7 +56,7 @@ public:
   float Increment;
 };
 
-//Editor Slider
+// Editor Slider
 class EditorSlider : public EditorRange
 {
 public:
@@ -67,7 +67,7 @@ public:
   using EditorRange::EditorRange;
 };
 
-//EditorRotationBasis
+// EditorRotationBasis
 /// Editor for creating a gizmo to modify a basis. The int is occasionally used
 /// to denote what "property" is being modified. Currently it's not easy to set
 /// just a property as several properties need to be sampled (see
@@ -88,7 +88,7 @@ public:
   String mArchetypeName;
 };
 
-//Editor Resource
+// Editor Resource
 class MetaEditorResource : public EditorPropertyExtension
 {
 public:
@@ -128,7 +128,7 @@ public:
   SearchFilter Filter;
 };
 
-//Meta Property Filter
+// Meta Property Filter
 class MetaPropertyFilter : public MetaAttribute
 {
 public:
@@ -143,14 +143,14 @@ public:
   virtual bool Filter(Member* prop, HandleParam instance) = 0;
 };
 
-//Template Filter Base
+// Template Filter Base
 class TemplateFilterBase
 {
 public:
   virtual bool Filter(Member* prop, HandleParam instance) = 0;
 };
 
-//Template Filter Bool
+// Template Filter Bool
 template <typename ClassType, bool ClassType::*ClassMember>
 class TemplateFilterBool : public TemplateFilterBase
 {
@@ -162,7 +162,7 @@ public:
   }
 };
 
-//Template Filter Not Bool
+// Template Filter Not Bool
 template <typename ClassType, bool ClassType::*ClassMember>
 class TemplateFilterNotBool : public TemplateFilterBase
 {
@@ -174,7 +174,7 @@ public:
   }
 };
 
-//Template Filter Equality
+// Template Filter Equality
 template <typename ClassType,
           typename ValueType,
           ValueType ClassType::*ClassMember,
@@ -188,7 +188,7 @@ public:
     return pointer->*ClassMember == Value;
   }
 };
-//Property Basic Filter
+// Property Basic Filter
 class MetaPropertyBasicFilter : public MetaPropertyFilter
 {
 public:
@@ -212,7 +212,7 @@ public:
   TemplateFilterBase* mActualFilter;
 };
 
-//Meta Shader Input
+// Meta Shader Input
 class MetaShaderInput : public MetaAttribute
 {
 public:
@@ -222,7 +222,7 @@ public:
   String mInputName;
 };
 
-//Meta Editor Gizmo
+// Meta Editor Gizmo
 class MetaEditorGizmo : public MetaAttribute
 {
 public:
@@ -245,7 +245,7 @@ public:
                                  &ZilchSelf::Member,                           \
                                  ConstantValue>()))
 
-//Meta Group
+// Meta Group
 /// Used for grouping properties in the property grid.
 class MetaGroup : public MetaAttribute
 {
@@ -255,7 +255,7 @@ public:
   String mName;
 };
 
-//Meta Custom Ui
+// Meta Custom Ui
 /// Used for adding custom Ui to the property grid. This is currently only for
 /// the old Ui and not exposed to script.
 class MetaCustomUi : public MetaAttribute
@@ -265,7 +265,7 @@ public:
   virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
 };
 
-//Property Rename
+// Property Rename
 /// Add to properties to handle old files with old property names.
 class MetaPropertyRename : public MetaAttribute
 {

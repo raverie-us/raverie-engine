@@ -121,7 +121,7 @@ void DeveloperConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mGenericFlags, HashSet<String>());
 }
 
-//ZilchPluginConfig
+// ZilchPluginConfig
 ZilchDefineType(ZilchPluginConfig, builder, type)
 {
   ZeroBindComponent();
@@ -336,7 +336,6 @@ void RecentProjects::RemoveMissingProjects()
       mRecentProjects.Insert(project);
   }
 }
-
 
 cstr cConfigFileName = "ConfigurationV6.data";
 

@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Instance Attenuation
+// Instance Attenuation
 
 // Used to store attenuation information for each instance
 struct InstanceAttenuation
@@ -25,7 +25,7 @@ struct InstanceAttenuation
   Link<InstanceAttenuation> link;
 };
 
-//Sound Emitter Display
+// Sound Emitter Display
 
 class SoundEmitterDisplay : public MetaDisplay
 {
@@ -36,7 +36,7 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Emitter
+// Sound Emitter
 
 /// Allows 3D positioning of sounds relative to SoundListeners
 class SoundEmitter : public Component

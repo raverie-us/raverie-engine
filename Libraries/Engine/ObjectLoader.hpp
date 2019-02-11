@@ -27,7 +27,7 @@ class PropertyPath;
 
 */
 
-//Object Loader
+// Object Loader
 /// This loader handles loading data tree patches specific to Zero Objects
 /// (i.e. Cogs and Resources). It resolves both data inheritance and
 /// dependency checking when patching the data tree.
@@ -49,7 +49,7 @@ private:
                                              Status& status) override;
 };
 
-//Cached Modifications
+// Cached Modifications
 /// Given a data tree, this builds local modifications that can be applied to a
 /// given Object at a later time.
 class CachedModifications
@@ -85,7 +85,7 @@ public:
   bool Empty();
 
   //------------------------------------------------------------------------------------
-  //Object Node
+  // Object Node
   struct ObjectNode
   {
     /// Constructor / Destructor.

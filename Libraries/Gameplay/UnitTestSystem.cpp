@@ -12,7 +12,7 @@ DefineEvent(UnitTestRecordFileSelected);
 DefineEvent(UnitTestPlayFileSelected);
 } // namespace Events
 
-//Widgets
+// Widgets
 WidgetChildId::WidgetChildId() : mType(nullptr), mIndex(0)
 {
 }
@@ -117,7 +117,7 @@ Widget* WidgetPath::Resolve(RootWidget* root)
   return foundWidget;
 }
 
-//Unit Test Events
+// Unit Test Events
 static const String cUnitTestRecordOption("unitTestRecord");
 static const String cUnitTestPlayOption("unitTestPlay");
 static const String cProjectBegin("ProjectBegin");
@@ -260,7 +260,7 @@ void UnitTestWindowEvent::Execute(UnitTestSystem* system)
   system->GetMainWindow()->SendWindowEvent(mEvent, true);
 }
 
-//Unit Test System
+// Unit Test System
 ZilchDefineType(UnitTestSystem, builder, type)
 {
 }

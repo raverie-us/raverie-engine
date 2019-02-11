@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Grid Area
+// Grid Area
 PixelGridArea::PixelGridArea(Composite* parent, SpriteSheetImporter* owner) :
     Widget(parent)
 {
@@ -23,7 +23,7 @@ void PixelGridArea::RenderUpdate(ViewBlock& viewBlock,
   mOwner->DrawRedirect(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
 }
 
-//Sprite Sheet Importer
+// Sprite Sheet Importer
 ZilchDefineType(SpriteSheetImporter, builder, type)
 {
   ZilchBindFieldProperty(Name);
@@ -1100,7 +1100,7 @@ void SpriteSheetImporter::SetZoom(float zoom)
   mZoom = Math::Clamp(mZoom, cMinSpriteImporterZoom, cMaxSpriteImporterZoom);
 }
 
-//Getters/Setters
+// Getters/Setters
 int SpriteSheetImporter::GetFrameWidth()
 {
   return FrameSizeX;

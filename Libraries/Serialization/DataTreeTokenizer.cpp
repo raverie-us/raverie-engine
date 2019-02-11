@@ -48,7 +48,7 @@ inline DataTokenType::Enum GetTokenFromState(TokenState::Enum currentState)
   }
 }
 
-//Data Tree Tokenizer
+// Data Tree Tokenizer
 DataTreeTokenizer::DataTreeTokenizer(StringParam text) : mLineNumber(0)
 {
   mText = text;
@@ -78,7 +78,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
     switch (currentState)
     {
       //----------------------------------------------------------------------------
-      //Start
+      // Start
     case TokenState::Start:
     {
       if (IsAlpha(rune) || rune == '_')
@@ -119,7 +119,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //------------------------------------------------------------- String
-    //Literal Start
+    // Literal Start
     case TokenState::StringLiteralStart:
     {
       if (rune == '\\')
@@ -131,7 +131,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //------------------------------------------------------------ String
-    //Literal Escape
+    // Literal Escape
     case TokenState::StringLiteralEscape:
     {
       currentState = TokenState::StringLiteralStart;
@@ -140,7 +140,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //------------------------------------------------------------------- String
-    //Literal
+    // Literal
     case TokenState::StringLiteral:
     {
       tokenAccepted = true;
@@ -149,7 +149,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //-----------------------------------------------------------------------
-    //Identifier
+    // Identifier
     case TokenState::Identifier:
     {
       // Transition to enum if it's a period
@@ -162,7 +162,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //----------------------------------------------------------------
-    //Enumeration Start
+    // Enumeration Start
     case TokenState::EnumerationStart:
     {
       if (IsAlpha(rune) || rune == '_')
@@ -173,7 +173,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //----------------------------------------------------------------------
-    //Enumeration
+    // Enumeration
     case TokenState::Enumeration:
     {
       // Only accept alpha and underscores
@@ -182,7 +182,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //--------------------------------------------------------------------------
-    //Integer
+    // Integer
     case TokenState::Integer:
     {
       if (IsNumber(rune))
@@ -198,7 +198,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //-------------------------------------------------------------------
-    //Negative Start
+    // Negative Start
     case TokenState::NegativeStart:
     {
       if (rune == '0')
@@ -210,7 +210,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //--------------------------------------------------------------------- Zero
-    //Integer
+    // Integer
     case TokenState::ZeroInteger:
     {
       if (IsNumber(rune))
@@ -224,7 +224,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //------------------------------------------------------------------------
-    //Hex Start
+    // Hex Start
     case TokenState::HexStart:
     {
       if (IsHex(rune))
@@ -234,7 +234,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //------------------------------------------------------------------------------
-    //Hex
+    // Hex
     case TokenState::Hex:
     {
       if (IsHex(rune))
@@ -244,7 +244,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //----------------------------------------------------------------------
-    //Float Start
+    // Float Start
     case TokenState::FloatStart:
     {
       if (IsNumber(rune))
@@ -254,7 +254,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //----------------------------------------------------------------------------
-    //Float
+    // Float
     case TokenState::Float:
     {
       if (rune == 'e')
@@ -264,14 +264,14 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //-------------------------------------------------------------------
-    //Explicit Float
+    // Explicit Float
     case TokenState::ExplicitFloat:
     {
       tokenAccepted = true;
       break;
     }
     //--------------------------------------------------------- Scientific
-    //Notation Start
+    // Notation Start
     case TokenState::ScientificNotationStart:
     {
       if (rune == '+' || rune == '-')
@@ -284,7 +284,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //--------------------------------------------------------- Scientific
-    //Notation Sign
+    // Notation Sign
     case TokenState::ScientificNotationSign:
     {
       if (IsNumber(rune))
@@ -295,7 +295,7 @@ bool DataTreeTokenizer::ReadToken(DataToken& token, Status& status)
       break;
     }
     //-------------------------------------------------------- Scientific
-    //Notation Float
+    // Notation Float
     case TokenState::ScientificNotationFloat:
     {
       if (rune == 'f')

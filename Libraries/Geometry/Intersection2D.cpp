@@ -16,7 +16,6 @@ IntersectionPoint2D& Manifold2D::PointAt(uint index)
   return Points[index];
 }
 
-
 /// Find the closest point on a line segment to the given point.
 Type ClosestPointOnSegmentToPoint(Vec2Param segmentPointA,
                                   Vec2Param segmentPointB,
@@ -134,7 +133,6 @@ Vec2 ProjectPolygonOntoAxis(const Vec2* polygonPoints,
 
   return Vec2(minProj, maxProj);
 }
-
 
 /// Intersect a rotated box with a rotated box.
 Type BoxBox(Vec2Param boxCenterA,
@@ -448,7 +446,8 @@ Type CircleConvexPolygon(Vec2Param circleCenter,
   Vec2 closestPoint;
 
   // Loop through all of the polygon's sides/segments to find the
-  // intersectionPoint on the polygon that is closest to the center of the sphere
+  // intersectionPoint on the polygon that is closest to the center of the
+  // sphere
   const uint lastPoint = convexPolygonPointCount - 1;
   uint currPoint, nextPoint;
   for (uint i = 0; i < convexPolygonPointCount; ++i)
@@ -470,8 +469,8 @@ Type CircleConvexPolygon(Vec2Param circleCenter,
   }
 
   // If the distance of intersectionPoint on the polygon closest to the circle's
-  // center is less than the circle's radius, then the circle is intersecting the
-  // polygon.
+  // center is less than the circle's radius, then the circle is intersecting
+  // the polygon.
   if (minCircleToPolyLength < circleRadius)
   {
     if (manifold != nullptr)

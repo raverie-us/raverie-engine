@@ -65,7 +65,7 @@ public:
   void OnDestroy(uint flags) override;
 
   //-------------------------------------------------------------------Collider
-  //Interface
+  // Interface
   /// Gives any derived collider a chance to cache world-space values (e.g.
   /// SphereCollider.WorldRadius)
   virtual void CacheWorldValues();
@@ -108,7 +108,7 @@ public:
   /// information.
   virtual void RebuildModifiedResources();
   //-------------------------------------------------------------------Support
-  //Shape Interface
+  // Shape Interface
   /// Support function for GJK/MPR or any other Minkowski difference algorithm.
   /// This sets the given support vector to the point (in world space) furthest
   /// in the given direction. Almost all colliders should implement this! The

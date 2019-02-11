@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 cstr errorMessage = "Need builder type for binary files."
                     " Since file is binary a loader must be provided.";
 

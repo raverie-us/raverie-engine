@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Recording Node
+// Recording Node
 
 ZilchDefineType(RecordingNode, builder, type)
 {
@@ -196,7 +196,7 @@ void RecordingNode::WriteBuffer(Zero::Array<float>* buffer,
   delete buffer;
 }
 
-//Save Audio Node
+// Save Audio Node
 
 ZilchDefineType(SaveAudioNode, builder, type)
 {

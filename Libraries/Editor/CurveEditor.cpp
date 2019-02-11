@@ -1541,7 +1541,6 @@ void ControlPoint::SetTangentOut(Vec2Param direction)
   mTangentOut->SetGraphDirection(direction);
 }
 
-
 bool ControlPoint::TangentsSplit()
 {
   return (mEditorFlags & CurveEditorFlags::TangentsSplit) > 0;

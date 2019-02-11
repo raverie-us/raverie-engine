@@ -29,7 +29,6 @@ public:
   int Code;
 };
 
-
 class ProgressEvent : public Event
 {
 public:

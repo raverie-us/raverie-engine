@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Creation Context
+// Meta Creation Context
 CogMetaCreationContext::~CogMetaCreationContext()
 {
   forRange(CogInitializer * init, mInitializers.Values()) delete init;
@@ -22,7 +22,7 @@ CogInitializer* CogMetaCreationContext::GetInitializer(Space* space)
   return init;
 }
 
-//Cog Meta Composition
+// Cog Meta Composition
 ZilchDefineType(CogMetaComposition, builder, type)
 {
 }

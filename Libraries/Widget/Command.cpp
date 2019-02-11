@@ -283,7 +283,7 @@ void CommandSearchProvider::FilterAddCommand(SearchData& search,
   }
 }
 
-//MenuDefinition
+// MenuDefinition
 void MenuDefinition::Serialize(Serializer& stream)
 {
   SerializeName(Name);
@@ -292,7 +292,7 @@ void MenuDefinition::Serialize(Serializer& stream)
   SerializeName(Entries);
 }
 
-//Manager
+// Manager
 ZilchDefineType(CommandManager, builder, type)
 {
   ZeroBindEvent(Events::CommandExecute, CommandEvent);

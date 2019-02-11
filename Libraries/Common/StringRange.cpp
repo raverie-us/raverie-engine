@@ -674,7 +674,7 @@ bool StringRange::IsCurrentRuneLower() const
   return false;
 }
 
-//Split Range
+// Split Range
 StringSplitRange::StringSplitRange(StringRange range, StringRange separator)
 {
   mRemainingRange = range;
@@ -723,7 +723,7 @@ void StringSplitRange::SkipNext()
   mRemainingRange = StringRange(separatorRange.End(), mRemainingRange.End());
 }
 
-//Iterator
+// Iterator
 StringIterator::StringIterator(StringParam orginalStr, cstr currentByte) :
     mIteratorRange(orginalStr, currentByte, orginalStr.EndData())
 {

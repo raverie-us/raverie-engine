@@ -1298,7 +1298,6 @@ void HeightMapTool::SetCurrentTool(HeightTool::Enum tool)
   mSubTool = mSubTools[(uint)tool];
 }
 
-
 HeightMapMouseCapture::HeightMapMouseCapture(Mouse* mouse,
                                              Viewport* viewport,
                                              HeightMapTool* tool) :

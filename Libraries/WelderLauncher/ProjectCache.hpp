@@ -28,7 +28,7 @@ public:
   BuildId mBuildId;
 };
 
-//CachedProject
+// CachedProject
 /// A cached project with it's latest screenshot texture.
 class CachedProject : public EventObject
 {
@@ -100,7 +100,7 @@ public:
   TimeType mLastLoadTime;
 };
 
-//ProjectCache
+// ProjectCache
 /// Caches all projects and their latest screenshot textures.
 class ProjectCache
 {

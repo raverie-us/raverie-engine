@@ -9,7 +9,7 @@ namespace Zero
 class MetaSelection;
 class CogRestoreState;
 
-//Cog Replace Event
+// Cog Replace Event
 namespace Events
 {
 // Sent on the space when an Archetype object is rebuilt
@@ -26,7 +26,7 @@ public:
   Cog* mNewCog;
 };
 
-//Archetype Rebuilder
+// Archetype Rebuilder
 /// To rebuild an Archetype, we serialize the object to a string, create a new
 /// object from that string, then destroy the old object.
 /// The new object is then updated in all Selections and is updated in the

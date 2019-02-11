@@ -55,7 +55,7 @@ float GetValueExponentialCurve(const float current,
          startValue;
 }
 
-//Interpolating Object
+// Interpolating Object
 
 InterpolatingObject::InterpolatingObject() :
     mStartValue(0),
@@ -268,7 +268,7 @@ const FalloffCurveType::Enum InterpolatingObject::GetCurveType() const
   return mCurrentCurveType;
 }
 
-//Custom Curve
+// Custom Curve
 
 CustomCurve::~CustomCurve()
 {

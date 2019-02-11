@@ -38,7 +38,6 @@ public:
                     WidgetRect clipRect) override;
 };
 
-
 // To prevent interference the set of indicators is divided up into
 // a range for use by lexers: [0 .. 7], a range for use by containers:
 // [8 = INDIC_CONTAINER .. 31 = INDIC_IME-1], and a range for IME

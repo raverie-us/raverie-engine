@@ -25,7 +25,7 @@ DefineEvent(SoundCuePostPlay);
 
 } // namespace Events
 
-//Sound Instance Event
+// Sound Instance Event
 
 ZilchDefineType(SoundInstanceEvent, builder, type)
 {
@@ -34,7 +34,7 @@ ZilchDefineType(SoundInstanceEvent, builder, type)
   ZilchBindGetter(SoundInstance);
 }
 
-//Cross Fade Object
+// Cross Fade Object
 
 AudioFadeObject::AudioFadeObject() :
     mFading(false),
@@ -128,7 +128,7 @@ void AudioFadeObject::GetMoreSamples()
                                 mInstanceID);
 }
 
-//Notification Object
+// Notification Object
 
 void MusicNotificationObject::ProcessAndNotify(float currentTime,
                                                SoundInstance* instance)
@@ -280,7 +280,7 @@ void MusicNotificationObject::ResetBeats(float currentTime,
   }
 }
 
-//Sound Instance
+// Sound Instance
 
 ZilchDefineType(SoundInstance, builder, type)
 {

@@ -35,7 +35,7 @@ class PropertyView;
 class KeyboardEvent;
 class FileEditEvent;
 
-//Sprite Frame
+// Sprite Frame
 // Display a frame of sprite
 class SpriteFrame
 {
@@ -70,7 +70,7 @@ struct TextureArea
   Texture* mTexture;
 };
 
-//Sprite Preview
+// Sprite Preview
 // Animated Preview of a set of Frames as areas of a texture
 class SpritePreview : public Composite
 {
@@ -104,7 +104,7 @@ DeclareEnum5(SpriteOrigin, Custom, Center, UpperLeft, BottomLeft, BottomCenter);
 Vec2 ComputeOrigin(SpriteOrigin::Enum origin, int width, int height);
 SpriteOrigin::Enum ComputeOrigin(Vec2 point, int width, int height);
 
-//Sprite Preview Widget
+// Sprite Preview Widget
 class SpritePreviewWidget : public PreviewWidget
 {
 public:
@@ -116,7 +116,7 @@ public:
   TextureView* mTextureView;
 };
 
-//Sprite Tile View Widget
+// Sprite Tile View Widget
 class SpriteTileViewWidget : public TileViewWidget
 {
 public:
@@ -130,7 +130,7 @@ public:
   void OnMouseClick(MouseEvent* event) override;
 };
 
-//Sprite Frame Tile View
+// Sprite Frame Tile View
 class SpriteFrameTileView : public TileView
 {
 public:
@@ -148,7 +148,7 @@ public:
   void OnLeftMouseDrag(MouseDragEvent* e) override;
 };
 
-//Sprite Data Source
+// Sprite Data Source
 class SpriteDataSource : public DataSource
 {
 public:

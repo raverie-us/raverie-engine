@@ -87,7 +87,6 @@ public:
   byte States[Keys::KeyMax];
 };
 
-
 DeclareEnum3(KeyState, Up, Down, Repeated);
 
 /// Represents information about key state changes.
@@ -132,7 +131,7 @@ public:
   Keyboard* mKeyboard;
 };
 
-//KeyboardTextEvent
+// KeyboardTextEvent
 /// Gives the actual key value being typed. For example, holding Shift + 'a'
 /// will give 'A'.
 class KeyboardTextEvent : public Event

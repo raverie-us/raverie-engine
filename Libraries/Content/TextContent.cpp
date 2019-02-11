@@ -12,7 +12,6 @@ TextContent::TextContent()
   EditMode = ContentEditMode::ResourceObject;
 }
 
-
 ContentItem* MakeTextContent(ContentInitializer& initializer)
 {
   TextContent* content = new TextContent();

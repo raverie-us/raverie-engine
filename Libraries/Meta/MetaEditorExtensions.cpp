@@ -4,12 +4,12 @@
 namespace Zero
 {
 
-//Editor Property Extension
+// Editor Property Extension
 ZilchDefineType(EditorPropertyExtension, builder, type)
 {
 }
 
-//Indexed String Array
+// Indexed String Array
 ZilchDefineType(EditorIndexedStringArray, builder, type)
 {
 }
@@ -27,7 +27,7 @@ void EditorIndexedStringArray::Enumerate(HandleParam instance,
     strings = mFixedValues;
 }
 
-//Editor Range
+// Editor Range
 ZilchDefineType(EditorRange, builder, type)
 {
   ZilchBindFieldProperty(Min);
@@ -64,7 +64,7 @@ void EditorRange::PostProcess(Status& status, ReflectionObject* owner)
   }
 }
 
-//Editor Slider
+// Editor Slider
 ZilchDefineType(EditorSlider, builder, type)
 {
 }
@@ -76,7 +76,7 @@ EditorSlider::EditorSlider()
   Increment = 0.01f;
 }
 
-//EditorRotationBasis
+// EditorRotationBasis
 ZilchDefineType(EditorRotationBasis, builder, type)
 {
 }
@@ -103,7 +103,7 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName,
 {
 }
 
-//Editor Resource
+// Editor Resource
 ZilchDefineType(MetaEditorResource, builder, type)
 {
   ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
@@ -146,23 +146,23 @@ bool MetaEditorResource::FilterPropertySearchResult(HandleParam object,
   return true;
 }
 
-//Meta Property Filter
+// Meta Property Filter
 ZilchDefineType(MetaPropertyFilter, builder, type)
 {
 }
 
-//Property Basic Filter
+// Property Basic Filter
 ZilchDefineType(MetaPropertyBasicFilter, builder, type)
 {
 }
 
-//Meta Editor Gizmo
+// Meta Editor Gizmo
 ZilchDefineType(MetaEditorGizmo, builder, type)
 {
   ZilchBindFieldProperty(mGizmoArchetype);
 }
 
-//Meta Shader Input
+// Meta Shader Input
 ZilchDefineType(MetaShaderInput, builder, type)
 {
   ZilchBindFieldProperty(mFragmentName)
@@ -171,7 +171,7 @@ ZilchDefineType(MetaShaderInput, builder, type)
       ->AddAttribute(PropertyAttributes::cOptional);
 }
 
-//Meta Group
+// Meta Group
 ZilchDefineType(MetaGroup, builder, type)
 {
   ZilchBindFieldProperty(mName);
@@ -181,12 +181,12 @@ MetaGroup::MetaGroup(StringParam name) : mName(name)
 {
 }
 
-//Meta Custom Ui
+// Meta Custom Ui
 ZilchDefineType(MetaCustomUi, builder, type)
 {
 }
 
-//Property Rename
+// Property Rename
 ZilchDefineType(MetaPropertyRename, builder, type)
 {
 }

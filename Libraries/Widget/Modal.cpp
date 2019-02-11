@@ -260,7 +260,7 @@ bool ModalConfirmAction::TakeFocusOverride()
   return true;
 }
 
-//ModalButtonsAction Action
+// ModalButtonsAction Action
 ModalButtonsAction::ModalButtonsAction(Composite* parent,
                                        StringParam title,
                                        Array<String>& buttonNames,

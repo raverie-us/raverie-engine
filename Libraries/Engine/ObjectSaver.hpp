@@ -7,7 +7,7 @@ namespace Zero
 // Forward declarations
 class ObjectState;
 
-//Object Saver
+// Object Saver
 /// This will be in charge of properly saving out data tree patches based
 /// on the given object and their local modifications.
 class ObjectSaver : public TextSaver

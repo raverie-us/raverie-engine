@@ -13,7 +13,7 @@ struct PolymorphicNode;
   ZilchTypeId(type)->AddAttribute(                                             \
       SerializationAttributes::cSerializationPrimitive)
 
-//Meta Serialization
+// Meta Serialization
 class MetaSerialization : public ReferenceCountedEventObject
 {
 public:
@@ -54,7 +54,7 @@ public:
   virtual void SerializeMembers(HandleParam object, Serializer& serializer);
 };
 
-//Serialization Primitive
+// Serialization Primitive
 class EnumMetaSerialization : public MetaSerialization
 {
 public:
@@ -73,7 +73,7 @@ public:
   BoundType* mEnumType;
 };
 
-//Serialization Primitive
+// Serialization Primitive
 template <typename T>
 class PrimitiveMetaSerialization : public MetaSerialization
 {
@@ -88,7 +88,7 @@ public:
   bool ConvertFromString(StringParam input, Any& output) override;
 };
 
-//String Serialization
+// String Serialization
 class MetaStringSerialization : public MetaSerialization
 {
 public:
@@ -102,7 +102,7 @@ public:
   bool ConvertFromString(StringParam input, Any& output) override;
 };
 
-//Serialization Filter
+// Serialization Filter
 class SerializationFilter : public ReferenceCountedEventObject
 {
 public:

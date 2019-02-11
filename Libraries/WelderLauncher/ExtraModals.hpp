@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//ModalProgess
+// ModalProgess
 /// A Modal with a progress bar. Currently only works with background tasks.
 class ModalBackgroundTaskProgessBar : public ModalStrip
 {

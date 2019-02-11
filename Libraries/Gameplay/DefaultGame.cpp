@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 ZilchDefineType(DefaultGameSetup, builder, type)
 {
   ZeroBindComponent();

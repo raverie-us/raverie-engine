@@ -17,7 +17,7 @@ DeclareEvent(SoundListenerRemoved);
 class ListenerNode;
 class SoundEvent;
 
-//Sound Node
+// Sound Node
 
 class SoundNode : public ReferenceCountedEventObject
 {
@@ -156,7 +156,7 @@ private:
   }
 };
 
-//Simple Collapse Node
+// Simple Collapse Node
 
 // Class to derive from for simple collapse functionality
 class SimpleCollapseNode : public SoundNode
@@ -179,7 +179,7 @@ public:
   void CollapseNode() override;
 };
 
-//Output Node
+// Output Node
 
 // Node used by audio system for final output
 class OutputNode : public SoundNode
@@ -197,7 +197,7 @@ public:
                         const bool firstRequest) override;
 };
 
-//Combine Node
+// Combine Node
 
 class CombineNode : public SimpleCollapseNode
 {
@@ -216,7 +216,7 @@ private:
                         const bool firstRequest) override;
 };
 
-//Combine And Pause Node
+// Combine And Pause Node
 
 class CombineAndPauseNode : public SimpleCollapseNode
 {

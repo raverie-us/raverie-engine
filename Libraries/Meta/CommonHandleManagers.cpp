@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Basic handles
+// Basic handles
 // DefineReferenceCountedHandle(ReferenceCountedEmpty);
 // ZilchDefineType(ReferenceCountedEmpty, builder, type)
 //{
@@ -59,7 +59,7 @@ namespace Zero
 //  ZeroBindHandle();
 //}
 //
-///Object handles
+/// Object handles
 // DefineReferenceCountedHandle(ReferenceCountedObject);
 // ZilchDefineType(ReferenceCountedObject, builder, type)
 //{
@@ -114,7 +114,7 @@ namespace Zero
 //  ZeroBindHandle();
 //}
 //
-///EventObject handles
+/// EventObject handles
 // DefineReferenceCountedHandle(ReferenceCountedEventObject);
 // ZilchDefineType(ReferenceCountedEventObject, builder, type)
 //{

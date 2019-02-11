@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Generated Wave Node
+// Generated Wave Node
 
 ZilchDefineType(GeneratedWaveNode, builder, type)
 {
@@ -207,7 +207,7 @@ void GeneratedWaveNode::InterpolateVolumeThreaded(float volume, float time)
                                        (unsigned)(time * cSystemSampleRate));
 }
 
-//ADSR Envelope
+// ADSR Envelope
 
 ZilchDefineType(AdsrEnvelope, builder, type)
 {
@@ -223,7 +223,7 @@ ZilchDefineType(AdsrEnvelope, builder, type)
   ZilchBindField(mReleaseTime);
 }
 
-//Note Harmonic
+// Note Harmonic
 
 void NoteHarmonic::SetValues(float frequency,
                              float volume,
@@ -252,7 +252,7 @@ void NoteHarmonic::Stop()
   Envelope.Release();
 }
 
-//Additive Note
+// Additive Note
 
 void AdditiveNote::AddHarmonic(float frequency,
                                float volume,
@@ -293,7 +293,7 @@ void AdditiveNote::Stop()
     it->Stop();
 }
 
-//Additive Synth Node
+// Additive Synth Node
 
 ZilchDefineType(AdditiveSynthNode, builder, type)
 {
@@ -473,7 +473,7 @@ void AdditiveSynthNode::StopAllNotesThreaded()
   }
 }
 
-//Microphone Input Node
+// Microphone Input Node
 
 ZilchDefineType(MicrophoneInputNode, builder, type)
 {
@@ -620,7 +620,7 @@ bool MicrophoneInputNode::GetOutputSamples(BufferType* outputBuffer,
   return true;
 }
 
-//Linear Grain Window
+// Linear Grain Window
 
 LinearGrainWindow::LinearGrainWindow(unsigned length) :
     GrainWindow(length, GranularSynthWindows::Linear),
@@ -652,7 +652,7 @@ void LinearGrainWindow::CopySettings(GrainWindow* other)
   mHalfLength = ((LinearGrainWindow*)other)->mHalfLength;
 }
 
-//Cosine Grain Window
+// Cosine Grain Window
 
 RaisedCosineGrainWindow::RaisedCosineGrainWindow(unsigned length,
                                                  unsigned attackLength,
@@ -752,7 +752,7 @@ void RaisedCosineGrainWindow::CopySettings(GrainWindow* other)
   y2 = otherWindow->y2;
 }
 
-//Parabolic Window
+// Parabolic Window
 
 ParabolicGrainWindow::ParabolicGrainWindow(unsigned length) :
     GrainWindow(length, GranularSynthWindows::Parabolic),
@@ -798,7 +798,7 @@ void ParabolicGrainWindow::CopySettings(GrainWindow* other)
   mCurve = otherWindow->mCurve;
 }
 
-//Trapezoid Window
+// Trapezoid Window
 
 TrapezoidGrainWindow::TrapezoidGrainWindow(unsigned length,
                                            unsigned attack,
@@ -873,7 +873,7 @@ void TrapezoidGrainWindow::CopySettings(GrainWindow* other)
   mCurrentState = otherWindow->mCurrentState;
 }
 
-//Grain
+// Grain
 
 Grain::Grain() :
     mActive(false),
@@ -1035,7 +1035,7 @@ Grain& Grain::operator=(const Grain& otherGrain)
   return *this;
 }
 
-//Granular Synth Node
+// Granular Synth Node
 
 ZilchDefineType(GranularSynthNode, builder, type)
 {

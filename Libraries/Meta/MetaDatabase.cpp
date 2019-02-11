@@ -16,7 +16,7 @@ ZilchDefineType(MetaLibraryEvent, builder, type)
 {
 }
 
-//Meta Serialize Property
+// Meta Serialize Property
 ZilchDefineType(MetaSerializedProperty, builder, type)
 {
 }

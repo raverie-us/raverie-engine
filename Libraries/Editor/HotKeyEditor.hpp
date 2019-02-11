@@ -214,7 +214,6 @@ public:
   }
 };
 
-
 void RegisterHotKeyEditors();
 
 } // namespace Zero

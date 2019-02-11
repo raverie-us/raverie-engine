@@ -7,7 +7,7 @@ namespace Zero
 // Forward declarations
 class Object;
 
-//Object Restore State
+// Object Restore State
 /// In undo/redo, there are operations related to data inheritance that require
 /// re-creating the object to be undone. This is an interface for the engines
 /// operation's to handle this generically.

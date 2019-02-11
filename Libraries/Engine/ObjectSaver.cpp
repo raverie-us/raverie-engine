@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Object Saver
+// Object Saver
 ObjectSaver::ObjectSaver() :
     mSerializeStart(nullptr),
     mFullObjectOverride(false)

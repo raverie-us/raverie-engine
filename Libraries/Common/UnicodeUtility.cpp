@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Utilities
+// Utilities
 namespace UTF8
 {
 static const char cTotalBytesToReadUTF8[256] = {

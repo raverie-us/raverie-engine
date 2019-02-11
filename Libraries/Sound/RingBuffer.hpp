@@ -7,7 +7,7 @@
 namespace Zero
 {
 
-//Ring Buffer
+// Ring Buffer
 
 class RingBuffer
 {

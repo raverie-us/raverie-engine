@@ -9,7 +9,7 @@ namespace Zero
   ZilchBindDefaultConstructor();                                               \
   ZilchBindDestructor();
 
-//Meta Resource
+// Meta Resource
 // If a Type was created from a Resource, the resource id will be available as a
 // type component.
 class MetaResource : public ReferenceCountedEventObject
@@ -31,7 +31,7 @@ public:
   CodeLocation mClassLocation;
 };
 
-//Editor Script Object
+// Editor Script Object
 class MetaEditorScriptObject : public MetaAttribute
 {
 public:
@@ -43,7 +43,7 @@ public:
   bool mAutoRegister;
 };
 
-//Meta Dependency
+// Meta Dependency
 class MetaDependency : public MetaAttribute
 {
 public:
@@ -52,7 +52,7 @@ public:
   void PostProcess(Status& status, ReflectionObject* owner) override;
 };
 
-//Meta Interface
+// Meta Interface
 class MetaInterface : public MetaAttribute
 {
 public:

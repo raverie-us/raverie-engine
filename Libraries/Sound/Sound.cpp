@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Sound
+// Sound
 
 String SoundToString(const BoundType* type, const byte* instance)
 {
@@ -96,7 +96,7 @@ bool Sound::GetStreaming()
     return false;
 }
 
-//Sound Display
+// Sound Display
 
 ZilchDefineType(SoundDisplay, builder, type)
 {
@@ -113,7 +113,7 @@ String SoundDisplay::GetDebugText(HandleParam object)
   return GetName(object);
 }
 
-//Sound Loader
+// Sound Loader
 
 HandleOf<Resource> SoundLoader::LoadFromBlock(ResourceEntry& entry)
 {
@@ -158,7 +158,7 @@ bool SoundLoader::LoadSound(Sound* sound, ResourceEntry& entry)
     return true;
 }
 
-//Sound Manager
+// Sound Manager
 
 ImplementResourceManager(SoundManager, Sound);
 

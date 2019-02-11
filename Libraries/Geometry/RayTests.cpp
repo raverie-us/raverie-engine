@@ -407,8 +407,8 @@ Type RayPlane(Vec3Param rayStart,
 
   // Ray's direction and plane's normal are perpendicular, ray can only
   // intersect plane if ray lies on plane. However, I will not consider this to
-  // be considered an intersection due to the unlikelihood of the infinitely thin
-  // ray lying on the infinitely thin plane.
+  // be considered an intersection due to the unlikelihood of the infinitely
+  // thin ray lying on the infinitely thin plane.
   if (Math::Abs(relativeDirection) <= real(0.00001))
   {
     return None;
@@ -770,7 +770,6 @@ Type RayTriangle(Vec3Param rayStart,
   }
   return None;
 }
-
 
 // Intersect a ray with an axis aligned bounding box.
 Type RayAabb(Vec3Param rayStart,

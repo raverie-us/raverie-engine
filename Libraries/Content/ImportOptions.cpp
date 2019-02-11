@@ -95,7 +95,7 @@ GeometryOptions::GeometryOptions(ImportOptions* owner) :
 {
 }
 
-//ShowNormalGenerationOptionsFilter
+// ShowNormalGenerationOptionsFilter
 ZilchDefineType(ShowNormalGenerationOptionsFilter, builder, type)
 {
 }

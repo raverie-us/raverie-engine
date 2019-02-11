@@ -10,7 +10,7 @@ namespace Events
 DeclareEvent(CustomAudioNodeSamplesNeeded);
 }
 
-//Custom Audio Node Event
+// Custom Audio Node Event
 
 class CustomAudioNodeEvent : public Event
 {
@@ -24,7 +24,7 @@ public:
   unsigned SamplesNeeded;
 };
 
-//Sound Buffer
+// Sound Buffer
 
 /// Used with a CustomAudioNode to play audio data directly
 class SoundBuffer : public ReferenceCountedObject
@@ -48,7 +48,7 @@ public:
   Zero::Array<float> mBuffer;
 };
 
-//Custom Audio Node
+// Custom Audio Node
 
 /// Uses a SoundBuffer to send audio data directly to the audio engine
 class CustomAudioNode : public SoundNode

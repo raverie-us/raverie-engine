@@ -48,7 +48,6 @@ bool UnaryOperatorKey::operator==(const UnaryOperatorKey& rhs) const
   return mPair == rhs.mPair;
 }
 
-
 BinaryOperatorKey::BinaryOperatorKey()
 {
   mPair.first.first = nullptr;

@@ -103,7 +103,7 @@ Location::Enum GetOpposite(Location::Enum location)
 
 } // namespace Location
 
-//Thickness
+// Thickness
 const Thickness Thickness::cZero(0, 0, 0, 0);
 
 ZilchDefineType(Thickness, builder, type)
@@ -183,7 +183,7 @@ Thickness Thickness::operator+(const Thickness& rhs)
       Left + rhs.Left, Top + rhs.Top, Right + rhs.Right, Bottom + rhs.Bottom);
 }
 
-//Ui Rect
+// Ui Rect
 const Rectangle Rectangle::cZero =
     Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 

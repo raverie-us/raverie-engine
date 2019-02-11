@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Pitch Change Handler
+// Pitch Change Handler
 
 PitchChangeHandler::PitchChangeHandler() :
     mPitchCents(0),

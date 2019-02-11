@@ -363,7 +363,6 @@ TileMap::TileMap() :
 {
 }
 
-
 TileMap::Tile::Tile()
 {
   ArchetypeResource = 0;
@@ -417,7 +416,6 @@ PhysicsMesh* TileMap::Tile::GetCollisionResource() const
       ->GetResourceManager(ZilchTypeId(PhysicsMesh))
       ->GetResource(CollisionResource, ResourceNotFound::ReturnNull);
 }
-
 
 TileMap::~TileMap()
 {

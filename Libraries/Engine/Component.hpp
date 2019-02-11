@@ -13,7 +13,7 @@ DeclareTag(Component);
 class CogInitializer;
 struct AttachmentInfo;
 
-//Transform Update Info
+// Transform Update Info
 struct TransformUpdateInfo
 {
   TransformUpdateInfo()
@@ -30,7 +30,7 @@ struct TransformUpdateInfo
   Transform* mTransform;
 };
 
-//Component
+// Component
 /// A component is an atomic piece of functionality that is composed into a Cog
 /// to form game objects.
 class Component : public Object
@@ -171,7 +171,7 @@ private:
   }
 };
 
-//Component Handle Manager
+// Component Handle Manager
 class ComponentHandleData : public CogHandleData
 {
 public:
@@ -197,7 +197,7 @@ public:
   void Delete(const Handle& handle) override;
 };
 
-//Component Handle
+// Component Handle
 template <typename ComponentType>
 class ComponentHandle : public HandleOf<ComponentType>
 {

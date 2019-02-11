@@ -25,7 +25,6 @@ DeclareEnum3(ContentEditMode,
              // Edit the content item (usually multiple resources or binary)
              ContentItem);
 
-
 /// ResourceSystem Contains all resource managers.
 class ResourceSystem : public EventObject
 {

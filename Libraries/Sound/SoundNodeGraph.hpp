@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Node Print Info
+// Node Print Info
 
 class NodePrintInfo
 {
@@ -45,7 +45,7 @@ public:
 
 typedef Array<NodePrintInfo*> NodeInfoListType;
 
-//Sound Node Graph
+// Sound Node Graph
 
 class SoundNodeGraph
 {

@@ -7,7 +7,7 @@ struct OpusEncoder;
 namespace Zero
 {
 
-//Audio File Data
+// Audio File Data
 
 // Information about an audio file as well as data read in from the file
 class AudioFileData
@@ -29,7 +29,7 @@ public:
   float** BuffersPerChannel;
 };
 
-//File Encoder
+// File Encoder
 
 class AudioFileEncoder
 {
@@ -103,7 +103,7 @@ struct PacketHeader
   unsigned Size;
 };
 
-//Packet Encoder
+// Packet Encoder
 
 class PacketEncoder
 {

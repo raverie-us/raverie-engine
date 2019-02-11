@@ -287,7 +287,6 @@ Composite* Scratchboard::GetClientArea()
   return mClientArea;
 }
 
-
 void Scratchboard::AttachChildWidget(Widget* widget,
                                      AttachType::Enum attachType)
 {

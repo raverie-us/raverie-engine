@@ -9,7 +9,7 @@ namespace Events
 DefineEvent(PathFinderMeshFinished);
 }
 
-//Nav Mesh Edge
+// Nav Mesh Edge
 NavMeshEdge::NavMeshEdge(NavMeshPolygon* owner) :
     mCost(0.0f),
     mTailVertex(u32(-1)),
@@ -20,7 +20,7 @@ NavMeshEdge::NavMeshEdge(NavMeshPolygon* owner) :
   owner->mEdges.PushBack(this);
 }
 
-//Edge Triangle Range
+// Edge Triangle Range
 NavMeshEdge::PolygonRange::PolygonRange() : mIgnore(nullptr)
 {
 }
@@ -72,7 +72,7 @@ NavMeshEdge::AllConnectedTriangles(NavMeshPolygon* ignore)
   return PolygonRange(this, ignore);
 }
 
-//Nav Mesh Triangle
+// Nav Mesh Triangle
 Vec3 NavMeshPolygon::GetCenter(PathFinderAlgorithmMesh* mesh)
 {
   Array<Vec3>& vertices = mesh->mVertices;
@@ -100,7 +100,7 @@ NavMeshPolygon::PolygonRange NavMeshPolygon::AllNeighboringPolygons()
   return PolygonRange(this);
 }
 
-//Triangle Triangle Range
+// Triangle Triangle Range
 NavMeshPolygon::PolygonRange::PolygonRange(NavMeshPolygon* polygon) :
     mCurrentEdge(polygon->AllEdges())
 {
@@ -149,7 +149,7 @@ float NavMeshPolygon::PolygonRange::GetFrontCost()
   return CurrentEdge()->mCost + Front()->mCost;
 }
 
-//Finder Mesh Node Range
+// Finder Mesh Node Range
 PathFinderMeshNodeRange::PathFinderMeshNodeRange(NavMeshPolygon* polygon) :
     mRange(polygon->AllNeighboringPolygons())
 {
@@ -190,7 +190,7 @@ void PathFinderMeshNodeRange::PopUntilValid()
   }
 }
 
-//Finder Algorithm Mesh
+// Finder Algorithm Mesh
 PathFinderAlgorithmMesh::PathFinderAlgorithmMesh() :
     mCurrentPolygonId(0),
     mCurrentEdgeId(0)
@@ -402,7 +402,7 @@ NavMeshEdgeId PathFinderAlgorithmMesh::GetNextEdgeId()
   return mCurrentEdgeId++;
 }
 
-//Path Finder Mesh
+// Path Finder Mesh
 ZilchDefineType(PathFinderMesh, builder, type)
 {
   ZeroBindDocumented();
@@ -433,11 +433,12 @@ ZilchDefineType(PathFinderMesh, builder, type)
   // ZilchBindOverloadedMethod(FindPath,
   // ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param,
   // IntVec3Param)); ZilchBindOverloadedMethod(FindPath,
-  // ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
-  // ZilchBindOverloadedMethod(FindPathThreaded,
+  // ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param,
+  // Real3Param)); ZilchBindOverloadedMethod(FindPathThreaded,
   // ZilchInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param,
   // IntVec3Param)); ZilchBindOverloadedMethod(FindPathThreaded,
-  // ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
+  // ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param,
+  // Real3Param));
 
   ZilchBindMethod(WorldPositionToPolygon);
   ZilchBindMethod(LocalPositionToPolygon);

@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Resource
+// Resource
 /// Zilch script file Resource.
 class ZilchScript : public ZilchDocumentResource
 {
@@ -23,7 +23,7 @@ public:
                              ResourceLibrary* library);
 };
 
-//ZilchScriptLoader
+// ZilchScriptLoader
 class ZilchScriptLoader : public ResourceLoader
 {
 public:
@@ -32,7 +32,7 @@ public:
   void ReloadFromFile(Resource* resource, ResourceEntry& entry) override;
 };
 
-//Manager
+// Manager
 // Resource manager for ZilchScript
 class ZilchScriptManager : public ResourceManager
 {

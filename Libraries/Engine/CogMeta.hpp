@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Serialization Filter
+// Serialization Filter
 class CogSerializationFilter : public SerializationFilter
 {
 public:
@@ -12,7 +12,7 @@ public:
   bool ShouldSerialize(Object* object) override;
 };
 
-//Cog Meta Operations
+// Cog Meta Operations
 class CogMetaOperations : public MetaOperations
 {
 public:
@@ -28,7 +28,7 @@ public:
   ObjectRestoreState* GetRestoreState(HandleParam object) override;
 };
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 class CogMetaDataInheritance : public MetaDataInheritanceRoot
 {
 public:
@@ -57,7 +57,7 @@ public:
   void RebuildObject(HandleParam object) override;
 };
 
-//Cog Meta Transform
+// Cog Meta Transform
 /// Gizmos use this interface to transform objects.
 class CogMetaTransform : public MetaTransform
 {
@@ -67,7 +67,7 @@ public:
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
 
-//Archetype Extension
+// Archetype Extension
 /// Used to give a custom editor for Archetype on Cog instead of the usual
 /// resource selector.
 class CogArchetypeExtension : public EditorPropertyExtension
@@ -76,7 +76,7 @@ public:
   ZilchDeclareType(CogArchetypeExtension, TypeCopyMode::ReferenceType);
 };
 
-//Cog Meta Display
+// Cog Meta Display
 class CogMetaDisplay : public MetaDisplay
 {
 public:
@@ -86,7 +86,7 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
-//Cog Meta Display
+// Cog Meta Display
 /// When saving a Cog as a property (such as in CogPath), we want to save out
 /// the CogId, not the full definition of the Cog.
 class CogMetaSerialization : public MetaSerialization

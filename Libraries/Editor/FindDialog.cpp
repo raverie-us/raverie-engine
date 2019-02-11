@@ -5,22 +5,22 @@
 #define inifinite_loop for (;;)
 
 // A big note to anyone who reads this file:
-// 
+//
 // The search context is something that could use refactoring, since it
 // no longer needs to be a member variable (or allocated for that matter)
 // and instead should be something that's on the stack and passed through
 // to all the functions. This is because we no longer maintain the context
 // through searches, but rather we let the cursor position in the open
 // document tell us where next to search.
-// 
+//
 // This also means that all ClearContext cases can be taken out, even the
 // ones used where we check for modified documents.
-// 
+//
 // On that same note, after considering that context should be a stack
 // variable, I then thought that pushing CharEnd and CharBegin forward
 // after a replace was no longer necessary. This is not true since
 // ReplaceAll still relies on that behavior. (note to self)
-// 
+//
 // Yet another consideration, we might actually want to keep context
 // around since search in selection may rely on it to work. Search in
 // selection is currently disabled for this exact reason.

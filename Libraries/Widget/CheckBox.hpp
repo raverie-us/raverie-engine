@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 // Basic Check Box
 class CheckBox : public Composite
 {
@@ -47,7 +46,6 @@ private:
   Element* mBackground;
   bool mChecked;
 };
-
 
 // Check Box with text label next to the control
 class TextCheckBox : public Composite

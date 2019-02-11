@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Sound Listener
+// Sound Listener
 
 ZilchDefineType(SoundListener, builder, type)
 {

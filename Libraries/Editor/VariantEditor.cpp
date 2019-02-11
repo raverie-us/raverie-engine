@@ -9,7 +9,7 @@ namespace Events
 DefineEvent(TextUpdated);
 } // namespace Events
 
-//Initialization
+// Initialization
 ZilchDefineType(TextUpdatedEvent, builder, type)
 {
   ZilchBindField(mChangeAccepted);

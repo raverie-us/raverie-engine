@@ -12,7 +12,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
   // Create a directory handle which in windows is done with CreateFile
   // FILE_LIST_DIRECTORY is an access right required for ReadDirectoryChangesW
   // to operate. FILE_FLAG_OVERLAPPED is required to use overlaps with the
-  // handle. FILE_FLAG_BACKUP_SEMANTICS is required to create a directory handle.
+  // handle. FILE_FLAG_BACKUP_SEMANTICS is required to create a directory
+  // handle.
   const OsInt flags = FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS;
 
   // Create the directory handle
@@ -120,8 +121,8 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
         {
           // Move to the next file notification. FILE_NOTIFY_INFORMATION can be
           // variably size due to the filename so the stride between structures
-          // is given with the field NextEntryOffset. When the size is zero it is
-          // the last message.
+          // is given with the field NextEntryOffset. When the size is zero it
+          // is the last message.
           buffer = buffer + notify.NextEntryOffset;
         }
       }

@@ -230,7 +230,7 @@ void ContentItem::OnInitialize()
 {
 }
 
-//Resource Meta Operations
+// Resource Meta Operations
 ZilchDefineType(ContentItemMetaOperations, builder, type)
 {
 }

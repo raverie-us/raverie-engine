@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Net Property
+// Meta Net Property
 class MetaNetProperty : public MetaAttribute
 {
 public:

@@ -130,7 +130,7 @@ public:
   bool ReadOnly;
 
   //-------------------------------------------------------------------Generated
-  //Data
+  // Data
   // Tool tip or short description.
   String ToolTip;
   // Tags on this object

@@ -250,7 +250,7 @@ public:
   void ClearShadersProjectAndLibrary();
 
   //-------------------------------------------------------------------Pipeline
-  //compilation.
+  // compilation.
   // Compiles the shader library through a pipeline of tools to a final backend.
 
   /// Compiles the current shader library (CompileAndTranslateShaders must be
@@ -261,7 +261,7 @@ public:
   bool CompilePipeline(ShaderPipelineDescription& pipeline);
 
   //-------------------------------------------------------------------Reflection
-  //Interface
+  // Interface
   /// Find a the shader type for a fragment by name. Only checks the fragment
   /// library.
   ZilchShaderIRType* FindFragmentType(StringParam typeName);

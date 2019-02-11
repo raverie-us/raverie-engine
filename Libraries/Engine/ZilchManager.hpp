@@ -20,7 +20,7 @@ DeclareEvent(ScriptsCompiledPostPatch);
 DeclareEvent(ScriptCompilationFailed);
 } // namespace Events
 
-//Zilch Compile Event
+// Zilch Compile Event
 class ZilchCompileEvent : public Event
 {
 public:
@@ -33,7 +33,7 @@ public:
   HashSet<ResourceLibrary*>& mModifiedLibraries;
 };
 
-//Zilch Manager
+// Zilch Manager
 DeclareEnum2(CompileResult, CompilationFailed, CompilationSucceeded);
 
 class ZilchManager : public ExplicitSingleton<ZilchManager, EventObject>

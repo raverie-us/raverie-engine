@@ -14,7 +14,7 @@ namespace Zero
 /// produced by getting random values between -1 and 1.</param>
 DeclareEnum5(SynthWaveType, SineWave, SquareWave, SawWave, TriangleWave, Noise);
 
-//BiQuad Filter
+// BiQuad Filter
 
 class BiQuad
 {
@@ -42,7 +42,7 @@ private:
   float b2;
 };
 
-//Delay Filter
+// Delay Filter
 
 class Delay
 {
@@ -69,7 +69,7 @@ protected:
   int mSampleRate;
 };
 
-//Delay All Pass Filter
+// Delay All Pass Filter
 
 class DelayAPF : public Delay
 {
@@ -89,7 +89,7 @@ private:
   float mAPFg;
 };
 
-//Comb Filter
+// Comb Filter
 
 class Comb : public Delay
 {
@@ -110,7 +110,7 @@ private:
   float mCombG;
 };
 
-//Low Pass Comb Filter
+// Low Pass Comb Filter
 
 class LPComb : public Delay
 {
@@ -130,7 +130,7 @@ private:
   float mPrevSample;
 };
 
-//Pole Low Pass Filter
+// Pole Low Pass Filter
 
 class OnePoleLP
 {
@@ -150,7 +150,7 @@ private:
   float mPrevSample;
 };
 
-//Low Pass Filter
+// Low Pass Filter
 
 class LowPassFilter
 {
@@ -179,7 +179,7 @@ private:
   void SetCutoffValues();
 };
 
-//High Pass Filter
+// High Pass Filter
 
 class HighPassFilter
 {
@@ -203,7 +203,7 @@ private:
   void SetCutoffValues();
 };
 
-//Band Pass Filter
+// Band Pass Filter
 
 class BandPassFilter
 {
@@ -232,7 +232,7 @@ private:
   void ResetFrequencies();
 };
 
-//Oscillator
+// Oscillator
 
 class Oscillator
 {
@@ -276,7 +276,7 @@ private:
   float mSquareWavePositiveFraction;
 };
 
-//Delay Line
+// Delay Line
 
 class DelayLine
 {
@@ -341,7 +341,7 @@ private:
   InterpolatingObject WetLevelInterpolator;
 };
 
-//Envelope Detector
+// Envelope Detector
 
 class EnvelopeDetector
 {
@@ -393,7 +393,7 @@ private:
                     // const float METER_MIN_DB = -60.0;
 };
 
-//Dynamics Processor Filter
+// Dynamics Processor Filter
 
 class DynamicsProcessor
 {
@@ -497,7 +497,7 @@ private:
   LagrangeInterpolation(double* x, double* y, int howMany, double xBar);
 };
 
-//Equalizer Filter
+// Equalizer Filter
 
 namespace EqualizerBands
 {
@@ -553,7 +553,7 @@ private:
   void SetFilterData();
 };
 
-//Reverb Filter
+// Reverb Filter
 
 class ReverbData
 {
@@ -617,7 +617,7 @@ private:
   InterpolatingObject WetValueInterpolator;
 };
 
-//Complex Number
+// Complex Number
 
 class ComplexNumber
 {
@@ -649,7 +649,7 @@ public:
   float mImaginary;
 };
 
-//Fast Fourier Transform
+// Fast Fourier Transform
 
 class FFT
 {
@@ -666,7 +666,7 @@ private:
                     const bool forward);
 };
 
-//Transform Convolver
+// Transform Convolver
 
 class FFTConvolver
 {
@@ -693,7 +693,7 @@ private:
 
 static int NextPowerOf2(const int& value);
 
-//Envelope Settings
+// Envelope Settings
 
 class EnvelopeSettings
 {
@@ -730,7 +730,7 @@ public:
   float mReleaseTime;
 };
 
-//ADSR envelope
+// ADSR envelope
 
 class ADSR
 {
@@ -766,7 +766,7 @@ private:
   States mCurrentState;
 };
 
-//Modulation Operator
+// Modulation Operator
 
 class FMOperator
 {

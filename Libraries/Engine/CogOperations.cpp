@@ -368,7 +368,7 @@ Cog* CreateFromArchetypeOperation::DoCreation()
   return object;
 }
 
-//Attach Operation
+// Attach Operation
 AttachOperation::AttachOperation(Cog* object,
                                  Cog* newParent,
                                  bool relativeAttach) :
@@ -455,7 +455,7 @@ void AttachOperation::Redo()
     space->MarkModified();
 }
 
-//Detach Operation
+// Detach Operation
 DetachOperation::DetachOperation(Cog* object, bool relativeDetach) :
     mRelativeDetach(relativeDetach),
     mObjectUndoHandle(object)

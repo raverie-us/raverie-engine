@@ -230,7 +230,7 @@ void ComputeContactFragments(Contact* contact,
   ContactNormalFragment(fragments[0], baumgarte, restitutionBias);
   // there's no baumgarte on the friction constraints
   //(the error is also zero so nothing would be solved anyways, but this makes
-  //it clearer)
+  // it clearer)
   RigidConstraintFragment(fragments[1], real(0.0));
   RigidConstraintFragment(fragments[2], real(0.0));
 

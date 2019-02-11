@@ -191,7 +191,6 @@ private:
   virtual Resource* AllocateDefaultConstructed() = 0;
 };
 
-
 /// Resource loader interface. Used to load resource of various formats.
 /// A resource manager may provide multiple loaders.
 class ResourceLoader
@@ -209,7 +208,7 @@ public:
   }
 };
 
-//Manager Setup
+// Manager Setup
 
 // Adds Resource Typed Static Functions for native resource types
 // CreateRuntime should not be used directly, implement a static CreateRuntime

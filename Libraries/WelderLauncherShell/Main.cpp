@@ -117,7 +117,7 @@ int PlatformMain(const Array<String>& arguments)
 
     // load whatever dll is newer between the installed one and the downloaded
     // one (if they install a newer version selector we want to run that dll
-    //instead of the downloaded one and if the server was newer we would've
+    // instead of the downloaded one and if the server was newer we would've
     // already downloaded it)
     String dllDirectoryPath = ChooseDllPath(
         localVersionPath, localVersionId, downloadPath, downloadedVersionId);

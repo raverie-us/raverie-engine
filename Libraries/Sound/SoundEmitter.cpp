@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Sound Emitter
+// Sound Emitter
 
 ZilchDefineType(SoundEmitterDisplay, builder, type)
 {

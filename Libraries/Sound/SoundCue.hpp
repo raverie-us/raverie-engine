@@ -16,7 +16,7 @@ DeclareEnum2(SoundPlayMode, Single, Looping);
 /// displayed.</param>
 DeclareEnum2(SoundSelectMode, Random, Sequential);
 
-//Sound Entry
+// Sound Entry
 
 /// Stores Sounds and associated properties to be used by a SoundCue.
 class SoundEntry : public Object
@@ -94,7 +94,7 @@ class SoundEntryDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Tag Entry
+// Sound Tag Entry
 
 /// Stores a SoundTag which will be applied to all SoundInstances created by
 /// this SoundCue.
@@ -126,7 +126,7 @@ class SoundTagEntryDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Cue Display
+// Sound Cue Display
 
 typedef Array<SoundTag*> SoundTagList;
 
@@ -139,7 +139,7 @@ public:
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Cue
+// Sound Cue
 
 /// Settings and Sounds for playing audio files.
 class SoundCue : public DataResource
@@ -273,7 +273,7 @@ private:
   float mTimeSigValue;
 };
 
-//Sound Cue Manager
+// Sound Cue Manager
 
 /// Cue Manager manages sound cues.
 class SoundCueManager : public ResourceManager

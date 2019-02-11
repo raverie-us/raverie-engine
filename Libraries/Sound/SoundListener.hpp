@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Sound Listener
+// Sound Listener
 
 /// Uses the object's position to "hear" all SoundEmitters in the SoundSpace
 class SoundListener : public Component

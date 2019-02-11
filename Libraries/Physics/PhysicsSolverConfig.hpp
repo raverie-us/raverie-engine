@@ -37,7 +37,7 @@ struct ConstraintConfigBlock : public SafeId32Object
   ConstraintConfigBlock();
 
   //-------------------------------------------------------------------Object
-  //Interface
+  // Interface
   void Serialize(Serializer& serializer);
 
   //-------------------------------------------------------------------Properties
@@ -121,7 +121,7 @@ public:
   ~PhysicsSolverConfig();
 
   //-------------------------------------------------------------------DataResource
-  //Interface
+  // Interface
   void Serialize(Serializer& stream) override;
   void Initialize() override;
   HandleOf<Resource> Clone() override;

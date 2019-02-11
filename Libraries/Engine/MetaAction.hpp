@@ -28,7 +28,7 @@ DeclareEnum19(EaseType,
 typedef float (*Easer)(float linearT);
 Easer GetEaser(uint easeType);
 
-//MetaAnimatePropertyAction
+// MetaAnimatePropertyAction
 
 // Action to animate a property over time
 Action* CreateMetaAnimatePropertyAction(HandleParam object,
@@ -36,7 +36,6 @@ Action* CreateMetaAnimatePropertyAction(HandleParam object,
                                         float duration,
                                         AnyParam ending,
                                         EaseType::Enum easeType);
-
 
 /// Action to call method use Meta
 class MetaCallAction : public Action

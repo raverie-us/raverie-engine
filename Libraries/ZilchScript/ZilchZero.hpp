@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Zilch Component
+// Zilch Component
 /// A base class for all Zilch components defined in script
 class ZilchComponent : public Component
 {
@@ -21,7 +21,7 @@ public:
   void Delete() override;
 };
 
-//Zilch Event
+// Zilch Event
 /// A base class for all Zilch events defined in script
 class ZilchEvent : public Event
 {
@@ -33,7 +33,7 @@ public:
   void Delete() override;
 };
 
-//Zilch Object
+// Zilch Object
 /// A base class for any object in Zilch that we want to have properties / meta
 /// / send and receive events
 class ZilchObject : public EventObject

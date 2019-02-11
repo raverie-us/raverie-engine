@@ -111,7 +111,6 @@ void GenerateTableComplexOverlapLookup(TableType& table)
 #undef GenerateCollisionTables
 #undef GenerateCollisionLookups
 
-
 /// A 1-d lookup table for collision between a shape and a colliders. Uses the
 /// collider type to index into an array of function pointers to
 /// resolve what kind of shape the colliders is.

@@ -7,7 +7,6 @@ namespace Zero
 const uint cMinFrameSize = 1;
 const uint cMaxSpriteSize = 4096;
 
-
 DeclareEnum2(SpriteSampling, Nearest, Linear);
 
 DeclareEnum3(SpriteFill, Stretch, NineSlice, Tiled);

@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Listener Node
+// Listener Node
 
 ZilchDefineType(ListenerNode, builder, type)
 {

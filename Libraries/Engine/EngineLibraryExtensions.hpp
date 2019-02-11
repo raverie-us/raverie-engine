@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Zero Library Extensions
+// Zero Library Extensions
 class EngineLibraryExtensions
 {
 public:

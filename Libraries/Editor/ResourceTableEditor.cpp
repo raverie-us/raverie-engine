@@ -352,7 +352,6 @@ void SearchableResourceTextBox::SetTextOffset(float offset)
   mDisplayTextBox->SetTextOffset(offset);
 }
 
-
 WeightedTableBar::WeightedTableBar(
     Composite* parent, ResourceWeightedTableView* weightedTableView) :
     Composite(parent)
@@ -535,7 +534,6 @@ void WeightedTableBarDragManipulation::OnMouseUp(MouseEvent* e)
   this->Destroy();
 }
 
-
 ResourceWeightedTableView::ResourceWeightedTableView(
     Composite* parent, ResourceTableEditor* editor) :
     Composite(parent)
@@ -676,8 +674,8 @@ void ResourceWeightedTableView::UpdateTransform()
     Vec2 probSize = mEntries[i].mProbability->GetMinSize();
     // to avoid warbling, compute the offset from the left edge based upon the
     // difference in size of the two composites (doing it this way avoids
-    //warbling because we're computing a fixed delta from the left edge instead
-    //of from the center)
+    // warbling because we're computing a fixed delta from the left edge instead
+    // of from the center)
     float probSizeDeltaX =
         Math::Min(halfBarSizeX, (probSize.x - barSize.x) * 0.5f);
     // now we can compute the position from the left edge (that won't warble)
@@ -709,8 +707,9 @@ void ResourceWeightedTableView::UpdateTransform()
     Vec2 valueSize = mEntries[i].mValueTag->GetMinSize();
     // The value position is computed a bit differently to avoid warbling
     // between the name and value text boxes. The difference in size between
-    // these two composites is computed and then the value text box is positioned
-    // a fixed amount (based upon the size offset) away from the name text box.
+    // these two composites is computed and then the value text box is
+    // positioned a fixed amount (based upon the size offset) away from the name
+    // text box.
     float valueSizeDeltaX = SnapToPixels(
         Math::Min(halfBarSizeX, (valueSize.x - nameSize.x) * 0.5f));
     Vec2 valuePos =
@@ -1051,7 +1050,6 @@ Vec2 ResourceWeightedTableView::GetMinSize(float& width)
   return minSize;
 }
 
-
 // Strings used to identify columns in the tree view
 const String ItemName = "ItemName";
 const String ItemValue = "ItemValue";
@@ -1349,7 +1347,6 @@ public:
   }
 };
 
-
 ResourceTableTreeView::ResourceTableTreeView(Composite* parent,
                                              ResourceTableEditor* editor) :
     Composite(parent)
@@ -1548,8 +1545,8 @@ void ResourceTableTreeView::RemoveSelectedRows()
   // Unfortunately, the tree requires unique identifies for all items, meaning
   // that they should change from removing another item. We're currently using
   // the index in the resource as the unique identifier, so the entire tree will
-  // break. To get around this, just reset the data source which will rebuild the
-  // tree. (maybe use a better index later)
+  // break. To get around this, just reset the data source which will rebuild
+  // the tree. (maybe use a better index later)
   mTreeView->SetDataSource(mSource);
   table->ForceRebuild();
 
@@ -1612,7 +1609,6 @@ void ResourceTableTreeView::FadeOutContextMenu()
   if (contextMenu)
     contextMenu->FadeOut();
 }
-
 
 ResourceTableEditor::ResourceTableEditor(Composite* parent,
                                          ResourceTable* table) :

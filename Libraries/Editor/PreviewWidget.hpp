@@ -85,7 +85,7 @@ PreviewWidget* CreatePreviewWidgetT(PreviewWidgetInitializer& initializer)
 typedef PreviewWidget* (*CreatePreviewWidget)(
     PreviewWidgetInitializer& initializer);
 
-//Creator
+// Creator
 struct PreviewWidgetCreator
 {
   PreviewWidgetCreator() : Importance(PreviewImportance::None), Creator(nullptr)

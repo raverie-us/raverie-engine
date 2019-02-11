@@ -6,7 +6,7 @@ namespace Zero
 
 const float cUiWidgetSnapSize = 1.0f;
 
-//Events
+// Events
 namespace Events
 {
 
@@ -26,7 +26,7 @@ UiRootWidget* UiTransformUpdateEvent::GetRootWidget()
   return mRootWidget;
 }
 
-//Dock Mode
+// Dock Mode
 namespace UiDockMode
 {
 
@@ -39,7 +39,7 @@ uint GetAxis(UiDockMode::Enum mode)
 
 } // namespace UiDockMode
 
-//Widget Cast Results Range
+// Widget Cast Results Range
 ZilchDefineType(UiWidgetCastResultsRange, builder, type)
 {
   ZeroBindDocumented();
@@ -90,7 +90,7 @@ uint UiWidgetCastResultsRange::Size()
   return mOverlappingWidgets.Size();
 }
 
-//Widget
+// Widget
 ZilchDefineType(UiWidget, builder, type)
 {
   ZeroBindDocumented();

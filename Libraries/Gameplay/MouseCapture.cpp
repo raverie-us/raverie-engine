@@ -181,7 +181,6 @@ public:
   }
 };
 
-
 ZilchDefineType(MouseCapture, builder, type)
 {
   ZeroBindComponent();

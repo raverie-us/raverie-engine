@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Resource
+// Meta Resource
 ZilchDefineType(MetaResource, builder, type)
 {
 }
@@ -19,7 +19,7 @@ void MetaResource::SetResource(Resource* resource)
   mResourceId = resource->mResourceId;
 }
 
-//MetaEditor Script Object
+// MetaEditor Script Object
 ZilchDefineType(MetaEditorScriptObject, builder, type)
 {
   ZilchBindField(mAutoRegister)->AddAttribute(PropertyAttributes::cOptional);
@@ -56,7 +56,7 @@ void MetaEditorScriptObject::PostProcess(Status& status,
   }
 }
 
-//Meta Dependency
+// Meta Dependency
 ZilchDefineType(MetaDependency, builder, type)
 {
 }
@@ -97,7 +97,7 @@ void MetaDependency::PostProcess(Status& status, ReflectionObject* owner)
   componentMeta->mSetupMode = SetupMode::DefaultConstructor;
 }
 
-//Meta Interface
+// Meta Interface
 ZilchDefineType(MetaInterface, builder, type)
 {
 }

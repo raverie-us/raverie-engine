@@ -55,7 +55,6 @@ void TweakableGetter(Call& call, ExceptionReport& report)
                                    (const byte*)property->UserData);
 }
 
-
 TweakableNode::TweakableNode(StringParam typeName)
 {
   Name = typeName;

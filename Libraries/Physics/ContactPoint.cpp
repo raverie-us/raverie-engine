@@ -116,7 +116,6 @@ real ContactPoint::GetRelativeVelocity()
   return Math::Dot(GetWorldNormalTowardsOther(), pointVelocity);
 }
 
-
 ContactPointRange::ContactPointRange()
 {
   mPointIndex = 0;

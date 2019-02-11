@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Generated Wave Node
+// Generated Wave Node
 
 /// Plays audio using the specified type of generated wave
 class GeneratedWaveNode : public SoundNode
@@ -84,7 +84,7 @@ private:
   void InterpolateVolumeThreaded(float volume, float time);
 };
 
-//ADSR Envelope
+// ADSR Envelope
 
 /// Used to control harmonics of notes played by the AdditiveSynthNode
 class AdsrEnvelope
@@ -122,7 +122,7 @@ public:
   float mReleaseTime;
 };
 
-//Harmonic Data
+// Harmonic Data
 
 class HarmonicData
 {
@@ -147,7 +147,7 @@ public:
   SynthWaveType::Enum mWaveType;
 };
 
-//Note Harmonic
+// Note Harmonic
 
 class NoteHarmonic
 {
@@ -170,7 +170,7 @@ private:
   float mVolume;
 };
 
-//AdditiveNote
+// AdditiveNote
 
 // used by AdditiveSynthNode
 class AdditiveNote
@@ -191,7 +191,7 @@ private:
   HarmonicsListType Harmonics;
 };
 
-//Additive Synth Node
+// Additive Synth Node
 
 /// Generates audio using additive synthesis
 class AdditiveSynthNode : public SoundNode
@@ -245,7 +245,7 @@ private:
   NotesMapType CurrentNotesMapThreaded;
 };
 
-//Microphone Input Node
+// Microphone Input Node
 
 /// Receives input from a microphone and passes the audio data to its output
 /// SoundNodes
@@ -287,7 +287,7 @@ private:
 /// efficient than RaisedCosine but not as smooth.</param>
 DeclareEnum4(GranularSynthWindows, Linear, Parabolic, RaisedCosine, Trapezoid);
 
-//Grain Window
+// Grain Window
 
 class GrainWindow
 {
@@ -312,7 +312,7 @@ public:
   GranularSynthWindows::Enum mType;
 };
 
-//Linear Grain Window
+// Linear Grain Window
 
 class LinearGrainWindow : public GrainWindow
 {
@@ -326,7 +326,7 @@ public:
   unsigned mHalfLength;
 };
 
-//Cosine Grain Window
+// Cosine Grain Window
 
 class RaisedCosineGrainWindow : public GrainWindow
 {
@@ -354,7 +354,7 @@ public:
   float y2;
 };
 
-//Parabolic Window
+// Parabolic Window
 
 class ParabolicGrainWindow : public GrainWindow
 {
@@ -370,7 +370,7 @@ public:
   float mCurve;
 };
 
-//Trapezoid Window
+// Trapezoid Window
 
 class TrapezoidGrainWindow : public GrainWindow
 {
@@ -395,7 +395,7 @@ public:
   State mCurrentState;
 };
 
-//Grain
+// Grain
 
 class Grain
 {
@@ -430,7 +430,7 @@ public:
   GrainWindow* mWindow;
 };
 
-//Granular Synth Node
+// Granular Synth Node
 
 class GranularSynthNode : public SoundNode
 {

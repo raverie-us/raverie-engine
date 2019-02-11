@@ -8,7 +8,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Decoded Packet
+// Decoded Packet
 
 DecodedPacket::DecodedPacket(unsigned bufferSize) : mSamples(bufferSize)
 {
@@ -27,7 +27,7 @@ DecodedPacket& DecodedPacket::operator=(const DecodedPacket& other)
   return *this;
 }
 
-//Packet Decoder
+// Packet Decoder
 
 SingleChannelPacketDecoder::~SingleChannelPacketDecoder()
 {
@@ -56,7 +56,7 @@ void SingleChannelPacketDecoder::DecodePacket(const byte* packetData,
       PacketDecoder::DecodePacket(packetData, dataSize, mDecoder, &decodedData);
 }
 
-//Packet Decoder
+// Packet Decoder
 
 int PacketDecoder::DecodePacket(const byte* packetData,
                                 unsigned dataSize,
@@ -255,7 +255,7 @@ int PacketDecoder::GetPacketFromFile(byte* packetDataToWrite,
   return packetDataSize;
 }
 
-//File Decoder
+// File Decoder
 
 OsInt StartThreadForDecoding(void* data)
 {
@@ -381,7 +381,7 @@ void AudioFileDecoder::ClearData()
   PacketDecoder::DestroyDecoders(mDecoders, mChannels);
 }
 
-//Decompressed File Decoder
+// Decompressed File Decoder
 
 DecompressedDecoder::DecompressedDecoder(Status& status,
                                          const String& fileName,
@@ -492,7 +492,7 @@ void DecompressedDecoder::ClearData()
   }
 }
 
-//Streaming Decoder
+// Streaming Decoder
 
 StreamingDecoder::StreamingDecoder(Status& status,
                                    File* inputFile,

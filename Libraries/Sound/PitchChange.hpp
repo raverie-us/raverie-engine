@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Pitch Change Handler
+// Pitch Change Handler
 
 class PitchChangeHandler
 {

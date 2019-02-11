@@ -19,7 +19,7 @@ Tweakable(float, ButtonSpacing, 2.0f, cLocation);
 Tweakable(float, ElementSpacing, 1.0f, cLocation);
 } // namespace WebBrowserUi
 
-//WebBrowserWidget
+// WebBrowserWidget
 ZilchDefineType(WebBrowserWidget, builder, type)
 {
 }

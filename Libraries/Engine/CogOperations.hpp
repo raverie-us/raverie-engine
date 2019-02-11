@@ -88,7 +88,7 @@ public:
   Vec3 mScale;
 };
 
-//Attach Operation
+// Attach Operation
 class AttachOperation : public Operation
 {
 public:
@@ -115,7 +115,7 @@ public:
   bool mSpaceWasModified;
 };
 
-//Detach Operation
+// Detach Operation
 class DetachOperation : public Operation
 {
 public:

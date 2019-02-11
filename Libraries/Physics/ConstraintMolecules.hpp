@@ -29,9 +29,9 @@ struct ConstraintMolecule
 };
 
 /// Used to give constraints an array of molecules where the underlying
-/// structure may be larger than a fragment. This is so the same code path can be
-/// taken for anything that wants to store an array of ConstraintMolecules plus
-/// something else.
+/// structure may be larger than a fragment. This is so the same code path can
+/// be taken for anything that wants to store an array of ConstraintMolecules
+/// plus something else.
 struct MoleculeWalker
 {
   MoleculeWalker();

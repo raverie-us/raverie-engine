@@ -184,7 +184,6 @@ void ListSource::Selected(DataIndex index)
   mDispatcher.Dispatch(Events::DataActivated, &e);
 }
 
-
 // Add spaces to any enum with names that are upper camel case
 String AddSpacesToUpperCamelCase::Convert(cstr input)
 {
@@ -221,7 +220,6 @@ String AddSpacesToUpperCamelCase::Convert(cstr input)
   // Return the string builder's string
   return builder.ToString();
 }
-
 
 EnumSource::EnumSource()
 {

@@ -13,7 +13,6 @@
 namespace Zero
 {
 
-
 ContentItem* MakeDataContent(ContentInitializer& initializer)
 {
   String fullPath =

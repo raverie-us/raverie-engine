@@ -9,7 +9,7 @@ namespace Zero
 // custom templated handle type. See below and in CommonHandleManagers.cpp for
 // examples.
 
-//Basic handles
+// Basic handles
 typedef ReferenceCounted<EmptyClass> ReferenceCountedEmpty;
 typedef SafeId<u32, EmptyClass> SafeId32;
 typedef SafeId<u64, EmptyClass> SafeId64;
@@ -22,7 +22,7 @@ typedef ReferenceCountedThreadSafeId<u32, EmptyClass>
 typedef ReferenceCountedThreadSafeId<u64, EmptyClass>
     ReferenceCountedThreadSafeId64;
 
-//Object handles
+// Object handles
 typedef ReferenceCounted<Object> ReferenceCountedObject;
 typedef SafeId<u32, Object> SafeId32Object;
 typedef SafeId<u64, Object> SafeId64Object;
@@ -35,7 +35,7 @@ typedef ReferenceCountedThreadSafeId<u32, Object>
 typedef ReferenceCountedThreadSafeId<u64, Object>
     ReferenceCountedThreadSafeId64Object;
 
-//EventObject handles
+// EventObject handles
 typedef ReferenceCounted<EventObject> ReferenceCountedEventObject;
 typedef SafeId<u32, EventObject> SafeId32EventObject;
 typedef SafeId<u64, EventObject> SafeId64EventObject;

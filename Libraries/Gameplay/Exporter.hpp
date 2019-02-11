@@ -44,7 +44,7 @@ void CopyFileCallback(StringParam fullPath,
                       void* userData);
 } // namespace ExportUtility
 
-//ExportTarget
+// ExportTarget
 class ExportTarget
 {
 public:
@@ -69,7 +69,7 @@ public:
   String mTargetName;
 };
 
-//WindowsExportTarget
+// WindowsExportTarget
 class WindowsExportTarget : public ExportTarget
 {
 public:
@@ -84,7 +84,7 @@ public:
                               Guid guid) override;
 };
 
-//EmscriptenExportTarget
+// EmscriptenExportTarget
 class EmscriptenExportTarget : public ExportTarget
 {
 public:
@@ -99,7 +99,7 @@ public:
                               Guid guid) override;
 };
 
-//ExportTargetEntry
+// ExportTargetEntry
 struct ExportTargetSource;
 struct ExportTargetEntry
 {
@@ -109,7 +109,7 @@ struct ExportTargetEntry
   bool Export;
 };
 
-//ExportTargetList
+// ExportTargetList
 struct ExportTargetList
 {
   ExportTargetList();

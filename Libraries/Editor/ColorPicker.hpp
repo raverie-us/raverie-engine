@@ -29,7 +29,6 @@ public:
   Vec4 Color;
 };
 
-
 // Eye Dropper for picking colors from desktop
 class ColorEyeDropper : public MouseManipulation
 {
@@ -44,7 +43,6 @@ public:
 
 // Open the eye dropper
 ColorEyeDropper* OpenEyeDropper(Mouse* mouse, Composite* parent);
-
 
 // Widget that display color in a box
 class ColorDisplay : public Composite
@@ -62,7 +60,6 @@ private:
   TextureView* mColorDisplay;
   Label* mText;
 };
-
 
 /// Color Picker widget
 class ColorPicker : public Composite

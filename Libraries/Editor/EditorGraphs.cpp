@@ -31,7 +31,7 @@ class FpsSampler : public DataSampler
   }
 };
 
-//Oscilloscope sampler
+// Oscilloscope sampler
 class OscilloscopeSampler : public DataSampler
 {
   typedef OscilloscopeSampler ZilchSelf;

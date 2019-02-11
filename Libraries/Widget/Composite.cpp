@@ -397,7 +397,6 @@ Widget* Find(StringParam name,
   return nullptr;
 }
 
-
 // Find any child widget by name
 Widget* FindWidgetByName(StringParam name,
                          UiTraversal::Enum traversalType,
@@ -407,7 +406,7 @@ Widget* FindWidgetByName(StringParam name,
   return Find(name, traversalType, index, parent);
 }
 
-//Colored Composite
+// Colored Composite
 ColoredComposite::ColoredComposite(Composite* parent,
                                    Vec4Param color,
                                    AttachType::Enum attachType) :

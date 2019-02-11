@@ -13,7 +13,7 @@ public:
   typedef StaticAabbTree<uint> AabbTree;
 
   //-------------------------------------------------------------------Resource
-  //Interface
+  // Interface
   void Serialize(Serializer& stream) override;
   void Initialize();
   void Unload() override;
@@ -26,7 +26,7 @@ public:
   static HandleOf<PhysicsMesh> CreateRuntime();
 
   //-------------------------------------------------------------------
-  //GenericPhysicsMesh Interface
+  // GenericPhysicsMesh Interface
   void ForceRebuild() override;
   void RebuildMidPhase() override;
   void GenerateInternalEdgeData() override;

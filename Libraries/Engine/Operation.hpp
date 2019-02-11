@@ -240,7 +240,7 @@ public:
   HashSet<Cog*> mDestroyedObjects;
 
   //-----------------------------------------------------------------------------------
-  //Side Effects
+  // Side Effects
   static void StartListeningForSideEffects();
   static bool IsListeningForSideEffects();
   static void RegisterSideEffect(HandleParam object,
@@ -295,7 +295,7 @@ public:
 typedef u64 UndoObjectId;
 const UndoObjectId cInvalidUndoObjectId = 0;
 
-//Undo Handle
+// Undo Handle
 class UndoHandle
 {
 public:
@@ -332,7 +332,7 @@ T UndoHandle::Get() const
   return GetHandle().Get<T>();
 }
 
-//Undo Handle Of
+// Undo Handle Of
 template <typename T>
 class UndoHandleOf : public UndoHandle
 {
@@ -355,7 +355,7 @@ public:
   }
 };
 
-//Undo Map
+// Undo Map
 class UndoMap
 {
 public:

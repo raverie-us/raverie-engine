@@ -23,7 +23,7 @@ DeclareEnum17(DataTokenType,
               False,
               Var);
 
-//Data Token
+// Data Token
 struct DataToken
 {
   DataToken() : mType(DataTokenType::None)
@@ -34,7 +34,7 @@ struct DataToken
   uint mLineNumber;
 };
 
-//Data Tree Tokenizer
+// Data Tree Tokenizer
 class DataTreeTokenizer
 {
 public:

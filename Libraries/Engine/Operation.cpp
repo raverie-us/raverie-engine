@@ -807,7 +807,7 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
   }
 }
 
-//Side Effects
+// Side Effects
 void OperationQueue::StartListeningForSideEffects()
 {
   ErrorIf(sListeningForSideEffects == true,
@@ -919,7 +919,7 @@ OperationQueue::SideEffectContext::SideEffectContext(HandleParam context,
   mRootPath = path;
 }
 
-//Undo Handle
+// Undo Handle
 UndoHandle::UndoHandle()
 {
   mUndoId = cInvalidUndoObjectId;
@@ -955,7 +955,7 @@ void UndoHandle::UpdateObject(HandleParam newObject)
   mUndoId = Z::gUndoMap->UpdateUndoId(mUndoId, newObject);
 }
 
-//Undo Map
+// Undo Map
 void UndoMap::Initialize()
 {
   Z::gUndoMap = new UndoMap();

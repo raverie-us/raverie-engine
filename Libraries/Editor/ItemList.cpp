@@ -36,7 +36,7 @@ struct SortItem
   }
 };
 
-//Item Selector
+// Item Selector
 ZilchDefineType(ItemList, builder, type)
 {
 }
@@ -240,7 +240,7 @@ void ItemList::OnItemSelected(ObjectEvent* e)
   SetSelectedItem(item->mItemName);
 }
 
-//Weighted Composite
+// Weighted Composite
 ZilchDefineType(WeightedComposite, builder, type)
 {
 }
@@ -262,7 +262,7 @@ bool WeightedComposite::operator<(const WeightedComposite& rhs)
   return mWeight < rhs.mWeight;
 }
 
-//Item Group
+// Item Group
 ZilchDefineType(ItemGroup, builder, type)
 {
 }
@@ -317,7 +317,7 @@ void ItemGroup::Sort()
   }
 }
 
-//Item
+// Item
 ZilchDefineType(Item, builder, type)
 {
 }
@@ -407,7 +407,7 @@ void Item::UpdateTransform()
   WeightedComposite::UpdateTransform();
 }
 
-//Item Grid Layout
+// Item Grid Layout
 ItemGridLayout::ItemGridLayout(float itemHeight, uint columns) :
     Layout(Thickness::cZero),
     mItemHeight(itemHeight),

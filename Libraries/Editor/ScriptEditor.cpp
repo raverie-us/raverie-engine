@@ -1402,7 +1402,7 @@ void ScriptEditor::OnMouseMove(MouseEvent* event)
   codeInspector->AttemptGetDefinition(this, cursor, definition);
 
   //// Don't keep showing the tooltip if we're at the same location and moving
-  ///the mouse slightly
+  /// the mouse slightly
   if (definition.ElementLocation.IsSamePositionAndOrigin(mLastLocation))
     return;
 

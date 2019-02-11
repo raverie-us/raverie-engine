@@ -972,7 +972,6 @@ Vec3 TranslateGizmo::GetStartPosition()
   return mStartPosition;
 }
 
-
 ZilchDefineType(ScaleGizmo, builder, type)
 {
   ZeroBindComponent();

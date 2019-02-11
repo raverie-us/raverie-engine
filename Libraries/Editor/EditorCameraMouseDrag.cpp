@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 EditorCameraMouseDrag::EditorCameraMouseDrag(
     Mouse* mouse,
     EditorViewport* editorViewport,

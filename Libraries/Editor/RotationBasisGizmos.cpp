@@ -13,7 +13,7 @@ DefineEvent(RotationBasisGizmoEnd);
 DefineEvent(RotationBasisAabbQuery);
 } // namespace Events
 
-//RotationBasisGizmoInitializationEvent
+// RotationBasisGizmoInitializationEvent
 ZilchDefineType(RotationBasisGizmoInitializationEvent, builder, type)
 {
   ZilchBindFieldProperty(mIntData);

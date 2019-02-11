@@ -3,7 +3,6 @@
 namespace Zero
 {
 
-
 template <typename ClientDataType>
 AvlDynamicTreeNode<ClientDataType>::AvlDynamicTreeNode()
 {
@@ -55,7 +54,6 @@ AvlDynamicTreeNode<ClientDataType>::GetSibling()
     return mParent->mChild2;
   return mParent->mChild1;
 }
-
 
 template <typename ClientDataType>
 void AvlDynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root,
@@ -217,7 +215,6 @@ void AvlDynamicTreePolicy<ClientDataType>::FixAabbAndHeight(NodeType* node)
   node->mAabb = child1->mAabb;
   node->mAabb.Combine(child2->mAabb);
 }
-
 
 template <typename ClientDataType>
 AvlDynamicAabbTree<ClientDataType>::AvlDynamicAabbTree()

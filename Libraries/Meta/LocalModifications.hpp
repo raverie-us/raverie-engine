@@ -12,12 +12,12 @@ DeclareStringConstant(Instance);
 // Forward declarations
 class ObjectRestoreState;
 
-//Contextual Object State
+// Contextual Object State
 class ObjectState
 {
 public:
   //---------------------------------------------------------------------------------------
-  //Child Id
+  // Child Id
   struct ChildId
   {
     explicit ChildId(StringParam typeName = "", Guid id = cInvalidUniqueId);
@@ -88,7 +88,7 @@ public:
   bool mChildOrderModified;
 };
 
-//Object Modifications
+// Object Modifications
 class LocalModifications : public ExplicitSingleton<LocalModifications, Object>
 {
 public:
@@ -153,7 +153,7 @@ private:
   HashMap<Handle, ObjectState*> mObjectStates;
 };
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 DeclareEnum2(InheritIdContext,
              // This is used when saving a modified instance of an object (e.g.
              // a Cog inside a level file).
@@ -200,7 +200,7 @@ public:
   static bool InheritsFromData(HandleParam object);
 };
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 // Implement this if the object itself can inherit from other data (e.g. Cog,
 // Material)
 class MetaDataInheritanceRoot : public MetaDataInheritance

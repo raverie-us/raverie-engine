@@ -15,11 +15,11 @@ class UiWidget;
 // Typedefs
 typedef Array<UiWidget*> UiWidgetArray;
 
-//Focus
+// Focus
 DeclareEnum2(UiFocusDirection, Forward, Backward);
 void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction);
 
-//Events
+// Events
 namespace Events
 {
 
@@ -47,7 +47,7 @@ public:
 
 DeclareEnum2(Axis, X, Y);
 
-//Sizing
+// Sizing
 // Used for determining how this widget should be sized when in a layout.
 DeclareEnum3(UiSizePolicy,
              Auto,  // Uses default widget size
@@ -58,7 +58,7 @@ DeclareEnum3(UiSizePolicy,
 DeclareEnum3(UiVerticalAlignment, Bottom, Center, Top);
 DeclareEnum3(UiHorizontalAlignment, Left, Center, Right);
 
-//Dock Mode
+// Dock Mode
 // We can't use our bitfield declaration macros because we need to set
 // custom values for the different entries.
 namespace UiDockMode
@@ -83,13 +83,13 @@ uint GetAxis(UiDockMode::Enum mode);
 
 } // namespace UiDockMode
 
-//Transform Update State
+// Transform Update State
 DeclareEnum3(UiTransformUpdateState,
              Updated,      // The Widget is completely up to date
              ChildUpdate,  // A children of this Widget needs updating
              LocalUpdate); // This Widget needs updating
 
-//Widget Flags
+// Widget Flags
 DeclareBitField11(
     UiWidgetFlags,
     // If inactive, it will not draw this Widget and all children. It will
@@ -130,7 +130,7 @@ DeclareBitField11(
     mFlags.SetState(UiWidgetFlags::flag, state);                               \
   }
 
-//Widget Cast Results Range
+// Widget Cast Results Range
 class UiWidgetCastResultsRange
 {
 public:
@@ -154,7 +154,7 @@ public:
   uint mIndex;
 };
 
-//Widget
+// Widget
 typedef ComponentHierarchy<UiWidget> UiWidgetComponentHierarchy;
 class UiWidget : public UiWidgetComponentHierarchy
 {

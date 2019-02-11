@@ -7,7 +7,7 @@ struct OpusDecoder;
 namespace Zero
 {
 
-//Decoded Packet
+// Decoded Packet
 
 class DecodedPacket
 {
@@ -24,7 +24,7 @@ public:
   BufferType mSamples;
 };
 
-//Channel Packet Decoder
+// Channel Packet Decoder
 
 class SingleChannelPacketDecoder
 {
@@ -49,7 +49,7 @@ private:
   OpusDecoder* mDecoder;
 };
 
-//Packet Decoder
+// Packet Decoder
 
 class PacketDecoder
 {
@@ -98,7 +98,7 @@ public:
                                ThreadLock* lockObject);
 };
 
-//File Decoder
+// File Decoder
 
 typedef void (*FileDecoderCallback)(DecodedPacket*, void* data);
 
@@ -151,7 +151,7 @@ protected:
   Semaphore DecodingSemaphore;
 };
 
-//Decompressed Decoder
+// Decompressed Decoder
 
 class DecompressedDecoder : public AudioFileDecoder
 {
@@ -184,7 +184,7 @@ private:
   unsigned mDataSize;
 };
 
-//Streaming Decoder
+// Streaming Decoder
 
 class StreamingDecoder : public AudioFileDecoder
 {

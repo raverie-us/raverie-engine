@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Array
+// Meta Array
 ZilchDefineType(MetaArray, builder, type)
 {
 }

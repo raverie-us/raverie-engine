@@ -494,7 +494,6 @@ void TreeRow::Refresh()
   this->RefreshData();
 }
 
-
 TreeRow::~TreeRow()
 {
   // Remove from parent

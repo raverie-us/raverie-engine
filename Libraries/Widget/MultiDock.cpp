@@ -93,7 +93,6 @@ DockingArea* NextInDirection(MultiDock* multiDock,
   }
 }
 
-
 // Hint area for docking
 class HintRegion : public Composite
 {
@@ -728,7 +727,6 @@ public:
     this->Destroy();
   }
 };
-
 
 MultiDocker::MultiDocker(Widget* widget, MultiDock* owner)
 {

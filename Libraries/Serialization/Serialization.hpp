@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Attributes
+// Attributes
 namespace SerializationAttributes
 {
 DeclareStringConstant(Id);

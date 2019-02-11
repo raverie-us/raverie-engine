@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 void DirectBuilderComponent::Serialize(Serializer& stream)
 {
   SerializeName(Name);

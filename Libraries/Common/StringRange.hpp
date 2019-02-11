@@ -118,7 +118,7 @@ public:
   cstr mEnd;
 };
 
-//Split Range
+// Split Range
 /// A range that splits a StringRange based upon a separator range.
 class ZeroShared StringSplitRange
 {
@@ -251,7 +251,7 @@ inline bool operator<(const StringRange& left, const String& right)
   return strncmp(left.Data(), right.Data(), left.SizeInBytes()) < 0;
 }
 
-//range vs cstr
+// range vs cstr
 inline bool operator==(const StringRange& left, cstr right)
 {
   return left.SizeInBytes() == strlen(right) &&

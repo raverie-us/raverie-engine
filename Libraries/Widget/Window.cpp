@@ -115,7 +115,6 @@ const String WindowElementsName = "WindowElements";
 const String CloseIcon = "Close";
 const String ModifiedIcon = "Modified";
 
-
 TabWidget::TabWidget(Composite* parent) : Composite(parent)
 {
   static const String className = "Tab";

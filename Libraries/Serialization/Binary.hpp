@@ -35,7 +35,7 @@ public:
   }
 
   //------------------------------------------------------------ Polymorphic
-  //Serialization
+  // Serialization
 
   void StartPolymorphicInternal(const PolymorphicInfo& info) override
   {
@@ -60,7 +60,7 @@ public:
   }
 
   //-------------------------------------------------------  Fundamental
-  //serialization
+  // serialization
   template <typename type>
   bool FundamentalType(type& value)
   {
@@ -69,7 +69,7 @@ public:
   }
 
   //------------------------------------------------------------ String
-  //Serialization
+  // Serialization
   bool StringField(cstr typeName,
                    cstr fieldName,
                    StringRange& stringRange) override
@@ -81,7 +81,7 @@ public:
   }
 
   //------------------------------------------------------------ Enum
-  //Serialization
+  // Serialization
   bool EnumField(cstr enumTypeName,
                  cstr fieldName,
                  uint& enumValue,
@@ -93,7 +93,7 @@ public:
   }
 
   //------------------------------------------------------------ Array
-  //Serialization
+  // Serialization
   bool ArrayField(cstr typeName,
                   cstr fieldName,
                   byte* data,
@@ -153,7 +153,7 @@ public:
   }
 
   //-------------------------------------------------------  Fundamental
-  //serialization
+  // serialization
   template <typename type>
   bool FundamentalType(type& value)
   {
@@ -162,12 +162,12 @@ public:
   }
 
   //------------------------------------------------------------ String
-  //Serialization
+  // Serialization
 
   /// Each binary loader must handle string separately
 
   //------------------------------------------------------------ Polymorphic
-  //Serialization
+  // Serialization
   bool GetPolymorphic(PolymorphicNode& node) override
   {
     // Read the integer based type id from the file
@@ -198,7 +198,7 @@ public:
   }
 
   //------------------------------------------------------------ Array
-  //Serialization
+  // Serialization
   bool ArrayField(cstr typeName,
                   cstr fieldName,
                   byte* data,

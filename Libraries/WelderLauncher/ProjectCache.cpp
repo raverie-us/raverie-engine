@@ -62,7 +62,7 @@ void LauncherProjectInfo::SetBuildId(const BuildId& buildId)
 #define SetChildComponentPropertyValueMacro(component, propertyName, newValue) \
   SetChildComponentPropertyValue(#component, propertyName, newValue)
 
-//CachedProject
+// CachedProject
 CachedProject::CachedProject()
 {
   mProjectCog = nullptr;
@@ -455,7 +455,7 @@ void CachedProject::SetProjectPropertyValue(StringParam propertyName,
   }
 }
 
-//ProjectCache
+// ProjectCache
 ProjectCache::ProjectCache(Cog* configCog)
 {
   mConfigCog = configCog;

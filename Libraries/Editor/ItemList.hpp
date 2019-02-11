@@ -7,7 +7,7 @@ namespace Zero
 class Item;
 class ItemGroup;
 
-//Item Selector
+// Item Selector
 class ItemList : public Composite
 {
 public:
@@ -46,7 +46,7 @@ private:
   Item* mSelectedItem;
 };
 
-//Weighted Composite
+// Weighted Composite
 class WeightedComposite : public ColoredComposite
 {
 public:
@@ -59,7 +59,7 @@ public:
   uint mWeight;
 };
 
-//Item Group
+// Item Group
 class ItemGroup : public WeightedComposite
 {
 public:
@@ -79,7 +79,7 @@ public:
   uint mColumns;
 };
 
-//Item
+// Item
 class Item : public WeightedComposite
 {
 public:
@@ -109,7 +109,7 @@ public:
   Element* mFocusHighlight;
 };
 
-//Item Grid Layout
+// Item Grid Layout
 class ItemGridLayout : public Layout
 {
 public:

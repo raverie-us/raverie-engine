@@ -8,7 +8,7 @@ ZilchDefineType(MetaOwner, builder, type)
 {
 }
 
-//Meta Component
+// Meta Component
 ZilchDefineType(CogComponentMeta, builder, type)
 {
 }
@@ -100,7 +100,7 @@ bool CogComponentMeta::IsDependentOn(BoundType* componentType,
   return false;
 }
 
-//Meta Composition
+// Meta Composition
 ZilchDefineType(MetaComposition, builder, type)
 {
 }
@@ -555,7 +555,7 @@ String MetaComposition::GetAddName()
   return mComponentType->Name;
 }
 
-//Meta Owner
+// Meta Owner
 Handle MetaOwner::GetOwner(HandleParam object)
 {
   return mGetOwner(object);

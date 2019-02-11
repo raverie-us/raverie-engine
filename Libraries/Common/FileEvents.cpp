@@ -9,7 +9,6 @@ const float cSecondsModified = 0.5f;
 const float cCleanTime = 20.0f;
 const TimeType cFileIsOpen = 1;
 
-
 FileModifiedState::FileModifiedState()
 {
   mLastCleanup = Time::Clock();

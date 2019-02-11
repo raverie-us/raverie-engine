@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Ring Buffer
+// Ring Buffer
 
 int RingBuffer::Initialize(unsigned elementSizeBytes,
                            unsigned elementCountInBuffer,

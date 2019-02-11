@@ -17,7 +17,7 @@ DefineEvent(WebBrowserDownloadStarted);
 DefineEvent(WebBrowserDownloadUpdated);
 } // namespace Events
 
-//WebBrowserEvent
+// WebBrowserEvent
 ZilchDefineType(WebBrowserEvent, builder, type)
 {
   ZilchBindGetterProperty(WebBrowser);
@@ -28,14 +28,14 @@ WebBrowser* WebBrowserEvent::GetWebBrowser()
   return mWebBrowser;
 }
 
-//WebBrowserPopupCreateEvent
+// WebBrowserPopupCreateEvent
 ZilchDefineType(WebBrowserPopupCreateEvent, builder, type)
 {
   ZilchBindFieldProperty(mName);
   ZilchBindFieldProperty(mUrl);
 }
 
-//WebBrowserCursorEvent
+// WebBrowserCursorEvent
 ZilchDefineType(WebBrowserCursorEvent, builder, type)
 {
   ZilchBindFieldProperty(mCursor);
@@ -46,7 +46,7 @@ WebBrowserCursorEvent::WebBrowserCursorEvent()
   mCursor = Cursor::Arrow;
 }
 
-//WebBrowserPointQueryEvent
+// WebBrowserPointQueryEvent
 ZilchDefineType(WebBrowserPointQueryEvent, builder, type)
 {
   ZilchBindFieldProperty(mBrowserPixelPosition);
@@ -59,7 +59,7 @@ WebBrowserPointQueryEvent::WebBrowserPointQueryEvent()
   mMonitorPixelPosition = IntVec2::cZero;
 }
 
-//WebBrowserConsoleEvent
+// WebBrowserConsoleEvent
 ZilchDefineType(WebBrowserConsoleEvent, builder, type)
 {
   ZilchBindFieldProperty(mMessage);
@@ -73,13 +73,13 @@ WebBrowserConsoleEvent::WebBrowserConsoleEvent()
   mHandled = false;
 }
 
-//WebBrowserTextEvent
+// WebBrowserTextEvent
 ZilchDefineType(WebBrowserTextEvent, builder, type)
 {
   ZilchBindFieldProperty(mText);
 }
 
-//WebBrowserUrlEvent
+// WebBrowserUrlEvent
 ZilchDefineType(WebBrowserUrlEvent, builder, type)
 {
   ZilchBindFieldProperty(mUrl);
@@ -91,7 +91,7 @@ WebBrowserUrlEvent::WebBrowserUrlEvent()
   mHandled = false;
 }
 
-//WebBrowserDownloadEvent
+// WebBrowserDownloadEvent
 ZilchDefineType(WebBrowserDownloadEvent, builder, type)
 {
   ZilchBindFieldProperty(mFilePath);
@@ -120,7 +120,7 @@ WebBrowserDownloadEvent::WebBrowserDownloadEvent()
   mCancel = false;
 }
 
-//WebBrowserManager
+// WebBrowserManager
 ZilchDefineType(WebBrowserManager, builder, type)
 {
 }
@@ -151,7 +151,7 @@ void WebBrowserManager::EnsurePlatformInitailized()
   Browser::PlatformCreate();
 }
 
-//WebBrowserSetup
+// WebBrowserSetup
 ZilchDefineType(WebBrowserSetup, builder, type)
 {
   ZilchBindFieldProperty(mUrl);

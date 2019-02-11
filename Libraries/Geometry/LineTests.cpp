@@ -22,7 +22,6 @@ void MakeBasisFromY(Vec3Param yAxis, Mat3Ptr basis)
 
 } // namespace
 
-
 // Intersect a line with an axis-aligned bounding box.
 Type LineAabb(Vec3Param linePoint,
               Vec3Param lineDirection,

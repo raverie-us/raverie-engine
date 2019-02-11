@@ -41,7 +41,6 @@ namespace Z
 ContentSystem* gContentSystem;
 } // namespace Z
 
-
 ContentComponent* ContentComponentFactory::CreateFromName(StringRange name)
 {
   ContentCreatorMapType::range r = Creators.Find(name);
@@ -52,7 +51,6 @@ ContentComponent* ContentComponentFactory::CreateFromName(StringRange name)
   ContentComponent* component = (*creator)();
   return component;
 }
-
 
 void InitializeContentSystem()
 {

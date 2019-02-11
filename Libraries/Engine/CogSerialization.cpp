@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Cog Serialization
+// Cog Serialization
 bool CogSerialization::ShouldSave(Cog& cog)
 {
   uint flagsStopSaving = CogFlags::Transient | CogFlags::Destroyed;

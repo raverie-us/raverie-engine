@@ -448,7 +448,7 @@ void TextSaver::AddSubtractivePolymorphicNode(cstr typeName, Guid nodeId)
   else
   {
     /* Example:
-    
+
       Model [LocallyRemoved]
       {
       }

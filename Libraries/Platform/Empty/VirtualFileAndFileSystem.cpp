@@ -482,7 +482,6 @@ void FileRange::PopFront()
   self->mRange.PopFront();
 }
 
-
 const int File::PlatformMaxPath = 4096;
 
 struct FilePrivateData

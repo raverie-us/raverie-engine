@@ -4,14 +4,14 @@
 namespace Zero
 {
 
-//Attribute Status
+// Attribute Status
 void AttributeStatus::SetFailed(CodeLocation& location, StringParam message)
 {
   mLocation = location;
   Status::SetFailed(message);
 }
 
-//Attribute Extensions
+// Attribute Extensions
 AttributeExtensions::~AttributeExtensions()
 {
   DeleteObjectsIn(mClassExtensions.Values());
@@ -183,7 +183,7 @@ AttributeExtension* AttributeExtensions::RegisterExtension(
   return extension;
 }
 
-//Attribute Extension
+// Attribute Extension
 AttributeExtension::AttributeExtension(StringParam name) :
     mAttributeName(name),
     mMustBeType(nullptr),

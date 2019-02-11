@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 Vec2 CollisionMatrixItem::mPadding = Pixels(1, 1);
 
 namespace CollisionTableSettings
@@ -284,7 +283,6 @@ void CollisionGroupLabel::OnRemoveGroup(Event* event)
   mTableEditor->RefreshAll();
 }
 
-
 /// Sorts the collision groups alphabetically by their name. This is used since
 /// the groups are internally stored in a hashmap and the order will change.
 /// To make the editor more usable sort them by name.
@@ -295,7 +293,6 @@ struct GroupSorter
     return lhs->Name < rhs->Name;
   }
 };
-
 
 CollisionTableMatrix::CollisionTableMatrix(Composite* parent,
                                            CollisionTableEditor* tableEditor) :
@@ -564,7 +561,6 @@ void CollisionTableMatrix::OnAddNewCollisionGroup(Event* event)
   AddResourceWindow* addWidget = OpenAddWindow(resourceType, &window);
   addWidget->ShowResourceTypeSearch(false);
 }
-
 
 CollisionTableEditor::CollisionTableEditor(Composite* parent,
                                            CollisionTable* table) :

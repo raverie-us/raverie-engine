@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 ZilchDefineType(ViewportMouseEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -84,7 +83,6 @@ Vec3 ViewportMouseEvent::ToWorldPlane(Vec3Param worldPlaneNormal,
   return viewport->ScreenToWorldPlane(
       Position, worldPlaneNormal, worldPlanePosition);
 }
-
 
 ZilchDefineType(ReactiveViewport, builder, type)
 {

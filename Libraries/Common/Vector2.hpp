@@ -299,7 +299,6 @@ ZeroShared Vector2 Refract(Vec2Param input,
 /// Get the angle between the two vectors in radians.
 ZeroShared real AngleBetween(Vec2Param a, Vec2Param b);
 
-
 /// Clamps each component of a vector between min/max.
 ZeroShared void Clamp(Vec2Ptr vec, real min, real max);
 

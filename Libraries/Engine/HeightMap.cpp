@@ -20,7 +20,7 @@ ZilchDefineType(HeightMapEvent, builder, type)
   ZeroBindDocumented();
 }
 
-//HeightPatch
+// HeightPatch
 ZilchDefineType(HeightPatch, builder, type)
 {
 }
@@ -54,7 +54,6 @@ void HeightPatch::SetHeight(CellIndex index, float height)
   ErrorIf(linearIndex > TotalSize, "Invalid height index");
   Heights[linearIndex] = height;
 }
-
 
 HeightMapCellRange::HeightMapCellRange(HeightMap* heightMap,
                                        Vec2 position,
@@ -1703,8 +1702,9 @@ void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart,
 {
   // if the raycast is straight down, then the projected ray will cause some bad
   // things to happen. Just set a simple set of bounds for the min/max so that
-  // we'll check at least once (we should be prevented from infinite looping at a
-  //different spot)
+  // we'll check at least once (we should be prevented from infinite looping at
+  // a
+  // different spot)
   if (mProjectedRayDir.Length() == real(0))
   {
     minT = 0;
@@ -1765,7 +1765,7 @@ void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart,
   Vec3 aabbMax = Vec3(maxLocal.x, maxHeight, maxLocal.y);
   // cast the local ray against full aabb and then limit to that range
   //(use the interval test because the point test can return p0 = p1 when the
-  //ray starts inside the aabb
+  // ray starts inside the aabb
   if (Intersection::RayAabb(
           localRayStart, localRayDir, aabbMin, aabbMax, &interval) !=
       Intersection::None)

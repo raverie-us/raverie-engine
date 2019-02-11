@@ -61,7 +61,7 @@ void Spacer::SetSize(Vec2 size)
   mMinSize = size;
 }
 
-//Splitter
+// Splitter
 ZilchDefineType(Splitter, builder, type)
 {
 }

@@ -227,7 +227,6 @@ void ContentComponent::Initialize(ContentComposition* item)
   mOwner = item;
 }
 
-
 void BuilderComponent::BuildListing(ResourceListing& listing)
 {
 }

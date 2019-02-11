@@ -13,7 +13,7 @@ class Heap;
 class CogCreationContext;
 class ObjectState;
 
-//Archetype
+// Archetype
 /// An archetype is a resource containing the serialized data definition of an
 /// object. The archetype stores a binary cache of the serialization data and
 /// the source file for debugging and for archetype updating.
@@ -81,7 +81,7 @@ private:
   CachedModifications mAllCachedModifications;
 };
 
-//Archetype Manager
+// Archetype Manager
 /// Resource Manager for Archetypes.
 class ArchetypeManager : public ResourceManager
 {

@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 // Helper class for implementing Drag, and other mouse manipulations.
 // Provides relative supports functions and a basic interface.
 class MouseManipulation : public Widget

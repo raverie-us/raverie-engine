@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Audio Task
+// Audio Task
 
 AudioTask::AudioTask() : mFunction(nullptr), mObject(nullptr)
 {
@@ -32,7 +32,7 @@ AudioTask::~AudioTask()
     delete mFunction;
 }
 
-//Audio Mixer
+// Audio Mixer
 
 AudioMixer::AudioMixer() :
     mSystemChannels(2),
@@ -744,7 +744,7 @@ void AudioMixer::SetSendMicInput(bool turnOn)
     mSendMicrophoneInputData.Set(0);
 }
 
-//Audio Frame
+// Audio Frame
 
 namespace AudioChannelTranslation
 {

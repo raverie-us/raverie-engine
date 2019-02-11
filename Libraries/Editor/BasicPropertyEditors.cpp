@@ -502,7 +502,6 @@ public:
   }
 };
 
-
 // Edit a slider range
 class PropertyEditorRange : public DirectProperty
 {
@@ -1246,7 +1245,6 @@ public:
   }
 };
 
-
 template <typename vectorType, typename elementType, uint dimension>
 class PropertyEditVectorN : public PropertyEditVector
 {
@@ -1512,7 +1510,6 @@ public:
     PropertyWidget::UpdateTransform();
   }
 };
-
 
 // Color Can edit floating point color vectors and ByteColor uint
 // so these functions handle changing the variant to the correct type

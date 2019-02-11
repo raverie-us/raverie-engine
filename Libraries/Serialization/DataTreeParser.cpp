@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Data Tree Parser
+// Data Tree Parser
 bool DataTreeParser::BuildTree(DataTreeContext& context,
                                StringRange data,
                                DataNode* fileRoot)

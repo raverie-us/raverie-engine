@@ -122,7 +122,7 @@ public:
 private:
 };
 
-//Resource Meta Operations
+// Resource Meta Operations
 class ContentItemMetaOperations : public MetaOperations
 {
 public:

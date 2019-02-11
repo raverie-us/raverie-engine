@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Zero Meta Array
+// Zero Meta Array
 template <typename ArrayType>
 class ZeroMetaArray : public MetaArray
 {

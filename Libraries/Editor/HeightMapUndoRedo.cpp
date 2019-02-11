@@ -5,7 +5,6 @@
 namespace Zero
 {
 
-
 ModifiedHeightMapCell::ModifiedHeightMapCell(const HeightMapCell& cell,
                                              float originalHeight,
                                              float height)
@@ -27,7 +26,6 @@ void ModifiedHeightMapCell::Set(const HeightMapCell& cell,
   OriginalHeight = originalHeight;
   AppliedHeight = height - originalHeight;
 }
-
 
 HeightMapUndoRedo::HeightMapUndoRedo(HeightMap* heightMap, StringParam name)
 {
@@ -94,7 +92,6 @@ void HeightMapUndoRedo::Redo()
 {
   ApplyHeightHelper(1);
 }
-
 
 HeightPatchUndoRedo::HeightPatchUndoRedo(HeightMap* heightMap, StringParam name)
 {
@@ -172,7 +169,6 @@ void HeightPatchUndoRedo::Redo()
   }
 }
 
-
 ModifiedWeightMapPixel::ModifiedWeightMapPixel(PatchIndexParam index,
                                                uint x,
                                                uint y,
@@ -198,7 +194,6 @@ void ModifiedWeightMapPixel::Set(PatchIndexParam index,
   OriginalWeight = originalWeight;
   AppliedWeight = weight;
 }
-
 
 WeightMapUndoRedo::WeightMapUndoRedo(HeightMap* heightMap, StringParam name)
 {

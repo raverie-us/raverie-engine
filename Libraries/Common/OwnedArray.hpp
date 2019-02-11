@@ -6,7 +6,7 @@
 namespace Zero
 {
 
-//OwnedArray
+// OwnedArray
 
 template <typename type,
           typename Allocator = DefaultAllocator,

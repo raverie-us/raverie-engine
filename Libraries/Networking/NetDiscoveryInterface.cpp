@@ -322,9 +322,9 @@ void NetDiscoveryInterface::DispatchHost(IpAddress const& hostIp,
   GameSession* owner = static_cast<GameSession*>(mNetPeer->GetOwner());
 
   // we do all these if checks so that if they fail to get new host info, we
-  // don't clear out the old info on the NetHost. (eg. so if they fail to get the
-  // server name or something other, it doesn't clear out the server name any
-  // more, or clear the last screenshot or sent)
+  // don't clear out the old info on the NetHost. (eg. so if they fail to get
+  // the server name or something other, it doesn't clear out the server name
+  // any more, or clear the last screenshot or sent)
   if (hostData->mRefreshResult != NetRefreshResult::NoResponse)
   {
     if (!hostData->mBasicHostInfo.IsEmpty())

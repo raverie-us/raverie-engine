@@ -178,7 +178,7 @@ private:
   float mFriction;
 };
 
-//Heightmap
+// Heightmap
 class ParticleCollisionHeightmap : public ParticleAnimator
 {
 public:

@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Audio Task
+// Audio Task
 
 class AudioTask
 {
@@ -19,7 +19,7 @@ public:
   HandleOf<SoundNode> mObject;
 };
 
-//Audio Mixer
+// Audio Mixer
 
 class AudioMixer : public EventObject
 {
@@ -184,7 +184,7 @@ private:
   bool mSendMicrophoneInputUncompressed;
 };
 
-//Audio Frame
+// Audio Frame
 
 class AudioFrame
 {

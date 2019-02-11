@@ -19,7 +19,6 @@ bool IsPrintable(Rune rune)
          rune == 245 || rune > 255;
 }
 
-
 RenderFont::RenderFont(Font* fontObject, int fontHeight) :
     mFont(fontObject),
     mFontHeight(fontHeight),
@@ -148,7 +147,6 @@ RenderRune& RenderFont::GetRenderRune(Rune rune)
     return *renderRune;
   }
 }
-
 
 struct FontRenderOptions
 {

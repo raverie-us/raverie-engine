@@ -12,7 +12,7 @@ struct AttachmentInfo
   Cog* Child;
 };
 
-//Events
+// Events
 namespace Events
 {
 DeclareEvent(Attached);
@@ -22,7 +22,7 @@ DeclareEvent(ChildDetached);
 DeclareEvent(ChildrenOrderChanged);
 } // namespace Events
 
-//Hierarchy Event
+// Hierarchy Event
 class HierarchyEvent : public Event
 {
 public:
@@ -32,7 +32,7 @@ public:
   Cog* Child;
 };
 
-//Hierarchy
+// Hierarchy
 /// Component that gives an game object the ability to have child objects and
 /// Contains a list of children.
 class Hierarchy : public Component
@@ -64,7 +64,7 @@ public:
   void DestroyChildren();
 };
 
-//Hierarchy Composition
+// Hierarchy Composition
 class HierarchyComposition : public MetaComposition
 {
 public:

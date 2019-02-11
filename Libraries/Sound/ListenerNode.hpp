@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Listener Position Info
+// Listener Position Info
 
 // Stores position and velocity information for ListenerNode
 class ListenerWorldPositionInfo
@@ -27,7 +27,7 @@ public:
   Mat3 mWorldMatrix;
 };
 
-//Listener Node
+// Listener Node
 
 class ListenerNode : public SoundNode
 {

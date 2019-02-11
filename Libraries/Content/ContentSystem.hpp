@@ -112,7 +112,6 @@ public:
   String ResourceOwner;
 };
 
-
 void InitializeContentSystem();
 void ShutdownContentSystem();
 

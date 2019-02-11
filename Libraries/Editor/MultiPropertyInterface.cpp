@@ -469,7 +469,7 @@ void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture,
   }
 }
 
-//Multi Meta Composition
+// Multi Meta Composition
 MultiMetaComposition::MultiMetaComposition(PropertyInterface* propertyInterface,
                                            BoundType* objectType,
                                            OperationQueue* opQueue) :

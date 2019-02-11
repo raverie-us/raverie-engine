@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Location
+// Location
 DeclareEnum9(Location,
              TopLeft,
              TopCenter,
@@ -37,7 +37,7 @@ Vec2 GetDirection(Location::Enum from, Location::Enum to);
 Location::Enum GetOpposite(Location::Enum location);
 } // namespace Location
 
-//Thickness
+// Thickness
 struct Thickness
 {
   ZilchDeclareType(Thickness, TypeCopyMode::ValueType);
@@ -102,7 +102,7 @@ struct Thickness
   static const Thickness cZero;
 };
 
-//Rectangle
+// Rectangle
 struct Rectangle;
 typedef const Rectangle& RectangleParam;
 

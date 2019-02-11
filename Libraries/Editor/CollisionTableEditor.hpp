@@ -9,7 +9,6 @@ struct CollisionFilter;
 class CollisionGroup;
 class CollisionTableEditor;
 
-
 /// Stores what two groups this filter is between. This is how a user selects
 /// what filter to edit in the property grid. This also displays visually
 /// the current collision state of the filter.
@@ -60,7 +59,6 @@ public:
   static Vec2 mPadding;
 };
 
-
 /// A label for a row in the collision group. This needs to store what group
 /// it's associated with so right click context menus can know what is being
 /// affected.
@@ -92,7 +90,6 @@ public:
   /// modifying during right click context menus.
   HandleOf<CollisionGroup> mGroup;
 };
-
 
 /// The matrix display used to edit a collision table.
 class CollisionTableMatrix : public Composite
@@ -148,7 +145,6 @@ public:
   /// to be only one for all labels and this creates the labels.
   HandleOf<ContextMenu> mContextMenuHandle;
 };
-
 
 /// The main editor for collision tables. This has two main ui pieces: the
 /// collision table matrix and the property grid for editing items in the

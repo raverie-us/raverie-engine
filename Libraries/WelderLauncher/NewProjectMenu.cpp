@@ -17,7 +17,7 @@ Tweakable(Vec4, IconButtonBackground, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, InvalidColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace NewProjectsUi
 
-//TemplateProjectItem
+// TemplateProjectItem
 TemplateProjectItem::TemplateProjectItem(Composite* parent,
                                          NewProjectMenu* newProjectMenu,
                                          TemplateProject* project) :
@@ -122,7 +122,7 @@ void TemplateProjectItem::UpdatePreviewImage()
   PlaceCenterToRect(rect, mImage);
 }
 
-//NewProjectMenu
+// NewProjectMenu
 NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
     Composite(parent),
     mLauncher(launcher)

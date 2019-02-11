@@ -409,7 +409,7 @@ Quaternion Quaternion::Inverted() const
   return Quaternion::Inverted(*this);
 }
 
-//Functions
+// Functions
 Quaternion operator*(real lhs, QuatParam rhs)
 {
   return rhs * lhs;

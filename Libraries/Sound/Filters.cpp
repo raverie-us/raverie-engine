@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//BiQuad Filter
+// BiQuad Filter
 
 BiQuad::BiQuad() :
     a0(0),
@@ -63,7 +63,7 @@ void BiQuad::AddHistoryTo(BiQuad& otherFilter)
   otherFilter.y_2 += y_2;
 }
 
-//Delay Filter
+// Delay Filter
 
 Delay::Delay(float maxDelayTime, int sampleRate) :
     mBuffer(nullptr),
@@ -164,7 +164,7 @@ void Delay::ProcessAudio(const float input, float* output)
   WriteDelayAndInc(input);
 }
 
-//DelayAPF Filter
+// DelayAPF Filter
 
 DelayAPF::DelayAPF(const float maxDelayTime, const int sampleRate) :
     mAPFg(0),
@@ -190,7 +190,7 @@ void DelayAPF::ProcessAudio(const float input, float* output)
   WriteDelayAndInc(inputWithDelay);
 }
 
-//Comb Filter
+// Comb Filter
 
 Comb::Comb(const float maxDelayTime, const int sampleRate) :
     mCombG(0),
@@ -218,7 +218,7 @@ void Comb::ProcessAudio(const float input, float* output)
   WriteDelayAndInc(input + (mCombG * (*output)));
 }
 
-//Low Pass Comb Filter
+// Low Pass Comb Filter
 
 LPComb::LPComb(const float maxDelayTime, const int sampleRate) :
     mCombG(0),
@@ -257,7 +257,7 @@ void LPComb::ProcessAudio(const float input, float* output)
   WriteDelayAndInc(*output);
 }
 
-//Pole Low Pass Filter
+// Pole Low Pass Filter
 
 OnePoleLP::OnePoleLP() : mLPFg(0), mPrevSample(0)
 {
@@ -281,7 +281,7 @@ void OnePoleLP::ProcessAudio(const float input, float* output)
   mPrevSample = *output;
 }
 
-//Low Pass Filter
+// Low Pass Filter
 
 LowPassFilter::LowPassFilter() :
     CutoffFrequency(20001.0f),
@@ -361,7 +361,7 @@ float LowPassFilter::GetCutoffFrequency()
   return CutoffFrequency;
 }
 
-//High Pass Filter
+// High Pass Filter
 
 HighPassFilter::HighPassFilter() :
     CutoffFrequency(10.0f),
@@ -418,7 +418,7 @@ void HighPassFilter::ProcessFrame(const float* input,
   }
 }
 
-//Band Pass Filter
+// Band Pass Filter
 
 BandPassFilter::BandPassFilter() : Quality(0.669f), CentralFreq(1000.0f)
 {
@@ -486,7 +486,7 @@ void BandPassFilter::ResetFrequencies()
             ((HighPassCutoff * 2.0f * Math::cPi) + cSystemSampleRate);
 }
 
-//Oscillator
+// Oscillator
 
 Oscillator::Oscillator() :
     mReadIndex(0),
@@ -639,7 +639,7 @@ void Oscillator::SetSquareWavePositiveFraction(const float positiveFraction)
   }
 }
 
-//Delay Line
+// Delay Line
 
 DelayLine::DelayLine() :
     mDelaySamplesFractional(100.0f * cSystemSampleRate / 1000.0f),
@@ -877,7 +877,7 @@ void DelayLine::ReallocateBuffers(int newLength)
   mBufferSize = newLength;
 }
 
-//Envelope Detector
+// Envelope Detector
 
 EnvelopeDetector::EnvelopeDetector() :
     mAttackTimeMSec(0.0f),
@@ -994,7 +994,7 @@ float EnvelopeDetector::Detect(float input)
   return mEnvelope;
 }
 
-//Dynamics Processor Filter
+// Dynamics Processor Filter
 
 DynamicsProcessor::DynamicsProcessor() :
     mInputGainDB(0),
@@ -1210,7 +1210,7 @@ double DynamicsProcessor::LagrangeInterpolation(double* x,
   return interpolatedValue;
 }
 
-//Equalizer Filter
+// Equalizer Filter
 
 Equalizer::Equalizer()
 {
@@ -1368,7 +1368,7 @@ void Equalizer::SetFilterData()
   Band3.SetQuality(0.669f);
 }
 
-//Reverb Data
+// Reverb Data
 
 ReverbData::ReverbData() :
     PreDelay(0.5f, cSystemSampleRate),
@@ -1437,7 +1437,7 @@ float ReverbData::ProcessSample(const float input)
   return result;
 }
 
-//Reverb
+// Reverb
 
 Reverb::Reverb() : TimeMSec(1000.0f), LPgain(0.5f), WetValue(0.5f)
 {
@@ -1563,7 +1563,7 @@ void Reverb::Initialize()
   Data[6].LPComb_2.SetDelayMSec(42.58f);
 }
 
-//Complex Number
+// Complex Number
 
 ComplexNumber ComplexNumber::operator*(const float constant) const
 {
@@ -1612,7 +1612,7 @@ float ComplexNumber::MagnitudeSquared() const
   return mReal * mReal + mImaginary * mImaginary;
 }
 
-//Fourier Transform
+// Fourier Transform
 
 void FFT::Forward(ComplexNumber* samples, const int numberOfSamples)
 {
@@ -1725,7 +1725,7 @@ void FFT::DoFFT(ComplexNumber* samples,
   }
 }
 
-//Transform Convolver
+// Transform Convolver
 
 int NextPowerOf2(const int& value)
 {
@@ -1878,7 +1878,7 @@ void FFTConvolver::Reset()
   mOverlap.Clear();
 }
 
-//ADSR envelope
+// ADSR envelope
 
 ADSR::ADSR() :
     mDelayTime(0.0f),
@@ -2004,7 +2004,7 @@ bool ADSR::IsFinished()
   return mCurrentState == OffState;
 }
 
-//Modulation Operator
+// Modulation Operator
 
 FMOperator::FMOperator() :
     mFrequency(0.0f),

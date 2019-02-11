@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 /// Emits particles inside a sphere
 class SphericalParticleEmitter : public ParticleEmitterShared
 {

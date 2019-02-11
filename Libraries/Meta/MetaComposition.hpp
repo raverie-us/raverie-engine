@@ -4,10 +4,10 @@
 namespace Zero
 {
 
-//Proxy Objects
+// Proxy Objects
 DeclareEnum2(ProxyReason, TypeDidntExist, AllocationException);
 
-//Actions
+// Actions
 DeclareEnum2(
     EnumerateAction,
     // All Components that could ever be dynamically added to the object type
@@ -16,7 +16,7 @@ DeclareEnum2(
     // This does dependency checking.
     AllAddableToObject);
 
-//Meta Component SetupMode is used for dynamic addition setup
+// Meta Component SetupMode is used for dynamic addition setup
 DeclareEnum4(
     SetupMode,
     FromDataOnly,         // Object can be setup from data only.
@@ -53,7 +53,7 @@ public:
   HashSet<String> mTags;
 };
 
-//Add Info
+// Add Info
 /// Gives information about why a Component cannot be added.
 struct AddInfo
 {
@@ -62,7 +62,7 @@ struct AddInfo
   String Reason;
 };
 
-//Meta Creation Context
+// Meta Creation Context
 /// When the operation system creates multiple components in the same batch,
 /// some systems (such as Cog Components) require knowledge of all the created
 /// components. In the case of Cog Components, we want to send the
@@ -75,7 +75,7 @@ struct MetaCreationContext
   }
 };
 
-//Meta Composition
+// Meta Composition
 /// Meta Interface for polymorphic, dynamic containment of objects / components.
 class MetaComposition : public ReferenceCountedEventObject
 {
@@ -86,7 +86,7 @@ public:
   MetaComposition(BoundType* componentType);
 
   //----------------------------------------------------------------------------------------
-  //Queries
+  // Queries
   /// Returns how many Components the given instance has.
   virtual uint GetComponentCount(HandleParam owner);
 
@@ -113,7 +113,7 @@ public:
   virtual uint GetComponentIndex(HandleParam owner, HandleParam component);
 
   //-----------------------------------------------------------------------------------
-  //Modification
+  // Modification
   /// Fills out the given array with all dynamically addable types. The owner is
   /// only required if querying for all addable to object.
   virtual void Enumerate(Array<BoundType*>& addTypes,
@@ -187,7 +187,7 @@ public:
                              uint destination);
 
   //--------------------------------------------------------------------------------
-  //Component Range
+  // Component Range
   struct ComponentRange
   {
     bool Empty();
@@ -221,7 +221,7 @@ public:
   HashMap<String, BoundType*> mComponentTypes;
 };
 
-//Meta Owner
+// Meta Owner
 typedef Handle (*GetOwnerFunction)(HandleParam object);
 
 /// Used to generically get the owner of an object.

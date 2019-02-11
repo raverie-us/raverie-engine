@@ -128,7 +128,6 @@ DocumentResource* StringDocument::GetResource()
   return nullptr;
 }
 
-
 ResourceDocument::ResourceDocument(DocumentResource* resource) :
     Document((u64)resource->mResourceId)
 {
@@ -169,7 +168,6 @@ DocumentResource* ResourceDocument::GetResource()
 {
   return mResource;
 }
-
 
 FileDocument::FileDocument(StringParam name, StringParam fullPath)
 {

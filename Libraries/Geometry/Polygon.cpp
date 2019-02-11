@@ -446,7 +446,7 @@ bool Polygon::Validate(Array<String>& errors) const
   {
     // Test the current edge against all non-neighboring edges
     //(there's no way to intersect neighboring edges unless overlapping
-    //linearly)
+    // linearly)
     uint edgeI[2] = {i, i + 1};
     for (uint j = i + 2; j < pointCount; ++j)
     {

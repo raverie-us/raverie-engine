@@ -13,7 +13,7 @@ DefineEvent(ScriptsCompiledPostPatch);
 DefineEvent(ScriptCompilationFailed);
 } // namespace Events
 
-//Zilch Compile Event
+// Zilch Compile Event
 ZilchDefineType(ZilchCompileEvent, builder, type)
 {
 }
@@ -49,7 +49,7 @@ BoundType* ZilchCompileEvent::GetReplacingType(BoundType* oldType)
   return nullptr;
 }
 
-//Zilch Manager
+// Zilch Manager
 ZilchManager::ZilchManager() :
     mVersion(0),
     mShouldAttemptCompile(true),

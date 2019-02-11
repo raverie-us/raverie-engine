@@ -13,7 +13,6 @@ AudioContent::AudioContent()
   EditMode = ContentEditMode::ContentItem;
 }
 
-
 ContentItem* MakeAudioContent(ContentInitializer& initializer)
 {
   AudioContent* content = new AudioContent();
@@ -27,7 +26,7 @@ ContentItem* MakeAudioContent(ContentInitializer& initializer)
   return content;
 }
 
-//SoundBuilder
+// SoundBuilder
 ZilchDefineType(SoundBuilder, builder, type)
 {
   ZeroBindDependency(AudioContent);

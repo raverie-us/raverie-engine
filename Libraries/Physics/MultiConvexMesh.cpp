@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Defines
+// Defines
 PhysicsDefineArrayType(MultiConvexMeshVertexData);
 PhysicsDefineArrayType(MultiConvexMeshIndexData);
 
@@ -695,7 +695,7 @@ Aabb MultiConvexMesh::ComputeAabb()
   return mAabb;
 }
 
-//MultiConvexMeshManager
+// MultiConvexMeshManager
 ImplementResourceManager(MultiConvexMeshManager, MultiConvexMesh);
 
 MultiConvexMeshManager::MultiConvexMeshManager(BoundType* resourceType) :

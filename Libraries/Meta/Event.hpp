@@ -6,7 +6,6 @@ namespace Zero
 class EventReceiver;
 class EventDispatcher;
 
-
 /// Base event class. All events types inherit from this class.
 class Event : public ThreadSafeId<u32, Object>
 {
@@ -176,7 +175,7 @@ private:
   DispatchList mConnections;
 };
 
-//Hash Policy
+// Hash Policy
 struct ConnectionPointerHashPolicy
 {
   // Hashing operator

@@ -8,7 +8,7 @@ void AddPropertyRenamedAttribute(Zilch::ParseEvent* e,
                                  Property* property,
                                  Attribute* attribute);
 
-//Zero Library Extensions
+// Zero Library Extensions
 void MetaLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
   return AddNativeExtensions(builder, builder.BoundTypes);

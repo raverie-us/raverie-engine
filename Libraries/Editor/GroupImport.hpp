@@ -9,7 +9,7 @@ void GroupImport();
 void OpenGroupImport(Array<String>& files);
 void LoadDroppedFiles(Array<HandleOfString>& files);
 
-//GroupImportWindow
+// GroupImportWindow
 class GroupImportWindow : public Composite
 {
 public:
@@ -32,7 +32,7 @@ public:
   void OnCancel(Event* event);
 };
 
-//ImportCallback
+// ImportCallback
 class ImportCallback : public SafeId32EventObject
 {
 public:

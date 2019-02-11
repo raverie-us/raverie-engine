@@ -13,7 +13,7 @@ public:
   ZilchDeclareType(ConvexMesh, TypeCopyMode::ReferenceType);
 
   //-------------------------------------------------------------------Resource
-  //Interface
+  // Interface
   void Serialize(Serializer& stream) override;
   void Initialize();
   void OnResourceModified() override;

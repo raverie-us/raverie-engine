@@ -182,17 +182,17 @@ Zilch::Type* BasicNativeTypeToZilchType(NativeTypeId nativeTypeId)
 
   // Multi-Primitive Math Types
   case BasicNativeType::BoolVector2:
-    return ZilchTypeId(
-        BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type); // Boolean2
-                                                                      // type
+    return ZilchTypeId(BasicNativeTypeFromEnum<
+                       BasicNativeType::BoolVector2>::Type); // Boolean2
+                                                             // type
   case BasicNativeType::BoolVector3:
-    return ZilchTypeId(
-        BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type); // Boolean3
-                                                                      // type
+    return ZilchTypeId(BasicNativeTypeFromEnum<
+                       BasicNativeType::BoolVector3>::Type); // Boolean3
+                                                             // type
   case BasicNativeType::BoolVector4:
-    return ZilchTypeId(
-        BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type); // Boolean4
-                                                                      // type
+    return ZilchTypeId(BasicNativeTypeFromEnum<
+                       BasicNativeType::BoolVector4>::Type); // Boolean4
+                                                             // type
   case BasicNativeType::IntVector2:
     return ZilchTypeId(
         BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type); // Integer2
@@ -215,9 +215,9 @@ Zilch::Type* BasicNativeTypeToZilchType(NativeTypeId nativeTypeId)
     return ZilchTypeId(
         BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type); // Real4 type
   case BasicNativeType::Quaternion:
-    return ZilchTypeId(
-        BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type); // Quaternion
-                                                                     // type
+    return ZilchTypeId(BasicNativeTypeFromEnum<
+                       BasicNativeType::Quaternion>::Type); // Quaternion
+                                                            // type
   case BasicNativeType::Matrix3:
     return ZilchTypeId(
         BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type); // Real3x3

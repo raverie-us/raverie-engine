@@ -10,7 +10,6 @@ DefineEvent(CommandRenamed);
 DefineEvent(BindingOverwrite);
 } // namespace Events
 
-
 static const String cDefaultCommandString = "\'NEW COMMAND\'";
 static const String cDefaultBindingString = "\'NEW BINDING\'";
 
@@ -25,7 +24,6 @@ static const Vec4 cZeroCommandColor(1, 0.647f, 0, 1);
 
 static const bool cNotUsingHotKeyResource = true;
 static const bool cHotKeysEditable = false;
-
 
 /// HotKeyBinding ref when a binding conflict has occurred
 class BindingConflictEvent : public Event
@@ -560,7 +558,6 @@ public:
   }
 };
 
-
 #define CommandSortFunctor(name, operation)                                    \
   struct name : public binary_function<CommandEntry, CommandEntry, bool>       \
   {                                                                            \
@@ -649,7 +646,6 @@ CommandSortFunctor(CompareCommandTags, LessTags) bool CommandEntry::LessTags(
   else
     return mTags < rhs.mTags;
 }
-
 
 HotKeyCommands::HotKeyCommands()
 {

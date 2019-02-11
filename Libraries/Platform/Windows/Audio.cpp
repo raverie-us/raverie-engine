@@ -78,7 +78,7 @@ Zero::String GetMessageForHresult(Zero::StringParam message, HRESULT hr)
   return Zero::String::Format("%s 0x%08x", message.c_str(), hr);
 }
 
-//Audio IO Windows Data
+// Audio IO Windows Data
 
 class AudioIOWindowsData
 {
@@ -95,7 +95,7 @@ public:
   static unsigned _stdcall StartInputThread(void* param);
 };
 
-//WASAPI Device
+// WASAPI Device
 
 class WasapiDevice : IMMNotificationClient
 {
@@ -702,7 +702,7 @@ HRESULT STDMETHODCALLTYPE WasapiDevice::OnDefaultDeviceChanged(
   return S_OK;
 }
 
-//Output using WASAPI
+// Output using WASAPI
 
 static void WASAPICallback(float* outputBuffer,
                            float* inputBuffer,
@@ -892,7 +892,7 @@ float AudioInputOutput::GetBufferSizeMultiplier()
   return 0.04f;
 }
 
-//Audio IO Windows Data
+// Audio IO Windows Data
 
 AudioIOWindowsData::AudioIOWindowsData() : Enumerator(nullptr)
 {
@@ -925,7 +925,7 @@ unsigned AudioIOWindowsData::StartInputThread(void* param)
   return 0;
 }
 
-//MIDI Input
+// MIDI Input
 
 void CALLBACK MidiInProcCallback(HMIDIIN handle,
                                  UINT message,

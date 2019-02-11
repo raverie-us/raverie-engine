@@ -25,9 +25,10 @@ namespace
 const real cObbPlanePoints = real(0.07);
 
 // Threshold used to determine if two oriented bounding boxes are colliding on
-// an axis. Their points are projected onto that axis and if the distance between
-// the centers of the oriented bounding boxes is greater than the half-lengths
-// of their projections then they are separating. This test is done using
+// an axis. Their points are projected onto that axis and if the distance
+// between the centers of the oriented bounding boxes is greater than the
+// half-lengths of their projections then they are separating. This test is done
+// using
 //"projections - distance" and that value is compared with this threshold.
 const real cObbObbZero = real(0.0002);
 
@@ -484,8 +485,8 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
           " a valid axis of intersection was not found.");
   //----------------------------------------------------------------------------
   // If any of the 9 latter OBB axes were used (those that are generated from
-  // the cross products of the OBBs' face normals), then it is an edge-edge case.
-  // Now we find the closest points of the two edges.
+  // the cross products of the OBBs' face normals), then it is an edge-edge
+  // case. Now we find the closest points of the two edges.
   if (axisCase > 6)
   {
     ObbObbEdgeCase(obbOneCenter,
@@ -701,8 +702,8 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   // B's face is now in A's face's reference frame. The nice thing is that now
   // A's face can be represented by its half extents, with the center of A's
   // face being the origin and the axes of A's face being the x-axis and y-axis
-  // (or z-axis, depending on how you view things). Now clip B's face against A's
-  // face.
+  // (or z-axis, depending on how you view things). Now clip B's face against
+  // A's face.
   Vec2 bFace[8];
   uint bFacePointCount =
       ClipQuadWithRectangle(aFaceExtents, bFacePoints, bFace);

@@ -23,7 +23,6 @@ void MakeBasisFromY(Vec3Param yAxis, Mat3Ptr basis)
 
 } // namespace
 
-
 // Intersect a segment with an axis aligned bounding box.
 Type SegmentAabb(Vec3Param segmentStart,
                  Vec3Param segmentEnd,
@@ -242,7 +241,6 @@ Type SegmentTriangle(Vec3Param segmentStart,
           "function.");
   return Unimplemented;
 }
-
 
 // Intersect a segment with an axis aligned bounding box.
 Type SegmentAabb(Vec3Param segmentStart,

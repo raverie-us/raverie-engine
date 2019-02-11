@@ -14,7 +14,6 @@ void UnTranslatedBoundFunction(Zilch::Call& call,
 // properties.
 void DummyBoundFunction(Zilch::Call& call, Zilch::ExceptionReport& report);
 
-
 /// Helper struct to pass around groups of types for generating library
 /// translation
 struct TypeGroups

@@ -115,8 +115,8 @@ void Combine2dConvexMeshes(const Array<Vec2>& vertices,
 
   uint vertexCount = vertices.Size();
   // The first step is to build each shape and determine which edges are
-  // internal. During this step we'll also find the mirror edge for each internal
-  // edge.
+  // internal. During this step we'll also find the mirror edge for each
+  // internal edge.
   subShapes = shapes.All();
   for (; !subShapes.Empty(); subShapes.PopFront())
   {
@@ -146,8 +146,8 @@ void Combine2dConvexMeshes(const Array<Vec2>& vertices,
 
       // Try to find the adjacent edge. If we find it we need to hook up the
       // adjacency for each edge but we don't need to add it to the internal
-      // edges list because we handle the internal edges in pairs so we only need
-      // one of them in there. Also, there is no need to add it to the map
+      // edges list because we handle the internal edges in pairs so we only
+      // need one of them in there. Also, there is no need to add it to the map
       // because there is only 1 pair for an edge.
       Edge* adjacentEdge = edgeMap.FindValue(edge, nullptr);
       if (adjacentEdge != nullptr)

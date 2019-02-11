@@ -25,7 +25,7 @@ Linear Constraint:
   We start with the velocity constraint instead of the position constraint
   which ignores some 2nd order terms but works well enough for now.
   The rough idea is thetaB - thetaA = 0
- 
+
   cDoti: dot(w2,iA) - dot(w1,iB) = 0
   Ji   : [0, -iA, 0, iB]
 

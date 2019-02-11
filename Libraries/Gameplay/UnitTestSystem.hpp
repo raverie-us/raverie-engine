@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Widgets
+// Widgets
 class WidgetChildId
 {
 public:
@@ -30,7 +30,7 @@ public:
 
 class UnitTestSystem;
 
-//Unit Test Events
+// Unit Test Events
 class UnitTestEvent : public IZilchObject
 {
 public:

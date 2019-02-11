@@ -9,14 +9,14 @@ class TileEditor2D;
 class PaletteText;
 class TilePaletteSprite;
 
-//Palette Entry
+// Palette Entry
 struct TilePaletteEntry
 {
   TilePaletteSprite* frame;
   TileMap::Tile tile;
 };
 
-//Palette Change
+// Palette Change
 struct TilePaletteChange
 {
   TilePaletteChange()
@@ -41,7 +41,7 @@ struct TilePaletteChange
 
 typedef Array<TilePaletteChange> TilePaletteChangeList;
 
-//Sprite
+// Sprite
 class TilePaletteSprite : public Composite
 {
 public:
@@ -68,7 +68,7 @@ public:
   TextureView* mFrameOverlay;
 };
 
-//Palette Operation
+// Palette Operation
 class TilePaletteOperation : public Operation
 {
 public:
@@ -84,7 +84,7 @@ public:
   TilePaletteChangeList mChangeList;
 };
 
-//Palette View
+// Palette View
 class TilePaletteView : public Composite
 {
 public:

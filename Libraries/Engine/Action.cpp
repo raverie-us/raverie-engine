@@ -41,7 +41,6 @@ void Action::Cancel()
   mFlags.SetFlag(ActionFlag::NotActive);
 }
 
-
 void RemoveAndDecRef(InActionList& list, Action* action)
 {
   ErrorIf(!action->mFlags.IsSet(ActionFlag::Linked), "Action is not linked");
@@ -129,12 +128,10 @@ ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
     return ActionState::Running;
 }
 
-
 ZilchDefineType(ActionSet, builder, type)
 {
   ZeroBindDocumented();
 }
-
 
 ZilchDefineType(Actions, builder, type)
 {
@@ -210,7 +207,6 @@ void Actions::Update(float dt, float realDt, ActionExecuteMode::Enum mode)
   }
 }
 
-
 ZilchDefineType(ActionGroup, builder, type)
 {
   ZeroBindDocumented();
@@ -250,7 +246,6 @@ void ActionGroup::CancelOverride()
 {
   CancelActions(mActions);
 }
-
 
 ZilchDefineType(ActionSequence, builder, type)
 {

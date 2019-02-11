@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Utility Functions
+// Utility Functions
 namespace ExportUtility
 {
 
@@ -223,7 +223,7 @@ void CopyFileCallback(StringParam fullPath,
 
 } // namespace ExportUtility
 
-//Content Source
+// Content Source
 struct ExportTargetSource : public DataSource
 {
   ExportTargetList* mExportList;
@@ -310,7 +310,7 @@ struct ExportTargetSource : public DataSource
   }
 };
 
-//ExportTargetList
+// ExportTargetList
 ExportTargetList::ExportTargetList()
 {
 }
@@ -345,7 +345,6 @@ HashSet<String> ExportTargetList::GetActiveTargets()
   }
   return activeTargets;
 }
-
 
 ExportUI::ExportUI(Composite* parent) : Composite(parent)
 {

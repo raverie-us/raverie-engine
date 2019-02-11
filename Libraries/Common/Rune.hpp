@@ -63,7 +63,7 @@ public:
   uint value;
 };
 
-//Comparison Operators
+// Comparison Operators
 inline bool operator==(uint left, RuneParam right)
 {
   return left == right.value;

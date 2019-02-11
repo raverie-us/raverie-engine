@@ -102,7 +102,6 @@ void MouseManipulation::OnMouseUp(MouseEvent* event)
   CloseAndReturnFocus();
 }
 
-
 const String GripperElement = "Gripper";
 
 Gripper::Gripper(Composite* parent,

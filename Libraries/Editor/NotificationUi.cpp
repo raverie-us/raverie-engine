@@ -13,7 +13,6 @@ Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
 
 static NotificationPopup* mNotifcationWindow = NULL;
 
-
 NotificationPopup::NotifyData::NotifyData(NotifyEvent* event)
 {
   Type = event->Type;

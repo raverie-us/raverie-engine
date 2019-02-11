@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Net Property
+// Meta Net Property
 ZilchDefineType(MetaNetProperty, builder, type)
 {
   ZilchBindField(mNetPropertyConfig)

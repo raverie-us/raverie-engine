@@ -14,7 +14,7 @@ class DispatchAtParams;
 /// Add Pixel scalar to everything
 DeclareEnum4(StencilDrawMode, None, Add, Remove, Test);
 
-//Root Widget
+// Root Widget
 class UiRootWidget : public UiWidget
 {
 public:
@@ -37,13 +37,13 @@ public:
                       bool interactiveOnly = false) override;
 
   //---------------------------------------------------------------------------
-  //Keyboard Events
+  // Keyboard Events
   void PerformKeyDown(Keys::Enum key);
   void PerformKeyUp(Keys::Enum key);
   void PerformKeyboardEvent(KeyboardEvent* e);
 
   //------------------------------------------------------------------------------
-  //Mouse Events
+  // Mouse Events
   /// This must be called appropriately before mouse clicks.
   void PerformMouseMove(Vec2Param newRootPoint);
 
@@ -71,7 +71,7 @@ public:
   void DispatchAt(DispatchAtParams& dispatchParams);
 
   //-----------------------------------------------------------------------
-  //Input Event Routing
+  // Input Event Routing
   /// If set, all input from the Os will be forwarded to the root widget.
   void SetOsWindow(OsWindow* window);
 
@@ -86,7 +86,7 @@ public:
   bool mIgnoreEvents;
 
   //---------------------------------------------------------------------------------
-  //Rendering
+  // Rendering
   /// Renders the Ui to the given color render target. The depth render target
   /// must have stencil.
   void Render(RenderTasksEvent* e,
@@ -129,7 +129,7 @@ public:
   GraphicsRenderSettings mStencilTestSettings;
 
   //-------------------------------------------------------------------------------------
-  //Other
+  // Other
   /// The widget currently in focus.
   void SetFocusWidget(UiWidget* newFocus);
   UiWidget* GetFocusWidget();

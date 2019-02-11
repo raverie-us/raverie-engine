@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Emitter Data Per Listener
+// Emitter Data Per Listener
 
 EmitterDataPerListener::EmitterDataPerListener() :
     mPreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
@@ -17,7 +17,7 @@ EmitterDataPerListener::EmitterDataPerListener() :
   memset(mPreviousGains, 0, sizeof(float) * cMaxChannels);
 }
 
-//Emitter Node
+// Emitter Node
 
 ZilchDefineType(EmitterNode, builder, type)
 {

@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 Image::Image()
 {
   Width = 0;

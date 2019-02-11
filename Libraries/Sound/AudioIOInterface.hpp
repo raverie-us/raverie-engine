@@ -32,7 +32,7 @@ void IOCallback(float* outputBuffer,
                 unsigned framesPerBuffer,
                 void* data);
 
-//Input Output Interface
+// Input Output Interface
 
 class AudioIOInterface
 {

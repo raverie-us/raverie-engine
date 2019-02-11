@@ -237,7 +237,6 @@
 #  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
-
 // ZeroForceInline forces a function to be inlined for optimization purposes
 // ZeroNoInline forces a function to not be inlined (only used to debug, and
 // unfortunately to fix true linker bugs)

@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Startup
+// Startup
 // Handles all platform agnostic initialization
 class ZeroStartup
 {

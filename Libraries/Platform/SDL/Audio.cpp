@@ -44,7 +44,7 @@ public:
   SDLAudioDevice Streams[StreamTypes::Size];
 };
 
-//Input Output using SDL
+// Input Output using SDL
 
 void SDLCallback(void* data, uint8* buffer, int lengthInBytes)
 {
@@ -216,7 +216,7 @@ float AudioInputOutput::GetBufferSizeMultiplier()
   return 0.04f;
 }
 
-//MIDI Input
+// MIDI Input
 
 MidiInput::MidiInput()
 {

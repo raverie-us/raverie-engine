@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Threaded Volume Modifier
+// Threaded Volume Modifier
 
 InstanceVolumeModifier::InstanceVolumeModifier() :
     mCurrentVolume(1.0f),

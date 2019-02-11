@@ -278,7 +278,7 @@ ZilchDefineType(ContactBlock, builder, type)
   ZeroBindSetup(SetupMode::DefaultSerialization);
 }
 
-//joint block type
+// joint block type
 #define JointType(jointType)                                                   \
   ZilchDefineType(jointType##Block, builder, type)                             \
   {                                                                            \
@@ -290,7 +290,7 @@ ZilchDefineType(ContactBlock, builder, type)
 #include "JointList.hpp"
 #undef JointType
 
-//Config Factory
+// Config Factory
 ZilchDefineTemplateType(PhysicsSolverConfigMetaComposition, builder, type)
 {
 }

@@ -308,8 +308,8 @@ void CheckClassMemory(cstr className, byte* classMemory)
   }
 
   // dbghelp used to by only able to look up functions and data so classes can
-  // not be looked up (as far as I know) so look up the class by its constructor.
-  // Until this is called the class is not around...
+  // not be looked up (as far as I know) so look up the class by its
+  // constructor. Until this is called the class is not around...
   uint success = SymFromName(process, constructorFunc.c_str(), symbolInfo);
 
   if (!success)

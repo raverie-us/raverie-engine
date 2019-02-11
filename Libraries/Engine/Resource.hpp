@@ -40,7 +40,7 @@ DeclareEnum3(ResourceNotFound,
              // Return Default Resource
              ReturnDefault);
 
-//Resource Handle Manager
+// Resource Handle Manager
 class ResourceHandleData
 {
 public:
@@ -80,7 +80,6 @@ public:
 
   Resource* GetResource(const Handle& handle, bool resolveThroughManagerOnNull);
 };
-
 
 class ResourceDisplayFunctions : public MetaDisplay
 {
@@ -193,7 +192,7 @@ public:
   ResourceTemplate* GetResourceTemplate();
 
   //----------------------------------------------------------------------------------
-  //Inherit Range
+  // Inherit Range
   struct InheritRange
   {
     InheritRange(Resource* current);
@@ -279,7 +278,7 @@ public:
 
 extern const String DataResourceExtension;
 
-//Data Resource
+// Data Resource
 /// A resource that is stored in our serialization data format and is directly
 /// edited by the editor.
 class DataResource : public Resource
@@ -301,7 +300,7 @@ public:
   DataNode* GetDataTree() override;
 };
 
-//Resource Inheritance
+// Resource Inheritance
 class DataResourceInheritance : public MetaDataInheritanceRoot
 {
 public:
@@ -315,7 +314,7 @@ public:
   }
 };
 
-//Resource Meta Operations
+// Resource Meta Operations
 class ResourceMetaOperations : public MetaOperations
 {
 public:

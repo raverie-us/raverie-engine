@@ -40,7 +40,6 @@ public:
   Rectangle mEndWorldRectangle;
 };
 
-
 // Store data about each object being transformed
 struct TransformingObject
 {

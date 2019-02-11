@@ -97,8 +97,8 @@ void WindowsExportTarget::ExportApplication()
     CopyFile(tempFile, FilePath::Combine(appDirectory, "ZeroEditor.exe"));
 
     // Embed package as resource section. This is generally more windows
-    // friendly than appending the data on the End() of the exe since opening the
-    // exe for reading is unreliable. The resource data section IDR_PACK is
+    // friendly than appending the data on the End() of the exe since opening
+    // the exe for reading is unreliable. The resource data section IDR_PACK is
     // already in the exe and will be updated from empty to a package containing
     // all resources.
 

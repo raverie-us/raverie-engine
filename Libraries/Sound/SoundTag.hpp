@@ -14,7 +14,7 @@ DeclareEvent(TagHasNoInstances);
 
 } // namespace Events
 
-//Tag Object
+// Tag Object
 
 class TagObject : public ReferenceCountedObject
 {
@@ -126,7 +126,7 @@ private:
   Link<TagObject> link;
 };
 
-//Sound Tag Display
+// Sound Tag Display
 
 class SoundTagDisplay : public MetaDisplay
 {
@@ -136,7 +136,7 @@ class SoundTagDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Tag
+// Sound Tag
 
 /// Controls settings on all tagged SoundInstances
 class SoundTag : public DataResource
@@ -261,7 +261,7 @@ private:
   HandleOf<SoundTag> mCompressorTag;
 };
 
-//Sound Tag Manager
+// Sound Tag Manager
 
 class SoundTagManager : public ResourceManager
 {

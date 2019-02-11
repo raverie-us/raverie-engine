@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//StringPool
+// StringPool
 #if defined(ZeroStringPooling)
 typedef HashSet<StringNode*, PoolPolicy> StringPoolSet;
 class StringPool
@@ -82,7 +82,6 @@ bool CaseInsensitiveCompare(Rune a, Rune b)
 {
   return UTF8::ToLower(a) == UTF8::ToLower(b);
 }
-
 
 String::String()
 {
@@ -919,7 +918,7 @@ String WordWrap(StringRange input, size_t maxLineLength)
   return builder.ToString();
 }
 
-//SimplePolicy
+// SimplePolicy
 StringRange String::SimplePolicy::ToStringRange(StringParam value)
 {
   return value.All();

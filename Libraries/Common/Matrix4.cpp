@@ -799,7 +799,6 @@ void Matrix4::Decompose(Mat4Param transform,
   }
 }
 
-
 Mat4Ref Matrix4::Transpose()
 {
   Matrix4::Transpose(*this);
@@ -971,7 +970,7 @@ void Matrix4::SetCross(uint index, real x, real y, real z, real w)
   SetCross(index, Vector4(x, y, z, w));
 }
 
-//Functions
+// Functions
 Matrix4 operator*(real lhs, Mat4Param rhs)
 {
   return rhs * lhs;

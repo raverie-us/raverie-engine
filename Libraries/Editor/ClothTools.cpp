@@ -624,7 +624,6 @@ void RopeCreatorSubTool::SetNumberOfLinks(uint numberOfLinks)
   mNumberOfLinks = Math::Clamp(numberOfLinks, 2u, 100u);
 }
 
-
 // Simple helper to set the group value of a property
 template <typename ValueType, typename CallbackType>
 void SetGroupProperty(AnchoringSubTool* anchorTool,

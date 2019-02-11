@@ -293,7 +293,6 @@ x  |
 
 */
 
-
 /// Test to see if the given point lies on or inside the given point.
 Type PointPoint(Vec3Param pointA, Vec3Param pointB);
 
@@ -364,7 +363,6 @@ Type PointTriangle(Vec3Param point,
                    Vec3Param trianglePointB,
                    Vec3Param trianglePointC,
                    real epsilon = real(0));
-
 
 /// Find the closest point on a ray to the given point. Will return "Inside" if
 /// the closest point found is in the interval of t = [0, inf], otherwise
@@ -450,7 +448,6 @@ Type ClosestPointsOfTwoSegments(Vec3Param segmentOnePointA,
                                 Vec3Param segmentTwoPointB,
                                 Vec3Ptr closestPointOne,
                                 Vec3Ptr closestPointTwo);
-
 
 /// Intersect a line with an axis-aligned bounding box.
 Type LineAabb(Vec3Param linePoint,
@@ -555,7 +552,6 @@ Type LineTriangle(Vec3Param linePoint,
                   Vec3Param trianglePointB,
                   Vec3Param trianglePointC,
                   Interval* interval);
-
 
 /// Intersect a ray with an axis aligned bounding box.
 Type RayAabb(Vec3Param rayStart,
@@ -687,7 +683,6 @@ Type RayTriangle(Vec3Param rayStart,
                  Interval* interval,
                  real epsilon = real(0));
 
-
 /// Intersect a segment with an axis aligned bounding box.
 Type SegmentAabb(Vec3Param segmentStart,
                  Vec3Param segmentEnd,
@@ -792,7 +787,6 @@ Type SegmentTriangle(Vec3Param segmentStart,
                      Vec3Param trianglePointB,
                      Vec3Param trianglePointC,
                      Interval* interval);
-
 
 /// Intersect a ray with an axis aligned bounding box.
 Type RayAabb(Vec3Param rayStart,
@@ -904,7 +898,6 @@ Type RayTorus(Vec3Param rayStart,
               real torusTubeRadius,
               IntersectionPoint* intersectionpoint = nullptr);
 
-
 /// Intersect a segment with an axis aligned bounding box.
 Type SegmentAabb(Vec3Param segmentStart,
                  Vec3Param segmentEnd,
@@ -966,7 +959,6 @@ Type SegmentTriangle(Vec3Param segmentStart,
                      Vec3Param trianglePointC,
                      IntersectionPoint* intersectionPoint = nullptr);
 
-
 /// Intersect an axis aligned bounding box with an axis aligned bounding box.
 Type AabbAabb(Vec3Param aabbOneMinPoint,
               Vec3Param aabbOneMaxPoint,
@@ -985,8 +977,8 @@ Type AabbCapsule(Vec3Param aabbMinPoint,
 /// Intersect an axis aligned bounding box with a frustum. The 6 planes of the
 /// frustum are assumed to be pointing inwards.
 /// This test is an approximation because it only checks the aabb points against
-/// the frustum's planes. This doesn't cover all axes necessary for a SAT test so
-/// it can return false positives.
+/// the frustum's planes. This doesn't cover all axes necessary for a SAT test
+/// so it can return false positives.
 Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
                               Vec3Param aabbMaxPoint,
                               const Vec4 frustumPlanes[6],

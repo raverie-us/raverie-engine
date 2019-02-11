@@ -6,7 +6,7 @@ namespace Zero
 
 class AttributeExtension;
 
-//Attribute Status
+// Attribute Status
 class AttributeStatus : public Status
 {
 public:
@@ -15,7 +15,7 @@ public:
   CodeLocation mLocation;
 };
 
-//Attribute Extensions
+// Attribute Extensions
 /// Processes all supported attributes and attribute parameters.
 class AttributeExtensions : public ExplicitSingleton<AttributeExtensions>
 {
@@ -57,7 +57,7 @@ public:
   ExtensionMap mFunctionExtensions;
 };
 
-//Attribute Extension
+// Attribute Extension
 class AttributeExtension
 {
 public:
@@ -97,7 +97,7 @@ public:
   bool mAllowMultiple;
 };
 
-//Attribute Extension Type
+// Attribute Extension Type
 template <typename T>
 class AttributeExtensionType : public AttributeExtension
 {

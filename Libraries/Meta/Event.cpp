@@ -76,7 +76,7 @@ void Event::Terminate()
   mTerminated = true;
 }
 
-//ObjectEvent
+// ObjectEvent
 ZilchDefineType(ObjectEvent, builder, type)
 {
   ZeroBindDocumented();

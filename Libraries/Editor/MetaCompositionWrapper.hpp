@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Composition
+// Meta Composition
 class MetaCompositionWrapper : public MetaComposition
 {
 public:

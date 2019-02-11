@@ -12,7 +12,7 @@ void FindNamedResource(Call& call, ExceptionReport& report);
 void ProcessResourceProperties(BoundType* type);
 void ProcessComponentInterfaces(BoundType* type);
 
-//Zero Library Extensions
+// Zero Library Extensions
 void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
   return AddNativeExtensions(builder, builder.BoundTypes);

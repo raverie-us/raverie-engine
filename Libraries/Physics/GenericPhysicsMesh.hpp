@@ -36,7 +36,7 @@ public:
   GenericPhysicsMesh();
 
   //-------------------------------------------------------------------Resource
-  //Interface
+  // Interface
   void Save(StringParam filename) override;
   void Serialize(Serializer& stream) override;
   void Initialize();
@@ -44,7 +44,7 @@ public:
   void ResourceModified() override;
 
   //-------------------------------------------------------------------
-  //GenericPhysicsMesh Interface
+  // GenericPhysicsMesh Interface
   /// Called when a mesh is modified. This is typically done when the
   /// vertices/indices are modified in script.
   virtual void OnResourceModified() = 0;

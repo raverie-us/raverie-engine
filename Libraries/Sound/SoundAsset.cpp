@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Sound Asset
+// Sound Asset
 
 ZilchDefineType(SoundAsset, builder, Type)
 {
@@ -44,7 +44,7 @@ void SoundAsset::RemoveInstance(unsigned instanceID)
       nullptr);
 }
 
-//Decompressed Sound Asset
+// Decompressed Sound Asset
 
 ZilchDefineType(DecompressedSoundAsset, builder, Type)
 {
@@ -142,7 +142,7 @@ void DecompressedSoundAsset::DecodingCallback(DecodedPacket* packet)
                  (s32)(mSamplesAvailableShared + samplesCopied));
 }
 
-//Streaming Data Per Instance
+// Streaming Data Per Instance
 
 static void StreamingDecodingCallback(DecodedPacket* packet, void* data)
 {
@@ -202,7 +202,7 @@ void StreamingDataPerInstance::DecodingCallback(DecodedPacket* packet)
   mDecodedPacketQueue.Write(*packet);
 }
 
-//Streaming Sound Asset
+// Streaming Sound Asset
 
 ZilchDefineType(StreamingSoundAsset, builder, Type)
 {

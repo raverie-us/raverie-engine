@@ -11,11 +11,11 @@ namespace Memory
 static const bool StackDebug = true;
 
 /// The stack allocator works like the program stack. For every allocation the
-/// stack head is moved forward and for each deallocation it is moved back. It is
-/// extremely efficient but allocations must be freed in stack order (LIFO). This
-/// makes the stack allocator efficient for temporaries and scratch space that
-/// exist only a part of a frame or for permanent allocations that are never
-/// freed.
+/// stack head is moved forward and for each deallocation it is moved back. It
+/// is extremely efficient but allocations must be freed in stack order (LIFO).
+/// This makes the stack allocator efficient for temporaries and scratch space
+/// that exist only a part of a frame or for permanent allocations that are
+/// never freed.
 class Stack : public Graph
 {
 public:

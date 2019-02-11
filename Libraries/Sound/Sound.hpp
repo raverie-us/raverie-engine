@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Sound
+// Sound
 
 /// The resource for a single audio file.
 class Sound : public Resource
@@ -36,7 +36,7 @@ public:
                    AudioFileLoadType::Enum loadType);
 };
 
-//Sound Display
+// Sound Display
 
 class SoundDisplay : public MetaDisplay
 {
@@ -46,7 +46,7 @@ class SoundDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Loader
+// Sound Loader
 
 class SoundLoader : public ResourceLoader
 {
@@ -63,7 +63,7 @@ public:
   AudioFileLoadType::Enum mLoadType;
 };
 
-//Sound Manager
+// Sound Manager
 
 class SoundManager : public ResourceManager
 {

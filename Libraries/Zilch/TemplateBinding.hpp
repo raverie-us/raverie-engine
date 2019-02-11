@@ -63,7 +63,7 @@ public:
   }
 
   //*** BUILDER DESTRUCTOR ***// Generates a Zilch function to call a class
-  //destructor
+  // destructor
   template <typename Class>
   static Function* FromDestructor(LibraryBuilder& builder,
                                   BoundType* classBoundType)

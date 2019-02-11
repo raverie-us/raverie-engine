@@ -6,7 +6,7 @@ namespace Zero
 
 const bool cBindCogChildrenReverseRange = false;
 
-//Helpers
+// Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state);
 bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
 void ClearCogModifications(Cog* rootCog,
@@ -18,7 +18,7 @@ void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications);
 template <typename type>
 void eraseEqualValues(Array<type>& mArray, type value);
 
-//Events
+// Events
 namespace Events
 {
 DefineEvent(CogNameChanged);
@@ -27,7 +27,7 @@ DefineEvent(CogDestroy);
 DefineEvent(CogDelayedDestroy);
 } // namespace Events
 
-//Cog Meta
+// Cog Meta
 Handle CogGetOwner(HandleParam object)
 {
   Cog* cog = object.Get<Cog*>();
@@ -50,7 +50,7 @@ String CogDisplayName(HandleParam object)
   return object.StoredType->HasInherited<MetaDisplay>()->GetName(object);
 }
 
-//Cog
+// Cog
 Memory::Heap* Cog::sHeap =
     new Memory::Heap("Cogs", Memory::GetNamedHeap("Objects"));
 
@@ -2191,7 +2191,7 @@ Actions* Cog::GetActions()
   return mActionList;
 }
 
-//Helpers
+// Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state)
 {
   if (cog->mFlags.IsSet(CogFlags::Protected))
@@ -2335,7 +2335,7 @@ void eraseEqualValues(Array<type>& mArray, type value)
   }
 }
 
-//Cog Handle Manager
+// Cog Handle Manager
 void CogHandleManager::Allocate(BoundType* type,
                                 Handle& handleToInitialize,
                                 size_t customFlags)

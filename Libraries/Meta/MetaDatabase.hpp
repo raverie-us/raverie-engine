@@ -9,7 +9,7 @@ DeclareEvent(MetaModified);
 DeclareEvent(MetaRemoved);
 } // namespace Events
 
-//Meta Type Event
+// Meta Type Event
 class MetaLibraryEvent : public Event
 {
 public:
@@ -17,7 +17,7 @@ public:
   LibraryRef mLibrary;
 };
 
-//Meta Serialize Property
+// Meta Serialize Property
 class MetaSerializedProperty : public ReferenceCountedEventObject
 {
 public:
@@ -35,7 +35,7 @@ public:
 typedef InList<MetaSerializedProperty, &MetaSerializedProperty::mLink>
     MetaPropertyDefaultsList;
 
-//Meta Database
+// Meta Database
 class MetaDatabase : public ExplicitSingleton<MetaDatabase, EventObject>
 {
 public:

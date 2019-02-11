@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 void IntersectionToPhysicsManifoldFull(Intersection::Manifold* iManifold,
                                        Physics::Manifold* pManifold)
 {
@@ -43,7 +42,7 @@ void IntersectionToPhysicsManifoldPersistent(Intersection::Manifold* iManifold,
   pManifold->SetPolicy(Physics::AddingPolicy::PersistentManifold);
 }
 
-//Edge Fixing
+// Edge Fixing
 
 void FixInternalEdges(GenericPhysicsMesh* mesh,
                       Physics::Manifold* manifold,
@@ -89,7 +88,6 @@ void FixInternalEdges(HeightMapCollider* collider,
     CorrectInternalEdgeNormal(collider, manifold, 1, contactId);
 }
 
-
 void BaseManifoldToProxyResult(Intersection::Manifold* manifold,
                                ProxyResult* result)
 {
@@ -131,7 +129,6 @@ void ManifoldToProxyResult(const Sphere& castShape,
   result->mDistance = (objectCenter - aabbCenter).Length();
   BaseManifoldToProxyResult(manifold, result);
 }
-
 
 Vec3 NormalFromPointOnShape(const Aabb& aabb,
                             Collider* shapeCollider,
@@ -218,7 +215,6 @@ Vec3 NormalFromPointOnShape(const Triangle& triangle,
     normal *= real(-1.0);
   return normal;
 }
-
 
 void ColliderToShape(Collider* collider, Sphere& sphere)
 {

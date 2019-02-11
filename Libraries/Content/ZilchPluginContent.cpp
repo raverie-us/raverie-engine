@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//ZilchPluginBuilder
+// ZilchPluginBuilder
 ZilchDefineType(ZilchPluginBuilder, builder, type)
 {
   ZeroBindComponent();

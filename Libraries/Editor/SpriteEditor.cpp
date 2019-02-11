@@ -43,7 +43,6 @@ u32 GetNextPowerOfTwo(u32 value)
   return value;
 }
 
-
 IntVec2 FindBestSquareFit(uint frameSizeX, uint frameSizeY, uint frameCount)
 {
   uint rows = 1;
@@ -113,7 +112,6 @@ IntRect SpriteFrameLayout::GetFrame(uint frameIndex)
   rect.SizeY = FrameSizeY;
   return rect;
 }
-
 
 void ComputeOrigins(Array<Vec2>& origins, int frameSizeX, int frameSizeY)
 {
@@ -276,7 +274,7 @@ void SpritePreview::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//Sprite Preview Widget
+// Sprite Preview Widget
 SpritePreviewWidget::SpritePreviewWidget(SpriteFrame* spriteFrame,
                                          Composite* parent) :
     PreviewWidget(parent)
@@ -300,7 +298,7 @@ void SpritePreviewWidget::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-//Sprite Tile View Widget
+// Sprite Tile View Widget
 SpriteTileViewWidget::SpriteTileViewWidget(Composite* parent,
                                            TileView* tileView,
                                            PreviewWidget* tileWidget,
@@ -326,7 +324,7 @@ void SpriteTileViewWidget::OnMouseClick(MouseEvent* event)
   Select(true);
 }
 
-//Sprite Frame Tile View
+// Sprite Frame Tile View
 TileViewWidget* SpriteFrameTileView::CreateTileViewWidget(
     Composite* parent,
     StringParam name,
@@ -377,7 +375,7 @@ void SpriteFrameTileView::OnLeftMouseDrag(MouseDragEvent* e)
   // operations for multiple selected frames
 }
 
-//Sprite Data Source
+// Sprite Data Source
 SpriteDataSource::SpriteDataSource() : mRoot()
 {
 }
@@ -530,7 +528,7 @@ bool SpriteDataSource::SetData(DataEntry* dataEntry,
   return false;
 }
 
-//Sprite Source Editor
+// Sprite Source Editor
 ZilchDefineType(SpriteSourceEditor, builder, type)
 {
   ZilchBindGetterSetterProperty(SpriteName);
@@ -945,7 +943,7 @@ void SpriteSourceEditor::OnSpriteSourceRemoved(ResourceEvent* event)
 {
   // if the sprite source that was removed is the one we're editing then close
   // this window (set active to false so we don't get 1 extra frame of logic
-  //running)
+  // running)
   if (event->EventResource == mSpriteSource)
   {
     SetActive(false);

@@ -48,11 +48,11 @@ void TransformAction::CommitState(PhysicsNode* node)
   // Update the kinematic velocity if requested. The partial velocity still
   // needs to be updated here even though it's updated in
   // UpdateKinematicVelocities so that the user can update positions mid-frame
-  // and get a new velocity on their kinematic objects. However, don't update the
-  // old position and rotation as that should only be updated once per frame. If
-  // the old position is updated multiple times then velocity calculation will
-  // get partial values. To avoid that the positions are only updated once a
-  // frame (see UpdateKinematicVelocities).
+  // and get a new velocity on their kinematic objects. However, don't update
+  // the old position and rotation as that should only be updated once per
+  // frame. If the old position is updated multiple times then velocity
+  // calculation will get partial values. To avoid that the positions are only
+  // updated once a frame (see UpdateKinematicVelocities).
   if (body != nullptr && mState & KinematicVelocity)
     body->ComputeVelocities(
         oldTranslation, oldRotation, body->mSpace->mIterationDt);
@@ -236,8 +236,8 @@ uint BroadPhaseAction::BroadPhaseToRemoveFrom() const
   // we cannot just check the current broadphase state. We may be currently in
   // static, but with a static remove and a dynamic Insert queued. That would
   // mean we'd want to queue a dynamic remove. Therefore, if we have an Insert
-  // queued, queue the corresponding remove. If we don't have an Insert, just use
-  // the current state.
+  // queued, queue the corresponding remove. If we don't have an Insert, just
+  // use the current state.
   if (mState & StaticInsert)
     return StaticRemoval;
   if (mState & DynamicInsert)

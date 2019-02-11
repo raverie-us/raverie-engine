@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Serialization
+// Meta Serialization
 ZilchDefineType(MetaSerialization, builder, type)
 {
 }
@@ -163,7 +163,7 @@ void MetaSerialization::SerializeMembers(HandleParam object,
   MetaSerializeProperties(object, serializer);
 }
 
-//Serialization Primitive
+// Serialization Primitive
 ZilchDefineType(EnumMetaSerialization, builder, type)
 {
 }
@@ -267,7 +267,7 @@ ZilchDefineTemplateType(PrimitiveMetaSerialization<Quat>, builder, type)
 {
 }
 
-//String Serialization
+// String Serialization
 ZilchDefineType(MetaStringSerialization, builder, type)
 {
 }
@@ -312,7 +312,7 @@ bool MetaStringSerialization::ConvertFromString(StringParam input, Any& output)
   return true;
 }
 
-//Serialization Filter
+// Serialization Filter
 ZilchDefineType(SerializationFilter, builder, type)
 {
 }

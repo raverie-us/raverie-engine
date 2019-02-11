@@ -517,7 +517,7 @@ void CrashHandler::FatalError(int errorCode)
 {
   // capture the current context so the stack walker will show whatever called
   // this at the root (it seems like the stack walker skips knows to skip one
-  //level or something so the call stack doesn't show this function)
+  // level or something so the call stack doesn't show this function)
   EXCEPTION_POINTERS* exceptions = NULL;
   GetExceptionPointers(errorCode, &exceptions);
 
@@ -537,8 +537,8 @@ void CrashHandler::DefaultRunCrashHandlerCallback(void* crashData,
   CrashHandler::InvokeCrashStartCallback(info);
 
   // Auto restart is used for programs out in the wild that want to immediately
-  // restart if something goes wrong. For instance, this was used for the pacific
-  // science center projects.
+  // restart if something goes wrong. For instance, this was used for the
+  // pacific science center projects.
   if (CrashHandler::mAutoRestart)
   {
     String appExe = GetApplication();

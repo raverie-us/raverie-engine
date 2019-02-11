@@ -124,7 +124,6 @@ public:
   uint mNewIndex;
 };
 
-
 /// A "text box" that allows searching of resource types. This wraps itself up
 /// to still pretend (slightly) that it's a text box, however when edited it
 /// will make a search view so the user can pick from the resources.
@@ -155,7 +154,6 @@ public:
   /// Any already open search views we've created
   HandleOf<FloatingSearchView> mActiveSearch;
 };
-
 
 /// Bar composite to display the weight of an item. Also allows clicking
 /// and dragging to update the current probability.
@@ -199,7 +197,6 @@ public:
   WeightedTableBar* mBar;
   float mStartProbability;
 };
-
 
 /// Weighted table view for the resource table. Used primarily to set relative
 /// weights and get a good idea of how probable one item is over another.
@@ -282,7 +279,6 @@ public:
   Thickness mMargins;
 };
 
-
 /// The tree view editor for resource tables. Allows compactly
 /// viewing and editing of all the items in the tree view.
 class ResourceTableTreeView : public Composite
@@ -315,7 +311,6 @@ public:
 
   HandleOf<ContextMenu> mContextMenuHandle;
 };
-
 
 /// The main editor for resource tables. Manages switching between
 /// the tree view and the weighted table view.

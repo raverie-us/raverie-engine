@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Threaded Volume Modifier
+// Threaded Volume Modifier
 
 // Object to modify the volume of sound instances. Multiplies with the instance
 // volume.

@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Sound Attenuator
+// Sound Attenuator
 
 ZilchDefineType(SoundAttenuatorDisplay, builder, type)
 {
@@ -326,7 +326,7 @@ bool SoundAttenuator::HasInput()
   return false;
 }
 
-//Sound Attenuator Manager
+// Sound Attenuator Manager
 
 ImplementResourceManager(SoundAttenuatorManager, SoundAttenuator);
 

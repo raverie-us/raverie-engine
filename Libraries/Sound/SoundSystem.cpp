@@ -39,14 +39,14 @@ System* CreateSoundSystem()
   return new SoundSystem();
 }
 
-//Sound Event
+// Sound Event
 
 ZilchDefineType(SoundEvent, builder, type)
 {
   ZeroBindDocumented();
 }
 
-//MIDI Event
+// MIDI Event
 
 ZilchDefineType(MidiEvent, builder, type)
 {
@@ -57,7 +57,7 @@ ZilchDefineType(MidiEvent, builder, type)
   ZilchBindField(Value);
 }
 
-//Audio Float Data Event
+// Audio Float Data Event
 
 ZilchDefineType(AudioFloatDataEvent, builder, type)
 {
@@ -67,7 +67,7 @@ ZilchDefineType(AudioFloatDataEvent, builder, type)
   ZilchBindMember(AudioData);
 }
 
-//Audio Byte Data Event
+// Audio Byte Data Event
 
 ZilchDefineType(AudioByteDataEvent, builder, type)
 {
@@ -76,7 +76,7 @@ ZilchDefineType(AudioByteDataEvent, builder, type)
   ZilchBindMember(AudioData);
 }
 
-//Sound System
+// Sound System
 
 ZilchDefineType(SoundSystem, builder, type)
 {
@@ -470,7 +470,7 @@ void SoundSystem::RemoveSoundSpace(SoundSpace* space, bool isEditor)
   }
 }
 
-//Audio Settings
+// Audio Settings
 
 ZilchDefineType(AudioSettings, builder, type)
 {

@@ -15,7 +15,7 @@ DefineEvent(TagHasNoInstances);
 
 } // namespace Events
 
-//Tag Object
+// Tag Object
 
 ZilchDefineType(TagObject, builder, type)
 {
@@ -395,7 +395,7 @@ TagObject::InstanceData::~InstanceData()
     mVolumeModifier->Active = false;
 }
 
-//Sound Tag
+// Sound Tag
 
 ZilchDefineType(SoundTagDisplay, builder, type)
 {
@@ -861,7 +861,7 @@ void SoundTag::ReleaseTag()
   }
 }
 
-//Sound Tag Manager
+// Sound Tag Manager
 
 ImplementResourceManager(SoundTagManager, SoundTag);
 

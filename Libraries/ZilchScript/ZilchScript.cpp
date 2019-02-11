@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 void ZeroZilchExceptionCallback(ExceptionEvent* e)
 {
   // Get the first non-native stack for debugging
@@ -71,7 +70,7 @@ void OnDebuggerResume(DebuggerEvent* event)
   Z::gEngine->DispatchEvent(Events::DebuggerResume, &toSend);
 }
 
-//ZilchScript Resource
+// ZilchScript Resource
 ZilchDefineType(ZilchScript, builder, type)
 {
   ZeroBindDocumented();
@@ -130,7 +129,7 @@ void ZilchScript::GetLibrariesRecursive(Array<LibraryRef>& libraries,
     libraries.PushBack(library->mSwapFragment.mCurrentLibrary);
 }
 
-//ZilchScriptLoader
+// ZilchScriptLoader
 HandleOf<Resource> ZilchScriptLoader::LoadFromFile(ResourceEntry& entry)
 {
   ZilchScript* script = new ZilchScript();
@@ -154,7 +153,7 @@ void ZilchScriptLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
   ((ZilchScript*)resource)->ReloadData(ReadFileIntoString(entry.FullPath));
 }
 
-//ZilchScriptManager
+// ZilchScriptManager
 ImplementResourceManager(ZilchScriptManager, ZilchScript);
 
 ZilchScriptManager::ZilchScriptManager(BoundType* resourceType) :

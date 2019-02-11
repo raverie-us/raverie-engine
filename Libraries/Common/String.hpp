@@ -22,7 +22,7 @@ typedef const String& StringParam;
 // typedef const String& StringRef;
 typedef const StringRange& StringRangeParam;
 
-//StringStats
+// StringStats
 class StringStats
 {
 public:
@@ -30,12 +30,12 @@ public:
   Atomic<size_t> mTotalCount;
 };
 
-//Utility
+// Utility
 bool CaseSensitiveCompare(Rune a, Rune b);
 bool CaseInsensitiveCompare(Rune a, Rune b);
 typedef bool (*RuneComparer)(Rune a, Rune b);
 
-//StringNode
+// StringNode
 struct StringNode
 {
   typedef char value_type;
@@ -59,7 +59,7 @@ struct StringNode
   static bool isEqual(StringNode* l, StringNode* r);
 };
 
-//PoolPolicy
+// PoolPolicy
 class PoolPolicy
 {
 public:

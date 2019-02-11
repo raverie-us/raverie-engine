@@ -31,7 +31,7 @@ bool IsValidForStorage(HandleParam object)
   return false;
 }
 
-//Child Id
+// Child Id
 ObjectState::ChildId::ChildId(StringParam typeName, Guid id) :
     mTypeName(typeName),
     mId(id)
@@ -74,7 +74,7 @@ bool ObjectState::ChildId::operator==(const ChildId& rhs) const
   return mTypeName == rhs.mTypeName && mId == rhs.mId;
 }
 
-//Object State
+// Object State
 ObjectState::ObjectState() : mChildOrderModified(false)
 {
 }
@@ -279,7 +279,7 @@ ObjectState::ChildrenMap::range ObjectState::GetRemovedChildren()
   return mRemovedChildren.All();
 }
 
-//Object Modifications
+// Object Modifications
 ObjectState* LocalModifications::GetObjectState(HandleParam object,
                                                 bool createNew,
                                                 bool validateStorage)
@@ -657,7 +657,7 @@ bool LocalModifications::IsModified(HandleParam object,
   return false;
 }
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 Guid MetaDataInheritance::GetUniqueId(HandleParam object)
 {
   return cInvalidUniqueId;

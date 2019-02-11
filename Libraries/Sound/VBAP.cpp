@@ -23,7 +23,7 @@ float GetNormalizeValue(const Math::Vec2& vector)
   return Math::Sqrt(value);
 }
 
-//Speaker Info
+// Speaker Info
 
 SpeakerInfo::SpeakerInfo(float radians,
                          const Math::Vec2& vector,
@@ -49,7 +49,7 @@ void SpeakerInfo::CreateMatrix()
   mInverted = Math::Mat2::SafeInvert(mNeighborMatrix);
 }
 
-//VBAP
+// VBAP
 
 VBAP::VBAP() : mNumberOfChannels(1)
 {

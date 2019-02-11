@@ -24,7 +24,6 @@ class TimeSystem;
 class TimeConfig;
 System* CreateTimeSystem();
 
-
 /// Update event Contains current time and delta time.
 class UpdateEvent : public Event
 {

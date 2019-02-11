@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Options
+// Options
 typedef Array<ContentItem*> ContentItemArray;
 
 DeclareEnum3(ProcessingLevel, Full, Production, Fast);

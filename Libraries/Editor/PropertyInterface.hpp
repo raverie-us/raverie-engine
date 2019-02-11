@@ -129,7 +129,7 @@ DeclareEnum2(PropertyAction,
                       // visually, but does not queue an operation.
              Commit); // Executes the property change and queue's an operation
 
-//Property Interface
+// Property Interface
 /// Used for undo / redo, networking, multiple object editing, etc...
 class PropertyInterface
 {
@@ -208,7 +208,7 @@ public:
   PropertyView* mPropertyGrid;
 };
 
-//Event Meta Composition
+// Event Meta Composition
 class EventMetaComposition : public MetaCompositionWrapper
 {
 public:
@@ -231,7 +231,7 @@ public:
   PropertyInterface* mPropertyInterface;
 };
 
-//Event Meta Array
+// Event Meta Array
 class EventMetaArray : public MetaArrayWrapper
 {
 public:

@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Creation Context
+// Meta Creation Context
 /// See comment above MetaCreationContext.
 struct CogMetaCreationContext : public MetaCreationContext
 {
@@ -16,7 +16,7 @@ struct CogMetaCreationContext : public MetaCreationContext
   HashMap<Space*, CogInitializer*> mInitializers;
 };
 
-//Cog Meta Composition
+// Cog Meta Composition
 class CogMetaComposition : public MetaComposition
 {
 public:

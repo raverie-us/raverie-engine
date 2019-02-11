@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Sound Attenuator Node
+// Sound Attenuator Node
 
 class SoundAttenuatorNode
 {
@@ -19,7 +19,7 @@ public:
   Link<SoundAttenuatorNode> link;
 };
 
-//Sound Attenuator
+// Sound Attenuator
 
 /// Decreases a positional sound's volume as the SoundEmitter gets further away
 /// from a SoundListener.
@@ -107,7 +107,7 @@ class SoundAttenuatorDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
-//Sound Attenuator Manager
+// Sound Attenuator Manager
 
 class SoundAttenuatorManager : public ResourceManager
 {

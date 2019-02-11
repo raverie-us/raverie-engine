@@ -71,7 +71,7 @@ bool StressTestErrorHandler(ErrorSignaler::ErrorData& errorData)
 // Occurs when the engine updates
 void OnUpdate(ObjectEvent* event);
 
-//StressRandom
+// StressRandom
 // Constructor
 StressRandom::StressRandom(int seed) : mRandom(seed)
 {
@@ -222,7 +222,7 @@ String StressRandom::RandomString()
   return builder.ToString();
 }
 
-//StressTest
+// StressTest
 ZilchDefineType(StressTest, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
@@ -304,7 +304,7 @@ void StressTest::Serialize(Serializer& stream)
     LogFile = FilePath::Combine(GetUserDocumentsDirectory(), "Log.txt");
 }
 
-//StressTestDialog
+// StressTestDialog
 ZilchDefineType(StressTestDialog, builder, type)
 {
 }
@@ -946,8 +946,8 @@ void StressTestDialog::TestOnce()
             //            true;//OsMouseButtonState::Held;
             //            shell->DispatchEvent(Events::OsMouseMove, &event);
             // a move has to be sent twice (at least on the same frame)
-            // otherwise it doesn't work right now, I guess it's a bug in ui that
-            // needs to be fixed
+            // otherwise it doesn't work right now, I guess it's a bug in ui
+            // that needs to be fixed
             //            event.Movement = Vec2::cZero;
             //            shell->DispatchEvent(Events::OsMouseMove, &event);
           }

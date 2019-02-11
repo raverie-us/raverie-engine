@@ -95,9 +95,9 @@ void ComputeEdgeInfoForTriangleA(Triangle& triA,
 
   // now that we have this info we can get to the heart of this algorithm.
   // we want to compute the angle between the normals of triA and triB about the
-  // edge axis, this tells us what the valid Voronoi region is for triangle A. To
-  // do this, we have to compute some basis vectors and make sure that they are
-  // facing in correct directions
+  // edge axis, this tells us what the valid Voronoi region is for triangle A.
+  // To do this, we have to compute some basis vectors and make sure that they
+  // are facing in correct directions
 
   // first, we need to construct vectors on the surface of A and B that are
   // perpendicular to the normal and edge and facing outwards
@@ -177,8 +177,8 @@ void ComputeEdgeInfoForTriangleA(Triangle& triA,
   // correct for a counterclockwise edge earlier
   *mEdgeAngles[flagIndex] = voronoiRegionAngle;
   // mark as being in a convex or not state. Make sure to override this flag
-  // with the state, not just if it's convex because this is run incrementally on
-  // painted meshes
+  // with the state, not just if it's convex because this is run incrementally
+  // on painted meshes
   info->mEdgeFlags.SetState(flags[flagIndex], isConvex);
 }
 
@@ -230,8 +230,8 @@ void GenerateInternalEdgeInfo(PhysicsMesh* mesh, TriangleInfoMap* infoMap)
   TreeType& tree = *treePointer;
 
   // loop over all of the triangles in the mesh, for each triangle send it
-  // through the tree to determine which triangles should be checked for the more
-  // expensive internal calculation (should I fatten the aabb?)
+  // through the tree to determine which triangles should be checked for the
+  // more expensive internal calculation (should I fatten the aabb?)
   uint triangleCount = mesh->GetTriangleCount();
   for (uint indexA = 0; indexA < triangleCount; ++indexA)
   {
@@ -463,10 +463,10 @@ void TestEdgeCloseness(Vec3Param contactPoint,
   real length = dir.Length();
 
   // the normal approach would just be to save this edge as closest if it's
-  // distance is less than the previous edge, however there can be cases when the
-  // point is right on a corner and the distances are incredibly close to each
-  // other where the closest edge is not the desired one. In the case that we
-  // detect very close edge proximity (aka within an epsilon of the last
+  // distance is less than the previous edge, however there can be cases when
+  // the point is right on a corner and the distances are incredibly close to
+  // each other where the closest edge is not the desired one. In the case that
+  // we detect very close edge proximity (aka within an epsilon of the last
   // distance) we want the edge that makes the most sense to rotate the triangle
   // normal about to get the contact normal. The way to test this is to take the
   // edge that is most perpendicular to the contact normal, this means it is the
@@ -682,8 +682,8 @@ void EvaluateBestEdge(Physics::ManifoldPoint& point,
 
   // test to see if we are back facing on both triangles (if we are on the
   // negative side of both normals). If so, we don't correct to the Voronoi
-  // region, we instead use the triangle normal, however since we are on the back
-  // use the negative normal
+  // region, we instead use the triangle normal, however since we are on the
+  // back use the negative normal
   bool backFacingNormal =
       (nDotA < convexEpsilon); // && (nDotB < convexEpsilon);
   if (backFacingNormal)

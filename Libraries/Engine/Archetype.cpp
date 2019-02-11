@@ -8,7 +8,7 @@ Memory::Heap* Archetype::CacheHeap =
     new Memory::Heap("Archetypes", Memory::GetRoot());
 bool Archetype::sRebuilding = false;
 
-//Archetype
+// Archetype
 ZilchDefineType(Archetype, builder, type)
 {
   ZeroBindDocumented();
@@ -202,7 +202,7 @@ Archetype* Archetype::GetBaseArchetype()
   return ArchetypeManager::GetInstance()->FindOrNull(mBaseResourceIdName);
 }
 
-//ArchetypeLoader
+// ArchetypeLoader
 class ArchetypeLoader : public ResourceLoader
 {
 public:
@@ -267,7 +267,7 @@ public:
   }
 };
 
-//Archetype Manager
+// Archetype Manager
 ImplementResourceManager(ArchetypeManager, Archetype);
 
 ArchetypeManager::ArchetypeManager(BoundType* resourceType) :

@@ -17,7 +17,6 @@ DefineEvent(GameRequestQuit);
 DefineEvent(EditSpaces);
 } // namespace Events
 
-
 GameEvent::GameEvent()
 {
   mHandled = false;

@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Startup
+// Startup
 Engine* ZeroStartup::Initialize(ZeroStartupSettings& settings)
 {
   InitializeLibraries(settings);

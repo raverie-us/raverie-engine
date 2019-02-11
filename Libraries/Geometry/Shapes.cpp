@@ -254,7 +254,6 @@ SweptTriangle SweptTriangle::UniformTransform(Mat4Param transformation) const
   return Transform(transformation);
 }
 
-
 Tetrahedron::Tetrahedron(Vec3Param point1,
                          Vec3Param point2,
                          Vec3Param point3,
@@ -338,7 +337,6 @@ Tetrahedron Tetrahedron::UniformTransform(Mat4Param transformation) const
   return Transform(transformation);
 }
 
-
 void Obb::GetCenter(Vec3Ref center) const
 {
   center = Center;
@@ -370,7 +368,6 @@ Vec3 Obb::GetCenter() const
   GetCenter(center);
   return center;
 }
-
 
 void Ellipsoid::GetCenter(Vec3Ref center) const
 {

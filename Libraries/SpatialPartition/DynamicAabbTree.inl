@@ -3,7 +3,6 @@
 namespace Zero
 {
 
-
 template <typename ClientDataType>
 DynamicTreeNode<ClientDataType>::DynamicTreeNode()
 {
@@ -52,7 +51,6 @@ DynamicTreeNode<ClientDataType>* DynamicTreeNode<ClientDataType>::GetSibling()
     return mParent->mChild2;
   return mParent->mChild1;
 }
-
 
 template <typename ClientDataType>
 void DynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root,
@@ -143,7 +141,6 @@ DynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
   }
   return grandParent;
 }
-
 
 template <typename ClientDataType>
 DynamicAabbTree<ClientDataType>::DynamicAabbTree()

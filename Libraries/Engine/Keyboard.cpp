@@ -424,7 +424,7 @@ bool KeyboardEvent::GetModifierPressed()
   return CtrlPressed || ShiftPressed || AltPressed;
 }
 
-//KeyboardTextEvent
+// KeyboardTextEvent
 ZilchDefineType(KeyboardTextEvent, builder, type)
 {
   ZeroBindDocumented();

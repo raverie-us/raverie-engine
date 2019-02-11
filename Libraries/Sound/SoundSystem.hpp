@@ -24,7 +24,7 @@ DeclareEvent(MicrophoneCompressedByteData);
 
 } // namespace Events
 
-//Sound Event
+// Sound Event
 
 /// Sent for various audio-related events
 class SoundEvent : public Event
@@ -42,7 +42,7 @@ public:
   void* mPointer;
 };
 
-//MIDI Event
+// MIDI Event
 
 /// Sent when a MIDI message is received from a connected device.
 class MidiEvent : public Event
@@ -68,7 +68,7 @@ public:
   float Value;
 };
 
-//Audio Float Data Event
+// Audio Float Data Event
 
 class AudioFloatDataEvent : public Event
 {
@@ -79,7 +79,7 @@ public:
   unsigned Channels;
 };
 
-//Audio Byte Data Event
+// Audio Byte Data Event
 
 class AudioByteDataEvent : public Event
 {
@@ -89,7 +89,7 @@ public:
   HandleOf<ArrayClass<byte>> AudioData;
 };
 
-//Enums
+// Enums
 
 /// The possible settings for the number of channels used by the audio system
 /// when creating audio. <param name="AutoDetect">The audio system will match
@@ -103,7 +103,7 @@ public:
 /// typical 7.1 speaker configuration.</param>
 DeclareEnum6(AudioMixTypes, AutoDetect, Mono, Stereo, Quad, FiveOne, SevenOne);
 
-//Sound System
+// Sound System
 
 /// SoundSystem manages audio for the engine.
 class SoundSystem : public System
@@ -244,7 +244,7 @@ namespace Z
 extern SoundSystem* gSound;
 } // namespace Z
 
-//Sound Settings
+// Sound Settings
 
 class AudioSettings : public Component
 {

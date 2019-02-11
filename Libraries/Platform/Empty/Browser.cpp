@@ -208,7 +208,7 @@ void Browser::PlatformUpdate()
 {
 }
 
-//BrowserSubProcess
+// BrowserSubProcess
 int BrowserSubProcess::Execute()
 {
   return 0;

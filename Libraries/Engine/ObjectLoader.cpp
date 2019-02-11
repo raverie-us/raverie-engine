@@ -7,7 +7,7 @@ namespace Zero
 DataNode* FindSimilarInterfaces(DataNode* parent, BoundType* typeToAdd);
 void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation);
 
-//Object Loader
+// Object Loader
 void ObjectLoader::RecordModifications(Object* rootObject)
 {
   // Object loader assumes a single root node
@@ -234,7 +234,7 @@ void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation)
   }
 }
 
-//Cached Modifications
+// Cached Modifications
 CachedModifications::CachedModifications() : mRootObjectNode(nullptr)
 {
 }
@@ -626,7 +626,7 @@ CachedModifications::ExtractInternal(Object* object)
   return currNode;
 }
 
-//Object Node
+// Object Node
 CachedModifications::ObjectNode::ObjectNode()
 {
   // mState = new ObjectState();

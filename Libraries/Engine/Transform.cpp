@@ -51,7 +51,6 @@ TransformMetaTransform::BuildInstance(Transform* transform)
   return instance;
 }
 
-
 Vec3 GetTranslationFrom(Mat4Param mat)
 {
   return Vec3(mat.m03, mat.m13, mat.m23);
@@ -107,7 +106,6 @@ void SetRotationLookAt(Transform* transform,
   transform->SetWorldRotation(
       LookAt(transform->GetWorldTranslation(), lookAtPoint, up, facing));
 }
-
 
 Memory::Pool* Transform::sCachedWorldMatrixPool = new Memory::Pool(
     "TransformWorldMatrixCache", Memory::GetRoot(), sizeof(Mat4), 100);

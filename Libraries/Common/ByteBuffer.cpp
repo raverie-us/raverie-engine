@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 ByteBuffer::BlockRange::BlockRange(ByteBuffer* buffer)
 {
   mBlock = buffer->mBlocks.Data();
@@ -36,7 +35,6 @@ void ByteBuffer::BlockRange::PopFront()
   ErrorIf(Empty(), "Popped and empty range.");
   ++mBlock;
 }
-
 
 ByteBuffer::ByteBuffer(size_t blockSize)
 {
@@ -191,7 +189,6 @@ void ByteBuffer::Deallocate()
   mBlocks.Clear();
   mTotalSize = 0;
 }
-
 
 ByteBufferBlock::ByteBufferBlock()
 {

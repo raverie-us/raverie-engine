@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Bound Type Handle
+// Bound Type Handle
 BoundTypeHandle::BoundTypeHandle(BoundType* boundType)
 {
   if (boundType)
@@ -25,7 +25,7 @@ BoundType* BoundTypeHandle::operator->() const
   return MetaDatabase::GetInstance()->FindType(mName);
 }
 
-//Property Handle
+// Property Handle
 PropertyHandle::PropertyHandle(Property* property)
 {
   if (property)

@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Attributes
+// Attributes
 namespace SerializationAttributes
 {
 DefineStringConstant(Id);
@@ -29,7 +29,6 @@ PolymorphicInfo::PolymorphicInfo() :
     mFlags(0)
 {
 }
-
 
 Serializer::Serializer()
 {

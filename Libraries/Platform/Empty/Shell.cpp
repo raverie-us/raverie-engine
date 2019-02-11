@@ -132,7 +132,7 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   return mInputDevices;
 }
 
-//ShellWindow
+// ShellWindow
 ShellWindow::ShellWindow(Shell* shell,
                          StringParam windowName,
                          Math::IntVec2Param clientSize,

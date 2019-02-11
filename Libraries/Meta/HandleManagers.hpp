@@ -45,7 +45,7 @@ public:
   Atomic<int> mCount;
 };
 
-//Declare
+// Declare
 // Call within the class definition
 #define DeclareReferenceCountedHandle()                                        \
   DeclareReferenceCountedHandleInternals() typedef u32 HandleIdType;
@@ -83,7 +83,7 @@ public:
 #define DeclareReferenceCountedThreadSafeIdHandle(idType)                      \
   DeclareReferenceCountedHandleInternals() DeclareThreadSafeIdHandle(idType)
 
-//Define
+// Define
 #define DefineSafeIdHandle(type)                                               \
   type::HandleIdType type::mZeroHandleCurrentId = 1;                           \
   HashMap<type::HandleIdType, type*> type::mZeroHandleLiveObjects;
@@ -97,7 +97,7 @@ public:
 #define DefineReferenceCountedThreadSafeIdHandle(type)                         \
   DefineReferenceCountedHandle(type) DefineThreadSafeIdHandle(type)
 
-//Constructor
+// Constructor
 // Call in the constructor and copy constructor of the object
 #define ConstructReferenceCountedHandle() mZeroHandleReferenceCount.mCount = 0;
 
@@ -118,7 +118,7 @@ public:
   ConstructReferenceCountedHandle();                                           \
   ConstructThreadSafeIdHandle();
 
-//Destructor
+// Destructor
 // Call in the destructor of the object
 #define DestructReferenceCountedHandle()                                       \
   ErrorIf(mZeroHandleReferenceCount.mCount != 0,                               \
@@ -141,17 +141,17 @@ public:
 #define DestructReferenceCountedThreadSafeIdHandle()                           \
   DestructThreadSafeIdHandle();
 
-//Bind Manager
+// Bind Manager
 // Call in the meta initialization of the class type
 #define ZeroBindHandle()                                                       \
   type->HandleManager = ZilchManagerId(ZeroHandleManager<ZilchSelf>);
 
-//Register Manager
+// Register Manager
 // Call in the meta initialization of the library
 #define ZeroRegisterHandleManager(type)                                        \
   ZilchRegisterSharedHandleManager(ZeroHandleManager<type>);
 
-//Handle Manager
+// Handle Manager
 template <typename T>
 class ZeroHandleManager : public HandleManager
 {
@@ -167,7 +167,7 @@ public:
   ZeroDeclareHasMemberTrait(IsThreadSafe, mZeroHandleLock);
 
   //------------------------------------------------------------------------------------
-  //Handle Data
+  // Handle Data
   struct HandleData
   {
     void* mRawObject;
@@ -221,12 +221,12 @@ public:
   }
 
   //--------------------------------------------------------------------------------------
-  //Internals
+  // Internals
   // Internal versions of each function were added because they need to be
   // templated for SFINAE
 
   //---------------------------------------------------------------------------------
-  //ObjectToHandle
+  // ObjectToHandle
   //************************************************************************************************
   // Only reference counted
   template <typename U = T>
@@ -282,7 +282,7 @@ public:
   }
 
   //---------------------------------------------------------------------------------
-  //HandleToObject
+  // HandleToObject
   //************************************************************************************************
   // Only reference counted
   template <typename U = T>
@@ -328,7 +328,7 @@ public:
   }
 
   //-----------------------------------------------------------------------------------
-  //AddReference
+  // AddReference
   //************************************************************************************************
   template <typename U = T>
   void AddReferenceInternal(const Handle& handle,
@@ -346,7 +346,7 @@ public:
   }
 
   //-------------------------------------------------------------------------------
-  //ReleaseReference
+  // ReleaseReference
   //************************************************************************************************
   template <typename U = T>
   ReleaseResult::Enum ReleaseReferenceInternal(
@@ -370,13 +370,13 @@ public:
   }
 };
 
-//Zero Handle Object
+// Zero Handle Object
 // Used as the default base for inheritable handle types
 class EmptyClass
 {
 };
 
-//Reference Counted
+// Reference Counted
 template <typename Base = EmptyClass>
 class ReferenceCounted : public Base
 {
@@ -410,7 +410,7 @@ void ReferenceCounted<Base>::ZilchSetupType(ZZ::LibraryBuilder& builder,
   ZeroBindHandle();
 }
 
-//Safe Id
+// Safe Id
 template <typename idType, typename Base = EmptyClass>
 class SafeId : public Base
 {
@@ -457,7 +457,7 @@ void SafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder,
   ZeroBindHandle();
 }
 
-//Thread Safe Id
+// Thread Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ThreadSafeId : public Base
 {
@@ -506,7 +506,7 @@ void ThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder,
 {
   ZeroBindHandle();
 }
-//Reference Counted Safe Id
+// Reference Counted Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ReferenceCountedSafeId : public Base
 {
@@ -553,7 +553,7 @@ void ReferenceCountedSafeId<idType, Base>::ZilchSetupType(
 {
   ZeroBindHandle();
 }
-//Counted Thread Safe Id
+// Counted Thread Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ReferenceCountedThreadSafeId : public Base
 {

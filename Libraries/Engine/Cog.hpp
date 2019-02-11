@@ -6,7 +6,7 @@ namespace Zero
 
 extern const bool cBindCogChildrenReverseRange;
 
-//Events
+// Events
 namespace Events
 {
 DeclareEvent(CogNameChanged);
@@ -49,7 +49,7 @@ DeclareBitField12(
     // Is the Cog representing the Archetype definition (data file)?
     ArchetypeDefinitionMode);
 
-//Base Cog
+// Base Cog
 /// Base class used for the intrusive link.
 class BaseCog : public Object
 {
@@ -64,7 +64,7 @@ typedef BaseInList<BaseCog, Cog, &BaseCog::HierarchyLink> HierarchyList;
 typedef ConditionalRange<HierarchyList::range, NameCondition>
     HierarchyListNameRange;
 
-//Cog
+// Cog
 /// Game Object Composition class. This class is the foundational object for all
 /// dynamic objects in the game world. The Cog is a piece of logical interactive
 /// content and the primary mechanism game systems (Graphics, Physics, Etc.)
@@ -111,7 +111,7 @@ public:
   virtual Cog* Clone();
 
   //-----------------------------------------------------------------------------
-  //Serialization
+  // Serialization
   /// Serialize all components data.
   void Serialize(Serializer& stream) override;
 
@@ -122,7 +122,7 @@ public:
   static Cog* CreateAndInitializeFromStream(Space* space, Serializer& stream);
 
   //----------------------------------------------------------------------------
-  //Initialization
+  // Initialization
   /// Initialize all the components on the composition.
   /// The order of initialize is as follows:
   /// 1. Initialize
@@ -140,7 +140,7 @@ public:
   bool IsInitialized() const;
 
   //--------------------------------------------------------------------------------
-  //Components
+  // Components
   /// Typedefs.
   typedef Array<Component*> ComponentArray;
   typedef ComponentArray::range ComponentRange;
@@ -225,7 +225,7 @@ public:
   ComponentMap mComponentMap;
 
   //----------------------------------------------------------------------------------
-  //Children
+  // Children
   /// Get the parent of this object in the Hierarchy.
   Cog* GetParent();
   /// Searches up the hierarchy for the root Cog.
@@ -316,7 +316,7 @@ public:
   Cog* mHierarchyParent;
 
   //--------------------------------------------------------------------------------
-  //Archetypes
+  // Archetypes
   /// Getter / setter for Archetype.
   Archetype* GetArchetype();
   void SetArchetype(Archetype* archetype);
@@ -363,7 +363,7 @@ public:
   HandleOf<Archetype> mArchetype;
 
   //------------------------------------------------------------------------------------
-  //Events
+  // Events
   /// Dispatches an event on this object
   void DispatchEvent(StringParam eventId, Event* event);
 
@@ -388,7 +388,7 @@ public:
   EventDispatcher mDispatcher;
 
   //-------------------------------------------------------------------------------------
-  //Other
+  // Other
   virtual bool IsEditorMode();
   virtual bool IsPreviewMode();
   virtual bool IsEditorOrPreviewMode();
@@ -506,7 +506,7 @@ inline void SetUpObject(T* object)
   }
 }
 
-//Cog Handle Manager
+// Cog Handle Manager
 class CogHandleData
 {
 public:

@@ -4,13 +4,13 @@
 namespace Zero
 {
 
-//Zilch Library Resource
+// Zilch Library Resource
 ZilchDefineType(ZilchLibraryResource, builder, type)
 {
   ZeroBindDocumented();
 }
 
-//Zilch Document
+// Zilch Document
 ZilchDefineType(ZilchDocumentResource, builder, type)
 {
   ZilchBindFieldGetter(mText);

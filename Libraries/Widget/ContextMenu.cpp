@@ -35,7 +35,7 @@ DefineEvent(MenuEntryModified);
 DefineEvent(ContextMenuCreated);
 } // namespace Events
 
-//Context
+// Context
 void Context::Add(HandleParam object)
 {
   mContextMap[object.StoredType->Name] = object;
@@ -303,7 +303,7 @@ void ContextMenuEntry::CreateSubMenu(ContextMenuItem* menuItem)
   parent->UpdateTransform();
 }
 
-//ContextMenuEntryDivider
+// ContextMenuEntryDivider
 ZilchDefineType(ContextMenuEntryDivider, builder, type)
 {
   ZilchBindConstructor();
@@ -316,7 +316,7 @@ Widget* ContextMenuEntryDivider::Create(ContextMenu* parent)
   return item;
 }
 
-//ContextMenuEntryCommand
+// ContextMenuEntryCommand
 ZilchDefineType(ContextMenuEntryCommand, builder, type)
 {
   ZilchFullBindConstructor(
@@ -354,7 +354,7 @@ Widget* ContextMenuEntryCommand::Create(ContextMenu* parent)
   return item;
 }
 
-//ContextMenuEntryMenu
+// ContextMenuEntryMenu
 ZilchDefineType(ContextMenuEntryMenu, builder, type)
 {
   ZilchFullBindConstructor(

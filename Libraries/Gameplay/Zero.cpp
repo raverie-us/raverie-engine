@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Zero Static
+// Zero Static
 ZilchDefineType(ZeroStatic, builder, type)
 {
   ZeroBindDocumented();
@@ -155,7 +155,6 @@ void ZeroStatic::DisconnectAllEvents(Object* sender, Object* receiver)
   dispatcher->Disconnect(receiver);
 }
 
-
 Keyboard* ZeroStatic::GetKeyboard()
 {
   return Keyboard::Instance;
@@ -211,7 +210,7 @@ SoundSystem* ZeroStatic::GetAudio()
   return Z::gSound;
 }
 
-//ZilchScriptConnection
+// ZilchScriptConnection
 ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher,
                                              StringParam eventId,
                                              DelegateParam delagate) :

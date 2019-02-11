@@ -220,7 +220,6 @@ public:
   Widget* mBackground;
 };
 
-
 DeclareEnum3(WindowStyle, Normal, NoFrame, Small);
 Thickness GetTotalWindowPadding();
 

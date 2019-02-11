@@ -12,7 +12,6 @@ namespace Zero
 
 const char cExtensionDelimiter = '.';
 
-
 bool IsValidFileNameRune(Rune r)
 {
   return IsAlphaNumeric(r) || r.value == '.' || r.value == '_' ||

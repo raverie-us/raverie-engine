@@ -94,7 +94,6 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
   return content;
 }
 
-
 void CreateImageContent(ContentSystem* system)
 {
   AddContentComponent<TextureInfo>(system);

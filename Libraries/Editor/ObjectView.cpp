@@ -361,7 +361,7 @@ public:
   }
 };
 
-//Removed Entry
+// Removed Entry
 ZilchDefineType(RemovedEntry, builder, type)
 {
 }
@@ -438,7 +438,7 @@ String RemovedEntry::GetNameFromCogNode(DataNode* cogNode)
   return "[Invalid]";
 }
 
-//Data Source Adapter class to bind a space and objects to a DataBaseSource.
+// Data Source Adapter class to bind a space and objects to a DataBaseSource.
 class SpaceObjectSource : public DataSource
 {
 public:

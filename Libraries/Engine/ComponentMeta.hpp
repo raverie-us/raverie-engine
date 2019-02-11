@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 class ComponentMetaDataInheritance : public MetaDataInheritance
 {
 public:
@@ -22,7 +22,7 @@ public:
   void RebuildObject(HandleParam object) override;
 };
 
-//Component Meta Operations
+// Component Meta Operations
 class ComponentMetaOperations : public MetaOperations
 {
 public:

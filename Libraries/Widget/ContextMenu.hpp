@@ -25,7 +25,7 @@ DeclareTweakable(Vec2, BorderPadding);
 DeclareTweakable(Vec4, GutterColor);
 } // namespace MenuUi
 
-//Context
+// Context
 class Context
 {
 public:
@@ -53,7 +53,7 @@ public:
 typedef Context& ContextRef;
 typedef const Context& ContextParam;
 
-//Context Menu Event
+// Context Menu Event
 class ContextMenuEvent : public Event
 {
   ZilchDeclareType(ContextMenuEvent, TypeCopyMode::ReferenceType);

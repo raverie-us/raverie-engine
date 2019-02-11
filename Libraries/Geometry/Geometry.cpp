@@ -676,7 +676,8 @@ void CalculateTriMeshCenterOfMassAndVolume(const Vec3* triMeshPoints,
     // by the total volume of the mesh, which gives that tetrahedron's
     // contribution to the total mesh volume as a value between 0 and 1. If we
     // divided by 6, both for the tetrahedral volume as well as the mesh volume,
-    // then the 6's would cancel out and we would be left with the same ratio. :P
+    // then the 6's would cancel out and we would be left with the same ratio.
+    // :P
     real tetraVol = triPoints.Determinant();
 
     // Tetrahedron contributes its own center of mass, but weighted by its

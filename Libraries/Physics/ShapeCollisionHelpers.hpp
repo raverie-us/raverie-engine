@@ -12,7 +12,7 @@ class MultiConvexMeshCollider;
 class MeshCollider;
 class HeightMapCollider;
 
-//Helpers
+// Helpers
 
 /// Performs a full manifold replacement (I get a full set
 /// of contacts from intersection instead of a few new points)
@@ -67,7 +67,7 @@ inline void IntersectionToPhysicsManifold<Obb, Obb>(
 
 #undef DeclareFullManifoldSpecialization
 
-//Edge Fixing
+// Edge Fixing
 
 void FixInternalEdges(GenericPhysicsMesh* mesh,
                       Physics::Manifold* manifold,
@@ -86,7 +86,6 @@ void FixInternalEdges(MeshCollider* collider,
 void FixInternalEdges(HeightMapCollider* collider,
                       Physics::Manifold* manifold,
                       uint contactId);
-
 
 void BaseManifoldToProxyResult(Intersection::Manifold* manifold,
                                ProxyResult* result);
@@ -118,7 +117,6 @@ void ManifoldToProxyResult(const Sphere& castShape,
                            Collider* collider,
                            Intersection::Manifold* manifold,
                            ProxyResult* result);
-
 
 // Unfortunately, these need a collider because of how the cylinder version
 // works
@@ -162,10 +160,10 @@ Vec3 NormalFromPointOnShape(const Triangle& triangle,
                             Vec3Param point,
                             Vec3Param start);
 
-
 // to deal with shape types that we should be getting a normal when casting
-// against (we only get normals against segments and rays, other shapes we ignore
-//this call on)
+// against (we only get normals against segments and rays, other shapes we
+// ignore
+// this call on)
 template <typename CastType, typename ShapeType>
 void GetNormalFromPointOnShape(const CastType& castShape,
                                const ShapeType& shape,
@@ -199,7 +197,6 @@ void GetNormalFromPointOnShape(const Segment& castShape,
   normal = NormalFromPointOnShape(shape, shapeCollider, point, castShape.Start);
 }
 
-
 /// Anything that asserts in here either needs a new function or should be going
 /// through the complex interface (meshes, multi-collider, etc...)
 template <typename ShapeType>
@@ -215,7 +212,6 @@ void ColliderToShape(Collider* collider, Ellipsoid& ellipsoid);
 void ColliderToShape(Collider* collider, Cylinder& cylinder);
 void ColliderToShape(Collider* collider, Capsule& capsule);
 void ColliderToShape(Collider* collider, ConvexMeshShape& convexMesh);
-
 
 /// Currently I need to get the aabb of the cast shape to hand off to the
 /// complex collider for filtering, however, taking the aabb of any shape
@@ -238,7 +234,6 @@ inline Aabb GetCastDataAabb(const Ray& castShape)
   return ToAabb(castShape, real(999999.0));
 }
 
-
 // No real reason for this to be templated. Only possibility is
 // if we ever need to specialize a case. This most likely would happen if
 // the manifold needs to be combined differently that normal. (or meshes?)
@@ -250,7 +245,6 @@ bool CollideShapes(Shape1Type& shape1,
   return Collide(shape1, shape2, result);
 }
 
-
 // No real reason for this to be templated. Only possibility is
 // if we ever need to specialize a case. (Meshes?)
 template <typename Shape1Type, typename Shape2Type>
@@ -258,7 +252,6 @@ bool OverlapShapes(const Shape1Type& shape1, const Shape2Type& shape2)
 {
   return Overlap(shape1, shape2);
 }
-
 
 // No real reason for this to be templated. Only possibility is
 // if we ever need to specialize a case. (Meshes?)

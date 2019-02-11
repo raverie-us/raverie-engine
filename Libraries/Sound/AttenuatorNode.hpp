@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Attenuation Per Listener
+// Attenuation Per Listener
 
 class AttenuationPerListener
 {
@@ -20,7 +20,7 @@ public:
   LowPassFilter LowPass;
 };
 
-//Attenuator Node
+// Attenuator Node
 
 class AttenuatorNode : public SimpleCollapseNode
 {

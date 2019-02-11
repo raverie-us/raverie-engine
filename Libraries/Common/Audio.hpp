@@ -19,7 +19,7 @@ typedef void IOCallbackType(float* outputBuffer,
                             unsigned framesPerBuffer,
                             void* data);
 
-//Audio Input Output
+// Audio Input Output
 
 class AudioInputOutput
 {
@@ -63,7 +63,7 @@ DeclareEnum7(MidiEventType,
              MidiControl,
              NotSet);
 
-//MIDI Data
+// MIDI Data
 
 class MidiData
 {
@@ -77,7 +77,7 @@ public:
 class MidiInput;
 typedef void (*MidiDataCallback)(MidiData* data, MidiInput* input);
 
-//MIDI Input
+// MIDI Input
 
 class MidiInput
 {

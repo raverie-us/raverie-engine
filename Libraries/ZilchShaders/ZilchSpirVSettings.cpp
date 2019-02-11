@@ -197,7 +197,6 @@ void UniformBufferDescription::AddField(Zilch::BoundType* type,
   mFields.PushBack(fieldMeta);
 }
 
-
 BuiltInBlockDescription::BuiltInBlockDescription()
 {
   mInterfaceBlock = true;

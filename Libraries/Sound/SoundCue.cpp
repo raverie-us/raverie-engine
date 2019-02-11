@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Sound Entry
+// Sound Entry
 
 ZilchDefineType(SoundEntryDisplay, builder, type)
 {
@@ -196,7 +196,7 @@ void SoundEntry::SetLoopTailLength(float time)
   mLoopTailLength = Math::Clamp(time, 0.0f, 30.0f);
 }
 
-//Sound Tag Entry
+// Sound Tag Entry
 
 ZilchDefineType(SoundTagEntryDisplay, builder, type)
 {
@@ -252,7 +252,7 @@ SoundTag* SoundTagEntry::GetSoundTag()
   return mSoundTag;
 }
 
-//Sound Cue
+// Sound Cue
 
 ZilchDefineType(SoundCueDisplay, builder, type)
 {
@@ -676,7 +676,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space,
   return instanceHandle;
 }
 
-//Sound Cue Manager
+// Sound Cue Manager
 
 ImplementResourceManager(SoundCueManager, SoundCue);
 

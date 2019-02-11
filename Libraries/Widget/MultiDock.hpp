@@ -35,7 +35,6 @@ public:
   uint DockShell;
 };
 
-
 struct DockingArea
 {
   friend class MultiDock;
@@ -51,7 +50,6 @@ struct DockingShell
 {
   DockingArea DockAreas[DockArea::Count];
 };
-
 
 /// Multi dock widget is a composite widget that supports dockable children.
 class MultiDock : public Composite

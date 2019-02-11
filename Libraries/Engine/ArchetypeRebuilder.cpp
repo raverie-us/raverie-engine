@@ -6,7 +6,7 @@
 namespace Zero
 {
 
-//Cog Replace Event
+// Cog Replace Event
 namespace Events
 {
 DefineEvent(CogReplaced);
@@ -24,7 +24,7 @@ CogReplaceEvent::CogReplaceEvent(Cog* oldCog, Cog* newCog) :
   mNewIndex = newCog->GetId().ToUint64();
 }
 
-//Archetype Rebuilder
+// Archetype Rebuilder
 void ReplaceInSelection(Cog* oldCog,
                         Cog* newCog,
                         HashSet<MetaSelection*>* modifiedSelections);

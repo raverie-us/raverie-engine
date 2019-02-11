@@ -124,7 +124,7 @@ struct ValuePolicy
   }
 };
 
-//AutoDataBaseSource
+// AutoDataBaseSource
 
 /// This class provides a tree container that implements the DataBaseSource
 /// interface.

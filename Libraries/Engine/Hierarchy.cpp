@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Events
+// Events
 namespace Events
 {
 DefineEvent(Attached);
@@ -14,7 +14,7 @@ DefineEvent(ChildDetached);
 DefineEvent(ChildrenOrderChanged);
 } // namespace Events
 
-//Hierarchy Event
+// Hierarchy Event
 ZilchDefineType(HierarchyEvent, builder, type)
 {
   ZeroBindDocumented();
@@ -31,7 +31,7 @@ ZilchDefineType(HierarchyComposition, builder, type)
 {
 }
 
-//Hierarchy
+// Hierarchy
 ZilchDefineType(Hierarchy, builder, type)
 {
   ZeroBindComponent();
@@ -170,7 +170,7 @@ void Hierarchy::DestroyChildren()
   }
 }
 
-//Hierarchy Composition
+// Hierarchy Composition
 HierarchyComposition::HierarchyComposition() : MetaComposition(ZilchTypeId(Cog))
 {
 }

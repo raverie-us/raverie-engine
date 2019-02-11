@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//for bones
+// for bones
 class BoneData
 {
 public:
@@ -15,7 +15,7 @@ public:
 // bone data is keyed by the vertex index that this data effects
 typedef HashMap<size_t, Array<BoneData>> BoneDataMap;
 
-//for meshs
+// for meshs
 const size_t cMaxBonesWeights = 4;
 
 class VertexData
@@ -73,7 +73,7 @@ public:
 
 typedef HashMap<uint, MeshData> MeshDataMap;
 
-//for archetypes
+// for archetypes
 class HierarchyData
 {
 public:

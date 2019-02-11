@@ -3,12 +3,12 @@
 
 namespace Zero
 {
-//Empty Base
+// Empty Base
 class EmptyBase
 {
 };
 
-//Lazy Singleton
+// Lazy Singleton
 template <typename T, typename Base = EmptyBase>
 class LazySingleton : public Base
 {
@@ -54,7 +54,7 @@ public:
 
 #define ZeroDefineExplicitSingletonContents(T) T* T::mInstance = nullptr;
 
-//Explicit Singleton
+// Explicit Singleton
 template <typename T, typename Base = EmptyBase>
 class ExplicitSingleton : public Base
 {

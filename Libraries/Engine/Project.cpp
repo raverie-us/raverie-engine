@@ -322,10 +322,12 @@ ZilchDefineType(WindowLaunchSettings, builder, type)
 
   // Disabled usage of launch options popup for now
   // ZilchBindFieldProperty(mUseLaunchOptionsPopup)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mLaunchFullscreen); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
-                                             //bool, false);
-  ZilchBindFieldProperty(mWindowedResolution); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
-                                               //bool, false);
+  ZilchBindFieldProperty(
+      mLaunchFullscreen); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
+                          // bool, false);
+  ZilchBindFieldProperty(
+      mWindowedResolution); //->ZeroFilterEquality(mUseLaunchOptionsPopup,
+                            // bool, false);
 }
 
 void WindowLaunchSettings::Serialize(Serializer& stream)
@@ -367,7 +369,7 @@ void FrameRateSettings::SetFrameRate(int frameRate)
   mFrameRate = Math::Max(frameRate, 1);
 }
 
-//LauncherProjectInfoProxy
+// LauncherProjectInfoProxy
 ZilchDefineType(LauncherProjectInfoProxy, builder, type)
 {
   ZeroBindComponent();

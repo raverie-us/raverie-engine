@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Support Functions
+// Support Functions
 
 // Sanitizes the name of the content file to be compatible with cog, archetype,
 // and resource names
@@ -92,7 +92,7 @@ public:
   BasisType::Enum mZBasisTo;
 };
 
-//ShowNormalGenerationOptionsFilter
+// ShowNormalGenerationOptionsFilter
 class ShowNormalGenerationOptionsFilter : public MetaPropertyFilter
 {
 public:

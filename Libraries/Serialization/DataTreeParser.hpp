@@ -7,7 +7,7 @@ namespace Zero
 class DataNode;
 struct DataTreeContext;
 
-//Data Tree Parser
+// Data Tree Parser
 class DataTreeParser
 {
 public:

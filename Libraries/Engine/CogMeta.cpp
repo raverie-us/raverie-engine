@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Serialization Filter
+// Serialization Filter
 ZilchDefineType(CogSerializationFilter, builder, type)
 {
 }
@@ -17,7 +17,7 @@ bool CogSerializationFilter::ShouldSerialize(Object* object)
   return CogSerialization::ShouldSave(object);
 }
 
-//Cog Meta Operations
+// Cog Meta Operations
 ZilchDefineType(CogMetaOperations, builder, type)
 {
 }
@@ -94,7 +94,7 @@ ObjectRestoreState* CogMetaOperations::GetRestoreState(HandleParam object)
   return new CogRestoreState(cog->FindNearestArchetypeContext());
 }
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 ZilchDefineType(CogMetaDataInheritance, builder, type)
 {
 }
@@ -209,7 +209,7 @@ void CogMetaDataInheritance::RebuildObject(HandleParam instance)
   ArchetypeRebuilder::RebuildCog(cog->FindNearestArchetypeContext());
 }
 
-//Cog Meta Transform
+// Cog Meta Transform
 ZilchDefineType(CogMetaTransform, builder, type)
 {
 }
@@ -265,12 +265,12 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
   return instance;
 }
 
-//Archetype Extension
+// Archetype Extension
 ZilchDefineType(CogArchetypeExtension, builder, type)
 {
 }
 
-//Cog Meta Display
+// Cog Meta Display
 ZilchDefineType(CogMetaDisplay, builder, type)
 {
 }
@@ -294,7 +294,7 @@ String CogMetaDisplay::GetDebugText(HandleParam object)
   return GetName(object);
 }
 
-//Cog Meta Display
+// Cog Meta Display
 bool CogMetaSerialization::sSaveContextIds = true;
 
 ZilchDefineType(CogMetaSerialization, builder, type)

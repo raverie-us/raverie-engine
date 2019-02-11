@@ -81,7 +81,7 @@ public:
 // Type-defines
 typedef u32 NetGuid;
 
-//SocketHandle Data
+// SocketHandle Data
 // A structure to represent socket data
 struct SocketData
 {
@@ -158,7 +158,7 @@ struct ProtocolSetup
 
 DeclareEnum2(TcpSocketBind, Any, Loopback);
 
-//SocketHandle
+// SocketHandle
 /// Manages all the client/server/peer connections .
 class TcpSocket : public EventObject
 {

@@ -229,7 +229,7 @@ public:
   MultiConvexMeshSubMeshData mSubMeshData;
 };
 
-//MultiConvexMeshManager
+// MultiConvexMeshManager
 class MultiConvexMeshManager : public ResourceManager
 {
 public:

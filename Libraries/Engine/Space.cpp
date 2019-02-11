@@ -167,7 +167,6 @@ void Space::RemoveFromNameMap(Cog* cog, StringParam name)
   }
 }
 
-
 Cog* Space::CreateAt(StringParam source, Transform* transform)
 {
   Mat4 world = transform->GetWorldMatrix();
@@ -401,7 +400,6 @@ Cog* Space::CreateNamedLink(StringParam archetypeName,
 
   return cog;
 }
-
 
 void Space::DestroyAll()
 {

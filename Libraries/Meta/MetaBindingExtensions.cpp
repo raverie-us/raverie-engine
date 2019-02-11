@@ -6,7 +6,7 @@ namespace Zero
 
 const String cInvalidTypeName = "void";
 
-//Object Attributes
+// Object Attributes
 namespace ObjectAttributes
 {
 
@@ -29,7 +29,7 @@ const String cTool("Tool");
 
 } // namespace ObjectAttributes
 
-//Property Attributes
+// Property Attributes
 namespace PropertyAttributes
 {
 
@@ -55,7 +55,7 @@ const String cOptional("Optional");
 
 } // namespace PropertyAttributes
 
-//Function Attributes
+// Function Attributes
 namespace FunctionAttributes
 {
 
@@ -66,7 +66,7 @@ const String cInvalidatesObject("InvalidatesObject");
 
 } // namespace FunctionAttributes
 
-//Serialization Attributes
+// Serialization Attributes
 namespace SerializationAttributes
 {
 
@@ -74,7 +74,7 @@ const String cSerializationPrimitive("SerializationPrimitive");
 
 } // namespace SerializationAttributes
 
-//Events
+// Events
 namespace Events
 {
 DefineEvent(PropertyModified);
@@ -123,7 +123,7 @@ void ObjectModifiedDefault(HandleParam object)
   }
 }
 
-//Meta Operations
+// Meta Operations
 void MetaOperations::NotifyPropertyModified(HandleParam object,
                                             PropertyPathParam property,
                                             AnyParam oldValue,
@@ -220,7 +220,7 @@ void MetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
   ObjectModifiedDefault(object);
 }
 
-//Property Event
+// Property Event
 ZilchDefineType(PropertyEvent, builder, type)
 {
   ZeroBindEvent(Events::PropertyModified, PropertyEvent);
@@ -238,7 +238,7 @@ PropertyEvent::PropertyEvent(HandleParam object,
 {
 }
 
-//Type Event
+// Type Event
 ZilchDefineType(TypeEvent, builder, type)
 {
 }
@@ -289,7 +289,7 @@ ZilchDefineType(MetaTransform, builder, type)
 {
 }
 
-//TypeNameDisplay
+// TypeNameDisplay
 String TypeNameDisplay::GetName(HandleParam object)
 {
   return object.StoredType->Name;
@@ -300,7 +300,7 @@ String TypeNameDisplay::GetDebugText(HandleParam object)
   return GetName(object);
 }
 
-//StringNameDisplay
+// StringNameDisplay
 StringNameDisplay::StringNameDisplay(StringParam string) : mString(string)
 {
 }
@@ -315,7 +315,7 @@ String StringNameDisplay::GetDebugText(HandleParam)
   return mString;
 }
 
-//Meta Transform
+// Meta Transform
 bool MetaTransformInstance::IsNull()
 {
   return mInstance.IsNull();
@@ -408,7 +408,7 @@ Vec3 MetaTransformInstance::ToParent(Vec3Param local)
   return local;
 }
 
-//Meta Attribute
+// Meta Attribute
 ZilchDefineType(MetaAttribute, builder, type)
 {
 }

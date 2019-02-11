@@ -119,7 +119,7 @@ public:
   String mPropertyName;
 };
 
-//Type
+// Type
 template <typename propertyType>
 class AnimatePropertyValueType : public AnimatePropertyType<propertyType>
 {

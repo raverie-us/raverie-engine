@@ -32,7 +32,7 @@ Verify(): Runs the function and generates an error if the function returns non
 namespace Zero
 {
 
-//Signaler
+// Signaler
 class ZeroShared ErrorSignaler
 {
 public:

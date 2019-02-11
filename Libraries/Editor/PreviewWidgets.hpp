@@ -221,7 +221,7 @@ public:
   TextureView* mImage;
 };
 
-//preview
+// preview
 class FontPreview : public SpacePreview
 {
 public:
@@ -271,7 +271,7 @@ public:
   Handle mObject;
 };
 
-//SampleCurvePreview
+// SampleCurvePreview
 class SampleCurvePreview : public PreviewWidget
 {
 public:

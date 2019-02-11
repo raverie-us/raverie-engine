@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//MetaAnimatePropertyAction
+// MetaAnimatePropertyAction
 
 typedef Any (*Interpolator)(AnyParam starting, AnyParam ending, float t);
 typedef float (*Easer)(float inT);
@@ -157,7 +157,6 @@ Action* CreateMetaAnimatePropertyAction(HandleParam handle,
   action->mTime = 0.0f;
   return action;
 }
-
 
 ActionState::Enum MetaCallAction::Update(float dt)
 {

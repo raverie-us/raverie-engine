@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Zilch Library Resource
+// Zilch Library Resource
 class ZilchLibraryResource : public Resource
 {
 public:
@@ -14,7 +14,7 @@ public:
   virtual Resource* GetOriginResource() const = 0;
 };
 
-//Zilch Document
+// Zilch Document
 class ZilchDocumentResource : public DocumentResource, public ICodeInspector
 {
 public:

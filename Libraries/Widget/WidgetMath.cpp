@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 const WidgetRect WidgetRect::cZero =
     WidgetRect::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 

@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Sound Asset
+// Sound Asset
 
 class SoundAsset : public ReferenceCountedObject
 {
@@ -55,7 +55,7 @@ private:
   }
 };
 
-//Decompressed Sound Asset
+// Decompressed Sound Asset
 
 class DecompressedSoundAsset : public SoundAsset
 {
@@ -84,7 +84,7 @@ private:
   volatile unsigned mSamplesAvailableShared;
 };
 
-//Streaming Data Per Instance
+// Streaming Data Per Instance
 
 class StreamingDataPerInstance
 {
@@ -125,7 +125,7 @@ public:
   Link<StreamingDataPerInstance> link;
 };
 
-//Streaming Sound Asset
+// Streaming Sound Asset
 
 class StreamingSoundAsset : public SoundAsset
 {

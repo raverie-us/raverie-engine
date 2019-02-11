@@ -45,7 +45,6 @@ public:
   ResourceId mResourceId;
 };
 
-
 // Build Collision Meshes on component
 class PhysicsMeshBuilder : public BuilderComponent
 {
@@ -118,7 +117,7 @@ public:
   void Serialize(Serializer& stream) override;
 };
 
-//Texture Content
+// Texture Content
 // Textures imported from mesh files with embedded textures
 class TextureContent : public ContentComponent
 {
@@ -131,7 +130,7 @@ public:
   Array<GeometryResourceEntry> mTextures;
 };
 
-//Geometry Content
+// Geometry Content
 class GeometryContent : public ContentComposition
 {
 public:

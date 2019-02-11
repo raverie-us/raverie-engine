@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Sound Space
+// Sound Space
 
 /// Sound functionality associated with a Space
 class SoundSpace : public Component

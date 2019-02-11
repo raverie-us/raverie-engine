@@ -134,8 +134,8 @@ void FilterDataSetWithTags(TagSet& activeTags,
     }
 
     // if the standalone Contains all of the necessary tags then we need to
-    // check if it Contains the current search string and we need to populate the
-    // new list of available tags
+    // check if it Contains the current search string and we need to populate
+    // the new list of available tags
     if (containsAllTags && !containsRejection)
     {
       // check the active search string and see if this version matches

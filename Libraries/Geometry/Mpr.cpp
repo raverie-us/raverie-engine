@@ -35,7 +35,7 @@ const uint cRightShape = 1;
   {
     choose_new_candidate();
   }
-  
+
   //Phase 2: Portal Refinement
   while(true)
   {

@@ -12,7 +12,7 @@ class MetaEventConnection;
 class ObjectSaver;
 class CachedModifications;
 
-//Cog Serialization
+// Cog Serialization
 class CogSerialization
 {
 public:
@@ -41,7 +41,7 @@ public:
   static void PostProcessAfterCopy(Cog* cog, CachedModifications& restoreState);
 };
 
-//LinkId
+// LinkId
 /// Component used to resolve links between saved objects in data files.
 /// component only on compositions serialized to data file. At runtime this info
 /// is stored on the compositions CogId member.
@@ -57,7 +57,7 @@ public:
   uint Id;
 };
 
-//Named
+// Named
 /// Component used to store an game object's name.
 /// Component only on compositions serialized to data file. At runtime this info
 /// is stored on the compositions Name member.
@@ -72,7 +72,7 @@ public:
   String Name;
 };
 
-//Archetyped
+// Archetyped
 class Archetyped : public Component
 {
 public:
@@ -84,7 +84,7 @@ public:
   String Name;
 };
 
-//Editor Flags
+// Editor Flags
 class EditorFlags : public Component
 {
 public:
@@ -104,7 +104,7 @@ public:
   bool mHidden;
 };
 
-//Space Objects
+// Space Objects
 class SpaceObjects : public Component
 {
 public:
@@ -116,7 +116,7 @@ public:
   Space* mSpace;
 };
 
-//Archetype Instance
+// Archetype Instance
 /// Used as an alternate to data tree patching. This is strictly an
 /// optimization.
 class ArchetypeInstance
@@ -134,7 +134,7 @@ typedef SerializeCheck::Enum (*ComponentCheckFn)(Cog* composition,
 
 DeclareEnum2(ContextMode, Creating, Saving);
 
-//Serialization Context
+// Serialization Context
 class CogSerializationContext
 {
 public:
@@ -147,7 +147,7 @@ public:
 
 const u32 cContextIdMask = 0xFFFF0000;
 
-//Cog Saving Context
+// Cog Saving Context
 class CogSavingContext : public CogSerializationContext
 {
 public:
@@ -169,7 +169,7 @@ public:
   ComponentCheckFn ShouldSerializeComponentCallback;
 };
 
-//Cog Creation Context
+// Cog Creation Context
 class CogCreationContext : public CogSerializationContext
 {
 public:

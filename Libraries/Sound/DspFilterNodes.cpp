@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Volume Node
+// Volume Node
 
 ZilchDefineType(VolumeNode, builder, type)
 {
@@ -149,7 +149,7 @@ void VolumeNode::InterpolateVolumeThreaded(float volume, float time)
                          (unsigned)(time * cSystemSampleRate));
 }
 
-//Panning Node
+// Panning Node
 
 ZilchDefineType(PanningNode, builder, type)
 {
@@ -406,7 +406,7 @@ void PanningNode::SetVolumeThreaded(bool left, float newVolume, float time)
   }
 }
 
-//Pitch Node
+// Pitch Node
 
 ZilchDefineType(PitchNode, builder, type)
 {
@@ -502,7 +502,7 @@ void PitchNode::SetPitchThreaded(float semitones, float interpolationTime)
   PitchObject.SetPitchFactor(newFactor, interpolationTime);
 }
 
-//Low Pass Node
+// Low Pass Node
 
 ZilchDefineType(LowPassNode, builder, type)
 {
@@ -601,7 +601,7 @@ void LowPassNode::SetCutoffFrequencyThreaded(float frequency)
       filter->SetCutoffFrequency(frequency);
 }
 
-//High Pass Node
+// High Pass Node
 
 ZilchDefineType(HighPassNode, builder, type)
 {
@@ -700,7 +700,7 @@ void HighPassNode::SetCutoffFrequencyThreaded(float frequency)
       filter->SetCutoffFrequency(frequency);
 }
 
-//Band Pass Node
+// Band Pass Node
 
 ZilchDefineType(BandPassNode, builder, type)
 {
@@ -813,7 +813,7 @@ void BandPassNode::SetQualityFactorThreaded(float Q)
       filter->SetQuality(Q);
 }
 
-//Equalizer Node
+// Equalizer Node
 
 ZilchDefineType(EqualizerNode, builder, type)
 {
@@ -1029,7 +1029,7 @@ void EqualizerNode::InterpolateAllThreaded(float* values,
       filter->InterpolateBands(values, timeToInterpolate);
 }
 
-//Reverb Node
+// Reverb Node
 
 ZilchDefineType(ReverbNode, builder, type)
 {
@@ -1183,7 +1183,7 @@ void ReverbNode::InterpolateWetValueThreaded(float value, float time)
       filter->InterpolateWetLevel(value, time);
 }
 
-//Delay Node
+// Delay Node
 
 ZilchDefineType(DelayNode, builder, type)
 {
@@ -1375,7 +1375,7 @@ void DelayNode::InterpolateWetValueThreaded(float value, float time)
       filter->InterpolateWetLevel(value, time);
 }
 
-//Flanger Node
+// Flanger Node
 
 ZilchDefineType(FlangerNode, builder, type)
 {
@@ -1529,7 +1529,7 @@ FlangerNode::Data::Data(float frequency, float feedback, float maxDelayMs)
   LFO.SetNoteOn(true);
 }
 
-//Chorus Node
+// Chorus Node
 
 ChorusNode::Data::Data(float frequency, float minDelay, float feedback)
 {
@@ -1701,7 +1701,7 @@ void ChorusNode::SetFeedbackThreaded(float value)
       data->Delay.SetFeedback(value);
 }
 
-//Compressor Node
+// Compressor Node
 
 ZilchDefineType(CompressorNode, builder, type)
 {
@@ -1849,7 +1849,7 @@ bool CompressorNode::GetOutputSamples(BufferType* outputBuffer,
   return true;
 }
 
-//Expander Node
+// Expander Node
 
 ZilchDefineType(ExpanderNode, builder, type)
 {
@@ -1997,7 +1997,7 @@ bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer,
   return true;
 }
 
-//Add Noise Node
+// Add Noise Node
 
 ZilchDefineType(AddNoiseNode, builder, type)
 {
@@ -2143,7 +2143,7 @@ bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer,
   return true;
 }
 
-//Modulation Node
+// Modulation Node
 
 ZilchDefineType(ModulationNode, builder, type)
 {

@@ -30,7 +30,7 @@ public:
   OperationQueue* mOperationQueue;
 };
 
-//Undo Meta Composition
+// Undo Meta Composition
 class UndoMetaComposition : public EventMetaComposition
 {
 public:

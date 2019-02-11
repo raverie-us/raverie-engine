@@ -200,7 +200,7 @@ struct Joint : public Component
 
   // Common helpers for joint atoms
   //-------------------------------------------------------------------
-  //AnchorAtom helpers
+  // AnchorAtom helpers
   /// Helper to get/set a local point on an anchor atom.
   Vec3 GetLocalPointHelper(const Physics::AnchorAtom& anchor, uint index) const;
   void SetLocalPointHelper(Physics::AnchorAtom& anchor,
@@ -223,7 +223,7 @@ struct Joint : public Component
                                     Vec3Param localPoint);
 
   //------------------------------------------------------------------- AxisAtom
-  //helpers
+  // helpers
   /// Helpers to get/set a local space axis for an axis atom
   Vec3 GetLocalAxisHelper(const Physics::AxisAtom& axisAtom, uint index) const;
   void SetLocalAxisHelper(Physics::AxisAtom& axisAtom,
@@ -235,7 +235,7 @@ struct Joint : public Component
   void SetWorldAxisHelper(Physics::AxisAtom& axisAtom, Vec3Param worldAxis);
 
   //-------------------------------------------------------------------
-  //AngleAtom helpers
+  // AngleAtom helpers
   /// Helpers to get/set local space reference frames for an angle atom.
   Quat GetLocalAngleHelper(const Physics::AngleAtom& angleAtom,
                            uint index) const;

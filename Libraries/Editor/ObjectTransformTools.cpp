@@ -441,7 +441,6 @@ void ObjectTranslateTool::SetSnapping(bool snapping)
     gizmo->has(TranslateGizmo)->SetSnapping(snapping);
 }
 
-
 float ObjectTranslateTool::GetSnapDistance()
 {
   return mSnapDistance;
@@ -689,7 +688,6 @@ void ObjectRotateTool::SetSnapping(bool snapping)
   if (gizmo)
     gizmo->has(RotateGizmo)->SetSnapping(snapping);
 }
-
 
 float ObjectRotateTool::GetSnapAngle()
 {

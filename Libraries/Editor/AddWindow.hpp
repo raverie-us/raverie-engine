@@ -28,7 +28,7 @@ struct PostAddOp
   PropertyPath mProperty;
 };
 
-//Post Add Resource Event
+// Post Add Resource Event
 class PostAddResourceEvent : public Event
 {
 public:
@@ -45,7 +45,7 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType,
                                  Window** window = nullptr,
                                  StringParam resourceName = "");
 
-//Add Resource Window
+// Add Resource Window
 class AddResourceWindow : public Composite
 {
 public:
@@ -89,7 +89,7 @@ private:
   ResourceTemplateDisplay* mResourceTemplateDisplay;
 };
 
-//Resource Type Search
+// Resource Type Search
 class ResourceTypeSearch : public ColoredComposite
 {
 public:
@@ -127,7 +127,7 @@ private:
   Array<String> mValidResourceTypes;
 };
 
-//Resource Template Search
+// Resource Template Search
 class ResourceTemplateSearch : public ColoredComposite
 {
 public:
@@ -165,7 +165,7 @@ private:
   ItemList* mTemplateList;
 };
 
-//Resource Template Display
+// Resource Template Display
 class ResourceTemplateDisplay : public ColoredComposite
 {
 public:
@@ -220,7 +220,7 @@ private:
   HandleOf<ToolTip> mTagsToolTip;
 };
 
-//Resource Template Display
+// Resource Template Display
 class ImportButton : public ColoredComposite
 {
 public:

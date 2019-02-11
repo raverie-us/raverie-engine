@@ -131,7 +131,7 @@ void ContactBodyFilter::SkipDead(RangeType& range)
   }
 }
 
-//functions
+// functions
 InList<JointEdge, &JointEdge::ColliderLink>::range
 GetJointEdges(Collider* collider)
 {

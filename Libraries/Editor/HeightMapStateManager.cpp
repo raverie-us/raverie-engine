@@ -5,7 +5,6 @@
 namespace Zero
 {
 
-
 ZilchDefineType(HeightMapBrushStroke, builder, type)
 {
   ZilchBindConstructor();
@@ -36,7 +35,6 @@ void HeightMapBrushStroke::AddPoint(Vec2Param point)
 //
 //}
 
-
 void HeightMapKeyFrame::CopyHeightMapData(HeightMap* map)
 {
   mUnitsPerPatch = map->mUnitsPerPatch;
@@ -46,7 +44,6 @@ void HeightMapKeyFrame::CopyHeightMapData(HeightMap* map)
     mPatches[patch.first] = *patch.second;
   }
 }
-
 
 HeightMapStateManager::HeightMapStateManager(HeightMap* map) : mHeightMap(map)
 {

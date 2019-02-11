@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//SceneGraphMaterial
+// SceneGraphMaterial
 SceneGraphMaterial::SceneGraphMaterial()
 {
   UsageCount = 0;
@@ -17,7 +17,7 @@ void SceneGraphMaterial::Serialize(Serializer& stream)
   SerializeName(Attributes);
 }
 
-//SceneGraphSource
+// SceneGraphSource
 ZilchDefineType(SceneGraphSource, builder, type)
 {
 }

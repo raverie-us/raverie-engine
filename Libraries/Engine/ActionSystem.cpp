@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Space
+// Space
 ZilchDefineType(ActionSpace, builder, type)
 {
   ZeroBindComponent();

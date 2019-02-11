@@ -15,7 +15,7 @@ namespace Zero
 /// reduction using a SampleCurve resource.</param>
 DeclareEnum6(FalloffCurveType, Linear, Squared, Sine, SquareRoot, Log, Custom);
 
-//Custom Curve
+// Custom Curve
 
 // Interpolation using a custom curve.
 class CustomCurve
@@ -39,7 +39,7 @@ private:
   Array<Math::Vec3>* CurveData;
 };
 
-//Interpolating Object
+// Interpolating Object
 
 // Object to interpolate either sequentially or with direct access.
 class InterpolatingObject

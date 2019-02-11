@@ -156,8 +156,9 @@ void SpringSystem::OnDestroy(uint flags)
   }
 
   // have to clean up both owned and connected edges since we don't know if
-  // we'll be destroyed before or after the other side is destroyed (and we can't
-  //clean up if the other side was already destroyed)
+  // we'll be destroyed before or after the other side is destroyed (and we
+  // can't
+  // clean up if the other side was already destroyed)
   while (!mOwnedEdges.Empty())
   {
     SystemConnection& connection = mOwnedEdges.Front();

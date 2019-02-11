@@ -233,7 +233,6 @@ String TextureBuilder::GetOutputFile()
   return BuildString(Name, ".ztex");
 }
 
-
 // ZeroDefineType(HeightToNormalBuilder);
 //
 // void HeightToNormalBuilder::Generate(ContentInitializer& initializer)

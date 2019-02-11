@@ -9,7 +9,7 @@ namespace Tags
 DefineTag(Component);
 }
 
-//Component Memory
+// Component Memory
 Memory::Heap* Component::sHeap =
     new Memory::Heap("Components", Memory::GetNamedHeap("Objects"));
 
@@ -35,7 +35,7 @@ ZilchDefineTemplateType(ProxyObject<Component>, builder, type)
 {
 }
 
-//Component
+// Component
 ZilchDefineType(Component, builder, type)
 {
   ZilchBindDefaultConstructor();
@@ -153,7 +153,7 @@ void Component::DispatchEvent(StringParam eventId, Event* event)
   mOwner->GetDispatcher()->Dispatch(eventId, event);
 }
 
-//Component Handle Manager
+// Component Handle Manager
 void ComponentHandleManager::Allocate(BoundType* type,
                                       Handle& handleToInitialize,
                                       size_t customFlags)

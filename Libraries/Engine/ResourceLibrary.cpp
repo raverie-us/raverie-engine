@@ -19,7 +19,7 @@ ZilchDefineType(ZilchCompileFragmentEvent, builder, type)
 {
 }
 
-//Resource Entry
+// Resource Entry
 ZilchCompileFragmentEvent::ZilchCompileFragmentEvent(
     Module& dependencies,
     Array<ZilchDocumentResource*>& fragments,
@@ -129,7 +129,7 @@ void ResourcePackage::Serialize(Serializer& stream)
   stream.SerializeField("Resources", Resources);
 }
 
-//Compiled Library
+// Compiled Library
 SwapLibrary::SwapLibrary() : mCompileStatus(ZilchCompileStatus::Modified)
 {
 }
@@ -181,7 +181,7 @@ void SwapLibrary::Unload()
   mCurrentLibrary = nullptr;
 }
 
-//Resource Library
+// Resource Library
 BoundType* ResourceLibrary::sScriptType = nullptr;
 BoundType* ResourceLibrary::sFragmentType = nullptr;
 bool ResourceLibrary::sLibraryUnloading = false;

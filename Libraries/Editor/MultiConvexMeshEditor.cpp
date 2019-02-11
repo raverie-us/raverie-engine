@@ -1118,7 +1118,7 @@ void MultiConvexMeshEditor::AutoCompute()
   Sprite* sprite = mPreviewCog->has(Sprite);
   // if the preview cog doesn't have a sprite (archetype mode) then don't auto
   // compute (could technically combine the sprites of all children but that's
-  //more work than it's worth)
+  // more work than it's worth)
   if (sprite == NULL)
     return;
 

@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 // Resource loader for engine's data file format (.data)
 template <typename ResourceMananger, DataFileFormat::Enum defaultFormat>
 class GenericDataLoader : public ResourceLoader

@@ -77,7 +77,7 @@ void GeneralSearchView::OnCancel(SearchViewEvent* event)
   AutoClose();
 }
 
-//FloatingSearchView
+// FloatingSearchView
 
 FloatingSearchView::FloatingSearchView(Widget* popUp) :
     PopUp(popUp, PopUpCloseMode::MouseDistance)

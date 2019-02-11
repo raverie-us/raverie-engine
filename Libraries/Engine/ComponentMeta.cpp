@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Meta Data Inheritance
+// Meta Data Inheritance
 ZilchDefineType(ComponentMetaDataInheritance, builder, type)
 {
 }
@@ -70,7 +70,7 @@ void ComponentMetaDataInheritance::RebuildObject(HandleParam object)
   ZilchTypeId(Cog)->HasInherited<MetaDataInheritance>()->RebuildObject(cog);
 }
 
-//Component Meta Operations
+// Component Meta Operations
 ZilchDefineType(ComponentMetaOperations, builder, type)
 {
 }

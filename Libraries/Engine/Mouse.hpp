@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-
 /// Mouse object for Display System.
 class Mouse : public ExplicitSingleton<Mouse, EventObject>
 {

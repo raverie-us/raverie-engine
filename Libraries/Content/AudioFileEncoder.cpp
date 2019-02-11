@@ -35,7 +35,7 @@ struct WavFmtData
 const float Normalize16Bit = 1 << 15;
 const float Normalize24Bit = 1 << 23;
 
-//Audio File Data
+// Audio File Data
 
 void AudioFileData::ReleaseData()
 {
@@ -45,7 +45,7 @@ void AudioFileData::ReleaseData()
   BuffersPerChannel = nullptr;
 }
 
-//File Encoder
+// File Encoder
 
 AudioFileData AudioFileEncoder::OpenFile(Status& status, StringParam fileName)
 {
@@ -523,7 +523,7 @@ void AudioFileEncoder::EncodeFile(Status& status,
   delete[] encodersPerChannel;
 }
 
-//Packet Encoder
+// Packet Encoder
 
 PacketEncoder::~PacketEncoder()
 {

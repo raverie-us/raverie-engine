@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Zilch Component
+// Zilch Component
 ZilchDefineType(ZilchComponent, builder, type)
 {
   ZeroBindComponent();
@@ -278,7 +278,7 @@ void ZilchComponent::Delete()
   handle.Delete();
 }
 
-//ZilchEvent
+// ZilchEvent
 ZilchDefineType(ZilchEvent, builder, type)
 {
   type->Sealed = false;
@@ -308,7 +308,7 @@ void ZilchEvent::Delete()
   thisHandle.Delete();
 }
 
-//ZilchObject
+// ZilchObject
 ZilchDefineType(ZilchObject, builder, type)
 {
   type->HandleManager = ZilchManagerId(HeapManager);

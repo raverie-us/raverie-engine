@@ -74,7 +74,6 @@ struct SweepResultRange
   SweepResultArray::range mRange;
 };
 
-
 /// The PhysicsSpace is an "instance" of a world. This world
 /// manages and stores all of the other physical components of this world.
 /// PhysicSpaces act independently of each other.
@@ -249,7 +248,7 @@ public:
                               CastFilter& filter);
 
   //------------------------------------------------------------- Frustum
-  //Casting
+  // Casting
   void CastFrustum(const Frustum& frustum, CastResults& results);
   /// Finds all colliders in the space that a Frustum hits using the
   /// given filter. This returns up to maxCount number of objects.
@@ -258,7 +257,7 @@ public:
                                CastFilter& filter);
 
   //------------------------------------------------------------- Collider
-  //Casting
+  // Casting
   /// Currently a hack function for player controller sweeping
   void CastCollider(Vec3Param offset,
                     Collider* testCollider,
@@ -272,7 +271,7 @@ public:
                                 CastFilter& filter);
 
   //------------------------------------------------------------- Collider
-  //Sweeping
+  // Sweeping
   /// Performs a swept cast with a collider's shape and a given velocity.
   /// Returns a range of all objects the collider could've hit within 'dt' time.
   SweepResultRange SweepCollider(Collider* collider,
@@ -281,7 +280,7 @@ public:
                                  CastFilter& filter);
 
   //------------------------------------------------------------- Collision
-  //Shape Events
+  // Shape Events
   /// Dispatches an event to all objects within the given sphere. Uses the
   /// default cast filter.
   void DispatchWithinSphere(const Sphere& sphere,

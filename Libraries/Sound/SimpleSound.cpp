@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Simple Sound
+// Simple Sound
 
 ZilchDefineType(SimpleSound, builder, type)
 {

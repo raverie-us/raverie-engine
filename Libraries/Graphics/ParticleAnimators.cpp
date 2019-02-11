@@ -528,7 +528,7 @@ void ParticleCollisionPlane::SetFriction(float friction)
   mFriction = Math::Clamp(friction, 0.0f, 1.0f);
 }
 
-//Heightmap
+// Heightmap
 ZilchDefineType(ParticleCollisionHeightmap, builder, type)
 {
   ZeroBindComponent();

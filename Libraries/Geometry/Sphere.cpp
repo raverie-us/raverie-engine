@@ -121,8 +121,8 @@ Sphere Sphere::UniformTransform(Mat4Param transformation) const
 {
   // since this is a uniform transform (uniform scale) then we know we'll be
   // returning a sphere. The easiest way to write this is the same as
-  // transforming to an ellipsoid, just assuming that the resultant radii are all
-  // equal.
+  // transforming to an ellipsoid, just assuming that the resultant radii are
+  // all equal.
   Ellipsoid ellipsoid = Transform(transformation);
 
   Sphere ret;

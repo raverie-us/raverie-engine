@@ -14,7 +14,7 @@ public:
   PhysicsMaterial();
 
   //-------------------------------------------------------------------Resource
-  //Interface
+  // Interface
   void Serialize(Serializer& stream) override;
   void ResourceModified() override;
 
@@ -75,7 +75,7 @@ public:
   bool mModified;
 };
 
-//PhysicsMaterialManager
+// PhysicsMaterialManager
 class PhysicsMaterialManager : public ResourceManager
 {
 public:

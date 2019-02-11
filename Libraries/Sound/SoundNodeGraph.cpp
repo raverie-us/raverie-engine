@@ -3,7 +3,7 @@
 
 namespace Zero
 {
-//Node Print Info
+// Node Print Info
 
 ZilchDefineType(NodePrintInfo, builder, type)
 {
@@ -16,7 +16,7 @@ ZilchDefineType(NodePrintInfo, builder, type)
   ZilchBindField(mID);
 }
 
-//Sound Node Graph
+// Sound Node Graph
 
 SoundNodeGraph::~SoundNodeGraph()
 {

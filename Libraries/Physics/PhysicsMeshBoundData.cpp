@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Defines
+// Defines
 PhysicsDefineArrayType(PhysicsMeshVertexData);
 PhysicsDefineArrayType(PhysicsMeshIndexData);
 

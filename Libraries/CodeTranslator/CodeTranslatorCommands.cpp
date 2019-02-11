@@ -184,7 +184,7 @@ String FragmentFileTranslatorScriptEditor::OnTranslate()
   //
   // StringBuilder builder;
   //// Append a string that is all of the types who originated from this
-  ///fragment file
+  /// fragment file
   // AutoDeclare(typeRange, library->mTypes.Values());
   // for(; !typeRange.Empty(); typeRange.PopFront())
   //{
@@ -199,7 +199,7 @@ String FragmentFileTranslatorScriptEditor::OnTranslate()
   //
   // String result = builder.ToString();
   //// If we didn't generate any strings then return that we couldn't find the
-  ///translation
+  /// translation
   // if(result.Empty())
   //  result = "Not found";
   //
@@ -225,9 +225,9 @@ String ZilchCompositorScriptEditor::OnTranslate()
   // TranslateMaterial(*mShaderGenerator, mMaterial);
   //
   //// Find the shader that resulted from the given material. This has to do a
-  ///search of the project to / find which zilch file was created for the
-  ///material. As this is not a normal operation in / translation/compositing
-  ///and is only used for debugging I decided a search was acceptable.
+  /// search of the project to / find which zilch file was created for the
+  /// material. As this is not a normal operation in / translation/compositing
+  /// and is only used for debugging I decided a search was acceptable.
   // String result = mShaderGenerator->FindZilchShaderString(mMaterial->Name);
   // if(result.Empty())
   //  result = "Failed to compose shader";
@@ -269,8 +269,8 @@ String TranslatedZilchCompositorScriptEditor::OnTranslate()
   // ShaderType* vertexShaderType =
   // shaderGenerator.mShaderLibraryRef->FindType(vertexShaderName); ShaderType*
   // geometryShaderType =
-  // shaderGenerator.mShaderLibraryRef->FindType(geometryShaderName); ShaderType*
-  // pixelShaderType =
+  // shaderGenerator.mShaderLibraryRef->FindType(geometryShaderName);
+  // ShaderType* pixelShaderType =
   // shaderGenerator.mShaderLibraryRef->FindType(pixelShaderName);
   //
   // ShaderTypeTranslation vertexTranslation;
@@ -370,7 +370,7 @@ void BaseSplitScriptEditor::OnLeftMouseDown(MouseEvent* e)
   //  return;
   //
   //// Find the source file for the current range (it could be in a fragment or
-  ///shader so search both)
+  /// shader so search both)
   // SimpleZilchShaderGenerator* shaderGenerator =
   // mTranslatedEditor->mShaderGenerator; ZilchShaderProject& fragmentProject =
   // shaderGenerator->mFragmentProject; ZilchShaderProject& shaderProject =

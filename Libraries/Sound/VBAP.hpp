@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Speaker Info
+// Speaker Info
 
 class SpeakerInfo
 {
@@ -31,7 +31,7 @@ public:
   bool mInverted;
 };
 
-//VBAP
+// VBAP
 
 class VBAP
 {

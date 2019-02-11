@@ -129,8 +129,8 @@ void ApplyPositionCorrection(RigidBody* body,
   // We need to use the kinematic body for velocity correction
   //(since we need its velocity), but we don't want to updated it during
   // position correction (we don't want to update based upon its center of
-  // mass). This is also convenient because there's no reason to position correct
-  // kinematics anyways.
+  // mass). This is also convenient because there's no reason to position
+  // correct kinematics anyways.
   if (body != nullptr && body->GetKinematic() == false)
   {
     // translation is very simple to update, just offset by the linear offset

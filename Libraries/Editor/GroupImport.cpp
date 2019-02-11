@@ -202,7 +202,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
   OpenGroupImport(allFiles);
 }
 
-//GroupImportWindow
+// GroupImportWindow
 GroupImportWindow::GroupImportWindow(Composite* parent,
                                      ImportOptions* options) :
     Composite(parent)
@@ -352,7 +352,7 @@ void GroupImportWindow::OnCancel(Event* event)
   mParentWindow->Destroy();
 }
 
-//ImportCallback
+// ImportCallback
 void ImportCallback::Open()
 {
   // Open the open file dialog

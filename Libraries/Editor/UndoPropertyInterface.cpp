@@ -80,7 +80,7 @@ void PropertyToUndo::Redo()
   mOperationQueue->Redo();
 }
 
-//Undo Meta Composition
+// Undo Meta Composition
 UndoMetaComposition::UndoMetaComposition(PropertyInterface* propertyInterface,
                                          BoundType* objectType,
                                          OperationQueue* opQueue) :

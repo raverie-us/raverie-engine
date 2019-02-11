@@ -8,7 +8,7 @@ namespace Zero
 class OperationQueue;
 class MetaSelection;
 
-//MultiProperty
+// MultiProperty
 /// This property interface handles the modification of multiple objects
 /// at once, as well as queuing operations for each object modification.
 /// The object given to the property view with this interface should
@@ -52,7 +52,7 @@ private:
                     PropertyPathParam property) override;
 };
 
-//Multi Meta Composition
+// Multi Meta Composition
 class MultiMetaComposition : public UndoMetaComposition
 {
 public:

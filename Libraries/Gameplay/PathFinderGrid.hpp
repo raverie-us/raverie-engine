@@ -9,7 +9,7 @@ namespace Events
 DeclareEvent(PathFinderGridFinished);
 }
 
-//PathFinderAlgorithmGrid
+// PathFinderAlgorithmGrid
 class PathFinderAlgorithmGrid;
 
 class PathFinderGridNodeRange
@@ -87,7 +87,7 @@ public:
   HashMap<IntVec3, PathFinderCell> mCells;
 };
 
-//PathFinderGrid
+// PathFinderGrid
 /// A* pathfinding on a grid. The grid supports cardinal or diagonal movement.
 /// Collision and costs can be set for each tile to make path-finding avoid
 /// cells. Sends the PathFinderGridFinished event on itself when a threaded

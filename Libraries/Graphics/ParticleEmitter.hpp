@@ -149,7 +149,7 @@ public:
   static const float mMaxEmitRate;
 };
 
-//Hide Base Filter
+// Hide Base Filter
 // This is used to hide properties on ParticleEmitterShared that don't apply to
 // derived particle emitters. This is temporary and should be removed once we
 // refactor particles.

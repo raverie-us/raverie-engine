@@ -12,7 +12,7 @@ DefineEvent(CustomAudioNodeSamplesNeeded);
 
 } // namespace Events
 
-//Custom Audio Node Event
+// Custom Audio Node Event
 
 ZilchDefineType(CustomAudioNodeEvent, builder, type)
 {
@@ -21,7 +21,7 @@ ZilchDefineType(CustomAudioNodeEvent, builder, type)
   ZilchBindField(SamplesNeeded);
 }
 
-//Sound Buffer
+// Sound Buffer
 
 ZilchDefineType(SoundBuffer, builder, type)
 {
@@ -63,7 +63,7 @@ void SoundBuffer::AddMicUncompressedData(
   mBuffer.Append(buffer->NativeArray.All());
 }
 
-//Custom Audio Node
+// Custom Audio Node
 
 ZilchDefineType(CustomAudioNode, builder, type)
 {

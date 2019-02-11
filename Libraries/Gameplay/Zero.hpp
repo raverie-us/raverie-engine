@@ -6,7 +6,7 @@ namespace Zero
 
 class Editor;
 
-//Zero Static
+// Zero Static
 /// Global functionality exposed to Zilch script. Bound as "Zero" to script
 /// (e.g. Zero.Keyboard) ZeroStatic was used to avoid the conflict with
 /// namespace Zero).
@@ -45,7 +45,7 @@ public:
   // static MultiTouch* GetMultiTouch();
 };
 
-//ZilchScriptConnection
+// ZilchScriptConnection
 /// ZilchScriptConnection enables zilch to connect to any event in the engine.
 class ZilchScriptConnection : public EventConnection
 {

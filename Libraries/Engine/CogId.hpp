@@ -4,13 +4,12 @@
 namespace Zero
 {
 
-//Declarations
+// Declarations
 class CogInitializer;
 class CogCreationContext;
 
 const u32 cInvalidObjectRawId = 0xFFFFFFFD;
 const u32 cDeletedObjectRawId = 0xFFFFDEAD;
-
 
 /// Cog Id is a handle / weak reference to a Cog
 struct CogId

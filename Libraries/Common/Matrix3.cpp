@@ -533,7 +533,6 @@ void Matrix3::Decompose(Mat3Param transform,
 {
 }
 
-
 Matrix3 Matrix3::Transposed() const
 {
   return Matrix3::Transposed(*this);
@@ -675,7 +674,7 @@ void Matrix3::SetCross(uint index, real x, real y, real z)
   SetCross(index, crossVector);
 }
 
-//Functions
+// Functions
 Matrix3 operator*(real lhs, Mat3Param rhs)
 {
   return rhs * lhs;

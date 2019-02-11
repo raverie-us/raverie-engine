@@ -32,7 +32,6 @@ Vec3 GetSplineNormal(float radians, Vec3* normal, Vec3Param splineTangent)
   return Math::TransformNormal(rotation, localSpin);
 }
 
-
 ZilchDefineType(SplineParticleEmitter, builder, type)
 {
   ZeroBindComponent();

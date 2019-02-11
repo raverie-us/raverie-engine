@@ -123,7 +123,7 @@ bool RawControlMapping::IsSame(RawControlMapping* map)
   return true;
 }
 
-//JoystickEvent
+// JoystickEvent
 ZilchDefineType(JoystickEvent, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);

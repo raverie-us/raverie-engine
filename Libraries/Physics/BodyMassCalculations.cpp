@@ -262,7 +262,7 @@ void ComputeMass(RigidBody* body)
 
   // the center of mass doesn't care about 2d mode
   //(if mass override changed the center of mass then we overrode the variable
-  //earlier)
+  // earlier)
   body->mCenterOfMass = centerOfMass;
 
   WorldTransformation* transform = body->mPhysicsNode->GetTransform();

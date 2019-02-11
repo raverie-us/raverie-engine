@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Audio IO Interface
+// Audio IO Interface
 
 AudioIOInterface::AudioIOInterface() :
     MixedOutputBuffer(nullptr),
@@ -308,7 +308,6 @@ void AudioIOInterface::SaveInputSamples(const float* inputBuffer,
   InputRingBuffer.Write(inputBuffer,
                         frames * StreamInfoList[StreamTypes::Input].mChannels);
 }
-
 
 void IOCallback(float* outputBuffer,
                 float* inputBuffer,

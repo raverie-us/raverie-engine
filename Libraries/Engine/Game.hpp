@@ -28,7 +28,6 @@ DeclareEvent(EditSpaces);
 /// Typedefs.
 typedef ArrayMultiMap<String, Space*> SpaceMap;
 
-
 /// Event type used by the GameSession
 class GameEvent : public Event
 {

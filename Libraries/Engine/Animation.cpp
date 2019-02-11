@@ -256,7 +256,6 @@ void Animation::UpdateFrame(PlayData& playData,
   }
 }
 
-
 class AnimationLoaderData : public ResourceLoader
 {
   HandleOf<Resource> LoadFromFile(ResourceEntry& entry) override

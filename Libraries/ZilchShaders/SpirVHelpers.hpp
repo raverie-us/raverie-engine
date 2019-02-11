@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//for enum types
+// for enum types
 template <>
 struct ZeroShared HashPolicy<spv::Op> : public HashPolicy<int>
 {

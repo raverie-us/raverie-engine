@@ -327,7 +327,7 @@ bool ComplexVsComplexColliders(Collider* collider0,
   bool type1Local = ColliderType1::RangeInLocalSpace::value;
   // determine which collider needs a local space functor and which needs a
   // world space functor (could do some fancy template tricks to remove the if,
-  //but worry about that later)
+  // but worry about that later)
   if (type0Local)
   {
     if (type1Local)

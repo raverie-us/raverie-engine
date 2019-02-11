@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//CallBack0
+// CallBack0
 template <typename ReturnType>
 class Callback0
 {
@@ -56,7 +56,7 @@ Callback0<ReturnType>* CreateCallback(
   return callback;
 }
 
-//CallBack1
+// CallBack1
 template <typename ReturnType, typename P0>
 class Callback1
 {
@@ -109,7 +109,7 @@ Callback1<ReturnType, P0>* CreateCallback(
   return callback;
 }
 
-//CallBack2
+// CallBack2
 template <typename ReturnType, typename P0, typename P1>
 class Callback2
 {
@@ -163,7 +163,7 @@ Callback2<ReturnType, P0, P1>* CreateCallback(
   return callback;
 }
 
-//CallBack3
+// CallBack3
 template <typename ReturnType, typename P0, typename P1, typename P2>
 class Callback3
 {

@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Bound Type Handle
+// Bound Type Handle
 class BoundTypeHandle
 {
 public:
@@ -19,7 +19,7 @@ public:
   String mName;
 };
 
-//Property Handle
+// Property Handle
 class PropertyHandle
 {
 public:
@@ -36,7 +36,7 @@ public:
   String mName;
 };
 
-//Meta Component Handle
+// Meta Component Handle
 template <typename ComponentType>
 class MetaComponentHandle
 {

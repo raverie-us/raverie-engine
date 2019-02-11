@@ -166,7 +166,7 @@ void PhysicsMaterial::SetDensityInternal(real density, bool markModified)
     ResourceModified();
 }
 
-//PhysicsMaterialManager
+// PhysicsMaterialManager
 ImplementResourceManager(PhysicsMaterialManager, PhysicsMaterial);
 
 PhysicsMaterialManager::PhysicsMaterialManager(BoundType* resourceType) :

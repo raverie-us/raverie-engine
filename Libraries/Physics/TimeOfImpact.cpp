@@ -286,8 +286,8 @@ void TimeOfImpactComplexInternal(TimeOfImpactData* data, bool parametersSwapped)
   {
     // when performing a linear sweep we always sweep the first collider,
     // however the collider order might've been swapped (to make it easier to
-    // test against complex colliders). In that case swap who is doing the linear
-    // sweep.
+    // test against complex colliders). In that case swap who is doing the
+    // linear sweep.
     if (!parametersSwapped)
       objA.vel = data->Velocity;
     else
@@ -487,7 +487,7 @@ void TimeOfImpactComplexVsComplex(TimeOfImpactData* data)
   bool type1Local = ColliderType1::RangeInLocalSpace::value;
   // determine which collider needs a local space functor and which needs a
   // world space functor (could do some fancy template tricks to remove the if,
-  //but worry about that later)
+  // but worry about that later)
   if (type0Local)
   {
     if (type1Local)

@@ -28,7 +28,7 @@ const NavMeshPolygonId cInvalidMeshId = (u32)-1;
 
 class PathFinderAlgorithmMesh;
 
-//Nav Mesh Edge
+// Nav Mesh Edge
 /// This edge is a half edge, meaning adjacent polygons each have their own
 /// edge.
 struct NavMeshEdge
@@ -83,7 +83,7 @@ struct NavMeshEdge
   NavMeshEdge* mPreviousConnected;
 };
 
-//Nav Mesh Polygon
+// Nav Mesh Polygon
 struct NavMeshPolygon
 {
   typedef InList<NavMeshEdge, &NavMeshEdge::mEdgeLink> EdgeList;
@@ -135,7 +135,7 @@ struct NavMeshPolygon
   u32 mId;
 };
 
-//Finder Mesh Node Range
+// Finder Mesh Node Range
 class PathFinderMeshNodeRange
 {
 public:
@@ -154,7 +154,7 @@ public:
   NavMeshPolygon::PolygonRange mRange;
 };
 
-//Finder Algorithm Mesh
+// Finder Algorithm Mesh
 class PathFinderAlgorithmMesh
     : public PathFinderAlgorithm<PathFinderAlgorithmMesh,
                                  NavMeshPolygonId,
@@ -221,7 +221,7 @@ public:
   HashMap<NavMeshEdge*, CogId> mEdgeClientData;
 };
 
-//Path Finder Mesh
+// Path Finder Mesh
 /// A* pathfinding on a mesh.
 class PathFinderMesh : public PathFinder
 {

@@ -7,7 +7,7 @@ namespace Zero
 
 using namespace AudioConstants;
 
-//Sound Space
+// Sound Space
 
 ZilchDefineType(SoundSpace, builder, type)
 {

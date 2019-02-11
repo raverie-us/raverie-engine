@@ -11,7 +11,6 @@ static const real cAabbFatScaleFactor = real(1.2);
 
 } // namespace BaseDynamicTreeInternal
 
-
 template <typename NodeType>
 typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef*
 BaseDynamicTreePolicy<NodeType>::SelectNode(NodeType* parent, NodeType* newLeaf)
@@ -70,7 +69,6 @@ void BaseDynamicTreePolicy<NodeType>::DeleteNode(NodeType* node)
   node->mChild1 = node->mChild2 = nullptr;
   delete node;
 }
-
 
 template <typename PolicyType>
 BaseDynamicAabbTree<PolicyType>::BaseDynamicAabbTree()

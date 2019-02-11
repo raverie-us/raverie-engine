@@ -23,7 +23,7 @@ DeclareEvent(SoundCuePostPlay);
 
 } // namespace Events
 
-//Sound Instance Event
+// Sound Instance Event
 
 /// Sent for various SoundInstance-related events
 class SoundInstanceEvent : public Event
@@ -49,7 +49,7 @@ private:
   HandleOf<SoundInstance> mSoundInstance;
 };
 
-//Cross Fade Object
+// Cross Fade Object
 
 class AudioFadeObject
 {
@@ -85,7 +85,7 @@ public:
   unsigned mInstanceID;
 };
 
-//Notification Object
+// Notification Object
 
 class MusicNotificationObject
 {
@@ -123,7 +123,7 @@ public:
   int mTotalBeats;
 };
 
-//Sound Instance
+// Sound Instance
 
 class TagObject;
 

@@ -151,8 +151,8 @@ void RelinkNodes(Cog* owner,
 }
 
 // when a new node comes into existence, if it has no parent node then we are
-// stuck with an unfortunate situation. We might have nodes under us that we need
-// to be linked. The only way to find them is do a full traversal of all
+// stuck with an unfortunate situation. We might have nodes under us that we
+// need to be linked. The only way to find them is do a full traversal of all
 // hierarchies until we find a cog with physics where we can extract the node.
 void LinkNewParentNode(PhysicsNode* node, Cog* owner)
 {
@@ -266,8 +266,9 @@ void LinkTreeNode(PhysicsNode* node)
     {
       // if we do not have active body set, either we went into the body case
       // above (no collider parent) or the active body of our parent is null,
-      // either way, recurse the direct body to find the active body (could speed
-      //up i guess by keeping another flag for if we took the collider branch
+      // either way, recurse the direct body to find the active body (could
+      // speed
+      // up i guess by keeping another flag for if we took the collider branch
       // above since we'd know that active body is null)
       if (!activeBody)
       {
@@ -566,7 +567,8 @@ void BodyOnDestroy(RigidBody* body, bool dynamicallyDestroyed)
 {
   // fixing the tree will unlink and relink all of the colliders, but this
   // body won't be in the tree to do that, so unlink all of it's colliders real
-  // quick but make sure that the collider's do not still point to the rigid body
+  // quick but make sure that the collider's do not still point to the rigid
+  // body
   //(allowing this caused a crash at some point during a wake up, not sure
   // how it could ever happen, but putting this loop in to prevent that).
   RigidBody::CompositeColliderRange range = body->mColliders.All();
@@ -640,7 +642,7 @@ void PhysicsDetach(PhysicsNode* node, AttachmentInfo& info)
 
   // in the event our parent is already clear, this means we've already called
   // this (might happen with how both collider's and bodies are notified but the
-  //logic takes place the same either way)
+  // logic takes place the same either way)
   if (parentNode == nullptr)
     return;
 

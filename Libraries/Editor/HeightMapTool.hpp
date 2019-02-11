@@ -247,7 +247,6 @@ public:
   HeightPatchUndoRedo* mOperation;
 };
 
-
 /// Declaration of WeightPainter texture channels
 DeclareEnum4(HeightTextureSelect, Texture0, Texture1, Texture2, Texture3);
 
@@ -278,7 +277,6 @@ public:
 
   WeightMapUndoRedo* mOperation;
 };
-
 
 class HeightMapMouseCapture : public MouseManipulation
 {
@@ -345,8 +343,8 @@ DeclareEnum2(CellIndexType, Local, Absoulte)
     ///     <description>
     ///       CreateDestroy:\Destroy patches instead of creating them.\ \
 ///       RaiseLower:\Lower height map with the brush instead of raising
-    ///       it.\ \ SmoothSharpen:\Sharpen height map with the brush instead of
-    ///       smoothing it.
+    ///       it.\ \ SmoothSharpen:\Sharpen height map with the brush instead
+    ///       of smoothing it.
     ///     </description>
     ///   </command>
     /// </Commands>

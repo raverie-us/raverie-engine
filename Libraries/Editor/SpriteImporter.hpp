@@ -23,7 +23,7 @@ struct FrameArea
   IntRect Rect;
 };
 
-//Grid Area
+// Grid Area
 class PixelGridArea : public Widget
 {
 public:
@@ -39,7 +39,7 @@ public:
                     WidgetRect clipRect) override;
 };
 
-//Sprite Sheet Importer
+// Sprite Sheet Importer
 class SpriteSheetImporter : public Composite
 {
 public:

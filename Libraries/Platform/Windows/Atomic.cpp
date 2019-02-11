@@ -35,7 +35,7 @@ extern "C"
   short __cdecl _InterlockedExchangeAdd16(short volatile* target, short value);
   long __cdecl _InterlockedExchangeAdd(long volatile* target, long value);
   //__int64 __cdecl _InterlockedExchangeAdd64(__int64 volatile* target, __int64
-  //value);
+  // value);
 
   // InterlockedIncrement
   // char    __cdecl _InterlockedIncrement8 (char volatile*    target);

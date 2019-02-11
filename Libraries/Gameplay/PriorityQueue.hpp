@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-//Priority Node
+// Priority Node
 template <typename Priority = float>
 class PriorityNode
 {
@@ -17,7 +17,7 @@ public:
   size_t mQueueIndex;
 };
 
-//Priority Queue
+// Priority Queue
 /// Node must have the following:
 ///   Priority mPriority;
 ///   size_t mQueueIndex;

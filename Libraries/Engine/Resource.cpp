@@ -19,7 +19,7 @@ DefineTag(Resource);
 
 const String cNullResource = "null";
 
-//Resource Handle Manager
+// Resource Handle Manager
 void ResourceHandleManager::Allocate(BoundType* type,
                                      Handle& handleToInitialize,
                                      size_t customFlags)
@@ -176,7 +176,7 @@ void LoadResource(HandleParam instance,
   }
 }
 
-//ResourceMetaSerialization
+// ResourceMetaSerialization
 ZilchDefineType(ResourceMetaSerialization, builder, type)
 {
 }
@@ -263,7 +263,7 @@ String ResourceToString(const BoundType* type, const byte* value)
 //  }
 //}
 
-//ResourceDisplayFunctions
+// ResourceDisplayFunctions
 ZilchDefineType(ResourceDisplayFunctions, builder, Type)
 {
 }
@@ -636,7 +636,7 @@ DataNode* DataResource::GetDataTree()
   return loader.TakeOwnershipOfFirstRoot();
 }
 
-//Resource Inheritance
+// Resource Inheritance
 ZilchDefineType(DataResourceInheritance, builder, type)
 {
 }
@@ -663,7 +663,7 @@ bool DataResourceInheritance::ShouldStoreLocalModifications(HandleParam object)
   return !resource->mBaseResourceIdName.Empty();
 }
 
-//Resource Meta Operations
+// Resource Meta Operations
 ZilchDefineType(ResourceMetaOperations, builder, type)
 {
 }

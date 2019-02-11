@@ -4,7 +4,7 @@
 
 namespace Zero
 {
-//Simple Sound
+// Simple Sound
 
 /// Plays a specified SoundCue, either when created or when the Play method is
 /// called.

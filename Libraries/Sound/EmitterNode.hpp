@@ -5,7 +5,7 @@
 namespace Zero
 {
 
-//Emitter Data Per Listener
+// Emitter Data Per Listener
 
 // Stores data for each listener
 class EmitterDataPerListener
@@ -26,7 +26,7 @@ public:
   float mGainValues[AudioConstants::cMaxChannels];
 };
 
-//Emitter Node
+// Emitter Node
 
 class EmitterNode : public SoundNode
 {

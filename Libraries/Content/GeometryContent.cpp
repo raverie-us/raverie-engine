@@ -524,7 +524,7 @@ void AnimationBuilder::BuildListing(ResourceListing& listing)
   }
 }
 
-//Texture Content
+// Texture Content
 ZilchDefineType(TextureContent, builder, type)
 {
   ZeroBindComponent();
@@ -541,7 +541,7 @@ void TextureContent::Generate(ContentInitializer& initializer)
 {
 }
 
-//Geometry Content
+// Geometry Content
 
 String GeometryContent::GetName()
 {
@@ -662,7 +662,6 @@ bool GeneratedArchetype::NeedToBuildArchetype(ContentItem* item)
   bool metaFileOutOfDate = NeedToBuild(metaFile, archetypeFile);
   return fileOutOfDate || metaFileOutOfDate;
 }
-
 
 void CreateGeometryContent(ContentSystem* system)
 {
