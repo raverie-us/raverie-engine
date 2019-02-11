@@ -1,4 +1,4 @@
-
+// External.
 #include "Precompiled.hpp"
 #include "stb_vorbis.h"
 
