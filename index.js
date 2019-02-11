@@ -554,9 +554,30 @@ function safeDeleteFile(filePath)
 
 function gatherSourceFiles()
 {
-  return glob.sync('**/*.@(c|cc|cxx|cpp|h|hxx|hpp|inl)', {
+  console.log('Gathering Source Files');
+  const files = glob.sync('**/*.@(c|cc|cxx|cpp|h|hxx|hpp|inl)', {
     cwd: dirs.libraries
   });
+
+  for (let i = 0; i < files.length;)
+  {
+    const fullPath = path.join(dirs.libraries, files[i]);
+    const fileOptions =
+    {
+      encoding: 'utf8'
+    };
+    const code = fs.readFileSync(fullPath, fileOptions);
+
+    if (code.startsWith('// External.'))
+    {
+      files.splice(i, 1);
+    }
+    else
+    {
+      ++i;
+    }
+  }
+  return files;
 }
 
 async function runEslint()
