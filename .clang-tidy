@@ -3,4 +3,3 @@ modernize-use-equals-default,\
 "
 AnalyzeTemporaryDtors: true
 FormatStyle: file
-HeaderFilterRegex: ''

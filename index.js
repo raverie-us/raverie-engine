@@ -619,7 +619,7 @@ async function runClangTidy(sourceFiles)
     const oldCode = fs.readFileSync(fullPath, fileOptions);
 
     // We always tell it to fix the file, and we compare it afterward to see if it changed.
-    const args = ['-extra-arg=-Weverything', '-fix', filePath];
+    const args = ['-extra-arg=-Weverything', '-fix', '-header-filter=.*', filePath];
 
     // Clang-tidy emits all the errors to the standard out.
     // We capture them and re-emit them to stderr.
