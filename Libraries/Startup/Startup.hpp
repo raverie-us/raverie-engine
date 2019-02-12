@@ -19,4 +19,6 @@ protected:
   ZilchSetup* mZilchSetup;
 };
 
+bool Startup(Engine* engine, StringMap& parameters, String projectFile);
+
 } // namespace Zero

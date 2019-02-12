@@ -3,6 +3,11 @@ add_library(Platform)
 welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR})
 welder_use_precompiled_header(Platform ${CMAKE_CURRENT_LIST_DIR})
 
+target_compile_definitions(Platform
+  PUBLIC
+    main=SDL_main
+)
+
 target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
@@ -25,7 +30,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/File.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
-    ${CMAKE_CURRENT_LIST_DIR}/../SDL/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/OpenglRendererSDL.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Peripherals.cpp

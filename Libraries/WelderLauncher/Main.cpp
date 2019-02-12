@@ -15,11 +15,6 @@ using namespace Zero;
 
 extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
 {
-  // This is not quite correct, but since we don't have a
-  // typical platform main we don't get everything initialized.
-  Zero::gCommandLineArguments.PushBack(
-      FilePath::Combine(dllPath, "ZeroLauncherSharedLibrary.dll"));
-
   FileSystemInitializer fileSystemInitializer(
       &PopulateVirtualFileSystemWithZip);
 
@@ -113,14 +108,14 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   return returnCode;
 }
 
-namespace Zero
-{
-// This main allows the launcher to run as an executable, even though it is
-// typically loaded as a shared library (dll/so) and 'RunZeroLauncher' is
-// invoked externally.
-int PlatformMain(const Array<String>& arguments)
-{
-  return RunZeroLauncher(arguments.Empty() ? "" : arguments.Front().c_str());
-}
+using namespace Zero;
 
-} // namespace Zero
+extern "C" int main(int argc, char* argv[])
+{
+  CommandLineToStringArray(gCommandLineArguments, argv, argc);
+
+  // This main allows the launcher to run as an executable, even though it is
+  // typically loaded as a shared library (dll/so) and 'RunZeroLauncher' is
+  // invoked externally.
+  return RunZeroLauncher(argc ? argv[0] : ".");
+}

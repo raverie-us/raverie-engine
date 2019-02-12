@@ -392,7 +392,7 @@ public:
 
   void* mUserData;
 
-  ZeroDeclarePrivateData(Shell, 64);
+  ZeroDeclarePrivateData(Shell, 128);
 };
 
 /// Flags used to control the behavior of an ShellWindow

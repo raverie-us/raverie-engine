@@ -1,6 +1,7 @@
 add_library(Platform)
 
 welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Platform ${CMAKE_CURRENT_LIST_DIR})
 
 target_sources(Platform
   PRIVATE
@@ -17,7 +18,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/FpControl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Intrinsics.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../Empty/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/PlatformStandard.cpp
@@ -33,6 +33,8 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/Utilities.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/VirtualFileAndFileSystem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
 welder_target_includes(Platform

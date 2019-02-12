@@ -1,20 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
-{
+using namespace Zero;
 
-// Application Startup Function
-bool Startup(Engine* engine, StringMap& parameters, String projectFile);
-
-void DebugRunEngine(void* voidEngine)
+extern "C" int main(int argc, char* argv[])
 {
-  Zero::Engine* engine = (Zero::Engine*)voidEngine;
-  engine->Run();
-}
+  CommandLineToStringArray(gCommandLineArguments, argv, argc);
 
-int PlatformMain(const Array<String>& arguments)
-{
   // Set the log and error handlers so debug printing
   // and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;
@@ -48,7 +40,7 @@ int PlatformMain(const Array<String>& arguments)
 
   // Initialize environments
   Environment* environment = Environment::GetInstance();
-  environment->ParseCommandArgs(arguments);
+  environment->ParseCommandArgs(gCommandLineArguments);
 
   // Add stdout listener (requires engine initialization to get the Environment
   // object)
@@ -83,10 +75,6 @@ int PlatformMain(const Array<String>& arguments)
   if (!success)
     return 1;
 
-  // Use this line to test the crash handler running in
-  // visual studio and remove the line below
-  // Zero::RunEngine(DebugRunEngine, engine);
-
   // Run engine until termination
   engine->Run();
 
@@ -103,4 +91,3 @@ int PlatformMain(const Array<String>& arguments)
 
   return 0;
 }
-} // namespace Zero

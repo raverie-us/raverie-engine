@@ -63,9 +63,14 @@ String ChooseDllPath(Zero::StringParam localDllPath,
     return localDllPath;
   return downloadedDllPath;
 }
+} // namespace Zero
 
-int PlatformMain(const Array<String>& arguments)
+using namespace Zero;
+
+extern "C" int main(int argc, char* argv[])
 {
+  CommandLineToStringArray(gCommandLineArguments, argv, argc);
+
   int restart = 1;
   ExternalLibrary library;
 
@@ -141,4 +146,3 @@ int PlatformMain(const Array<String>& arguments)
   // MetaDatabase::Shutdown();
   return 0;
 }
-} // namespace Zero
