@@ -1,6 +1,6 @@
 add_library(GL INTERFACE)
 
-find_package(OpenGL REQUIRED)
+find_package(OpenGL)
 
 target_include_directories(GL
   INTERFACE
