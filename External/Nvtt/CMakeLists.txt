@@ -35,7 +35,6 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/bc7/shapes_two.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/bc7/tile.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/Array.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/Debug.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/Debug.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/DefsGnucDarwin.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/DefsGnucLinux.h
@@ -179,6 +178,7 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/weightedclusterfit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/weightedclusterfit.h
     ${CMAKE_CURRENT_LIST_DIR}/nvconfig.h
+    ${CMAKE_CURRENT_LIST_DIR}/Debug.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )

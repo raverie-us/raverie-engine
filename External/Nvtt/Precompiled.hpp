@@ -10,10 +10,11 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
+#include <ctype.h>
 #include <errno.h>
 #include <float.h>
-#include <limits>
 #include <limits.h>
+#include <limits>
 #include <malloc.h>
 #include <math.h>
 #include <new>
