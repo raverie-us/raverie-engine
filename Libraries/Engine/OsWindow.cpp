@@ -671,7 +671,7 @@ void OsMouseEvent::Clear()
   ShiftPressed = false;
   AltPressed = false;
   CtrlPressed = false;
-  MouseButton = MouseButton;
+  MouseButton = MouseButtons::None;
   IsMouseAtTrapPosition = false;
   for (uint i = 0; i < MouseButtons::Size; ++i)
     ButtonDown[i] = false;

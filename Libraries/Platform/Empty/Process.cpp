@@ -20,15 +20,6 @@ void Process::Start(Status& status, ProcessStartInfo& info)
 {
 }
 
-void Process::Start(Status& status,
-                    StringRange commandLine,
-                    bool redirectOut,
-                    bool redirectError,
-                    bool redirectIn,
-                    bool showWindow)
-{
-}
-
 int Process::WaitForClose()
 {
   return 0;

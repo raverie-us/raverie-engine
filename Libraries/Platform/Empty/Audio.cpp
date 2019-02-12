@@ -52,6 +52,11 @@ unsigned AudioInputOutput::GetStreamSampleRate(StreamTypes::Enum whichStream)
   return 0;
 }
 
+float AudioInputOutput::GetBufferSizeMultiplier()
+{
+  return 0.0f;
+}
+
 MidiInput::MidiInput() :
     mOnMidiData(nullptr),
     mHandle(nullptr),

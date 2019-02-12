@@ -39,8 +39,9 @@ void DebuggerOutput(const char* message)
 {
 }
 
-void DebugBreak()
+bool DebugBreak()
 {
+  return false;
 }
 
 void EnableMemoryLeakChecking(int breakOnAllocation)

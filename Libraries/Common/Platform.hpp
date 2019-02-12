@@ -291,6 +291,6 @@
 #  define ZeroSharedTemplate
 #endif
 
-#ifndef PLATFORM_WINDOWS
-#  include <alloca.h>
+#if __has_include(<alloca.h>)
+#include <alloca.h>
 #endif

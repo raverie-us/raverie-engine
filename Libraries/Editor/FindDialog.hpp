@@ -152,7 +152,7 @@ private:
   static size_t CountLines(StringRange input);
 
   // Check if a cursor position is valid within a region
-  int ValidCursorPos(StringRange regionText, DocumentEditor* editor);
+  size_t ValidCursorPos(StringRange regionText, DocumentEditor* editor);
 
   // Do the replacement given a script editor
   void DoReplacements(DocumentEditor* scriptEditor, SearchResult* searchResult);

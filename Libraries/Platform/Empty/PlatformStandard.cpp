@@ -4,7 +4,6 @@
 namespace Zero
 {
 
-extern void InitializeGamepad();
 void PlatformLibrary::Initialize()
 {
 }

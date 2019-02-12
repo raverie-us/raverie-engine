@@ -1530,7 +1530,7 @@ void HotKeyEditor::OnGlobalCommandRemoved(CommandUpdateEvent* event)
 
 void HotKeyEditor::OnGlobalCommandUpdated(CommandUpdateEvent* event)
 {
-  int index = mHotKeys->mCommand.FindIndex(*event->mCommand);
+  size_t index = mHotKeys->mCommand.FindIndex(*event->mCommand);
 
   if (index == CommandSet::InvalidIndex)
     return;

@@ -109,14 +109,12 @@ bool Shell::GetPrimaryMonitorImage(Image* image)
   return false;
 }
 
-bool Shell::OpenFile(FileDialogInfo& config)
+void Shell::OpenFile(FileDialogInfo& config)
 {
-  return false;
 }
 
-bool Shell::SaveFile(FileDialogInfo& config)
+void Shell::SaveFile(FileDialogInfo& config)
 {
-  return false;
 }
 
 void Shell::ShowMessageBox(StringParam title, StringParam message)

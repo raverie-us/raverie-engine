@@ -259,7 +259,7 @@ void Epa::DrawDebug(void)
 void Epa::AddEdge(unsigned p0, unsigned p1)
 {
   Edge newEdge = Edge(p0, p1);
-  unsigned index = mEdges.FindIndex(newEdge);
+  size_t index = mEdges.FindIndex(newEdge);
   if (index != InvalidIndex)
   {
     mEdges[index] = mEdges.Back();

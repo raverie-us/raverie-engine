@@ -86,8 +86,6 @@ public:
   typedef const value_type* iterator;
   typedef const value_type* const_iterator;
 
-  static const uint InvalidIndex = (uint)-1;
-
   ///////Constructors//////////////////
   String();
 
