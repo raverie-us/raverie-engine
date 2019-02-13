@@ -606,7 +606,7 @@ async function runClangTidy(sourceFiles)
   const clangTidyOptions = {
     cwd: dirs.libraries,
     // We only ignore stderr because it prints 'unable to find compile_commands.json'.
-    stdio: ['ignore', 'pipe', 'ignore'],
+    stdio: ['ignore', 'pipe', 'inherit'],
     reject: false
   };
   for (const filePath of sourceFiles)
@@ -619,7 +619,7 @@ async function runClangTidy(sourceFiles)
     const oldCode = fs.readFileSync(fullPath, fileOptions);
 
     // We always tell it to fix the file, and we compare it afterward to see if it changed.
-    const args = ['-extra-arg=-Weverything', '-fix', '-header-filter=.*', filePath];
+    const args = ['-extra-arg=-Weverything', '-fix'/*, '-p='*/, '-header-filter=.*', filePath];
 
     // Clang-tidy emits all the errors to the standard out.
     // We capture them and re-emit them to stderr.
@@ -752,6 +752,7 @@ async function runWelderFormat(sourceFiles)
   }
 }
 
+/*
 async function runDoxygen()
 {
   console.log('Running Doxygen');
@@ -769,6 +770,7 @@ async function runDoxygen()
   };
   await exec(paths.doxygen, [], doxygenOptions);
 }
+*/
 
 async function runCmakeLocal()
 {
@@ -788,6 +790,7 @@ async function runCmakeLocal()
   await exec(paths.cmake, [dirs.root], cmakeOptions);
 }
 
+/*
 function safeChmod(file, mode)
 {
   try
@@ -840,7 +843,9 @@ async function runBuild(buildDir, config, testExecutablePaths)
   addExecutable(path.join(buildDir, config, 'ne' + executableExtension));
   addExecutable(path.join(buildDir, 'ne' + executableExtension));
 }
+*/
 
+/*
 async function runTests(testExecutablePaths)
 {
   console.log('Running Tests');
@@ -855,6 +860,7 @@ async function runTests(testExecutablePaths)
     await exec(testExecutablePath, [], options);
   }
 }
+*/
 
 async function createImage()
 {
@@ -911,7 +917,7 @@ async function build()
   await runClangFormat(sourceFiles);
   await runWelderFormat(sourceFiles);
   // TODO(Trevor.Sundberg): Run cppcheck.
-  // TODO(Trevor.Sundberg): Run cpplint.
+  // TODO(Trevor.Sundberg): Run cpplint.'
   //await runDoxygen();
   // TODO(Trevor.Sundberg): Run moxygen.
   await runCmakeLocal();
