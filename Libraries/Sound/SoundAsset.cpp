@@ -105,7 +105,7 @@ void DecompressedSoundAsset::AppendSamplesThreaded(BufferType* buffer,
   // If not, copy what we can and set the rest to zero
   else
   {
-    unsigned samplesToCopy = samplesAvailable - sampleIndex;
+    int samplesToCopy = (int)samplesAvailable - (int)sampleIndex;
 
     // Check if there are any samples to copy
     if (samplesToCopy > 0)
@@ -121,7 +121,9 @@ void DecompressedSoundAsset::AppendSamplesThreaded(BufferType* buffer,
     }
     // If not, set all samples to zero
     else
+    {
       memset(bufferStart, 0, sizeof(float) * samplesRequested);
+    }
   }
 }
 

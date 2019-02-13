@@ -282,6 +282,13 @@ AudioFileDecoder::~AudioFileDecoder()
   StopDecodingThread();
 }
 
+void AudioFileDecoder::RunDecodingTask()
+{
+  bool decoding = DecodePacketThreaded();
+  if (decoding)
+    DecodeNextSection();
+}
+
 void AudioFileDecoder::DecodeNextSection()
 {
   // If the system is threaded, increment the semaphore to trigger another
@@ -449,11 +456,6 @@ int DecompressedDecoder::GetNextPacket(byte* packetData)
       packetData, mCompressedData, mDataSize, &mDataIndex);
 }
 
-void DecompressedDecoder::RunDecodingTask()
-{
-  DecodePacketThreaded();
-}
-
 void DecompressedDecoder::OpenAndReadFile(Status& status,
                                           const String& fileName)
 {
@@ -573,11 +575,6 @@ int StreamingDecoder::GetNextPacket(byte* packetData)
   else
     return PacketDecoder::GetPacketFromFile(
         packetData, mInputFile, &mFilePosition, mLock);
-}
-
-void StreamingDecoder::RunDecodingTask()
-{
-  DecodePacketThreaded();
 }
 
 void StreamingDecoder::Reset()

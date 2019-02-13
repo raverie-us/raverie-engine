@@ -117,7 +117,7 @@ public:
   // getting packet fails or if the end of the data was reached.
   virtual int GetNextPacket(byte* packetData) = 0;
   // Called to decode the next packet when the system is not threaded
-  virtual void RunDecodingTask() = 0;
+  void RunDecodingTask();
   // Requests the next chunk of decoded data
   void DecodeNextSection();
 
@@ -167,8 +167,6 @@ public:
   // Fills in the provided buffer with the next packet data. Returns -1 if
   // getting packet fails or if the end of the data was reached.
   int GetNextPacket(byte* packetData) override;
-  // Called to decode the next packet when the system is not threaded
-  void RunDecodingTask() override;
 
 private:
   // Opens a file and reads in its data
@@ -213,8 +211,6 @@ public:
   // Fills in the provided buffer with the next packet data. Returns -1 if
   // getting packet fails or if the end of the data was reached.
   int GetNextPacket(byte* packetData) override;
-  // Called to decode the next packet when the system is not threaded
-  void RunDecodingTask() override;
   // Resets streaming decoding to the beginning
   void Reset();
 

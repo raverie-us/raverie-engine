@@ -133,7 +133,7 @@ void AudioMixer::ShutDown()
 void AudioMixer::Update()
 {
   // If not threaded, run decoding tasks and mix loop
-  if (!Zero::ThreadingEnabled)
+  if (!ThreadingEnabled)
   {
     for (unsigned i = 0; i < MaxDecodingTasksToRun && !DecodingTasks.Empty();
          ++i)
