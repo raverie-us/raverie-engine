@@ -25,6 +25,7 @@
   "homepage": "https://github.com/WelderFoundation/WelderEngine#readme",
   "dependencies": {
     "archiver": "^3.0.0",
+    "command-exists": "^1.2.8",
     "eslint": "^5.9.0",
     "execa": "^1.0.0",
     "extract-zip": "^1.6.7",

@@ -1,10 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-/// BuildVersion.inl file is updated by the build system based on the latest
-/// changeset and the build id files
-#include "BuildVersion.inl"
-
 #if ZeroRelease
 #  define ZeroConfiguration "Release"
 #elif ZeroDebug
@@ -25,14 +21,14 @@ namespace Zero
 // Helper to stringify the build id's name conditionally on if there's an
 // experimental branch
 #ifdef ZeroExperimentalBranchName
-#  define ZeroBuildIdString()                                                          \
-    ZeroExperimentalBranchName                                                         \
-        "." Stringify(ZeroMajorVersion) "." Stringify(ZeroMinorVersion) "." Stringify( \
-            ZeroPatchVersion) "." Stringify(ZeroRevisionId)
+#  define ZeroBuildIdString()                                                              \
+    ZeroExperimentalBranchName                                                             \
+        "." Stringify(WelderMajorVersion) "." Stringify(WelderMinorVersion) "." Stringify( \
+            WelderPatchVersion) "." Stringify(WelderRevisionId)
 #else
-#  define ZeroBuildIdString()                                                  \
-    Stringify(ZeroMajorVersion) "." Stringify(ZeroMinorVersion) "." Stringify( \
-        ZeroPatchVersion) "." Stringify(ZeroRevisionId)
+#  define ZeroBuildIdString()                                                      \
+    Stringify(WelderMajorVersion) "." Stringify(WelderMinorVersion) "." Stringify( \
+        WelderPatchVersion) "." Stringify(WelderRevisionId)
 #endif
 
 cstr GetGuidString()
@@ -54,27 +50,27 @@ uint GetLauncherMajorVersion()
 
 uint GetMajorVersion()
 {
-  return ZeroMajorVersion;
+  return WelderMajorVersion;
 }
 
 uint GetMinorVersion()
 {
-  return ZeroMinorVersion;
+  return WelderMinorVersion;
 }
 
 uint GetPatchVersion()
 {
-  return ZeroPatchVersion;
+  return WelderPatchVersion;
 }
 
 uint GetRevisionNumber()
 {
-  return ZeroRevisionId;
+  return WelderRevisionId;
 }
 
 u64 GetShortChangeSet()
 {
-  return WrapHex(ZeroShortChangeSet);
+  return WrapHex(WelderShortChangeSet);
 }
 
 cstr GetExperimentalBranchName()
@@ -88,22 +84,22 @@ cstr GetExperimentalBranchName()
 
 cstr GetMajorVersionString()
 {
-  return Stringify(ZeroMajorVersion);
+  return Stringify(WelderMajorVersion);
 }
 
 cstr GetMinorVersionString()
 {
-  return Stringify(ZeroMinorVersion);
+  return Stringify(WelderMinorVersion);
 }
 
 cstr GetPatchVersionString()
 {
-  return Stringify(ZeroPatchVersion);
+  return Stringify(WelderPatchVersion);
 }
 
 cstr GetRevisionNumberString()
 {
-  return Stringify(ZeroRevisionId);
+  return Stringify(WelderRevisionId);
 }
 
 cstr GetBuildIdString()
@@ -113,17 +109,17 @@ cstr GetBuildIdString()
 
 cstr GetShortChangeSetString()
 {
-  return Stringify(ZeroShortChangeSet);
+  return Stringify(WelderShortChangeSet);
 }
 
 cstr GetChangeSetString()
 {
-  return Stringify(ZeroChangeSet);
+  return Stringify(WelderChangeSet);
 }
 
 cstr GetChangeSetDateString()
 {
-  return ZeroChangeSetDate;
+  return WelderChangeSetDate;
 }
 
 cstr GetConfigurationString()
@@ -138,9 +134,9 @@ cstr GetPlatformString()
 
 cstr GetBuildVersionName()
 {
-  return ZeroBuildIdString() " " Stringify(ZeroChangeSet) " " ZeroChangeSetDate
-                                                          " " ZeroConfiguration
-                                                          " " ZeroPlatform;
+  return ZeroBuildIdString() " " Stringify(
+      WelderChangeSet) " " WelderChangeSetDate " " ZeroConfiguration
+                       " " ZeroPlatform;
 }
 
 int GetVersionId(StringParam versionIdFilePath)

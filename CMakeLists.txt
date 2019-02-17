@@ -1,15 +1,19 @@
 cmake_minimum_required(VERSION 3.13.1 FATAL_ERROR)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+add_definitions(-DWelderMajorVersion=1)
+add_definitions(-DWelderMinorVersion=0)
+add_definitions(-DWelderPatchVersion=0)
+add_definitions(-DWelderRevisionId=${WELDER_REVISION})
+add_definitions(-DWelderShortChangeSet=${WELDER_SHORT_CHANGESET})
+add_definitions(-DWelderChangeSet=${WELDER_CHANGESET})
+add_definitions(-DWelderChangeSetDate=${WELDER_CHANGESET_DATE})
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
 
 project(Welder)
-add_definitions(-DPLATFORM_ARCHITECTURE="${PLATFORM_ARCHITECTURE}")
+add_definitions(-DPLATFORM_ARCHITECTURE="${WELDER_ARCHITECTURE}")
 
 set(WELDER_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(WELDER_CMAKE_DIR ${WELDER_CORE_DIR}/CMakeFiles/)

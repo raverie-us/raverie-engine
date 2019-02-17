@@ -9,41 +9,34 @@ const request = require('request');
 const rimraf = require('rimraf');
 const mv = require('mv');
 const ncp = require('ncp');
-const { performance } = require('perf_hooks');
+const performance = require('perf_hooks').performance;
 const extract = require('extract-zip');
 const archiver = require('archiver');
+const commandExists = require('command-exists').sync;
 
 const bytesPerMb = 1024 * 1024;
 
-let fixMode = false;
-function fix()
+let system;
+let executableExtension = '';
+
+function initialize()
 {
-  fixMode = true;
+  switch (os.platform())
+  {
+  case 'win32':
+    system = 'windows';
+    executableExtension = '.exe';
+    break;
+  case 'darwin':
+    system = 'mac';
+    break;
+  default:
+    system = 'linux';
+    break;
+  }
 }
 
-const platform = (() =>
-{
-  switch (os.platform())
-  {
-  case 'win32':
-    return 'windows';
-  case 'darwin':
-    return 'mac';
-  default:
-    return 'linux';
-  }
-})();
-
-const executableExtension = (() =>
-{
-  switch (os.platform())
-  {
-  case 'win32':
-    return '.exe';
-  default:
-    return '';
-  }
-})();
+initialize();
 
 const dirs = (() =>
 {
@@ -51,8 +44,6 @@ const dirs = (() =>
   const libraries = path.join(root, 'Libraries');
   const temp = path.join(root, 'Temp');
   const tempBuild = path.join(temp, 'Build');
-  const buildDefault = path.join(tempBuild, 'Default');
-  const buildLocal = path.join(tempBuild, 'Local');
   const tempDownload = path.join(temp, 'Download');
   const tempDoxygen = path.join(temp, 'Doxygen');
   const tempTest = path.join(temp, 'Test');
@@ -72,8 +63,6 @@ const dirs = (() =>
     temp,
     libraries,
     tempBuild,
-    buildDefault,
-    buildLocal,
     tempDownload,
     tempDoxygen,
     tempTest,
@@ -94,18 +83,28 @@ const paths = (() =>
 {
   const ninja = path.join(dirs.localNinjaBin, 'ninja' + executableExtension);
   const clang = path.join(dirs.localLlvmBin, 'clang' + executableExtension);
+  const clangXX = path.join(dirs.localLlvmBin, 'clang++' + executableExtension);
+  const lld = path.join(dirs.localLlvmBin, 'lld' + executableExtension);
+  const llvmAr = path.join(dirs.localLlvmBin, 'llvm-ar' + executableExtension);
   const clangTidy = path.join(dirs.localLlvmBin, 'clang-tidy' + executableExtension);
   const clangFormat = path.join(dirs.localLlvmBin, 'clang-format' + executableExtension);
   const doxygen = path.join(dirs.localDoxygenBin, 'doxygen' + executableExtension);
   const cmake = path.join(dirs.localCmakeBin, 'cmake' + executableExtension);
 
+  // Commands that we don't have portable/image versions of:
+  const git = 'git';
+
   return {
     ninja,
     clang,
+    clangXX,
+    lld,
+    llvmAr,
     clangTidy,
     clangFormat,
     doxygen,
     cmake,
+    git,
   };
 })();
 
@@ -126,10 +125,10 @@ function makeAllDirs()
   }
 }
 
-function addPath(directory)
-{
-  process.env.PATH += `;${directory}`;
-}
+//function addPath(directory)
+//{
+//  process.env.PATH += `;${directory}`;
+//}
 
 function sleep(ms)
 {
@@ -219,30 +218,18 @@ async function exec(executable, args, options)
   return result;
 }
 
-async function setupEnvironment()
+async function execStdout(...args)
 {
-  switch (platform)
-  {
-  case 'windows':
-    addPath('C:/Program Files/LLVM/bin');
-    addPath('C:/Program Files/doxygen/bin');
-    addPath('C:/Program Files/CMake/bin');
-    break;
-  case 'linux':
-    //addPath(path.join(dirs.tempTools, 'llvm'));
-    //addPath(path.join(dirs.tempTools, 'doxygen'));
-    //addPath(path.join(dirs.tempTools, 'cmake'));
-    break;
-  default:
-    printError(`setupEnvironment: Unhandled platform ${platform}`);
-  }
+  return (await exec(...args)).stdout;
 }
 
 function verifyFileExists(filePath)
 {
-  if (!fs.existsSync(filePath))
+  const exists = path.isAbsolute(filePath) ? fs.existsSync(filePath) : commandExists(filePath);
+
+  if (!exists)
   {
-    printError(`file '${filePath}' does not exist`);
+    printError(`file/command '${filePath}' does not exist`);
     return false;
   }
   return true;
@@ -425,7 +412,7 @@ async function installProgram(info)
     }
   }
 
-  const settings = info[platform];
+  const settings = info[system];
   if (settings)
   {
     let filePath = null;
@@ -440,7 +427,7 @@ async function installProgram(info)
   }
   else
   {
-    printError(`installProgram: Unhandled platform ${platform} for ${info.name}`);
+    printError(`installProgram: Unhandled system ${system} for ${info.name}`);
   }
 
   if (info.check)
@@ -581,23 +568,30 @@ function gatherSourceFiles()
   return files;
 }
 
-async function runEslint()
+async function runEslint(options)
 {
   console.log('Running Eslint');
   const eslintOptions = {
     cwd: dirs.root,
     stdio: ['ignore', 'pipe', 'pipe'],
-    out: printError,
-    err: printError,
+    out: options.fix ? printLog : printError,
+    err: options.fix ? printLog : printError,
     reject: false
   };
+  const args = ['node_modules/eslint/bin/eslint.js', '.'];
+
+  if (options.fix)
+  {
+    args.push('--fix');
+  }
+
   await exec('node', ['node_modules/eslint/bin/eslint.js', '.'], eslintOptions);
 }
 
-async function runClangTidy(sourceFiles)
+async function runClangTidy(options, sourceFiles)
 {
   console.log('Running Clang Tidy');
-  if (!await verifyFileExists(paths.clangTidy))
+  if (!verifyFileExists(paths.clangTidy))
   {
     return;
   }
@@ -625,7 +619,7 @@ async function runClangTidy(sourceFiles)
     // We capture them and re-emit them to stderr.
     const result = await exec(paths.clangTidy, args, clangTidyOptions);
 
-    if (fixMode)
+    if (options.fix)
     {
       continue;
     }
@@ -642,10 +636,10 @@ async function runClangTidy(sourceFiles)
   }
 }
 
-async function runClangFormat(sourceFiles)
+async function runClangFormat(options, sourceFiles)
 {
   console.log('Running Clang Format');
-  if (!await verifyFileExists(paths.clangFormat))
+  if (!verifyFileExists(paths.clangFormat))
   {
     return;
   }
@@ -673,7 +667,7 @@ async function runClangFormat(sourceFiles)
     const oldCode = fs.readFileSync(fullPath, fileOptions);
     const newCode = result.stdout;
 
-    if (fixMode)
+    if (options.fix)
     {
       fs.writeFileSync(fullPath, newCode, fileOptions);
     }
@@ -684,7 +678,7 @@ async function runClangFormat(sourceFiles)
   }
 }
 
-async function runWelderFormat(sourceFiles)
+async function runWelderFormat(options, sourceFiles)
 {
   console.log('Running Welder Format');
 
@@ -741,7 +735,7 @@ async function runWelderFormat(sourceFiles)
     // Join all lines together with a standard UNIX newline.
     const newCode = lines.join('\n');
 
-    if (fixMode)
+    if (options.fix)
     {
       fs.writeFileSync(fullPath, newCode, fileOptions);
     }
@@ -756,7 +750,7 @@ async function runWelderFormat(sourceFiles)
 async function runDoxygen()
 {
   console.log('Running Doxygen');
-  if (!await verifyFileExists(paths.doxygen))
+  if (!verifyFileExists(paths.doxygen))
   {
     return;
   }
@@ -772,25 +766,152 @@ async function runDoxygen()
 }
 */
 
-async function runCmakeLocal()
+async function runCmake(options)
 {
-  console.log('Running Cmake Local');
-  if (!await verifyFileExists(paths.cmake))
+  console.log('Running Cmake');
+  makeAllDirs();
+
+  if (!verifyFileExists(paths.cmake) || !verifyFileExists(paths.git))
   {
-    return;
+    return null;
   }
 
+  const gitOptions = {
+    cwd: dirs.root,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    err: printError,
+    reject: false
+  };
+  const revision = await execStdout(paths.git, ['rev-list', '--count', 'HEAD'], gitOptions);
+  const shortChangeset = await execStdout(paths.git, ['log', '-1', '--pretty=%h', '--abbrev=12'], gitOptions);
+  const changeset = await execStdout(paths.git, ['log', '-1', '--pretty=%H'], gitOptions);
+  const changesetDate = `"${await execStdout(paths.git, ['log', '-1', '--pretty=%cd', '--date=format:%Y-%m-%d'], gitOptions)}"`;
+
+  const aliases =
+  {
+    windows:
+    {
+      builder: 'Visual Studio 15 2017',
+      toolchain: 'MSVC',
+      platform: 'Windows',
+      architecture: 'X64',
+      configuration: 'Any',
+    },
+    emscripten:
+    {
+      builder: 'MinGW Makefiles',
+      toolchain: 'Emscripten',
+      platform: 'Emscripten',
+      architecture: 'WASM',
+      configuration: 'Release',
+    },
+    empty:
+    {
+      builder: 'Ninja',
+      toolchain: 'Clang',
+      platform: 'Stub',
+      architecture: 'ANY',
+      configuration: 'Release',
+    },
+  };
+
+  const combo = aliases[options.alias ? options.alias : system];
+
+  // Allow options to override builder, toolchian, etc.
+  // It is the user's responsibility to ensure this is a valid combination.
+  Object.assign(combo, options);
+
+  let builderArgs = [];
+  let toolchainArgs = [];
+  let architectureArgs = [];
+  let configurationArgs = [];
+
+  if (combo.builder === 'Ninja')
+  {
+    builderArgs = [
+      `-DCMAKE_MAKE_PROGRAM=${paths.ninja}`,
+    ];
+  }
+
+  if (combo.toolchain === 'Emscripten')
+  {
+    if (!process.env.EMSCRIPTEN)
+    {
+      printError('Cannot find EMSCRIPTEN environment variable');
+    }
+
+    const toolchainFile = path.join(process.env.EMSCRIPTEN, 'cmake/Modules/Platform/Emscripten.cmake');
+    toolchainArgs = [
+      `-DCMAKE_TOOLCHAIN_FILE=${toolchainFile}`,
+      '-DEMSCRIPTEN_GENERATE_BITCODE_STATIC_LIBRARIES=1',
+    ];
+  }
+
+  if (combo.toolchain === 'Clang')
+  {
+    toolchainArgs = [
+      '-DCMAKE_SYSTEM_NAME=Generic',
+      `-DCMAKE_C_COMPILER:PATH=${paths.clang}`,
+      `-DCMAKE_CXX_COMPILER:PATH=${paths.clangXX}`,
+      '-DCMAKE_C_COMPILER_ID=Clang',
+      '-DCMAKE_CXX_COMPILER_ID=Clang',
+      `-DCMAKE_LINKER=${paths.lld}`,
+      `-DCMAKE_AR=${paths.llvmAr}`,
+    ];
+  }
+
+  if (combo.toolchain === 'MSVC' && combo.architecture === 'X64')
+  {
+    architectureArgs = [
+      '-DCMAKE_GENERATOR_PLATFORM=x64',
+      '-T', 'host=x64',
+    ];
+  }
+
+  if (combo.toolchain !== 'MSVC')
+  {
+    configurationArgs = [
+      `-DCMAKE_BUILD_TYPE=${combo.configuration}`,
+      '-DCMAKE_EXPORT_COMPILE_COMMANDS=1',
+    ];
+  }
+
+  const cmakeArgs = [
+    `-DWELDER_REVISION=${revision}`,
+    `-DWELDER_SHORT_CHANGESET=${shortChangeset}`,
+    `-DWELDER_CHANGESET=${changeset}`,
+    `-DWELDER_CHANGESET_DATE=${changesetDate}`,
+    '-G', combo.builder,
+    ...builderArgs,
+    `-DWELDER_TOOLCHAIN=${combo.toolchain}`,
+    ...toolchainArgs,
+    `-DWELDER_PLATFORM=${combo.platform}`,
+    `-DWELDER_ARCHITECTURE=${combo.architecture}`,
+    ...architectureArgs,
+    ...configurationArgs,
+    dirs.root,
+  ];
+
+  console.log(cmakeArgs);
+  console.log(combo);
+
+  const comboString = `${combo.builder}_${combo.toolchain}_${combo.platform}_${combo.architecture}_${combo.configuration}`.replace(/ /g, '-');
+  const comboDir = path.join(dirs.tempBuild, comboString);
+  rimraf.sync(comboDir);
+  makeDir(comboDir);
+
   const cmakeOptions = {
-    cwd: dirs.buildLocal,
+    cwd: comboDir,
     stdio: ['ignore', 'pipe', 'pipe'],
     out: printLog,
     err: printError,
     reject: false
   };
-  await exec(paths.cmake, [dirs.root], cmakeOptions);
+  await exec(paths.cmake, cmakeArgs, cmakeOptions);
+
+  return comboDir;
 }
 
-/*
 function safeChmod(file, mode)
 {
   try
@@ -806,7 +927,7 @@ function safeChmod(file, mode)
 async function runBuild(buildDir, config, testExecutablePaths)
 {
   console.log('Running Build');
-  if (!await verifyFileExists(paths.cmake))
+  if (!verifyFileExists(paths.cmake))
   {
     return;
   }
@@ -843,7 +964,6 @@ async function runBuild(buildDir, config, testExecutablePaths)
   addExecutable(path.join(buildDir, config, 'ne' + executableExtension));
   addExecutable(path.join(buildDir, 'ne' + executableExtension));
 }
-*/
 
 /*
 async function runTests(testExecutablePaths)
@@ -866,7 +986,7 @@ async function createImage()
 {
   console.log('Creating');
   makeAllDirs();
-  const imagePath = path.join(dirs.tempImages, `image-${platform}.zip`);
+  const imagePath = path.join(dirs.tempImages, `image-${system}.zip`);
   safeDeleteFile(imagePath);
 
   const output = fs.createWriteStream(imagePath);
@@ -906,23 +1026,33 @@ async function clean()
   console.log('Cleaned');
 }
 
-async function build()
+async function format(options)
 {
-  console.log('Building');
+  console.log('Formatting');
   makeAllDirs();
-  await runEslint();
+  await runEslint(options);
   // TODO(Trevor.Sundberg): Run cmake_format.
   const sourceFiles = gatherSourceFiles();
-  await runClangTidy(sourceFiles);
-  await runClangFormat(sourceFiles);
-  await runWelderFormat(sourceFiles);
+  if (options.tidy)
+  {
+    await runClangTidy(options, sourceFiles);
+  }
+  await runClangFormat(options, sourceFiles);
+  await runWelderFormat(options, sourceFiles);
   // TODO(Trevor.Sundberg): Run cppcheck.
   // TODO(Trevor.Sundberg): Run cpplint.'
   //await runDoxygen();
   // TODO(Trevor.Sundberg): Run moxygen.
-  await runCmakeLocal();
-  //const testExecutablePaths = [];
-  //await runBuild(dirs.buildLocal, 'Release', testExecutablePaths);
+  console.log('Formatted');
+}
+
+async function build(options)
+{
+  console.log('Building');
+  const buildDir = await runCmake(options);
+  const testExecutablePaths = [];
+  const configuration = options.configuration ? options.configuration : 'Release';
+  await runBuild(buildDir, configuration, testExecutablePaths);
   //await runTests(testExecutablePaths);
   console.log('Built');
 }
@@ -954,36 +1084,62 @@ async function installSources()
   await installCmake();
 }
 
+function getParsedArgs()
+{
+  const args = process.argv.splice(2);
+
+  if (args.length === 0)
+  {
+    return ['clean', 'installImage', 'build'];
+  }
+
+  const json = args.join(' ');
+
+  if (json.startsWith('['))
+  {
+    return eval(json); // eslint-disable-line
+  }
+
+  // Assume the arguments are not in json format (just an array of strings).
+  return args;
+}
+
 async function main()
 {
-  await setupEnvironment();
-
   const commands = {
-    fix,
     createImage,
     clean,
     installImage,
     installSources,
+    format,
+    runCmake,
     build,
   };
 
-  let args = process.argv.slice(2);
-  if (args.length === 0)
-  {
-    args = ['clean', 'installImage', 'build'];
-  }
-
-  for (const arg of args)
+  const parsedArgs = getParsedArgs();
+  for (let arg of parsedArgs)
   {
     console.log('--------------------------------------------------');
-    const command = commands[arg];
-    if (command)
+    let command;
+    if (typeof arg === 'string')
     {
-      await command();
+      command = commands[arg];
+      arg = {
+        name: arg
+      };
     }
     else
     {
-      printError(`Invalid command '${arg}'`);
+      command = commands[arg.name];
+    }
+
+    if (command)
+    {
+      await command(arg);
+    }
+    else
+    {
+      console.error(`Invalid command '${arg}'`);
     }
   }
 }

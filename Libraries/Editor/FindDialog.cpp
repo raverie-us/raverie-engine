@@ -412,7 +412,7 @@ void FindTextDialog::SplitActiveCursorRegion()
 
 // Check if a cursor position is valid within a region
 size_t FindTextDialog::ValidCursorPos(StringRange regionText,
-                                   DocumentEditor* editor)
+                                      DocumentEditor* editor)
 {
   // Store the position of the cursor (relative to the start of the region)
   int cursorPos;
