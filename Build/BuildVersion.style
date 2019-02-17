@@ -1,1 +1,0 @@
-changeset = '\n#define ZeroRevisionId {rev}\n#define ZeroShortChangeSet {node|short}\n#define ZeroChangeSet {node}\n#define ZeroChangeSetDate "{date|shortdate}"\n'

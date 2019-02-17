@@ -1,3 +1,0 @@
-#define ZeroMajorVersion 2
-#define ZeroMinorVersion 0
-#define ZeroPatchVersion 0
