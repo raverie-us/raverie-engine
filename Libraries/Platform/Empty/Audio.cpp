@@ -20,7 +20,6 @@ StreamStatus::Enum AudioInputOutput::InitializeAPI(Zero::String* resultMessage)
 StreamStatus::Enum AudioInputOutput::InitializeStream(
     StreamTypes::Enum whichStream, Zero::String* resultMessage)
 {
-  Error("Not implemented");
   return StreamStatus::Uninitialized;
 }
 
@@ -54,7 +53,7 @@ unsigned AudioInputOutput::GetStreamSampleRate(StreamTypes::Enum whichStream)
 
 float AudioInputOutput::GetBufferSizeMultiplier()
 {
-  return 0.0f;
+  return 1.0f;
 }
 
 MidiInput::MidiInput() :

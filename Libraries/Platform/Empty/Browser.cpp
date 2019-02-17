@@ -99,7 +99,6 @@ bool Browser::GetFocus()
 
 void Browser::SetVisible(bool visible)
 {
-  // We just ignore this since we're never visible...
 }
 
 bool Browser::GetVisible()
@@ -195,7 +194,6 @@ void Browser::SimulateMouseScroll(Math::IntVec2Param localPosition,
 {
 }
 
-// This must be called before any browsers are created
 void Browser::PlatformCreate()
 {
 }
@@ -208,7 +206,6 @@ void Browser::PlatformUpdate()
 {
 }
 
-// BrowserSubProcess
 int BrowserSubProcess::Execute()
 {
   return 0;
