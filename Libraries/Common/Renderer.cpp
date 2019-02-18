@@ -4,6 +4,27 @@
 
 namespace Zero
 {
+const String cPostVertex("PostVertex");
+
+StringParam GetCoreVertexFragmentName(CoreVertexType::Enum type)
+{
+  static String cMesh("MeshVertex");
+  static String cSkinnedMesh("SkinnedMeshVertex");
+  static String cStreamed("StreamedVertex");
+
+  switch (type)
+  {
+  case CoreVertexType::Mesh:
+    return cMesh;
+  case CoreVertexType::SkinnedMesh:
+    return cSkinnedMesh;
+  case CoreVertexType::Streamed:
+    return cStreamed;
+  }
+
+  Error("Invalid CoreVertexType");
+  return cMesh;
+}
 
 GraphicsDriverSupport::GraphicsDriverSupport() :
     mTextureCompression(false),

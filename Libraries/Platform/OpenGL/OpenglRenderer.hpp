@@ -51,8 +51,6 @@ public:
 class GlMaterialRenderData : public MaterialRenderData
 {
 public:
-  String mCompositeName;
-  u64 mResourceId;
 };
 
 class GlMeshRenderData : public MeshRenderData
@@ -172,8 +170,6 @@ public:
   void DestroyUnusedSamplers();
 
   UniformFunction mUniformFunctions[ShaderInputType::Count];
-
-  String mCoreVertexTypeNames[CoreVertexType::Count];
 
   HashMap<ShaderKey, GlShader> mGlShaders;
   HashMap<ShaderKey, ShaderEntry> mShaderEntries;

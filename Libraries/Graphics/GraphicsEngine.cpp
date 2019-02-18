@@ -1,6 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
+#define WelderLazyShaderCompositing
 
 namespace Zero
 {
@@ -189,6 +190,128 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   mVerticalSync = false;
 }
 
+#if defined(WelderLazyShaderCompositing)
+void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
+                                        ViewBlock* viewBlock,
+                                        FrameBlock* frameBlock,
+                                        Array<String>& shadersOut)
+{
+  // Create a map of RenderGroup id to task memory index for every sub group
+  // entry.
+  HashMap<int, size_t> taskIndexMap;
+  while (taskIndexMap.Size() < task->mSubRenderGroupCount)
+  {
+    size_t index = taskIndexMap.Size() + 1;
+    RenderTaskRenderPass* subTask = task + index;
+    taskIndexMap.InsertOrError(subTask->mRenderGroupIndex, index);
+  }
+
+  // All ViewNodes under the base RenderGroup.
+  IndexRange viewNodeRange =
+      viewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
+
+  for (uint i = viewNodeRange.start; i < viewNodeRange.end; ++i)
+  {
+    ViewNode& viewNode = viewBlock->mViewNodes[i];
+    FrameNode& frameNode = frameBlock->mFrameNodes[viewNode.mFrameNodeIndex];
+
+    // Get the index for this object's RenderGroup settings. Always default to
+    // the base task entry.
+    size_t index = taskIndexMap.FindValue(viewNode.mRenderGroupId, 0);
+
+    // Offsets to sub RenderGroup settings or just the base task.
+    RenderTaskRenderPass* subTask = task + index;
+
+    // Different RenderPass tasks are also made to denote RenderGroups to not
+    // render. Don't change state or render the object.
+    if (subTask->mRender == false)
+      continue;
+
+    MaterialRenderData* materialData = frameNode.mMaterialRenderData;
+    if (materialData == nullptr)
+      continue;
+
+    // Shader permutation lookup for vertex type and render pass
+    String name = BuildString(GetCoreVertexFragmentName(frameNode.mCoreVertexType),
+                    materialData->mCompositeName,
+                    subTask->mRenderPassName);
+    shadersOut.PushBack(name);
+  }
+}
+
+void CollectShadersRenderTaskPostProcess(RenderTaskPostProcess* task,
+                                         Array<String>& shadersOut)
+{
+  MaterialRenderData* materialData = task->mMaterialRenderData;
+  if (materialData == nullptr && task->mPostProcessName.Empty() == true)
+    return;
+
+  String compositeName =
+      materialData ? materialData->mCompositeName : task->mPostProcessName;
+
+  String name = BuildString(cPostVertex, compositeName);
+  shadersOut.PushBack(name);
+}
+
+void CollectShaders(RenderTasks* renderTasks,
+                    RenderQueues* renderQueues,
+                    Array<String>& shaderNamesOut)
+{
+  forRange(RenderTaskRange & taskRange, renderTasks->mRenderTaskRanges.All())
+  {
+    FrameBlock* frameBlock =
+        &renderQueues->mFrameBlocks[taskRange.mFrameBlockIndex];
+    ViewBlock* viewBlock =
+        &renderQueues->mViewBlocks[taskRange.mViewBlockIndex];
+
+    uint taskIndex = taskRange.mTaskIndex;
+    for (uint i = 0; i < taskRange.mTaskCount; ++i)
+    {
+      RenderTask* task = (RenderTask*)&renderTasks->mRenderTaskBuffer
+                             .mRenderTaskData[taskIndex];
+
+      switch (task->mId)
+      {
+      case RenderTaskType::ClearTarget:
+        taskIndex += sizeof(RenderTaskClearTarget);
+        break;
+
+      case RenderTaskType::RenderPass:
+      {
+        RenderTaskRenderPass* renderPass = (RenderTaskRenderPass*)task;
+        CollectShadersRenderTaskRenderPass(
+            renderPass, viewBlock, frameBlock, shaderNamesOut);
+        // RenderPass tasks can have multiple following task entries for sub
+        // RenderGroup settings. Have to index past all sub tasks.
+        taskIndex += sizeof(RenderTaskRenderPass) *
+                     (renderPass->mSubRenderGroupCount + 1);
+        i += renderPass->mSubRenderGroupCount;
+      }
+      break;
+
+      case RenderTaskType::PostProcess:
+        CollectShadersRenderTaskPostProcess((RenderTaskPostProcess*)task,
+                                            shaderNamesOut);
+        taskIndex += sizeof(RenderTaskPostProcess);
+        break;
+
+      case RenderTaskType::BackBufferBlit:
+        taskIndex += sizeof(RenderTaskBackBufferBlit);
+        break;
+
+      case RenderTaskType::TextureUpdate:
+        taskIndex += sizeof(RenderTaskTextureUpdate);
+        break;
+
+      default:
+        Error("Render task not implemented.");
+        break;
+      }
+    }
+  }
+}
+#endif
+
 void GraphicsEngine::Update(bool debugger)
 {
   // Do not try to run rendering while this job is going.
@@ -261,6 +384,35 @@ void GraphicsEngine::Update(bool debugger)
   // pass everything to the renderer, all rendering happens on this job
   mDoRenderTasksJob->mRenderTasks = mRenderTasksFront;
   mDoRenderTasksJob->mRenderQueues = mRenderQueuesFront;
+  
+#if defined(WelderLazyShaderCompositing)
+  Array<String> shaderNames;
+  CollectShaders(mRenderTasksFront,
+                 mRenderQueuesFront,
+                 shaderNames);
+
+  ShaderSet shadersToCompile;
+  forRange(StringParam name, shaderNames)
+  {
+    Shader* shader = mCompositeShaders.FindValue(name, nullptr);
+    if (shader == nullptr)
+      shader = mPostProcessShaders.FindValue(name, nullptr);
+    ContinueIf(shader == nullptr, "Expected shader");
+
+    if (!shader->mSentToRenderer)
+      shadersToCompile.Insert(shader);
+  }
+
+  if (!shadersToCompile.Empty())
+  {
+    AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
+    bool compiled = mShaderGenerator->BuildShaders(
+        shadersToCompile, mUniqueComposites, addShadersJob->mShaders);
+    ErrorIf(!compiled, "Shaders did not compile after composition.");
+    AddRendererJob(addShadersJob);
+  }
+#endif
+
   AddRendererJob(mDoRenderTasksJob);
 
   // Add job for texture data after render tasks job so that
@@ -992,17 +1144,15 @@ Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex,
                                           ShaderMap& shaderMap)
 {
   String name = BuildString(coreVertex, composite, renderPass);
-  if (shaderMap.ContainsKey(name))
-    return shaderMap.FindValue(name, nullptr);
+  Shader*& shader = shaderMap[name];
+  if (shader)
+    return shader;
 
-  Shader* shader = gShaderPool->AllocateType<Shader>();
+  shader = gShaderPool->AllocateType<Shader>();
   shader->mCoreVertex = coreVertex;
   shader->mComposite = composite;
   shader->mRenderPass = renderPass;
   shader->mName = name;
-
-  shaderMap.Insert(shader->mName, shader);
-
   return shader;
 }
 
@@ -1054,7 +1204,7 @@ void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange,
       if (index == 1)
       {
         Shader* shader =
-            GetOrCreateShader("PostVertex", frag0, String(), mCompositeShaders);
+            GetOrCreateShader(cPostVertex, frag0, String(), mCompositeShaders);
         shaders.Insert(shader);
       }
     }
@@ -1502,7 +1652,7 @@ void GraphicsEngine::CompileShaders()
 
   forRange(String fragment, mRemovedPostProcess.All())
   {
-    String shaderName = BuildString("PostVertex", fragment);
+    String shaderName = BuildString(cPostVertex, fragment);
     shadersToRemove.Insert(mPostProcessShaders[shaderName]);
     mPostProcessShaders.Erase(shaderName);
   }
@@ -1562,8 +1712,7 @@ void GraphicsEngine::CompileShaders()
 
   forRange(String fragment, mModifiedPostProcess.All())
   {
-    Shader* shader = GetOrCreateShader(
-        "PostVertex", fragment, String(), mPostProcessShaders);
+    Shader* shader = GetOrCreateShader(cPostVertex, fragment, String(), mPostProcessShaders);
     shadersToCompile.Insert(shader);
   }
 
@@ -1572,6 +1721,12 @@ void GraphicsEngine::CompileShaders()
   mModifiedRenderPass.Clear();
   mModifiedPostProcess.Clear();
 
+  forRange(Shader* shader, shadersToCompile)
+  {
+    shader->mSentToRenderer = false;
+  }
+
+#if !defined(WelderLazyShaderCompositing)
   if (shadersToCompile.Empty() == false)
   {
     AddShadersJob* addShadersJob = new AddShadersJob(mRendererJobQueue);
@@ -1580,6 +1735,7 @@ void GraphicsEngine::CompileShaders()
     ErrorIf(!compiled, "Shaders did not compile after composition.");
     AddRendererJob(addShadersJob);
   }
+#endif
 }
 
 void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture,

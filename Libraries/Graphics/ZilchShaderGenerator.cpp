@@ -678,6 +678,7 @@ bool ZilchShaderGenerator::BuildShaders(
     for (size_t i = startIndex; i < endIndex; ++i)
     {
       Shader* shader = shaderArray[i];
+      ZPrint("Compositing %s\n", shader->mName.c_str());
 
       // Make shader def.
       ZilchShaderIRCompositor::ShaderDefinition shaderDef;
@@ -756,6 +757,8 @@ bool ZilchShaderGenerator::BuildShaders(
       entry.mGeometryShader = geometryInfo.mClassName;
       entry.mPixelShader = pixelInfo.mClassName;
       shaderEntries.PushBack(entry);
+
+      shader->mSentToRenderer = true;
     }
 
     ZilchShaderIRModuleRef shaderDependencies = new ZilchShaderIRModule();

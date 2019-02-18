@@ -1210,11 +1210,6 @@ void OpenglRenderer::Initialize(OsHandle windowHandle,
   mUniformFunctions[ShaderInputType::Mat4] = EmptyUniformFunc;
   mUniformFunctions[ShaderInputType::Texture] = (UniformFunction)glUniform1iv;
 
-  // should be set by graphics
-  mCoreVertexTypeNames[CoreVertexType::Mesh] = "MeshVertex";
-  mCoreVertexTypeNames[CoreVertexType::SkinnedMesh] = "SkinnedMeshVertex";
-  mCoreVertexTypeNames[CoreVertexType::Streamed] = "StreamedVertex";
-
   mStreamedVertexBuffer.Initialize();
 
 #define ZeroGlVertexIn ZeroIfGl("in") ZeroIfWebgl("attribute")
@@ -1895,9 +1890,10 @@ void OpenglRenderer::DoRenderTaskRange(RenderTaskRange& taskRange)
   {
     ErrorIf(taskIndex >= mRenderTasks->mRenderTaskBuffer.mCurrentIndex,
             "Render task data is not valid.");
-    byte* task = &mRenderTasks->mRenderTaskBuffer.mRenderTaskData[taskIndex];
+    RenderTask* task = (RenderTask*)&mRenderTasks->mRenderTaskBuffer
+                           .mRenderTaskData[taskIndex];
 
-    switch (*task)
+    switch (task->mId)
     {
     case RenderTaskType::ClearTarget:
       DoRenderTaskClearTarget((RenderTaskClearTarget*)task);
@@ -1965,12 +1961,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   {
     size_t index = taskIndexMap.Size() + 1;
     RenderTaskRenderPass* subTask = task + index;
-    if (taskIndexMap.ContainsKey(subTask->mRenderGroupIndex))
-    {
-      Error("Duplicate RenderGroup added.");
-      break;
-    }
-    taskIndexMap[subTask->mRenderGroupIndex] = index;
+    taskIndexMap.InsertOrError(subTask->mRenderGroupIndex, index);
   }
 
   // Initialize to invalid index so state is set for the first object.
@@ -2066,8 +2057,7 @@ void OpenglRenderer::DoRenderTaskPostProcess(RenderTaskPostProcess* task)
   u64 resourceId =
       materialData ? (u64)materialData->mResourceId : cFragmentShaderInputsId;
 
-  ShaderKey shaderKey(compositeName,
-                      StringPair(String("PostVertex"), String()));
+  ShaderKey shaderKey(compositeName, StringPair(cPostVertex, String()));
   GlShader* shader = GetShader(shaderKey);
   if (shader == nullptr)
     return;
@@ -2178,7 +2168,7 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   // Shader permutation lookup for vertex type and render pass
   ShaderKey shaderKey(
       materialData->mCompositeName,
-      StringPair(mCoreVertexTypeNames[frameNode.mCoreVertexType],
+      StringPair(GetCoreVertexFragmentName(frameNode.mCoreVertexType),
                  mRenderPassName));
   GlShader* shader = GetShader(shaderKey);
   if (shader == nullptr)
@@ -2267,7 +2257,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
   // Shader permutation lookup for vertex type and render pass
   ShaderKey shaderKey(
       materialData->mCompositeName,
-      StringPair(mCoreVertexTypeNames[frameNode.mCoreVertexType],
+      StringPair(GetCoreVertexFragmentName(frameNode.mCoreVertexType),
                  mRenderPassName));
   GlShader* shader = GetShader(shaderKey);
   if (shader == nullptr)
