@@ -27,8 +27,17 @@ set(WELDER_C_CXX_FLAGS_DEBUG "\
   -Od\
 ")
 
-set(WELDER_C_CXX_FLAGS_RELEASE "\
+set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
   -Zi\
+  -Gm\
+  -MT\
+  -MP\
+  -GS\
+  -O2\
+  -Oi\
+")
+
+set(WELDER_C_CXX_FLAGS_RELEASE "\
   -Gm-\
   -MT\
   -MP\
@@ -36,6 +45,15 @@ set(WELDER_C_CXX_FLAGS_RELEASE "\
   -GS-\
   -O2\
   -Oi\
+")
+
+set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
+  -Gm-\
+  -MT\
+  -MP\
+  -GL\
+  -GS-\
+  -O1\
 ")
 
 set(WELDER_LINKER_FLAGS "/ignore:4099,4221,4075,4251")

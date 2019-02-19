@@ -17,17 +17,23 @@ set(WELDER_C_CXX_FLAGS "\
   -fno-tree-vectorize\
 ")
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
-    -g\
-  ")
-endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
-    -O3\
-  ")
-endif()
+set(WELDER_C_CXX_FLAGS_DEBUG "\
+  -g\
+")
+
+set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
+  -O3\
+  -g\
+")
+
+set(WELDER_C_CXX_FLAGS_RELEASE "\
+  -O3\
+")
+
+set(WELDER_C_CXX_FLAGS_MINSIZEREL "\
+  -Oz\
+")
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker /ignore:4049,4217")
 
