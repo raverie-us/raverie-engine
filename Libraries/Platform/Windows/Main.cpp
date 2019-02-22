@@ -24,7 +24,7 @@ int CallMain()
   {
     argc = 0;
   }
-
+  LocalFree(wideArgv);
   return main(argc, argv.Data());
 }
 

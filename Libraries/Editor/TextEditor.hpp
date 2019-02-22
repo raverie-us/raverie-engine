@@ -69,6 +69,7 @@ public:
 
   // Select a color scheme.
   void SetColorScheme(ColorScheme& scheme);
+  void UpdateColorScheme();
   void SetCommonLexerStyles(ColorScheme& scheme);
 
   void SetTextStyle(uint pos, uint length, uint style);

@@ -97,6 +97,10 @@ RootWidget::~RootWidget()
 {
   InList<RootWidget>::Unlink(this);
   mOsWindow->Destroy();
+
+  if (Z::gMouse->mActiveWindow == mOsWindow)
+    Z::gMouse->mActiveWindow = nullptr;
+  delete mOsWindow;
 }
 
 void RootWidget::OnUiUpdate(UpdateEvent* event)

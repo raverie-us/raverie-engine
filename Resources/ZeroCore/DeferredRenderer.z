@@ -164,7 +164,7 @@ class DeferredRenderer : ZilchComponent
     
     if (this.DirectLighting)
     {
-      var geometryInputs = ShaderInputs();
+      var geometryInputs = ShaderInputs.Create();
       geometryInputs.Add("GeometryInput", "GeometryBuffer0", geometryBuffer0.Texture);
       geometryInputs.Add("GeometryInput", "GeometryBuffer1", geometryBuffer1.Texture);
       

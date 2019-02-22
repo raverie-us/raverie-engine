@@ -19,7 +19,11 @@ public:
 
   void Serialize(Serializer& stream) override;
 
-  Material* mOwner;
+  union
+  {
+    MaxAlignmentType mAligned;
+    Material* mOwner;
+  };
 
   void MarkAsModified();
   IndexRange AddShaderInputs(Array<ShaderInput>& shaderInputs);

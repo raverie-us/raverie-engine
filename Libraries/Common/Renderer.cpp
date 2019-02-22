@@ -20,6 +20,8 @@ StringParam GetCoreVertexFragmentName(CoreVertexType::Enum type)
     return cSkinnedMesh;
   case CoreVertexType::Streamed:
     return cStreamed;
+  case CoreVertexType::Count:
+    break;
   }
 
   Error("Invalid CoreVertexType");

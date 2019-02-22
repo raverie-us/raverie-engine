@@ -87,7 +87,7 @@ String ReadFileIntoString(StringParam path)
     return String();
 
   Zero::String dataFormat((char*)block.Data, block.Size);
-  delete block.Data;
+  zDeallocate(block.Data);
   return dataFormat;
 }
 

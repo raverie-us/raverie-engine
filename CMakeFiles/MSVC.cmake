@@ -12,7 +12,6 @@ set(WELDER_C_CXX_FLAGS "\
   -fp:fast\
   -errorReport:prompt\
   -Gd\
-  -Oy-\
   -EHsc\
   -nologo\
   -analyze-\
@@ -25,6 +24,8 @@ set(WELDER_C_CXX_FLAGS_DEBUG "\
   -MDd\
   -GS\
   -Od\
+  -Ob0\
+  -Oy-\
 ")
 
 set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
@@ -35,6 +36,7 @@ set(WELDER_C_CXX_FLAGS_RELWITHDEBINFO "\
   -GS\
   -O2\
   -Oi\
+  -Oy-\
 ")
 
 set(WELDER_C_CXX_FLAGS_RELEASE "\

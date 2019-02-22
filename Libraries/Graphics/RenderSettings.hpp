@@ -11,6 +11,10 @@ class ShaderInputs : public ReferenceCountedThreadSafeId32
 public:
   ZilchDeclareType(ShaderInputs, TypeCopyMode::ReferenceType);
 
+  ~ShaderInputs();
+
+  static HandleOf<ShaderInputs> Create();
+
   /// Add an input value for a specific fragment.
   void Add(String fragmentName, String inputName, bool input);
   /// Add an input value for a specific fragment.
@@ -51,6 +55,11 @@ public:
   // Map of fragmentName and inputName to inputs.
   typedef Pair<String, String> StringPair;
   HashMap<StringPair, ShaderInput> mShaderInputs;
+
+  // We've encountered problems with freeing ShaderInputs more than once, so we're
+  // placing this guard here to ensure that we don't free it multiple times.
+  static const u32 cGuardId = 0xF00DF00D;
+  u32 mGuardId = cGuardId;
 };
 
 /// Settings for how pixel shader outputs are combined with the RenderTarget's

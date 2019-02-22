@@ -280,6 +280,15 @@ void Widget::SetTranslation(Vec3 newTranslation)
   MarkAsNeedsUpdate();
 }
 
+size_t Widget::GetDepth()
+{
+  size_t depth = 0;
+  Widget* it = this;
+  while ((it = it->GetParent()))
+    ++depth;
+  return depth;
+}
+
 void Widget::SetTranslationAndSize(Vec3 newTranslation, Vec2 newSize)
 {
   mSize = SnapToPixels(newSize);

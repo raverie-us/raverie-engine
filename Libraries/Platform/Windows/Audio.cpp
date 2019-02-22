@@ -861,10 +861,10 @@ void AudioInputOutput::ShutDownAPI()
   if (((AudioIOWindowsData*)PlatformData)->Enumerator)
   {
     SAFE_RELEASE(((AudioIOWindowsData*)PlatformData)->Enumerator);
-    CoUninitialize();
 
     ZPrint("WASAPI audio IO was shut down\n");
   }
+  CoUninitialize();
 }
 
 unsigned AudioInputOutput::GetStreamChannels(StreamTypes::Enum whichStream)

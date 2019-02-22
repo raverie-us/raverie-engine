@@ -1577,6 +1577,7 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
 
   // Iterate through all raw input devices
   RID_DEVICE_INFO ridDeviceInfo;
+  memset(&ridDeviceInfo, 0, sizeof(ridDeviceInfo));
   ridDeviceInfo.cbSize = sizeof(RID_DEVICE_INFO);
   for (uint i = 0; i < deviceCount; i++)
   {

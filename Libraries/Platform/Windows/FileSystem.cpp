@@ -301,6 +301,7 @@ struct FileRangePrivateData
 FileRange::FileRange(StringParam filePath)
 {
   ZeroConstructPrivateData(FileRangePrivateData);
+  memset(self, 0, sizeof(*self));
   mPath = filePath;
   if (mPath.Empty())
   {

@@ -8,8 +8,9 @@ namespace Zero
 ZilchDefineType(ShaderInputs, builder, type)
 {
   ZeroBindDocumented();
-  ZilchBindDefaultCopyDestructor();
-  type->CreatableInScript = true;
+  ZilchBindDestructor();
+
+  ZilchBindMethod(Create);
 
   ZilchBindOverloadedMethod(Add,
                             ZilchInstanceOverload(void, String, String, bool));
@@ -37,6 +38,17 @@ ZilchDefineType(ShaderInputs, builder, type)
       Add, ZilchInstanceOverload(void, String, String, Texture*));
   ZilchBindMethod(Remove);
   ZilchBindMethod(Clear);
+}
+
+ShaderInputs::~ShaderInputs()
+{
+  ErrorIf(mGuardId != cGuardId, "Expected the guard id to be set");
+  mGuardId = 0;
+}
+
+HandleOf<ShaderInputs> ShaderInputs::Create()
+{
+  return new ShaderInputs();
 }
 
 void ShaderInputs::Add(String fragmentName, String inputName, bool input)

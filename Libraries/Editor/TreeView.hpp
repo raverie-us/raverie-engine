@@ -299,7 +299,7 @@ public:
 class TreeView : public Composite
 {
 public:
-  typedef TreeView ZilchSelf;
+  ZilchDeclareType(TreeView, TypeCopyMode::ReferenceType);
 
   TreeView(Composite* parent);
   ~TreeView();

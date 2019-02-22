@@ -52,7 +52,6 @@ enum
 {
   TextMatchHighlight = INDIC_CONTAINER
 };
-
 }
 
 class ScintillaZero : public Scintilla::ScintillaBase
@@ -235,6 +234,9 @@ ZilchDefineType(TextEditor, builder, type)
 
 TextEditor::TextEditor(Composite* parent) : BaseScrollArea(parent)
 {
+  mTotalMargins = 0;
+  mLexer = Lexer::Zilch;
+
   Scintilla_LinkLexers();
   mScinWidget = new ScintillaWidget(this);
   mScinWidget->SetTakeFocusMode(FocusMode::Hard);
@@ -584,7 +586,7 @@ void TextEditor::SetLexer(uint lexer)
   }
 
   mLexer = (Lexer::Enum)lexer;
-  SetColorScheme(*GetColorScheme());
+  UpdateColorScheme();
 }
 
 void TextEditor::UpdateMargins(ColorScheme& scheme)
@@ -796,7 +798,7 @@ void TextEditor::OnConfigPropertyChanged(PropertyEvent* event)
 
 void TextEditor::OnColorSchemeChanged(ObjectEvent* event)
 {
-  SetColorScheme(*GetColorScheme());
+  UpdateColorScheme();
 }
 
 TextEditorConfig* TextEditor::GetConfig()
@@ -830,7 +832,7 @@ void TextEditor::UpdateConfig(TextEditorConfig* textConfig)
   }
 
   SetLexer(mLexer);
-  SetColorScheme(*GetColorScheme());
+  UpdateColorScheme();
 
   if (textConfig->ShowWhiteSpace)
     SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
@@ -962,6 +964,13 @@ void TextEditor::UpdateTransform()
 #define SCE_ERROR 30
 
 #define SCE_LINK 31
+
+void TextEditor::UpdateColorScheme()
+{
+  ColorScheme* colors = GetColorScheme();
+  if (colors)
+    SetColorScheme(*colors);
+}
 
 void TextEditor::SetColorScheme(ColorScheme& scheme)
 {
@@ -1270,13 +1279,13 @@ void TextEditor::OnKeyDown(KeyboardEvent* event)
       // I suspect it has something to do with us responding to windows message
       // pump events and then scintilla settings being set using the windows
       // message pump also - Dane Curbow
-      SetColorScheme(*GetColorScheme());
+      UpdateColorScheme();
     }
     if (event->Key == Keys::Equal)
     {
       SetFontSize(mFontSize + 1);
       // ref T3197
-      SetColorScheme(*GetColorScheme());
+      UpdateColorScheme();
     }
     // if(event->Key == Keys::R)
     //  SetWordWrap(true);
@@ -1290,7 +1299,7 @@ void TextEditor::OnKeyDown(KeyboardEvent* event)
 void TextEditor::SetFontSize(int size)
 {
   mFontSize = Math::Max(size, cMinFontSize);
-  SetColorScheme(*GetColorScheme());
+  UpdateColorScheme();
 }
 
 void TextEditor::OnKeyUp(KeyboardEvent* event)
@@ -1315,7 +1324,7 @@ void TextEditor::OnMouseScroll(MouseEvent* event)
     mFontSize =
         Math::Clamp(int(mFontSize + scroll), cMinFontSize, cMaxFontSize);
     SetFontSize(mFontSize);
-    SetColorScheme(*GetColorScheme());
+    UpdateColorScheme();
   }
 }
 

@@ -65,11 +65,11 @@ struct LayoutArea
 {
   ZilchDeclareType(LayoutArea, TypeCopyMode::ValueType);
 
-  LimitMode::Enum HorizLimit;
-  LimitMode::Enum VerticalLimit;
+  LimitMode::Enum HorizLimit = LimitMode::Unlimited;
+  LimitMode::Enum VerticalLimit = LimitMode::Unlimited;
 
-  Vec2 Size;
-  Vec3 Offset;
+  Vec2 Size = Vec2::cZero;
+  Vec3 Offset = Vec3::cZero;
 };
 
 class Composite;

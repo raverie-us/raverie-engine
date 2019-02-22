@@ -294,11 +294,17 @@ LibraryView::LibraryView(Composite* parent) :
     Composite(parent),
     mResourceLibrary(nullptr)
 {
+  mSearch = nullptr;
+  mPrimaryCommandIndex = 0;
+  mTagEditorCloseButton = nullptr;
+  mTagEditor = nullptr;
   mSource = nullptr;
   mDataSelection = nullptr;
   mContentLibrary = nullptr;
+  mResourceLibrary = nullptr;
   mIgnoreEditorSelectionChange = false;
   mTagEditorCurrentHeight = 0;
+  mTagEditorFinalHeight = 0;
 
   this->SetLayout(CreateStackLayout());
 

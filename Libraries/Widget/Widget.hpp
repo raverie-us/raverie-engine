@@ -209,6 +209,9 @@ public:
   // Get the minimum size needs for this widget to be useful
   virtual Vec2 GetMinSize();
 
+  // Get how deep this widget is in the hierarchy.
+  size_t GetDepth();
+
   /// Function to set translation and size together
   void SetTranslationAndSize(Vec3 newTranslation, Vec2 newSize);
 

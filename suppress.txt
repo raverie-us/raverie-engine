@@ -1,0 +1,32 @@
+UNINITIALIZED READ
+name=AvSetMmThreadCharacteristicsW
+system call NtCreateFile parameter #9
+AVRT.dll!AvSetMmThreadCharacteristicsW
+AVRT.dll!AvSetMmThreadCharacteristicsW
+
+UNINITIALIZED READ
+name=NtUserGetRawInputDeviceInfo
+system call NtUserGetRawInputDeviceInfo parameter value #2
+
+UNINITIALIZED READ
+name=FindNextFileW
+KERNELBASE.dll!FindNextFileW
+
+UNINITIALIZED READ
+name=WideCharToMultiByte
+KERNELBASE.dll!WideCharToMultiByte
+
+UNINITIALIZED READ
+name=GetFinalPathNameByHandleW
+system call NtDeviceIoControlFile InputBuffer
+KERNELBASE.dll!DeviceIoControl
+KERNELBASE.dll!GetFinalPathNameByHandleW
+KERNELBASE.dll!GetFinalPathNameByHandleW
+
+INVALID HEAP ARGUMENT
+name=AddTextureWrongDelete (Remove Later)
+drmemorylib.dll!replace_operator_delete_array_nothrow
+WelderEditor.exe!Zero::OpenglRenderer::AddTexture
+WelderEditor.exe!Zero::AddTextureJob::Execute
+WelderEditor.exe!Zero::RendererThreadMain
+KERNEL32.dll!BaseThreadInitThunk

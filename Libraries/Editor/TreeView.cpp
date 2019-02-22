@@ -1401,6 +1401,10 @@ void ColumnResizer::OnMouseExit(MouseEvent* event)
   event->GetMouse()->SetCursor(Cursor::Arrow);
 }
 
+ZilchDefineType(TreeView, builder, type)
+{
+}
+
 TreeView::TreeView(Composite* parent) : Composite(parent)
 {
   static const String className = "TreeGrid";

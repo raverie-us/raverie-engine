@@ -352,7 +352,7 @@ void ShowProgressJob::ShowCurrentProgress()
   Lock();
   ShowProgressInfo info = *this;
   Unlock();
-  Z::gRenderer->ShowProgress(this);
+  Z::gRenderer->ShowProgress(&info);
 }
 
 bool ShowProgressJob::OnShouldRun()

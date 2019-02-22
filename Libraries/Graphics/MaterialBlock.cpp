@@ -21,6 +21,7 @@ ZilchDefineType(MaterialBlock, builder, type)
 
 MaterialBlock::MaterialBlock() : mOwner(nullptr)
 {
+  mAligned = 0;
 }
 
 void MaterialBlock::Serialize(Serializer& stream)

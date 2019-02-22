@@ -117,6 +117,8 @@ const String ModifiedIcon = "Modified";
 
 TabWidget::TabWidget(Composite* parent) : Composite(parent)
 {
+  mTabArea = nullptr;
+
   static const String className = "Tab";
   mDefSet = mDefSet->GetDefinitionSet(className);
   mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -126,6 +128,7 @@ TabWidget::TabWidget(Composite* parent) : Composite(parent)
   mOwned = nullptr;
 
   mHighlight = false;
+  mHighlightColor = Vec4::cZero;
   mSelected = true;
 
   ConnectThisTo(mBackground, Events::LeftMouseDown, OnMouseDown);

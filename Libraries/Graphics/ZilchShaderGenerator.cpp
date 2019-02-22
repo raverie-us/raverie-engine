@@ -292,20 +292,18 @@ LibraryRef BuildWrapperLibrary(ZilchShaderIRLibraryRef fragmentsLibrary)
             shaderProperty.mBoundType = type;
 
             size_t fieldSize;
-            size_t byteAlignment;
+            const size_t byteAlignment = sizeof(MaxAlignmentType);
 
             if (type->IsA(ZilchTypeId(Texture)))
             {
               // Textures are stored by their ID's.
               fieldSize = sizeof(u64);
-              byteAlignment = fieldSize;
               // Textures need a different getter/setter.
               shaderProperty.mIsTexture = true;
             }
             else
             {
               fieldSize = type->GetCopyableSize();
-              byteAlignment = Math::Min(fieldSize, sizeof(float));
               shaderProperty.mIsTexture = false;
             }
 
@@ -325,7 +323,7 @@ LibraryRef BuildWrapperLibrary(ZilchShaderIRLibraryRef fragmentsLibrary)
       }
 
       // Pad type out to largest stored primitve.
-      size_t largestSize = sizeof(u64);
+      size_t largestSize = sizeof(MaxAlignmentType);
       size_t endPad = (largestSize - fragmentSize % largestSize) % largestSize;
       fragmentSize += endPad;
 
@@ -345,9 +343,9 @@ LibraryRef BuildWrapperLibrary(ZilchShaderIRLibraryRef fragmentsLibrary)
       // Allocate one instance of the derived type and store it on the BoundType
       // for initializing fragments to the default values.
       ByteBufferBlock& defaultMemory =
-          boundType->ComplexUserData.CreateObject<ByteBufferBlock>(0);
+          boundType->ComplexUserData.CreateObject<ByteBufferBlock>();
       size_t derivedTypeSize = fragmentSize - baseSize;
-      defaultMemory.SetData(new byte[derivedTypeSize], derivedTypeSize, true);
+      defaultMemory.SetData((byte*)zAllocate(derivedTypeSize), derivedTypeSize, true);
       byte* defaultMemoryPtr = defaultMemory.GetBegin();
       memset(defaultMemoryPtr, 0, defaultMemory.Size());
 

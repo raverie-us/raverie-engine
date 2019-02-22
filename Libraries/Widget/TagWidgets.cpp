@@ -506,6 +506,7 @@ TagEditor::TagEditor(Composite* parent) : Composite(parent)
   mTagChain = new TagChain(this);
   mTagChain->SetSize(Pixels(100, 60));
   mTagChain->mSorted = true;
+  mAddButton = nullptr;
 
   Spacer* spacer = new Spacer(this);
   spacer->SetSize(Pixels(1, 1));

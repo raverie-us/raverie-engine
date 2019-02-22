@@ -23,6 +23,7 @@ set(WELDER_C_CXX_FLAGS "\
   -fdelayed-template-parsing\
   -fexceptions\
   -frtti\
+  -fstack-protector\
   -fno-vectorize\
   -fno-slp-vectorize\
   -fno-tree-vectorize\
