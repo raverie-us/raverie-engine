@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.13.1 FATAL_ERROR)
 
-add_definitions(-DWelderMajorVersion=1)
-add_definitions(-DWelderMinorVersion=0)
-add_definitions(-DWelderPatchVersion=0)
 add_definitions(-DWelderRevisionId=${WELDER_REVISION})
 add_definitions(-DWelderShortChangeSet=${WELDER_SHORT_CHANGESET})
 add_definitions(-DWelderChangeSet=${WELDER_CHANGESET})

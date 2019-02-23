@@ -574,9 +574,10 @@ BuildsMenu::BuildsMenu(Composite* parent, LauncherWindow* launcher) :
 
   // Listen for when the user tags change on the config (most likely from the
   // settings menu)
-  ConnectThisTo(
-      mLauncher->mConfigCog, Events::ShowDevelopChanged, OnShowDevelopChanged);
-  ConnectThisTo(mLauncher->mConfigCog,
+  ConnectThisTo(Z::gEngine->GetConfigCog(),
+                Events::ShowDevelopChanged,
+                OnShowDevelopChanged);
+  ConnectThisTo(Z::gEngine->GetConfigCog(),
                 Events::ShowExperimentalBranchesChanged,
                 OnShowDevelopChanged);
 
@@ -607,7 +608,7 @@ void BuildsMenu::CreateBuildItems()
     mBuildItems[i]->Destroy();
   mBuildItems.Clear();
 
-  LauncherConfig* launcherConfig = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   // Create UI to represent each build on the build server
   VersionSelector* versionSelector = mLauncher->mVersionSelector;

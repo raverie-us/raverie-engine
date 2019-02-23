@@ -217,16 +217,13 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
   // Not ready for consumption yet, but I want to test it with dev config
   // METAREFACTOR they should always be initialized, but hidden with an
   // attribute
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
-  {
-    ZilchInitializeType(SpringSystem);
-    ZilchInitializeType(DecorativeCloth);
-    ZilchInitializeType(DecorativeRope);
-    ZilchInitializeType(GjkDebug);
-    ZilchInitializeType(MeshDebug);
-    ZilchInitializeType(TimeOfImpactDebug);
-    ZilchInitializeType(ColliderInspector);
-  }
+  //ZilchInitializeType(SpringSystem);
+  //ZilchInitializeType(DecorativeCloth);
+  //ZilchInitializeType(DecorativeRope);
+  //ZilchInitializeType(GjkDebug);
+  //ZilchInitializeType(MeshDebug);
+  //ZilchInitializeType(TimeOfImpactDebug);
+  //ZilchInitializeType(ColliderInspector);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }

@@ -133,7 +133,7 @@ public:
   typedef LauncherWindow ZilchSelf;
 
   /// Constructor.
-  LauncherWindow(MainWindow* parent, Cog* launcherConfigCog);
+  LauncherWindow(MainWindow* parent);
   ~LauncherWindow();
 
   /// Check for the server for templates and builds.
@@ -272,7 +272,6 @@ public:
 
   VersionSelector* mVersionSelector;
   ProjectCache* mProjectCache;
-  Cog* mConfigCog;
 
   /// Listen for communications from other launcher or the engine
   TcpSocket* mListener;

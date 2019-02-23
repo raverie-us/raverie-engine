@@ -18,9 +18,7 @@ void OnLauncherTweakablesModified()
 IntVec2 Launcher::mEulaWindowSize = IntVec2(700, 520);
 IntVec2 Launcher::mLauncherWindowSize = IntVec2(1024, 595);
 
-Launcher::Launcher(Cog* configCog, StringMap& arguments) :
-    mConfigCog(configCog),
-    mArguments(arguments)
+Launcher::Launcher()
 {
   mOsWindow = nullptr;
   mMainWindow = nullptr;
@@ -58,9 +56,9 @@ void Launcher::EulaAccepted()
   OpenLauncherWindow();
 
   // Store that we've accepted the eula
-  UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
+  UserConfig* userConfig = HasOrAdd<UserConfig>(Z::gEngine->GetConfigCog());
   userConfig->LastAcceptedEulaHash = GetEulaHash();
-  SaveLauncherConfig(mConfigCog);
+  SaveConfig();
   mEulaWindow->SetActive(false);
   mEulaWindow->Destroy();
   mEulaWindow = nullptr;
@@ -81,15 +79,13 @@ void Launcher::OpenEulaWindow()
   mOsWindow->SetMinClientSize(mEulaWindowSize);
   mOsWindow->SetClientSize(mEulaWindowSize);
 
-  EulaWindow* window = new EulaWindow(mConfigCog, mMainWindow);
+  EulaWindow* window = new EulaWindow(mMainWindow);
   window->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
   mEulaWindow = window;
 }
 
 void Launcher::Initialize()
 {
-  // Hack for BraveCobra
-  Cog* configCog = mConfigCog;
   IntVec2 minClientSize = mLauncherWindowSize;
   // Ideally we should change the window size here, but the loading progress bar
   // looks wrong with the window of this size. Fix later when we can override
@@ -135,23 +131,26 @@ void Launcher::OpenLauncherWindow()
 {
   mOsWindow->SetTitle("Zero Launcher");
 
-  LauncherConfig* versionConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* versionConfig =
+      Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
-  LauncherWindow* launcher = new LauncherWindow(mMainWindow, mConfigCog);
+  LauncherWindow* launcher = new LauncherWindow(mMainWindow);
   launcher->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
 
   // If there were any command-line arguments then create an event to send to
   // the launcher's ui
-  if (mArguments.Empty() == false)
+  auto& arguments = Environment::GetInstance()->mParsedCommandLineArguments;
+  if (arguments.Empty() == false)
   {
     LauncherCommunicationEvent toSend;
-    toSend.LoadFromCommandArguments(mArguments);
+    toSend.LoadFromCommandArguments(arguments);
     if (toSend.EventId.Empty() == false)
       launcher->DispatchEvent(toSend.EventId, &toSend);
   }
 
   // If the user has no recent projects then display the new project's page
-  RecentProjects* recentProjects = mConfigCog->has(RecentProjects);
+  RecentProjects* recentProjects =
+      Z::gEngine->GetConfigCog()->has(RecentProjects);
   if (recentProjects == nullptr ||
       recentProjects->GetRecentProjectsCount() == 0)
   {
@@ -183,14 +182,14 @@ void Launcher::OpenTweakablesWindow()
 
 size_t Launcher::GetEulaHash()
 {
-  String eulaFile = GetEulaFilePath(mConfigCog);
+  String eulaFile = GetEulaFilePath();
   String eulaText = ReadFileIntoString(eulaFile);
   return eulaText.Hash();
 }
 
 bool Launcher::ShouldOpenEula()
 {
-  UserConfig* userConfig = HasOrAdd<UserConfig>(mConfigCog);
+  UserConfig* userConfig = HasOrAdd<UserConfig>(Z::gEngine->GetConfigCog());
   return userConfig->LastAcceptedEulaHash != GetEulaHash();
 }
 

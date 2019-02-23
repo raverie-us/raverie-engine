@@ -21,7 +21,7 @@ StartupFunction LoadDll(Zero::StringParam libraryPath, ExternalLibrary& library)
 
 Zero::String GetLauncherDownloadedPath()
 {
-  String majorVersionIdStr = ToString(GetLauncherMajorVersion());
+  String majorVersionIdStr = ToString(GetMajorVersion());
   String launcherFolderName =
       BuildString("ZeroLauncher_", majorVersionIdStr, ".0");
   String searchLocation =

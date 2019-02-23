@@ -201,23 +201,11 @@ ZilchDefineType(PhysicsSpace, builder, type)
   ZilchBindMethod(WhyAreTheyNotColliding);
 
   // Debugging features for JoshD. Disabled for all users for now
-  // bool inDevConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig)
-  // != nullptr; if(inDevConfig)
-  //{
-  //  ZilchBindGetterSetterProperty(IslandingType);
-  //  ZilchBindGetterSetterProperty(IslandPreProcessType);
-  //  ZilchBindGetterSetterProperty(PostProcessIslands);
-  //  ZilchBindGetterSetterProperty(IsSolverShared);
-  //  ZilchBindGetter(IslandCount);
-  //}
-  // else
-  //{
-  //  ZilchBindGetterSetter(IslandingType);
-  //  ZilchBindGetterSetter(IslandPreProcessType);
-  //  ZilchBindGetterSetter(PostProcessIslands);
-  //  ZilchBindGetterSetter(IsSolverShared);
-  //  ZilchBindGetter(IslandCount);
-  //}
+  //ZilchBindGetterSetterProperty(IslandingType);
+  //ZilchBindGetterSetterProperty(IslandPreProcessType);
+  //ZilchBindGetterSetterProperty(PostProcessIslands);
+  //ZilchBindGetterSetterProperty(IsSolverShared);
+  //ZilchBindGetter(IslandCount);
 }
 
 PhysicsSpace::PhysicsSpace()

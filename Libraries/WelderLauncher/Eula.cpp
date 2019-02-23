@@ -12,9 +12,9 @@ Tweakable(Vec4, TitleTextColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, TextColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace EulaUi
 
-String GetEulaFilePath(Cog* configCog)
+String GetEulaFilePath()
 {
-  MainConfig* mainConfig = configCog->has(MainConfig);
+  MainConfig* mainConfig = Z::gEngine->GetConfigCog()->has(MainConfig);
   if (mainConfig != nullptr)
     return FilePath::Combine(mainConfig->SourceDirectory, "LICENSE.md");
 
@@ -42,7 +42,7 @@ public:
   Element* mBackground;
 };
 
-EulaWindow::EulaWindow(Cog* configCog, Composite* parent) : Composite(parent)
+EulaWindow::EulaWindow(Composite* parent) : Composite(parent)
 {
   ZPrint("Displaying Eula Window\n");
   SetLayout(CreateStackLayout());
@@ -90,7 +90,7 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) : Composite(parent)
       eulaText->SetColorScheme(*colorScheme);
 
       // Set the text
-      String eulaFilePath = GetEulaFilePath(configCog);
+      String eulaFilePath = GetEulaFilePath();
       eulaText->SetReadOnly(false);
       eulaText->SetAllText(ReadFileIntoString(eulaFilePath));
       eulaText->SetReadOnly(true);

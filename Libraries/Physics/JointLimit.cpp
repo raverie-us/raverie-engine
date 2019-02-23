@@ -18,10 +18,7 @@ ZilchDefineType(JointLimit, builder, type)
   ZeroBindEvent(Events::JointLowerLimitReached, JointEvent);
   ZeroBindEvent(Events::JointUpperLimitReached, JointEvent);
 
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
-    ZilchBindGetterSetterProperty(AtomIds)->ZeroSerialize(255u);
-  else
-    ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
+  ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
 
   ZeroBindTag(Tags::Physics);
   ZeroBindTag(Tags::Joint);

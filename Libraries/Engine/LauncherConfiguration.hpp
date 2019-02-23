@@ -39,10 +39,7 @@ public:
   LauncherConfig();
   void Serialize(Serializer& stream);
 
-  void SaveToCache();
-  void LoadFromCache();
-
-  void ApplyCommandLineArguments(const StringMap& arguments);
+  void ApplyCommandLineArguments();
 
   /// Will the version selector auto run? Will it install it if it wasn't
   /// installed?
@@ -58,8 +55,6 @@ public:
   /// Used so zero can find out how to call the version selector.
   String mLauncherLocation;
 
-  /// Where is the config saved to
-  String mSavePath;
   /// The root directory where templates, versions, etc... are installed to
   String mDownloadPath;
   String mDefaultProjectSaveLocation;
@@ -83,8 +78,6 @@ public:
   static float mDefaultReloadFrequency;
   float mNewestLauncherUpdateCheckFrequency;
 
-  String mCachedData;
-
   // Should the launcher restart when it closes? Used to have
   // the launcher restart in order to update.
   bool mRestartOnClose;
@@ -99,13 +92,5 @@ class LauncherLegacySettings : public Component
 
   bool mDisplayLegacyBuilds;
 };
-
-void SaveLauncherConfig(Cog* launcherConfigCog);
-Cog* LoadLauncherConfig(Cog* zeroConfigCog,
-                        const StringMap& arguments,
-                        bool overrideApplicationPath = false);
-
-void CacheLauncherConfig(LauncherConfig* config, String& cachedData);
-void ReloadLauncherConfig(LauncherConfig* config, String& cachedData);
 
 } // namespace Zero

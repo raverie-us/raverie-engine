@@ -414,11 +414,6 @@ String GetUserDocumentsDirectory()
   return "/Documents/";
 }
 
-String GetApplicationDirectory()
-{
-  return "/";
-}
-
 String GetApplication()
 {
   return "/Main.app";

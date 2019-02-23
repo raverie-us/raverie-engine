@@ -456,10 +456,9 @@ void CachedProject::SetProjectPropertyValue(StringParam propertyName,
 }
 
 // ProjectCache
-ProjectCache::ProjectCache(Cog* configCog)
+ProjectCache::ProjectCache()
 {
-  mConfigCog = configCog;
-  mRecentProjects = mConfigCog->has(RecentProjects);
+  mRecentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
 }
 
 ProjectCache::~ProjectCache()

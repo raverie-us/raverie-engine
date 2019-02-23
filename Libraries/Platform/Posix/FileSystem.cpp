@@ -346,13 +346,6 @@ String GetTemporaryDirectory()
   return FilePath::GetDirectoryPath(tmpnam(nullptr));
 }
 
-String GetApplicationDirectory()
-{
-  // The first entry in the command line arguments should be our executable.
-  // Use the parent directory of the executable as the application directory.
-  return FilePath::GetDirectoryPath(GetApplication());
-}
-
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.

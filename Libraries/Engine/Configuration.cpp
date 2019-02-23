@@ -15,7 +15,6 @@ ZilchDefineType(MainConfig, builder, type)
 {
   ZeroBindComponent();
   ZeroBindDocumented();
-  ZilchBindFieldGetterProperty(ApplicationName);
   ZilchBindGetterProperty(BuildDate);
   ZilchBindGetterProperty(BuildVersion);
   type->AddAttribute(ObjectAttributes::cCore);
@@ -23,7 +22,6 @@ ZilchDefineType(MainConfig, builder, type)
 
 void MainConfig::Initialize(CogInitializer& initializer)
 {
-  mConfigDidNotExist = false;
   mSave = true;
 }
 
@@ -39,7 +37,6 @@ String MainConfig::GetBuildVersion()
 
 void MainConfig::Serialize(Serializer& stream)
 {
-  SerializeNameDefault(ApplicationName, String());
 }
 
 ZilchDefineType(EditorConfig, builder, type)
@@ -337,80 +334,99 @@ void RecentProjects::RemoveMissingProjects()
   }
 }
 
-cstr cConfigFileName = "ConfigurationV6.data";
 
-String GetConfigFile(StringParam applicationName)
+String GetRemoteConfigDirectory(StringParam organization, StringParam applicationName)
 {
   return FilePath::Combine(
-      GetUserDocumentsDirectory(), applicationName, cConfigFileName);
+      GetUserDocumentsDirectory(),
+                           BuildString(organization, applicationName));
 }
 
-void SaveConfig(Cog* configCog)
+String GetConfigDirectory()
+{
+  return GetRemoteConfigDirectory(GetOrganization(), GetApplicationName());
+}
+
+String GetConfigFileName()
+{
+  return String::Format("ConfigurationV%d.data", GetConfigVersion());
+}
+
+String GetRemoteConfigFilePath(StringParam organization,
+                               StringParam applicationName)
+{
+  return FilePath::Combine(
+      GetRemoteConfigDirectory(organization, applicationName),
+                           GetConfigFileName());
+}
+
+String GetConfigFilePath()
+{
+  return FilePath::Combine(GetConfigDirectory(), GetConfigFileName());
+}
+
+void SaveConfig()
 {
   if (!MainConfig::sConfigCanSave)
     return;
 
-  MainConfig* config = configCog->has(MainConfig);
-  String applicationName = config->ApplicationName;
-  String fileName = GetConfigFile(applicationName);
-  String configDirectory =
-      FilePath::Combine(GetUserDocumentsDirectory(), applicationName);
+  String configDirectory = GetConfigDirectory();
   CreateDirectoryAndParents(configDirectory);
-  String configFile = FilePath::Combine(configDirectory, cConfigFileName);
+  String configFile = GetConfigFilePath();
 
   ObjectSaver saver;
   Status status;
   saver.Open(status, configFile.c_str());
   ErrorIf(status.Failed(), "Failed to save config file");
-  saver.SaveInstance(configCog);
-
-  // SaveToDataFile(*configCog, configFile);
+  saver.SaveInstance(Z::gEngine->mConfigCog); // SaveDefinition?
 }
 
-void RemoveConfig(Cog* config)
+void RemoveConfig()
 {
-  MainConfig* mainConfig = config->has(MainConfig);
-  String configFile = GetConfigFile(mainConfig->ApplicationName);
+  String configFile = GetConfigFilePath();
   DeleteFile(configFile);
 }
 
-Cog* LoadConfig(StringParam applicationName,
-                bool useDefault,
-                ZeroStartupSettings& settings)
+Cog* LoadRemoteConfig(StringParam organization, StringParam applicationName)
 {
-  ZPrint("Build Version: %s\n", GetBuildVersionName());
+  String path = GetRemoteConfigFilePath(organization, applicationName);
+  return Z::gFactory->Create(Z::gEngine->GetEngineSpace(), path, 0, nullptr);
+}
 
-  ZPrint("Loading configuration for %s...\n", applicationName.c_str());
+Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
+{
+  // If we're in safe mode, just use the default config
+  Environment* environment = Environment::GetInstance();
+  StringMap& arguments = environment->mParsedCommandLineArguments;
+  bool useDefault = GetStringValue<bool>(arguments, "safe", false);
 
-  // Get Paths
+  ZPrint("Build Version: %s\n", GetBuildVersionName().c_str());
+
+  ZPrint("Loading configuration for %s...\n", GetApplicationName().c_str());
+
+  static const String cDataDirectoryName("Data");
+
   String appCacheDirectory = GetUserLocalDirectory();
   String documentDirectory = GetUserDocumentsDirectory();
   String applicationDirectory = GetApplicationDirectory();
-  String configFile = GetConfigFile(applicationName);
+  String configFile = GetConfigFilePath();
   String sourceDirectory = FindSourceDirectory();
+  String dataDirectory = FilePath::Combine(sourceDirectory, cDataDirectoryName);
+  const String defaultConfigFile = String::Format(
+      "Default%sConfiguration.data", GetApplicationName().c_str());
 
   Cog* configCog = nullptr;
   bool userConfigExists = false;
-
-  static const String cDataDirectory("Data");
-  static const String cDefaultConfigFile("Configuration.data");
 
   // Locations to look for the config file.
   // Some of them are absolute, some are relative to the working directory.
   String searchConfigPaths[] = {
       // The user config.
       configFile,
-      // Into the source directory's Data directory.
-      FilePath::Combine(sourceDirectory, cDataDirectory, cDefaultConfigFile),
-      // In the application directory.
-      FilePath::Combine(applicationDirectory, cDefaultConfigFile),
       // In the working directory.
-      cDefaultConfigFile,
-      // Into the application/Data directory.
-      FilePath::Combine(
-          applicationDirectory, cDataDirectory, cDefaultConfigFile),
-      // Into the working/Data directory.
-      FilePath::Combine(cDataDirectory, cDefaultConfigFile),
+      GetConfigFileName(),
+      // In the source's Data directory.
+      FilePath::Combine(dataDirectory, defaultConfigFile),
   };
 
   const size_t searchconfigPathsCount =
@@ -440,50 +456,34 @@ Cog* LoadConfig(StringParam applicationName,
 
   if (configCog == nullptr)
   {
-    String msg =
-        BuildString("Failed to find or open the configuration file, '",
-                    cConfigFileName,
-                    "', in the working directory or application directory");
-    FatalEngineError(msg.c_str());
-
+    FatalEngineError("Failed to find or open the configuration file");
     return nullptr;
   }
 
   HasOrAdd<EditorSettings>(configCog);
-  MainConfig* mainConfig = configCog->has(MainConfig);
-  mainConfig->ApplicationName = applicationName;
-  mainConfig->mConfigDidNotExist = !userConfigExists;
-  mainConfig->ApplicationDirectory = applicationDirectory;
-  mainConfig->SourceDirectory = sourceDirectory;
-  mainConfig->DataDirectory =
-      FilePath::Combine(mainConfig->SourceDirectory, cDataDirectory);
+  HasOrAdd<ContentConfig>(configCog);
+  HasOrAdd<TextEditorConfig>(configCog);
 
-  if (settings.mEmbeddedPackage)
-  {
-    mainConfig->DataDirectory =
-        FilePath::Combine(settings.mEmbeddedWorkingDirectory, cDataDirectory);
-  }
+  modifier(configCog, userData);
+
+  MainConfig* mainConfig = configCog->has(MainConfig);
+  mainConfig->SourceDirectory = sourceDirectory;
+  mainConfig->DataDirectory = dataDirectory;
+
+  Z::gEngine->mConfigCog = configCog;
 
   if (!userConfigExists)
-  {
-    // Set the application name this allows different native programs
-    // to have different config files.
-    mainConfig->ApplicationName = applicationName;
-    SaveConfig(configCog);
-  }
+    SaveConfig();
 
   configCog->mFlags.SetFlag(CogFlags::Protected);
   return configCog;
 }
 
-String FindSourceDirectory()
+String FindDirectoryFromRootFile(String dir, StringParam root)
 {
-  static const String cRoot(".welder");
-  String dir = GetApplicationDirectory();
-
   while (!dir.Empty())
   {
-    String rootFile = FilePath::Combine(dir, cRoot);
+    String rootFile = FilePath::Combine(dir, root);
     if (FileExists(rootFile))
     {
       return dir;
@@ -492,7 +492,23 @@ String FindSourceDirectory()
     dir = FilePath::GetDirectoryPath(dir);
   }
 
-  return GetApplicationDirectory();
+  return String();
+}
+
+String FindSourceDirectory()
+{
+  static const String cRoot(".welder");
+  String dir;
+  
+  dir = FindDirectoryFromRootFile(GetWorkingDirectory(), cRoot);
+  if (!dir.Empty())
+    return dir;
+
+  dir = FindDirectoryFromRootFile(GetApplicationDirectory(), cRoot);
+  if (!dir.Empty())
+    return dir;
+
+  return GetWorkingDirectory();
 }
 
 } // namespace Zero

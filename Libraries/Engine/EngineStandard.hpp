@@ -30,34 +30,13 @@ class ActionSpace;
 class SavingEvent;
 class DocumentResource;
 
-class ZeroStartupSettings
-{
-public:
-  // The name of the tweakable file
-  String mTweakableFileName;
-
-  // When exporting a project, the engine will run and this will be set to true.
-  // It's currently used for determining which config file the engine should
-  // load.
-  bool mEmbeddedPackage;
-
-  // When exporting a stand alone application this is the temp working directory
-  // for it
-  String mEmbeddedWorkingDirectory;
-
-  // Load the application's config file. Current this is used to allow the
-  // launcher to load a different config file from the editor and run a bit of
-  // extra logic.
-  virtual Cog* LoadConfig();
-};
-
 // Engine library
 class ZeroNoImportExport EngineLibrary : public Zilch::StaticLibrary
 {
 public:
   ZilchDeclareStaticLibraryInternals(EngineLibrary, "ZeroEngine");
 
-  static bool Initialize(ZeroStartupSettings& settings);
+  static bool Initialize();
   static void Shutdown();
 
 private:

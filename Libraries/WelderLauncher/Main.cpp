@@ -13,74 +13,37 @@ bool ZeroLauncherStartup(Engine* engine,
 
 using namespace Zero;
 
-extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
+extern "C" int main(int argc, char* argv[])
 {
-  FileSystemInitializer fileSystemInitializer(
-      &PopulateVirtualFileSystemWithZip);
+  CommandLineToStringArray(gCommandLineArguments, argv, argc);
 
-  // Set the log and error handlers so debug printing
-  // and asserts will print to the Visual Studio Output Window.
-  DebuggerListener debuggerOutput;
-  Zero::Console::Add(&debuggerOutput);
+  SetupApplication(
+      1, 0, 0, 1, sWelderOrganization, sLauncherGuid, sLauncherName);
 
-  // Mirror console output to a log file
-  FileListener fileListener;
-  // Change the base log file's name
-  fileListener.mBaseLogFileName = "ZeroLauncherLog_";
-  Zero::Console::Add(&fileListener);
-
-  // Used custom dialog box
-  ErrorSignaler::SetErrorHandler(Os::ErrorProcessHandler);
-
-  // Enable the crash handler
-  CrashHandler::Enable();
-  CrashHandler::AppendToExtraSymbolPath(dllPath);
-
-  CrashHandler::SetPreMemoryDumpCallback(
-      Zero::LauncherCrashPreMemoryDumpCallback, NULL);
-  CrashHandler::SetCustomMemoryCallback(Zero::LauncherCrashCustomMemoryCallback,
-                                        NULL);
-  CrashHandler::SetLoggingCallback(Zero::LauncherCrashLoggingCallback,
-                                   &fileListener);
-  CrashHandler::SetSendCrashReportCallback(Zero::LauncherSendCrashReport, NULL);
-  CrashHandler::SetCrashStartCallback(Zero::LauncherCrashStartCallback, NULL);
-
-  ZPrint("Loading ZeroLauncher %d.0.\n", GetLauncherMajorVersion());
-
-  Environment* environment = Environment::GetInstance();
-  environment->ParseCommandArgs(gCommandLineArguments);
-
-  // Startup the engine
-  ZeroLauncherStartupSettings settings;
-  settings.mTweakableFileName = "LauncherTweakables";
-  settings.mEmbeddedPackage = false;
-  settings.mDllPath = dllPath;
-
-  // Startup the engine
-  Zero::LauncherStartup startup;
-  Engine* engine = startup.Initialize(settings);
+  LauncherStartup startup;
+  Engine* engine = startup.Initialize();
 
   // Check and see if another launcher is already open (has to happen after
   // startup)
   Status status;
-  String mutexId =
-      BuildString("ZeroLauncherMutex:{", GetLauncherGuidString(), "}");
+  String mutexId = BuildString("ZeroLauncherMutex:{", GetGuidString(), "}");
   InterprocessMutex mutex;
   mutex.Initialize(status, mutexId.c_str(), true);
   if (status.Failed())
   {
     ZPrint("Mutex is already open. Sending a message to the open launcher and "
            "closing\n");
-    Zero::LauncherSingletonCommunication communicator(
-        environment->mParsedCommandLineArguments);
+    Zero::LauncherSingletonCommunication communicator;
     return 0;
   }
 
-  CrashHandler::SetRestartCommandLine(environment->mCommandLine);
+  CrashHandler::SetRestartCommandLine(Environment::GetInstance()->mCommandLine);
 
   // Run application startup
   bool success = Zero::ZeroLauncherStartup(
-      engine, environment->mParsedCommandLineArguments, String(dllPath));
+      engine,
+      Environment::GetInstance()->mParsedCommandLineArguments,
+      String());
   // Failed startup do not run
   if (!success)
     return 0;
@@ -106,16 +69,4 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   ZPrint("Terminated\n");
 
   return returnCode;
-}
-
-using namespace Zero;
-
-extern "C" int main(int argc, char* argv[])
-{
-  CommandLineToStringArray(gCommandLineArguments, argv, argc);
-
-  // This main allows the launcher to run as an executable, even though it is
-  // typically loaded as a shared library (dll/so) and 'RunZeroLauncher' is
-  // invoked externally.
-  return RunZeroLauncher(argc ? argv[0] : ".");
 }

@@ -98,7 +98,7 @@ void TemplateProjectItem::OnLeftClick(Event* e)
 void TemplateProjectItem::OnRightClick(Event* e)
 {
   LauncherWindow* launcher = mNewProjectMenu->mLauncher;
-  DeveloperConfig* devConfig = launcher->mConfigCog->has(DeveloperConfig);
+  DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
   if (devConfig != nullptr)
     launcher->mVersionSelector->DownloadTemplateProject(mTemplateProject);
 }
@@ -127,7 +127,7 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
     Composite(parent),
     mLauncher(launcher)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   SetLayout(CreateStackLayout(
       LayoutDirection::TopToBottom, Vec2::cZero, Thickness(35, 23, 35, 21)));
   SetClipping(true);
@@ -238,7 +238,7 @@ NewProjectMenu::NewProjectMenu(Composite* parent, LauncherWindow* launcher) :
 
   // Listen for when the user tags change on the config (most likely from the
   // settings menu)
-  ConnectThisTo(mLauncher->mConfigCog,
+  ConnectThisTo(Z::gEngine->GetConfigCog(),
                 Events::LauncherConfigChanged,
                 OnLauncherConfigChanged);
 }
@@ -519,7 +519,7 @@ void NewProjectMenu::OnSearchDataModified(Event* e)
 
 void NewProjectMenu::OnLauncherConfigChanged(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   mLocationBox->SetText(config->mDefaultProjectSaveLocation);
 }
 
@@ -581,7 +581,7 @@ void NewProjectMenu::OnCreateProject(Event* e)
   TemplateProject* selectedProject = selectedItem->mTemplateProject;
 
   // Use the config's settings for where to install template projects
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   String templateInstallLocation = config->GetTemplateInstallPath();
 
   // Make a task to create the project from the template (download the template,

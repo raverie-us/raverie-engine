@@ -54,8 +54,6 @@ public:
   void OnConnectionFailed(Event* e);
 
   TcpSocket* mSocket;
-  Cog* mLauncherConfig;
-  LauncherConfig* mVersionConfig;
   String mEventType;
 };
 
@@ -68,7 +66,7 @@ class LauncherSingletonCommunication : public EventObject
 public:
   ZilchDeclareType(LauncherSingletonCommunication, TypeCopyMode::ReferenceType);
 
-  LauncherSingletonCommunication(const StringMap& arguments);
+  LauncherSingletonCommunication();
   ~LauncherSingletonCommunication();
 
   void OnConnectionCompleted(Event* e);
@@ -76,7 +74,6 @@ public:
 
   size_t mTimesTryingToConnect;
   TcpSocket* mSocket;
-  StringMap mArguments;
   /// The resulting status of the connection attempt
   Status mStatus;
 };

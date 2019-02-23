@@ -50,7 +50,16 @@ void EnableMemoryLeakChecking(int breakOnAllocation)
 
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 {
-  return false;
+  char buffer[cDebugBufferLength];
+  ZeroSPrintf(buffer,
+              cDebugBufferLength,
+              "%s(%d) : %s %s\n",
+              errorData.File,
+              errorData.Line,
+              errorData.Message,
+              errorData.Expression);
+  Console::Print(Filter::ErrorFilter, buffer);
+  return true;
 }
 
 void WebRequest(Status& status,

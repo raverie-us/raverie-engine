@@ -6,6 +6,7 @@ namespace Zero
 
 ZilchDefineType(HeightMapDebugDrawer, builder, type)
 {
+  type->AddAttribute(ObjectAttributes::cHidden);
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultSerialization);
   ZeroBindDependency(HeightMap);
@@ -193,6 +194,7 @@ void HeightMapDebugDrawer::DrawAabbProjection(const Aabb& aabb)
 
 ZilchDefineType(HeightMapAabbChecker, builder, type)
 {
+  type->AddAttribute(ObjectAttributes::cHidden);
   ZeroBindComponent();
   ZeroBindSetup(SetupMode::DefaultConstructor);
 

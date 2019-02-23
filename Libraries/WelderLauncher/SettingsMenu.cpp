@@ -38,7 +38,7 @@ SettingsMenu::SettingsMenu(Modal* parent, LauncherWindow* launcher) :
 
   ActionGroup* group = new ActionGroup(this);
 
-  LauncherConfig* config = launcher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   Composite* topRow = new Composite(this);
   topRow->SetLayout(CreateStackLayout(
@@ -302,7 +302,7 @@ void SettingsMenu::OnDeactivated(Event* e)
 
 void SettingsMenu::OnProjectLocationTextSubmit(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   ZPrint("Settings: Changing project location from '%s' to '%s'\n",
          config->mDefaultProjectSaveLocation.c_str(),
@@ -312,7 +312,7 @@ void SettingsMenu::OnProjectLocationTextSubmit(Event* e)
   SaveConfig();
 
   Event toSend;
-  mLauncher->mConfigCog->DispatchEvent(Events::LauncherConfigChanged, &toSend);
+  Z::gEngine->GetConfigCog()->DispatchEvent(Events::LauncherConfigChanged, &toSend);
 }
 
 void SettingsMenu::OnBrowseProjectLocation(Event* e)
@@ -356,7 +356,7 @@ void SettingsMenu::OnDownloadLocationTextChanged(Event* e)
 
 void SettingsMenu::OnDownloadLocationTextSubmit(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   String oldDownloadPath = config->mDownloadPath;
   String oldDownloadPathWithSeparator =
       BuildString(oldDownloadPath, cDirectorySeparatorCstr);
@@ -423,7 +423,7 @@ void SettingsMenu::OnBrowseDownloadLocationSelected(OsFileSelection* e)
 
 void SettingsMenu::OnChangeDownloadLocation(ModalConfirmEvent* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   if (e->mConfirmed == true)
   {
     // Grab the old download path and update to the new one
@@ -442,7 +442,7 @@ void SettingsMenu::OnChangeDownloadLocation(ModalConfirmEvent* e)
       DeleteDirectory(oldDownloadPath);
 
     Event toSend;
-    mLauncher->mConfigCog->DispatchEvent(Events::LauncherConfigChanged,
+    Z::gEngine->GetConfigCog()->DispatchEvent(Events::LauncherConfigChanged,
                                          &toSend);
   }
   else
@@ -455,14 +455,14 @@ void SettingsMenu::OnChangeDownloadLocation(ModalConfirmEvent* e)
 
 void SettingsMenu::OnAutoRunModeSelected(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   config->mAutoRunMode = mAutoRunMode->GetSelectedItem();
   SaveConfig();
 }
 
 void SettingsMenu::OnMaxRecentProjectsModified(Event* e)
 {
-  RecentProjects* recentProjects = mLauncher->mConfigCog->has(RecentProjects);
+  RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
 
   uint maxRecentProjects;
   ToValue(mMaxNumberOfRecentProjects->GetText(), maxRecentProjects);
@@ -489,7 +489,7 @@ void SettingsMenu::OnMaxRecentProjectsModified(Event* e)
 
 void SettingsMenu::OnAutoCheckForMajorUpdatesModified(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   config->mAutoCheckForLauncherUpdates =
       mAutoCheckForLauncherUpdatesCheckBox->GetChecked();
 
@@ -504,7 +504,7 @@ void SettingsMenu::OnAutoCheckForMajorUpdatesModified(Event* e)
 
 void SettingsMenu::OnShowDevelopModified(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   config->mShowDevelopmentBuilds = mShowDevelopCheckBox->GetChecked();
 
   // Save the config now with the new settings
@@ -518,7 +518,7 @@ void SettingsMenu::OnShowDevelopModified(Event* e)
 
 void SettingsMenu::OnShowExperimentalBranchesModified(Event* e)
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   config->mShowExperimentalBranches =
       mShowExperimentalBranchesCheckBox->GetChecked();
 
@@ -563,8 +563,8 @@ void SettingsMenu::OnRevertToDefaultsConfirmation(ModalConfirmEvent* e)
 
 void SettingsMenu::LoadFromConfig()
 {
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
-  RecentProjects* recentProjects = mLauncher->mConfigCog->has(RecentProjects);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
+  RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
 
   mDefaultProjectLocation->SetText(config->mDefaultProjectSaveLocation);
   mDownloadLocation->SetText(config->mDownloadPath);
@@ -577,16 +577,10 @@ void SettingsMenu::LoadFromConfig()
       config->mShowExperimentalBranches);
 }
 
-void SettingsMenu::SaveConfig()
-{
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
-  SaveLauncherConfig(config->GetOwner());
-}
-
 void SettingsMenu::RevertConfigToDefaults()
 {
   ZPrint("Settings: Revert to default\n");
-  LauncherConfig* config = mLauncher->mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   // Grab the old location of the downloads
   String oldDownloadPath = config->mDownloadPath;
 
@@ -596,7 +590,7 @@ void SettingsMenu::RevertConfigToDefaults()
   // We can't default serialize the recent projects because then we'd lose all
   // of the recent projects, so for now the max recent projects default is
   // hardcoded here as well.
-  RecentProjects* recentProjects = mLauncher->mConfigCog->has(RecentProjects);
+  RecentProjects* recentProjects = Z::gEngine->GetConfigCog()->has(RecentProjects);
   recentProjects->mMaxRecentProjects = 20;
 
   // Save the new config
@@ -610,7 +604,7 @@ void SettingsMenu::RevertConfigToDefaults()
     DeleteDirectory(oldDownloadPath);
 
   Event toSend;
-  mLauncher->mConfigCog->DispatchEvent(Events::LauncherConfigChanged, &toSend);
+  Z::gEngine->GetConfigCog()->DispatchEvent(Events::LauncherConfigChanged, &toSend);
 }
 
 void SettingsMenu::OnSettingsPressed(Event*)

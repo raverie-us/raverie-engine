@@ -874,15 +874,11 @@ ZilchDefineType(HeightMapTool, builder, type)
   ZeroBindSetup(SetupMode::DefaultConstructor);
   type->AddAttribute(ObjectAttributes::cTool);
 
-  if (DeveloperConfig* devConfig =
-          Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
-  {
-    ZilchBindFieldProperty(mShowPatchIndex);
-    ZilchBindFieldProperty(mShowCellIndex);
-    ZilchBindFieldProperty(mCellIndexType);
-  }
+  ZilchBindFieldProperty(mShowPatchIndex)->ZeroAdvancedGroup();
+  ZilchBindFieldProperty(mShowCellIndex)->ZeroAdvancedGroup();
+  ZilchBindFieldProperty(mCellIndexType)->ZeroAdvancedGroup();
 
-  ZilchBindGetterSetterProperty(CurrentTool)
+  ZilchBindGetterSetterProperty(CurrentTool) 
       ->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mSubTool);
 }

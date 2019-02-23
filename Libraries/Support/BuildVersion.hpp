@@ -6,16 +6,32 @@ namespace Zero
 
 #define ZeroPlatform PLATFORM_NAME PLATFORM_ARCHITECTURE
 
+extern const String sWelderOrganization;
+extern const String sEditorGuid;
+extern const String sEditorName;
+extern const String sLauncherGuid;
+extern const String sLauncherName;
+
+/// Sets all the application version and name information.
+void SetupApplication(uint major,
+                      uint minor,
+                      uint patch,
+                      uint configVersion,
+                      StringParam organization,
+                      StringParam guid,
+                      StringParam name);
+
 /// Get the guid (primarily for crashes).
 cstr GetGuidString();
 
-/// Get the launcher's guid (for the mutex name)
-cstr GetLauncherGuidString();
+/// Gets the name of the current running application.
+StringParam GetApplicationName();
 
-/// The major version for the launcher. This is currently hard-coded and not
-/// part of the build system. This is used to denote if a new installer should
-/// be downloaded and run.
-uint GetLauncherMajorVersion();
+/// Gets the orgnaization or name-space of an application.
+StringParam GetOrganization();
+
+/// Version of the configuration file we're loading (bumped for breaking changes).
+uint GetConfigVersion();
 
 /// The major version number denotes breaking changes to the build.
 uint GetMajorVersion();
@@ -56,7 +72,7 @@ cstr GetRevisionNumberString();
 
 /// The full build id of Major.Minor.Patch.Revision. The id will be prefaced
 /// with the experimental branch name if it exists.
-cstr GetBuildIdString();
+String GetBuildIdString();
 
 /// The shorter changeset as a string
 cstr GetShortChangeSetString();
@@ -74,7 +90,7 @@ cstr GetConfigurationString();
 cstr GetPlatformString();
 
 /// Get the full string description of the build version.
-cstr GetBuildVersionName();
+String GetBuildVersionName();
 
 /// Read a version from a specified text file.
 int GetVersionId(StringParam versionIdFilePath);

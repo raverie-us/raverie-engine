@@ -167,7 +167,7 @@ void ZilchManager::OnEngineUpdate(UpdateEvent* event)
 
 void ZilchManager::OnDebuggerPause(Zilch::DebuggerEvent* event)
 {
-  if (Engine::sInLauncher)
+  if (GetApplicationName() != sEditorName)
     return;
 
   ScriptEvent toSend;
@@ -178,7 +178,7 @@ void ZilchManager::OnDebuggerPause(Zilch::DebuggerEvent* event)
 
 void ZilchManager::OnDebuggerResume(Zilch::DebuggerEvent* event)
 {
-  if (Engine::sInLauncher)
+  if (GetApplicationName() != sEditorName)
     return;
 
   ScriptEvent toSend;
@@ -189,7 +189,7 @@ void ZilchManager::OnDebuggerResume(Zilch::DebuggerEvent* event)
 
 void ZilchManager::OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event)
 {
-  if (Engine::sInLauncher)
+  if (GetApplicationName() != sEditorName)
     return;
 
   Z::gEngine->mIsDebugging = true;
@@ -199,7 +199,7 @@ void ZilchManager::OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event)
 
 void ZilchManager::OnDebuggerBreakNotAllowed(Zilch::DebuggerTextEvent* event)
 {
-  if (Engine::sInLauncher)
+  if (GetApplicationName() != sEditorName)
     return;
 
   DoNotifyWarning("Debugger", event->Text);

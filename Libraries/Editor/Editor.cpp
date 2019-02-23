@@ -955,7 +955,7 @@ Status Editor::SaveAll(bool showNotify)
   SavingEvent e;
   DispatchEvent(Events::Save, &e);
 
-  SaveConfig(Z::gEditor->mConfig);
+  SaveConfig();
 
   // Save all content items that have been edited
   forRange(ContentItemId id, Z::gContentSystem->mModifiedContentItems.All())

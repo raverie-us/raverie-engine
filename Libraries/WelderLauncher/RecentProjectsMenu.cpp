@@ -280,10 +280,10 @@ void RecentProjectItem::OnRemoveModalResult(ModalConfirmEvent* e)
     ZPrint("Removing project '%s' from recent projects\n", projectPath.c_str());
 
     // Remove build from recent
-    Cog* configCog = mRecentProjectsMenu->mLauncher->mConfigCog;
-    RecentProjects* recentProjects = configCog->has(RecentProjects);
+    RecentProjects* recentProjects =
+        Z::gEngine->GetConfigCog()->has(RecentProjects);
     recentProjects->RemoveRecentProject(projectPath, true);
-    SaveLauncherConfig(configCog);
+    SaveConfig();
   }
 }
 
@@ -304,7 +304,7 @@ RecentProjectsMenu::RecentProjectsMenu(Composite* parent,
   ConnectThisTo(
       versionSelector, Events::VersionListLoaded, OnVersionListLoaded);
 
-  ConnectThisTo(mLauncher->mConfigCog,
+  ConnectThisTo(Z::gEngine->GetConfigCog(),
                 Events::RecentProjectsUpdated,
                 OnRecentProjectsUpdated);
   ConnectThisTo(this, Events::MenuDisplayed, OnMenuDisplayed);
@@ -374,7 +374,7 @@ void RecentProjectsMenu::UpdateRecentProjects()
     mProjects[i]->Destroy();
   mProjects.Clear();
 
-  Cog* configCog = mLauncher->mConfigCog;
+  Cog* configCog = Z::gEngine->GetConfigCog();
   LauncherConfig* launcherConfig = configCog->has(LauncherConfig);
   RecentProjects* recentProjects = configCog->has(RecentProjects);
   if (recentProjects != nullptr)

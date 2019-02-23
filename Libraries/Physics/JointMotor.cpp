@@ -16,10 +16,7 @@ ZilchDefineType(JointMotor, builder, type)
   ZilchBindGetterSetterProperty(Speed)->ZeroSerialize(real(5));
   ZilchBindGetterSetterProperty(MaxImpulse)->ZeroSerialize(real(2));
 
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
-    ZilchBindGetterSetterProperty(AtomIds)->ZeroSerialize(255u);
-  else
-    ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
+  ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
 
   ZeroBindTag(Tags::Physics);
   ZeroBindTag(Tags::Joint);

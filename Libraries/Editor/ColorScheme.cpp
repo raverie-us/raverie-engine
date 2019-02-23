@@ -185,11 +185,10 @@ void ColorScheme::SetSaveName(StringParam name)
 
 void ColorScheme::UpdateConfig()
 {
-  Cog* configCog = Z::gEngine->GetConfigCog();
-  MainConfig* mainConfig = configCog->has(MainConfig);
-  TextEditorConfig* textConfig = configCog->has(TextEditorConfig);
+  TextEditorConfig* textConfig =
+      Z::gEngine->GetConfigCog()->has(TextEditorConfig);
   textConfig->ColorScheme = mActiveName;
-  SaveConfig(configCog);
+  SaveConfig();
 }
 
 void ColorScheme::Modified()

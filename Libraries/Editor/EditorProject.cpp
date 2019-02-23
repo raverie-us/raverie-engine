@@ -25,7 +25,7 @@ void LoadProject(Editor* editor,
   HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject = projectFile;
 
   // Save what project was opened
-  SaveConfig(Z::gEditor->mConfig);
+  SaveConfig();
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
   project->ContentFolder = FilePath::Combine(path, "Content");
@@ -245,24 +245,7 @@ void LauncherOpenProjectComposite::SendEvent(StringParam eventType)
     delete mSocket;
   mSocket = nullptr;
 
-  // load the launcher config, if we can load it and get the launcher config
-  // then try to communicate with the launcher if it's open or launch it if it's
-  // closed
-  mLauncherConfig = LoadLauncherConfig(nullptr, StringMap());
-  if (mLauncherConfig != nullptr)
-  {
-    mVersionConfig = mLauncherConfig->has(LauncherConfig);
-    if (mVersionConfig != nullptr &&
-        FileExists(mVersionConfig->mLauncherLocation))
-    {
-      CommunicateWithLauncher();
-      return;
-    }
-  }
-
-  // Try to run from the installed location, if not notify the user
-  if (!RunFromInstalledPath())
-    FailedToOpenLauncher();
+  CommunicateWithLauncher();
 }
 
 void LauncherOpenProjectComposite::FailedToOpenLauncher()
@@ -303,7 +286,7 @@ bool LauncherOpenProjectComposite::RunFromInstalledPath()
 {
   String installPath;
   bool result = GetRegistryValueFromCommonInstallPaths(
-      GetLauncherGuidString(), "InstallLocation", installPath);
+      sLauncherGuid, "InstallLocation", installPath);
   if (result == false)
     return false;
 
@@ -333,23 +316,39 @@ void LauncherOpenProjectComposite::OnConnectionCompleted(Event* e)
   mSocket->Close();
 }
 
+String GetLauncherLocationFromLauncherConfig()
+{
+  auto launcherConfig = LoadRemoteConfig(sWelderOrganization, sLauncherName);
+  if (launcherConfig == nullptr)
+    return String();
+
+  auto versionConfig = launcherConfig->has(LauncherConfig);
+  if (versionConfig == nullptr)
+    return String();
+
+  if (versionConfig->mLauncherLocation.Empty() ||
+      !FileExists(versionConfig->mLauncherLocation))
+    return String();
+
+  String location = versionConfig->mLauncherLocation;
+  launcherConfig->Destroy();
+  return location;
+}
+
 void LauncherOpenProjectComposite::OnConnectionFailed(Event* e)
 {
-  // If the version selector exists then run the project through it
-  if (mVersionConfig != nullptr && !mVersionConfig->mLauncherLocation.Empty())
-  {
-    String launcherPath = mVersionConfig->mLauncherLocation;
-    if (RunLauncherExe(launcherPath))
-      return;
-  }
   // Try to run from the installed location, if not open the old dialog
   if (!RunFromInstalledPath())
   {
+    String launcherPath = GetLauncherLocationFromLauncherConfig();
+    if (!launcherPath.Empty() && RunLauncherExe(launcherPath))
+      return;
+
     // otherwise the launcher doesn't seem to exist so run the old open/new
     // dialog
     FailedToOpenLauncher();
   }
-
+  
   mSocket->Close();
 }
 
@@ -357,14 +356,13 @@ ZilchDefineType(LauncherSingletonCommunication, builder, type)
 {
 }
 
-LauncherSingletonCommunication::LauncherSingletonCommunication(
-    const StringMap& arguments)
+LauncherSingletonCommunication::LauncherSingletonCommunication()
 {
-  mArguments = arguments;
   mTimesTryingToConnect = 0;
 
   ZPrint("Sending launcher communication event with parameters:\n");
-  AutoDeclare(argRange, arguments.All());
+  AutoDeclare(argRange,
+              Environment::GetInstance()->mParsedCommandLineArguments.All());
   for (; !argRange.Empty(); argRange.PopFront())
   {
     AutoDeclare(pair, argRange.Front());
@@ -400,7 +398,8 @@ void LauncherSingletonCommunication::OnConnectionCompleted(Event* e)
   mStatus.Succeeded();
 
   LauncherCommunicationEvent myEvent;
-  myEvent.LoadFromCommandArguments(mArguments);
+  myEvent.LoadFromCommandArguments(
+      Environment::GetInstance()->mParsedCommandLineArguments);
 
   // If no arguments were provided then just tell the open launcher to display
   // recent projects

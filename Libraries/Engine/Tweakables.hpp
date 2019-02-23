@@ -78,13 +78,10 @@ public:
   static void Save();
 
   /// Loads the tweakables to the Data folder.
-  static void Load(StringParam fileName);
+  static void Load();
 
   /// Returns the location where we're saving the file (data folder).
   static String GetFileLocation();
-
-  /// The name of the file.
-  static String mFileName;
 
   /// A callback to let the editor know to update all Ui.
   typedef void (*TweakableModifiedCallback)();

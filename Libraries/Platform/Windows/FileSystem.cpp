@@ -75,21 +75,6 @@ String GetUserDocumentsDirectory()
   return Narrow(temp);
 }
 
-String GetApplicationDirectory()
-{
-  wchar_t temp[MAX_PATH + 1];
-  GetModuleFileName(NULL, temp, MAX_PATH);
-  String fileName = Narrow(temp);
-
-  /// FIX ME LATER!!!
-  // return Zero::FilePath::GetDirectoryPath(fileName);
-  StringRange found = fileName.FindLastOf(cDirectorySeparatorRune);
-  if (found.Empty())
-    return StringRange();
-
-  return fileName.SubString(fileName.Begin(), found.Begin());
-}
-
 String GetApplication()
 {
   wchar_t temp[MAX_PATH + 1];

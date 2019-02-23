@@ -36,7 +36,7 @@ namespace Zero
 inline static void LogAudioIoError(Zero::StringParam message,
                                    Zero::String* savedMessage = nullptr)
 {
-  ZPrint(Zero::String::Format(message.c_str(), "\n").c_str());
+  ZPrint(BuildString(message, "\n").c_str());
   if (savedMessage)
     *savedMessage = message;
 }

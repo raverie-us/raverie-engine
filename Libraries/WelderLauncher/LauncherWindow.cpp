@@ -219,7 +219,7 @@ void MainButton::OnMouseExit(MouseEvent* e)
   MarkAsNeedsUpdate();
 }
 
-LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog) :
+LauncherWindow::LauncherWindow(MainWindow* parent) :
     Composite(parent)
 {
   ZPrint("Displaying Launcher Window\n");
@@ -230,11 +230,11 @@ LauncherWindow::LauncherWindow(MainWindow* parent, Cog* launcherConfigCog) :
   for (uint i = 0; i < LauncherMenu::MenuCount; ++i)
     mMenus[i] = nullptr;
 
-  mConfigCog = launcherConfigCog;
 
-  LauncherConfig* launcherConfig = launcherConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig =
+      Z::gEngine->GetConfigCog()->has(LauncherConfig);
   mVersionSelector = new VersionSelector(launcherConfig);
-  mProjectCache = new ProjectCache(mConfigCog);
+  mProjectCache = new ProjectCache();
 
   // Finds which version are currently installed
   mVersionSelector->FindInstalledVersions();
@@ -434,7 +434,8 @@ void LauncherWindow::AutoCheckForLauncherUpdates()
 
   // Queue up actions to auto-recheck for new builds, etc...
   // Only do this if the launcher auto-checks for updates though
-  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig =
+      Z::gEngine->GetConfigCog()->has(LauncherConfig);
   if (!launcherConfig->mAutoCheckForLauncherUpdates)
     return;
 
@@ -605,11 +606,12 @@ void LauncherWindow::ForceUpdateBuilds()
 
 void LauncherWindow::ForceUpdateBuildsAndUpdateConfig()
 {
-  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig =
+      Z::gEngine->GetConfigCog()->has(LauncherConfig);
   mVersionSelector->ForceUpdateAllBuilds();
   launcherConfig->mForcedUpdateVersion =
       LauncherConfig::mCurrentForcedUpdateVersionNumber;
-  SaveLauncherConfig(mConfigCog);
+  SaveConfig();
 }
 
 void LauncherWindow::OnForcedBuildsModal(ModalButtonEvent* e)
@@ -863,17 +865,19 @@ void LauncherWindow::SelectMenu(MenuData* menu)
 void LauncherWindow::AddToRecentProjects(CachedProject* project)
 {
   // Add the project to the recent projects listing
-  RecentProjects* recentProjects = mConfigCog->has(RecentProjects);
+  RecentProjects* recentProjects =
+      Z::gEngine->GetConfigCog()->has(RecentProjects);
   recentProjects->AddRecentProject(project->GetProjectPath(), true);
-  SaveLauncherConfig(mConfigCog);
+  SaveConfig();
 }
 
 void LauncherWindow::RemoveFromRecentProjects(CachedProject* project)
 {
   // Add the project to the recent projects listing
-  RecentProjects* recentProjects = mConfigCog->has(RecentProjects);
+  RecentProjects* recentProjects =
+      Z::gEngine->GetConfigCog()->has(RecentProjects);
   recentProjects->RemoveRecentProject(project->GetProjectPath(), true);
-  SaveLauncherConfig(mConfigCog);
+  SaveConfig();
 }
 
 void LauncherWindow::SelectActiveProject(CachedProject* project,
@@ -921,7 +925,8 @@ void LauncherWindow::OnPackageListing(BackgroundTaskEvent* taskEvent)
 
     // If the user doesn't have any builds installed and has no recent projects
     // then install the latest "Stable" version
-    RecentProjects* recentProjects = mConfigCog->has(RecentProjects);
+    RecentProjects* recentProjects =
+        Z::gEngine->GetConfigCog()->has(RecentProjects);
     if (mVersionSelector->GetInstalledBuildsCount() == 0 &&
         (recentProjects == nullptr ||
          recentProjects->GetRecentProjectsCount() == 0))
@@ -956,11 +961,11 @@ void LauncherWindow::OnLauncherListing(BackgroundTaskEvent* taskEvent)
 
   job->PopulatePackageList();
 
-  MainConfig* mainConfig = mConfigCog->has(MainConfig);
-  String minorIdFile = FilePath::Combine(mainConfig->ApplicationDirectory,
+  MainConfig* mainConfig = Z::gEngine->GetConfigCog()->has(MainConfig);
+  String minorIdFile = FilePath::Combine(GetApplicationDirectory(),
                                          "ZeroLauncherVersionId.txt");
   int minorId = GetVersionId(minorIdFile);
-  int majorId = (int)GetLauncherMajorVersion();
+  int majorId = (int)GetMajorVersion();
 
   ZeroBuildContent* newestInstaller = nullptr;
   ZeroBuildContent* newestPatch = nullptr;
@@ -1050,7 +1055,7 @@ void LauncherWindow::OnTemplateListing(BackgroundTaskEvent* taskEvent)
 
 void LauncherWindow::CheckForForcedBuildUpdate()
 {
-  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   if (launcherConfig->mForcedUpdateVersion !=
       LauncherConfig::mCurrentForcedUpdateVersionNumber)
     ForceUpdateBuilds();
@@ -1192,7 +1197,7 @@ void LauncherWindow::OnInstallProjectPack(ModalConfirmEvent* e)
 
   // Unzip the project to the current default project save location using the
   // zip file's name
-  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig = Z::gEngine->GetConfigCog()->has(LauncherConfig);
   String projectLocation = launcherConfig->mDefaultProjectSaveLocation;
   String exportDirectory = FilePath::Combine(
       projectLocation,
@@ -1240,7 +1245,7 @@ void LauncherWindow::OnBrowsePressed(Event* e)
   if (!GetDispatcher()->IsConnected(cCallBackEvent, this))
     ConnectThisTo(this, cCallBackEvent, OnOpenProjectFile);
 
-  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   // Open the open file dialog
   FileDialogConfig* config = FileDialogConfig::Create();
@@ -1325,7 +1330,7 @@ void LauncherWindow::OnLauncherUpdateTags(LauncherCommunicationEvent* e)
   // If the event provided any new tags then load them (should only be at the
   // moment from another launcher opening with a different mode, such as the
   // ProjectFun shortcut)
-  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   if (e->mExtraData ==
       LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode])
@@ -1354,7 +1359,7 @@ void LauncherWindow::OnLauncherOpenProject(LauncherCommunicationEvent* e)
 
   // If the config settings say to always run the project when installed then
   // run the project (and show it in the active project page)
-  LauncherConfig* config = mConfigCog->has(LauncherConfig);
+  LauncherConfig* config = Z::gEngine->GetConfigCog()->has(LauncherConfig);
 
   if (config->mAutoRunMode == LauncherAutoRunMode::IfInstalled)
     OnLauncherRunProject(e);
@@ -1390,7 +1395,7 @@ void LauncherWindow::OnLauncherRunProject(LauncherCommunicationEvent* e)
     if (standalone->mInstallState == InstallState::Installed)
       mVersionSelector->RunProject(standalone, project);
   }
-  SaveLauncherConfig(mConfigCog);
+  SaveConfig();
 
   SelectActiveProject(project, true);
 }

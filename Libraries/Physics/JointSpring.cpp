@@ -15,10 +15,7 @@ ZilchDefineType(JointSpring, builder, type)
   ZilchBindGetterSetterProperty(FrequencyHz)->ZeroSerialize(real(2.0));
   ZilchBindGetterSetterProperty(DampingRatio)->ZeroSerialize(real(0.7));
 
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
-    ZilchBindGetterSetterProperty(AtomIds)->ZeroSerialize(255u);
-  else
-    ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
+  ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
 
   ZeroBindTag(Tags::Physics);
   ZeroBindTag(Tags::Joint);

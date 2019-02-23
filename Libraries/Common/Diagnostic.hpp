@@ -59,11 +59,11 @@ public:
   typedef bool (*ErrorHandler)(ErrorData& errorData);
   static void SetErrorHandler(ErrorHandler newHandler)
   {
-    activeErrorHandler = newHandler;
+    sActiveErrorHandler = newHandler;
   }
   static ErrorHandler GetErrorHandler()
   {
-    return activeErrorHandler;
+    return sActiveErrorHandler;
   }
 
   static bool SignalError(SignalErrorType erroType,
@@ -75,7 +75,7 @@ public:
                           ...);
 
 private:
-  static ErrorHandler activeErrorHandler;
+  static ErrorHandler sActiveErrorHandler;
 };
 
 } // namespace Zero

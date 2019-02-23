@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-String GetEulaFilePath(Cog* configCog);
+String GetEulaFilePath();
 
 class EulaWindow : public Composite
 {
@@ -13,7 +13,7 @@ public:
   typedef EulaWindow ZilchSelf;
 
   /// Constructor.
-  EulaWindow(Cog* configCog, Composite* parent);
+  EulaWindow(Composite* parent);
 
   /// Button event response.
   void OnAccept(Event*);

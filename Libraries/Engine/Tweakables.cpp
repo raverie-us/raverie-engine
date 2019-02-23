@@ -107,7 +107,6 @@ void TweakableNode::Serialize(Serializer& stream)
 }
 
 Tweakables::TweakableModifiedCallback Tweakables::sModifiedCallback = NULL;
-String Tweakables::mFileName;
 
 ZilchDefineType(Tweakables, builder, type)
 {
@@ -154,10 +153,8 @@ void Tweakables::Save()
   Z::gTweakables->Serialize(saver);
 }
 
-void Tweakables::Load(StringParam fileName)
+void Tweakables::Load()
 {
-  mFileName = fileName;
-
   // Get the file location
   String file = GetFileLocation();
 
@@ -184,7 +181,7 @@ String Tweakables::GetFileLocation()
   String directory = mainConfig->DataDirectory;
 
   // Combine the directory and file
-  return FilePath::CombineWithExtension(directory, mFileName, ".data");
+  return FilePath::CombineWithExtension(directory, BuildString(GetApplicationName(), "Tweakables"), ".data");
 }
 
 TweakablesComposition::TweakablesComposition() : MetaComposition(nullptr)

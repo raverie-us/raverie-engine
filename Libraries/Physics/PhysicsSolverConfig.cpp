@@ -305,24 +305,13 @@ ZilchDefineType(PhysicsSolverConfig, builder, type)
   ZilchBindGetterSetterProperty(PositionIterationCount);
   ZilchBindGetterSetterProperty(VelocityRestitutionThreshold);
 
-  bool inDevConfig =
-      Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr;
   // @JoshD: Hide for now so these won't confuse anyone
   // These properties are only for showing people how constraints handle
   // when you don't implement important features
-  // if (inDevConfig)
-  //{
-  //  ZilchBindFieldProperty(mWarmStart);
-  //  ZilchBindFieldProperty(mCacheContacts);
-  //  ZilchBindGetterSetterProperty(SubCorrectionType);
-  //}
-  // else
-  //{
-  //  ZilchBindField(mWarmStart);
-  //  ZilchBindField(mCacheContacts);
-  //  ZilchBindGetterSetter(SubCorrectionType);
-  //}
-  // ZilchBindGetterSetterProperty(SolverType);
+  //ZilchBindFieldProperty(mWarmStart);
+  //ZilchBindFieldProperty(mCacheContacts);
+  //ZilchBindGetterSetterProperty(SubCorrectionType);
+  //ZilchBindGetterSetterProperty(SolverType);
 
   ZilchBindGetterSetterProperty(PositionCorrectionType);
 }

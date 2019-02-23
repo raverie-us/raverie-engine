@@ -19,7 +19,7 @@ public:
   {
     logFile = nullptr;
     mCanOpen = true;
-    mBaseLogFileName = "ZeroLog_";
+    mBaseLogFileName = FilePath::GetFileNameWithoutExtension(GetApplication());
   }
 
   ~FileListener()

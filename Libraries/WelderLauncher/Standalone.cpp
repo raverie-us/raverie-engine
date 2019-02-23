@@ -55,7 +55,7 @@ BuildId BuildId::GetCurrentLauncherId()
   // This major id needs to match "ZeroLauncherMajorId" on the web server in
   // order to determine if a new major version is available which triggers a
   // re-install of the launcher.
-  id.mMajorVersion = GetLauncherMajorVersion();
+  id.mMajorVersion = GetMajorVersion();
   id.mMinorVersion = 0;
   id.mPatchVersion = 0;
   id.mRevisionId = GetRevisionNumber();

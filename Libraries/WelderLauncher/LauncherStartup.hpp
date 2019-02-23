@@ -8,21 +8,12 @@ bool ZeroLauncherStartup(Engine* engine,
                          StringMap& arguments,
                          StringParam dllPath);
 
-class ZeroLauncherStartupSettings : public ZeroStartupSettings
-{
-public:
-  String mDllPath;
-  Cog* LoadConfig() override;
-};
-
-/// Helper to initialize libraries for the launcher
 class LauncherStartup : public ZeroStartup
 {
-public:
-  void Shutdown();
-
 protected:
-  void InitializeLibraries(ZeroStartupSettings& settings) override;
+  void InitializeExternal() override;
+  void InitializeConfig(Cog* configCog) override;
+  void ShutdownExternal() override;
 };
 
 } // namespace Zero

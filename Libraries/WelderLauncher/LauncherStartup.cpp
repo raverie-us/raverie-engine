@@ -70,9 +70,8 @@ bool ZeroLauncherStartup(Engine* engine,
   String project = GetStringValue<String>(arguments, "file", String());
   bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
 
-  Cog* launcherConfigCog = Z::gEngine->GetConfigCog();
-
-  SaveLauncherConfig(launcherConfigCog);
+  SaveConfig();
+  Cog* configCog = Z::gEngine->GetConfigCog();
 
   // Profile initializing systems
   {
@@ -88,16 +87,16 @@ bool ZeroLauncherStartup(Engine* engine,
 
     SystemInitializer initializer;
     initializer.mEngine = engine;
-    initializer.Config = launcherConfigCog;
+    initializer.Config = configCog;
 
     // Initialize all systems.
     engine->Initialize(initializer);
   }
 
-  Tweakables::Load("LauncherTweakables");
+  Tweakables::Load();
 
-  Z::gLauncher = new Launcher(launcherConfigCog, arguments);
-  LoadResources(launcherConfigCog);
+  Z::gLauncher = new Launcher();
+  LoadResources(configCog);
 
   Event event;
   engine->DispatchEvent(Events::NoProjectLoaded, &event);
@@ -106,12 +105,11 @@ bool ZeroLauncherStartup(Engine* engine,
   Z::gLauncher->Startup();
 
   CommandManager* commands = CommandManager::GetInstance();
-  BindAppCommands(launcherConfigCog, commands);
+  BindAppCommands(configCog, commands);
   commands->RunParsedCommands();
 
   // Extra debug stuff to test crashing
-  if (arguments.ContainsKey("CrashEngine") &&
-      launcherConfigCog->has(DeveloperConfig))
+  if (arguments.ContainsKey("CrashEngine") && configCog->has(DeveloperConfig))
   {
     CrashHandler::FatalError(1);
   }
@@ -119,46 +117,29 @@ bool ZeroLauncherStartup(Engine* engine,
   return true;
 }
 
-Cog* ZeroLauncherStartupSettings::LoadConfig()
+void LauncherStartup::InitializeExternal()
 {
-  Environment* environment = Environment::GetInstance();
-  Cog* launcherConfigCog = LoadLauncherConfig(
-      nullptr, environment->mParsedCommandLineArguments, true);
-  ErrorIf(launcherConfigCog == nullptr, "Unable to load the launcher config");
-
-  MainConfig* mainConfig = launcherConfigCog->has(MainConfig);
-  mainConfig->ApplicationDirectory = mDllPath;
-  // Also update the Data and Tools directory (if they exist, if they don't
-  // exist then we're likely running in visual studio and we want the default
-  // behavior to run which will grab them from the source directory)
-  String dataDir = FilePath::Combine(mDllPath, "Data");
-  if (FileExists(dataDir))
-    mainConfig->DataDirectory = dataDir;
-  ContentConfig* contentConfig = launcherConfigCog->has(ContentConfig);
-  String toolsDir = FilePath::Combine(mDllPath, "Tools");
-  if (FileExists(toolsDir))
-    contentConfig->ToolsDirectory = toolsDir;
-
-  SaveLauncherConfig(launcherConfigCog);
-  return launcherConfigCog;
-}
-
-void LauncherStartup::InitializeLibraries(ZeroStartupSettings& settings)
-{
-  Engine::sInLauncher = true;
-
-  // Initialize all of zero's libraries
-  ZeroStartup::InitializeLibraries(settings);
-  // Take care of our remaining libraries
   LauncherDllLibrary::Initialize();
 }
 
-void LauncherStartup::Shutdown()
+void LauncherStartup::InitializeConfig(Cog* configCog)
 {
-  // Reverse order shutdown
+  // Force certain config components to exist. There's a few upgrade cases
+  // where one of these could be missing otherwise.
+  HasOrAdd<TextEditorConfig>(configCog);
+  HasOrAdd<RecentProjects>(configCog);
+
+  LauncherConfig* versionConfig = HasOrAdd<LauncherConfig>(configCog);
+  versionConfig->mLauncherLocation = GetApplication();
+
+  // Apply any command line arguments (mostly auto-run settings).
+  versionConfig->ApplyCommandLineArguments();
+}
+
+void LauncherStartup::ShutdownExternal()
+{
   LauncherDllLibrary::Shutdown();
   LauncherDllLibrary::GetInstance().ClearLibrary();
-  ZeroStartup::Shutdown();
 }
 
 } // namespace Zero

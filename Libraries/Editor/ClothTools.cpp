@@ -815,6 +815,7 @@ PropertyState SpringPointProxyProperty::GetValue(HandleParam object,
 
 ZilchDefineType(SpringTools, builder, type)
 {
+  type->AddAttribute(ObjectAttributes::cHidden);
   ZeroBindComponent();
   ZeroBindDependency(MouseCapture);
   ZeroBindSetup(SetupMode::DefaultSerialization);

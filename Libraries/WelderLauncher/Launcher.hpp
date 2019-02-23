@@ -7,8 +7,7 @@ namespace Zero
 class Launcher
 {
 public:
-  /// Constructor.
-  Launcher(Cog* configCog, StringMap& arguments);
+  Launcher();
 
   void Initialize();
 
@@ -32,8 +31,6 @@ private:
   MainWindow* mMainWindow;
   Composite* mEulaWindow;
   Composite* mLauncherWindow;
-  Cog* mConfigCog;
-  StringMap mArguments;
 
   static IntVec2 mEulaWindowSize;
   static IntVec2 mLauncherWindowSize;

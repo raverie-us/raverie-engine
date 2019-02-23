@@ -92,25 +92,6 @@ ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
   }
 }
 
-Cog* ZeroStartupSettings::LoadConfig()
-{
-  // Arguments
-  Environment* environment = Environment::GetInstance();
-  StringMap& arguments = environment->mParsedCommandLineArguments;
-
-  String applicationName = "ZeroEditor";
-  bool playGame = GetStringValue<bool>(arguments, "play", false);
-
-  // Exported games use a different settings file
-  if (mEmbeddedPackage || playGame)
-    applicationName = "Zero";
-
-  // If we're in safe mode, just use the default config
-  bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
-
-  return Zero::LoadConfig(applicationName, defaultConfig, *this);
-}
-
 ZilchDefineStaticLibrary(EngineLibrary)
 {
   builder.CreatableInScriptDefault = false;
@@ -391,7 +372,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(Shortcuts);
   ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
 
-  if (!Engine::sInLauncher)
+  if (GetApplicationName() != sLauncherName)
     ZilchInitializeTypeAs(LauncherProjectInfoProxy, "LauncherProjectInfo");
 
   ZilchInitializeType(ZilchLibraryResource);
@@ -402,7 +383,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
 
-bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
+bool EngineLibrary::Initialize()
 {
   // Build meta
   BuildStaticLibrary();
@@ -504,18 +485,6 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
 
   MetaDatabase::GetInstance()->AddAlternateName("Project",
                                                 ZilchTypeId(ProjectSettings));
-
-  Cog* config = settings.LoadConfig();
-  if (config == nullptr)
-    return false;
-
-  engine->mConfigCog = config;
-
-  Tweakables::Load(settings.mTweakableFileName);
-  Shortcuts::GetInstance()->Load(FilePath::Combine(
-      Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
-      "Shortcuts.data"));
-
   return true;
 }
 

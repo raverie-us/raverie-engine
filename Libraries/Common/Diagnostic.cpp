@@ -6,22 +6,8 @@ namespace Zero
 
 const int cDebugBufferLength = 1024;
 
-bool DefaultErrorHandler(ErrorSignaler::ErrorData& errorData)
-{
-  char buffer[cDebugBufferLength];
-  ZeroSPrintf(buffer,
-              cDebugBufferLength,
-              "%s(%d) : %s %s\n",
-              errorData.File,
-              errorData.Line,
-              errorData.Message,
-              errorData.Expression);
-  Console::Print(Filter::ErrorFilter, buffer);
-  return true;
-}
-
-ErrorSignaler::ErrorHandler ErrorSignaler::activeErrorHandler =
-    DefaultErrorHandler;
+ErrorSignaler::ErrorHandler ErrorSignaler::sActiveErrorHandler =
+    Os::ErrorProcessHandler;
 
 bool ErrorSignaler::SignalError(SignalErrorType signalType,
                                 cstr exp,
@@ -56,7 +42,7 @@ bool ErrorSignaler::SignalError(SignalErrorType signalType,
     errorData.Message = messageBuffer;
   }
 
-  bool result = (*activeErrorHandler)(errorData);
+  bool result = (*sActiveErrorHandler)(errorData);
   ignore = errorData.IgnoreFutureAssert;
   return result;
 }

@@ -45,7 +45,6 @@ public:
 
   /// Update all of the ui to display the current config values
   void LoadFromConfig();
-  void SaveConfig();
   void RevertConfigToDefaults();
 
   void OnSettingsPressed(Event*);

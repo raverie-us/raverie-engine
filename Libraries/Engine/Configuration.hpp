@@ -21,17 +21,10 @@ public:
   String GetBuildDate();
   String GetBuildVersion();
 
-  /// Name of the application for separating config files.
-  String ApplicationName;
   /// Directory source was built from.
   String SourceDirectory;
   /// Directory for built in data files
   String DataDirectory;
-  /// The location the app is running from. Stored here so the launcher can
-  /// override it to the dll location.
-  String ApplicationDirectory;
-  /// Did the config file or using default.
-  bool mConfigDidNotExist;
   /// Should the config be saved? Used in stress tester.
   bool mSave;
   /// Command line Parameters
@@ -250,14 +243,15 @@ private:
   HashSet<String> mRecentProjects;
 };
 
+typedef void (*ModifyConfigFn)(Cog* config, void* userData);
+// Load the config for another application. Be careful because all components must be registered or proxies.
+Cog* LoadRemoteConfig(StringParam organization, StringParam applicationName);
 // Load the config file for under a application name.
-Cog* LoadConfig(StringParam applicationName,
-                bool useDefault,
-                ZeroStartupSettings& settings);
+Cog* LoadConfig(ModifyConfigFn modifier, void* userData);
 // Save the configuration file.
-void SaveConfig(Cog* config);
+void SaveConfig();
 // Remove config file
-void RemoveConfig(Cog* config);
+void RemoveConfig();
 // Find the source directory by walking up from the application path looking for
 // '.welder'. If it is not found, it returns the application directory.
 String FindSourceDirectory();

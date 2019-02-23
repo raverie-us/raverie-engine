@@ -17,52 +17,25 @@ void LoadContentConfig(Cog* configCog)
   Array<String>& librarySearchPaths = contentSystem->LibrarySearchPaths;
   ContentConfig* contentConfig = configCog->has(ContentConfig);
   String appCacheDirectory = GetUserLocalDirectory();
-  String applicationDirectory = mainConfig->ApplicationDirectory;
   String documentDirectory = GetUserDocumentsDirectory();
   String workingDirectory = GetWorkingDirectory();
 
-  String applicationName = mainConfig->ApplicationName;
-
   String sourceDirectory = mainConfig->SourceDirectory;
+  ErrorIf(sourceDirectory.Empty(), "Expected a source directory");
 
   if (contentConfig)
     librarySearchPaths.InsertAt(0, contentConfig->LibraryDirectories.All());
 
+  librarySearchPaths.PushBack(FilePath::Combine(sourceDirectory, "Resources"));
+
   CreateDirectoryAndParents(
-      FilePath::Combine(appCacheDirectory, applicationName));
-
-  // Add application directory resources if available
-  if (!applicationDirectory.Empty())
-  {
-    librarySearchPaths.PushBack(
-        FilePath::Combine(applicationDirectory, "Resources"));
-  }
-
-  // Add the source path for resources
-  if (!sourceDirectory.Empty())
-    librarySearchPaths.PushBack(
-        FilePath::Combine(sourceDirectory, "Resources"));
-
-  // Add working directory resources
-  librarySearchPaths.PushBack(FilePath::Combine(workingDirectory, "Resources"));
+      FilePath::Combine(appCacheDirectory, GetApplicationName()));
 
   // Hack!
   if (mExtraLibrarySearchPaths != nullptr)
     mExtraLibrarySearchPaths(configCog, librarySearchPaths);
-
-  // First try to use the tools directory specified in the user config
-  if (contentConfig && !contentConfig->ToolsDirectory.Empty() &&
-      FileExists(contentConfig->ToolsDirectory))
-    contentSystem->ToolPath =
-        FilePath::Normalize(contentConfig->ToolsDirectory);
-  else if (!sourceDirectory.Empty())
-    // Use the build info version if it is not empty
-    contentSystem->ToolPath = FilePath::Combine(sourceDirectory, "Tools");
-  else if (!applicationDirectory.Empty())
-    contentSystem->ToolPath = FilePath::Combine(applicationDirectory, "Tools");
-  else
-    // Just use working directory
-    contentSystem->ToolPath = FilePath::Combine(workingDirectory, "Tools");
+  
+  contentSystem->ToolPath = FilePath::Combine(sourceDirectory, "Tools");
 
   contentSystem->mHistoryEnabled = contentConfig->HistoryEnabled;
 
@@ -80,7 +53,7 @@ void LoadContentConfig(Cog* configCog)
   if (!DirectoryExists(contentSystem->ContentOutputPath))
   {
     String prebuiltContent =
-        FilePath::Combine(applicationDirectory, "PrebuiltZeroContent");
+        FilePath::Combine(sourceDirectory, "PrebuiltZeroContent");
     if (DirectoryExists(prebuiltContent))
     {
       ZPrint("Copying prebuilt content from '%s' to '%s'\n",

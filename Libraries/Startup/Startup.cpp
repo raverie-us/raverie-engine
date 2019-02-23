@@ -4,15 +4,43 @@
 namespace Zero
 {
 
-// Startup
-Engine* ZeroStartup::Initialize(ZeroStartupSettings& settings)
+Engine* ZeroStartup::Initialize()
 {
-  InitializeLibraries(settings);
-  return InitializeEngine();
-}
+  // Set the log and error handlers so debug printing and asserts will print to
+  // the any debugger output (such as the Visual Studio Output Window).
+  mDebuggerListener = new DebuggerListener();
+  Zero::Console::Add(mDebuggerListener);
 
-void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
-{
+  mFileSystemInitializer =
+      new FileSystemInitializer(&PopulateVirtualFileSystemWithZip);
+
+  // Mirror console output to a log file.
+  mFileListener = new FileListener();
+  Zero::Console::Add(mFileListener);
+
+  mTotalEngineTimer = new TimerBlock("Total run time:");
+
+  CrashHandler::Enable();
+
+  // CrashHandler::SetPreMemoryDumpCallback(Zero::CrashPreMemoryDumpCallback,
+  //                                       NULL);
+  // CrashHandler::SetCustomMemoryCallback(Zero::CrashCustomMemoryCallback,
+  // NULL); CrashHandler::SetLoggingCallback(Zero::CrashLoggingCallback,
+  // mFileListener);
+  // CrashHandler::SetSendCrashReportCallback(Zero::SendCrashReport, NULL);
+  // CrashHandler::SetCrashStartCallback(Zero::CrashStartCallback, NULL);
+
+  Environment* environment = Environment::GetInstance();
+  environment->ParseCommandArgs(gCommandLineArguments);
+
+  // Add stdout listener (requires engine initialization to get the Environment
+  // object)
+  if (!environment->GetParsedArgument("logStdOut").Empty())
+  {
+    mStdoutListener = new StdOutListener();
+    Zero::Console::Add(mStdoutListener);
+  }
+
   CommonLibrary::Initialize();
 
   // Temporary location for registering handle managers
@@ -64,7 +92,7 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   ContentMetaLibrary::Initialize();
   SpatialPartitionLibrary::Initialize();
 
-  EngineLibrary::Initialize(settings);
+  EngineLibrary::Initialize();
   GraphicsLibrary::Initialize();
   PhysicsLibrary::Initialize();
   NetworkingLibrary::Initialize();
@@ -79,22 +107,48 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
 
   NativeBindingList::ValidateTypes();
 
+  InitializeExternal();
+
+  if (LoadConfig(&InitializeConfigExternal, this) == nullptr)
+    return false;
+
+  Tweakables::Load();
+
+  Shortcuts::GetInstance()->Load(FilePath::Combine(
+      Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
+      "Shortcuts.data"));
+
   // Load documentation for all native libraries
   DocumentationLibrary::GetInstance()->LoadDocumentation(FilePath::Combine(
       Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory,
       "Documentation.data"));
 
   ZPrint("Os: %s\n", Os::GetVersionString().c_str());
+
+  return Z::gEngine;
 }
 
-Engine* ZeroStartup::InitializeEngine()
+void ZeroStartup::InitializeExternal()
 {
-  return Z::gEngine;
+}
+
+void ZeroStartup::InitializeConfig(Cog* configCog)
+{
+}
+
+void ZeroStartup::ShutdownExternal()
+{
+}
+
+void ZeroStartup::InitializeConfigExternal(Cog* configCog, void* userData)
+{
+  ((ZeroStartup*)userData)->InitializeConfig(configCog);
 }
 
 void ZeroStartup::Shutdown()
 {
   Zero::TimerBlock block("Shutting down Libraries.");
+  ShutdownExternal();
 
   Core::GetInstance().GetLibrary()->ClearComponents();
 

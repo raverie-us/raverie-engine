@@ -121,7 +121,7 @@ String GetToolsPath()
 
 void SendCrashReport(CrashHandlerParameters& params, void* userData)
 {
-  params.AddParameter("Version", GetBuildIdString());
+  params.AddParameter("Version", GetBuildIdString().c_str());
   params.AddParameter("Name", "Zero Engine");
   params.AddParameter("Guid", GetGuidString());
   params.AddParameter("Revision", GetRevisionNumberString());

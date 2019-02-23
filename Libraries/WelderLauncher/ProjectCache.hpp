@@ -105,7 +105,7 @@ public:
 class ProjectCache
 {
 public:
-  ProjectCache(Cog* configCog);
+  ProjectCache();
   ~ProjectCache();
 
   /// Load the project and create a cache entry for it.
@@ -133,7 +133,6 @@ public:
   typedef HashMap<String, CachedProject*> CachedProjectMap;
   CachedProjectMap mProjectMap;
 
-  Cog* mConfigCog;
   RecentProjects* mRecentProjects;
 };
 

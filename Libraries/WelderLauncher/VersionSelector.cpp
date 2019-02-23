@@ -543,8 +543,7 @@ TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(
 void VersionSelector::FindDownloadedTemplates()
 {
   // Check the dll install directory.
-  String dllDownloadDir =
-      mConfig->GetOwner()->has(MainConfig)->ApplicationDirectory;
+  String dllDownloadDir = GetApplicationDirectory();
   String packagedTemplates = FilePath::Combine(dllDownloadDir, "Templates");
   FindDownloadedTemplatesRecursive(packagedTemplates);
 
@@ -1048,7 +1047,7 @@ BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate(StringParam url)
 {
   ZPrint("Downloading launcher patch update.\n");
 
-  String majorVersionIdStr = ToString(GetLauncherMajorVersion());
+  String majorVersionIdStr = ToString(GetMajorVersion());
   String launcherFolderName =
       FilePath::Combine(GetUserLocalDirectory(),
                         BuildString("ZeroLauncher_", majorVersionIdStr, ".0"));
@@ -1313,18 +1312,6 @@ void VersionSelector::RunNewProject(ZeroBuild* standalone,
   ZPrint("Running project '%s' with build '%s'\n",
          projectName.c_str(),
          zeroExePath.c_str());
-
-  // old versions before the version selector do not understand the -newProject
-  // command (because it didn't exist back then) so we have to clear the editing
-  // project from the config to achieve a similar result (we can't set the
-  // project name though)
-  if (standalone->ContainsTag("PreVersionSelector"))
-  {
-    EditorConfig* editorConfig = HasOrAdd<EditorConfig>(configCog);
-    editorConfig->EditingProject = String();
-
-    SaveLauncherConfig(configCog);
-  }
 
   String commandLine = "-newProject";
   // if a project name was specified then set the name of the new project to run

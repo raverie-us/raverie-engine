@@ -135,6 +135,17 @@ extern const String cSerializationPrimitive;
 
 } // namespace SerializationAttributes
 
+// Common groups (used with PropertyAttributes::cGroup)
+namespace CommonGroups
+{
+/// A group fpr advanced properties that the user should not touch unless they know what they are doing.
+extern const String cAdvanced;
+} // namespace CommonGroups
+
+#define ZeroAdvancedGroup()                                                    \
+  AddAttribute(::Zero::PropertyAttributes::cGroup)                             \
+      ->AddParameter(::Zero::CommonGroups::cAdvanced)
+
 // Uncategorized
 extern const String cInvalidTypeName;
 

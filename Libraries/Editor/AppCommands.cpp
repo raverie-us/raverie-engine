@@ -71,7 +71,7 @@ VersionStatus::Type GlobalVersionStatus = VersionStatus::Unknown;
 void BuildVersion()
 {
   String buildVersionString =
-      String::Format("BuildVersion: %s", GetBuildVersionName());
+      String::Format("BuildVersion: %s", GetBuildVersionName().c_str());
   ZPrintFilter(Filter::DefaultFilter, "%s\n", buildVersionString.c_str());
   OsShell* platform = Z::gEngine->has(OsShell);
   platform->SetClipboardText(buildVersionString);
@@ -92,15 +92,10 @@ void WriteBuildInfo()
   builder.AppendFormat("PatchVersion %d\n", GetPatchVersion());
   builder.AppendFormat("RevisionId %d\n", GetRevisionNumber());
   builder.AppendFormat("Platform \"%s\"\n", GetPlatformString());
-  cstr experimentalBranchName = GetExperimentalBranchName();
-  if (experimentalBranchName != nullptr)
-    builder.AppendFormat("ExperimentalBranchName \"%s\"\n",
-                         experimentalBranchName);
   builder.AppendFormat("ShortChangeSet \"%s\"\n", GetShortChangeSetString());
   builder.AppendFormat("ChangeSet \"%s\"\n", GetChangeSetString());
   builder.AppendFormat("ChangeSetDate \"%s\"\n", GetChangeSetDateString());
-  builder.AppendFormat("BuildId \"%s\"\n", GetBuildIdString());
-  builder.AppendFormat("LauncherMajorVersion %d\n", GetLauncherMajorVersion());
+  builder.AppendFormat("BuildId \"%s\"\n", GetBuildIdString().c_str());
 
   String result = builder.ToString();
   WriteStringRangeToFile(filePath, result);

@@ -18,49 +18,70 @@ namespace Zero
 #define WrapHex(a) InnerWrapHex(a)
 #define InnerWrapHex(s) 0x##s##ULL
 
-// Helper to stringify the build id's name conditionally on if there's an
-// experimental branch
-#ifdef ZeroExperimentalBranchName
-#  define ZeroBuildIdString()                                                              \
-    ZeroExperimentalBranchName                                                             \
-        "." Stringify(WelderMajorVersion) "." Stringify(WelderMinorVersion) "." Stringify( \
-            WelderPatchVersion) "." Stringify(WelderRevisionId)
-#else
-#  define ZeroBuildIdString()                                                      \
-    Stringify(WelderMajorVersion) "." Stringify(WelderMinorVersion) "." Stringify( \
-        WelderPatchVersion) "." Stringify(WelderRevisionId)
-#endif
+const String sWelderOrganization = "Welder";
+const String sEditorGuid = "51392222-AEDE-4530-8749-9DFAB5725FD7";
+const String sEditorName = "Editor";
+const String sLauncherGuid = "7489829B-8A03-4B26-B3AC-FDDC6668BAF7";
+const String sLauncherName = "Launcher";
+
+uint gAppMajorVersion = 1;
+uint gAppMinorVersion = 0;
+uint gAppPatchVersion = 0;
+uint gConfigVersion = 1;
+String gAppGuid;
+String gAppOrganization;
+String gAppName;
+
+void SetupApplication(uint major,
+                      uint minor,
+                      uint patch,
+                      uint configVersion,
+                      StringParam organization,
+                      StringParam guid,
+                      StringParam name)
+{
+  gAppMajorVersion = major;
+  gAppMinorVersion = minor;
+  gAppPatchVersion = patch;
+  gConfigVersion = configVersion;
+  gAppGuid = guid;
+  gAppOrganization = organization;
+  gAppName = name;
+}
 
 cstr GetGuidString()
 {
-  return "F6E3D203-EB81-4B09-983C-31DAD32AE29F";
+  return gAppGuid.c_str();
 }
 
-cstr GetLauncherGuidString()
+StringParam GetApplicationName()
 {
-  return "295EE6D2-9E03-43A6-8150-388649CC1341";
+  return gAppName;
 }
 
-uint GetLauncherMajorVersion()
+StringParam GetOrganization()
 {
-  // Hardcoded to 1 for all legacy versions. The first version on the new server
-  // will be 2
-  return 4;
+  return gAppOrganization;
+}
+
+uint GetConfigVersion()
+{
+  return gConfigVersion;
 }
 
 uint GetMajorVersion()
 {
-  return WelderMajorVersion;
+  return gAppMajorVersion;
 }
 
 uint GetMinorVersion()
 {
-  return WelderMinorVersion;
+  return gAppMinorVersion;
 }
 
 uint GetPatchVersion()
 {
-  return WelderPatchVersion;
+  return gAppPatchVersion;
 }
 
 uint GetRevisionNumber()
@@ -71,15 +92,6 @@ uint GetRevisionNumber()
 u64 GetShortChangeSet()
 {
   return WrapHex(WelderShortChangeSet);
-}
-
-cstr GetExperimentalBranchName()
-{
-#ifdef ZeroExperimentalBranchName
-  return ZeroExperimentalBranchName;
-#else
-  return nullptr;
-#endif
 }
 
 cstr GetMajorVersionString()
@@ -102,9 +114,18 @@ cstr GetRevisionNumberString()
   return Stringify(WelderRevisionId);
 }
 
-cstr GetBuildIdString()
+String GetBuildIdString()
 {
-  return ZeroBuildIdString();
+  StringBuilder builder;
+  builder.Append(ToString(GetMajorVersion()));
+  builder.Append('.');
+  builder.Append(ToString(GetMinorVersion()));
+  builder.Append('.');
+  builder.Append(ToString(GetPatchVersion()));
+  builder.Append('.');
+  builder.Append(GetRevisionNumberString());
+  String result = builder.ToString();
+  return result;
 }
 
 cstr GetShortChangeSetString()
@@ -132,11 +153,20 @@ cstr GetPlatformString()
   return ZeroPlatform;
 }
 
-cstr GetBuildVersionName()
+String GetBuildVersionName()
 {
-  return ZeroBuildIdString() " " Stringify(
-      WelderChangeSet) " " WelderChangeSetDate " " ZeroConfiguration
-                       " " ZeroPlatform;
+  StringBuilder builder;
+  builder.Append(GetBuildIdString());
+  builder.Append(' ');
+  builder.Append(GetChangeSetString());
+  builder.Append(' ');
+  builder.Append(GetChangeSetDateString());
+  builder.Append(' ');
+  builder.Append(ZeroConfiguration);
+  builder.Append(' ');
+  builder.Append(ZeroPlatform);
+  String result = builder.ToString();
+  return result;
 }
 
 int GetVersionId(StringParam versionIdFilePath)

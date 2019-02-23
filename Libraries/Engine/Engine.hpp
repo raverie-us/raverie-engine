@@ -113,17 +113,17 @@ public:
   // limited update.
   bool mIsDebugging;
 
-  static bool sInLauncher;
+  Cog* mConfigCog;
 
 private:
   friend class Space;
   friend class EngineMetaComposition;
   friend class GameSession;
   friend class EngineLibrary;
+  friend class ZeroStartup;
 
   void LoadPendingLevels();
 
-  Cog* mConfigCog;
   TimeSystem* mTimeSystem;
   float mTimePassed;
   Space* mEngineSpace;

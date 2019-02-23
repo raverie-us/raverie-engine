@@ -198,13 +198,10 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(MultiConvexMeshPoint);
   ZilchInitializeType(MultiConvexMeshPropertyViewInfo);
   ZilchInitializeType(MultiConvexMeshEditor);
-  // METAREFACTOR they should always be initialized, but hidden with an
-  // attribute
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
-  {
-    ZilchInitializeType(HeightMapDebugDrawer);
-    ZilchInitializeType(HeightMapAabbChecker);
-  }
+
+  ZilchInitializeType(HeightMapDebugDrawer);
+  ZilchInitializeType(HeightMapAabbChecker);
+
   ZilchInitializeType(SpriteSheetImporter);
   ZilchInitializeType(HeightMapImporter);
 
@@ -234,11 +231,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(RopeCreatorSubTool);
   ZilchInitializeType(SpringPointProxy);
   ZilchInitializeType(SpringPointProxyProperty);
-
-  // METAREFACTOR this should always be initialized, but hidden with an
-  // attribute
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr)
-    ZilchInitializeType(SpringTools);
+  ZilchInitializeType(SpringTools);
 
   ZilchInitializeType(HeightMapSubTool);
   ZilchInitializeType(HeightManipulationTool);

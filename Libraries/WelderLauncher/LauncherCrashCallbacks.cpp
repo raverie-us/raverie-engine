@@ -84,9 +84,9 @@ String LauncherGetToolsPath()
 
 void LauncherSendCrashReport(CrashHandlerParameters& params, void* userData)
 {
-  params.AddParameter("Version", GetBuildIdString());
+  params.AddParameter("Version", GetBuildIdString().c_str());
   params.AddParameter("Name", "Zero Launcher");
-  params.AddParameter("Guid", GetLauncherGuidString());
+  params.AddParameter("Guid", GetGuidString());
   params.AddParameter("Revision", GetRevisionNumberString());
   params.AddParameter("ChangeSet", GetChangeSetString());
   params.AddParameter("ChangeSetDate", GetChangeSetDateString());

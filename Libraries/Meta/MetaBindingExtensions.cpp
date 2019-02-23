@@ -74,6 +74,12 @@ const String cSerializationPrimitive("SerializationPrimitive");
 
 } // namespace SerializationAttributes
 
+// Common groups (used with PropertyAttributes::cGroup)
+namespace CommonGroups
+{
+const String cAdvanced("Advanced");
+} // namespace SerializationAttributes
+
 // Events
 namespace Events
 {

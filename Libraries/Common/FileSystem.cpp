@@ -4,6 +4,12 @@
 namespace Zero
 {
 
+String GetApplicationDirectory()
+{
+  // Use the parent directory of the executable as the application directory.
+  return FilePath::GetDirectoryPath(GetApplication());
+}
+
 template <typename Function>
 bool TryFileOperation(StringParam dest, StringParam source, Function fileOp)
 {

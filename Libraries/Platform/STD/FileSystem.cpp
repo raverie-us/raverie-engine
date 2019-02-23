@@ -79,13 +79,6 @@ String GetUserDocumentsDirectory()
 }
 #endif
 
-String GetApplicationDirectory()
-{
-  // The first entry in the command line arguments should be our executable.
-  // Use the parent directory of the executable as the application directory.
-  return FilePath::GetDirectoryPath(GetApplication());
-}
-
 #if !defined(ZeroPlatformNoGetApplication)
 String GetApplication()
 {

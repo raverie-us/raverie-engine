@@ -69,7 +69,6 @@ void ZeroDoNotify(StringParam title,
       Filter::EngineFilter, "%s : %s\n", title.c_str(), message.c_str());
 }
 
-bool Engine::sInLauncher = false;
 ZilchDefineType(Engine, builder, type)
 {
   type->HandleManager = ZilchManagerId(PointerManager);
