@@ -10,7 +10,6 @@
 #include "NameValidation.hpp"
 #include "ChunkReader.hpp"
 #include "ChunkWriter.hpp"
-#include "StringMap.hpp"
 #include "StringReplacement.hpp"
 #include "PartialMatch.hpp"
 #include "Archive.hpp"

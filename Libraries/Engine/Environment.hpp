@@ -41,6 +41,21 @@ public:
   /// The arguments split up into name/value pairs. If a parameter name had no
   /// value then it is parsed as a boolean with the value of true.
   StringMap mParsedCommandLineArguments;
+
+  template <typename type>
+  static type GetValue(StringParam key, const type& valueIfNotFound = type())
+  {
+    auto environment = Environment::GetInstance();
+    String* value = environment->mParsedCommandLineArguments.FindPointer(key);
+
+    type result = type();
+    if (value)
+      ToValue(*value, result);
+    else
+      result = valueIfNotFound;
+
+    return result;
+  }
 };
 
 } // namespace Zero

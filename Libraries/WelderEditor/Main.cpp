@@ -3,6 +3,11 @@
 
 using namespace Zero;
 
+namespace Zero
+{
+bool ZeroEditorStartup();
+}
+
 extern "C" int main(int argc, char* argv[])
 {
   CommandLineToStringArray(gCommandLineArguments, argv, argc);
@@ -11,10 +16,10 @@ extern "C" int main(int argc, char* argv[])
 
   ZeroStartup startup;
   Engine* engine = startup.Initialize();
+  startup.Startup();
 
   // Run application specific startup
-  bool success = Zero::Startup(
-      engine, Environment::GetInstance()->mParsedCommandLineArguments, String());
+  bool success = ZeroEditorStartup();
 
   // Failed startup do not run
   if (!success)

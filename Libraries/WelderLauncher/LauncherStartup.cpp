@@ -4,12 +4,6 @@
 namespace Zero
 {
 
-OsShell* CreateOsShellSystem();
-System* CreateSoundSystem();
-System* CreateGraphicsSystem();
-System* CreatePhysicsSystem();
-System* CreateTimeSystem();
-
 bool LoadContent(Cog* configCog)
 {
   Z::gContentSystem->DefaultBuildStream = new TextStreamDebugPrint();
@@ -60,60 +54,20 @@ bool LoadResources(Cog* configCog)
   return true;
 }
 
-bool ZeroLauncherStartup(Engine* engine,
-                         StringMap& arguments,
-                         StringParam dllPath)
+bool ZeroLauncherStartup()
 {
-  TimerBlock startUp("Engine Startup");
-  String applicationName = "ZeroVersionSelector";
-
-  String project = GetStringValue<String>(arguments, "file", String());
-  bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
-
-  SaveConfig();
-  Cog* configCog = Z::gEngine->GetConfigCog();
-
-  // Profile initializing systems
-  {
-    TimerBlock block("Initializing core systems.");
-
-    // Create all core systems
-    engine->AddSystem(CreateUnitTestSystem());
-    engine->AddSystem(CreateOsShellSystem());
-    engine->AddSystem(CreateTimeSystem());
-    engine->AddSystem(CreatePhysicsSystem());
-    engine->AddSystem(CreateSoundSystem());
-    engine->AddSystem(CreateGraphicsSystem());
-
-    SystemInitializer initializer;
-    initializer.mEngine = engine;
-    initializer.Config = configCog;
-
-    // Initialize all systems.
-    engine->Initialize(initializer);
-  }
-
-  Tweakables::Load();
-
   Z::gLauncher = new Launcher();
-  LoadResources(configCog);
+  LoadResources(Z::gEngine->GetConfigCog());
 
   Event event;
-  engine->DispatchEvent(Events::NoProjectLoaded, &event);
+  Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
 
   // Start up the launcher
   Z::gLauncher->Startup();
 
   CommandManager* commands = CommandManager::GetInstance();
-  BindAppCommands(configCog, commands);
+  BindAppCommands(Z::gEngine->GetConfigCog(), commands);
   commands->RunParsedCommands();
-
-  // Extra debug stuff to test crashing
-  if (arguments.ContainsKey("CrashEngine") && configCog->has(DeveloperConfig))
-  {
-    CrashHandler::FatalError(1);
-  }
-
   return true;
 }
 

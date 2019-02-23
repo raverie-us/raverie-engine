@@ -1,16 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
-{
-
-// Application Startup Function
-bool ZeroLauncherStartup(Engine* engine,
-                         StringMap& parameters,
-                         StringParam dllPath);
-
-} // namespace Zero
-
 using namespace Zero;
 
 extern "C" int main(int argc, char* argv[])
@@ -39,11 +29,10 @@ extern "C" int main(int argc, char* argv[])
 
   CrashHandler::SetRestartCommandLine(Environment::GetInstance()->mCommandLine);
 
+  startup.Startup();
+
   // Run application startup
-  bool success = Zero::ZeroLauncherStartup(
-      engine,
-      Environment::GetInstance()->mParsedCommandLineArguments,
-      String());
+  bool success = Zero::ZeroLauncherStartup();
   // Failed startup do not run
   if (!success)
     return 0;

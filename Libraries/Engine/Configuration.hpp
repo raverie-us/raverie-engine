@@ -27,8 +27,6 @@ public:
   String DataDirectory;
   /// Should the config be saved? Used in stress tester.
   bool mSave;
-  /// Command line Parameters
-  StringMap Parameters;
 
   /// A global flag for whether we save the config or not. This is used in unit
   /// test mode where we want to clear the config but not have it overwrite the

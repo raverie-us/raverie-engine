@@ -57,24 +57,23 @@ void LauncherConfig::Serialize(Serializer& stream)
 
 void LauncherConfig::ApplyCommandLineArguments()
 {
-  auto& arguments = Environment::GetInstance()->mParsedCommandLineArguments;
   String upgradeCommand =
       LauncherStartupArguments::Names[LauncherStartupArguments::Upgrade];
-  bool upgrade = GetStringValue<bool>(arguments, upgradeCommand, false);
+  bool upgrade = Environment::GetValue<bool>(upgradeCommand, false);
   if (upgrade == true)
     mAutoRunMode = LauncherAutoRunMode::None;
 
   // if we get the command argument to run then try to install and run
   String runCommand =
       LauncherStartupArguments::Names[LauncherStartupArguments::Run];
-  bool run = GetStringValue<bool>(arguments, runCommand, false);
+  bool run = Environment::GetValue<bool>(runCommand, false);
   if (run == true)
     mAutoRunMode = LauncherAutoRunMode::InstallAndRun;
 
   String debuggerModeCommand =
       LauncherStartupArguments::Names[LauncherStartupArguments::DebuggerMode];
   mRunDebuggerMode =
-      GetStringValue<bool>(arguments, debuggerModeCommand, false);
+      Environment::GetValue<bool>(debuggerModeCommand, false);
 }
 
 uint LauncherConfig::GetAutoRunMode()

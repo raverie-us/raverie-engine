@@ -396,9 +396,7 @@ Cog* LoadRemoteConfig(StringParam organization, StringParam applicationName)
 Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
 {
   // If we're in safe mode, just use the default config
-  Environment* environment = Environment::GetInstance();
-  StringMap& arguments = environment->mParsedCommandLineArguments;
-  bool useDefault = GetStringValue<bool>(arguments, "safe", false);
+  bool useDefault = Environment::GetValue<bool>("safe", false);
 
   ZPrint("Build Version: %s\n", GetBuildVersionName().c_str());
 
@@ -420,24 +418,21 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
 
   // Locations to look for the config file.
   // Some of them are absolute, some are relative to the working directory.
-  String searchConfigPaths[] = {
-      // The user config.
-      configFile,
-      // In the working directory.
-      GetConfigFileName(),
-      // In the source's Data directory.
-      FilePath::Combine(dataDirectory, defaultConfigFile),
-  };
+  Array<String> searchConfigPaths;
 
-  const size_t searchconfigPathsCount =
-      sizeof(searchConfigPaths) / sizeof(*searchConfigPaths);
-  for (size_t i = 0; i < searchconfigPathsCount; ++i)
+  if (!useDefault)
   {
-    // Skip the user config if we're only going to use a default config.
-    if (useDefault && i == 0)
-      continue;
+    // In the working directory (for exported projects).
+    searchConfigPaths.PushBack(GetConfigFileName());
+    // The user config in the documents directory.
+    searchConfigPaths.PushBack(configFile);
+  }
+  // In the source's Data directory.
+  searchConfigPaths.PushBack(
+      FilePath::Combine(dataDirectory, defaultConfigFile));
 
-    StringParam path = searchConfigPaths[i];
+  forRange(StringParam path, searchConfigPaths)
+  {
     if (FileExists(path))
     {
       configCog =
@@ -446,7 +441,7 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
       // Make sure we successfully created the config Cog from the data file.
       if (configCog != nullptr)
       {
-        userConfigExists = (i == 0);
+        userConfigExists = (path == configFile);
         ZPrintFilter(
             Filter::DefaultFilter, "Using config '%s'.\n", path.c_str());
         break;
@@ -472,8 +467,7 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
 
   Z::gEngine->mConfigCog = configCog;
 
-  if (!userConfigExists)
-    SaveConfig();
+  SaveConfig();
 
   configCog->mFlags.SetFlag(CogFlags::Protected);
   return configCog;

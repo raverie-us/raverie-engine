@@ -13,32 +13,24 @@ System* CreateTimeSystem();
 void CreateEditor(Cog* config, StringParam project, StringParam newProjectName);
 void CreateGame(Cog* config, Cog* projectCog, StringParam projectFile);
 
-bool Startup(Engine* engine, StringMap& arguments, String projectFile)
+bool ZeroEditorStartup()
 {
-  TimerBlock startUp("Engine Startup");
+  String projectFile = Environment::GetValue<String>("file");
+  bool playGame = Environment::GetValue<bool>("play", false);
 
-  bool playGame = GetStringValue<bool>(arguments, "play", false);
-  bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
-  bool noRunLauncher = GetStringValue<bool>(arguments, "nolauncher", false);
-  bool autoRestart = GetStringValue<bool>(arguments, "autorestart", false);
-  String newProject = GetStringValue<String>(arguments, "newProject", String());
-
-  if (autoRestart)
-    CrashHandler::RestartOnCrash(true);
+  String newProject =
+      Environment::GetValue<String>("newProject");
 
   // Check to see if there was a project file in the same directory.
-  if (FileExists(projectFile))
+  static const String cDefaultProjectFile("Project.zeroproj");
+  if (FileExists(cDefaultProjectFile))
   {
+    projectFile = cDefaultProjectFile;
     playGame = true;
-  }
-  else
-  {
-    // Otherwise, we could be trying to load a project (from the launcher)
-    projectFile = GetStringValue<String>(arguments, "file", String());
   }
 
   // Load config object
-  Cog* configCog = engine->GetConfigCog();
+  Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
   EditorConfig* editorConfig = configCog->has(EditorConfig);
 
@@ -53,25 +45,6 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
     projectFile = FilePath::Combine(
         mainConfig->DataDirectory, "Fallback", "Fallback.zeroproj");
 
-  {
-    TimerBlock block("Initializing core systems.");
-
-    // Create all core systems
-    engine->AddSystem(CreateUnitTestSystem());
-    engine->AddSystem(CreateOsShellSystem());
-    engine->AddSystem(CreateTimeSystem());
-    engine->AddSystem(CreatePhysicsSystem());
-    engine->AddSystem(CreateSoundSystem());
-    engine->AddSystem(CreateGraphicsSystem());
-
-    SystemInitializer initializer;
-    initializer.mEngine = engine;
-    initializer.Config = configCog;
-
-    // Initialize all systems.
-    engine->Initialize(initializer);
-  }
-
   // Initialize Extensions
   ZPrint("Loading Extensions\n");
 
@@ -80,8 +53,8 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
     // Creating project cog outside of CreateGame() so that eula window can make
     // changes if needed. Note: We don't currently show a eula window so this
     // may need to be refactored.
-    Cog* projectCog =
-        Z::gFactory->Create(engine->GetEngineSpace(), projectFile, 0, nullptr);
+    Cog* projectCog = Z::gFactory->Create(
+        Z::gEngine->GetEngineSpace(), projectFile, 0, nullptr);
     if (projectCog == nullptr)
     {
       FatalEngineError("Failed load project '%s'", projectFile.c_str());
@@ -95,18 +68,6 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
     CreateEditor(configCog, projectFile, newProject);
   }
 
-  // Check specifically for the WriteBuildInfo command needed by the build
-  // tools. If it exists as a command-line argument then invoke it early. This
-  // has to be done here because if there's no valid project when the editor
-  // runs then command line arguments aren't processed.
-  Environment* environment = Environment::GetInstance();
-  if (environment->mParsedCommandLineArguments.ContainsKey("WriteBuildInfo"))
-  {
-    CommandManager* commandManager = CommandManager::GetInstance();
-    Command* command = commandManager->GetCommand("WriteBuildInfo");
-    if (command != nullptr)
-      command->ExecuteCommand();
-  }
 
   return true;
 }

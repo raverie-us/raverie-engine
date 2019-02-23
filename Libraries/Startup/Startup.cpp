@@ -3,9 +3,16 @@
 
 namespace Zero
 {
+OsShell* CreateOsShellSystem();
+System* CreateSoundSystem();
+System* CreateGraphicsSystem();
+System* CreatePhysicsSystem();
+System* CreateTimeSystem();
 
 Engine* ZeroStartup::Initialize()
 {
+  TimerBlock startUp("Initialize");
+
   // Set the log and error handlers so debug printing and asserts will print to
   // the any debugger output (such as the Visual Studio Output Window).
   mDebuggerListener = new DebuggerListener();
@@ -40,6 +47,9 @@ Engine* ZeroStartup::Initialize()
     mStdoutListener = new StdOutListener();
     Zero::Console::Add(mStdoutListener);
   }
+
+  CrashHandler::RestartOnCrash(
+      Environment::GetValue<bool>("autorestart", false));
 
   CommonLibrary::Initialize();
 
@@ -126,6 +136,32 @@ Engine* ZeroStartup::Initialize()
   ZPrint("Os: %s\n", Os::GetVersionString().c_str());
 
   return Z::gEngine;
+}
+
+void ZeroStartup::Startup()
+{
+  TimerBlock startUp("Startup");
+  Engine* engine = Z::gEngine;
+  Cog* configCog = engine->GetConfigCog();
+
+  {
+    TimerBlock block("Initializing core systems.");
+
+    // Create all core systems
+    engine->AddSystem(CreateUnitTestSystem());
+    engine->AddSystem(CreateOsShellSystem());
+    engine->AddSystem(CreateTimeSystem());
+    engine->AddSystem(CreatePhysicsSystem());
+    engine->AddSystem(CreateSoundSystem());
+    engine->AddSystem(CreateGraphicsSystem());
+
+    SystemInitializer initializer;
+    initializer.mEngine = engine;
+    initializer.Config = configCog;
+
+    // Initialize all systems.
+    engine->Initialize(initializer);
+  }
 }
 
 void ZeroStartup::InitializeExternal()

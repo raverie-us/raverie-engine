@@ -28,7 +28,6 @@ target_sources(Support
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Profiler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Profiler.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StringMap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/StringReplacement.cpp
     ${CMAKE_CURRENT_LIST_DIR}/StringReplacement.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SupportStandard.hpp

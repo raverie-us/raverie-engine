@@ -10,6 +10,7 @@ class ZeroStartup
 {
 public:
   Engine* Initialize();
+  void Startup();
   void Shutdown();
 
 protected:
@@ -23,13 +24,14 @@ private:
   ExecutableState* mState;
   ZilchSetup* mZilchSetup;
 
+  // Initialize:
   UniquePointer<DebuggerListener> mDebuggerListener;
   UniquePointer<FileSystemInitializer> mFileSystemInitializer;
   UniquePointer<FileListener> mFileListener;
   UniquePointer<TimerBlock> mTotalEngineTimer;
   UniquePointer<StdOutListener> mStdoutListener;
-};
 
-bool Startup(Engine* engine, StringMap& parameters, String projectFile);
+  // Startup:
+};
 
 } // namespace Zero

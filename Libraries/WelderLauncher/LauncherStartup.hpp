@@ -4,9 +4,7 @@
 namespace Zero
 {
 
-bool ZeroLauncherStartup(Engine* engine,
-                         StringMap& arguments,
-                         StringParam dllPath);
+bool ZeroLauncherStartup();
 
 class LauncherStartup : public ZeroStartup
 {
