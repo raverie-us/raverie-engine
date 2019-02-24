@@ -4,7 +4,7 @@
 namespace Zero
 {
 
-bool LoadContent(Cog* configCog)
+bool LoadLauncherContent()
 {
   Z::gContentSystem->DefaultBuildStream = new TextStreamDebugPrint();
   Z::gContentSystem->EnumerateLibraries();
@@ -39,35 +39,6 @@ bool LoadContent(Cog* configCog)
 
   float time = (float)timer.UpdateAndGetTime();
   ZPrint("Finished Loading Editor Content in %.2f\n", time);
-  return true;
-}
-
-bool LoadResources(Cog* configCog)
-{
-  LoadContentConfig(configCog);
-
-  Z::gLauncher->Initialize();
-
-  if (!LoadContent(configCog))
-    return false;
-
-  return true;
-}
-
-bool ZeroLauncherStartup()
-{
-  Z::gLauncher = new Launcher();
-  LoadResources(Z::gEngine->GetConfigCog());
-
-  Event event;
-  Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
-
-  // Start up the launcher
-  Z::gLauncher->Startup();
-
-  CommandManager* commands = CommandManager::GetInstance();
-  BindAppCommands(Z::gEngine->GetConfigCog(), commands);
-  commands->RunParsedCommands();
   return true;
 }
 

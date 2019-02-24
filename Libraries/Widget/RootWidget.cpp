@@ -48,17 +48,14 @@ RootWidget::RootWidget(OsWindow* osWindow) : Composite(NULL)
   mOsWindow = osWindow;
   mDragged = false;
 
-  if (Z::EditorDebugFeatures)
-  {
-    mDebuggerOverlay = new ColorBlock(this);
-    mDebuggerOverlay->SetColor(Vec4(0, 0, 0, 0.4f));
-    mDebuggerOverlay->SetSize(Pixels(50000, 50000));
-    mDebuggerOverlay->SetActive(false);
-    mDebuggerText = new Text(this, "DebuggerText");
-    mDebuggerText->SetText("Debugging...");
-    mDebuggerText->SizeToContents();
-    mDebuggerText->SetActive(false);
-  }
+  mDebuggerOverlay = new ColorBlock(this);
+  mDebuggerOverlay->SetColor(Vec4(0, 0, 0, 0.4f));
+  mDebuggerOverlay->SetSize(Pixels(50000, 50000));
+  mDebuggerOverlay->SetActive(false);
+  mDebuggerText = new Text(this, "DebuggerText");
+  mDebuggerText->SetText("Debugging...");
+  mDebuggerText->SizeToContents();
+  mDebuggerText->SetActive(false);
 
   ConnectThisTo(Z::gWidgetManager, Events::WidgetUpdate, OnManagerUpdate);
 
@@ -290,13 +287,10 @@ void RootWidget::UpdateTransform()
     SetTranslationAndSize(Vec3(0, 0, 0), size);
   }
 
-  if (Z::EditorDebugFeatures)
-  {
-    mDebuggerOverlay->MoveToFront();
-    mDebuggerText->MoveToFront();
-    WidgetRect rect = this->GetLocalRect();
-    PlaceCenterToRect(rect, mDebuggerText);
-  }
+  mDebuggerOverlay->MoveToFront();
+  mDebuggerText->MoveToFront();
+  WidgetRect rect = this->GetLocalRect();
+  PlaceCenterToRect(rect, mDebuggerText);
 
   Composite::UpdateTransform();
 }

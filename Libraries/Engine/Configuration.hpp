@@ -81,10 +81,6 @@ public:
   /// Last version the user has used locally. Used to
   /// show release notes.
   uint LastVersionUsed;
-
-  /// The hash of the last accepted Eula. Used to uniquely identify each
-  /// eula and auto-detect if the eula text changes.
-  u64 LastAcceptedEulaHash;
 };
 
 /// Configuration component for content system. Used to find content paths and

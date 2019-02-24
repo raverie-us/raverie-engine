@@ -86,7 +86,7 @@ MainWindow::MainWindow(OsWindow* window) : RootWidget(window)
   mainMenu->SetLayout(CreateStackLayout(
       LayoutDirection::LeftToRight, Vec2::cZero, Thickness(2, 2, 2, 2)));
   Label* zeroLabel = new Label(mainMenu);
-  zeroLabel->SetText("Zero");
+  zeroLabel->SetText(window->GetTitle());
   zeroLabel->mText->ChangeDefinition(mDefSet->GetDefinition("TitleText"));
   Spacer* spacer = new Spacer(mainMenu);
   spacer->SetSize(Vec2(4, 0));

@@ -27,7 +27,6 @@ public:
 #include "LauncherComponents.hpp"
 
 #include "DeveloperNotes.hpp"
-#include "Eula.hpp"
 #include "Launcher.hpp"
 #include "LauncherTasks.hpp"
 #include "LauncherWindow.hpp"

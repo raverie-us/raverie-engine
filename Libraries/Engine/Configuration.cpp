@@ -93,7 +93,6 @@ void UserConfig::Serialize(Serializer& stream)
 
   SerializeNameDefault(LastVersionKnown, 0u);
   SerializeNameDefault(LastVersionUsed, 0u);
-  SerializeNameDefault(LastAcceptedEulaHash, (u64)0);
 }
 
 ZilchDefineType(DeveloperConfig, builder, type)

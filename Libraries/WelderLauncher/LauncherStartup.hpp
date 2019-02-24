@@ -3,8 +3,7 @@
 
 namespace Zero
 {
-
-bool ZeroLauncherStartup();
+bool LoadLauncherContent();
 
 class LauncherStartup : public ZeroStartup
 {

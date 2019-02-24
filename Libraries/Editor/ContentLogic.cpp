@@ -4,21 +4,18 @@
 namespace Zero
 {
 
-ExtraLibrarySearchPathCallback mExtraLibrarySearchPaths = nullptr;
-
-void LoadContentConfig(Cog* configCog)
+void LoadContentConfig()
 {
   InitializeContentSystem();
 
   ContentSystem* contentSystem = Z::gContentSystem;
 
+  Cog* configCog = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = configCog->has(MainConfig);
 
   Array<String>& librarySearchPaths = contentSystem->LibrarySearchPaths;
   ContentConfig* contentConfig = configCog->has(ContentConfig);
   String appCacheDirectory = GetUserLocalDirectory();
-  String documentDirectory = GetUserDocumentsDirectory();
-  String workingDirectory = GetWorkingDirectory();
 
   String sourceDirectory = mainConfig->SourceDirectory;
   ErrorIf(sourceDirectory.Empty(), "Expected a source directory");
@@ -31,10 +28,6 @@ void LoadContentConfig(Cog* configCog)
   CreateDirectoryAndParents(
       FilePath::Combine(appCacheDirectory, GetApplicationName()));
 
-  // Hack!
-  if (mExtraLibrarySearchPaths != nullptr)
-    mExtraLibrarySearchPaths(configCog, librarySearchPaths);
-  
   contentSystem->ToolPath = FilePath::Combine(sourceDirectory, "Tools");
 
   contentSystem->mHistoryEnabled = contentConfig->HistoryEnabled;
@@ -191,7 +184,7 @@ void ShowBuiltInResource(StringParam name)
     resource->mContentItem->ShowInEditor = true;
 }
 
-bool LoadEditorContent(Cog* configCog)
+bool LoadEditorContent()
 {
   Z::gContentSystem->DefaultBuildStream = new TextStreamDebugPrint();
   Z::gContentSystem->EnumerateLibraries();
@@ -217,10 +210,6 @@ bool LoadEditorContent(Cog* configCog)
   {
     coreContent = coreContent && LoadContentLibrary(libraryName, true);
   }
-
-  // Hack!
-  if (mCustomLibraryLoader != nullptr)
-    mCustomLibraryLoader(configCog);
 
   if (!coreContent)
   {

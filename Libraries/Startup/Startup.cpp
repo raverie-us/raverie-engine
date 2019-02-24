@@ -138,30 +138,95 @@ Engine* ZeroStartup::Initialize()
   return Z::gEngine;
 }
 
-void ZeroStartup::Startup()
+OsWindow* ZeroStartup::Startup(StartupOptions& options)
 {
   TimerBlock startUp("Startup");
   Engine* engine = Z::gEngine;
   Cog* configCog = engine->GetConfigCog();
 
+  // Create all core systems
+  engine->AddSystem(CreateUnitTestSystem());
+  engine->AddSystem(CreateOsShellSystem());
+  engine->AddSystem(CreateTimeSystem());
+  engine->AddSystem(CreatePhysicsSystem());
+  engine->AddSystem(CreateSoundSystem());
+  engine->AddSystem(CreateGraphicsSystem());
+
+  SystemInitializer initializer;
+  initializer.mEngine = engine;
+  initializer.Config = configCog;
+
+  // Initialize all systems.
+  engine->Initialize(initializer);
+
+  if (options.mLoadContent)
+    LoadContentConfig();
+
+  ZPrint("Creating main window.\n");
+
+  OsShell* osShell = Z::gEngine->has(OsShell);
+
+  IntVec2 size = options.mWindowSize;
+  WindowState::Enum state = options.mWindowState;
+
+  String name = BuildString(GetOrganization(), " ", GetApplicationName());
+
+  if (options.mWindowSettingsFromProjectCog)
   {
-    TimerBlock block("Initializing core systems.");
+    WindowLaunchSettings* windowLaunch =
+        options.mWindowSettingsFromProjectCog->has(WindowLaunchSettings);
+    if (windowLaunch != nullptr)
+    {
+      size = windowLaunch->mWindowedResolution;
+      if (windowLaunch->mLaunchFullscreen)
+        state = WindowState::Fullscreen;
+    }
 
-    // Create all core systems
-    engine->AddSystem(CreateUnitTestSystem());
-    engine->AddSystem(CreateOsShellSystem());
-    engine->AddSystem(CreateTimeSystem());
-    engine->AddSystem(CreatePhysicsSystem());
-    engine->AddSystem(CreateSoundSystem());
-    engine->AddSystem(CreateGraphicsSystem());
-
-    SystemInitializer initializer;
-    initializer.mEngine = engine;
-    initializer.Config = configCog;
-
-    // Initialize all systems.
-    engine->Initialize(initializer);
+    ProjectSettings* projectSettings =
+        options.mWindowSettingsFromProjectCog->has(ProjectSettings);
+    if (projectSettings != nullptr)
+    {
+      name = projectSettings->ProjectName;
+    }
   }
+
+  // On Emscripten, the window full screen can only be done by a user
+  // action. Setting it on startup causes an abrupt change the first time
+  // the user click or hits a button.
+#if !defined(PLATFORM_EMSCRIPTEN)
+  if (state == WindowState::Fullscreen)
+    state = WindowState::Maximized;
+#endif
+
+  IntVec2 minSize = Math::Min(options.mMinimumWindowSize, size);
+  IntVec2 monitorClientPos = IntVec2(0, 0);
+
+  if (options.mWindowCentered)
+  {
+    IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
+    monitorClientPos = monitorRect.Center(size);
+  }
+
+  OsWindow* mainWindow = osShell->CreateOsWindow(
+      name, size, monitorClientPos, nullptr, options.mWindowStyle);
+  mainWindow->SetMinClientSize(minSize);
+  mainWindow->SetState(state);
+
+  // Pass window handle to initialize the graphics api
+  auto graphics = Z::gEngine->has(GraphicsEngine);
+  graphics->CreateRenderer(mainWindow);
+
+  if (options.mUseSplashScreen)
+    graphics->SetSplashscreenLoading();
+
+  // Fix any issues related to Intel drivers (we call SetState twice on purpose to fix the driver issues).
+  mainWindow->PlatformSpecificFixup();
+
+  // Used for trapping the mouse.
+  Z::gMouse->mActiveWindow = mainWindow;
+  
+  // Note that content and resources are loaded after CreateRenderer so that they may use the Renderer API to upload textures, meshes, etc.
+  return mainWindow;
 }
 
 void ZeroStartup::InitializeExternal()

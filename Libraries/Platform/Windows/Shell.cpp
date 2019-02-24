@@ -1264,9 +1264,8 @@ Shell::Shell() :
   DisableProcessWindowsGhosting();
 
   ZeroConstructPrivateData(ShellPrivateData);
-  self->mTaskbar = nullptr;
+  memset(self, 0, sizeof(*self));
   self->mTaskbarButtonCreated = RegisterWindowMessageW(L"TaskbarButtonCreated");
-  self->mCursor = nullptr;
 
   HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(nullptr);
 
@@ -1615,6 +1614,12 @@ const Array<PlatformInputDevice>& Shell::ScanInputDevices()
   return mInputDevices;
 }
 
+struct ShellWindowPrivateData
+{
+  WINDOWPLACEMENT mPlacement;
+  WindowStyleFlags::Enum mRestoreStyle;
+};
+
 ShellWindow::ShellWindow(Shell* shell,
                          StringParam windowName,
                          Math::IntVec2Param clientSize,
@@ -1650,6 +1655,9 @@ ShellWindow::ShellWindow(Shell* shell,
     mOnRawMouseChanged(nullptr),
     mOnInputDeviceChanged(nullptr)
 {
+  ZeroConstructPrivateData(ShellWindowPrivateData);
+  memset(self, 0, sizeof(*self));
+
   // Get the parent window
   HWND parentWindowHwnd = nullptr;
 
@@ -1710,6 +1718,7 @@ ShellWindow::ShellWindow(Shell* shell,
 ShellWindow::~ShellWindow()
 {
   Destroy();
+  ZeroDestructPrivateData(ShellWindowPrivateData);
 }
 
 void ShellWindow::Destroy()
@@ -1918,9 +1927,7 @@ WindowState::Enum ShellWindow::GetState()
 
 void ShellWindow::SetState(WindowState::Enum windowState)
 {
-  static WINDOWPLACEMENT sPlacement;
-  static WindowStyleFlags::Enum sRestorStyle;
-
+  ZeroGetPrivateData(ShellWindowPrivateData);
   switch (windowState)
   {
   case WindowState::Minimized:
@@ -1929,8 +1936,8 @@ void ShellWindow::SetState(WindowState::Enum windowState)
     // windowed first.
     if (gIntelGraphics && GetState() == WindowState::Fullscreen)
     {
-      SetStyle(sRestorStyle);
-      SetWindowPlacement((HWND)mHandle, &sPlacement);
+      SetStyle(self->mRestoreStyle);
+      SetWindowPlacement((HWND)mHandle, &self->mPlacement);
     }
 
     SendMessage((HWND)mHandle, WM_SYSCOMMAND, SC_MINIMIZE, 0);
@@ -1944,8 +1951,8 @@ void ShellWindow::SetState(WindowState::Enum windowState)
     // reset (except intel bug above).
     if (GetState() == WindowState::Fullscreen)
     {
-      SetStyle(sRestorStyle);
-      SetWindowPlacement((HWND)mHandle, &sPlacement);
+      SetStyle(self->mRestoreStyle);
+      SetWindowPlacement((HWND)mHandle, &self->mPlacement);
     }
 
     SendMessage((HWND)mHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
@@ -1971,11 +1978,11 @@ void ShellWindow::SetState(WindowState::Enum windowState)
   {
     // Make sure in windowed mode to save placement.
     SendMessage((HWND)mHandle, WM_SYSCOMMAND, SC_RESTORE, 0);
-    GetWindowPlacement((HWND)mHandle, &sPlacement);
+    GetWindowPlacement((HWND)mHandle, &self->mPlacement);
 
     // Remove border and disable window's aero so it can't manipulate the window
     // without us knowing.
-    sRestorStyle = mStyle.Field;
+    self->mRestoreStyle = mStyle.Field;
     mStyle.SetFlag(WindowStyleFlags::ClientOnly);
     mStyle.ClearFlag(WindowStyleFlags::Resizable);
     mStyle.ClearFlag(WindowStyleFlags::TitleBar);
@@ -2091,14 +2098,16 @@ void ShellWindow::SetProgress(ProgressType::Enum progressType, float progress)
 
 void ShellWindow::PlatformSpecificFixup()
 {
-  // Borderless window with Windows Aero does not work correctly on Intel.
-  WindowStyleFlags::Enum style = mStyle.Field;
-  style = (WindowStyleFlags::Enum)(style & ~WindowStyleFlags::Resizable);
-  // Specifying a titlebar does not work correctly on Intel.
-  style = (WindowStyleFlags::Enum)(style & ~WindowStyleFlags::TitleBar);
-  // SetStyle sets state to windowed to force the window to update, so reset
-  // maximize after.
-  SetStyle(style);
+  if (gIntelGraphics)
+  {
+    auto state = GetState();
+    // Borderless window with Windows Aero does not work correctly on Intel.
+    WindowStyleFlags::Enum style = mStyle.Field;
+    style = (WindowStyleFlags::Enum)(style & ~WindowStyleFlags::ClientOnly);
+    // SetStyle sets state to windowed to force the window to update, so reset state after.
+    SetStyle(style);
+    SetState(state);
+  }
 }
 
 } // namespace Zero

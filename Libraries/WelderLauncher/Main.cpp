@@ -29,13 +29,17 @@ extern "C" int main(int argc, char* argv[])
 
   CrashHandler::SetRestartCommandLine(Environment::GetInstance()->mCommandLine);
 
-  startup.Startup();
+  StartupOptions options;
+  options.mWindowSize = IntVec2(1024, 595);
+  options.mMinimumWindowSize = IntVec2(1024, 595);
+  options.mWindowCentered = true;
+  options.mWindowState = WindowState::Windowed;
+  OsWindow* mainWindow = startup.Startup(options);
 
-  // Run application startup
-  bool success = Zero::ZeroLauncherStartup();
-  // Failed startup do not run
-  if (!success)
+  if (!LoadLauncherContent())
     return 0;
+
+  Z::gLauncher = new Launcher(mainWindow);
 
   // Return code of 0 means don't restart the launcher
   int returnCode = 0;

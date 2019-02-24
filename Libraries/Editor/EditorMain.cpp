@@ -876,56 +876,19 @@ void SetupTools(Editor* editor);
           editorMain,                                                          \
           &EditorMain::memberFunction);
 
-void CreateEditor(Cog* config,
+void CreateEditor(OsWindow* mainWindow,
                   StringParam fileToOpen,
                   StringParam newProjectName)
 {
-  ZPrint("Loading in Editor Mode.\n");
-
-  Z::EditorDebugFeatures = true;
-
-  OsShell* osShell = Z::gEngine->has(OsShell);
-
-  LoadContentConfig(config);
-
-  IntVec2 size = IntVec2(1280, 720);
-  IntVec2 position = IntVec2(0, 0);
-
-  // If changes are ever made to these flags, all platforms must be considered.
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(
-      WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar |
-      WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable |
-      WindowStyleFlags::Close | WindowStyleFlags::ClientOnly);
-
-  OsWindow* mainWindow =
-      osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
-  mainWindow->SetMinClientSize(cMinimumMonitorSize);
-  mainWindow->SetState(WindowState::Maximized);
-
-  // Pass window handle to initialize the graphics api
-  Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow);
-
-  // Fix any issues related to Intel drivers
-  mainWindow->PlatformSpecificFixup();
-  mainWindow->SetState(WindowState::Maximized);
-
-  // This is after CreateRenderer so that the graphics api is initialized for
-  // graphics resources
-  if (!LoadEditorContent(config))
-    return;
-
-  DeveloperConfig* devConfig = config->has(DeveloperConfig);
-
-  // Setup the crash handler
-  CrashHandler::SetupRescueCallback(EditorRescueCall, nullptr);
-
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnTweakablesModified;
 
   TimerBlock block("Creating Editor");
+  CrashHandler::SetupRescueCallback(EditorRescueCall, nullptr);
 
   MainWindow* rootWidget = new MainWindow(mainWindow);
   EditorMain* editorMain = new EditorMain(rootWidget, mainWindow);
+  Cog* config = Z::gEngine->GetConfigCog();
   MainConfig* mainConfig = config->has(MainConfig);
   editorMain->mConfig = config;
   editorMain->mOsWindow = mainWindow;
@@ -1054,6 +1017,7 @@ void CreateEditor(Cog* config,
 
     BindCommand("StressTest", StressTest);
     // Add a command to write out all bound types in the engine
+    DeveloperConfig* devConfig = config->has(DeveloperConfig);
     if (devConfig != nullptr)
     {
       commands->AddCommand("ExportTypeList",

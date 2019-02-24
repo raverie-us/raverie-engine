@@ -185,6 +185,11 @@ void OsWindow::SetTitle(StringParam title)
   return mWindow.SetTitle(title);
 }
 
+String OsWindow::GetTitle()
+{
+  return mWindow.GetTitle();
+}
+
 WindowState::Enum OsWindow::GetState()
 {
   return mWindow.GetState();

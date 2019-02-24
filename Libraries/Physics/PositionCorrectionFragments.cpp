@@ -18,7 +18,7 @@ bool ShouldSolvePosition(Joint* joint)
   JointConfigOverride* configOverride = joint->mNode->mConfigOverride;
   uint jointType = joint->GetJointType();
 
-  // Hack! Normally we check the config values for joints to determine if it
+  // Normally we check the config values for joints to determine if it
   // should apply post stabilization or baumgarte. Custom joints determine this
   // via each constraint's SolvePosition bool which is set from script so just
   // check how many position constraints there are.

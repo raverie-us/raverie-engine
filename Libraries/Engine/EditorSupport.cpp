@@ -7,8 +7,6 @@ namespace Zero
 namespace Z
 {
 RuntimeEditor* gRuntimeEditor = NULL;
-bool EditorDebugFeatures = false;
-bool DeveloperMode = false;
 } // namespace Z
 
 namespace SpecialCogNames

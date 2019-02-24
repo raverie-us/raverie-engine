@@ -15,121 +15,16 @@ void OnLauncherTweakablesModified()
   Tweakables::Save();
 }
 
-IntVec2 Launcher::mEulaWindowSize = IntVec2(700, 520);
-IntVec2 Launcher::mLauncherWindowSize = IntVec2(1024, 595);
-
-Launcher::Launcher()
+Launcher::Launcher(OsWindow* window)
 {
-  mOsWindow = nullptr;
-  mMainWindow = nullptr;
-  mEulaWindow = nullptr;
-  mLauncherWindow = nullptr;
-}
-
-void Launcher::Startup()
-{
-  mMainWindow = new MainWindow(mOsWindow);
-  mMainWindow->SetTitle("");
-
-  // Don't pre-open the launcher unless the user has accepted the eula.
-  // Technically the launcher runs logic on initialize even if it is inactive
-  // that shouldn't happen unless the user has first accepted the eula.
-
-  // If the newest Eula has been accepted, show the Eula window.
-  // Otherwise, set the launcher window to visible as it has already been
-  // created
-  bool showEula = ShouldOpenEula();
-  if (showEula)
-    OpenEulaWindow();
-  else
-    OpenLauncherWindow();
-
-  if (Os::IsDebuggerAttached())
-    OpenTweakablesWindow();
-}
-
-void Launcher::EulaAccepted()
-{
-  // There's some delay/resizing issues now, so first open the launcher and then
-  // resize after we destroy the eula window. This helps minimize
-  // (although not remove) popping and sizes not updating.
-  OpenLauncherWindow();
-
-  // Store that we've accepted the eula
-  UserConfig* userConfig = HasOrAdd<UserConfig>(Z::gEngine->GetConfigCog());
-  userConfig->LastAcceptedEulaHash = GetEulaHash();
-  SaveConfig();
-  mEulaWindow->SetActive(false);
-  mEulaWindow->Destroy();
-  mEulaWindow = nullptr;
-
-  // Display the launcher
-  mOsWindow->SetClientSize(mLauncherWindowSize);
-  mOsWindow->SetMinClientSize(mLauncherWindowSize);
-
-  // Re-center the window
-  OsShell* osShell = Z::gEngine->has(OsShell);
-  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
-  IntVec2 monitorClientPosition = monitorRect.Center(mLauncherWindowSize);
-  mOsWindow->SetMonitorClientPosition(monitorClientPosition);
-}
-
-void Launcher::OpenEulaWindow()
-{
-  mOsWindow->SetMinClientSize(mEulaWindowSize);
-  mOsWindow->SetClientSize(mEulaWindowSize);
-
-  EulaWindow* window = new EulaWindow(mMainWindow);
-  window->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
-  mEulaWindow = window;
-}
-
-void Launcher::Initialize()
-{
-  IntVec2 minClientSize = mLauncherWindowSize;
-  // Ideally we should change the window size here, but the loading progress bar
-  // looks wrong with the window of this size. Fix later when we can override
-  // the loading.
-  // if(ShouldOpenEula())
-  //  minWindowSize = mEulaWindowSize;
-
-  String windowName = "Zero Launcher";
-  bool mainWindow = true;
-  bool visible = true;
-
-  OsShell* osShell = Z::gEngine->has(OsShell);
-  IntRect monitorRect = osShell->GetPrimaryMonitorRectangle();
-
-  IntVec2 clientSize = minClientSize;
-  IntVec2 monitorClientPos = monitorRect.Center(clientSize);
-
-  BitField<WindowStyleFlags::Enum> mainStyle;
-  mainStyle.U32Field = WindowStyleFlags::OnTaskBar |
-                       WindowStyleFlags::TitleBar | WindowStyleFlags::Close |
-                       WindowStyleFlags::ClientOnly |
-                       WindowStyleFlags::Resizable;
-
-  if (mainWindow)
-    mainStyle.SetFlag(WindowStyleFlags::MainWindow);
-
-  if (!visible)
-    mainStyle.SetFlag(WindowStyleFlags::NotVisible);
-
-  OsWindow* window = osShell->CreateOsWindow(
-      windowName, clientSize, monitorClientPos, nullptr, mainStyle.Field);
-  window->SetMinClientSize(minClientSize);
-  window->SetState(WindowState::Windowed);
   mOsWindow = window;
+  mMainWindow = nullptr;
+  mLauncherWindow = nullptr;
 
-  Z::gEngine->has(GraphicsEngine)->CreateRenderer(window);
+  Event event;
+  Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
 
-  // Fix any issue for Intel Drivers
-  window->PlatformSpecificFixup();
-}
-
-void Launcher::OpenLauncherWindow()
-{
-  mOsWindow->SetTitle("Zero Launcher");
+  mMainWindow = new MainWindow(mOsWindow);
 
   LauncherConfig* versionConfig =
       Z::gEngine->GetConfigCog()->has(LauncherConfig);
@@ -159,6 +54,13 @@ void Launcher::OpenLauncherWindow()
   }
 
   mLauncherWindow = launcher;
+
+  if (Os::IsDebuggerAttached())
+    OpenTweakablesWindow();
+
+  CommandManager* commands = CommandManager::GetInstance();
+  BindAppCommands(Z::gEngine->GetConfigCog(), commands);
+  commands->RunParsedCommands();
 }
 
 void Launcher::OpenTweakablesWindow()
@@ -178,19 +80,6 @@ void Launcher::OpenTweakablesWindow()
 
   // Set the tweakables modified callback so that we can update the Ui
   Tweakables::sModifiedCallback = &OnLauncherTweakablesModified;
-}
-
-size_t Launcher::GetEulaHash()
-{
-  String eulaFile = GetEulaFilePath();
-  String eulaText = ReadFileIntoString(eulaFile);
-  return eulaText.Hash();
-}
-
-bool Launcher::ShouldOpenEula()
-{
-  UserConfig* userConfig = HasOrAdd<UserConfig>(Z::gEngine->GetConfigCog());
-  return userConfig->LastAcceptedEulaHash != GetEulaHash();
 }
 
 } // namespace Zero

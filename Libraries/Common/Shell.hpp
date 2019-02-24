@@ -656,6 +656,8 @@ public:
   ShellWindow* mParent;
 
   float mProgress;
+
+  ZeroDeclarePrivateData(ShellWindow, 64);
 };
 
 } // namespace Zero

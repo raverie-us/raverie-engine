@@ -102,10 +102,6 @@ public:
 
 namespace Z
 {
-// Enabled Debug Features used by the editor
-extern bool EditorDebugFeatures;
-// Enabled core developer features
-extern bool DeveloperMode;
 // Access the editor at runtime prevents including
 // editor in core engine
 // Runtime editor will be NULL outside the editor

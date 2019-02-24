@@ -100,6 +100,7 @@ public:
 
   /// Set the title of window displayed in the title bar.
   void SetTitle(StringParam title);
+  String GetTitle();
 
   /// State of the Window, Set state to Minimize, Maximize, or Restore the
   /// window

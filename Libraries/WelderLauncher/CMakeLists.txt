@@ -15,8 +15,6 @@ target_sources(WelderLauncher
     ${CMAKE_CURRENT_LIST_DIR}/DeveloperNotes.hpp
     ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Eula.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Eula.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ForwardDeclarations.hpp

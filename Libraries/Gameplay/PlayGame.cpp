@@ -4,8 +4,6 @@
 namespace Zero
 {
 
-CustomLibraryLoader mCustomLibraryLoader = nullptr;
-
 void LoadResourcePackageRelative(StringParam baseDirectory,
                                  StringParam libraryName)
 {
@@ -29,66 +27,17 @@ void LoadResourcePackageRelative(StringParam baseDirectory,
     DoNotifyError("Failed to load resource package.", status.Message);
 }
 
-void GameRescueCall(void* userData)
-{
-}
-
-void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
+void CreateGame(OsWindow* mainWindow, Cog* projectCog, StringParam projectFile)
 {
   ZPrint("Loading in Game Mode.\n");
 
-  CrashHandler::SetupRescueCallback(GameRescueCall, nullptr);
-
   String projectDirectory = FilePath::GetDirectoryPath(projectFile);
-
-  OsShell* osShell = Z::gEngine->has(OsShell);
-  ProjectSettings* project = projectCog->has(ProjectSettings);
-
-  IntVec2 size = IntVec2(1280, 720);
-  IntVec2 position = IntVec2(0, 0);
-
-  WindowLaunchSettings* windowLaunch = projectCog->has(WindowLaunchSettings);
-  if (windowLaunch != nullptr)
-    size = windowLaunch->mWindowedResolution;
-
-  // If changes are ever made to these flags, all platforms must be considered.
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(
-      WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar |
-      WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable |
-      WindowStyleFlags::Close);
-
-  OsWindow* mainWindow =
-      osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
-
-  // On Emscripten, the window full screen can only be done by a user action.
-  // Setting it on startup causes an abrupt change the first time the user click
-  // or hits a button.
-#if !defined(PLATFORM_EMSCRIPTEN)
-  if (windowLaunch == nullptr || windowLaunch->mLaunchFullscreen)
-    mainWindow->SetState(WindowState::Fullscreen);
-#endif
-
-  // quick hack to make exports work better so they can trap the mouse
-  Z::gMouse->mActiveWindow = mainWindow;
-
-  mainWindow->SetTitle(project->ProjectName);
-
-  // Pass window handle to initialize the graphics api
-  Z::gEngine->has(GraphicsEngine)->CreateRenderer(mainWindow);
-  Z::gEngine->has(GraphicsEngine)->SetSplashscreenLoading();
-
-  ZPrint("Loading resource packages...\n");
-
   LoadResourcePackageRelative(projectDirectory, "FragmentCore");
   LoadResourcePackageRelative(projectDirectory, "Loading");
   LoadResourcePackageRelative(projectDirectory, "ZeroCore");
   LoadResourcePackageRelative(projectDirectory, "UiWidget");
   LoadResourcePackageRelative(projectDirectory, "EditorUi");
   LoadResourcePackageRelative(projectDirectory, "Editor");
-
-  // Hack!
-  if (mCustomLibraryLoader != nullptr)
-    mCustomLibraryLoader(configCog);
 
   if (SharedContent* sharedContent = projectCog->has(SharedContent))
   {
@@ -99,6 +48,8 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
       LoadResourcePackageRelative(projectDirectory, libraryName);
     }
   }
+
+  ProjectSettings* project = projectCog->has(ProjectSettings);
 
   // Set the store name based on the project name.
   ObjectStore::GetInstance()->SetStoreName(project->ProjectName);

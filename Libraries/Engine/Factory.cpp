@@ -274,15 +274,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
                                             "Creating proxy.\n",
                                             componentNode.TypeName.Data());
 
-            // In the editor throw an error in
-            // the exported version just log and continue so
-            // missing component do not create errors in export
-            // This should not be an exception in script because it causes too
-            // many export bugs!
-            if (Z::EditorDebugFeatures)
-              DoNotifyErrorWithContext(message, NotifyException::None);
-            else
-              ZPrint("Suppressed: %s", message.c_str());
+            DoNotifyErrorWithContext(message, NotifyException::None);
           }
 
           // Create a Proxy to be used for this component
